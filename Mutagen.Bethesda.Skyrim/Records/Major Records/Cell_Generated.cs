@@ -2014,12 +2014,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICellGetter rhs) return false;
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellGetter? obj)
         {
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2243,11 +2243,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICellGetter item,
-            ICellGetter rhs)
+            ICellGetter rhs,
+            Cell.TranslationMask? equalsMask = null)
         {
             return ((CellCommon)((ICellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3308,64 +3310,171 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICellGetter? lhs,
-            ICellGetter? rhs)
+            ICellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!object.Equals(lhs.Grid, rhs.Grid)) return false;
-            if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
-            if (!MemorySliceExt.Equal(lhs.OcclusionData, rhs.OcclusionData)) return false;
-            if (!MemorySliceExt.Equal(lhs.MaxHeightData, rhs.MaxHeightData)) return false;
-            if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
-            if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
-            if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
-            if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
-            if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
-            if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
-            if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
-            if (!lhs.Water.Equals(rhs.Water)) return false;
-            if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
-            if (!lhs.LockList.Equals(rhs.LockList)) return false;
-            if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
-            if (!lhs.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion)) return false;
-            if (!lhs.AcousticSpace.Equals(rhs.AcousticSpace)) return false;
-            if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
-            if (!lhs.Music.Equals(rhs.Music)) return false;
-            if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
-            if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
-            if (!lhs.NavigationMeshes.SequenceEqualNullable(rhs.NavigationMeshes)) return false;
-            if (lhs.Timestamp != rhs.Timestamp) return false;
-            if (lhs.UnknownGroupData != rhs.UnknownGroupData) return false;
-            if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
-            if (lhs.PersistentUnknownGroupData != rhs.PersistentUnknownGroupData) return false;
-            if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
-            if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
-            if (lhs.TemporaryUnknownGroupData != rhs.TemporaryUnknownGroupData) return false;
-            if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
+            {
+                if (!object.Equals(lhs.Grid, rhs.Grid)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
+            {
+                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.OcclusionData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.OcclusionData, rhs.OcclusionData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.MaxHeightData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.MaxHeightData, rhs.MaxHeightData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LightingTemplate) ?? true))
+            {
+                if (!lhs.LightingTemplate.Equals(rhs.LightingTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterHeight) ?? true))
+            {
+                if (!lhs.WaterHeight.EqualsWithin(rhs.WaterHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterNoiseTexture) ?? true))
+            {
+                if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
+            {
+                if (!lhs.Regions.SequenceEqualNullable(rhs.Regions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCN) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XWCN, rhs.XWCN)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.XWCS) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XWCS, rhs.XWCS)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
+            {
+                if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
+            {
+                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
+            {
+                if (!lhs.LockList.Equals(rhs.LockList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.SkyAndWeatherFromRegion) ?? true))
+            {
+                if (!lhs.SkyAndWeatherFromRegion.Equals(rhs.SkyAndWeatherFromRegion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.AcousticSpace) ?? true))
+            {
+                if (!lhs.AcousticSpace.Equals(rhs.AcousticSpace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.ImageSpace) ?? true))
+            {
+                if (!lhs.ImageSpace.Equals(rhs.ImageSpace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
+            {
+                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
+            {
+                if (!lhs.NavigationMeshes.SequenceEqualNullable(rhs.NavigationMeshes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.UnknownGroupData) ?? true))
+            {
+                if (lhs.UnknownGroupData != rhs.UnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PersistentTimestamp) ?? true))
+            {
+                if (lhs.PersistentTimestamp != rhs.PersistentTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PersistentUnknownGroupData) ?? true))
+            {
+                if (lhs.PersistentUnknownGroupData != rhs.PersistentUnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Persistent) ?? true))
+            {
+                if (!lhs.Persistent.SequenceEqualNullable(rhs.Persistent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryTimestamp) ?? true))
+            {
+                if (lhs.TemporaryTimestamp != rhs.TemporaryTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.TemporaryUnknownGroupData) ?? true))
+            {
+                if (lhs.TemporaryUnknownGroupData != rhs.TemporaryUnknownGroupData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Temporary) ?? true))
+            {
+                if (!lhs.Temporary.SequenceEqualNullable(rhs.Temporary)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICellGetter?)lhs,
-                rhs: rhs as ICellGetter);
+                rhs: rhs as ICellGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICellGetter?)lhs,
-                rhs: rhs as ICellGetter);
+                rhs: rhs as ICellGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICellGetter item)
@@ -6143,12 +6252,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ICellGetter rhs) return false;
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellGetter? obj)
         {
-            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellCommon)((ICellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellCommon)((ICellGetter)this).CommonInstance()!).GetHashCode(this);

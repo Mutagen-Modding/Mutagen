@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageDataGetter rhs)) return false;
-            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageDataGetter rhs) return false;
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageDataGetter? obj)
         {
-            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAIPackageDataGetter item,
-            IAIPackageDataGetter rhs)
+            IAIPackageDataGetter rhs,
+            AIPackageData.TranslationMask? equalsMask = null)
         {
             return ((AIPackageDataCommon)((IAIPackageDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAIPackageDataGetter? lhs,
-            IAIPackageDataGetter? rhs)
+            IAIPackageDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if ((crystal?.GetShouldTranslate((int)AIPackageData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -1200,13 +1209,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageDataGetter rhs)) return false;
-            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageDataGetter rhs) return false;
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageDataGetter? obj)
         {
-            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageDataCommon)((IAIPackageDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockInformationGetter rhs) return false;
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockInformationGetter? obj)
         {
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -599,11 +599,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILockInformationGetter item,
-            ILockInformationGetter rhs)
+            ILockInformationGetter rhs,
+            LockInformation.TranslationMask? equalsMask = null)
         {
             return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -937,14 +939,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILockInformationGetter? lhs,
-            ILockInformationGetter? rhs)
+            ILockInformationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.LockLevel != rhs.LockLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            if (!lhs.Key.Equals(rhs.Key)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.LockLevel) ?? true))
+            {
+                if (lhs.LockLevel != rhs.LockLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
+            {
+                if (!lhs.Key.Equals(rhs.Key)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1288,13 +1303,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockInformationGetter rhs) return false;
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockInformationGetter? obj)
         {
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).GetHashCode(this);

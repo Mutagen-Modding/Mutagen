@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructableDataGetter rhs)) return false;
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructableDataGetter rhs) return false;
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructableDataGetter? obj)
         {
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDestructableDataGetter item,
-            IDestructableDataGetter rhs)
+            IDestructableDataGetter rhs,
+            DestructableData.TranslationMask? equalsMask = null)
         {
             return ((DestructableDataCommon)((IDestructableDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDestructableDataGetter? lhs,
-            IDestructableDataGetter? rhs)
+            IDestructableDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.DESTCount != rhs.DESTCount) return false;
-            if (lhs.VATSTargetable != rhs.VATSTargetable) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
+            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.DESTCount) ?? true))
+            {
+                if (lhs.DESTCount != rhs.DESTCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.VATSTargetable) ?? true))
+            {
+                if (lhs.VATSTargetable != rhs.VATSTargetable) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructableData_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
             return true;
         }
         
@@ -1256,13 +1271,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructableDataGetter rhs)) return false;
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructableDataGetter rhs) return false;
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructableDataGetter? obj)
         {
-            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructableDataCommon)((IDestructableDataGetter)this).CommonInstance()!).GetHashCode(this);

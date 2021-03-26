@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestObjectiveTargetGetter rhs)) return false;
-            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestObjectiveTargetGetter rhs) return false;
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestObjectiveTargetGetter? obj)
         {
-            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -675,11 +675,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IQuestObjectiveTargetGetter item,
-            IQuestObjectiveTargetGetter rhs)
+            IQuestObjectiveTargetGetter rhs,
+            QuestObjectiveTarget.TranslationMask? equalsMask = null)
         {
             return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1028,14 +1030,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestObjectiveTargetGetter? lhs,
-            IQuestObjectiveTargetGetter? rhs)
+            IQuestObjectiveTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.AliasIndex != rhs.AliasIndex) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.AliasIndex) ?? true))
+            {
+                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.QSTADataTypeState) ?? true))
+            {
+                if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            }
             return true;
         }
         
@@ -1493,13 +1508,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestObjectiveTargetGetter rhs)) return false;
-            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestObjectiveTargetGetter rhs) return false;
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestObjectiveTargetGetter? obj)
         {
-            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestObjectiveTargetCommon)((IQuestObjectiveTargetGetter)this).CommonInstance()!).GetHashCode(this);

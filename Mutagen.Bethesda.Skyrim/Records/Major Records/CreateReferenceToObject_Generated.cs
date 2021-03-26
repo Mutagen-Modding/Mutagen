@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreateReferenceToObjectGetter rhs)) return false;
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreateReferenceToObjectGetter rhs) return false;
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreateReferenceToObjectGetter? obj)
         {
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -628,11 +628,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICreateReferenceToObjectGetter item,
-            ICreateReferenceToObjectGetter rhs)
+            ICreateReferenceToObjectGetter rhs,
+            CreateReferenceToObject.TranslationMask? equalsMask = null)
         {
             return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -971,15 +973,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICreateReferenceToObjectGetter? lhs,
-            ICreateReferenceToObjectGetter? rhs)
+            ICreateReferenceToObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
-            if (lhs.AliasIndex != rhs.AliasIndex) return false;
-            if (lhs.Create != rhs.Create) return false;
-            if (lhs.Level != rhs.Level) return false;
-            if (lhs.ALCADataTypeState != rhs.ALCADataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.AliasIndex) ?? true))
+            {
+                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Create) ?? true))
+            {
+                if (lhs.Create != rhs.Create) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.ALCADataTypeState) ?? true))
+            {
+                if (lhs.ALCADataTypeState != rhs.ALCADataTypeState) return false;
+            }
             return true;
         }
         
@@ -1421,13 +1439,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreateReferenceToObjectGetter rhs)) return false;
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreateReferenceToObjectGetter rhs) return false;
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreateReferenceToObjectGetter? obj)
         {
-            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)this).CommonInstance()!).GetHashCode(this);

@@ -917,12 +917,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTrackGetter rhs) return false;
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTrackGetter? obj)
         {
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1076,11 +1076,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMusicTrackGetter item,
-            IMusicTrackGetter rhs)
+            IMusicTrackGetter rhs,
+            MusicTrack.TranslationMask? equalsMask = null)
         {
             return ((MusicTrackCommon)((IMusicTrackGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1583,39 +1585,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMusicTrackGetter? lhs,
-            IMusicTrackGetter? rhs)
+            IMusicTrackGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
-            if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
-            if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
-            if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
-            if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
-            if (!lhs.CuePoints.SequenceEqualNullable(rhs.CuePoints)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Duration) ?? true))
+            {
+                if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.FadeOut) ?? true))
+            {
+                if (!lhs.FadeOut.EqualsWithin(rhs.FadeOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.TrackFilename) ?? true))
+            {
+                if (!string.Equals(lhs.TrackFilename, rhs.TrackFilename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.FinaleFilename) ?? true))
+            {
+                if (!string.Equals(lhs.FinaleFilename, rhs.FinaleFilename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
+            {
+                if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
+            {
+                if (!lhs.CuePoints.SequenceEqualNullable(rhs.CuePoints)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Tracks) ?? true))
+            {
+                if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMusicTrackGetter?)lhs,
-                rhs: rhs as IMusicTrackGetter);
+                rhs: rhs as IMusicTrackGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMusicTrackGetter?)lhs,
-                rhs: rhs as IMusicTrackGetter);
+                rhs: rhs as IMusicTrackGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMusicTrackGetter item)
@@ -2524,12 +2558,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTrackGetter rhs) return false;
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTrackGetter? obj)
         {
-            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTrackCommon)((IMusicTrackGetter)this).CommonInstance()!).GetHashCode(this);

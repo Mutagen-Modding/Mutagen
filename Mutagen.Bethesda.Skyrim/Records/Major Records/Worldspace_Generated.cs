@@ -1752,12 +1752,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1975,11 +1975,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceGetter item,
-            IWorldspaceGetter rhs)
+            IWorldspaceGetter rhs,
+            Worldspace.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceCommon)((IWorldspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3150,61 +3152,159 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceGetter? lhs,
-            IWorldspaceGetter? rhs)
+            IWorldspaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
-            if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
-            if (!lhs.InteriorLighting.Equals(rhs.InteriorLighting)) return false;
-            if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!object.Equals(lhs.Parent, rhs.Parent)) return false;
-            if (!lhs.Climate.Equals(rhs.Climate)) return false;
-            if (!lhs.Water.Equals(rhs.Water)) return false;
-            if (!lhs.LodWater.Equals(rhs.LodWater)) return false;
-            if (!lhs.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight)) return false;
-            if (!object.Equals(lhs.LandDefaults, rhs.LandDefaults)) return false;
-            if (!string.Equals(lhs.MapImage, rhs.MapImage)) return false;
-            if (!object.Equals(lhs.CloudModel, rhs.CloudModel)) return false;
-            if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
-            if (!object.Equals(lhs.MapOffset, rhs.MapOffset)) return false;
-            if (!lhs.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!lhs.Music.Equals(rhs.Music)) return false;
-            if (!string.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
-            if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
-            if (!string.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
-            if (!string.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
-            if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
-            if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
-            if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
-            if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
-            if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
-            if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
+            {
+                if (!lhs.LargeReferences.SequenceEqualNullable(rhs.LargeReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MaxHeight) ?? true))
+            {
+                if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.FixedDimensionsCenterCell) ?? true))
+            {
+                if (!lhs.FixedDimensionsCenterCell.Equals(rhs.FixedDimensionsCenterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.InteriorLighting) ?? true))
+            {
+                if (!lhs.InteriorLighting.Equals(rhs.InteriorLighting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
+            {
+                if (!object.Equals(lhs.Parent, rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
+            {
+                if (!lhs.Climate.Equals(rhs.Climate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWater) ?? true))
+            {
+                if (!lhs.LodWater.Equals(rhs.LodWater)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LodWaterHeight) ?? true))
+            {
+                if (!lhs.LodWaterHeight.EqualsWithin(rhs.LodWaterHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
+            {
+                if (!object.Equals(lhs.LandDefaults, rhs.LandDefaults)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
+            {
+                if (!string.Equals(lhs.MapImage, rhs.MapImage)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
+            {
+                if (!object.Equals(lhs.CloudModel, rhs.CloudModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
+            {
+                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapOffset) ?? true))
+            {
+                if (!object.Equals(lhs.MapOffset, rhs.MapOffset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
+            {
+                if (!lhs.DistantLodMultiplier.EqualsWithin(rhs.DistantLodMultiplier)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CanopyShadow) ?? true))
+            {
+                if (!string.Equals(lhs.CanopyShadow, rhs.CanopyShadow)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterNoiseTexture) ?? true))
+            {
+                if (!string.Equals(lhs.WaterNoiseTexture, rhs.WaterNoiseTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodDiffuseTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HdLodDiffuseTexture, rhs.HdLodDiffuseTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.HdLodNormalTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HdLodNormalTexture, rhs.HdLodNormalTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.WaterEnvironmentMap) ?? true))
+            {
+                if (!string.Equals(lhs.WaterEnvironmentMap, rhs.WaterEnvironmentMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.OffsetData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.OffsetData, rhs.OffsetData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
+            {
+                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
+            {
+                if (lhs.SubCellsTimestamp != rhs.SubCellsTimestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsUnknown) ?? true))
+            {
+                if (lhs.SubCellsUnknown != rhs.SubCellsUnknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCells) ?? true))
+            {
+                if (!lhs.SubCells.SequenceEqualNullable(rhs.SubCells)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
-                rhs: rhs as IWorldspaceGetter);
+                rhs: rhs as IWorldspaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWorldspaceGetter?)lhs,
-                rhs: rhs as IWorldspaceGetter);
+                rhs: rhs as IWorldspaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWorldspaceGetter item)
@@ -6191,12 +6291,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IWorldspaceGetter rhs) return false;
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceGetter? obj)
         {
-            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceCommon)((IWorldspaceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -794,12 +794,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -953,11 +953,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRegionGetter item,
-            IRegionGetter rhs)
+            IRegionGetter rhs,
+            Region.TranslationMask? equalsMask = null)
         {
             return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1441,39 +1443,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionGetter? lhs,
-            IRegionGetter? rhs)
+            IRegionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
-            if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
-            if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
-            if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
-            if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
-            if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
-            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
+            {
+                if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
+            {
+                if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter);
+                rhs: rhs as IRegionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter);
+                rhs: rhs as IRegionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionGetter item)
@@ -2351,12 +2385,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IRegionGetter rhs) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);

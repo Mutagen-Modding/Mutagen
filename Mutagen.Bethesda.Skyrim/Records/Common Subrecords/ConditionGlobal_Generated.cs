@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGlobalGetter rhs)) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGlobalGetter rhs) return false;
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -518,11 +518,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IConditionGlobalGetter item,
-            IConditionGlobalGetter rhs)
+            IConditionGlobalGetter rhs,
+            ConditionGlobal.TranslationMask? equalsMask = null)
         {
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -862,23 +864,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConditionGlobalGetter? lhs,
-            IConditionGlobalGetter? rhs)
+            IConditionGlobalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs)) return false;
-            if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
+            {
+                if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionGetter? lhs,
-            IConditionGetter? rhs)
+            IConditionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IConditionGlobalGetter?)lhs,
-                rhs: rhs as IConditionGlobalGetter);
+                rhs: rhs as IConditionGlobalGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IConditionGlobalGetter item)
@@ -1306,13 +1317,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGlobalGetter rhs)) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGlobalGetter rhs) return false;
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);

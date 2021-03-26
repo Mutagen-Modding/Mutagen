@@ -992,12 +992,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IActivatorGetter rhs) return false;
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActivatorGetter? obj)
         {
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1185,11 +1185,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IActivatorGetter item,
-            IActivatorGetter rhs)
+            IActivatorGetter rhs,
+            Activator.TranslationMask? equalsMask = null)
         {
             return ((ActivatorCommon)((IActivatorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1700,43 +1702,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActivatorGetter? lhs,
-            IActivatorGetter? rhs)
+            IActivatorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
-            if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
-            if (!lhs.ActivationSound.Equals(rhs.ActivationSound)) return false;
-            if (!lhs.WaterType.Equals(rhs.WaterType)) return false;
-            if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.MarkerColor) ?? true))
+            {
+                if (!lhs.MarkerColor.ColorOnlyEquals(rhs.MarkerColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.LoopingSound) ?? true))
+            {
+                if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ActivationSound) ?? true))
+            {
+                if (!lhs.ActivationSound.Equals(rhs.ActivationSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.WaterType) ?? true))
+            {
+                if (!lhs.WaterType.Equals(rhs.WaterType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.ActivateTextOverride) ?? true))
+            {
+                if (!object.Equals(lhs.ActivateTextOverride, rhs.ActivateTextOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Activator_FieldIndex.InteractionKeyword) ?? true))
+            {
+                if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActivatorGetter?)lhs,
-                rhs: rhs as IActivatorGetter);
+                rhs: rhs as IActivatorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActivatorGetter?)lhs,
-                rhs: rhs as IActivatorGetter);
+                rhs: rhs as IActivatorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IActivatorGetter item)
@@ -2799,12 +2845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IActivatorGetter rhs) return false;
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActivatorGetter? obj)
         {
-            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActivatorCommon)((IActivatorGetter)this).CommonInstance()!).GetHashCode(this);

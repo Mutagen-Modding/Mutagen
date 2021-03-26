@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMusicTypeDataGetter rhs)) return false;
-            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMusicTypeDataGetter rhs) return false;
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTypeDataGetter? obj)
         {
-            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMusicTypeDataGetter item,
-            IMusicTypeDataGetter rhs)
+            IMusicTypeDataGetter rhs,
+            MusicTypeData.TranslationMask? equalsMask = null)
         {
             return ((MusicTypeDataCommon)((IMusicTypeDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMusicTypeDataGetter? lhs,
-            IMusicTypeDataGetter? rhs)
+            IMusicTypeDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Priority != rhs.Priority) return false;
-            if (!lhs.DuckingDecibel.EqualsWithin(rhs.DuckingDecibel)) return false;
+            if ((crystal?.GetShouldTranslate((int)MusicTypeData_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicTypeData_FieldIndex.DuckingDecibel) ?? true))
+            {
+                if (!lhs.DuckingDecibel.EqualsWithin(rhs.DuckingDecibel)) return false;
+            }
             return true;
         }
         
@@ -1165,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMusicTypeDataGetter rhs)) return false;
-            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMusicTypeDataGetter rhs) return false;
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTypeDataGetter? obj)
         {
-            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTypeDataCommon)((IMusicTypeDataGetter)this).CommonInstance()!).GetHashCode(this);

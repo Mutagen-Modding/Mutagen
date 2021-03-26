@@ -163,13 +163,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHeadDataGetter rhs)) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHeadDataGetter rhs) return false;
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1183,11 +1183,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IHeadDataGetter item,
-            IHeadDataGetter rhs)
+            IHeadDataGetter rhs,
+            HeadData.TranslationMask? equalsMask = null)
         {
             return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1672,18 +1674,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHeadDataGetter? lhs,
-            IHeadDataGetter? rhs)
+            IHeadDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
-            if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
-            if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
-            if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
-            if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
-            if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
-            if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
+            {
+                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
+            {
+                if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            {
+                if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
+            {
+                if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
+            {
+                if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
+            {
+                if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
+            {
+                if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
             return true;
         }
         
@@ -2479,13 +2506,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHeadDataGetter rhs)) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHeadDataGetter rhs) return false;
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);

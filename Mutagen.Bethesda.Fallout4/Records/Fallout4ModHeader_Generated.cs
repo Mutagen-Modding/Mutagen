@@ -179,13 +179,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModHeaderGetter rhs)) return false;
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModHeaderGetter rhs) return false;
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModHeaderGetter? obj)
         {
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1285,11 +1285,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IFallout4ModHeaderGetter item,
-            IFallout4ModHeaderGetter rhs)
+            IFallout4ModHeaderGetter rhs,
+            Fallout4ModHeader.TranslationMask? equalsMask = null)
         {
             return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1768,26 +1770,75 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFallout4ModHeaderGetter? lhs,
-            IFallout4ModHeaderGetter? rhs)
+            IFallout4ModHeaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.FormID != rhs.FormID) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.FormVersion != rhs.FormVersion) return false;
-            if (lhs.Version2 != rhs.Version2) return false;
-            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
-            if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
-            if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
-            if (!string.Equals(lhs.Author, rhs.Author)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
-            if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
-            if (!MemorySliceExt.Equal(lhs.Screenshot, rhs.Screenshot)) return false;
-            if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
-            if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
-            if (lhs.INCC != rhs.INCC) return false;
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.FormID) ?? true))
+            {
+                if (lhs.FormID != rhs.FormID) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Stats) ?? true))
+            {
+                if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TypeOffsets) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Deleted) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Author) ?? true))
+            {
+                if (!string.Equals(lhs.Author, rhs.Author)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.MasterReferences) ?? true))
+            {
+                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.OverriddenForms) ?? true))
+            {
+                if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Screenshot) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Screenshot, rhs.Screenshot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TransientTypes) ?? true))
+            {
+                if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INCC) ?? true))
+            {
+                if (lhs.INCC != rhs.INCC) return false;
+            }
             return true;
         }
         
@@ -2659,13 +2710,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModHeaderGetter rhs)) return false;
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModHeaderGetter rhs) return false;
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModHeaderGetter? obj)
         {
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).GetHashCode(this);

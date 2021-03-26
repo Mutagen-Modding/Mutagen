@@ -86,13 +86,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelatedWatersGetter rhs)) return false;
-            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelatedWatersGetter rhs) return false;
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelatedWatersGetter? obj)
         {
-            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).GetHashCode(this);
@@ -572,11 +572,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRelatedWatersGetter item,
-            IRelatedWatersGetter rhs)
+            IRelatedWatersGetter rhs,
+            RelatedWaters.TranslationMask? equalsMask = null)
         {
             return ((RelatedWatersCommon)((IRelatedWatersGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -905,13 +907,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRelatedWatersGetter? lhs,
-            IRelatedWatersGetter? rhs)
+            IRelatedWatersGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime)) return false;
-            if (!lhs.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime)) return false;
-            if (!lhs.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater)) return false;
+            if ((crystal?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterDaytime) ?? true))
+            {
+                if (!lhs.RelatedWaterDaytime.Equals(rhs.RelatedWaterDaytime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterNighttime) ?? true))
+            {
+                if (!lhs.RelatedWaterNighttime.Equals(rhs.RelatedWaterNighttime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RelatedWaters_FieldIndex.RelatedWaterUnderwater) ?? true))
+            {
+                if (!lhs.RelatedWaterUnderwater.Equals(rhs.RelatedWaterUnderwater)) return false;
+            }
             return true;
         }
         
@@ -1254,13 +1266,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelatedWatersGetter rhs)) return false;
-            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelatedWatersGetter rhs) return false;
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelatedWatersGetter? obj)
         {
-            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelatedWatersCommon)((IRelatedWatersGetter)this).CommonInstance()!).GetHashCode(this);

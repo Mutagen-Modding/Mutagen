@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellDataGetter rhs)) return false;
-            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISpellDataGetter rhs) return false;
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellDataGetter? obj)
         {
-            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISpellDataGetter item,
-            ISpellDataGetter rhs)
+            ISpellDataGetter rhs,
+            SpellData.TranslationMask? equalsMask = null)
         {
             return ((SpellDataCommon)((ISpellDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISpellDataGetter? lhs,
-            ISpellDataGetter? rhs)
+            ISpellDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.Cost != rhs.Cost) return false;
-            if (lhs.Level != rhs.Level) return false;
-            if (lhs.Flag != rhs.Flag) return false;
+            if ((crystal?.GetShouldTranslate((int)SpellData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpellData_FieldIndex.Cost) ?? true))
+            {
+                if (lhs.Cost != rhs.Cost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpellData_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpellData_FieldIndex.Flag) ?? true))
+            {
+                if (lhs.Flag != rhs.Flag) return false;
+            }
             return true;
         }
         
@@ -1265,13 +1280,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellDataGetter rhs)) return false;
-            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISpellDataGetter rhs) return false;
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellDataGetter? obj)
         {
-            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellDataCommon)((ISpellDataGetter)this).CommonInstance()!).GetHashCode(this);

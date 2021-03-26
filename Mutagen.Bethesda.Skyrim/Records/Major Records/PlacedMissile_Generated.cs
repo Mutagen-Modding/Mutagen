@@ -433,12 +433,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedMissileGetter rhs) return false;
-            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedMissileGetter? obj)
         {
-            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).GetHashCode(this);
@@ -576,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedMissileGetter item,
-            IPlacedMissileGetter rhs)
+            IPlacedMissileGetter rhs,
+            PlacedMissile.TranslationMask? equalsMask = null)
         {
             return ((PlacedMissileCommon)((IPlacedMissileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1051,40 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedMissileGetter? lhs,
-            IPlacedMissileGetter? rhs)
+            IPlacedMissileGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedMissile_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedMissileGetter?)lhs,
-                rhs: rhs as IPlacedMissileGetter);
+                rhs: rhs as IPlacedMissileGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedMissileGetter?)lhs,
-                rhs: rhs as IPlacedMissileGetter);
+                rhs: rhs as IPlacedMissileGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedMissileGetter?)lhs,
-                rhs: rhs as IPlacedMissileGetter);
+                rhs: rhs as IPlacedMissileGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedMissileGetter item)
@@ -1609,12 +1621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedMissileGetter rhs) return false;
-            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedMissileGetter? obj)
         {
-            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedMissileCommon)((IPlacedMissileGetter)this).CommonInstance()!).GetHashCode(this);

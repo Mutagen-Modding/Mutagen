@@ -74,13 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkConditionGetter rhs)) return false;
-            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkConditionGetter rhs) return false;
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkConditionGetter? obj)
         {
-            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -605,11 +605,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkConditionGetter item,
-            IPerkConditionGetter rhs)
+            IPerkConditionGetter rhs,
+            PerkCondition.TranslationMask? equalsMask = null)
         {
             return ((PerkConditionCommon)((IPerkConditionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -944,12 +946,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkConditionGetter? lhs,
-            IPerkConditionGetter? rhs)
+            IPerkConditionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.RunOnTabIndex != rhs.RunOnTabIndex) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkCondition_FieldIndex.RunOnTabIndex) ?? true))
+            {
+                if (lhs.RunOnTabIndex != rhs.RunOnTabIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkCondition_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
@@ -1374,13 +1383,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkConditionGetter rhs)) return false;
-            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkConditionGetter rhs) return false;
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkConditionGetter? obj)
         {
-            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkConditionCommon)((IPerkConditionGetter)this).CommonInstance()!).GetHashCode(this);

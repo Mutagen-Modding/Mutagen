@@ -920,12 +920,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IObjectEffectGetter rhs) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IObjectEffectGetter? obj)
         {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1101,11 +1101,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IObjectEffectGetter item,
-            IObjectEffectGetter rhs)
+            IObjectEffectGetter rhs,
+            ObjectEffect.TranslationMask? equalsMask = null)
         {
             return ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1592,43 +1594,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IObjectEffectGetter? lhs,
-            IObjectEffectGetter? rhs)
+            IObjectEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.CastType != rhs.CastType) return false;
-            if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
-            if (lhs.TargetType != rhs.TargetType) return false;
-            if (lhs.EnchantType != rhs.EnchantType) return false;
-            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
-            if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
-            if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
+            {
+                if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
+            {
+                if (lhs.CastType != rhs.CastType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
+            {
+                if (lhs.TargetType != rhs.TargetType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
+            {
+                if (lhs.EnchantType != rhs.EnchantType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
+            {
+                if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
+            {
+                if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
+            {
+                if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
-                rhs: rhs as IObjectEffectGetter);
+                rhs: rhs as IObjectEffectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
-                rhs: rhs as IObjectEffectGetter);
+                rhs: rhs as IObjectEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IObjectEffectGetter item)
@@ -2461,12 +2507,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IObjectEffectGetter rhs) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IObjectEffectGetter? obj)
         {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);

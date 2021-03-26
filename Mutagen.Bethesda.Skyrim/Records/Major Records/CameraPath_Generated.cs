@@ -770,12 +770,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICameraPathGetter rhs) return false;
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICameraPathGetter? obj)
         {
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);
@@ -921,11 +921,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICameraPathGetter item,
-            ICameraPathGetter rhs)
+            ICameraPathGetter rhs,
+            CameraPath.TranslationMask? equalsMask = null)
         {
             return ((CameraPathCommon)((ICameraPathGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1389,35 +1391,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICameraPathGetter? lhs,
-            ICameraPathGetter? rhs)
+            ICameraPathGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
-            if (lhs.Zoom != rhs.Zoom) return false;
-            if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
-            if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.RelatedPaths) ?? true))
+            {
+                if (!lhs.RelatedPaths.SequenceEqualNullable(rhs.RelatedPaths)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Zoom) ?? true))
+            {
+                if (lhs.Zoom != rhs.Zoom) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.ZoomMustHaveCameraShots) ?? true))
+            {
+                if (lhs.ZoomMustHaveCameraShots != rhs.ZoomMustHaveCameraShots) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraPath_FieldIndex.Shots) ?? true))
+            {
+                if (!lhs.Shots.SequenceEqualNullable(rhs.Shots)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraPathGetter?)lhs,
-                rhs: rhs as ICameraPathGetter);
+                rhs: rhs as ICameraPathGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraPathGetter?)lhs,
-                rhs: rhs as ICameraPathGetter);
+                rhs: rhs as ICameraPathGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICameraPathGetter item)
@@ -2170,12 +2192,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ICameraPathGetter rhs) return false;
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICameraPathGetter? obj)
         {
-            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CameraPathCommon)((ICameraPathGetter)this).CommonInstance()!).GetHashCode(this);

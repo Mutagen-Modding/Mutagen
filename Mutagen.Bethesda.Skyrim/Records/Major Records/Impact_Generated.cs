@@ -930,12 +930,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1105,11 +1105,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImpactGetter item,
-            IImpactGetter rhs)
+            IImpactGetter rhs,
+            Impact.TranslationMask? equalsMask = null)
         {
             return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1612,46 +1614,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImpactGetter? lhs,
-            IImpactGetter? rhs)
+            IImpactGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
-            if (lhs.Orientation != rhs.Orientation) return false;
-            if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
-            if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
-            if (lhs.SoundLevel != rhs.SoundLevel) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Result != rhs.Result) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
-            if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
-            if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
-            if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
-            if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
+            {
+                if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
+            {
+                if (lhs.Orientation != rhs.Orientation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
+            {
+                if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
+            {
+                if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
+            {
+                if (lhs.Result != rhs.Result) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
+            {
+                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
+            {
+                if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
+            {
+                if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
+            {
+                if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
+            {
+                if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
+            {
+                if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
-                rhs: rhs as IImpactGetter);
+                rhs: rhs as IImpactGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
-                rhs: rhs as IImpactGetter);
+                rhs: rhs as IImpactGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IImpactGetter item)
@@ -2570,12 +2625,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IImpactGetter rhs) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);

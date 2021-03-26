@@ -1595,12 +1595,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedNpcGetter rhs) return false;
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedNpcGetter? obj)
         {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1812,11 +1812,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedNpcGetter item,
-            IPlacedNpcGetter rhs)
+            IPlacedNpcGetter rhs,
+            PlacedNpc.TranslationMask? equalsMask = null)
         {
             return ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2481,58 +2483,147 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedNpcGetter? lhs,
-            IPlacedNpcGetter? rhs)
+            IPlacedNpcGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!lhs.Base.Equals(rhs.Base)) return false;
-            if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
-            if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
-            if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
-            if (!object.Equals(lhs.Patrol, rhs.Patrol)) return false;
-            if (lhs.LevelModifier != rhs.LevelModifier) return false;
-            if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
-            if (lhs.Count != rhs.Count) return false;
-            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
-            if (!lhs.Health.EqualsWithin(rhs.Health)) return false;
-            if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
-            if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
-            if (!object.Equals(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
-            if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
-            if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
-            if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
-            if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
-            if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
-            if (!lhs.Horse.Equals(rhs.Horse)) return false;
-            if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
-            if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
-            if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
-            if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
-            if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
-            if (lhs.IgnoredBySandbox2 != rhs.IgnoredBySandbox2) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EncounterZone) ?? true))
+            {
+                if (!lhs.EncounterZone.Equals(rhs.EncounterZone)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollBipedData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.RagdollBipedData, rhs.RagdollBipedData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
+            {
+                if (!object.Equals(lhs.Patrol, rhs.Patrol)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LevelModifier) ?? true))
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
+            {
+                if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Health) ?? true))
+            {
+                if (!lhs.Health.EqualsWithin(rhs.Health)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferences) ?? true))
+            {
+                if (!lhs.LinkedReferences.SequenceEqualNullable(rhs.LinkedReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ActivateParents) ?? true))
+            {
+                if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferenceColor) ?? true))
+            {
+                if (!object.Equals(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
+            {
+                if (!lhs.PersistentLocation.Equals(rhs.PersistentLocation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationReference) ?? true))
+            {
+                if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox) ?? true))
+            {
+                if (lhs.IgnoredBySandbox != rhs.IgnoredBySandbox) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LocationRefTypes) ?? true))
+            {
+                if (!lhs.LocationRefTypes.SequenceEqualNullable(rhs.LocationRefTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.HeadTrackingWeight) ?? true))
+            {
+                if (!lhs.HeadTrackingWeight.EqualsWithin(rhs.HeadTrackingWeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
+            {
+                if (!lhs.Horse.Equals(rhs.Horse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FavorCost) ?? true))
+            {
+                if (!lhs.FavorCost.EqualsWithin(rhs.FavorCost)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
+            {
+                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
+            {
+                if (!lhs.Emittance.Equals(rhs.Emittance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MultiboundReference) ?? true))
+            {
+                if (!lhs.MultiboundReference.Equals(rhs.MultiboundReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.IgnoredBySandbox2) ?? true))
+            {
+                if (lhs.IgnoredBySandbox2 != rhs.IgnoredBySandbox2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Placement) ?? true))
+            {
+                if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedNpcGetter?)lhs,
-                rhs: rhs as IPlacedNpcGetter);
+                rhs: rhs as IPlacedNpcGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedNpcGetter?)lhs,
-                rhs: rhs as IPlacedNpcGetter);
+                rhs: rhs as IPlacedNpcGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedNpcGetter item)
@@ -4127,12 +4218,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedNpcGetter rhs) return false;
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedNpcGetter? obj)
         {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);

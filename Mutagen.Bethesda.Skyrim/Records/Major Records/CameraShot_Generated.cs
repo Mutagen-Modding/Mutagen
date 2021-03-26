@@ -836,12 +836,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICameraShotGetter rhs) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICameraShotGetter? obj)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1007,11 +1007,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICameraShotGetter item,
-            ICameraShotGetter rhs)
+            ICameraShotGetter rhs,
+            CameraShot.TranslationMask? equalsMask = null)
         {
             return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1491,44 +1493,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICameraShotGetter? lhs,
-            ICameraShotGetter? rhs)
+            ICameraShotGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Action != rhs.Action) return false;
-            if (lhs.Location != rhs.Location) return false;
-            if (lhs.Target != rhs.Target) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
-            if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
-            if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
-            if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
-            if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
-            if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
-            if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
-            if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
+            {
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                if (lhs.Location != rhs.Location) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                if (lhs.Target != rhs.Target) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
+            {
+                if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
-                rhs: rhs as ICameraShotGetter);
+                rhs: rhs as ICameraShotGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
-                rhs: rhs as ICameraShotGetter);
+                rhs: rhs as ICameraShotGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICameraShotGetter item)
@@ -2329,12 +2378,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ICameraShotGetter rhs) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICameraShotGetter? obj)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);

@@ -81,13 +81,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectDataGetter rhs)) return false;
-            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectDataGetter rhs) return false;
+            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectDataGetter? obj)
         {
-            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -657,11 +657,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IEffectDataGetter item,
-            IEffectDataGetter rhs)
+            IEffectDataGetter rhs,
+            EffectData.TranslationMask? equalsMask = null)
         {
             return ((EffectDataCommon)((IEffectDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1008,16 +1010,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEffectDataGetter? lhs,
-            IEffectDataGetter? rhs)
+            IEffectDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.MagicEffect.Equals(rhs.MagicEffect)) return false;
-            if (lhs.Magnitude != rhs.Magnitude) return false;
-            if (lhs.Area != rhs.Area) return false;
-            if (lhs.Duration != rhs.Duration) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.ActorValue != rhs.ActorValue) return false;
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.MagicEffect) ?? true))
+            {
+                if (!lhs.MagicEffect.Equals(rhs.MagicEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
+            {
+                if (lhs.Magnitude != rhs.Magnitude) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.Area) ?? true))
+            {
+                if (lhs.Area != rhs.Area) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.Duration) ?? true))
+            {
+                if (lhs.Duration != rhs.Duration) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.ActorValue) ?? true))
+            {
+                if (lhs.ActorValue != rhs.ActorValue) return false;
+            }
             return true;
         }
         
@@ -1377,13 +1398,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectDataGetter rhs)) return false;
-            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectDataGetter rhs) return false;
+            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectDataGetter? obj)
         {
-            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectDataCommon)((IEffectDataGetter)this).CommonInstance()!).GetHashCode(this);

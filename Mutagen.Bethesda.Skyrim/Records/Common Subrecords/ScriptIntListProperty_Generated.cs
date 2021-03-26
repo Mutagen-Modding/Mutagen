@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptIntListPropertyGetter rhs)) return false;
-            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptIntListPropertyGetter rhs) return false;
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptIntListPropertyGetter? obj)
         {
-            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -550,11 +550,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScriptIntListPropertyGetter item,
-            IScriptIntListPropertyGetter rhs)
+            IScriptIntListPropertyGetter rhs,
+            ScriptIntListProperty.TranslationMask? equalsMask = null)
         {
             return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -892,22 +894,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptIntListPropertyGetter? lhs,
-            IScriptIntListPropertyGetter? rhs)
+            IScriptIntListPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
-            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptIntListProperty_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IScriptPropertyGetter? lhs,
-            IScriptPropertyGetter? rhs)
+            IScriptPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScriptIntListPropertyGetter?)lhs,
-                rhs: rhs as IScriptIntListPropertyGetter);
+                rhs: rhs as IScriptIntListPropertyGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IScriptIntListPropertyGetter item)
@@ -1258,13 +1266,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptIntListPropertyGetter rhs)) return false;
-            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptIntListPropertyGetter rhs) return false;
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptIntListPropertyGetter? obj)
         {
-            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptIntListPropertyCommon)((IScriptIntListPropertyGetter)this).CommonInstance()!).GetHashCode(this);

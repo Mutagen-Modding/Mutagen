@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAVirtualMachineAdapterGetter rhs)) return false;
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAVirtualMachineAdapterGetter rhs) return false;
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAVirtualMachineAdapterGetter? obj)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -625,11 +625,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAVirtualMachineAdapterGetter item,
-            IAVirtualMachineAdapterGetter rhs)
+            IAVirtualMachineAdapterGetter rhs,
+            AVirtualMachineAdapter.TranslationMask? equalsMask = null)
         {
             return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -965,13 +967,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IAVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
-            if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
+            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.ObjectFormat) ?? true))
+            {
+                if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Scripts) ?? true))
+            {
+                if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
+            }
             return true;
         }
         
@@ -1317,13 +1329,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAVirtualMachineAdapterGetter rhs)) return false;
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAVirtualMachineAdapterGetter rhs) return false;
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAVirtualMachineAdapterGetter? obj)
         {
-            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AVirtualMachineAdapterCommon)((IAVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);

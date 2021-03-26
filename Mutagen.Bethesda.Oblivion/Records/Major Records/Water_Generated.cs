@@ -604,12 +604,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -759,11 +759,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWaterGetter item,
-            IWaterGetter rhs)
+            IWaterGetter rhs,
+            Water.TranslationMask? equalsMask = null)
         {
             return ((WaterCommon)((IWaterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1200,37 +1202,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWaterGetter? lhs,
-            IWaterGetter? rhs)
+            IWaterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
-            if (lhs.Opacity != rhs.Opacity) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
+            {
+                if (!string.Equals(lhs.Texture, rhs.Texture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Opacity) ?? true))
+            {
+                if (lhs.Opacity != rhs.Opacity) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.MaterialID) ?? true))
+            {
+                if (!string.Equals(lhs.MaterialID, rhs.MaterialID)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
+            {
+                if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
-                rhs: rhs as IWaterGetter);
+                rhs: rhs as IWaterGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWaterGetter?)lhs,
-                rhs: rhs as IWaterGetter);
+                rhs: rhs as IWaterGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWaterGetter item)
@@ -2015,12 +2043,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IWaterGetter rhs) return false;
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterGetter? obj)
         {
-            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterCommon)((IWaterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterCommon)((IWaterGetter)this).CommonInstance()!).GetHashCode(this);

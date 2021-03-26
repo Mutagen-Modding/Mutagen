@@ -615,12 +615,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IShoutGetter rhs) return false;
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IShoutGetter? obj)
         {
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);
@@ -784,11 +784,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IShoutGetter item,
-            IShoutGetter rhs)
+            IShoutGetter rhs,
+            Shout.TranslationMask? equalsMask = null)
         {
             return ((ShoutCommon)((IShoutGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1212,34 +1214,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IShoutGetter? lhs,
-            IShoutGetter? rhs)
+            IShoutGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Shout_FieldIndex.WordsOfPower) ?? true))
+            {
+                if (!lhs.WordsOfPower.SequenceEqualNullable(rhs.WordsOfPower)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IShoutGetter?)lhs,
-                rhs: rhs as IShoutGetter);
+                rhs: rhs as IShoutGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IShoutGetter?)lhs,
-                rhs: rhs as IShoutGetter);
+                rhs: rhs as IShoutGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IShoutGetter item)
@@ -1917,12 +1936,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IShoutGetter rhs) return false;
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IShoutGetter? obj)
         {
-            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ShoutCommon)((IShoutGetter)this).CommonInstance()!).GetHashCode(this);

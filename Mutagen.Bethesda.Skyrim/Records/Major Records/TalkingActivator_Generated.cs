@@ -882,12 +882,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITalkingActivatorGetter rhs) return false;
-            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITalkingActivatorGetter? obj)
         {
-            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1067,11 +1067,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITalkingActivatorGetter item,
-            ITalkingActivatorGetter rhs)
+            ITalkingActivatorGetter rhs,
+            TalkingActivator.TranslationMask? equalsMask = null)
         {
             return ((TalkingActivatorCommon)((ITalkingActivatorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1558,40 +1560,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITalkingActivatorGetter? lhs,
-            ITalkingActivatorGetter? rhs)
+            ITalkingActivatorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (lhs.PNAM != rhs.PNAM) return false;
-            if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
-            if (lhs.FNAM != rhs.FNAM) return false;
-            if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.PNAM) ?? true))
+            {
+                if (lhs.PNAM != rhs.PNAM) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.LoopingSound) ?? true))
+            {
+                if (!lhs.LoopingSound.Equals(rhs.LoopingSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.FNAM) ?? true))
+            {
+                if (lhs.FNAM != rhs.FNAM) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TalkingActivator_FieldIndex.VoiceType) ?? true))
+            {
+                if (!lhs.VoiceType.Equals(rhs.VoiceType)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITalkingActivatorGetter?)lhs,
-                rhs: rhs as ITalkingActivatorGetter);
+                rhs: rhs as ITalkingActivatorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITalkingActivatorGetter?)lhs,
-                rhs: rhs as ITalkingActivatorGetter);
+                rhs: rhs as ITalkingActivatorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITalkingActivatorGetter item)
@@ -2559,12 +2596,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ITalkingActivatorGetter rhs) return false;
-            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITalkingActivatorGetter? obj)
         {
-            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TalkingActivatorCommon)((ITalkingActivatorGetter)this).CommonInstance()!).GetHashCode(this);

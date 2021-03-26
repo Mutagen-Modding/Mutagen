@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructionStageGetter rhs)) return false;
-            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructionStageGetter rhs) return false;
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructionStageGetter? obj)
         {
-            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,11 +554,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDestructionStageGetter item,
-            IDestructionStageGetter rhs)
+            IDestructionStageGetter rhs,
+            DestructionStage.TranslationMask? equalsMask = null)
         {
             return ((DestructionStageCommon)((IDestructionStageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -908,12 +910,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDestructionStageGetter? lhs,
-            IDestructionStageGetter? rhs)
+            IDestructionStageGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if ((crystal?.GetShouldTranslate((int)DestructionStage_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStage_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
             return true;
         }
         
@@ -1376,13 +1385,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructionStageGetter rhs)) return false;
-            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructionStageGetter rhs) return false;
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructionStageGetter? obj)
         {
-            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructionStageCommon)((IDestructionStageGetter)this).CommonInstance()!).GetHashCode(this);

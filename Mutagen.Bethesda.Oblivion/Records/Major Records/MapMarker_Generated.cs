@@ -90,13 +90,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMapMarkerGetter rhs)) return false;
-            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMapMarkerGetter rhs) return false;
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMapMarkerGetter? obj)
         {
-            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -645,11 +645,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IMapMarkerGetter item,
-            IMapMarkerGetter rhs)
+            IMapMarkerGetter rhs,
+            MapMarker.TranslationMask? equalsMask = null)
         {
             return ((MapMarkerCommon)((IMapMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1005,13 +1007,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMapMarkerGetter? lhs,
-            IMapMarkerGetter? rhs)
+            IMapMarkerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Types.SequenceEqualNullable(rhs.Types)) return false;
+            if ((crystal?.GetShouldTranslate((int)MapMarker_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MapMarker_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MapMarker_FieldIndex.Types) ?? true))
+            {
+                if (!lhs.Types.SequenceEqualNullable(rhs.Types)) return false;
+            }
             return true;
         }
         
@@ -1474,13 +1486,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMapMarkerGetter rhs)) return false;
-            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMapMarkerGetter rhs) return false;
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMapMarkerGetter? obj)
         {
-            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MapMarkerCommon)((IMapMarkerGetter)this).CommonInstance()!).GetHashCode(this);

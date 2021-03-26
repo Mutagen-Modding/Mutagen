@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkillDataGetter rhs)) return false;
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkillDataGetter rhs) return false;
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkillDataGetter? obj)
         {
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -613,11 +613,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISkillDataGetter item,
-            ISkillDataGetter rhs)
+            ISkillDataGetter rhs,
+            SkillData.TranslationMask? equalsMask = null)
         {
             return ((SkillDataCommon)((ISkillDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -957,15 +959,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISkillDataGetter? lhs,
-            ISkillDataGetter? rhs)
+            ISkillDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Action != rhs.Action) return false;
-            if (lhs.Attribute != rhs.Attribute) return false;
-            if (lhs.Specialization != rhs.Specialization) return false;
-            if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
-            if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
+            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Action) ?? true))
+            {
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Attribute) ?? true))
+            {
+                if (lhs.Attribute != rhs.Attribute) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.Specialization) ?? true))
+            {
+                if (lhs.Specialization != rhs.Specialization) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueFirst) ?? true))
+            {
+                if (!lhs.UseValueFirst.EqualsWithin(rhs.UseValueFirst)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillData_FieldIndex.UseValueSecond) ?? true))
+            {
+                if (!lhs.UseValueSecond.EqualsWithin(rhs.UseValueSecond)) return false;
+            }
             return true;
         }
         
@@ -1318,13 +1336,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkillDataGetter rhs)) return false;
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkillDataGetter rhs) return false;
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkillDataGetter? obj)
         {
-            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkillDataCommon)((ISkillDataGetter)this).CommonInstance()!).GetHashCode(this);

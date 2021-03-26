@@ -1515,12 +1515,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1738,11 +1738,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IProjectileGetter item,
-            IProjectileGetter rhs)
+            IProjectileGetter rhs,
+            Projectile.TranslationMask? equalsMask = null)
         {
             return ((ProjectileCommon)((IProjectileGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2364,62 +2366,163 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IProjectileGetter? lhs,
-            IProjectileGetter? rhs)
+            IProjectileGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
-            if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
-            if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
-            if (!lhs.Light.Equals(rhs.Light)) return false;
-            if (!lhs.MuzzleFlash.Equals(rhs.MuzzleFlash)) return false;
-            if (!lhs.TracerChance.EqualsWithin(rhs.TracerChance)) return false;
-            if (!lhs.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity)) return false;
-            if (!lhs.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer)) return false;
-            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (!lhs.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration)) return false;
-            if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
-            if (!lhs.ImpactForce.EqualsWithin(rhs.ImpactForce)) return false;
-            if (!lhs.CountdownSound.Equals(rhs.CountdownSound)) return false;
-            if (!lhs.DisaleSound.Equals(rhs.DisaleSound)) return false;
-            if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
-            if (!lhs.ConeSpread.EqualsWithin(rhs.ConeSpread)) return false;
-            if (!lhs.CollisionRadius.EqualsWithin(rhs.CollisionRadius)) return false;
-            if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
-            if (!lhs.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval)) return false;
-            if (!lhs.DecalData.Equals(rhs.DecalData)) return false;
-            if (!lhs.CollisionLayer.Equals(rhs.CollisionLayer)) return false;
-            if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
-            if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
-            if (lhs.SoundLevel != rhs.SoundLevel) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Gravity) ?? true))
+            {
+                if (!lhs.Gravity.EqualsWithin(rhs.Gravity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlash) ?? true))
+            {
+                if (!lhs.MuzzleFlash.Equals(rhs.MuzzleFlash)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TracerChance) ?? true))
+            {
+                if (!lhs.TracerChance.EqualsWithin(rhs.TracerChance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerProximity) ?? true))
+            {
+                if (!lhs.ExplosionAltTriggerProximity.EqualsWithin(rhs.ExplosionAltTriggerProximity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ExplosionAltTriggerTimer) ?? true))
+            {
+                if (!lhs.ExplosionAltTriggerTimer.EqualsWithin(rhs.ExplosionAltTriggerTimer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashDuration) ?? true))
+            {
+                if (!lhs.MuzzleFlashDuration.EqualsWithin(rhs.MuzzleFlashDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.FadeDuration) ?? true))
+            {
+                if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ImpactForce) ?? true))
+            {
+                if (!lhs.ImpactForce.EqualsWithin(rhs.ImpactForce)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CountdownSound) ?? true))
+            {
+                if (!lhs.CountdownSound.Equals(rhs.CountdownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DisaleSound) ?? true))
+            {
+                if (!lhs.DisaleSound.Equals(rhs.DisaleSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DefaultWeaponSource) ?? true))
+            {
+                if (!lhs.DefaultWeaponSource.Equals(rhs.DefaultWeaponSource)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.ConeSpread) ?? true))
+            {
+                if (!lhs.ConeSpread.EqualsWithin(rhs.ConeSpread)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionRadius) ?? true))
+            {
+                if (!lhs.CollisionRadius.EqualsWithin(rhs.CollisionRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.Lifetime) ?? true))
+            {
+                if (!lhs.Lifetime.EqualsWithin(rhs.Lifetime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.RelaunchInterval) ?? true))
+            {
+                if (!lhs.RelaunchInterval.EqualsWithin(rhs.RelaunchInterval)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DecalData) ?? true))
+            {
+                if (!lhs.DecalData.Equals(rhs.DecalData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.CollisionLayer) ?? true))
+            {
+                if (!lhs.CollisionLayer.Equals(rhs.CollisionLayer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.MuzzleFlashModel) ?? true))
+            {
+                if (!string.Equals(lhs.MuzzleFlashModel, rhs.MuzzleFlashModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.TextureFilesHashes) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TextureFilesHashes, rhs.TextureFilesHashes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Projectile_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
-                rhs: rhs as IProjectileGetter);
+                rhs: rhs as IProjectileGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IProjectileGetter?)lhs,
-                rhs: rhs as IProjectileGetter);
+                rhs: rhs as IProjectileGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IProjectileGetter item)
@@ -3649,12 +3752,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IProjectileGetter rhs) return false;
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IProjectileGetter? obj)
         {
-            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ProjectileCommon)((IProjectileGetter)this).CommonInstance()!).GetHashCode(this);

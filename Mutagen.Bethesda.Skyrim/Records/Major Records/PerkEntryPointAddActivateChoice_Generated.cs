@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointAddActivateChoiceGetter rhs)) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -564,11 +564,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkEntryPointAddActivateChoiceGetter item,
-            IPerkEntryPointAddActivateChoiceGetter rhs)
+            IPerkEntryPointAddActivateChoiceGetter rhs,
+            PerkEntryPointAddActivateChoice.TranslationMask? equalsMask = null)
         {
             return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -952,33 +954,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkEntryPointAddActivateChoiceGetter? lhs,
-            IPerkEntryPointAddActivateChoiceGetter? rhs)
+            IPerkEntryPointAddActivateChoiceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
-            if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
+            {
+                if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
+            {
+                if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
-            IAPerkEntryPointEffectGetter? rhs)
+            IAPerkEntryPointEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
-                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter);
+                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
-                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter);
+                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkEntryPointAddActivateChoiceGetter item)
@@ -1483,13 +1499,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointAddActivateChoiceGetter rhs)) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);

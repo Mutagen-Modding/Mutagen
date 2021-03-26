@@ -59,13 +59,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IALocationTargetGetter rhs)) return false;
-            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IALocationTargetGetter rhs) return false;
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IALocationTargetGetter? obj)
         {
-            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -430,11 +430,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IALocationTargetGetter item,
-            IALocationTargetGetter rhs)
+            IALocationTargetGetter rhs,
+            ALocationTarget.TranslationMask? equalsMask = null)
         {
             return ((ALocationTargetCommon)((IALocationTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -730,7 +732,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -985,13 +988,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IALocationTargetGetter rhs)) return false;
-            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IALocationTargetGetter rhs) return false;
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IALocationTargetGetter? obj)
         {
-            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ALocationTargetCommon)((IALocationTargetGetter)this).CommonInstance()!).GetHashCode(this);

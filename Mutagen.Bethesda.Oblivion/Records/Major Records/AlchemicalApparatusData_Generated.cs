@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlchemicalApparatusDataGetter rhs)) return false;
-            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlchemicalApparatusDataGetter rhs) return false;
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlchemicalApparatusDataGetter? obj)
         {
-            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -583,11 +583,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAlchemicalApparatusDataGetter item,
-            IAlchemicalApparatusDataGetter rhs)
+            IAlchemicalApparatusDataGetter rhs,
+            AlchemicalApparatusData.TranslationMask? equalsMask = null)
         {
             return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -920,14 +922,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAlchemicalApparatusDataGetter? lhs,
-            IAlchemicalApparatusDataGetter? rhs)
+            IAlchemicalApparatusDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (!lhs.Quality.EqualsWithin(rhs.Quality)) return false;
+            if ((crystal?.GetShouldTranslate((int)AlchemicalApparatusData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlchemicalApparatusData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlchemicalApparatusData_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlchemicalApparatusData_FieldIndex.Quality) ?? true))
+            {
+                if (!lhs.Quality.EqualsWithin(rhs.Quality)) return false;
+            }
             return true;
         }
         
@@ -1266,13 +1281,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlchemicalApparatusDataGetter rhs)) return false;
-            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlchemicalApparatusDataGetter rhs) return false;
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlchemicalApparatusDataGetter? obj)
         {
-            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlchemicalApparatusDataCommon)((IAlchemicalApparatusDataGetter)this).CommonInstance()!).GetHashCode(this);

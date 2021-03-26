@@ -608,12 +608,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRelationshipGetter rhs) return false;
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationshipGetter? obj)
         {
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);
@@ -771,11 +771,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRelationshipGetter item,
-            IRelationshipGetter rhs)
+            IRelationshipGetter rhs,
+            Relationship.TranslationMask? equalsMask = null)
         {
             return ((RelationshipCommon)((IRelationshipGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1202,37 +1204,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRelationshipGetter? lhs,
-            IRelationshipGetter? rhs)
+            IRelationshipGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Parent.Equals(rhs.Parent)) return false;
-            if (!lhs.Child.Equals(rhs.Child)) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.AssociationType.Equals(rhs.AssociationType)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Child) ?? true))
+            {
+                if (!lhs.Child.Equals(rhs.Child)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.AssociationType) ?? true))
+            {
+                if (!lhs.AssociationType.Equals(rhs.AssociationType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relationship_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRelationshipGetter?)lhs,
-                rhs: rhs as IRelationshipGetter);
+                rhs: rhs as IRelationshipGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRelationshipGetter?)lhs,
-                rhs: rhs as IRelationshipGetter);
+                rhs: rhs as IRelationshipGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRelationshipGetter item)
@@ -1868,12 +1896,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IRelationshipGetter rhs) return false;
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationshipGetter? obj)
         {
-            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationshipCommon)((IRelationshipGetter)this).CommonInstance()!).GetHashCode(this);

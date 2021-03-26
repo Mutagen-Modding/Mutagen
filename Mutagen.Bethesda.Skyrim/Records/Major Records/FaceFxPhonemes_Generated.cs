@@ -236,13 +236,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFaceFxPhonemesGetter rhs)) return false;
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFaceFxPhonemesGetter rhs) return false;
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFaceFxPhonemesGetter? obj)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1246,11 +1246,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFaceFxPhonemesGetter item,
-            IFaceFxPhonemesGetter rhs)
+            IFaceFxPhonemesGetter rhs,
+            FaceFxPhonemes.TranslationMask? equalsMask = null)
         {
             return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1750,27 +1752,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFaceFxPhonemesGetter? lhs,
-            IFaceFxPhonemesGetter? rhs)
+            IFaceFxPhonemesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.ForceNames != rhs.ForceNames) return false;
-            if (!object.Equals(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
-            if (!object.Equals(lhs.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
-            if (!object.Equals(lhs.BMP_LipEee, rhs.BMP_LipEee)) return false;
-            if (!object.Equals(lhs.ChJSh_LipFV, rhs.ChJSh_LipFV)) return false;
-            if (!object.Equals(lhs.DST_LipK, rhs.DST_LipK)) return false;
-            if (!object.Equals(lhs.Eee_LipL, rhs.Eee_LipL)) return false;
-            if (!object.Equals(lhs.Eh_LipR, rhs.Eh_LipR)) return false;
-            if (!object.Equals(lhs.FV_LipTh, rhs.FV_LipTh)) return false;
-            if (!object.Equals(lhs.I, rhs.I)) return false;
-            if (!object.Equals(lhs.K, rhs.K)) return false;
-            if (!object.Equals(lhs.N, rhs.N)) return false;
-            if (!object.Equals(lhs.Oh, rhs.Oh)) return false;
-            if (!object.Equals(lhs.OohQ, rhs.OohQ)) return false;
-            if (!object.Equals(lhs.R, rhs.R)) return false;
-            if (!object.Equals(lhs.Th, rhs.Th)) return false;
-            if (!object.Equals(lhs.W, rhs.W)) return false;
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ForceNames) ?? true))
+            {
+                if (lhs.ForceNames != rhs.ForceNames) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Aah_LipBigAah) ?? true))
+            {
+                if (!object.Equals(lhs.Aah_LipBigAah, rhs.Aah_LipBigAah)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BigAah_LipDST) ?? true))
+            {
+                if (!object.Equals(lhs.BigAah_LipDST, rhs.BigAah_LipDST)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.BMP_LipEee) ?? true))
+            {
+                if (!object.Equals(lhs.BMP_LipEee, rhs.BMP_LipEee)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.ChJSh_LipFV) ?? true))
+            {
+                if (!object.Equals(lhs.ChJSh_LipFV, rhs.ChJSh_LipFV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.DST_LipK) ?? true))
+            {
+                if (!object.Equals(lhs.DST_LipK, rhs.DST_LipK)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eee_LipL) ?? true))
+            {
+                if (!object.Equals(lhs.Eee_LipL, rhs.Eee_LipL)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Eh_LipR) ?? true))
+            {
+                if (!object.Equals(lhs.Eh_LipR, rhs.Eh_LipR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.FV_LipTh) ?? true))
+            {
+                if (!object.Equals(lhs.FV_LipTh, rhs.FV_LipTh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.I) ?? true))
+            {
+                if (!object.Equals(lhs.I, rhs.I)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.K) ?? true))
+            {
+                if (!object.Equals(lhs.K, rhs.K)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.N) ?? true))
+            {
+                if (!object.Equals(lhs.N, rhs.N)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Oh) ?? true))
+            {
+                if (!object.Equals(lhs.Oh, rhs.Oh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.OohQ) ?? true))
+            {
+                if (!object.Equals(lhs.OohQ, rhs.OohQ)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.R) ?? true))
+            {
+                if (!object.Equals(lhs.R, rhs.R)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.Th) ?? true))
+            {
+                if (!object.Equals(lhs.Th, rhs.Th)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FaceFxPhonemes_FieldIndex.W) ?? true))
+            {
+                if (!object.Equals(lhs.W, rhs.W)) return false;
+            }
             return true;
         }
         
@@ -2547,13 +2601,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFaceFxPhonemesGetter rhs)) return false;
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFaceFxPhonemesGetter rhs) return false;
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFaceFxPhonemesGetter? obj)
         {
-            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)this).CommonInstance()!).GetHashCode(this);

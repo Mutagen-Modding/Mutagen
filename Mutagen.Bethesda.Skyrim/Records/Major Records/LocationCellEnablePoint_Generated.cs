@@ -79,13 +79,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCellEnablePointGetter rhs)) return false;
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCellEnablePointGetter rhs) return false;
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCellEnablePointGetter? obj)
         {
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -564,11 +564,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationCellEnablePointGetter item,
-            ILocationCellEnablePointGetter rhs)
+            ILocationCellEnablePointGetter rhs,
+            LocationCellEnablePoint.TranslationMask? equalsMask = null)
         {
             return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -892,13 +894,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationCellEnablePointGetter? lhs,
-            ILocationCellEnablePointGetter? rhs)
+            ILocationCellEnablePointGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Actor.Equals(rhs.Actor)) return false;
-            if (!lhs.Ref.Equals(rhs.Ref)) return false;
-            if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
+            {
+                if (!lhs.Actor.Equals(rhs.Actor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Ref) ?? true))
+            {
+                if (!lhs.Ref.Equals(rhs.Ref)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Grid) ?? true))
+            {
+                if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            }
             return true;
         }
         
@@ -1233,13 +1245,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCellEnablePointGetter rhs)) return false;
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCellEnablePointGetter rhs) return false;
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCellEnablePointGetter? obj)
         {
-            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCellEnablePointCommon)((ILocationCellEnablePointGetter)this).CommonInstance()!).GetHashCode(this);

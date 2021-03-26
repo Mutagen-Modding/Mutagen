@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionSoundsGetter rhs)) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionSoundsGetter rhs) return false;
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -597,11 +597,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionSoundsGetter item,
-            IRegionSoundsGetter rhs)
+            IRegionSoundsGetter rhs,
+            RegionSounds.TranslationMask? equalsMask = null)
         {
             return ((RegionSoundsCommon)((IRegionSoundsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -962,23 +964,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionSoundsGetter? lhs,
-            IRegionSoundsGetter? rhs)
+            IRegionSoundsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
-            if (!lhs.Music.Equals(rhs.Music)) return false;
-            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionSounds_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IRegionDataGetter? lhs,
-            IRegionDataGetter? rhs)
+            IRegionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionSoundsGetter?)lhs,
-                rhs: rhs as IRegionSoundsGetter);
+                rhs: rhs as IRegionSoundsGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionSoundsGetter item)
@@ -1449,13 +1460,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionSoundsGetter rhs)) return false;
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionSoundsGetter rhs) return false;
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionSoundsGetter? obj)
         {
-            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionSoundsCommon)((IRegionSoundsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IObjectBoundsGetter rhs)) return false;
-            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IObjectBoundsGetter rhs) return false;
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IObjectBoundsGetter? obj)
         {
-            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IObjectBoundsGetter item,
-            IObjectBoundsGetter rhs)
+            IObjectBoundsGetter rhs,
+            ObjectBounds.TranslationMask? equalsMask = null)
         {
             return ((ObjectBoundsCommon)((IObjectBoundsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IObjectBoundsGetter? lhs,
-            IObjectBoundsGetter? rhs)
+            IObjectBoundsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.First.Equals(rhs.First)) return false;
-            if (!lhs.Second.Equals(rhs.Second)) return false;
+            if ((crystal?.GetShouldTranslate((int)ObjectBounds_FieldIndex.First) ?? true))
+            {
+                if (!lhs.First.Equals(rhs.First)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectBounds_FieldIndex.Second) ?? true))
+            {
+                if (!lhs.Second.Equals(rhs.Second)) return false;
+            }
             return true;
         }
         
@@ -1162,13 +1171,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IObjectBoundsGetter rhs)) return false;
-            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IObjectBoundsGetter rhs) return false;
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IObjectBoundsGetter? obj)
         {
-            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ObjectBoundsCommon)((IObjectBoundsGetter)this).CommonInstance()!).GetHashCode(this);

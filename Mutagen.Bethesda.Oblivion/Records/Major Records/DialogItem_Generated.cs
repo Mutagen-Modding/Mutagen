@@ -1085,12 +1085,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IDialogItemGetter rhs) return false;
-            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogItemGetter? obj)
         {
-            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1245,11 +1245,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IDialogItemGetter item,
-            IDialogItemGetter rhs)
+            IDialogItemGetter rhs,
+            DialogItem.TranslationMask? equalsMask = null)
         {
             return ((DialogItemCommon)((IDialogItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1779,39 +1781,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogItemGetter? lhs,
-            IDialogItemGetter? rhs)
+            IDialogItemGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
-            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
-            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.Choices.SequenceEqualNullable(rhs.Choices)) return false;
-            if (!lhs.LinkFrom.SequenceEqualNullable(rhs.LinkFrom)) return false;
-            if (!object.Equals(lhs.Script, rhs.Script)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.PreviousTopic) ?? true))
+            {
+                if (!lhs.PreviousTopic.Equals(rhs.PreviousTopic)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Topics) ?? true))
+            {
+                if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Responses) ?? true))
+            {
+                if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Choices) ?? true))
+            {
+                if (!lhs.Choices.SequenceEqualNullable(rhs.Choices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.LinkFrom) ?? true))
+            {
+                if (!lhs.LinkFrom.SequenceEqualNullable(rhs.LinkFrom)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
+            {
+                if (!object.Equals(lhs.Script, rhs.Script)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogItemGetter?)lhs,
-                rhs: rhs as IDialogItemGetter);
+                rhs: rhs as IDialogItemGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogItemGetter?)lhs,
-                rhs: rhs as IDialogItemGetter);
+                rhs: rhs as IDialogItemGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDialogItemGetter item)
@@ -2784,12 +2818,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDialogItemGetter rhs) return false;
-            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogItemGetter? obj)
         {
-            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogItemCommon)((IDialogItemGetter)this).CommonInstance()!).GetHashCode(this);

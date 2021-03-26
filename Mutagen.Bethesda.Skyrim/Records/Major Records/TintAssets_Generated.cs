@@ -96,13 +96,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintAssetsGetter rhs)) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintAssetsGetter rhs) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -716,11 +716,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITintAssetsGetter item,
-            ITintAssetsGetter rhs)
+            ITintAssetsGetter rhs,
+            TintAssets.TranslationMask? equalsMask = null)
         {
             return ((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1096,15 +1098,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITintAssetsGetter? lhs,
-            ITintAssetsGetter? rhs)
+            ITintAssetsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Index != rhs.Index) return false;
-            if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (lhs.MaskType != rhs.MaskType) return false;
-            if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
-            if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
+            {
+                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
+            {
+                if (lhs.MaskType != rhs.MaskType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
+            {
+                if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
+            {
+                if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
+            }
             return true;
         }
         
@@ -1624,13 +1642,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintAssetsGetter rhs)) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintAssetsGetter rhs) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -472,12 +472,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAssociationTypeGetter rhs) return false;
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAssociationTypeGetter? obj)
         {
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -619,11 +619,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAssociationTypeGetter item,
-            IAssociationTypeGetter rhs)
+            IAssociationTypeGetter rhs,
+            AssociationType.TranslationMask? equalsMask = null)
         {
             return ((AssociationTypeCommon)((IAssociationTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1029,33 +1031,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAssociationTypeGetter? lhs,
-            IAssociationTypeGetter? rhs)
+            IAssociationTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
-            if (!Equals(lhs.Title, rhs.Title)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.ParentTitle) ?? true))
+            {
+                if (!Equals(lhs.ParentTitle, rhs.ParentTitle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Title) ?? true))
+            {
+                if (!Equals(lhs.Title, rhs.Title)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AssociationType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAssociationTypeGetter?)lhs,
-                rhs: rhs as IAssociationTypeGetter);
+                rhs: rhs as IAssociationTypeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAssociationTypeGetter?)lhs,
-                rhs: rhs as IAssociationTypeGetter);
+                rhs: rhs as IAssociationTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAssociationTypeGetter item)
@@ -1680,12 +1696,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IAssociationTypeGetter rhs) return false;
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAssociationTypeGetter? obj)
         {
-            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AssociationTypeCommon)((IAssociationTypeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorDataGetter rhs)) return false;
-            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IArmorDataGetter rhs) return false;
+            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorDataGetter? obj)
         {
-            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -582,11 +582,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IArmorDataGetter item,
-            IArmorDataGetter rhs)
+            IArmorDataGetter rhs,
+            ArmorData.TranslationMask? equalsMask = null)
         {
             return ((ArmorDataCommon)((IArmorDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -919,14 +921,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArmorDataGetter? lhs,
-            IArmorDataGetter? rhs)
+            IArmorDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if ((crystal?.GetShouldTranslate((int)ArmorData_FieldIndex.ArmorValue) ?? true))
+            {
+                if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArmorData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArmorData_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArmorData_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
             return true;
         }
         
@@ -1281,13 +1296,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorDataGetter rhs)) return false;
-            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IArmorDataGetter rhs) return false;
+            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorDataGetter? obj)
         {
-            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorDataCommon)((IArmorDataGetter)this).CommonInstance()!).GetHashCode(this);

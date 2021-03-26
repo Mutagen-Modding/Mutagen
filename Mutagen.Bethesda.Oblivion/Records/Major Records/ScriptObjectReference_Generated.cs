@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
-            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptObjectReferenceGetter rhs) return false;
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptObjectReferenceGetter? obj)
         {
-            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -468,11 +468,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IScriptObjectReferenceGetter item,
-            IScriptObjectReferenceGetter rhs)
+            IScriptObjectReferenceGetter rhs,
+            ScriptObjectReference.TranslationMask? equalsMask = null)
         {
             return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -790,22 +792,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptObjectReferenceGetter? lhs,
-            IScriptObjectReferenceGetter? rhs)
+            IScriptObjectReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAScriptReferenceGetter)lhs, (IAScriptReferenceGetter)rhs)) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if (!base.Equals((IAScriptReferenceGetter)lhs, (IAScriptReferenceGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptObjectReference_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAScriptReferenceGetter? lhs,
-            IAScriptReferenceGetter? rhs)
+            IAScriptReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScriptObjectReferenceGetter?)lhs,
-                rhs: rhs as IScriptObjectReferenceGetter);
+                rhs: rhs as IScriptObjectReferenceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IScriptObjectReferenceGetter item)
@@ -1184,13 +1192,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptObjectReferenceGetter rhs)) return false;
-            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptObjectReferenceGetter rhs) return false;
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptObjectReferenceGetter? obj)
         {
-            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectReferenceCommon)((IScriptObjectReferenceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -127,13 +127,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScenePhaseGetter rhs)) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScenePhaseGetter rhs) return false;
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -871,11 +871,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScenePhaseGetter item,
-            IScenePhaseGetter rhs)
+            IScenePhaseGetter rhs,
+            ScenePhase.TranslationMask? equalsMask = null)
         {
             return ((ScenePhaseCommon)((IScenePhaseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1268,16 +1270,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScenePhaseGetter? lhs,
-            IScenePhaseGetter? rhs)
+            IScenePhaseGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.StartConditions.SequenceEqualNullable(rhs.StartConditions)) return false;
-            if (!lhs.CompletionConditions.SequenceEqualNullable(rhs.CompletionConditions)) return false;
-            if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
-            if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
-            if (lhs.EditorWidth != rhs.EditorWidth) return false;
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.StartConditions) ?? true))
+            {
+                if (!lhs.StartConditions.SequenceEqualNullable(rhs.StartConditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.CompletionConditions) ?? true))
+            {
+                if (!lhs.CompletionConditions.SequenceEqualNullable(rhs.CompletionConditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused) ?? true))
+            {
+                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused2) ?? true))
+            {
+                if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
+            {
+                if (lhs.EditorWidth != rhs.EditorWidth) return false;
+            }
             return true;
         }
         
@@ -1973,13 +1994,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScenePhaseGetter rhs)) return false;
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScenePhaseGetter rhs) return false;
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScenePhaseGetter? obj)
         {
-            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseCommon)((IScenePhaseGetter)this).CommonInstance()!).GetHashCode(this);

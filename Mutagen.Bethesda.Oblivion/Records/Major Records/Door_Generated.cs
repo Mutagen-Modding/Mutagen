@@ -735,12 +735,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IDoorGetter rhs) return false;
-            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDoorGetter? obj)
         {
-            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -898,11 +898,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IDoorGetter item,
-            IDoorGetter rhs)
+            IDoorGetter rhs,
+            Door.TranslationMask? equalsMask = null)
         {
             return ((DoorCommon)((IDoorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1359,38 +1361,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDoorGetter? lhs,
-            IDoorGetter? rhs)
+            IDoorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
-            if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
-            if (!lhs.LoopSound.Equals(rhs.LoopSound)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.RandomTeleportDestinations.SequenceEqualNullable(rhs.RandomTeleportDestinations)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.OpenSound) ?? true))
+            {
+                if (!lhs.OpenSound.Equals(rhs.OpenSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.CloseSound) ?? true))
+            {
+                if (!lhs.CloseSound.Equals(rhs.CloseSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.LoopSound) ?? true))
+            {
+                if (!lhs.LoopSound.Equals(rhs.LoopSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Door_FieldIndex.RandomTeleportDestinations) ?? true))
+            {
+                if (!lhs.RandomTeleportDestinations.SequenceEqualNullable(rhs.RandomTeleportDestinations)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDoorGetter?)lhs,
-                rhs: rhs as IDoorGetter);
+                rhs: rhs as IDoorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDoorGetter?)lhs,
-                rhs: rhs as IDoorGetter);
+                rhs: rhs as IDoorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDoorGetter item)
@@ -2196,12 +2227,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDoorGetter rhs) return false;
-            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDoorGetter? obj)
         {
-            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorCommon)((IDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DoorCommon)((IDoorGetter)this).CommonInstance()!).GetHashCode(this);

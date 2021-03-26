@@ -895,12 +895,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1088,11 +1088,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITreeGetter item,
-            ITreeGetter rhs)
+            ITreeGetter rhs,
+            Tree.TranslationMask? equalsMask = null)
         {
             return ((TreeCommon)((ITreeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1578,43 +1580,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITreeGetter? lhs,
-            ITreeGetter? rhs)
+            ITreeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
-            if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
-            if (!object.Equals(lhs.Production, rhs.Production)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
-            if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
-            if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
-            if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
-            if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Ingredient) ?? true))
+            {
+                if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.HarvestSound) ?? true))
+            {
+                if (!lhs.HarvestSound.Equals(rhs.HarvestSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Production) ?? true))
+            {
+                if (!object.Equals(lhs.Production, rhs.Production)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.TrunkFlexibility) ?? true))
+            {
+                if (!lhs.TrunkFlexibility.EqualsWithin(rhs.TrunkFlexibility)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BranchFlexibility) ?? true))
+            {
+                if (!lhs.BranchFlexibility.EqualsWithin(rhs.BranchFlexibility)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafAmplitude) ?? true))
+            {
+                if (!lhs.LeafAmplitude.EqualsWithin(rhs.LeafAmplitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.LeafFrequency) ?? true))
+            {
+                if (!lhs.LeafFrequency.EqualsWithin(rhs.LeafFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.CNAMDataTypeState) ?? true))
+            {
+                if (lhs.CNAMDataTypeState != rhs.CNAMDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
-                rhs: rhs as ITreeGetter);
+                rhs: rhs as ITreeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITreeGetter?)lhs,
-                rhs: rhs as ITreeGetter);
+                rhs: rhs as ITreeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITreeGetter item)
@@ -2538,12 +2584,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ITreeGetter rhs) return false;
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITreeGetter? obj)
         {
-            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TreeCommon)((ITreeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TreeCommon)((ITreeGetter)this).CommonInstance()!).GetHashCode(this);

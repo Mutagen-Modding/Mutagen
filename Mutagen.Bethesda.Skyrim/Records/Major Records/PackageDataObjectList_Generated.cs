@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataObjectListGetter rhs)) return false;
-            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataObjectListGetter rhs) return false;
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataObjectListGetter? obj)
         {
-            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).GetHashCode(this);
@@ -470,11 +470,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageDataObjectListGetter item,
-            IPackageDataObjectListGetter rhs)
+            IPackageDataObjectListGetter rhs,
+            PackageDataObjectList.TranslationMask? equalsMask = null)
         {
             return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -809,22 +811,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageDataObjectListGetter? lhs,
-            IPackageDataObjectListGetter? rhs)
+            IPackageDataObjectListGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
-            if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageDataObjectList_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageDataGetter? lhs,
-            IAPackageDataGetter? rhs)
+            IAPackageDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageDataObjectListGetter?)lhs,
-                rhs: rhs as IPackageDataObjectListGetter);
+                rhs: rhs as IPackageDataObjectListGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageDataObjectListGetter item)
@@ -1149,13 +1157,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataObjectListGetter rhs)) return false;
-            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataObjectListGetter rhs) return false;
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataObjectListGetter? obj)
         {
-            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataObjectListCommon)((IPackageDataObjectListGetter)this).CommonInstance()!).GetHashCode(this);

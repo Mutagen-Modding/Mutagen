@@ -126,13 +126,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValuePerkNodeGetter rhs) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValuePerkNodeGetter? obj)
         {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -865,11 +865,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IActorValuePerkNodeGetter item,
-            IActorValuePerkNodeGetter rhs)
+            IActorValuePerkNodeGetter rhs,
+            ActorValuePerkNode.TranslationMask? equalsMask = null)
         {
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1260,19 +1262,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActorValuePerkNodeGetter? lhs,
-            IActorValuePerkNodeGetter? rhs)
+            IActorValuePerkNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Perk.Equals(rhs.Perk)) return false;
-            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
-            if (lhs.PerkGridX != rhs.PerkGridX) return false;
-            if (lhs.PerkGridY != rhs.PerkGridY) return false;
-            if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
-            if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
-            if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
-            if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
-            if (lhs.Index != rhs.Index) return false;
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
+            {
+                if (!lhs.Perk.Equals(rhs.Perk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.PerkGridX) ?? true))
+            {
+                if (lhs.PerkGridX != rhs.PerkGridX) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.PerkGridY) ?? true))
+            {
+                if (lhs.PerkGridY != rhs.PerkGridY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.HorizontalPosition) ?? true))
+            {
+                if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.VerticalPosition) ?? true))
+            {
+                if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
+            {
+                if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
+            {
+                if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -1879,13 +1909,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValuePerkNodeGetter rhs) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValuePerkNodeGetter? obj)
         {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);

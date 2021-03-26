@@ -1015,12 +1015,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundDescriptorGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1186,11 +1186,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISoundDescriptorGetter item,
-            ISoundDescriptorGetter rhs)
+            ISoundDescriptorGetter rhs,
+            SoundDescriptor.TranslationMask? equalsMask = null)
         {
             return ((SoundDescriptorCommon)((ISoundDescriptorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1708,44 +1710,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoundDescriptorGetter? lhs,
-            ISoundDescriptorGetter? rhs)
+            ISoundDescriptorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
-            if (!lhs.Category.Equals(rhs.Category)) return false;
-            if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
-            if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
-            if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
-            if (!string.Equals(lhs.String, rhs.String)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!object.Equals(lhs.LoopAndRumble, rhs.LoopAndRumble)) return false;
-            if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
-            if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
-            if (lhs.Priority != rhs.Priority) return false;
-            if (lhs.Variance != rhs.Variance) return false;
-            if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
-            if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Category) ?? true))
+            {
+                if (!lhs.Category.Equals(rhs.Category)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.AlternateSoundFor) ?? true))
+            {
+                if (!lhs.AlternateSoundFor.Equals(rhs.AlternateSoundFor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.SoundFiles) ?? true))
+            {
+                if (!lhs.SoundFiles.SequenceEqualNullable(rhs.SoundFiles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.OutputModel) ?? true))
+            {
+                if (!lhs.OutputModel.Equals(rhs.OutputModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.String) ?? true))
+            {
+                if (!string.Equals(lhs.String, rhs.String)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
+            {
+                if (!object.Equals(lhs.LoopAndRumble, rhs.LoopAndRumble)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
+            {
+                if (lhs.PercentFrequencyShift != rhs.PercentFrequencyShift) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyVariance) ?? true))
+            {
+                if (lhs.PercentFrequencyVariance != rhs.PercentFrequencyVariance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.Variance) ?? true))
+            {
+                if (lhs.Variance != rhs.Variance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.StaticAttenuation) ?? true))
+            {
+                if (!lhs.StaticAttenuation.EqualsWithin(rhs.StaticAttenuation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.BNAMDataTypeState) ?? true))
+            {
+                if (lhs.BNAMDataTypeState != rhs.BNAMDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISoundDescriptorGetter?)lhs,
-                rhs: rhs as ISoundDescriptorGetter);
+                rhs: rhs as ISoundDescriptorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISoundDescriptorGetter?)lhs,
-                rhs: rhs as ISoundDescriptorGetter);
+                rhs: rhs as ISoundDescriptorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISoundDescriptorGetter item)
@@ -2675,12 +2724,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISoundDescriptorGetter rhs) return false;
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundDescriptorGetter? obj)
         {
-            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundDescriptorCommon)((ISoundDescriptorGetter)this).CommonInstance()!).GetHashCode(this);

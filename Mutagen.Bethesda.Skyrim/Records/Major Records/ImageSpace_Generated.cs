@@ -582,12 +582,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -731,11 +731,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImageSpaceGetter item,
-            IImageSpaceGetter rhs)
+            IImageSpaceGetter rhs,
+            ImageSpace.TranslationMask? equalsMask = null)
         {
             return ((ImageSpaceCommon)((IImageSpaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1166,35 +1168,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceGetter? lhs,
-            IImageSpaceGetter? rhs)
+            IImageSpaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
-            if (!object.Equals(lhs.Hdr, rhs.Hdr)) return false;
-            if (!object.Equals(lhs.Cinematic, rhs.Cinematic)) return false;
-            if (!object.Equals(lhs.Tint, rhs.Tint)) return false;
-            if (!object.Equals(lhs.DepthOfField, rhs.DepthOfField)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Hdr) ?? true))
+            {
+                if (!object.Equals(lhs.Hdr, rhs.Hdr)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Cinematic) ?? true))
+            {
+                if (!object.Equals(lhs.Cinematic, rhs.Cinematic)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Tint) ?? true))
+            {
+                if (!object.Equals(lhs.Tint, rhs.Tint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfField) ?? true))
+            {
+                if (!object.Equals(lhs.DepthOfField, rhs.DepthOfField)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
-                rhs: rhs as IImageSpaceGetter);
+                rhs: rhs as IImageSpaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImageSpaceGetter?)lhs,
-                rhs: rhs as IImageSpaceGetter);
+                rhs: rhs as IImageSpaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IImageSpaceGetter item)
@@ -1940,12 +1962,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IImageSpaceGetter rhs) return false;
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceGetter? obj)
         {
-            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCommon)((IImageSpaceGetter)this).CommonInstance()!).GetHashCode(this);

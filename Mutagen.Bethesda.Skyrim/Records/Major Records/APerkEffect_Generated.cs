@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAPerkEffectGetter rhs)) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAPerkEffectGetter rhs) return false;
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -660,11 +660,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAPerkEffectGetter item,
-            IAPerkEffectGetter rhs)
+            IAPerkEffectGetter rhs,
+            APerkEffect.TranslationMask? equalsMask = null)
         {
             return ((APerkEffectCommon)((IAPerkEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1007,14 +1009,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (lhs.Priority != rhs.Priority) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APerkEffect_FieldIndex.PRKEDataTypeState) ?? true))
+            {
+                if (lhs.PRKEDataTypeState != rhs.PRKEDataTypeState) return false;
+            }
             return true;
         }
         
@@ -1399,13 +1414,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAPerkEffectGetter rhs)) return false;
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAPerkEffectGetter rhs) return false;
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAPerkEffectGetter? obj)
         {
-            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((APerkEffectCommon)((IAPerkEffectGetter)this).CommonInstance()!).GetHashCode(this);

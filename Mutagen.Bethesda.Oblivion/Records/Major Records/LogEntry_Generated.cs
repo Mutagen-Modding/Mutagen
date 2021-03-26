@@ -92,13 +92,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILogEntryGetter rhs)) return false;
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILogEntryGetter rhs) return false;
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILogEntryGetter? obj)
         {
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);
@@ -689,11 +689,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILogEntryGetter item,
-            ILogEntryGetter rhs)
+            ILogEntryGetter rhs,
+            LogEntry.TranslationMask? equalsMask = null)
         {
             return ((LogEntryCommon)((ILogEntryGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1064,14 +1066,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILogEntryGetter? lhs,
-            ILogEntryGetter? rhs)
+            ILogEntryGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
-            if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
+            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Entry) ?? true))
+            {
+                if (!string.Equals(lhs.Entry, rhs.Entry)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
+            {
+                if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
+            }
             return true;
         }
         
@@ -1592,13 +1607,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILogEntryGetter rhs)) return false;
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILogEntryGetter rhs) return false;
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILogEntryGetter? obj)
         {
-            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LogEntryCommon)((ILogEntryGetter)this).CommonInstance()!).GetHashCode(this);

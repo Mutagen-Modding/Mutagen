@@ -781,12 +781,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILoadScreenGetter rhs) return false;
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILoadScreenGetter? obj)
         {
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);
@@ -950,11 +950,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILoadScreenGetter item,
-            ILoadScreenGetter rhs)
+            ILoadScreenGetter rhs,
+            LoadScreen.TranslationMask? equalsMask = null)
         {
             return ((LoadScreenCommon)((ILoadScreenGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1425,39 +1427,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILoadScreenGetter? lhs,
-            ILoadScreenGetter? rhs)
+            ILoadScreenGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.LoadingScreenNif.Equals(rhs.LoadingScreenNif)) return false;
-            if (!lhs.InitialScale.EqualsWithin(rhs.InitialScale)) return false;
-            if (!lhs.InitialRotation.Equals(rhs.InitialRotation)) return false;
-            if (!object.Equals(lhs.RotationOffsetConstraints, rhs.RotationOffsetConstraints)) return false;
-            if (!lhs.InitialTranslationOffset.Equals(rhs.InitialTranslationOffset)) return false;
-            if (!string.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.LoadingScreenNif) ?? true))
+            {
+                if (!lhs.LoadingScreenNif.Equals(rhs.LoadingScreenNif)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialScale) ?? true))
+            {
+                if (!lhs.InitialScale.EqualsWithin(rhs.InitialScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialRotation) ?? true))
+            {
+                if (!lhs.InitialRotation.Equals(rhs.InitialRotation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.RotationOffsetConstraints) ?? true))
+            {
+                if (!object.Equals(lhs.RotationOffsetConstraints, rhs.RotationOffsetConstraints)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialTranslationOffset) ?? true))
+            {
+                if (!lhs.InitialTranslationOffset.Equals(rhs.InitialTranslationOffset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.CameraPath) ?? true))
+            {
+                if (!string.Equals(lhs.CameraPath, rhs.CameraPath)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILoadScreenGetter?)lhs,
-                rhs: rhs as ILoadScreenGetter);
+                rhs: rhs as ILoadScreenGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILoadScreenGetter?)lhs,
-                rhs: rhs as ILoadScreenGetter);
+                rhs: rhs as ILoadScreenGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILoadScreenGetter item)
@@ -2313,12 +2347,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ILoadScreenGetter rhs) return false;
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILoadScreenGetter? obj)
         {
-            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LoadScreenCommon)((ILoadScreenGetter)this).CommonInstance()!).GetHashCode(this);

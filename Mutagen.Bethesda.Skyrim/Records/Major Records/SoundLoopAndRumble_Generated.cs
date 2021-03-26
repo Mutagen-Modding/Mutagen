@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundLoopAndRumbleGetter rhs)) return false;
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundLoopAndRumbleGetter rhs) return false;
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundLoopAndRumbleGetter? obj)
         {
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISoundLoopAndRumbleGetter item,
-            ISoundLoopAndRumbleGetter rhs)
+            ISoundLoopAndRumbleGetter rhs,
+            SoundLoopAndRumble.TranslationMask? equalsMask = null)
         {
             return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoundLoopAndRumbleGetter? lhs,
-            ISoundLoopAndRumbleGetter? rhs)
+            ISoundLoopAndRumbleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.Loop != rhs.Loop) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (lhs.RumbleValues != rhs.RumbleValues) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Loop) ?? true))
+            {
+                if (lhs.Loop != rhs.Loop) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.RumbleValues) ?? true))
+            {
+                if (lhs.RumbleValues != rhs.RumbleValues) return false;
+            }
             return true;
         }
         
@@ -1259,13 +1274,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundLoopAndRumbleGetter rhs)) return false;
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundLoopAndRumbleGetter rhs) return false;
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundLoopAndRumbleGetter? obj)
         {
-            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)this).CommonInstance()!).GetHashCode(this);

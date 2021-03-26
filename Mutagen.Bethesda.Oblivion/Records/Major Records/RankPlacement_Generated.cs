@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRankPlacementGetter rhs) return false;
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRankPlacementGetter? obj)
         {
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).GetHashCode(this);
@@ -566,11 +566,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRankPlacementGetter item,
-            IRankPlacementGetter rhs)
+            IRankPlacementGetter rhs,
+            RankPlacement.TranslationMask? equalsMask = null)
         {
             return ((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -897,13 +899,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRankPlacementGetter? lhs,
-            IRankPlacementGetter? rhs)
+            IRankPlacementGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
+            {
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
             return true;
         }
         
@@ -1236,13 +1248,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRankPlacementGetter rhs) return false;
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRankPlacementGetter? obj)
         {
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).GetHashCode(this);

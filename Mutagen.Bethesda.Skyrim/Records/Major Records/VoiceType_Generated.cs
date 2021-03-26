@@ -390,12 +390,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IVoiceTypeGetter rhs) return false;
-            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVoiceTypeGetter? obj)
         {
-            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -531,11 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IVoiceTypeGetter item,
-            IVoiceTypeGetter rhs)
+            IVoiceTypeGetter rhs,
+            VoiceType.TranslationMask? equalsMask = null)
         {
             return ((VoiceTypeCommon)((IVoiceTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,31 +919,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IVoiceTypeGetter? lhs,
-            IVoiceTypeGetter? rhs)
+            IVoiceTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)VoiceType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IVoiceTypeGetter?)lhs,
-                rhs: rhs as IVoiceTypeGetter);
+                rhs: rhs as IVoiceTypeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IVoiceTypeGetter?)lhs,
-                rhs: rhs as IVoiceTypeGetter);
+                rhs: rhs as IVoiceTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IVoiceTypeGetter item)
@@ -1474,12 +1484,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IVoiceTypeGetter rhs) return false;
-            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVoiceTypeGetter? obj)
         {
-            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VoiceTypeCommon)((IVoiceTypeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionGrassesGetter rhs)) return false;
-            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionGrassesGetter rhs) return false;
+            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionGrassesGetter? obj)
         {
-            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -557,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionGrassesGetter item,
-            IRegionGrassesGetter rhs)
+            IRegionGrassesGetter rhs,
+            RegionGrasses.TranslationMask? equalsMask = null)
         {
             return ((RegionGrassesCommon)((IRegionGrassesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -914,22 +916,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionGrassesGetter? lhs,
-            IRegionGrassesGetter? rhs)
+            IRegionGrassesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
-            if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionGrasses_FieldIndex.Grasses) ?? true))
+            {
+                if (!lhs.Grasses.SequenceEqualNullable(rhs.Grasses)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IRegionDataGetter? lhs,
-            IRegionDataGetter? rhs)
+            IRegionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionGrassesGetter?)lhs,
-                rhs: rhs as IRegionGrassesGetter);
+                rhs: rhs as IRegionGrassesGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionGrassesGetter item)
@@ -1369,13 +1377,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionGrassesGetter rhs)) return false;
-            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionGrassesGetter rhs) return false;
+            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionGrassesGetter? obj)
         {
-            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionGrassesCommon)((IRegionGrassesGetter)this).CommonInstance()!).GetHashCode(this);

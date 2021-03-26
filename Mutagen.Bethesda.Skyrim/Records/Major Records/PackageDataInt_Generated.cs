@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataIntGetter rhs)) return false;
-            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataIntGetter rhs) return false;
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataIntGetter? obj)
         {
-            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).GetHashCode(this);
@@ -468,11 +468,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageDataIntGetter item,
-            IPackageDataIntGetter rhs)
+            IPackageDataIntGetter rhs,
+            PackageDataInt.TranslationMask? equalsMask = null)
         {
             return ((PackageDataIntCommon)((IPackageDataIntGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -806,22 +808,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageDataIntGetter? lhs,
-            IPackageDataIntGetter? rhs)
+            IPackageDataIntGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
-            if (lhs.Data != rhs.Data) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageDataInt_FieldIndex.Data) ?? true))
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageDataGetter? lhs,
-            IAPackageDataGetter? rhs)
+            IAPackageDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageDataIntGetter?)lhs,
-                rhs: rhs as IPackageDataIntGetter);
+                rhs: rhs as IPackageDataIntGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageDataIntGetter item)
@@ -1143,13 +1151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataIntGetter rhs)) return false;
-            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataIntGetter rhs) return false;
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataIntGetter? obj)
         {
-            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataIntCommon)((IPackageDataIntGetter)this).CommonInstance()!).GetHashCode(this);

@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectSoundGetter rhs)) return false;
-            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectSoundGetter rhs) return false;
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectSoundGetter? obj)
         {
-            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -524,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectSoundGetter item,
-            IMagicEffectSoundGetter rhs)
+            IMagicEffectSoundGetter rhs,
+            MagicEffectSound.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectSoundGetter? lhs,
-            IMagicEffectSoundGetter? rhs)
+            IMagicEffectSoundGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            if ((crystal?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectSound_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
             return true;
         }
         
@@ -1168,13 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectSoundGetter rhs)) return false;
-            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectSoundGetter rhs) return false;
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectSoundGetter? obj)
         {
-            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectSoundCommon)((IMagicEffectSoundGetter)this).CommonInstance()!).GetHashCode(this);

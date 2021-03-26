@@ -649,12 +649,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -816,11 +816,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIdleMarkerGetter item,
-            IIdleMarkerGetter rhs)
+            IIdleMarkerGetter rhs,
+            IdleMarker.TranslationMask? equalsMask = null)
         {
             return ((IdleMarkerCommon)((IIdleMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1257,35 +1259,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIdleMarkerGetter? lhs,
-            IIdleMarkerGetter? rhs)
+            IIdleMarkerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.IdleTimer.EqualsWithin(rhs.IdleTimer)) return false;
-            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.IdleTimer) ?? true))
+            {
+                if (!lhs.IdleTimer.EqualsWithin(rhs.IdleTimer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Animations) ?? true))
+            {
+                if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleMarker_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
-                rhs: rhs as IIdleMarkerGetter);
+                rhs: rhs as IIdleMarkerGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleMarkerGetter?)lhs,
-                rhs: rhs as IIdleMarkerGetter);
+                rhs: rhs as IIdleMarkerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IIdleMarkerGetter item)
@@ -2072,12 +2094,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IIdleMarkerGetter rhs) return false;
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIdleMarkerGetter? obj)
         {
-            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IdleMarkerCommon)((IIdleMarkerGetter)this).CommonInstance()!).GetHashCode(this);

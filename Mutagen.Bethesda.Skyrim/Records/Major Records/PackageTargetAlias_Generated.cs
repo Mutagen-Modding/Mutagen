@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetAliasGetter rhs)) return false;
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetAliasGetter rhs) return false;
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetAliasGetter? obj)
         {
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,11 +461,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageTargetAliasGetter item,
-            IPackageTargetAliasGetter rhs)
+            IPackageTargetAliasGetter rhs,
+            PackageTargetAlias.TranslationMask? equalsMask = null)
         {
             return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -783,22 +785,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageTargetAliasGetter? lhs,
-            IPackageTargetAliasGetter? rhs)
+            IPackageTargetAliasGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs)) return false;
-            if (lhs.Alias != rhs.Alias) return false;
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageTargetAlias_FieldIndex.Alias) ?? true))
+            {
+                if (lhs.Alias != rhs.Alias) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageTargetGetter? lhs,
-            IAPackageTargetGetter? rhs)
+            IAPackageTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageTargetAliasGetter?)lhs,
-                rhs: rhs as IPackageTargetAliasGetter);
+                rhs: rhs as IPackageTargetAliasGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageTargetAliasGetter item)
@@ -1124,13 +1132,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetAliasGetter rhs)) return false;
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetAliasGetter rhs) return false;
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetAliasGetter? obj)
         {
-            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetAliasCommon)((IPackageTargetAliasGetter)this).CommonInstance()!).GetHashCode(this);

@@ -145,13 +145,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageBranchGetter rhs)) return false;
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageBranchGetter rhs) return false;
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageBranchGetter? obj)
         {
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1053,11 +1053,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageBranchGetter item,
-            IPackageBranchGetter rhs)
+            IPackageBranchGetter rhs,
+            PackageBranch.TranslationMask? equalsMask = null)
         {
             return ((PackageBranchCommon)((IPackageBranchGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1492,19 +1494,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageBranchGetter? lhs,
-            IPackageBranchGetter? rhs)
+            IPackageBranchGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!object.Equals(lhs.Root, rhs.Root)) return false;
-            if (!string.Equals(lhs.ProcedureType, rhs.ProcedureType)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.DataInputIndices.SequenceEqualNullable(rhs.DataInputIndices)) return false;
-            if (!object.Equals(lhs.FlagsOverride, rhs.FlagsOverride)) return false;
-            if (!object.Equals(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused)) return false;
-            if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
+            {
+                if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Root) ?? true))
+            {
+                if (!object.Equals(lhs.Root, rhs.Root)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.ProcedureType) ?? true))
+            {
+                if (!string.Equals(lhs.ProcedureType, rhs.ProcedureType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.DataInputIndices) ?? true))
+            {
+                if (!lhs.DataInputIndices.SequenceEqualNullable(rhs.DataInputIndices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverride) ?? true))
+            {
+                if (!object.Equals(lhs.FlagsOverride, rhs.FlagsOverride)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverrideUnused) ?? true))
+            {
+                if (!object.Equals(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Unknown) ?? true))
+            {
+                if (!lhs.Unknown.SequenceEqualNullable(rhs.Unknown)) return false;
+            }
             return true;
         }
         
@@ -2250,13 +2280,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageBranchGetter rhs)) return false;
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageBranchGetter rhs) return false;
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageBranchGetter? obj)
         {
-            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageBranchCommon)((IPackageBranchGetter)this).CommonInstance()!).GetHashCode(this);

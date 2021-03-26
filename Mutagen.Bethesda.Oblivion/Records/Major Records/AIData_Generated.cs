@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIDataGetter rhs)) return false;
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIDataGetter rhs) return false;
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIDataGetter? obj)
         {
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -712,11 +712,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAIDataGetter item,
-            IAIDataGetter rhs)
+            IAIDataGetter rhs,
+            AIData.TranslationMask? equalsMask = null)
         {
             return ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1077,18 +1079,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAIDataGetter? lhs,
-            IAIDataGetter? rhs)
+            IAIDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.BuySellServices != rhs.BuySellServices) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
-            if (lhs.Unused != rhs.Unused) return false;
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Aggression) ?? true))
+            {
+                if (lhs.Aggression != rhs.Aggression) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Confidence) ?? true))
+            {
+                if (lhs.Confidence != rhs.Confidence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.EnergyLevel) ?? true))
+            {
+                if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Responsibility) ?? true))
+            {
+                if (lhs.Responsibility != rhs.Responsibility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.BuySellServices) ?? true))
+            {
+                if (lhs.BuySellServices != rhs.BuySellServices) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Teaches) ?? true))
+            {
+                if (lhs.Teaches != rhs.Teaches) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.MaximumTrainingLevel) ?? true))
+            {
+                if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
             return true;
         }
         
@@ -1458,13 +1485,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIDataGetter rhs)) return false;
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIDataGetter rhs) return false;
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIDataGetter? obj)
         {
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -633,12 +633,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -788,11 +788,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICollisionLayerGetter item,
-            ICollisionLayerGetter rhs)
+            ICollisionLayerGetter rhs,
+            CollisionLayer.TranslationMask? equalsMask = null)
         {
             return ((CollisionLayerCommon)((ICollisionLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1228,36 +1230,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICollisionLayerGetter? lhs,
-            ICollisionLayerGetter? rhs)
+            ICollisionLayerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (lhs.Index != rhs.Index) return false;
-            if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.DebugColor) ?? true))
+            {
+                if (!lhs.DebugColor.ColorOnlyEquals(rhs.DebugColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CollisionLayer_FieldIndex.CollidesWith) ?? true))
+            {
+                if (!lhs.CollidesWith.SequenceEqualNullable(rhs.CollidesWith)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
-                rhs: rhs as ICollisionLayerGetter);
+                rhs: rhs as ICollisionLayerGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICollisionLayerGetter?)lhs,
-                rhs: rhs as ICollisionLayerGetter);
+                rhs: rhs as ICollisionLayerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICollisionLayerGetter item)
@@ -1971,12 +1996,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ICollisionLayerGetter rhs) return false;
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICollisionLayerGetter? obj)
         {
-            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CollisionLayerCommon)((ICollisionLayerGetter)this).CommonInstance()!).GetHashCode(this);

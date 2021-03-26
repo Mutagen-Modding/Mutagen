@@ -84,13 +84,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellLightingGetter rhs)) return false;
-            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellLightingGetter rhs) return false;
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellLightingGetter? obj)
         {
-            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -746,11 +746,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICellLightingGetter item,
-            ICellLightingGetter rhs)
+            ICellLightingGetter rhs,
+            CellLighting.TranslationMask? equalsMask = null)
         {
             return ((CellLightingCommon)((ICellLightingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1118,19 +1120,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICellLightingGetter? lhs,
-            ICellLightingGetter? rhs)
+            ICellLightingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
-            if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
-            if (!lhs.FogColor.ColorOnlyEquals(rhs.FogColor)) return false;
-            if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
-            if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
-            if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
-            if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
-            if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
-            if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.AmbientColor) ?? true))
+            {
+                if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalColor) ?? true))
+            {
+                if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogColor) ?? true))
+            {
+                if (!lhs.FogColor.ColorOnlyEquals(rhs.FogColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogNear) ?? true))
+            {
+                if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogFar) ?? true))
+            {
+                if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.DirectionalFade) ?? true))
+            {
+                if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellLighting_FieldIndex.FogClipDistance) ?? true))
+            {
+                if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            }
             return true;
         }
         
@@ -1516,13 +1546,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellLightingGetter rhs)) return false;
-            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellLightingGetter rhs) return false;
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellLightingGetter? obj)
         {
-            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellLightingCommon)((ICellLightingGetter)this).CommonInstance()!).GetHashCode(this);

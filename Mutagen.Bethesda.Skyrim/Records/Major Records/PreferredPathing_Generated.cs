@@ -85,13 +85,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPreferredPathingGetter rhs)) return false;
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPreferredPathingGetter rhs) return false;
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPreferredPathingGetter? obj)
         {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -691,11 +691,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPreferredPathingGetter item,
-            IPreferredPathingGetter rhs)
+            IPreferredPathingGetter rhs,
+            PreferredPathing.TranslationMask? equalsMask = null)
         {
             return ((PreferredPathingCommon)((IPreferredPathingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1050,12 +1052,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPreferredPathingGetter? lhs,
-            IPreferredPathingGetter? rhs)
+            IPreferredPathingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
-            if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
+            if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
+            {
+                if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshTree) ?? true))
+            {
+                if (!lhs.NavmeshTree.SequenceEqualNullable(rhs.NavmeshTree)) return false;
+            }
             return true;
         }
         
@@ -1457,13 +1466,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPreferredPathingGetter rhs)) return false;
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPreferredPathingGetter rhs) return false;
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPreferredPathingGetter? obj)
         {
-            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PreferredPathingCommon)((IPreferredPathingGetter)this).CommonInstance()!).GetHashCode(this);

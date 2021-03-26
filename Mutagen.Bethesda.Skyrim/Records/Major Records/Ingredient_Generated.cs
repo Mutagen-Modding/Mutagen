@@ -1210,12 +1210,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIngredientGetter rhs) return false;
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngredientGetter? obj)
         {
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1411,11 +1411,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIngredientGetter item,
-            IIngredientGetter rhs)
+            IIngredientGetter rhs,
+            Ingredient.TranslationMask? equalsMask = null)
         {
             return ((IngredientCommon)((IIngredientGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1973,47 +1975,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIngredientGetter? lhs,
-            IIngredientGetter? rhs)
+            IIngredientGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.EquipType.Equals(rhs.EquipType)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.IngredientValue != rhs.IngredientValue) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.EquipType) ?? true))
+            {
+                if (!lhs.EquipType.Equals(rhs.EquipType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.IngredientValue) ?? true))
+            {
+                if (lhs.IngredientValue != rhs.IngredientValue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingredient_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIngredientGetter?)lhs,
-                rhs: rhs as IIngredientGetter);
+                rhs: rhs as IIngredientGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIngredientGetter?)lhs,
-                rhs: rhs as IIngredientGetter);
+                rhs: rhs as IIngredientGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IIngredientGetter item)
@@ -3178,12 +3236,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IIngredientGetter rhs) return false;
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngredientGetter? obj)
         {
-            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngredientCommon)((IIngredientGetter)this).CommonInstance()!).GetHashCode(this);

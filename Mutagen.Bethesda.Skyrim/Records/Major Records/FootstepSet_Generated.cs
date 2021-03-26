@@ -936,12 +936,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1087,11 +1087,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFootstepSetGetter item,
-            IFootstepSetGetter rhs)
+            IFootstepSetGetter rhs,
+            FootstepSet.TranslationMask? equalsMask = null)
         {
             return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1591,35 +1593,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFootstepSetGetter? lhs,
-            IFootstepSetGetter? rhs)
+            IFootstepSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
-            if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
-            if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            {
+                if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            {
+                if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            {
+                if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            {
+                if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            {
+                if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
-                rhs: rhs as IFootstepSetGetter);
+                rhs: rhs as IFootstepSetGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
-                rhs: rhs as IFootstepSetGetter);
+                rhs: rhs as IFootstepSetGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFootstepSetGetter item)
@@ -2296,12 +2318,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepSetGetter rhs) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);

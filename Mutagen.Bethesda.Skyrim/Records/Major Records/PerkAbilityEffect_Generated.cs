@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAbilityEffectGetter rhs)) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAbilityEffectGetter rhs) return false;
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -483,11 +483,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkAbilityEffectGetter item,
-            IPerkAbilityEffectGetter rhs)
+            IPerkAbilityEffectGetter rhs,
+            PerkAbilityEffect.TranslationMask? equalsMask = null)
         {
             return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -817,22 +819,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkAbilityEffectGetter? lhs,
-            IPerkAbilityEffectGetter? rhs)
+            IPerkAbilityEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
-            if (!lhs.Ability.Equals(rhs.Ability)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
+            {
+                if (!lhs.Ability.Equals(rhs.Ability)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkAbilityEffectGetter?)lhs,
-                rhs: rhs as IPerkAbilityEffectGetter);
+                rhs: rhs as IPerkAbilityEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkAbilityEffectGetter item)
@@ -1170,13 +1178,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAbilityEffectGetter rhs)) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAbilityEffectGetter rhs) return false;
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);

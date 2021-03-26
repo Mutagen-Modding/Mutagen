@@ -1231,12 +1231,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILightingTemplateGetter rhs) return false;
-            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILightingTemplateGetter? obj)
         {
-            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1422,11 +1422,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILightingTemplateGetter item,
-            ILightingTemplateGetter rhs)
+            ILightingTemplateGetter rhs,
+            LightingTemplate.TranslationMask? equalsMask = null)
         {
             return ((LightingTemplateCommon)((ILightingTemplateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1981,55 +1983,135 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILightingTemplateGetter? lhs,
-            ILightingTemplateGetter? rhs)
+            ILightingTemplateGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
-            if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
-            if (!lhs.FogNearColor.ColorOnlyEquals(rhs.FogNearColor)) return false;
-            if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
-            if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
-            if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
-            if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
-            if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
-            if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
-            if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
-            if (!lhs.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus)) return false;
-            if (!lhs.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus)) return false;
-            if (!lhs.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus)) return false;
-            if (!lhs.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus)) return false;
-            if (!lhs.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus)) return false;
-            if (!lhs.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus)) return false;
-            if (!lhs.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular)) return false;
-            if (!lhs.AmbientScale.EqualsWithin(rhs.AmbientScale)) return false;
-            if (!lhs.FogFarColor.ColorOnlyEquals(rhs.FogFarColor)) return false;
-            if (!lhs.FogMax.EqualsWithin(rhs.FogMax)) return false;
-            if (!lhs.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance)) return false;
-            if (!lhs.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!object.Equals(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
+            {
+                if (!lhs.AmbientColor.ColorOnlyEquals(rhs.AmbientColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalColor) ?? true))
+            {
+                if (!lhs.DirectionalColor.ColorOnlyEquals(rhs.DirectionalColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNearColor) ?? true))
+            {
+                if (!lhs.FogNearColor.ColorOnlyEquals(rhs.FogNearColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogNear) ?? true))
+            {
+                if (!lhs.FogNear.EqualsWithin(rhs.FogNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFar) ?? true))
+            {
+                if (!lhs.FogFar.EqualsWithin(rhs.FogFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationXY) ?? true))
+            {
+                if (lhs.DirectionalRotationXY != rhs.DirectionalRotationXY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalRotationZ) ?? true))
+            {
+                if (lhs.DirectionalRotationZ != rhs.DirectionalRotationZ) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalFade) ?? true))
+            {
+                if (!lhs.DirectionalFade.EqualsWithin(rhs.DirectionalFade)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogClipDistance) ?? true))
+            {
+                if (!lhs.FogClipDistance.EqualsWithin(rhs.FogClipDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogPower) ?? true))
+            {
+                if (!lhs.FogPower.EqualsWithin(rhs.FogPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXPlus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalXPlus.ColorOnlyEquals(rhs.AmbientDirectionalXPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalXMinus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalXMinus.ColorOnlyEquals(rhs.AmbientDirectionalXMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYPlus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalYPlus.ColorOnlyEquals(rhs.AmbientDirectionalYPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalYMinus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalYMinus.ColorOnlyEquals(rhs.AmbientDirectionalYMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZPlus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalZPlus.ColorOnlyEquals(rhs.AmbientDirectionalZPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus) ?? true))
+            {
+                if (!lhs.AmbientDirectionalZMinus.ColorOnlyEquals(rhs.AmbientDirectionalZMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientSpecular) ?? true))
+            {
+                if (!lhs.AmbientSpecular.ColorOnlyEquals(rhs.AmbientSpecular)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientScale) ?? true))
+            {
+                if (!lhs.AmbientScale.EqualsWithin(rhs.AmbientScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogFarColor) ?? true))
+            {
+                if (!lhs.FogFarColor.ColorOnlyEquals(rhs.FogFarColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.FogMax) ?? true))
+            {
+                if (!lhs.FogMax.EqualsWithin(rhs.FogMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeStartDistance) ?? true))
+            {
+                if (!lhs.LightFadeStartDistance.EqualsWithin(rhs.LightFadeStartDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.LightFadeEndDistance) ?? true))
+            {
+                if (!lhs.LightFadeEndDistance.EqualsWithin(rhs.LightFadeEndDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
+            {
+                if (!object.Equals(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILightingTemplateGetter?)lhs,
-                rhs: rhs as ILightingTemplateGetter);
+                rhs: rhs as ILightingTemplateGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILightingTemplateGetter?)lhs,
-                rhs: rhs as ILightingTemplateGetter);
+                rhs: rhs as ILightingTemplateGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILightingTemplateGetter item)
@@ -2965,12 +3047,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ILightingTemplateGetter rhs) return false;
-            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILightingTemplateGetter? obj)
         {
-            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LightingTemplateCommon)((ILightingTemplateGetter)this).CommonInstance()!).GetHashCode(this);

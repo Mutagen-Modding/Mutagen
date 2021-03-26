@@ -87,13 +87,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILightDataGetter rhs)) return false;
-            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILightDataGetter rhs) return false;
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILightDataGetter? obj)
         {
-            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -756,11 +756,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILightDataGetter item,
-            ILightDataGetter rhs)
+            ILightDataGetter rhs,
+            LightData.TranslationMask? equalsMask = null)
         {
             return ((LightDataCommon)((ILightDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1128,19 +1130,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILightDataGetter? lhs,
-            ILightDataGetter? rhs)
+            ILightDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (lhs.Time != rhs.Time) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
-            if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Time) ?? true))
+            {
+                if (lhs.Time != rhs.Time) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Radius) ?? true))
+            {
+                if (lhs.Radius != rhs.Radius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.FalloffExponent) ?? true))
+            {
+                if (!lhs.FalloffExponent.EqualsWithin(rhs.FalloffExponent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.FOV) ?? true))
+            {
+                if (!lhs.FOV.EqualsWithin(rhs.FOV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LightData_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
             return true;
         }
         
@@ -1533,13 +1563,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILightDataGetter rhs)) return false;
-            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILightDataGetter rhs) return false;
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILightDataGetter? obj)
         {
-            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LightDataCommon)((ILightDataGetter)this).CommonInstance()!).GetHashCode(this);

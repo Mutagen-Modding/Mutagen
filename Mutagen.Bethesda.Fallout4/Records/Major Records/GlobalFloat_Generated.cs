@@ -416,12 +416,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalFloatGetter rhs) return false;
-            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGlobalFloatGetter? obj)
         {
-            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).GetHashCode(this);
@@ -559,11 +559,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IGlobalFloatGetter item,
-            IGlobalFloatGetter rhs)
+            IGlobalFloatGetter rhs,
+            GlobalFloat.TranslationMask? equalsMask = null)
         {
             return ((GlobalFloatCommon)((IGlobalFloatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -990,41 +992,54 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGlobalFloatGetter? lhs,
-            IGlobalFloatGetter? rhs)
+            IGlobalFloatGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs)) return false;
-            if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
-            if (lhs.NoTypeDeclaration != rhs.NoTypeDeclaration) return false;
+            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GlobalFloat_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GlobalFloat_FieldIndex.NoTypeDeclaration) ?? true))
+            {
+                if (lhs.NoTypeDeclaration != rhs.NoTypeDeclaration) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IGlobalGetter? lhs,
-            IGlobalGetter? rhs)
+            IGlobalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalFloatGetter?)lhs,
-                rhs: rhs as IGlobalFloatGetter);
+                rhs: rhs as IGlobalFloatGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalFloatGetter?)lhs,
-                rhs: rhs as IGlobalFloatGetter);
+                rhs: rhs as IGlobalFloatGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalFloatGetter?)lhs,
-                rhs: rhs as IGlobalFloatGetter);
+                rhs: rhs as IGlobalFloatGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGlobalFloatGetter item)
@@ -1630,12 +1645,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalFloatGetter rhs) return false;
-            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGlobalFloatGetter? obj)
         {
-            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GlobalFloatCommon)((IGlobalFloatGetter)this).CommonInstance()!).GetHashCode(this);

@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageScheduleGetter rhs)) return false;
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageScheduleGetter rhs) return false;
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageScheduleGetter? obj)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -613,11 +613,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAIPackageScheduleGetter item,
-            IAIPackageScheduleGetter rhs)
+            IAIPackageScheduleGetter rhs,
+            AIPackageSchedule.TranslationMask? equalsMask = null)
         {
             return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -957,15 +959,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAIPackageScheduleGetter? lhs,
-            IAIPackageScheduleGetter? rhs)
+            IAIPackageScheduleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Month != rhs.Month) return false;
-            if (lhs.DayOfWeek != rhs.DayOfWeek) return false;
-            if (lhs.Day != rhs.Day) return false;
-            if (lhs.Time != rhs.Time) return false;
-            if (lhs.Duration != rhs.Duration) return false;
+            if ((crystal?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Month) ?? true))
+            {
+                if (lhs.Month != rhs.Month) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.DayOfWeek) ?? true))
+            {
+                if (lhs.DayOfWeek != rhs.DayOfWeek) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Day) ?? true))
+            {
+                if (lhs.Day != rhs.Day) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Time) ?? true))
+            {
+                if (lhs.Time != rhs.Time) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageSchedule_FieldIndex.Duration) ?? true))
+            {
+                if (lhs.Duration != rhs.Duration) return false;
+            }
             return true;
         }
         
@@ -1311,13 +1329,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageScheduleGetter rhs)) return false;
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageScheduleGetter rhs) return false;
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageScheduleGetter? obj)
         {
-            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageScheduleCommon)((IAIPackageScheduleGetter)this).CommonInstance()!).GetHashCode(this);

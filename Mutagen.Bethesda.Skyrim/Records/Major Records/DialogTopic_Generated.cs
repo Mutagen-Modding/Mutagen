@@ -901,12 +901,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1078,11 +1078,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogTopicGetter item,
-            IDialogTopicGetter rhs)
+            IDialogTopicGetter rhs,
+            DialogTopic.TranslationMask? equalsMask = null)
         {
             return ((DialogTopicCommon)((IDialogTopicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1849,42 +1851,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogTopicGetter? lhs,
-            IDialogTopicGetter? rhs)
+            IDialogTopicGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
-            if (!lhs.Branch.Equals(rhs.Branch)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.TopicFlags != rhs.TopicFlags) return false;
-            if (lhs.Category != rhs.Category) return false;
-            if (lhs.Subtype != rhs.Subtype) return false;
-            if (lhs.SubtypeName != rhs.SubtypeName) return false;
-            if (lhs.Timestamp != rhs.Timestamp) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Priority) ?? true))
+            {
+                if (!lhs.Priority.EqualsWithin(rhs.Priority)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Branch) ?? true))
+            {
+                if (!lhs.Branch.Equals(rhs.Branch)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.TopicFlags) ?? true))
+            {
+                if (lhs.TopicFlags != rhs.TopicFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Category) ?? true))
+            {
+                if (lhs.Category != rhs.Category) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Subtype) ?? true))
+            {
+                if (lhs.Subtype != rhs.Subtype) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.SubtypeName) ?? true))
+            {
+                if (lhs.SubtypeName != rhs.SubtypeName) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Timestamp) ?? true))
+            {
+                if (lhs.Timestamp != rhs.Timestamp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.Responses) ?? true))
+            {
+                if (!lhs.Responses.SequenceEqualNullable(rhs.Responses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogTopic_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
-                rhs: rhs as IDialogTopicGetter);
+                rhs: rhs as IDialogTopicGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogTopicGetter?)lhs,
-                rhs: rhs as IDialogTopicGetter);
+                rhs: rhs as IDialogTopicGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDialogTopicGetter item)
@@ -2943,12 +2986,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDialogTopicGetter rhs) return false;
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogTopicGetter? obj)
         {
-            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogTopicCommon)((IDialogTopicGetter)this).CommonInstance()!).GetHashCode(this);

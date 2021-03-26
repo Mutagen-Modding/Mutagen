@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherSoundGetter rhs)) return false;
-            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherSoundGetter rhs) return false;
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherSoundGetter? obj)
         {
-            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -525,11 +525,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWeatherSoundGetter item,
-            IWeatherSoundGetter rhs)
+            IWeatherSoundGetter rhs,
+            WeatherSound.TranslationMask? equalsMask = null)
         {
             return ((WeatherSoundCommon)((IWeatherSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -849,12 +851,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherSoundGetter? lhs,
-            IWeatherSoundGetter? rhs)
+            IWeatherSoundGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if ((crystal?.GetShouldTranslate((int)WeatherSound_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherSound_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -1180,13 +1189,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherSoundGetter rhs)) return false;
-            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherSoundGetter rhs) return false;
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherSoundGetter? obj)
         {
-            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherSoundCommon)((IWeatherSoundGetter)this).CommonInstance()!).GetHashCode(this);

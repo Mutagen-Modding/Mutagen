@@ -154,13 +154,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponDataGetter rhs)) return false;
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponDataGetter rhs) return false;
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponDataGetter? obj)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1326,11 +1326,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWeaponDataGetter item,
-            IWeaponDataGetter rhs)
+            IWeaponDataGetter rhs,
+            WeaponData.TranslationMask? equalsMask = null)
         {
             return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1818,36 +1820,115 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponDataGetter? lhs,
-            IWeaponDataGetter? rhs)
+            IWeaponDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.AnimationType != rhs.AnimationType) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
-            if (!lhs.Reach.EqualsWithin(rhs.Reach)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Unused2 != rhs.Unused2) return false;
-            if (!lhs.SightFOV.EqualsWithin(rhs.SightFOV)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.BaseVATStoHitChance != rhs.BaseVATStoHitChance) return false;
-            if (lhs.AttackAnimation != rhs.AttackAnimation) return false;
-            if (lhs.NumProjectiles != rhs.NumProjectiles) return false;
-            if (lhs.EmbeddedWeaponAV != rhs.EmbeddedWeaponAV) return false;
-            if (!lhs.RangeMin.EqualsWithin(rhs.RangeMin)) return false;
-            if (!lhs.RangeMax.EqualsWithin(rhs.RangeMax)) return false;
-            if (lhs.OnHit != rhs.OnHit) return false;
-            if (!lhs.AnimationAttackMult.EqualsWithin(rhs.AnimationAttackMult)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.RumbleLeftMotorStrength.EqualsWithin(rhs.RumbleLeftMotorStrength)) return false;
-            if (!lhs.RumbleRightMotorStrength.EqualsWithin(rhs.RumbleRightMotorStrength)) return false;
-            if (!lhs.RumbleDuration.EqualsWithin(rhs.RumbleDuration)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            if (lhs.Skill != rhs.Skill) return false;
-            if (lhs.Unknown4 != rhs.Unknown4) return false;
-            if (lhs.Resist != rhs.Resist) return false;
-            if (lhs.Unknown5 != rhs.Unknown5) return false;
-            if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.AnimationType) ?? true))
+            {
+                if (lhs.AnimationType != rhs.AnimationType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Reach) ?? true))
+            {
+                if (!lhs.Reach.EqualsWithin(rhs.Reach)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unused2) ?? true))
+            {
+                if (lhs.Unused2 != rhs.Unused2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.SightFOV) ?? true))
+            {
+                if (!lhs.SightFOV.EqualsWithin(rhs.SightFOV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.BaseVATStoHitChance) ?? true))
+            {
+                if (lhs.BaseVATStoHitChance != rhs.BaseVATStoHitChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.AttackAnimation) ?? true))
+            {
+                if (lhs.AttackAnimation != rhs.AttackAnimation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.NumProjectiles) ?? true))
+            {
+                if (lhs.NumProjectiles != rhs.NumProjectiles) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.EmbeddedWeaponAV) ?? true))
+            {
+                if (lhs.EmbeddedWeaponAV != rhs.EmbeddedWeaponAV) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.RangeMin) ?? true))
+            {
+                if (!lhs.RangeMin.EqualsWithin(rhs.RangeMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.RangeMax) ?? true))
+            {
+                if (!lhs.RangeMax.EqualsWithin(rhs.RangeMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.OnHit) ?? true))
+            {
+                if (lhs.OnHit != rhs.OnHit) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.AnimationAttackMult) ?? true))
+            {
+                if (!lhs.AnimationAttackMult.EqualsWithin(rhs.AnimationAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.RumbleLeftMotorStrength) ?? true))
+            {
+                if (!lhs.RumbleLeftMotorStrength.EqualsWithin(rhs.RumbleLeftMotorStrength)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.RumbleRightMotorStrength) ?? true))
+            {
+                if (!lhs.RumbleRightMotorStrength.EqualsWithin(rhs.RumbleRightMotorStrength)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.RumbleDuration) ?? true))
+            {
+                if (!lhs.RumbleDuration.EqualsWithin(rhs.RumbleDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Skill) ?? true))
+            {
+                if (lhs.Skill != rhs.Skill) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unknown4) ?? true))
+            {
+                if (lhs.Unknown4 != rhs.Unknown4) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Resist) ?? true))
+            {
+                if (lhs.Resist != rhs.Resist) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Unknown5) ?? true))
+            {
+                if (lhs.Unknown5 != rhs.Unknown5) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Stagger) ?? true))
+            {
+                if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
+            }
             return true;
         }
         
@@ -2457,13 +2538,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponDataGetter rhs)) return false;
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponDataGetter rhs) return false;
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponDataGetter? obj)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).GetHashCode(this);

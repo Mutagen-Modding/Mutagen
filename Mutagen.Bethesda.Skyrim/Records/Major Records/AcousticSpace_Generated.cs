@@ -527,12 +527,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAcousticSpaceGetter rhs) return false;
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAcousticSpaceGetter? obj)
         {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -680,11 +680,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAcousticSpaceGetter item,
-            IAcousticSpaceGetter rhs)
+            IAcousticSpaceGetter rhs,
+            AcousticSpace.TranslationMask? equalsMask = null)
         {
             return ((AcousticSpaceCommon)((IAcousticSpaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1090,34 +1092,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAcousticSpaceGetter? lhs,
-            IAcousticSpaceGetter? rhs)
+            IAcousticSpaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
-            if (!lhs.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion)) return false;
-            if (!lhs.EnvironmentType.Equals(rhs.EnvironmentType)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.AmbientSound) ?? true))
+            {
+                if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.UseSoundFromRegion) ?? true))
+            {
+                if (!lhs.UseSoundFromRegion.Equals(rhs.UseSoundFromRegion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AcousticSpace_FieldIndex.EnvironmentType) ?? true))
+            {
+                if (!lhs.EnvironmentType.Equals(rhs.EnvironmentType)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAcousticSpaceGetter?)lhs,
-                rhs: rhs as IAcousticSpaceGetter);
+                rhs: rhs as IAcousticSpaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAcousticSpaceGetter?)lhs,
-                rhs: rhs as IAcousticSpaceGetter);
+                rhs: rhs as IAcousticSpaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAcousticSpaceGetter item)
@@ -1762,12 +1781,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IAcousticSpaceGetter rhs) return false;
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAcousticSpaceGetter? obj)
         {
-            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AcousticSpaceCommon)((IAcousticSpaceGetter)this).CommonInstance()!).GetHashCode(this);

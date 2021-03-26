@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFogDistanceGetter rhs)) return false;
-            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFogDistanceGetter rhs) return false;
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFogDistanceGetter? obj)
         {
-            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IFogDistanceGetter item,
-            IFogDistanceGetter rhs)
+            IFogDistanceGetter rhs,
+            FogDistance.TranslationMask? equalsMask = null)
         {
             return ((FogDistanceCommon)((IFogDistanceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFogDistanceGetter? lhs,
-            IFogDistanceGetter? rhs)
+            IFogDistanceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.DayNear.EqualsWithin(rhs.DayNear)) return false;
-            if (!lhs.DayFar.EqualsWithin(rhs.DayFar)) return false;
-            if (!lhs.NightNear.EqualsWithin(rhs.NightNear)) return false;
-            if (!lhs.NightFar.EqualsWithin(rhs.NightFar)) return false;
+            if ((crystal?.GetShouldTranslate((int)FogDistance_FieldIndex.DayNear) ?? true))
+            {
+                if (!lhs.DayNear.EqualsWithin(rhs.DayNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FogDistance_FieldIndex.DayFar) ?? true))
+            {
+                if (!lhs.DayFar.EqualsWithin(rhs.DayFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FogDistance_FieldIndex.NightNear) ?? true))
+            {
+                if (!lhs.NightNear.EqualsWithin(rhs.NightNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FogDistance_FieldIndex.NightFar) ?? true))
+            {
+                if (!lhs.NightFar.EqualsWithin(rhs.NightFar)) return false;
+            }
             return true;
         }
         
@@ -1264,13 +1279,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFogDistanceGetter rhs)) return false;
-            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFogDistanceGetter rhs) return false;
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFogDistanceGetter? obj)
         {
-            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FogDistanceCommon)((IFogDistanceGetter)this).CommonInstance()!).GetHashCode(this);

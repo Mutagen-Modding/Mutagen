@@ -1773,12 +1773,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ICreatureGetter rhs) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureGetter? obj)
         {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1970,11 +1970,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICreatureGetter item,
-            ICreatureGetter rhs)
+            ICreatureGetter rhs,
+            Creature.TranslationMask? equalsMask = null)
         {
             return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2665,53 +2667,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICreatureGetter? lhs,
-            ICreatureGetter? rhs)
+            ICreatureGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
-            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
-            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
-            if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
-            if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
-            if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
-            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (lhs.AttackReach != rhs.AttackReach) return false;
-            if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
-            if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
-            if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
-            if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
-            if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
-            if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
-            if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
-            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
+            {
+                if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Models) ?? true))
+            {
+                if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
+            {
+                if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
+            {
+                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
+            {
+                if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
+            {
+                if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
+            {
+                if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Animations) ?? true))
+            {
+                if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
+            {
+                if (lhs.AttackReach != rhs.AttackReach) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
+            {
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
+            {
+                if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BaseScale) ?? true))
+            {
+                if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.FootWeight) ?? true))
+            {
+                if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodSpray) ?? true))
+            {
+                if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodDecal) ?? true))
+            {
+                if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
+            {
+                if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
+                rhs: rhs as ICreatureGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
+                rhs: rhs as ICreatureGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICreatureGetter item)
@@ -4218,12 +4294,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ICreatureGetter rhs) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureGetter? obj)
         {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);

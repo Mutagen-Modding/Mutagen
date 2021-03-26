@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceMovementTypeGetter rhs)) return false;
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceMovementTypeGetter rhs) return false;
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceMovementTypeGetter? obj)
         {
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -540,11 +540,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRaceMovementTypeGetter item,
-            IRaceMovementTypeGetter rhs)
+            IRaceMovementTypeGetter rhs,
+            RaceMovementType.TranslationMask? equalsMask = null)
         {
             return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -878,12 +880,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceMovementTypeGetter? lhs,
-            IRaceMovementTypeGetter? rhs)
+            IRaceMovementTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
-            if (!object.Equals(lhs.Overrides, rhs.Overrides)) return false;
+            if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
+            {
+                if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
+            {
+                if (!object.Equals(lhs.Overrides, rhs.Overrides)) return false;
+            }
             return true;
         }
         
@@ -1299,13 +1308,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceMovementTypeGetter rhs)) return false;
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceMovementTypeGetter rhs) return false;
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceMovementTypeGetter? obj)
         {
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);

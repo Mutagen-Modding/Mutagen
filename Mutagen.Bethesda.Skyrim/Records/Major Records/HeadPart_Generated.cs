@@ -887,12 +887,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IHeadPartGetter rhs) return false;
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadPartGetter? obj)
         {
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1064,11 +1064,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IHeadPartGetter item,
-            IHeadPartGetter rhs)
+            IHeadPartGetter rhs,
+            HeadPart.TranslationMask? equalsMask = null)
         {
             return ((HeadPartCommon)((IHeadPartGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1552,39 +1554,71 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHeadPartGetter? lhs,
-            IHeadPartGetter? rhs)
+            IHeadPartGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
-            if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
-            if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
-            if (!lhs.Color.Equals(rhs.Color)) return false;
-            if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.ExtraParts) ?? true))
+            {
+                if (!lhs.ExtraParts.SequenceEqualNullable(rhs.ExtraParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Parts) ?? true))
+            {
+                if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.TextureSet) ?? true))
+            {
+                if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.Equals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadPart_FieldIndex.ValidRaces) ?? true))
+            {
+                if (!lhs.ValidRaces.Equals(rhs.ValidRaces)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IHeadPartGetter?)lhs,
-                rhs: rhs as IHeadPartGetter);
+                rhs: rhs as IHeadPartGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IHeadPartGetter?)lhs,
-                rhs: rhs as IHeadPartGetter);
+                rhs: rhs as IHeadPartGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IHeadPartGetter item)
@@ -2456,12 +2490,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IHeadPartGetter rhs) return false;
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadPartGetter? obj)
         {
-            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadPartCommon)((IHeadPartGetter)this).CommonInstance()!).GetHashCode(this);

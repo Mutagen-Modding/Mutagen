@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcFacePartsGetter rhs)) return false;
-            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcFacePartsGetter rhs) return false;
+            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcFacePartsGetter? obj)
         {
-            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcFacePartsGetter item,
-            INpcFacePartsGetter rhs)
+            INpcFacePartsGetter rhs,
+            NpcFaceParts.TranslationMask? equalsMask = null)
         {
             return ((NpcFacePartsCommon)((INpcFacePartsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcFacePartsGetter? lhs,
-            INpcFacePartsGetter? rhs)
+            INpcFacePartsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Nose != rhs.Nose) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.Eyes != rhs.Eyes) return false;
-            if (lhs.Mouth != rhs.Mouth) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcFaceParts_FieldIndex.Nose) ?? true))
+            {
+                if (lhs.Nose != rhs.Nose) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceParts_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceParts_FieldIndex.Eyes) ?? true))
+            {
+                if (lhs.Eyes != rhs.Eyes) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceParts_FieldIndex.Mouth) ?? true))
+            {
+                if (lhs.Mouth != rhs.Mouth) return false;
+            }
             return true;
         }
         
@@ -1256,13 +1271,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcFacePartsGetter rhs)) return false;
-            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcFacePartsGetter rhs) return false;
+            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcFacePartsGetter? obj)
         {
-            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcFacePartsCommon)((INpcFacePartsGetter)this).CommonInstance()!).GetHashCode(this);

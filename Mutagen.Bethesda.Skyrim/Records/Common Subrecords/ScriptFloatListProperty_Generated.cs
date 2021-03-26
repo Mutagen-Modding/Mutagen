@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFloatListPropertyGetter rhs)) return false;
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFloatListPropertyGetter rhs) return false;
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFloatListPropertyGetter? obj)
         {
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -550,11 +550,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScriptFloatListPropertyGetter item,
-            IScriptFloatListPropertyGetter rhs)
+            IScriptFloatListPropertyGetter rhs,
+            ScriptFloatListProperty.TranslationMask? equalsMask = null)
         {
             return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -892,22 +894,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptFloatListPropertyGetter? lhs,
-            IScriptFloatListPropertyGetter? rhs)
+            IScriptFloatListPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
-            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptFloatListProperty_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IScriptPropertyGetter? lhs,
-            IScriptPropertyGetter? rhs)
+            IScriptPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScriptFloatListPropertyGetter?)lhs,
-                rhs: rhs as IScriptFloatListPropertyGetter);
+                rhs: rhs as IScriptFloatListPropertyGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IScriptFloatListPropertyGetter item)
@@ -1258,13 +1266,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFloatListPropertyGetter rhs)) return false;
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFloatListPropertyGetter rhs) return false;
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFloatListPropertyGetter? obj)
         {
-            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFloatListPropertyCommon)((IScriptFloatListPropertyGetter)this).CommonInstance()!).GetHashCode(this);

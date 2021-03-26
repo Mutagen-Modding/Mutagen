@@ -1409,12 +1409,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IScrollGetter rhs) return false;
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScrollGetter? obj)
         {
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1622,11 +1622,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScrollGetter item,
-            IScrollGetter rhs)
+            IScrollGetter rhs,
+            Scroll.TranslationMask? equalsMask = null)
         {
             return ((ScrollCommon)((IScrollGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2225,54 +2227,131 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScrollGetter? lhs,
-            IScrollGetter? rhs)
+            IScrollGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
-            if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.BaseCost != rhs.BaseCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
-            if (lhs.CastType != rhs.CastType) return false;
-            if (lhs.TargetType != rhs.TargetType) return false;
-            if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
-            if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
-            if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
-            if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.BaseCost) ?? true))
+            {
+                if (lhs.BaseCost != rhs.BaseCost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.ChargeTime) ?? true))
+            {
+                if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.CastType) ?? true))
+            {
+                if (lhs.CastType != rhs.CastType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.TargetType) ?? true))
+            {
+                if (lhs.TargetType != rhs.TargetType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.CastDuration) ?? true))
+            {
+                if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.HalfCostPerk) ?? true))
+            {
+                if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scroll_FieldIndex.SPITDataTypeState) ?? true))
+            {
+                if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScrollGetter?)lhs,
-                rhs: rhs as IScrollGetter);
+                rhs: rhs as IScrollGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScrollGetter?)lhs,
-                rhs: rhs as IScrollGetter);
+                rhs: rhs as IScrollGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IScrollGetter item)
@@ -3494,12 +3573,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IScrollGetter rhs) return false;
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScrollGetter? obj)
         {
-            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScrollCommon)((IScrollGetter)this).CommonInstance()!).GetHashCode(this);

@@ -113,13 +113,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcFaceMorphGetter rhs)) return false;
-            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcFaceMorphGetter rhs) return false;
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcFaceMorphGetter? obj)
         {
-            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1075,11 +1075,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcFaceMorphGetter item,
-            INpcFaceMorphGetter rhs)
+            INpcFaceMorphGetter rhs,
+            NpcFaceMorph.TranslationMask? equalsMask = null)
         {
             return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1517,29 +1519,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcFaceMorphGetter? lhs,
-            INpcFaceMorphGetter? rhs)
+            INpcFaceMorphGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NoseLongVsShort.EqualsWithin(rhs.NoseLongVsShort)) return false;
-            if (!lhs.NoseUpVsDown.EqualsWithin(rhs.NoseUpVsDown)) return false;
-            if (!lhs.JawUpVsDown.EqualsWithin(rhs.JawUpVsDown)) return false;
-            if (!lhs.JawNarrowVsWide.EqualsWithin(rhs.JawNarrowVsWide)) return false;
-            if (!lhs.JawForwardVsBack.EqualsWithin(rhs.JawForwardVsBack)) return false;
-            if (!lhs.CheeksUpVsDown.EqualsWithin(rhs.CheeksUpVsDown)) return false;
-            if (!lhs.CheeksForwardVsBack.EqualsWithin(rhs.CheeksForwardVsBack)) return false;
-            if (!lhs.EyesUpVsDown.EqualsWithin(rhs.EyesUpVsDown)) return false;
-            if (!lhs.EyesInVsOut.EqualsWithin(rhs.EyesInVsOut)) return false;
-            if (!lhs.BrowsUpVsDown.EqualsWithin(rhs.BrowsUpVsDown)) return false;
-            if (!lhs.BrowsInVsOut.EqualsWithin(rhs.BrowsInVsOut)) return false;
-            if (!lhs.BrowsForwardVsBack.EqualsWithin(rhs.BrowsForwardVsBack)) return false;
-            if (!lhs.LipsUpVsDown.EqualsWithin(rhs.LipsUpVsDown)) return false;
-            if (!lhs.LipsInVsOut.EqualsWithin(rhs.LipsInVsOut)) return false;
-            if (!lhs.ChinNarrowVsWide.EqualsWithin(rhs.ChinNarrowVsWide)) return false;
-            if (!lhs.ChinUpVsDown.EqualsWithin(rhs.ChinUpVsDown)) return false;
-            if (!lhs.ChinUnderbiteVsOverbite.EqualsWithin(rhs.ChinUnderbiteVsOverbite)) return false;
-            if (!lhs.EyesForwardVsBack.EqualsWithin(rhs.EyesForwardVsBack)) return false;
-            if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.NoseLongVsShort) ?? true))
+            {
+                if (!lhs.NoseLongVsShort.EqualsWithin(rhs.NoseLongVsShort)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.NoseUpVsDown) ?? true))
+            {
+                if (!lhs.NoseUpVsDown.EqualsWithin(rhs.NoseUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.JawUpVsDown) ?? true))
+            {
+                if (!lhs.JawUpVsDown.EqualsWithin(rhs.JawUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.JawNarrowVsWide) ?? true))
+            {
+                if (!lhs.JawNarrowVsWide.EqualsWithin(rhs.JawNarrowVsWide)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.JawForwardVsBack) ?? true))
+            {
+                if (!lhs.JawForwardVsBack.EqualsWithin(rhs.JawForwardVsBack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.CheeksUpVsDown) ?? true))
+            {
+                if (!lhs.CheeksUpVsDown.EqualsWithin(rhs.CheeksUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.CheeksForwardVsBack) ?? true))
+            {
+                if (!lhs.CheeksForwardVsBack.EqualsWithin(rhs.CheeksForwardVsBack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.EyesUpVsDown) ?? true))
+            {
+                if (!lhs.EyesUpVsDown.EqualsWithin(rhs.EyesUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.EyesInVsOut) ?? true))
+            {
+                if (!lhs.EyesInVsOut.EqualsWithin(rhs.EyesInVsOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.BrowsUpVsDown) ?? true))
+            {
+                if (!lhs.BrowsUpVsDown.EqualsWithin(rhs.BrowsUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.BrowsInVsOut) ?? true))
+            {
+                if (!lhs.BrowsInVsOut.EqualsWithin(rhs.BrowsInVsOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.BrowsForwardVsBack) ?? true))
+            {
+                if (!lhs.BrowsForwardVsBack.EqualsWithin(rhs.BrowsForwardVsBack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.LipsUpVsDown) ?? true))
+            {
+                if (!lhs.LipsUpVsDown.EqualsWithin(rhs.LipsUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.LipsInVsOut) ?? true))
+            {
+                if (!lhs.LipsInVsOut.EqualsWithin(rhs.LipsInVsOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.ChinNarrowVsWide) ?? true))
+            {
+                if (!lhs.ChinNarrowVsWide.EqualsWithin(rhs.ChinNarrowVsWide)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.ChinUpVsDown) ?? true))
+            {
+                if (!lhs.ChinUpVsDown.EqualsWithin(rhs.ChinUpVsDown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.ChinUnderbiteVsOverbite) ?? true))
+            {
+                if (!lhs.ChinUnderbiteVsOverbite.EqualsWithin(rhs.ChinUnderbiteVsOverbite)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.EyesForwardVsBack) ?? true))
+            {
+                if (!lhs.EyesForwardVsBack.EqualsWithin(rhs.EyesForwardVsBack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.Unknown) ?? true))
+            {
+                if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
+            }
             return true;
         }
         
@@ -2029,13 +2089,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcFaceMorphGetter rhs)) return false;
-            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcFaceMorphGetter rhs) return false;
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcFaceMorphGetter? obj)
         {
-            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcFaceMorphCommon)((INpcFaceMorphGetter)this).CommonInstance()!).GetHashCode(this);

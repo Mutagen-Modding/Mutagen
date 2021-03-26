@@ -1243,12 +1243,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1456,11 +1456,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIngestibleGetter item,
-            IIngestibleGetter rhs)
+            IIngestibleGetter rhs,
+            Ingestible.TranslationMask? equalsMask = null)
         {
             return ((IngestibleCommon)((IIngestibleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2022,48 +2024,107 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIngestibleGetter? lhs,
-            IIngestibleGetter? rhs)
+            IIngestibleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Addiction.Equals(rhs.Addiction)) return false;
-            if (!lhs.AddictionChance.EqualsWithin(rhs.AddictionChance)) return false;
-            if (!lhs.ConsumeSound.Equals(rhs.ConsumeSound)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Addiction) ?? true))
+            {
+                if (!lhs.Addiction.Equals(rhs.Addiction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.AddictionChance) ?? true))
+            {
+                if (!lhs.AddictionChance.EqualsWithin(rhs.AddictionChance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ConsumeSound) ?? true))
+            {
+                if (!lhs.ConsumeSound.Equals(rhs.ConsumeSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ingestible_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
-                rhs: rhs as IIngestibleGetter);
+                rhs: rhs as IIngestibleGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIngestibleGetter?)lhs,
-                rhs: rhs as IIngestibleGetter);
+                rhs: rhs as IIngestibleGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IIngestibleGetter item)
@@ -3230,12 +3291,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IIngestibleGetter rhs) return false;
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngestibleGetter? obj)
         {
-            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngestibleCommon)((IIngestibleGetter)this).CommonInstance()!).GetHashCode(this);

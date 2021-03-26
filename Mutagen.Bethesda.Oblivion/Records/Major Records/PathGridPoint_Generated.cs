@@ -87,13 +87,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPathGridPointGetter rhs)) return false;
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPathGridPointGetter rhs) return false;
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPathGridPointGetter? obj)
         {
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -668,11 +668,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPathGridPointGetter item,
-            IPathGridPointGetter rhs)
+            IPathGridPointGetter rhs,
+            PathGridPoint.TranslationMask? equalsMask = null)
         {
             return ((PathGridPointCommon)((IPathGridPointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1018,14 +1020,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPathGridPointGetter? lhs,
-            IPathGridPointGetter? rhs)
+            IPathGridPointGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
-            if (lhs.NumConnections != rhs.NumConnections) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
+            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.NumConnections) ?? true))
+            {
+                if (lhs.NumConnections != rhs.NumConnections) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Connections) ?? true))
+            {
+                if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
+            }
             return true;
         }
         
@@ -1364,13 +1379,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPathGridPointGetter rhs)) return false;
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPathGridPointGetter rhs) return false;
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPathGridPointGetter? obj)
         {
-            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PathGridPointCommon)((IPathGridPointGetter)this).CommonInstance()!).GetHashCode(this);

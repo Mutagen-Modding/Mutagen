@@ -58,13 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionLandGetter rhs)) return false;
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionLandGetter rhs) return false;
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);
@@ -417,11 +417,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionLandGetter item,
-            IRegionLandGetter rhs)
+            IRegionLandGetter rhs,
+            RegionLand.TranslationMask? equalsMask = null)
         {
             return ((RegionLandCommon)((IRegionLandGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -748,21 +750,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionLandGetter? lhs,
-            IRegionLandGetter? rhs)
+            IRegionLandGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IRegionDataGetter? lhs,
-            IRegionDataGetter? rhs)
+            IRegionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionLandGetter?)lhs,
-                rhs: rhs as IRegionLandGetter);
+                rhs: rhs as IRegionLandGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionLandGetter item)
@@ -1070,13 +1075,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionLandGetter rhs)) return false;
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionLandGetter rhs) return false;
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionLandGetter? obj)
         {
-            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionLandCommon)((IRegionLandGetter)this).CommonInstance()!).GetHashCode(this);

@@ -452,12 +452,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWordOfPowerGetter rhs) return false;
-            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWordOfPowerGetter? obj)
         {
-            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -603,11 +603,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWordOfPowerGetter item,
-            IWordOfPowerGetter rhs)
+            IWordOfPowerGetter rhs,
+            WordOfPower.TranslationMask? equalsMask = null)
         {
             return ((WordOfPowerCommon)((IWordOfPowerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -997,32 +999,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWordOfPowerGetter? lhs,
-            IWordOfPowerGetter? rhs)
+            IWordOfPowerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Translation, rhs.Translation)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)WordOfPower_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WordOfPower_FieldIndex.Translation) ?? true))
+            {
+                if (!object.Equals(lhs.Translation, rhs.Translation)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWordOfPowerGetter?)lhs,
-                rhs: rhs as IWordOfPowerGetter);
+                rhs: rhs as IWordOfPowerGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWordOfPowerGetter?)lhs,
-                rhs: rhs as IWordOfPowerGetter);
+                rhs: rhs as IWordOfPowerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWordOfPowerGetter item)
@@ -1599,12 +1612,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IWordOfPowerGetter rhs) return false;
-            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWordOfPowerGetter? obj)
         {
-            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WordOfPowerCommon)((IWordOfPowerGetter)this).CommonInstance()!).GetHashCode(this);

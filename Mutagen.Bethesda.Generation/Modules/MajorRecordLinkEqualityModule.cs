@@ -36,14 +36,14 @@ namespace Mutagen.Bethesda.Generation
                         fg.AppendLine($"return formLink.Equals(this);");
                     }
                     fg.AppendLine($"if (obj is not {obj.Interface(getter: true, internalInterface: true)} rhs) return false;");
-                    fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, rhs);");
+                    fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, rhs, crystal: null);");
                 }
                 fg.AppendLine();
 
                 fg.AppendLine($"public bool Equals({obj.Interface(getter: true, internalInterface: true)}? obj)");
                 using (new BraceWrapper(fg))
                 {
-                    fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, obj);");
+                    fg.AppendLine($"return {obj.CommonClassInstance("this", LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Equals(this, obj, crystal: null);");
                 }
                 fg.AppendLine();
 

@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectKeywordArchetypeGetter rhs)) return false;
-            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectKeywordArchetypeGetter rhs) return false;
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectKeywordArchetypeGetter? obj)
         {
-            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectKeywordArchetypeGetter item,
-            IMagicEffectKeywordArchetypeGetter rhs)
+            IMagicEffectKeywordArchetypeGetter rhs,
+            MagicEffectKeywordArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectKeywordArchetypeGetter? lhs,
-            IMagicEffectKeywordArchetypeGetter? rhs)
+            IMagicEffectKeywordArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectKeywordArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectKeywordArchetypeGetter);
+                rhs: rhs as IMagicEffectKeywordArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectKeywordArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectKeywordArchetypeGetter rhs)) return false;
-            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectKeywordArchetypeGetter rhs) return false;
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectKeywordArchetypeGetter? obj)
         {
-            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectKeywordArchetypeCommon)((IMagicEffectKeywordArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

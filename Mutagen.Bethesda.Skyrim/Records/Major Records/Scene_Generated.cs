@@ -1110,12 +1110,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISceneGetter rhs) return false;
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneGetter? obj)
         {
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1273,11 +1273,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISceneGetter item,
-            ISceneGetter rhs)
+            ISceneGetter rhs,
+            Scene.TranslationMask? equalsMask = null)
         {
             return ((SceneCommon)((ISceneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1820,41 +1822,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISceneGetter? lhs,
-            ISceneGetter? rhs)
+            ISceneGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Phases.SequenceEqualNullable(rhs.Phases)) return false;
-            if (!lhs.Actors.SequenceEqualNullable(rhs.Actors)) return false;
-            if (!lhs.Actions.SequenceEqualNullable(rhs.Actions)) return false;
-            if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
-            if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.LastActionIndex != rhs.LastActionIndex) return false;
-            if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Phases) ?? true))
+            {
+                if (!lhs.Phases.SequenceEqualNullable(rhs.Phases)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actors) ?? true))
+            {
+                if (!lhs.Actors.SequenceEqualNullable(rhs.Actors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Actions) ?? true))
+            {
+                if (!lhs.Actions.SequenceEqualNullable(rhs.Actions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
+            {
+                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
+            {
+                if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.LastActionIndex) ?? true))
+            {
+                if (lhs.LastActionIndex != rhs.LastActionIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VNAM, rhs.VNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISceneGetter?)lhs,
-                rhs: rhs as ISceneGetter);
+                rhs: rhs as ISceneGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISceneGetter?)lhs,
-                rhs: rhs as ISceneGetter);
+                rhs: rhs as ISceneGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISceneGetter item)
@@ -2904,12 +2944,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISceneGetter rhs) return false;
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneGetter? obj)
         {
-            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneCommon)((ISceneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneCommon)((ISceneGetter)this).CommonInstance()!).GetHashCode(this);

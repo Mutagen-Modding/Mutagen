@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesUnknownDataGetter rhs)) return false;
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponsesUnknownDataGetter rhs) return false;
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponsesUnknownDataGetter? obj)
         {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -565,11 +565,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogResponsesUnknownDataGetter item,
-            IDialogResponsesUnknownDataGetter rhs)
+            IDialogResponsesUnknownDataGetter rhs,
+            DialogResponsesUnknownData.TranslationMask? equalsMask = null)
         {
             return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -907,13 +909,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponsesUnknownDataGetter? lhs,
-            IDialogResponsesUnknownDataGetter? rhs)
+            IDialogResponsesUnknownDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!lhs.QNAM.Equals(rhs.QNAM)) return false;
-            if (lhs.NEXT != rhs.NEXT) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
+            {
+                if (!lhs.QNAM.Equals(rhs.QNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
+            {
+                if (lhs.NEXT != rhs.NEXT) return false;
+            }
             return true;
         }
         
@@ -1337,13 +1349,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesUnknownDataGetter rhs)) return false;
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponsesUnknownDataGetter rhs) return false;
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponsesUnknownDataGetter? obj)
         {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);

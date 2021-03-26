@@ -1139,12 +1139,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1334,11 +1334,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISpellGetter item,
-            ISpellGetter rhs)
+            ISpellGetter rhs,
+            Spell.TranslationMask? equalsMask = null)
         {
             return ((SpellCommon)((ISpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1873,47 +1875,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISpellGetter? lhs,
-            ISpellGetter? rhs)
+            ISpellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
-            if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (lhs.BaseCost != rhs.BaseCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
-            if (lhs.CastType != rhs.CastType) return false;
-            if (lhs.TargetType != rhs.TargetType) return false;
-            if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
-            if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
-            if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.MenuDisplayObject) ?? true))
+            {
+                if (!lhs.MenuDisplayObject.Equals(rhs.MenuDisplayObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.BaseCost) ?? true))
+            {
+                if (lhs.BaseCost != rhs.BaseCost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.ChargeTime) ?? true))
+            {
+                if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastType) ?? true))
+            {
+                if (lhs.CastType != rhs.CastType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.TargetType) ?? true))
+            {
+                if (lhs.TargetType != rhs.TargetType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.CastDuration) ?? true))
+            {
+                if (!lhs.CastDuration.EqualsWithin(rhs.CastDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.HalfCostPerk) ?? true))
+            {
+                if (!lhs.HalfCostPerk.Equals(rhs.HalfCostPerk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Spell_FieldIndex.SPITDataTypeState) ?? true))
+            {
+                if (lhs.SPITDataTypeState != rhs.SPITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
+                rhs: rhs as ISpellGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellGetter?)lhs,
-                rhs: rhs as ISpellGetter);
+                rhs: rhs as ISpellGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISpellGetter item)
@@ -2899,12 +2957,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISpellGetter rhs) return false;
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellGetter? obj)
         {
-            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellCommon)((ISpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellCommon)((ISpellGetter)this).CommonInstance()!).GetHashCode(this);

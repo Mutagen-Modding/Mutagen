@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageFlagsOverrideGetter rhs)) return false;
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageFlagsOverrideGetter rhs) return false;
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageFlagsOverrideGetter? obj)
         {
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).GetHashCode(this);
@@ -654,11 +654,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageFlagsOverrideGetter item,
-            IPackageFlagsOverrideGetter rhs)
+            IPackageFlagsOverrideGetter rhs,
+            PackageFlagsOverride.TranslationMask? equalsMask = null)
         {
             return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1005,16 +1007,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageFlagsOverrideGetter? lhs,
-            IPackageFlagsOverrideGetter? rhs)
+            IPackageFlagsOverrideGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.SetFlags != rhs.SetFlags) return false;
-            if (lhs.ClearFlags != rhs.ClearFlags) return false;
-            if (lhs.SetInterruptFlags != rhs.SetInterruptFlags) return false;
-            if (lhs.ClearInterruptFlags != rhs.ClearInterruptFlags) return false;
-            if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetFlags) ?? true))
+            {
+                if (lhs.SetFlags != rhs.SetFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearFlags) ?? true))
+            {
+                if (lhs.ClearFlags != rhs.ClearFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.SetInterruptFlags) ?? true))
+            {
+                if (lhs.SetInterruptFlags != rhs.SetInterruptFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.ClearInterruptFlags) ?? true))
+            {
+                if (lhs.ClearInterruptFlags != rhs.ClearInterruptFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.PreferredSpeed) ?? true))
+            {
+                if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageFlagsOverride_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
             return true;
         }
         
@@ -1379,13 +1400,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageFlagsOverrideGetter rhs)) return false;
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageFlagsOverrideGetter rhs) return false;
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageFlagsOverrideGetter? obj)
         {
-            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)this).CommonInstance()!).GetHashCode(this);

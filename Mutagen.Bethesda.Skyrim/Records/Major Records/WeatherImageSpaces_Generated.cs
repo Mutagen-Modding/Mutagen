@@ -96,13 +96,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherImageSpacesGetter rhs)) return false;
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherImageSpacesGetter rhs) return false;
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherImageSpacesGetter? obj)
         {
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -612,11 +612,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWeatherImageSpacesGetter item,
-            IWeatherImageSpacesGetter rhs)
+            IWeatherImageSpacesGetter rhs,
+            WeatherImageSpaces.TranslationMask? equalsMask = null)
         {
             return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -953,14 +955,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherImageSpacesGetter? lhs,
-            IWeatherImageSpacesGetter? rhs)
+            IWeatherImageSpacesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Sunrise.Equals(rhs.Sunrise)) return false;
-            if (!lhs.Day.Equals(rhs.Day)) return false;
-            if (!lhs.Sunset.Equals(rhs.Sunset)) return false;
-            if (!lhs.Night.Equals(rhs.Night)) return false;
+            if ((crystal?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunrise) ?? true))
+            {
+                if (!lhs.Sunrise.Equals(rhs.Sunrise)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Day) ?? true))
+            {
+                if (!lhs.Day.Equals(rhs.Day)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Sunset) ?? true))
+            {
+                if (!lhs.Sunset.Equals(rhs.Sunset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherImageSpaces_FieldIndex.Night) ?? true))
+            {
+                if (!lhs.Night.Equals(rhs.Night)) return false;
+            }
             return true;
         }
         
@@ -1317,13 +1332,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherImageSpacesGetter rhs)) return false;
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherImageSpacesGetter rhs) return false;
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherImageSpacesGetter? obj)
         {
-            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherImageSpacesCommon)((IWeatherImageSpacesGetter)this).CommonInstance()!).GetHashCode(this);

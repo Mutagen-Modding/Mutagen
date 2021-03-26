@@ -94,13 +94,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockDataGetter rhs)) return false;
-            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockDataGetter rhs) return false;
+            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockDataGetter? obj)
         {
-            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -640,11 +640,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILockDataGetter item,
-            ILockDataGetter rhs)
+            ILockDataGetter rhs,
+            LockData.TranslationMask? equalsMask = null)
         {
             return ((LockDataCommon)((ILockDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -985,15 +987,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILockDataGetter? lhs,
-            ILockDataGetter? rhs)
+            ILockDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Level != rhs.Level) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            if (!lhs.Key.Equals(rhs.Key)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)LockData_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockData_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockData_FieldIndex.Key) ?? true))
+            {
+                if (!lhs.Key.Equals(rhs.Key)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockData_FieldIndex.Unused2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            }
             return true;
         }
         
@@ -1350,13 +1368,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockDataGetter rhs)) return false;
-            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockDataGetter rhs) return false;
+            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockDataGetter? obj)
         {
-            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockDataCommon)((ILockDataGetter)this).CommonInstance()!).GetHashCode(this);

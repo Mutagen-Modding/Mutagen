@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IColorFrameGetter rhs)) return false;
-            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IColorFrameGetter rhs) return false;
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IColorFrameGetter? obj)
         {
-            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).GetHashCode(this);
@@ -511,11 +511,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IColorFrameGetter item,
-            IColorFrameGetter rhs)
+            IColorFrameGetter rhs,
+            ColorFrame.TranslationMask? equalsMask = null)
         {
             return ((ColorFrameCommon)((IColorFrameGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -830,12 +832,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IColorFrameGetter? lhs,
-            IColorFrameGetter? rhs)
+            IColorFrameGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Time.EqualsWithin(rhs.Time)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if ((crystal?.GetShouldTranslate((int)ColorFrame_FieldIndex.Time) ?? true))
+            {
+                if (!lhs.Time.EqualsWithin(rhs.Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorFrame_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
             return true;
         }
         
@@ -1149,13 +1158,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IColorFrameGetter rhs)) return false;
-            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IColorFrameGetter rhs) return false;
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IColorFrameGetter? obj)
         {
-            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ColorFrameCommon)((IColorFrameGetter)this).CommonInstance()!).GetHashCode(this);

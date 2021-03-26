@@ -146,13 +146,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcDataGetter rhs)) return false;
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcDataGetter rhs) return false;
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcDataGetter? obj)
         {
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1438,11 +1438,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this INpcDataGetter item,
-            INpcDataGetter rhs)
+            INpcDataGetter rhs,
+            NpcData.TranslationMask? equalsMask = null)
         {
             return ((NpcDataCommon)((INpcDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1957,40 +1959,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcDataGetter? lhs,
-            INpcDataGetter? rhs)
+            INpcDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Armorer != rhs.Armorer) return false;
-            if (lhs.Athletics != rhs.Athletics) return false;
-            if (lhs.Blade != rhs.Blade) return false;
-            if (lhs.Block != rhs.Block) return false;
-            if (lhs.Blunt != rhs.Blunt) return false;
-            if (lhs.HandToHand != rhs.HandToHand) return false;
-            if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
-            if (lhs.Alchemy != rhs.Alchemy) return false;
-            if (lhs.Alteration != rhs.Alteration) return false;
-            if (lhs.Conjuration != rhs.Conjuration) return false;
-            if (lhs.Destruction != rhs.Destruction) return false;
-            if (lhs.Illusion != rhs.Illusion) return false;
-            if (lhs.Mysticism != rhs.Mysticism) return false;
-            if (lhs.Restoration != rhs.Restoration) return false;
-            if (lhs.Acrobatics != rhs.Acrobatics) return false;
-            if (lhs.LightArmor != rhs.LightArmor) return false;
-            if (lhs.Marksman != rhs.Marksman) return false;
-            if (lhs.Mercantile != rhs.Mercantile) return false;
-            if (lhs.Security != rhs.Security) return false;
-            if (lhs.Sneak != rhs.Sneak) return false;
-            if (lhs.Speechcraft != rhs.Speechcraft) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.Strength != rhs.Strength) return false;
-            if (lhs.Intelligence != rhs.Intelligence) return false;
-            if (lhs.Willpower != rhs.Willpower) return false;
-            if (lhs.Agility != rhs.Agility) return false;
-            if (lhs.Speed != rhs.Speed) return false;
-            if (lhs.Endurance != rhs.Endurance) return false;
-            if (lhs.Personality != rhs.Personality) return false;
-            if (lhs.Luck != rhs.Luck) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Armorer) ?? true))
+            {
+                if (lhs.Armorer != rhs.Armorer) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Athletics) ?? true))
+            {
+                if (lhs.Athletics != rhs.Athletics) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Blade) ?? true))
+            {
+                if (lhs.Blade != rhs.Blade) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Block) ?? true))
+            {
+                if (lhs.Block != rhs.Block) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Blunt) ?? true))
+            {
+                if (lhs.Blunt != rhs.Blunt) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.HandToHand) ?? true))
+            {
+                if (lhs.HandToHand != rhs.HandToHand) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.HeavyArmor) ?? true))
+            {
+                if (lhs.HeavyArmor != rhs.HeavyArmor) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Alchemy) ?? true))
+            {
+                if (lhs.Alchemy != rhs.Alchemy) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Alteration) ?? true))
+            {
+                if (lhs.Alteration != rhs.Alteration) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Conjuration) ?? true))
+            {
+                if (lhs.Conjuration != rhs.Conjuration) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Destruction) ?? true))
+            {
+                if (lhs.Destruction != rhs.Destruction) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Illusion) ?? true))
+            {
+                if (lhs.Illusion != rhs.Illusion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Mysticism) ?? true))
+            {
+                if (lhs.Mysticism != rhs.Mysticism) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Restoration) ?? true))
+            {
+                if (lhs.Restoration != rhs.Restoration) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Acrobatics) ?? true))
+            {
+                if (lhs.Acrobatics != rhs.Acrobatics) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.LightArmor) ?? true))
+            {
+                if (lhs.LightArmor != rhs.LightArmor) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Marksman) ?? true))
+            {
+                if (lhs.Marksman != rhs.Marksman) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Mercantile) ?? true))
+            {
+                if (lhs.Mercantile != rhs.Mercantile) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Security) ?? true))
+            {
+                if (lhs.Security != rhs.Security) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Sneak) ?? true))
+            {
+                if (lhs.Sneak != rhs.Sneak) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Speechcraft) ?? true))
+            {
+                if (lhs.Speechcraft != rhs.Speechcraft) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Strength) ?? true))
+            {
+                if (lhs.Strength != rhs.Strength) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Intelligence) ?? true))
+            {
+                if (lhs.Intelligence != rhs.Intelligence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Willpower) ?? true))
+            {
+                if (lhs.Willpower != rhs.Willpower) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Agility) ?? true))
+            {
+                if (lhs.Agility != rhs.Agility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Speed) ?? true))
+            {
+                if (lhs.Speed != rhs.Speed) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Endurance) ?? true))
+            {
+                if (lhs.Endurance != rhs.Endurance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Personality) ?? true))
+            {
+                if (lhs.Personality != rhs.Personality) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcData_FieldIndex.Luck) ?? true))
+            {
+                if (lhs.Luck != rhs.Luck) return false;
+            }
             return true;
         }
         
@@ -2530,13 +2623,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcDataGetter rhs)) return false;
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcDataGetter rhs) return false;
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcDataGetter? obj)
         {
-            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcDataCommon)((INpcDataGetter)this).CommonInstance()!).GetHashCode(this);

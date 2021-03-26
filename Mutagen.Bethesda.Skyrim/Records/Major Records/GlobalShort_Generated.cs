@@ -392,12 +392,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalShortGetter rhs) return false;
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGlobalShortGetter? obj)
         {
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);
@@ -533,11 +533,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IGlobalShortGetter item,
-            IGlobalShortGetter rhs)
+            IGlobalShortGetter rhs,
+            GlobalShort.TranslationMask? equalsMask = null)
         {
             return ((GlobalShortCommon)((IGlobalShortGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -957,40 +959,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGlobalShortGetter? lhs,
-            IGlobalShortGetter? rhs)
+            IGlobalShortGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs)) return false;
-            if (lhs.Data != rhs.Data) return false;
+            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IGlobalGetter? lhs,
-            IGlobalGetter? rhs)
+            IGlobalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
-                rhs: rhs as IGlobalShortGetter);
+                rhs: rhs as IGlobalShortGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
-                rhs: rhs as IGlobalShortGetter);
+                rhs: rhs as IGlobalShortGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalShortGetter?)lhs,
-                rhs: rhs as IGlobalShortGetter);
+                rhs: rhs as IGlobalShortGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGlobalShortGetter item)
@@ -1605,12 +1617,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IGlobalShortGetter rhs) return false;
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGlobalShortGetter? obj)
         {
-            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GlobalShortCommon)((IGlobalShortGetter)this).CommonInstance()!).GetHashCode(this);

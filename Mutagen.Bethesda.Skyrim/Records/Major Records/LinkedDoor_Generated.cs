@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILinkedDoorGetter rhs)) return false;
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILinkedDoorGetter rhs) return false;
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -524,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILinkedDoorGetter item,
-            ILinkedDoorGetter rhs)
+            ILinkedDoorGetter rhs,
+            LinkedDoor.TranslationMask? equalsMask = null)
         {
             return ((LinkedDoorCommon)((ILinkedDoorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILinkedDoorGetter? lhs,
-            ILinkedDoorGetter? rhs)
+            ILinkedDoorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Door.Equals(rhs.Door)) return false;
+            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LinkedDoor_FieldIndex.Door) ?? true))
+            {
+                if (!lhs.Door.Equals(rhs.Door)) return false;
+            }
             return true;
         }
         
@@ -1165,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILinkedDoorGetter rhs)) return false;
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILinkedDoorGetter rhs) return false;
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILinkedDoorGetter? obj)
         {
-            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LinkedDoorCommon)((ILinkedDoorGetter)this).CommonInstance()!).GetHashCode(this);

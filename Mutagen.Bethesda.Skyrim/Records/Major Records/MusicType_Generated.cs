@@ -586,12 +586,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTypeGetter rhs) return false;
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTypeGetter? obj)
         {
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -735,11 +735,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMusicTypeGetter item,
-            IMusicTypeGetter rhs)
+            IMusicTypeGetter rhs,
+            MusicType.TranslationMask? equalsMask = null)
         {
             return ((MusicTypeCommon)((IMusicTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1167,34 +1169,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMusicTypeGetter? lhs,
-            IMusicTypeGetter? rhs)
+            IMusicTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
-            if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.FadeDuration) ?? true))
+            {
+                if (!lhs.FadeDuration.EqualsWithin(rhs.FadeDuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MusicType_FieldIndex.Tracks) ?? true))
+            {
+                if (!lhs.Tracks.SequenceEqualNullable(rhs.Tracks)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMusicTypeGetter?)lhs,
-                rhs: rhs as IMusicTypeGetter);
+                rhs: rhs as IMusicTypeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMusicTypeGetter?)lhs,
-                rhs: rhs as IMusicTypeGetter);
+                rhs: rhs as IMusicTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMusicTypeGetter item)
@@ -1874,12 +1893,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IMusicTypeGetter rhs) return false;
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMusicTypeGetter? obj)
         {
-            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MusicTypeCommon)((IMusicTypeGetter)this).CommonInstance()!).GetHashCode(this);

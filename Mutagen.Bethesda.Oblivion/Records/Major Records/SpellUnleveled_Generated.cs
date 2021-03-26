@@ -507,12 +507,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ISpellUnleveledGetter rhs) return false;
-            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellUnleveledGetter? obj)
         {
-            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).GetHashCode(this);
@@ -656,11 +656,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISpellUnleveledGetter item,
-            ISpellUnleveledGetter rhs)
+            ISpellUnleveledGetter rhs,
+            SpellUnleveled.TranslationMask? equalsMask = null)
         {
             return ((SpellUnleveledCommon)((ISpellUnleveledGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1107,41 +1109,54 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISpellUnleveledGetter? lhs,
-            ISpellUnleveledGetter? rhs)
+            ISpellUnleveledGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISpellGetter? lhs,
-            ISpellGetter? rhs)
+            ISpellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellUnleveledGetter?)lhs,
-                rhs: rhs as ISpellUnleveledGetter);
+                rhs: rhs as ISpellUnleveledGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellUnleveledGetter?)lhs,
-                rhs: rhs as ISpellUnleveledGetter);
+                rhs: rhs as ISpellUnleveledGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellUnleveledGetter?)lhs,
-                rhs: rhs as ISpellUnleveledGetter);
+                rhs: rhs as ISpellUnleveledGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISpellUnleveledGetter item)
@@ -1820,12 +1835,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISpellUnleveledGetter rhs) return false;
-            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellUnleveledGetter? obj)
         {
-            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellUnleveledCommon)((ISpellUnleveledGetter)this).CommonInstance()!).GetHashCode(this);

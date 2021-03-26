@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmmunitionDataGetter rhs)) return false;
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAmmunitionDataGetter rhs) return false;
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmmunitionDataGetter? obj)
         {
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -615,11 +615,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAmmunitionDataGetter item,
-            IAmmunitionDataGetter rhs)
+            IAmmunitionDataGetter rhs,
+            AmmunitionData.TranslationMask? equalsMask = null)
         {
             return ((AmmunitionDataCommon)((IAmmunitionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -959,15 +961,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAmmunitionDataGetter? lhs,
-            IAmmunitionDataGetter? rhs)
+            IAmmunitionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
+            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Damage) ?? true))
+            {
+                if (lhs.Damage != rhs.Damage) return false;
+            }
             return true;
         }
         
@@ -1314,13 +1332,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmmunitionDataGetter rhs)) return false;
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAmmunitionDataGetter rhs) return false;
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmmunitionDataGetter? obj)
         {
-            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmmunitionDataCommon)((IAmmunitionDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceBlockGetter rhs)) return false;
-            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceBlockGetter rhs) return false;
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceBlockGetter? obj)
         {
-            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -740,11 +740,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWorldspaceBlockGetter item,
-            IWorldspaceBlockGetter rhs)
+            IWorldspaceBlockGetter rhs,
+            WorldspaceBlock.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1452,15 +1454,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceBlockGetter? lhs,
-            IWorldspaceBlockGetter? rhs)
+            IWorldspaceBlockGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
-            if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberY) ?? true))
+            {
+                if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberX) ?? true))
+            {
+                if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.GroupType) ?? true))
+            {
+                if (lhs.GroupType != rhs.GroupType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
             return true;
         }
         
@@ -2082,13 +2100,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceBlockGetter rhs)) return false;
-            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceBlockGetter rhs) return false;
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceBlockGetter? obj)
         {
-            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceBlockCommon)((IWorldspaceBlockGetter)this).CommonInstance()!).GetHashCode(this);

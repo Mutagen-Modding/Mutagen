@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEntryPointsGetter rhs)) return false;
-            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEntryPointsGetter rhs) return false;
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEntryPointsGetter? obj)
         {
-            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -510,11 +510,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEntryPointsGetter item,
-            IEntryPointsGetter rhs)
+            IEntryPointsGetter rhs,
+            EntryPoints.TranslationMask? equalsMask = null)
         {
             return ((EntryPointsCommon)((IEntryPointsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -829,12 +831,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEntryPointsGetter? lhs,
-            IEntryPointsGetter? rhs)
+            IEntryPointsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.Points != rhs.Points) return false;
+            if ((crystal?.GetShouldTranslate((int)EntryPoints_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EntryPoints_FieldIndex.Points) ?? true))
+            {
+                if (lhs.Points != rhs.Points) return false;
+            }
             return true;
         }
         
@@ -1149,13 +1158,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEntryPointsGetter rhs)) return false;
-            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEntryPointsGetter rhs) return false;
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEntryPointsGetter? obj)
         {
-            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EntryPointsCommon)((IEntryPointsGetter)this).CommonInstance()!).GetHashCode(this);

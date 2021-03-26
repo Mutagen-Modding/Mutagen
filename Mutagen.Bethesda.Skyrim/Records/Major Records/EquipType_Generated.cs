@@ -509,12 +509,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEquipTypeGetter rhs) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEquipTypeGetter? obj)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -654,11 +654,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEquipTypeGetter item,
-            IEquipTypeGetter rhs)
+            IEquipTypeGetter rhs,
+            EquipType.TranslationMask? equalsMask = null)
         {
             return ((EquipTypeCommon)((IEquipTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1067,32 +1069,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEquipTypeGetter? lhs,
-            IEquipTypeGetter? rhs)
+            IEquipTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
-            if (lhs.UseAllParents != rhs.UseAllParents) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.SlotParents) ?? true))
+            {
+                if (!lhs.SlotParents.SequenceEqualNullable(rhs.SlotParents)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EquipType_FieldIndex.UseAllParents) ?? true))
+            {
+                if (lhs.UseAllParents != rhs.UseAllParents) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEquipTypeGetter?)lhs,
-                rhs: rhs as IEquipTypeGetter);
+                rhs: rhs as IEquipTypeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEquipTypeGetter?)lhs,
-                rhs: rhs as IEquipTypeGetter);
+                rhs: rhs as IEquipTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IEquipTypeGetter item)
@@ -1699,12 +1712,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IEquipTypeGetter rhs) return false;
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEquipTypeGetter? obj)
         {
-            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EquipTypeCommon)((IEquipTypeGetter)this).CommonInstance()!).GetHashCode(this);

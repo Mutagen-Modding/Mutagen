@@ -476,12 +476,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEyesGetter rhs) return false;
-            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEyesGetter? obj)
         {
-            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EyesCommon)((IEyesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -633,11 +633,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEyesGetter item,
-            IEyesGetter rhs)
+            IEyesGetter rhs,
+            Eyes.TranslationMask? equalsMask = null)
         {
             return ((EyesCommon)((IEyesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1033,33 +1035,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEyesGetter? lhs,
-            IEyesGetter? rhs)
+            IEyesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Eyes_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Eyes_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Eyes_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEyesGetter?)lhs,
-                rhs: rhs as IEyesGetter);
+                rhs: rhs as IEyesGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEyesGetter?)lhs,
-                rhs: rhs as IEyesGetter);
+                rhs: rhs as IEyesGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IEyesGetter item)
@@ -1653,12 +1669,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IEyesGetter rhs) return false;
-            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEyesGetter? obj)
         {
-            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EyesCommon)((IEyesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EyesCommon)((IEyesGetter)this).CommonInstance()!).GetHashCode(this);

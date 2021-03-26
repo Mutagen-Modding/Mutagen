@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDefaultObjectGetter rhs)) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDefaultObjectGetter rhs) return false;
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -524,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDefaultObjectGetter item,
-            IDefaultObjectGetter rhs)
+            IDefaultObjectGetter rhs,
+            DefaultObject.TranslationMask? equalsMask = null)
         {
             return ((DefaultObjectCommon)((IDefaultObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDefaultObjectGetter? lhs,
-            IDefaultObjectGetter? rhs)
+            IDefaultObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Use != rhs.Use) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
+            if ((crystal?.GetShouldTranslate((int)DefaultObject_FieldIndex.Use) ?? true))
+            {
+                if (lhs.Use != rhs.Use) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
             return true;
         }
         
@@ -1167,13 +1176,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDefaultObjectGetter rhs)) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDefaultObjectGetter rhs) return false;
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);

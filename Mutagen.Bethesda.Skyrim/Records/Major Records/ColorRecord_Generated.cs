@@ -483,12 +483,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -636,11 +636,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IColorRecordGetter item,
-            IColorRecordGetter rhs)
+            IColorRecordGetter rhs,
+            ColorRecord.TranslationMask? equalsMask = null)
         {
             return ((ColorRecordCommon)((IColorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,33 +1039,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IColorRecordGetter? lhs,
-            IColorRecordGetter? rhs)
+            IColorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            if (lhs.Playable != rhs.Playable) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ColorRecord_FieldIndex.Playable) ?? true))
+            {
+                if (lhs.Playable != rhs.Playable) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
-                rhs: rhs as IColorRecordGetter);
+                rhs: rhs as IColorRecordGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IColorRecordGetter?)lhs,
-                rhs: rhs as IColorRecordGetter);
+                rhs: rhs as IColorRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IColorRecordGetter item)
@@ -1662,12 +1678,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IColorRecordGetter rhs) return false;
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IColorRecordGetter? obj)
         {
-            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ColorRecordCommon)((IColorRecordGetter)this).CommonInstance()!).GetHashCode(this);

@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IExternalAliasReferenceGetter rhs)) return false;
-            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IExternalAliasReferenceGetter rhs) return false;
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IExternalAliasReferenceGetter? obj)
         {
-            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -526,11 +526,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IExternalAliasReferenceGetter item,
-            IExternalAliasReferenceGetter rhs)
+            IExternalAliasReferenceGetter rhs,
+            ExternalAliasReference.TranslationMask? equalsMask = null)
         {
             return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -860,12 +862,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IExternalAliasReferenceGetter? lhs,
-            IExternalAliasReferenceGetter? rhs)
+            IExternalAliasReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.AliasIndex != rhs.AliasIndex) return false;
+            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ExternalAliasReference_FieldIndex.AliasIndex) ?? true))
+            {
+                if (lhs.AliasIndex != rhs.AliasIndex) return false;
+            }
             return true;
         }
         
@@ -1257,13 +1266,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IExternalAliasReferenceGetter rhs)) return false;
-            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IExternalAliasReferenceGetter rhs) return false;
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IExternalAliasReferenceGetter? obj)
         {
-            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)this).CommonInstance()!).GetHashCode(this);

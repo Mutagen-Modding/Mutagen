@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IClothingFlagsGetter rhs)) return false;
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IClothingFlagsGetter rhs) return false;
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IClothingFlagsGetter? obj)
         {
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IClothingFlagsGetter item,
-            IClothingFlagsGetter rhs)
+            IClothingFlagsGetter rhs,
+            ClothingFlags.TranslationMask? equalsMask = null)
         {
             return ((ClothingFlagsCommon)((IClothingFlagsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IClothingFlagsGetter? lhs,
-            IClothingFlagsGetter? rhs)
+            IClothingFlagsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BipedFlags != rhs.BipedFlags) return false;
-            if (lhs.GeneralFlags != rhs.GeneralFlags) return false;
+            if ((crystal?.GetShouldTranslate((int)ClothingFlags_FieldIndex.BipedFlags) ?? true))
+            {
+                if (lhs.BipedFlags != rhs.BipedFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClothingFlags_FieldIndex.GeneralFlags) ?? true))
+            {
+                if (lhs.GeneralFlags != rhs.GeneralFlags) return false;
+            }
             return true;
         }
         
@@ -1164,13 +1173,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IClothingFlagsGetter rhs)) return false;
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IClothingFlagsGetter rhs) return false;
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IClothingFlagsGetter? obj)
         {
-            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ClothingFlagsCommon)((IClothingFlagsGetter)this).CommonInstance()!).GetHashCode(this);

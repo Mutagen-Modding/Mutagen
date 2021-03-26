@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintPresetGetter rhs)) return false;
-            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintPresetGetter rhs) return false;
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintPresetGetter? obj)
         {
-            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -561,11 +561,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITintPresetGetter item,
-            ITintPresetGetter rhs)
+            ITintPresetGetter rhs,
+            TintPreset.TranslationMask? equalsMask = null)
         {
             return ((TintPresetCommon)((ITintPresetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -904,13 +906,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITintPresetGetter? lhs,
-            ITintPresetGetter? rhs)
+            ITintPresetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Color.Equals(rhs.Color)) return false;
-            if (!lhs.DefaultValue.EqualsWithin(rhs.DefaultValue)) return false;
-            if (lhs.Index != rhs.Index) return false;
+            if ((crystal?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.Equals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintPreset_FieldIndex.DefaultValue) ?? true))
+            {
+                if (!lhs.DefaultValue.EqualsWithin(rhs.DefaultValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintPreset_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -1331,13 +1343,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintPresetGetter rhs)) return false;
-            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintPresetGetter rhs) return false;
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintPresetGetter? obj)
         {
-            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintPresetCommon)((ITintPresetGetter)this).CommonInstance()!).GetHashCode(this);

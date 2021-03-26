@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionWeatherGetter rhs)) return false;
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionWeatherGetter rhs) return false;
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionWeatherGetter? obj)
         {
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).GetHashCode(this);
@@ -557,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionWeatherGetter item,
-            IRegionWeatherGetter rhs)
+            IRegionWeatherGetter rhs,
+            RegionWeather.TranslationMask? equalsMask = null)
         {
             return ((RegionWeatherCommon)((IRegionWeatherGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -914,22 +916,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionWeatherGetter? lhs,
-            IRegionWeatherGetter? rhs)
+            IRegionWeatherGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs)) return false;
-            if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
+            if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
+            {
+                if (!lhs.Weathers.SequenceEqualNullable(rhs.Weathers)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IRegionDataGetter? lhs,
-            IRegionDataGetter? rhs)
+            IRegionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionWeatherGetter?)lhs,
-                rhs: rhs as IRegionWeatherGetter);
+                rhs: rhs as IRegionWeatherGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionWeatherGetter item)
@@ -1369,13 +1377,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionWeatherGetter rhs)) return false;
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionWeatherGetter rhs) return false;
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionWeatherGetter? obj)
         {
-            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionWeatherCommon)((IRegionWeatherGetter)this).CommonInstance()!).GetHashCode(this);

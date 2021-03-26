@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -531,11 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs)
+            IWorldspaceNavigationMeshDataGetter rhs,
+            WorldspaceNavigationMeshData.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -894,23 +896,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceNavigationMeshDataGetter? lhs,
-            IWorldspaceNavigationMeshDataGetter? rhs)
+            IWorldspaceNavigationMeshDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs)) return false;
-            if (!lhs.Parent.Equals(rhs.Parent)) return false;
-            if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
+            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
+            {
+                if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IANavigationMeshDataGetter? lhs,
-            IANavigationMeshDataGetter? rhs)
+            IANavigationMeshDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWorldspaceNavigationMeshDataGetter?)lhs,
-                rhs: rhs as IWorldspaceNavigationMeshDataGetter);
+                rhs: rhs as IWorldspaceNavigationMeshDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWorldspaceNavigationMeshDataGetter item)
@@ -1240,13 +1251,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellSubBlockGetter rhs)) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellSubBlockGetter rhs) return false;
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellSubBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -707,11 +707,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICellSubBlockGetter item,
-            ICellSubBlockGetter rhs)
+            ICellSubBlockGetter rhs,
+            CellSubBlock.TranslationMask? equalsMask = null)
         {
             return ((CellSubBlockCommon)((ICellSubBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1404,14 +1406,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICellSubBlockGetter? lhs,
-            ICellSubBlockGetter? rhs)
+            ICellSubBlockGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumber != rhs.BlockNumber) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Cells.SequenceEqualNullable(rhs.Cells)) return false;
+            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
+            {
+                if (lhs.BlockNumber != rhs.BlockNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.GroupType) ?? true))
+            {
+                if (lhs.GroupType != rhs.GroupType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.Cells) ?? true))
+            {
+                if (!lhs.Cells.SequenceEqualNullable(rhs.Cells)) return false;
+            }
             return true;
         }
         
@@ -2056,13 +2071,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellSubBlockGetter rhs)) return false;
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellSubBlockGetter rhs) return false;
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellSubBlockGetter? obj)
         {
-            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellSubBlockCommon)((ICellSubBlockGetter)this).CommonInstance()!).GetHashCode(this);

@@ -503,12 +503,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogBranchGetter rhs) return false;
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogBranchGetter? obj)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);
@@ -652,11 +652,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogBranchGetter item,
-            IDialogBranchGetter rhs)
+            IDialogBranchGetter rhs,
+            DialogBranch.TranslationMask? equalsMask = null)
         {
             return ((DialogBranchCommon)((IDialogBranchGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1063,34 +1065,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogBranchGetter? lhs,
-            IDialogBranchGetter? rhs)
+            IDialogBranchGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.TNAM != rhs.TNAM) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.StartingTopic.Equals(rhs.StartingTopic)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.TNAM) ?? true))
+            {
+                if (lhs.TNAM != rhs.TNAM) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogBranch_FieldIndex.StartingTopic) ?? true))
+            {
+                if (!lhs.StartingTopic.Equals(rhs.StartingTopic)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogBranchGetter?)lhs,
-                rhs: rhs as IDialogBranchGetter);
+                rhs: rhs as IDialogBranchGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogBranchGetter?)lhs,
-                rhs: rhs as IDialogBranchGetter);
+                rhs: rhs as IDialogBranchGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDialogBranchGetter item)
@@ -1713,12 +1732,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDialogBranchGetter rhs) return false;
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogBranchGetter? obj)
         {
-            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogBranchCommon)((IDialogBranchGetter)this).CommonInstance()!).GetHashCode(this);

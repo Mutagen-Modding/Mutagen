@@ -470,12 +470,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerEventNodeGetter rhs) return false;
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerEventNodeGetter? obj)
         {
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -615,11 +615,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IStoryManagerEventNodeGetter item,
-            IStoryManagerEventNodeGetter rhs)
+            IStoryManagerEventNodeGetter rhs,
+            StoryManagerEventNode.TranslationMask? equalsMask = null)
         {
             return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1064,42 +1066,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IStoryManagerEventNodeGetter? lhs,
-            IStoryManagerEventNodeGetter? rhs)
+            IStoryManagerEventNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemorySliceExt.Equal(lhs.XNAM, rhs.XNAM)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.XNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XNAM, rhs.XNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerEventNode_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAStoryManagerNodeGetter? lhs,
-            IAStoryManagerNodeGetter? rhs)
+            IAStoryManagerNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerEventNodeGetter);
+                rhs: rhs as IStoryManagerEventNodeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerEventNodeGetter);
+                rhs: rhs as IStoryManagerEventNodeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IStoryManagerEventNodeGetter?)lhs,
-                rhs: rhs as IStoryManagerEventNodeGetter);
+                rhs: rhs as IStoryManagerEventNodeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IStoryManagerEventNodeGetter item)
@@ -1753,12 +1771,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IStoryManagerEventNodeGetter rhs) return false;
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerEventNodeGetter? obj)
         {
-            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerEventNodeCommon)((IStoryManagerEventNodeGetter)this).CommonInstance()!).GetHashCode(this);

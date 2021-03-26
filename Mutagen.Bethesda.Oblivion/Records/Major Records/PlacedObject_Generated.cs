@@ -1258,12 +1258,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedObjectGetter rhs) return false;
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1449,11 +1449,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPlacedObjectGetter item,
-            IPlacedObjectGetter rhs)
+            IPlacedObjectGetter rhs,
+            PlacedObject.TranslationMask? equalsMask = null)
         {
             return ((PlacedObjectCommon)((IPlacedObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2043,54 +2045,131 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedObjectGetter? lhs,
-            IPlacedObjectGetter? rhs)
+            IPlacedObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!lhs.Base.Equals(rhs.Base)) return false;
-            if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
-            if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
-            if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
-            if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
-            if (!lhs.Owner.Equals(rhs.Owner)) return false;
-            if (lhs.FactionRank != rhs.FactionRank) return false;
-            if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
-            if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
-            if (!lhs.Target.Equals(rhs.Target)) return false;
-            if (lhs.SpeedTreeSeed != rhs.SpeedTreeSeed) return false;
-            if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
-            if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.LevelModifier != rhs.LevelModifier) return false;
-            if (!lhs.XRTM.Equals(rhs.XRTM)) return false;
-            if (lhs.ActionFlags != rhs.ActionFlags) return false;
-            if (lhs.Count != rhs.Count) return false;
-            if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
-            if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
-            if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!lhs.ContainedSoul.Equals(rhs.ContainedSoul)) return false;
-            if (!object.Equals(lhs.Location, rhs.Location)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XPCIFluff) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.FULLFluff) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
+            {
+                if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
+            {
+                if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Owner) ?? true))
+            {
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.FactionRank) ?? true))
+            {
+                if (lhs.FactionRank != rhs.FactionRank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.GlobalVariable) ?? true))
+            {
+                if (!lhs.GlobalVariable.Equals(rhs.GlobalVariable)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Target) ?? true))
+            {
+                if (!lhs.Target.Equals(rhs.Target)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.SpeedTreeSeed) ?? true))
+            {
+                if (lhs.SpeedTreeSeed != rhs.SpeedTreeSeed) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.DistantLODData) ?? true))
+            {
+                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Charge) ?? true))
+            {
+                if (!lhs.Charge.EqualsWithin(rhs.Charge)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LevelModifier) ?? true))
+            {
+                if (lhs.LevelModifier != rhs.LevelModifier) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XRTM) ?? true))
+            {
+                if (!lhs.XRTM.Equals(rhs.XRTM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActionFlags) ?? true))
+            {
+                if (lhs.ActionFlags != rhs.ActionFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
+            {
+                if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.OpenByDefault) ?? true))
+            {
+                if (lhs.OpenByDefault != rhs.OpenByDefault) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RagdollData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ContainedSoul) ?? true))
+            {
+                if (!lhs.ContainedSoul.Equals(rhs.ContainedSoul)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Location) ?? true))
+            {
+                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedObjectGetter?)lhs,
-                rhs: rhs as IPlacedObjectGetter);
+                rhs: rhs as IPlacedObjectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedObjectGetter?)lhs,
-                rhs: rhs as IPlacedObjectGetter);
+                rhs: rhs as IPlacedObjectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedObjectGetter item)
@@ -3488,12 +3567,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedObjectGetter rhs) return false;
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedObjectGetter? obj)
         {
-            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedObjectCommon)((IPlacedObjectGetter)this).CommonInstance()!).GetHashCode(this);
