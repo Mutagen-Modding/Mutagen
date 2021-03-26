@@ -2701,6 +2701,37 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.True(package.TryResolveIdentifier(mod.LeveledItems.First().Entries[0].Data.Reference.FormKey, out _));
         }
         #endregion
+
+        #region Warmup Caching
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void Warmup_Caches(LinkCacheTestTypes cacheType)
+        {
+            var prototype = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var armor = prototype.Armors.AddNew();
+            var llist = prototype.LeveledItems.AddNew();
+            llist.Entries = new ExtendedList<LeveledItemEntry>()
+            {
+                new LeveledItemEntry()
+                {
+                    Data = new LeveledItemEntryData()
+                    {
+                        Reference = armor.AsLink()
+                    }
+                }
+            };
+            using var disp = ConvertMod(prototype, out var mod);
+            var (style, package) = GetLinkCache(mod, cacheType);
+            package.Warmup<IArmorGetter>();
+            prototype.Armors.Clear();
+            prototype.LeveledItems.Clear();
+            package.TryResolveIdentifier<IArmorGetter>(armor.FormKey, out _)
+                .Should().Be(style == LinkCacheStyle.HasCaching || ReadOnly);
+            package.TryResolveIdentifier<ILeveledItemGetter>(llist.FormKey, out _)
+                .Should().Be(ReadOnly);
+        }
+        #endregion
     }
 
     public class Linking_ImmutableDirect_Tests : Linking_Abstract_Tests

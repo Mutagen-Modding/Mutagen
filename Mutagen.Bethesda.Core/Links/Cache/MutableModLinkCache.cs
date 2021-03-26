@@ -796,5 +796,21 @@ namespace Mutagen.Bethesda
         public void Dispose()
         {
         }
+
+        public void Warmup(Type type)
+        {
+        }
+
+        public void Warmup<TMajor>()
+        {
+        }
+
+        public void Warmup(params Type[] types)
+        {
+        }
+
+        public void Warmup(IEnumerable<Type> types)
+        {
+        }
     }
 }

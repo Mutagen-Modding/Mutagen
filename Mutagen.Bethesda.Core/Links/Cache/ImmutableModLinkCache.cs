@@ -469,6 +469,33 @@ namespace Mutagen.Bethesda
         public void Dispose()
         {
         }
+
+        /// <inheritdoc />
+        public void Warmup(Type type)
+        {
+            _formKeyCache.Warmup(type);
+        }
+
+        /// <inheritdoc />
+        public void Warmup<TMajor>()
+        {
+            _formKeyCache.Warmup(typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public void Warmup(params Type[] types)
+        {
+            Warmup((IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public void Warmup(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                _formKeyCache.Warmup(type);
+            }
+        }
     }
 
     internal class ImmutableModLinkCacheCategory<K>
@@ -601,6 +628,11 @@ namespace Mutagen.Bethesda
         public IEnumerable<LinkCacheItem> AllIdentifiers(Type type, CancellationToken? cancel)
         {
             return GetCache(type, _parent.Category, _parent._sourceMod).Items;
+        }
+
+        public void Warmup(Type type)
+        {
+            GetCache(type, _parent.Category, _parent._sourceMod);
         }
     }
 

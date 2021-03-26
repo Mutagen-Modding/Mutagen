@@ -457,6 +457,33 @@ namespace Mutagen.Bethesda
         public void Dispose()
         {
         }
+
+        /// <inheritdoc />
+        public void Warmup(Type type)
+        {
+            _formKeyCache.Warmup(type);
+        }
+
+        /// <inheritdoc />
+        public void Warmup<TMajor>()
+        {
+            _formKeyCache.Warmup(typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public void Warmup(params Type[] types)
+        {
+            Warmup((IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public void Warmup(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                _formKeyCache.Warmup(type);
+            }
+        }
     }
 
     internal class ImmutableLoadOrderLinkCacheCategory<K>
@@ -726,6 +753,20 @@ namespace Mutagen.Bethesda
             // Safe to return not-locked, because this particular cache will never be modified anymore, as it's fully queried
             if (cancel?.IsCancellationRequested ?? false) return Enumerable.Empty<LinkCacheItem>();
             return cache.Values;
+        }
+
+        public void Warmup(Type type)
+        {
+            DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
+
+            lock (cache)
+            {
+                // Fill all
+                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _parent.ListedOrder.Count, cache))
+                {
+                    FillNextCacheDepth(cache, type);
+                }
+            }
         }
     }
 
