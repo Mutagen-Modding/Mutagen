@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     {
         public static string GetTypicalPath(GameRelease release)
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", ToMyDocumentsString(release), $"{ToIniName(release.ToCategory())}.ini");
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", ToMyDocumentsString(release), $"{ToIniName(release)}.ini");
         }
 
         public static string ToMyDocumentsString(GameRelease release)
@@ -28,13 +28,15 @@ namespace Mutagen.Bethesda
             };
         }
 
-        public static string ToIniName(GameCategory category)
+        public static string ToIniName(GameRelease release)
         {
-            return category switch
+            return release switch
             {
-                GameCategory.Oblivion => "Oblivion",
-                GameCategory.Skyrim => "Skyrim",
-                GameCategory.Fallout4 => "Fallout4",
+                GameRelease.Oblivion => "Oblivion",
+                GameRelease.SkyrimLE => "Skyrim",
+                GameRelease.SkyrimSE => "Skyrim",
+                GameRelease.SkyrimVR => "SkyrimVR",
+                GameRelease.Fallout4 => "Fallout4",
                 _ => throw new NotImplementedException(),
             };
         }
