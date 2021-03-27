@@ -535,12 +535,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActionRecordGetter rhs) return false;
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActionRecordGetter? obj)
         {
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -692,11 +692,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IActionRecordGetter item,
-            IActionRecordGetter rhs)
+            IActionRecordGetter rhs,
+            ActionRecord.TranslationMask? equalsMask = null)
         {
             return ((ActionRecordCommon)((IActionRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1111,35 +1113,55 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActionRecordGetter? lhs,
-            IActionRecordGetter? rhs)
+            IActionRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.Notes) ?? true))
+            {
+                if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.AttractionRule) ?? true))
+            {
+                if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActionRecord_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActionRecordGetter?)lhs,
-                rhs: rhs as IActionRecordGetter);
+                rhs: rhs as IActionRecordGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActionRecordGetter?)lhs,
-                rhs: rhs as IActionRecordGetter);
+                rhs: rhs as IActionRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IActionRecordGetter item)
@@ -1798,12 +1820,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IActionRecordGetter rhs) return false;
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActionRecordGetter? obj)
         {
-            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActionRecordCommon)((IActionRecordGetter)this).CommonInstance()!).GetHashCode(this);

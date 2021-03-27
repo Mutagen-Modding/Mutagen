@@ -454,12 +454,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISkyrimMajorRecordGetter rhs) return false;
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimMajorRecordGetter? obj)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -582,11 +582,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISkyrimMajorRecordGetter item,
-            ISkyrimMajorRecordGetter rhs)
+            ISkyrimMajorRecordGetter rhs,
+            SkyrimMajorRecord.TranslationMask? equalsMask = null)
         {
             return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1206,23 +1208,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs)) return false;
-            if (lhs.FormVersion != rhs.FormVersion) return false;
-            if (lhs.Version2 != rhs.Version2) return false;
+            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISkyrimMajorRecordGetter?)lhs,
-                rhs: rhs as ISkyrimMajorRecordGetter);
+                rhs: rhs as ISkyrimMajorRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISkyrimMajorRecordGetter item)
@@ -1656,12 +1667,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISkyrimMajorRecordGetter rhs) return false;
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimMajorRecordGetter? obj)
         {
-            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimMajorRecordCommon)((ISkyrimMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

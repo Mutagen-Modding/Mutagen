@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAnimationChangeThresholdsGetter rhs)) return false;
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAnimationChangeThresholdsGetter rhs) return false;
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAnimationChangeThresholdsGetter? obj)
         {
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -547,11 +547,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAnimationChangeThresholdsGetter item,
-            IAnimationChangeThresholdsGetter rhs)
+            IAnimationChangeThresholdsGetter rhs,
+            AnimationChangeThresholds.TranslationMask? equalsMask = null)
         {
             return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -877,13 +879,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAnimationChangeThresholdsGetter? lhs,
-            IAnimationChangeThresholdsGetter? rhs)
+            IAnimationChangeThresholdsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Directional.EqualsWithin(rhs.Directional)) return false;
-            if (!lhs.MovementSpeed.EqualsWithin(rhs.MovementSpeed)) return false;
-            if (!lhs.RotationSpeed.EqualsWithin(rhs.RotationSpeed)) return false;
+            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.Directional) ?? true))
+            {
+                if (!lhs.Directional.EqualsWithin(rhs.Directional)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.MovementSpeed) ?? true))
+            {
+                if (!lhs.MovementSpeed.EqualsWithin(rhs.MovementSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.RotationSpeed) ?? true))
+            {
+                if (!lhs.RotationSpeed.EqualsWithin(rhs.RotationSpeed)) return false;
+            }
             return true;
         }
         
@@ -1213,13 +1225,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAnimationChangeThresholdsGetter rhs)) return false;
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAnimationChangeThresholdsGetter rhs) return false;
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAnimationChangeThresholdsGetter? obj)
         {
-            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)this).CommonInstance()!).GetHashCode(this);

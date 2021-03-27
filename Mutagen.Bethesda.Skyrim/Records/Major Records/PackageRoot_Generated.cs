@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageRootGetter rhs)) return false;
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageRootGetter rhs) return false;
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageRootGetter? obj)
         {
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).GetHashCode(this);
@@ -510,11 +510,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageRootGetter item,
-            IPackageRootGetter rhs)
+            IPackageRootGetter rhs,
+            PackageRoot.TranslationMask? equalsMask = null)
         {
             return ((PackageRootCommon)((IPackageRootGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -829,12 +831,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageRootGetter? lhs,
-            IPackageRootGetter? rhs)
+            IPackageRootGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BranchCount != rhs.BranchCount) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageRoot_FieldIndex.BranchCount) ?? true))
+            {
+                if (lhs.BranchCount != rhs.BranchCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageRoot_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1146,13 +1155,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageRootGetter rhs)) return false;
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageRootGetter rhs) return false;
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageRootGetter? obj)
         {
-            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageRootCommon)((IPackageRootGetter)this).CommonInstance()!).GetHashCode(this);

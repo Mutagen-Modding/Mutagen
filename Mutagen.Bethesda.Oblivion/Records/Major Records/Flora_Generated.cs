@@ -557,12 +557,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IFloraGetter rhs) return false;
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFloraGetter? obj)
         {
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()!).GetHashCode(this);
@@ -714,11 +714,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IFloraGetter item,
-            IFloraGetter rhs)
+            IFloraGetter rhs,
+            Flora.TranslationMask? equalsMask = null)
         {
             return ((FloraCommon)((IFloraGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1138,35 +1140,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFloraGetter? lhs,
-            IFloraGetter? rhs)
+            IFloraGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
-            if (!object.Equals(lhs.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Ingredient) ?? true))
+            {
+                if (!lhs.Ingredient.Equals(rhs.Ingredient)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
+            {
+                if (!object.Equals(lhs.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFloraGetter?)lhs,
-                rhs: rhs as IFloraGetter);
+                rhs: rhs as IFloraGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFloraGetter?)lhs,
-                rhs: rhs as IFloraGetter);
+                rhs: rhs as IFloraGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFloraGetter item)
@@ -1875,12 +1897,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IFloraGetter rhs) return false;
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFloraGetter? obj)
         {
-            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FloraCommon)((IFloraGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FloraCommon)((IFloraGetter)this).CommonInstance()!).GetHashCode(this);

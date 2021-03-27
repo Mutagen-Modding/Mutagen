@@ -106,13 +106,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceDataGetter rhs)) return false;
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceDataGetter rhs) return false;
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceDataGetter? obj)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -879,11 +879,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRaceDataGetter item,
-            IRaceDataGetter rhs)
+            IRaceDataGetter rhs,
+            RaceData.TranslationMask? equalsMask = null)
         {
             return ((RaceDataCommon)((IRaceDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1271,21 +1273,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceDataGetter? lhs,
-            IRaceDataGetter? rhs)
+            IRaceDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
-            if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
-            if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
-            if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
-            if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
-            if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
-            if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
-            if (lhs.Unused != rhs.Unused) return false;
-            if (!Equals(lhs.Height, rhs.Height)) return false;
-            if (!Equals(lhs.Weight, rhs.Weight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost0) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost1) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost2) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost3) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost4) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost5) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.SkillBoost6) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Height) ?? true))
+            {
+                if (!Equals(lhs.Height, rhs.Height)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Weight) ?? true))
+            {
+                if (!Equals(lhs.Weight, rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1853,13 +1889,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceDataGetter rhs)) return false;
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceDataGetter rhs) return false;
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceDataGetter? obj)
         {
-            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceDataCommon)((IRaceDataGetter)this).CommonInstance()!).GetHashCode(this);

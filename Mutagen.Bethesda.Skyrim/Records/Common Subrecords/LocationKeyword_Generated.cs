@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationKeywordGetter rhs)) return false;
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationKeywordGetter rhs) return false;
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationKeywordGetter? obj)
         {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -467,11 +467,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationKeywordGetter item,
-            ILocationKeywordGetter rhs)
+            ILocationKeywordGetter rhs,
+            LocationKeyword.TranslationMask? equalsMask = null)
         {
             return ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -787,22 +789,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationKeywordGetter? lhs,
-            ILocationKeywordGetter? rhs)
+            ILocationKeywordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
-            if (!lhs.Link.Equals(rhs.Link)) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationKeyword_FieldIndex.Link) ?? true))
+            {
+                if (!lhs.Link.Equals(rhs.Link)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationKeywordGetter?)lhs,
-                rhs: rhs as ILocationKeywordGetter);
+                rhs: rhs as ILocationKeywordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationKeywordGetter item)
@@ -1129,13 +1137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationKeywordGetter rhs)) return false;
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationKeywordGetter rhs) return false;
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationKeywordGetter? obj)
         {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).GetHashCode(this);

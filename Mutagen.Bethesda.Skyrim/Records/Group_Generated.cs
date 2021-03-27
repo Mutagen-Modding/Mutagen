@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGroupGetter<T> rhs)) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
+            if (obj is not IGroupGetter<T> rhs) return false;
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -283,7 +283,21 @@ namespace Mutagen.Bethesda.Skyrim
         {
             return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: null);
+        }
+
+        public static bool Equals<T, T_TranslMask>(
+            this IGroupGetter<T> item,
+            IGroupGetter<T> rhs,
+            Group.TranslationMask<T_TranslMask> equalsMask)
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
+            where T_TranslMask : SkyrimMajorRecord.TranslationMask, ITranslationMask
+        {
+            return ((GroupCommon<T>)((IGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+                lhs: item,
+                rhs: rhs,
+                crystal: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -980,14 +994,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGroupGetter<T>? lhs,
-            IGroupGetter<T>? rhs)
+            IGroupGetter<T>? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
+            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Group_FieldIndex.RecordCache) ?? true))
+            {
+                if (!lhs.RecordCache.SequenceEqualNullable(rhs.RecordCache)) return false;
+            }
             return true;
         }
         
@@ -1528,13 +1555,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGroupGetter<T> rhs)) return false;
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
+            if (obj is not IGroupGetter<T> rhs) return false;
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGroupGetter<T>? obj)
         {
-            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
+            return ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GroupCommon<T>)((IGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

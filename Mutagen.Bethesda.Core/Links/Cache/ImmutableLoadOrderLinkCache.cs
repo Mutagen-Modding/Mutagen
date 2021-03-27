@@ -73,6 +73,7 @@ namespace Mutagen.Bethesda
         {
             if (cache.Depth >= modCount)
             {
+                cache.Done = true;
                 return true;
             }
 
@@ -457,6 +458,33 @@ namespace Mutagen.Bethesda
         public void Dispose()
         {
         }
+
+        /// <inheritdoc />
+        public void Warmup(Type type)
+        {
+            _formKeyCache.Warmup(type);
+        }
+
+        /// <inheritdoc />
+        public void Warmup<TMajor>()
+        {
+            _formKeyCache.Warmup(typeof(TMajor));
+        }
+
+        /// <inheritdoc />
+        public void Warmup(params Type[] types)
+        {
+            Warmup((IEnumerable<Type>)types);
+        }
+
+        /// <inheritdoc />
+        public void Warmup(IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                _formKeyCache.Warmup(type);
+            }
+        }
     }
 
     internal class ImmutableLoadOrderLinkCacheCategory<K>
@@ -465,10 +493,8 @@ namespace Mutagen.Bethesda
         private readonly ImmutableLoadOrderLinkCache _parent;
         private readonly Func<IMajorRecordCommonGetter, TryGet<K>> _keyGetter;
         private readonly Func<K, bool> _shortCircuit;
-        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords
-            = new Dictionary<Type, DepthCache<K, LinkCacheItem>>();
-        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords
-            = new Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>>();
+        private readonly Dictionary<Type, DepthCache<K, LinkCacheItem>> _winningRecords = new();
+        private readonly Dictionary<Type, DepthCache<K, ImmutableList<LinkCacheItem>>> _allRecords = new();
 
         public ImmutableLoadOrderLinkCacheCategory(
             ImmutableLoadOrderLinkCache parent,
@@ -570,6 +596,13 @@ namespace Mutagen.Bethesda
 
             DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.TryGetValue(key, out majorRec);
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Check for record 
@@ -579,7 +612,7 @@ namespace Mutagen.Bethesda
                 }
                 if (ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey, _parent.ListedOrder.Count, cache))
                 {
-                    majorRec = default!;
+                    majorRec = default;
                     return false;
                 }
 
@@ -614,6 +647,19 @@ namespace Mutagen.Bethesda
             lock (_allRecords)
             {
                 cache = _allRecords.GetOrAdd(type);
+            }
+
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                if (cache.TryGetValue(key, out var doneList))
+                {
+                    foreach (var val in doneList)
+                    {
+                        yield return val;
+                    }
+                }
+                yield break;
             }
 
             // Grab the formkey's list
@@ -713,6 +759,13 @@ namespace Mutagen.Bethesda
                 return Enumerable.Empty<LinkCacheItem>();
             }
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.Values;
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Fill all
@@ -726,6 +779,20 @@ namespace Mutagen.Bethesda
             // Safe to return not-locked, because this particular cache will never be modified anymore, as it's fully queried
             if (cancel?.IsCancellationRequested ?? false) return Enumerable.Empty<LinkCacheItem>();
             return cache.Values;
+        }
+
+        public void Warmup(Type type)
+        {
+            DepthCache<K, LinkCacheItem> cache = GetTypeCache(type);
+
+            lock (cache)
+            {
+                // Fill all
+                while (!ImmutableLoadOrderLinkCache.ShouldStopQuery(modKey: null, _parent.ListedOrder.Count, cache))
+                {
+                    FillNextCacheDepth(cache, type);
+                }
+            }
         }
     }
 
@@ -747,7 +814,7 @@ namespace Mutagen.Bethesda
         where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TMod, TModGetter>
     {
-        public static readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> Empty = new ImmutableLoadOrderLinkCache<TMod, TModGetter>(Enumerable.Empty<TModGetter>(), LinkCachePreferences.Default);
+        public static readonly ImmutableLoadOrderLinkCache<TMod, TModGetter> Empty = new(Enumerable.Empty<TModGetter>(), LinkCachePreferences.Default);
 
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey> _formKeyContextCache;
         private readonly ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, string> _editorIdContextCache;
@@ -1016,6 +1083,13 @@ namespace Mutagen.Bethesda
                 }
             }
 
+            // If we're done, we can just query without locking
+            if (cache.Done)
+            {
+                return cache.TryGetValue(key, out majorRec);
+            }
+
+            // Potentially more to query, need to lock
             lock (cache)
             {
                 // Check for record
@@ -1177,6 +1251,7 @@ namespace Mutagen.Bethesda
         private readonly Dictionary<K, T> _dictionary = new Dictionary<K, T>();
         public HashSet<ModKey> PassedMods = new HashSet<ModKey>();
         public int Depth;
+        public bool Done;
 
         public IReadOnlyCollection<T> Values => _dictionary.Values;
 

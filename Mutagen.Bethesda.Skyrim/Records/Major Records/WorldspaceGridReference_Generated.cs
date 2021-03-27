@@ -74,13 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceGridReferenceGetter rhs)) return false;
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceGridReferenceGetter rhs) return false;
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceGridReferenceGetter? obj)
         {
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -605,11 +605,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceGridReferenceGetter item,
-            IWorldspaceGridReferenceGetter rhs)
+            IWorldspaceGridReferenceGetter rhs,
+            WorldspaceGridReference.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -946,12 +948,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceGridReferenceGetter? lhs,
-            IWorldspaceGridReferenceGetter? rhs)
+            IWorldspaceGridReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.GridPosition.Equals(rhs.GridPosition)) return false;
-            if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.GridPosition) ?? true))
+            {
+                if (!lhs.GridPosition.Equals(rhs.GridPosition)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceGridReference_FieldIndex.References) ?? true))
+            {
+                if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+            }
             return true;
         }
         
@@ -1312,13 +1321,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceGridReferenceGetter rhs)) return false;
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceGridReferenceGetter rhs) return false;
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceGridReferenceGetter? obj)
         {
-            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceGridReferenceCommon)((IWorldspaceGridReferenceGetter)this).CommonInstance()!).GetHashCode(this);

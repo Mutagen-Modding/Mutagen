@@ -758,5 +758,25 @@ namespace Mutagen.Bethesda
         public void Dispose()
         {
         }
+
+        public void Warmup(Type type)
+        {
+            WrappedImmutableCache.Warmup(type);
+        }
+
+        public void Warmup<TMajor>()
+        {
+            WrappedImmutableCache.Warmup<TMajor>();
+        }
+
+        public void Warmup(params Type[] types)
+        {
+            WrappedImmutableCache.Warmup(types);
+        }
+
+        public void Warmup(IEnumerable<Type> types)
+        {
+            WrappedImmutableCache.Warmup(types);
+        }
     }
 }

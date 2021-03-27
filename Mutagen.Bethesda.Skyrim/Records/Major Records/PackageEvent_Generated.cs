@@ -136,13 +136,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageEventGetter rhs)) return false;
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageEventGetter rhs) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageEventGetter? obj)
         {
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);
@@ -816,11 +816,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageEventGetter item,
-            IPackageEventGetter rhs)
+            IPackageEventGetter rhs,
+            PackageEvent.TranslationMask? equalsMask = null)
         {
             return ((PackageEventCommon)((IPackageEventGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1212,17 +1214,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageEventGetter? lhs,
-            IPackageEventGetter? rhs)
+            IPackageEventGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Idle.Equals(rhs.Idle)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
-            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
+            {
+                if (!lhs.Idle.Equals(rhs.Idle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCDA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCTX) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.QNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.TNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Topics) ?? true))
+            {
+                if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            }
             return true;
         }
         
@@ -1842,13 +1866,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageEventGetter rhs)) return false;
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageEventGetter rhs) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageEventGetter? obj)
         {
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);

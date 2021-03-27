@@ -1017,12 +1017,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPerkGetter rhs) return false;
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkGetter? obj)
         {
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1202,11 +1202,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkGetter item,
-            IPerkGetter rhs)
+            IPerkGetter rhs,
+            Perk.TranslationMask? equalsMask = null)
         {
             return ((PerkCommon)((IPerkGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1721,43 +1723,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkGetter? lhs,
-            IPerkGetter? rhs)
+            IPerkGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.Trait != rhs.Trait) return false;
-            if (lhs.Level != rhs.Level) return false;
-            if (lhs.NumRanks != rhs.NumRanks) return false;
-            if (lhs.Playable != rhs.Playable) return false;
-            if (lhs.Hidden != rhs.Hidden) return false;
-            if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Trait) ?? true))
+            {
+                if (lhs.Trait != rhs.Trait) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NumRanks) ?? true))
+            {
+                if (lhs.NumRanks != rhs.NumRanks) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Playable) ?? true))
+            {
+                if (lhs.Playable != rhs.Playable) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Hidden) ?? true))
+            {
+                if (lhs.Hidden != rhs.Hidden) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.NextPerk) ?? true))
+            {
+                if (!lhs.NextPerk.Equals(rhs.NextPerk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkGetter?)lhs,
-                rhs: rhs as IPerkGetter);
+                rhs: rhs as IPerkGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkGetter?)lhs,
-                rhs: rhs as IPerkGetter);
+                rhs: rhs as IPerkGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkGetter item)
@@ -2193,19 +2239,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IPerkGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IPerkGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         static partial void WriteBinaryEffectsCustom(
             MutagenWriter writer,
             IPerkGetter item);
@@ -2263,9 +2296,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            PerkBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Trait);
@@ -2404,9 +2445,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    PerkBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)Perk_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DATA:
@@ -2445,10 +2489,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IPerkInternal item);
 
         static partial void FillBinaryEffectsCustom(
             MutagenFrame frame,
@@ -2718,12 +2758,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPerkGetter rhs) return false;
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkGetter? obj)
         {
-            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkCommon)((IPerkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkCommon)((IPerkGetter)this).CommonInstance()!).GetHashCode(this);

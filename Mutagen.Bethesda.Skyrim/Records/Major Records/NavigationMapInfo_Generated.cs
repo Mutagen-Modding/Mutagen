@@ -155,13 +155,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMapInfoGetter rhs)) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationMapInfoGetter rhs) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1139,11 +1139,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavigationMapInfoGetter item,
-            INavigationMapInfoGetter rhs)
+            INavigationMapInfoGetter rhs,
+            NavigationMapInfo.TranslationMask? equalsMask = null)
         {
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1594,22 +1596,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavigationMapInfoGetter? lhs,
-            INavigationMapInfoGetter? rhs)
+            INavigationMapInfoGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
-            if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
-            if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
-            if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
-            if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
-            if (!object.Equals(lhs.Island, rhs.Island)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
-            if (!lhs.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord)) return false;
-            if (!lhs.ParentCell.Equals(rhs.ParentCell)) return false;
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
+            {
+                if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
+            {
+                if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
+            {
+                if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMerges) ?? true))
+            {
+                if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
+            {
+                if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
+            {
+                if (!object.Equals(lhs.Island, rhs.Island)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
+            {
+                if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
+            {
+                if (!lhs.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
+            {
+                if (!lhs.ParentCell.Equals(rhs.ParentCell)) return false;
+            }
             return true;
         }
         
@@ -2210,13 +2249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMapInfoGetter rhs)) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationMapInfoGetter rhs) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);

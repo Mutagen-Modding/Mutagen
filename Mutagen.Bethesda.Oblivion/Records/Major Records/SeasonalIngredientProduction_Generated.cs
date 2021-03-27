@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISeasonalIngredientProductionGetter rhs)) return false;
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISeasonalIngredientProductionGetter rhs) return false;
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISeasonalIngredientProductionGetter? obj)
         {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISeasonalIngredientProductionGetter item,
-            ISeasonalIngredientProductionGetter rhs)
+            ISeasonalIngredientProductionGetter rhs,
+            SeasonalIngredientProduction.TranslationMask? equalsMask = null)
         {
             return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISeasonalIngredientProductionGetter? lhs,
-            ISeasonalIngredientProductionGetter? rhs)
+            ISeasonalIngredientProductionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Spring != rhs.Spring) return false;
-            if (lhs.Summer != rhs.Summer) return false;
-            if (lhs.Fall != rhs.Fall) return false;
-            if (lhs.Winter != rhs.Winter) return false;
+            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Spring) ?? true))
+            {
+                if (lhs.Spring != rhs.Spring) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Summer) ?? true))
+            {
+                if (lhs.Summer != rhs.Summer) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Fall) ?? true))
+            {
+                if (lhs.Fall != rhs.Fall) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Winter) ?? true))
+            {
+                if (lhs.Winter != rhs.Winter) return false;
+            }
             return true;
         }
         
@@ -1256,13 +1271,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISeasonalIngredientProductionGetter rhs)) return false;
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISeasonalIngredientProductionGetter rhs) return false;
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISeasonalIngredientProductionGetter? obj)
         {
-            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)this).CommonInstance()!).GetHashCode(this);

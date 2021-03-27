@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceDepthOfFieldGetter rhs)) return false;
-            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceDepthOfFieldGetter rhs) return false;
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceDepthOfFieldGetter? obj)
         {
-            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).GetHashCode(this);
@@ -685,11 +685,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImageSpaceDepthOfFieldGetter item,
-            IImageSpaceDepthOfFieldGetter rhs)
+            IImageSpaceDepthOfFieldGetter rhs,
+            ImageSpaceDepthOfField.TranslationMask? equalsMask = null)
         {
             return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1043,17 +1045,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceDepthOfFieldGetter? lhs,
-            IImageSpaceDepthOfFieldGetter? rhs)
+            IImageSpaceDepthOfFieldGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.Strength.EqualsWithin(rhs.Strength)) return false;
-            if (!lhs.Distance.EqualsWithin(rhs.Distance)) return false;
-            if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.BlurRadius != rhs.BlurRadius) return false;
-            if (lhs.Sky != rhs.Sky) return false;
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Strength) ?? true))
+            {
+                if (!lhs.Strength.EqualsWithin(rhs.Strength)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Distance) ?? true))
+            {
+                if (!lhs.Distance.EqualsWithin(rhs.Distance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Range) ?? true))
+            {
+                if (!lhs.Range.EqualsWithin(rhs.Range)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.BlurRadius) ?? true))
+            {
+                if (lhs.BlurRadius != rhs.BlurRadius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceDepthOfField_FieldIndex.Sky) ?? true))
+            {
+                if (lhs.Sky != rhs.Sky) return false;
+            }
             return true;
         }
         
@@ -1475,13 +1499,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceDepthOfFieldGetter rhs)) return false;
-            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceDepthOfFieldGetter rhs) return false;
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceDepthOfFieldGetter? obj)
         {
-            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)this).CommonInstance()!).GetHashCode(this);

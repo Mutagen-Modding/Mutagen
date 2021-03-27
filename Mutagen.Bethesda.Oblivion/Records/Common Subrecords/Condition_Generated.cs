@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGetter rhs) return false;
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGetter? obj)
         {
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -730,11 +730,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IConditionGetter item,
-            IConditionGetter rhs)
+            IConditionGetter rhs,
+            Condition.TranslationMask? equalsMask = null)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1106,18 +1108,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConditionGetter? lhs,
-            IConditionGetter? rhs)
+            IConditionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.CompareOperator != rhs.CompareOperator) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
-            if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
-            if (lhs.Function != rhs.Function) return false;
-            if (lhs.FirstParameter != rhs.FirstParameter) return false;
-            if (lhs.SecondParameter != rhs.SecondParameter) return false;
-            if (lhs.ThirdParameter != rhs.ThirdParameter) return false;
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
+            {
+                if (lhs.CompareOperator != rhs.CompareOperator) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.Fluff) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.ComparisonValue) ?? true))
+            {
+                if (!lhs.ComparisonValue.EqualsWithin(rhs.ComparisonValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.FirstParameter) ?? true))
+            {
+                if (lhs.FirstParameter != rhs.FirstParameter) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.SecondParameter) ?? true))
+            {
+                if (lhs.SecondParameter != rhs.SecondParameter) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.ThirdParameter) ?? true))
+            {
+                if (lhs.ThirdParameter != rhs.ThirdParameter) return false;
+            }
             return true;
         }
         
@@ -1522,13 +1549,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGetter rhs) return false;
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGetter? obj)
         {
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);

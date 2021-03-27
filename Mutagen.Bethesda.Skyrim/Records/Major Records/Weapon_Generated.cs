@@ -1720,12 +1720,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1955,11 +1955,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWeaponGetter item,
-            IWeaponGetter rhs)
+            IWeaponGetter rhs,
+            Weapon.TranslationMask? equalsMask = null)
         {
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2646,61 +2648,159 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponGetter? lhs,
-            IWeaponGetter? rhs)
+            IWeaponGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
-            if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!lhs.BlockBashImpact.Equals(rhs.BlockBashImpact)) return false;
-            if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!object.Equals(lhs.ScopeModel, rhs.ScopeModel)) return false;
-            if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
-            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
-            if (!lhs.FirstPersonModel.Equals(rhs.FirstPersonModel)) return false;
-            if (!lhs.AttackSound.Equals(rhs.AttackSound)) return false;
-            if (!lhs.AttackSound2D.Equals(rhs.AttackSound2D)) return false;
-            if (!lhs.AttackLoopSound.Equals(rhs.AttackLoopSound)) return false;
-            if (!lhs.AttackFailSound.Equals(rhs.AttackFailSound)) return false;
-            if (!lhs.IdleSound.Equals(rhs.IdleSound)) return false;
-            if (!lhs.EquipSound.Equals(rhs.EquipSound)) return false;
-            if (!lhs.UnequipSound.Equals(rhs.UnequipSound)) return false;
-            if (!object.Equals(lhs.BasicStats, rhs.BasicStats)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.Critical, rhs.Critical)) return false;
-            if (lhs.DetectionSoundLevel != rhs.DetectionSoundLevel) return false;
-            if (!lhs.Template.Equals(rhs.Template)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BlockBashImpact) ?? true))
+            {
+                if (!lhs.BlockBashImpact.Equals(rhs.BlockBashImpact)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ScopeModel) ?? true))
+            {
+                if (!object.Equals(lhs.ScopeModel, rhs.ScopeModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Unused) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Unused, rhs.Unused)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.FirstPersonModel) ?? true))
+            {
+                if (!lhs.FirstPersonModel.Equals(rhs.FirstPersonModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound) ?? true))
+            {
+                if (!lhs.AttackSound.Equals(rhs.AttackSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackSound2D) ?? true))
+            {
+                if (!lhs.AttackSound2D.Equals(rhs.AttackSound2D)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackLoopSound) ?? true))
+            {
+                if (!lhs.AttackLoopSound.Equals(rhs.AttackLoopSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.AttackFailSound) ?? true))
+            {
+                if (!lhs.AttackFailSound.Equals(rhs.AttackFailSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.IdleSound) ?? true))
+            {
+                if (!lhs.IdleSound.Equals(rhs.IdleSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EquipSound) ?? true))
+            {
+                if (!lhs.EquipSound.Equals(rhs.EquipSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.UnequipSound) ?? true))
+            {
+                if (!lhs.UnequipSound.Equals(rhs.UnequipSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.BasicStats) ?? true))
+            {
+                if (!object.Equals(lhs.BasicStats, rhs.BasicStats)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Critical) ?? true))
+            {
+                if (!object.Equals(lhs.Critical, rhs.Critical)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.DetectionSoundLevel) ?? true))
+            {
+                if (lhs.DetectionSoundLevel != rhs.DetectionSoundLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Template) ?? true))
+            {
+                if (!lhs.Template.Equals(rhs.Template)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
-                rhs: rhs as IWeaponGetter);
+                rhs: rhs as IWeaponGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
-                rhs: rhs as IWeaponGetter);
+                rhs: rhs as IWeaponGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWeaponGetter item)
@@ -4442,12 +4542,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);

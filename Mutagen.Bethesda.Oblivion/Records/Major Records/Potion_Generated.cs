@@ -702,12 +702,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IPotionGetter rhs) return false;
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPotionGetter? obj)
         {
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -865,11 +865,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPotionGetter item,
-            IPotionGetter rhs)
+            IPotionGetter rhs,
+            Potion.TranslationMask? equalsMask = null)
         {
             return ((PotionCommon)((IPotionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1322,37 +1324,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPotionGetter? lhs,
-            IPotionGetter? rhs)
+            IPotionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPotionGetter?)lhs,
-                rhs: rhs as IPotionGetter);
+                rhs: rhs as IPotionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPotionGetter?)lhs,
-                rhs: rhs as IPotionGetter);
+                rhs: rhs as IPotionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPotionGetter item)
@@ -2149,12 +2177,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPotionGetter rhs) return false;
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPotionGetter? obj)
         {
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);

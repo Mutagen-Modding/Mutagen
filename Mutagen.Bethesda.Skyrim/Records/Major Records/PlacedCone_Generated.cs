@@ -433,12 +433,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedConeGetter rhs) return false;
-            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedConeGetter? obj)
         {
-            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -576,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedConeGetter item,
-            IPlacedConeGetter rhs)
+            IPlacedConeGetter rhs,
+            PlacedCone.TranslationMask? equalsMask = null)
         {
             return ((PlacedConeCommon)((IPlacedConeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1051,40 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedConeGetter? lhs,
-            IPlacedConeGetter? rhs)
+            IPlacedConeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedCone_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedConeGetter?)lhs,
-                rhs: rhs as IPlacedConeGetter);
+                rhs: rhs as IPlacedConeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedConeGetter?)lhs,
-                rhs: rhs as IPlacedConeGetter);
+                rhs: rhs as IPlacedConeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedConeGetter?)lhs,
-                rhs: rhs as IPlacedConeGetter);
+                rhs: rhs as IPlacedConeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedConeGetter item)
@@ -1609,12 +1621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedConeGetter rhs) return false;
-            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedConeGetter? obj)
         {
-            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedConeCommon)((IPlacedConeGetter)this).CommonInstance()!).GetHashCode(this);

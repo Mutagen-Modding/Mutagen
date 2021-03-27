@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionOwnerGetter rhs)) return false;
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFactionOwnerGetter rhs) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionOwnerGetter? obj)
         {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -507,11 +507,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFactionOwnerGetter item,
-            IFactionOwnerGetter rhs)
+            IFactionOwnerGetter rhs,
+            FactionOwner.TranslationMask? equalsMask = null)
         {
             return ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -834,23 +836,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFactionOwnerGetter? lhs,
-            IFactionOwnerGetter? rhs)
+            IFactionOwnerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
-            if (lhs.RequiredRank != rhs.RequiredRank) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
+            {
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
+            {
+                if (lhs.RequiredRank != rhs.RequiredRank) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionOwnerGetter?)lhs,
-                rhs: rhs as IFactionOwnerGetter);
+                rhs: rhs as IFactionOwnerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFactionOwnerGetter item)
@@ -1185,13 +1196,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionOwnerGetter rhs)) return false;
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFactionOwnerGetter rhs) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionOwnerGetter? obj)
         {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);

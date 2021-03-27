@@ -84,13 +84,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestFragmentAliasGetter rhs)) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestFragmentAliasGetter rhs) return false;
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);
@@ -681,11 +681,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IQuestFragmentAliasGetter item,
-            IQuestFragmentAliasGetter rhs)
+            IQuestFragmentAliasGetter rhs,
+            QuestFragmentAlias.TranslationMask? equalsMask = null)
         {
             return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1033,14 +1035,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestFragmentAliasGetter? lhs,
-            IQuestFragmentAliasGetter? rhs)
+            IQuestFragmentAliasGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Property, rhs.Property)) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
-            if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
+            {
+                if (!object.Equals(lhs.Property, rhs.Property)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.ObjectFormat) ?? true))
+            {
+                if (lhs.ObjectFormat != rhs.ObjectFormat) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Scripts) ?? true))
+            {
+                if (!lhs.Scripts.SequenceEqualNullable(rhs.Scripts)) return false;
+            }
             return true;
         }
         
@@ -1464,13 +1479,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestFragmentAliasGetter rhs)) return false;
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestFragmentAliasGetter rhs) return false;
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestFragmentAliasGetter? obj)
         {
-            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestFragmentAliasCommon)((IQuestFragmentAliasGetter)this).CommonInstance()!).GetHashCode(this);

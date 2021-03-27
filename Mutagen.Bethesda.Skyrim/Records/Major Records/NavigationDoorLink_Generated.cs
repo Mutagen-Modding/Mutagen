@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationDoorLinkGetter rhs)) return false;
-            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationDoorLinkGetter rhs) return false;
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationDoorLinkGetter? obj)
         {
-            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).GetHashCode(this);
@@ -558,11 +558,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavigationDoorLinkGetter item,
-            INavigationDoorLinkGetter rhs)
+            INavigationDoorLinkGetter rhs,
+            NavigationDoorLink.TranslationMask? equalsMask = null)
         {
             return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -889,13 +891,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavigationDoorLinkGetter? lhs,
-            INavigationDoorLinkGetter? rhs)
+            INavigationDoorLinkGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
-            if (lhs.NavMeshTriangleIndex != rhs.NavMeshTriangleIndex) return false;
-            if (lhs.Unused != rhs.Unused) return false;
+            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
+            {
+                if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMeshTriangleIndex) ?? true))
+            {
+                if (lhs.NavMeshTriangleIndex != rhs.NavMeshTriangleIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
             return true;
         }
         
@@ -1226,13 +1238,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationDoorLinkGetter rhs)) return false;
-            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationDoorLinkGetter rhs) return false;
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationDoorLinkGetter? obj)
         {
-            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)this).CommonInstance()!).GetHashCode(this);

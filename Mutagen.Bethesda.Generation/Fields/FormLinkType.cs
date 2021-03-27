@@ -105,9 +105,13 @@ namespace Mutagen.Bethesda.Generation
             return $"new {DirectTypeName(getter: false, internalInterface: true)}()";
         }
 
-        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
+        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
         {
-            fg.AppendLine($"if (!{accessor}.Equals({rhsAccessor})) return false;");
+            fg.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"if (!{accessor}.Equals({rhsAccessor})) return false;");
+            }
         }
 
         public override void GenerateForCopy(FileGeneration fg, Accessor accessor, Accessor rhs, Accessor copyMaskAccessor, bool protectedMembers, bool deepCopy)

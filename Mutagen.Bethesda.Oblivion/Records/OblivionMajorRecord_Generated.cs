@@ -403,12 +403,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IOblivionMajorRecordGetter rhs) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOblivionMajorRecordGetter? obj)
         {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -529,11 +529,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IOblivionMajorRecordGetter item,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter rhs,
+            OblivionMajorRecord.TranslationMask? equalsMask = null)
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1146,22 +1148,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs)) return false;
-            if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
+            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
+            {
+                if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOblivionMajorRecordGetter?)lhs,
-                rhs: rhs as IOblivionMajorRecordGetter);
+                rhs: rhs as IOblivionMajorRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1584,12 +1592,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IOblivionMajorRecordGetter rhs) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOblivionMajorRecordGetter? obj)
         {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

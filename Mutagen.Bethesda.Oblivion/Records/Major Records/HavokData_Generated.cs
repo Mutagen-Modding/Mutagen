@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHavokDataGetter rhs)) return false;
-            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHavokDataGetter rhs) return false;
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHavokDataGetter? obj)
         {
-            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -547,11 +547,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IHavokDataGetter item,
-            IHavokDataGetter rhs)
+            IHavokDataGetter rhs,
+            HavokData.TranslationMask? equalsMask = null)
         {
             return ((HavokDataCommon)((IHavokDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -877,13 +879,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHavokDataGetter? lhs,
-            IHavokDataGetter? rhs)
+            IHavokDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Material != rhs.Material) return false;
-            if (lhs.Friction != rhs.Friction) return false;
-            if (lhs.Restitution != rhs.Restitution) return false;
+            if ((crystal?.GetShouldTranslate((int)HavokData_FieldIndex.Material) ?? true))
+            {
+                if (lhs.Material != rhs.Material) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HavokData_FieldIndex.Friction) ?? true))
+            {
+                if (lhs.Friction != rhs.Friction) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HavokData_FieldIndex.Restitution) ?? true))
+            {
+                if (lhs.Restitution != rhs.Restitution) return false;
+            }
             return true;
         }
         
@@ -1210,13 +1222,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHavokDataGetter rhs)) return false;
-            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHavokDataGetter rhs) return false;
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHavokDataGetter? obj)
         {
-            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HavokDataCommon)((IHavokDataGetter)this).CommonInstance()!).GetHashCode(this);

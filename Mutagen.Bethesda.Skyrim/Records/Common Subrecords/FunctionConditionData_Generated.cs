@@ -100,13 +100,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -722,11 +722,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFunctionConditionDataGetter item,
-            IFunctionConditionDataGetter rhs)
+            IFunctionConditionDataGetter rhs,
+            FunctionConditionData.TranslationMask? equalsMask = null)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1103,29 +1105,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs)
+            IFunctionConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
-            if (lhs.Function != rhs.Function) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
-            if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
-            if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
-            if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
-            if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
+            {
+                if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
+            {
+                if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
+            {
+                if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
+            {
+                if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFunctionConditionDataGetter?)lhs,
-                rhs: rhs as IFunctionConditionDataGetter);
+                rhs: rhs as IFunctionConditionDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFunctionConditionDataGetter item)
@@ -1530,13 +1559,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);

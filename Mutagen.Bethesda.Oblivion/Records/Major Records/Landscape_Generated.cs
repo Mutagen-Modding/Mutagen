@@ -730,12 +730,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -885,11 +885,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILandscapeGetter item,
-            ILandscapeGetter rhs)
+            ILandscapeGetter rhs,
+            Landscape.TranslationMask? equalsMask = null)
         {
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1344,36 +1346,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILandscapeGetter? lhs,
-            ILandscapeGetter? rhs)
+            ILandscapeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
-            if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
-            if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
+            {
+                if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
+            {
+                if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
-                rhs: rhs as ILandscapeGetter);
+                rhs: rhs as ILandscapeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
-                rhs: rhs as ILandscapeGetter);
+                rhs: rhs as ILandscapeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILandscapeGetter item)
@@ -2178,12 +2203,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ILandscapeGetter rhs) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);

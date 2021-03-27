@@ -176,13 +176,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISceneActionGetter rhs)) return false;
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISceneActionGetter rhs) return false;
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneActionGetter? obj)
         {
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1166,11 +1166,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISceneActionGetter item,
-            ISceneActionGetter rhs)
+            ISceneActionGetter rhs,
+            SceneAction.TranslationMask? equalsMask = null)
         {
             return ((SceneActionCommon)((ISceneActionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1629,27 +1631,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISceneActionGetter? lhs,
-            ISceneActionGetter? rhs)
+            ISceneActionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.ActorID != rhs.ActorID) return false;
-            if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
-            if (lhs.Index != rhs.Index) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.StartPhase != rhs.StartPhase) return false;
-            if (lhs.EndPhase != rhs.EndPhase) return false;
-            if (!lhs.TimerSeconds.EqualsWithin(rhs.TimerSeconds)) return false;
-            if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
-            if (!lhs.Topic.Equals(rhs.Topic)) return false;
-            if (lhs.HeadtrackActorID != rhs.HeadtrackActorID) return false;
-            if (!lhs.LoopingMax.EqualsWithin(rhs.LoopingMax)) return false;
-            if (!lhs.LoopingMin.EqualsWithin(rhs.LoopingMin)) return false;
-            if (lhs.Emotion != rhs.Emotion) return false;
-            if (lhs.EmotionValue != rhs.EmotionValue) return false;
-            if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.ActorID) ?? true))
+            {
+                if (lhs.ActorID != rhs.ActorID) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.StartPhase) ?? true))
+            {
+                if (lhs.StartPhase != rhs.StartPhase) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.EndPhase) ?? true))
+            {
+                if (lhs.EndPhase != rhs.EndPhase) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.TimerSeconds) ?? true))
+            {
+                if (!lhs.TimerSeconds.EqualsWithin(rhs.TimerSeconds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Packages) ?? true))
+            {
+                if (!lhs.Packages.SequenceEqualNullable(rhs.Packages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Topic) ?? true))
+            {
+                if (!lhs.Topic.Equals(rhs.Topic)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.HeadtrackActorID) ?? true))
+            {
+                if (lhs.HeadtrackActorID != rhs.HeadtrackActorID) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMax) ?? true))
+            {
+                if (!lhs.LoopingMax.EqualsWithin(rhs.LoopingMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.LoopingMin) ?? true))
+            {
+                if (!lhs.LoopingMin.EqualsWithin(rhs.LoopingMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Emotion) ?? true))
+            {
+                if (lhs.Emotion != rhs.Emotion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.EmotionValue) ?? true))
+            {
+                if (lhs.EmotionValue != rhs.EmotionValue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Unused) ?? true))
+            {
+                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+            }
             return true;
         }
         
@@ -2550,13 +2604,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISceneActionGetter rhs)) return false;
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISceneActionGetter rhs) return false;
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneActionGetter? obj)
         {
-            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneActionCommon)((ISceneActionGetter)this).CommonInstance()!).GetHashCode(this);

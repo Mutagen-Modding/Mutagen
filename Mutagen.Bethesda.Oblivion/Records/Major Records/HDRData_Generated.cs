@@ -98,13 +98,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHDRDataGetter rhs)) return false;
-            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHDRDataGetter rhs) return false;
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHDRDataGetter? obj)
         {
-            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -910,11 +910,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IHDRDataGetter item,
-            IHDRDataGetter rhs)
+            IHDRDataGetter rhs,
+            HDRData.TranslationMask? equalsMask = null)
         {
             return ((HDRDataCommon)((IHDRDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1317,24 +1319,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHDRDataGetter? lhs,
-            IHDRDataGetter? rhs)
+            IHDRDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed)) return false;
-            if (!lhs.BlurRadius.EqualsWithin(rhs.BlurRadius)) return false;
-            if (!lhs.BlurPasses.EqualsWithin(rhs.BlurPasses)) return false;
-            if (!lhs.EmissiveMult.EqualsWithin(rhs.EmissiveMult)) return false;
-            if (!lhs.TargetLum.EqualsWithin(rhs.TargetLum)) return false;
-            if (!lhs.UpperLumClamp.EqualsWithin(rhs.UpperLumClamp)) return false;
-            if (!lhs.BrightScale.EqualsWithin(rhs.BrightScale)) return false;
-            if (!lhs.BrightClamp.EqualsWithin(rhs.BrightClamp)) return false;
-            if (!lhs.LumRampNoTex.EqualsWithin(rhs.LumRampNoTex)) return false;
-            if (!lhs.LumRampMin.EqualsWithin(rhs.LumRampMin)) return false;
-            if (!lhs.LumRampMax.EqualsWithin(rhs.LumRampMax)) return false;
-            if (!lhs.SunlightDimmer.EqualsWithin(rhs.SunlightDimmer)) return false;
-            if (!lhs.GrassDimmer.EqualsWithin(rhs.GrassDimmer)) return false;
-            if (!lhs.TreeDimmer.EqualsWithin(rhs.TreeDimmer)) return false;
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.EyeAdaptSpeed) ?? true))
+            {
+                if (!lhs.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.BlurRadius) ?? true))
+            {
+                if (!lhs.BlurRadius.EqualsWithin(rhs.BlurRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.BlurPasses) ?? true))
+            {
+                if (!lhs.BlurPasses.EqualsWithin(rhs.BlurPasses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.EmissiveMult) ?? true))
+            {
+                if (!lhs.EmissiveMult.EqualsWithin(rhs.EmissiveMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.TargetLum) ?? true))
+            {
+                if (!lhs.TargetLum.EqualsWithin(rhs.TargetLum)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.UpperLumClamp) ?? true))
+            {
+                if (!lhs.UpperLumClamp.EqualsWithin(rhs.UpperLumClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.BrightScale) ?? true))
+            {
+                if (!lhs.BrightScale.EqualsWithin(rhs.BrightScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.BrightClamp) ?? true))
+            {
+                if (!lhs.BrightClamp.EqualsWithin(rhs.BrightClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.LumRampNoTex) ?? true))
+            {
+                if (!lhs.LumRampNoTex.EqualsWithin(rhs.LumRampNoTex)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.LumRampMin) ?? true))
+            {
+                if (!lhs.LumRampMin.EqualsWithin(rhs.LumRampMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.LumRampMax) ?? true))
+            {
+                if (!lhs.LumRampMax.EqualsWithin(rhs.LumRampMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.SunlightDimmer) ?? true))
+            {
+                if (!lhs.SunlightDimmer.EqualsWithin(rhs.SunlightDimmer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.GrassDimmer) ?? true))
+            {
+                if (!lhs.GrassDimmer.EqualsWithin(rhs.GrassDimmer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.TreeDimmer) ?? true))
+            {
+                if (!lhs.TreeDimmer.EqualsWithin(rhs.TreeDimmer)) return false;
+            }
             return true;
         }
         
@@ -1774,13 +1819,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHDRDataGetter rhs)) return false;
-            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHDRDataGetter rhs) return false;
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHDRDataGetter? obj)
         {
-            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HDRDataCommon)((IHDRDataGetter)this).CommonInstance()!).GetHashCode(this);

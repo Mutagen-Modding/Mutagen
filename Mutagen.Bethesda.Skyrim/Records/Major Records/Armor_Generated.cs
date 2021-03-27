@@ -1424,12 +1424,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1644,11 +1644,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IArmorGetter item,
-            IArmorGetter rhs)
+            IArmorGetter rhs,
+            Armor.TranslationMask? equalsMask = null)
         {
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2282,53 +2284,127 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArmorGetter? lhs,
-            IArmorGetter? rhs)
+            IArmorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
-            if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
-            if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
-            if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!string.Equals(lhs.RagdollConstraintTemplate, rhs.RagdollConstraintTemplate)) return false;
-            if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
-            if (!lhs.BashImpactDataSet.Equals(rhs.BashImpactDataSet)) return false;
-            if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
-            if (!lhs.Race.Equals(rhs.Race)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Armature.SequenceEqualNullable(rhs.Armature)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (!lhs.ArmorRating.EqualsWithin(rhs.ArmorRating)) return false;
-            if (!lhs.TemplateArmor.Equals(rhs.TemplateArmor)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ObjectEffect) ?? true))
+            {
+                if (!lhs.ObjectEffect.Equals(rhs.ObjectEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.WorldModel) ?? true))
+            {
+                if (!Equals(lhs.WorldModel, rhs.WorldModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BodyTemplate) ?? true))
+            {
+                if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.RagdollConstraintTemplate) ?? true))
+            {
+                if (!string.Equals(lhs.RagdollConstraintTemplate, rhs.RagdollConstraintTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EquipmentType) ?? true))
+            {
+                if (!lhs.EquipmentType.Equals(rhs.EquipmentType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.BashImpactDataSet) ?? true))
+            {
+                if (!lhs.BashImpactDataSet.Equals(rhs.BashImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.AlternateBlockMaterial) ?? true))
+            {
+                if (!lhs.AlternateBlockMaterial.Equals(rhs.AlternateBlockMaterial)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Race) ?? true))
+            {
+                if (!lhs.Race.Equals(rhs.Race)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Armature) ?? true))
+            {
+                if (!lhs.Armature.SequenceEqualNullable(rhs.Armature)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ArmorRating) ?? true))
+            {
+                if (!lhs.ArmorRating.EqualsWithin(rhs.ArmorRating)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.TemplateArmor) ?? true))
+            {
+                if (!lhs.TemplateArmor.Equals(rhs.TemplateArmor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
+                rhs: rhs as IArmorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
+                rhs: rhs as IArmorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IArmorGetter item)
@@ -3743,12 +3819,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IArmorGetter rhs) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);

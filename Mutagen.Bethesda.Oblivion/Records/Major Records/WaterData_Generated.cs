@@ -138,13 +138,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterDataGetter rhs)) return false;
-            return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterDataGetter rhs) return false;
+            return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterDataGetter? obj)
         {
-            return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterDataCommon)((IWaterDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1348,11 +1348,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWaterDataGetter item,
-            IWaterDataGetter rhs)
+            IWaterDataGetter rhs,
+            WaterData.TranslationMask? equalsMask = null)
         {
             return ((WaterDataCommon)((IWaterDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1846,37 +1848,119 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWaterDataGetter? lhs,
-            IWaterDataGetter? rhs)
+            IWaterDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
-            if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
-            if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
-            if (!lhs.WaveFrequency.EqualsWithin(rhs.WaveFrequency)) return false;
-            if (!lhs.SunPower.EqualsWithin(rhs.SunPower)) return false;
-            if (!lhs.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount)) return false;
-            if (!lhs.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
-            if (!lhs.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed)) return false;
-            if (!lhs.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
-            if (!lhs.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
-            if (!lhs.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
-            if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
-            if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
-            if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
-            if (lhs.TextureBlend != rhs.TextureBlend) return false;
-            if (!lhs.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
-            if (!lhs.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
-            if (!lhs.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff)) return false;
-            if (!lhs.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
-            if (!lhs.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize)) return false;
-            if (!lhs.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
-            if (!lhs.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
-            if (!lhs.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
-            if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
-            if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.WindVelocity) ?? true))
+            {
+                if (!lhs.WindVelocity.EqualsWithin(rhs.WindVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.WindDirection) ?? true))
+            {
+                if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.WaveAmplitude) ?? true))
+            {
+                if (!lhs.WaveAmplitude.EqualsWithin(rhs.WaveAmplitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.WaveFrequency) ?? true))
+            {
+                if (!lhs.WaveFrequency.EqualsWithin(rhs.WaveFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.SunPower) ?? true))
+            {
+                if (!lhs.SunPower.EqualsWithin(rhs.SunPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectivityAmount) ?? true))
+            {
+                if (!lhs.ReflectivityAmount.EqualsWithin(rhs.ReflectivityAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.FresnelAmount) ?? true))
+            {
+                if (!lhs.FresnelAmount.EqualsWithin(rhs.FresnelAmount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.ScrollXSpeed) ?? true))
+            {
+                if (!lhs.ScrollXSpeed.EqualsWithin(rhs.ScrollXSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.ScrollYSpeed) ?? true))
+            {
+                if (!lhs.ScrollYSpeed.EqualsWithin(rhs.ScrollYSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.FogDistanceNearPlane) ?? true))
+            {
+                if (!lhs.FogDistanceNearPlane.EqualsWithin(rhs.FogDistanceNearPlane)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.FogDistanceFarPlane) ?? true))
+            {
+                if (!lhs.FogDistanceFarPlane.EqualsWithin(rhs.FogDistanceFarPlane)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.ShallowColor) ?? true))
+            {
+                if (!lhs.ShallowColor.ColorOnlyEquals(rhs.ShallowColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DeepColor) ?? true))
+            {
+                if (!lhs.DeepColor.ColorOnlyEquals(rhs.DeepColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.ReflectionColor) ?? true))
+            {
+                if (!lhs.ReflectionColor.ColorOnlyEquals(rhs.ReflectionColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.TextureBlend) ?? true))
+            {
+                if (lhs.TextureBlend != rhs.TextureBlend) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorForce) ?? true))
+            {
+                if (!lhs.RainSimulatorForce.EqualsWithin(rhs.RainSimulatorForce)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorVelocity) ?? true))
+            {
+                if (!lhs.RainSimulatorVelocity.EqualsWithin(rhs.RainSimulatorVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorFalloff) ?? true))
+            {
+                if (!lhs.RainSimulatorFalloff.EqualsWithin(rhs.RainSimulatorFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorDampner) ?? true))
+            {
+                if (!lhs.RainSimulatorDampner.EqualsWithin(rhs.RainSimulatorDampner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.RainSimulatorStartingSize) ?? true))
+            {
+                if (!lhs.RainSimulatorStartingSize.EqualsWithin(rhs.RainSimulatorStartingSize)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorForce) ?? true))
+            {
+                if (!lhs.DisplacementSimulatorForce.EqualsWithin(rhs.DisplacementSimulatorForce)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorVelocity) ?? true))
+            {
+                if (!lhs.DisplacementSimulatorVelocity.EqualsWithin(rhs.DisplacementSimulatorVelocity)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorFalloff) ?? true))
+            {
+                if (!lhs.DisplacementSimulatorFalloff.EqualsWithin(rhs.DisplacementSimulatorFalloff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorDampner) ?? true))
+            {
+                if (!lhs.DisplacementSimulatorDampner.EqualsWithin(rhs.DisplacementSimulatorDampner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.DisplacementSimulatorStartingSize) ?? true))
+            {
+                if (!lhs.DisplacementSimulatorStartingSize.EqualsWithin(rhs.DisplacementSimulatorStartingSize)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterData_FieldIndex.Damage) ?? true))
+            {
+                if (lhs.Damage != rhs.Damage) return false;
+            }
             return true;
         }
         

@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcOwnerGetter rhs)) return false;
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcOwnerGetter rhs) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcOwnerGetter? obj)
         {
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcOwnerGetter item,
-            INpcOwnerGetter rhs)
+            INpcOwnerGetter rhs,
+            NpcOwner.TranslationMask? equalsMask = null)
         {
             return ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -842,23 +844,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcOwnerGetter? lhs,
-            INpcOwnerGetter? rhs)
+            INpcOwnerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
-            if (!lhs.Npc.Equals(rhs.Npc)) return false;
-            if (!lhs.Global.Equals(rhs.Global)) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
+            {
+                if (!lhs.Npc.Equals(rhs.Npc)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcOwner_FieldIndex.Global) ?? true))
+            {
+                if (!lhs.Global.Equals(rhs.Global)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INpcOwnerGetter?)lhs,
-                rhs: rhs as INpcOwnerGetter);
+                rhs: rhs as INpcOwnerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INpcOwnerGetter item)
@@ -1199,13 +1210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcOwnerGetter rhs)) return false;
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcOwnerGetter rhs) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcOwnerGetter? obj)
         {
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);

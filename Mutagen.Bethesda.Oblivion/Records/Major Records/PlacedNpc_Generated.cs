@@ -744,12 +744,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedNpcGetter rhs) return false;
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedNpcGetter? obj)
         {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);
@@ -907,11 +907,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPlacedNpcGetter item,
-            IPlacedNpcGetter rhs)
+            IPlacedNpcGetter rhs,
+            PlacedNpc.TranslationMask? equalsMask = null)
         {
             return ((PlacedNpcCommon)((IPlacedNpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1376,40 +1378,75 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedNpcGetter? lhs,
-            IPlacedNpcGetter? rhs)
+            IPlacedNpcGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!lhs.Base.Equals(rhs.Base)) return false;
-            if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
-            if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
-            if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
-            if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
-            if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
-            if (!lhs.Horse.Equals(rhs.Horse)) return false;
-            if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!object.Equals(lhs.Location, rhs.Location)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
+            {
+                if (!lhs.Base.Equals(rhs.Base)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.XPCIFluff) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.XPCIFluff, rhs.XPCIFluff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.FULLFluff) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FULLFluff, rhs.FULLFluff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DistantLODData) ?? true))
+            {
+                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
+            {
+                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
+            {
+                if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Horse) ?? true))
+            {
+                if (!lhs.Horse.Equals(rhs.Horse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.RagdollData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.RagdollData, rhs.RagdollData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
+            {
+                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedNpcGetter?)lhs,
-                rhs: rhs as IPlacedNpcGetter);
+                rhs: rhs as IPlacedNpcGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedNpcGetter?)lhs,
-                rhs: rhs as IPlacedNpcGetter);
+                rhs: rhs as IPlacedNpcGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedNpcGetter item)
@@ -2305,12 +2342,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedNpcGetter rhs) return false;
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedNpcGetter? obj)
         {
-            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedNpcCommon)((IPlacedNpcGetter)this).CommonInstance()!).GetHashCode(this);

@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIngredientDataGetter rhs)) return false;
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IIngredientDataGetter rhs) return false;
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngredientDataGetter? obj)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IIngredientDataGetter item,
-            IIngredientDataGetter rhs)
+            IIngredientDataGetter rhs,
+            IngredientData.TranslationMask? equalsMask = null)
         {
             return ((IngredientDataCommon)((IIngredientDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIngredientDataGetter? lhs,
-            IIngredientDataGetter? rhs)
+            IIngredientDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)IngredientData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IngredientData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1161,13 +1170,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIngredientDataGetter rhs)) return false;
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IIngredientDataGetter rhs) return false;
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIngredientDataGetter? obj)
         {
-            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IngredientDataCommon)((IIngredientDataGetter)this).CommonInstance()!).GetHashCode(this);

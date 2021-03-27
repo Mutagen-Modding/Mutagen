@@ -704,12 +704,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -855,11 +855,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IConstructibleObjectGetter item,
-            IConstructibleObjectGetter rhs)
+            IConstructibleObjectGetter rhs,
+            ConstructibleObject.TranslationMask? equalsMask = null)
         {
             return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1309,35 +1311,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConstructibleObjectGetter? lhs,
-            IConstructibleObjectGetter? rhs)
+            IConstructibleObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
-            if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
-            if (lhs.CreatedObjectCount != rhs.CreatedObjectCount) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObject) ?? true))
+            {
+                if (!lhs.CreatedObject.Equals(rhs.CreatedObject)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.WorkbenchKeyword) ?? true))
+            {
+                if (!lhs.WorkbenchKeyword.Equals(rhs.WorkbenchKeyword)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConstructibleObject_FieldIndex.CreatedObjectCount) ?? true))
+            {
+                if (lhs.CreatedObjectCount != rhs.CreatedObjectCount) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
-                rhs: rhs as IConstructibleObjectGetter);
+                rhs: rhs as IConstructibleObjectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IConstructibleObjectGetter?)lhs,
-                rhs: rhs as IConstructibleObjectGetter);
+                rhs: rhs as IConstructibleObjectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IConstructibleObjectGetter item)
@@ -1691,19 +1713,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ConstructibleObjectBinaryWriteTranslation Instance = new ConstructibleObjectBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IConstructibleObjectGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IConstructibleObjectGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IConstructibleObjectGetter item,
             MutagenWriter writer,
@@ -1726,9 +1735,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            ConstructibleObjectBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CreatedObject,
@@ -1848,9 +1865,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    ConstructibleObjectBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)ConstructibleObject_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.CNAM:
@@ -1886,10 +1906,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IConstructibleObjectInternal item);
 
     }
 
@@ -2093,12 +2109,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IConstructibleObjectGetter rhs) return false;
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConstructibleObjectGetter? obj)
         {
-            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConstructibleObjectCommon)((IConstructibleObjectGetter)this).CommonInstance()!).GetHashCode(this);

@@ -669,12 +669,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDualCastDataGetter rhs) return false;
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDualCastDataGetter? obj)
         {
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -830,11 +830,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDualCastDataGetter item,
-            IDualCastDataGetter rhs)
+            IDualCastDataGetter rhs,
+            DualCastData.TranslationMask? equalsMask = null)
         {
             return ((DualCastDataCommon)((IDualCastDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1270,38 +1272,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDualCastDataGetter? lhs,
-            IDualCastDataGetter? rhs)
+            IDualCastDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
-            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
-            if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
-            if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
-            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
-            if (lhs.InheritScale != rhs.InheritScale) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
+            {
+                if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
+            {
+                if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
+            {
+                if (lhs.InheritScale != rhs.InheritScale) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDualCastDataGetter?)lhs,
-                rhs: rhs as IDualCastDataGetter);
+                rhs: rhs as IDualCastDataGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDualCastDataGetter?)lhs,
-                rhs: rhs as IDualCastDataGetter);
+                rhs: rhs as IDualCastDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDualCastDataGetter item)
@@ -1988,12 +2019,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDualCastDataGetter rhs) return false;
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDualCastDataGetter? obj)
         {
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVendorValuesGetter rhs)) return false;
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IVendorValuesGetter rhs) return false;
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVendorValuesGetter? obj)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -679,11 +679,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IVendorValuesGetter item,
-            IVendorValuesGetter rhs)
+            IVendorValuesGetter rhs,
+            VendorValues.TranslationMask? equalsMask = null)
         {
             return ((VendorValuesCommon)((IVendorValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,17 +1039,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IVendorValuesGetter? lhs,
-            IVendorValuesGetter? rhs)
+            IVendorValuesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.StartHour != rhs.StartHour) return false;
-            if (lhs.EndHour != rhs.EndHour) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.OnlyBuysStolenItems != rhs.OnlyBuysStolenItems) return false;
-            if (lhs.NotSellBuy != rhs.NotSellBuy) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.StartHour) ?? true))
+            {
+                if (lhs.StartHour != rhs.StartHour) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.EndHour) ?? true))
+            {
+                if (lhs.EndHour != rhs.EndHour) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Radius) ?? true))
+            {
+                if (lhs.Radius != rhs.Radius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.OnlyBuysStolenItems) ?? true))
+            {
+                if (lhs.OnlyBuysStolenItems != rhs.OnlyBuysStolenItems) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.NotSellBuy) ?? true))
+            {
+                if (lhs.NotSellBuy != rhs.NotSellBuy) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VendorValues_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
             return true;
         }
         
@@ -1403,13 +1427,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVendorValuesGetter rhs)) return false;
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IVendorValuesGetter rhs) return false;
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVendorValuesGetter? obj)
         {
-            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VendorValuesCommon)((IVendorValuesGetter)this).CommonInstance()!).GetHashCode(this);

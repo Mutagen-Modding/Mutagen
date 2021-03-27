@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponBasicStatsGetter rhs)) return false;
-            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponBasicStatsGetter rhs) return false;
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponBasicStatsGetter? obj)
         {
-            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -549,11 +549,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWeaponBasicStatsGetter item,
-            IWeaponBasicStatsGetter rhs)
+            IWeaponBasicStatsGetter rhs,
+            WeaponBasicStats.TranslationMask? equalsMask = null)
         {
             return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -879,13 +881,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponBasicStatsGetter? lhs,
-            IWeaponBasicStatsGetter? rhs)
+            IWeaponBasicStatsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
+            if ((crystal?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Damage) ?? true))
+            {
+                if (lhs.Damage != rhs.Damage) return false;
+            }
             return true;
         }
         
@@ -1211,13 +1223,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponBasicStatsGetter rhs)) return false;
-            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponBasicStatsGetter rhs) return false;
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponBasicStatsGetter? obj)
         {
-            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponBasicStatsCommon)((IWeaponBasicStatsGetter)this).CommonInstance()!).GetHashCode(this);

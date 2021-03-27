@@ -3923,12 +3923,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -4240,11 +4240,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRaceGetter item,
-            IRaceGetter rhs)
+            IRaceGetter rhs,
+            Race.TranslationMask? equalsMask = null)
         {
             return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -5413,102 +5415,323 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceGetter? lhs,
-            IRaceGetter? rhs)
+            IRaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
-            if (!lhs.Skin.Equals(rhs.Skin)) return false;
-            if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
-            if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
-            if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
-            if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
-            if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
-            if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
-            if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!Equals(lhs.Height, rhs.Height)) return false;
-            if (!Equals(lhs.Weight, rhs.Weight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
-            if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
-            if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
-            if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
-            if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
-            if (lhs.Size != rhs.Size) return false;
-            if (lhs.HeadBipedObject != rhs.HeadBipedObject) return false;
-            if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
-            if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
-            if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
-            if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
-            if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
-            if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
-            if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
-            if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
-            if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
-            if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
-            if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
-            if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
-            if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
-            if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
-            if (!Equals(lhs.Voices, rhs.Voices)) return false;
-            if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
-            if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
-            if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
-            if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
-            if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
-            if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
-            if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
-            if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
-            if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
-            if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
-            if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
-            if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
-            if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
-            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
-            if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
-            if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
-            if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
-            if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
-            if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
-            if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
-            if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
-            if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
-            if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
-            if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
-            if (!lhs.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun)) return false;
-            if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
-            if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
-            if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
-            if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
-            if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
-            if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
-            if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
+            {
+                if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
+            {
+                if (!lhs.Skin.Equals(rhs.Skin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
+            {
+                if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
+            {
+                if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            {
+                if (!Equals(lhs.Height, rhs.Height)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Weight) ?? true))
+            {
+                if (!Equals(lhs.Weight, rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Starting) ?? true))
+            {
+                if (!lhs.Starting.SequenceEqualNullable(rhs.Starting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseCarryWeight) ?? true))
+            {
+                if (!lhs.BaseCarryWeight.EqualsWithin(rhs.BaseCarryWeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMass) ?? true))
+            {
+                if (!lhs.BaseMass.EqualsWithin(rhs.BaseMass)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            {
+                if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            {
+                if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            {
+                if (lhs.Size != rhs.Size) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadBipedObject) ?? true))
+            {
+                if (lhs.HeadBipedObject != rhs.HeadBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HairBipedObject) ?? true))
+            {
+                if (lhs.HairBipedObject != rhs.HairBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            {
+                if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            {
+                if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Regen) ?? true))
+            {
+                if (!lhs.Regen.SequenceEqualNullable(rhs.Regen)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedDamage) ?? true))
+            {
+                if (!lhs.UnarmedDamage.EqualsWithin(rhs.UnarmedDamage)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedReach) ?? true))
+            {
+                if (!lhs.UnarmedReach.EqualsWithin(rhs.UnarmedReach)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            {
+                if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            {
+                if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            {
+                if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            {
+                if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            {
+                if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
+            {
+                if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
+            {
+                if (!Equals(lhs.SkeletalModel, rhs.SkeletalModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypeNames) ?? true))
+            {
+                if (!lhs.MovementTypeNames.SequenceEqualNullable(rhs.MovementTypeNames)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
+            {
+                if (!Equals(lhs.Voices, rhs.Voices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitateArmors) ?? true))
+            {
+                if (!Equals(lhs.DecapitateArmors, rhs.DecapitateArmors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultHairColors) ?? true))
+            {
+                if (!Equals(lhs.DefaultHairColors, rhs.DefaultHairColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.NumberOfTintsInList) ?? true))
+            {
+                if (lhs.NumberOfTintsInList != rhs.NumberOfTintsInList) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenMainClamp) ?? true))
+            {
+                if (!lhs.FacegenMainClamp.EqualsWithin(rhs.FacegenMainClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FacegenFaceClamp) ?? true))
+            {
+                if (!lhs.FacegenFaceClamp.EqualsWithin(rhs.FacegenFaceClamp)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttackRace) ?? true))
+            {
+                if (!lhs.AttackRace.Equals(rhs.AttackRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Attacks) ?? true))
+            {
+                if (!lhs.Attacks.SequenceEqualNullable(rhs.Attacks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyData) ?? true))
+            {
+                if (!Equals(lhs.BodyData, rhs.BodyData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Hairs) ?? true))
+            {
+                if (!lhs.Hairs.SequenceEqualNullable(rhs.Hairs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Eyes) ?? true))
+            {
+                if (!lhs.Eyes.SequenceEqualNullable(rhs.Eyes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyPartData) ?? true))
+            {
+                if (!lhs.BodyPartData.Equals(rhs.BodyPartData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BehaviorGraph) ?? true))
+            {
+                if (!Equals(lhs.BehaviorGraph, rhs.BehaviorGraph)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MaterialType) ?? true))
+            {
+                if (!lhs.MaterialType.Equals(rhs.MaterialType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecapitationFX) ?? true))
+            {
+                if (!lhs.DecapitationFX.Equals(rhs.DecapitationFX)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OpenLootSound) ?? true))
+            {
+                if (!lhs.OpenLootSound.Equals(rhs.OpenLootSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.CloseLootSound) ?? true))
+            {
+                if (!lhs.CloseLootSound.Equals(rhs.CloseLootSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedObjectNames) ?? true))
+            {
+                if (!lhs.BipedObjectNames.SequenceEqualNullable(rhs.BipedObjectNames)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MovementTypes) ?? true))
+            {
+                if (!lhs.MovementTypes.SequenceEqualNullable(rhs.MovementTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentFlags) ?? true))
+            {
+                if (lhs.EquipmentFlags != rhs.EquipmentFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.EquipmentSlots) ?? true))
+            {
+                if (!lhs.EquipmentSlots.SequenceEqualNullable(rhs.EquipmentSlots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.UnarmedEquipSlot) ?? true))
+            {
+                if (!lhs.UnarmedEquipSlot.Equals(rhs.UnarmedEquipSlot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
+            {
+                if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultWalk.Equals(rhs.BaseMovementDefaultWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultRun) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultRun.Equals(rhs.BaseMovementDefaultRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSwim) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultSwim.Equals(rhs.BaseMovementDefaultSwim)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultFly) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultFly.Equals(rhs.BaseMovementDefaultFly)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSneak) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultSneak.Equals(rhs.BaseMovementDefaultSneak)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultSprint) ?? true))
+            {
+                if (!lhs.BaseMovementDefaultSprint.Equals(rhs.BaseMovementDefaultSprint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.HeadData) ?? true))
+            {
+                if (!Equals(lhs.HeadData, rhs.HeadData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MorphRace) ?? true))
+            {
+                if (!lhs.MorphRace.Equals(rhs.MorphRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ArmorRace) ?? true))
+            {
+                if (!lhs.ArmorRace.Equals(rhs.ArmorRace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter);
+                rhs: rhs as IRaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter);
+                rhs: rhs as IRaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRaceGetter item)
@@ -8601,12 +8824,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IRaceGetter rhs) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);

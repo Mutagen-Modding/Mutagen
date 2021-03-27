@@ -87,13 +87,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestTargetGetter rhs)) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestTargetGetter rhs) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -682,11 +682,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IQuestTargetGetter item,
-            IQuestTargetGetter rhs)
+            IQuestTargetGetter rhs,
+            QuestTarget.TranslationMask? equalsMask = null)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1036,14 +1038,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestTargetGetter? lhs,
-            IQuestTargetGetter? rhs)
+            IQuestTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Target.Equals(rhs.Target)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+            {
+                if (!lhs.Target.Equals(rhs.Target)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
+            {
+                if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            }
             return true;
         }
         
@@ -1220,19 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IQuestTargetGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IQuestTargetGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestTargetGetter item,
             MutagenWriter writer)
@@ -1254,9 +1256,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags,
                     length: 4);
             }
-            QuestTargetBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public void Write(
@@ -1322,19 +1332,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    QuestTargetBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)QuestTarget_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IQuestTarget item);
 
     }
 
@@ -1513,13 +1522,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestTargetGetter rhs)) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestTargetGetter rhs) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);

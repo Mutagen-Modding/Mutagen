@@ -136,13 +136,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseGetter rhs)) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseGetter rhs) return false;
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -956,11 +956,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogResponseGetter item,
-            IDialogResponseGetter rhs)
+            IDialogResponseGetter rhs,
+            DialogResponse.TranslationMask? equalsMask = null)
         {
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1364,24 +1366,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
-            IDialogResponseGetter? rhs)
+            IDialogResponseGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Emotion != rhs.Emotion) return false;
-            if (lhs.EmotionValue != rhs.EmotionValue) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            if (!object.Equals(lhs.Text, rhs.Text)) return false;
-            if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
-            if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
-            if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
-            if (!lhs.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation)) return false;
-            if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
+            {
+                if (lhs.Emotion != rhs.Emotion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.EmotionValue) ?? true))
+            {
+                if (lhs.EmotionValue != rhs.EmotionValue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseNumber) ?? true))
+            {
+                if (lhs.ResponseNumber != rhs.ResponseNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Unknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Text) ?? true))
+            {
+                if (!object.Equals(lhs.Text, rhs.Text)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ScriptNotes) ?? true))
+            {
+                if (!string.Equals(lhs.ScriptNotes, rhs.ScriptNotes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Edits) ?? true))
+            {
+                if (!string.Equals(lhs.Edits, rhs.Edits)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.SpeakerIdleAnimation) ?? true))
+            {
+                if (!lhs.SpeakerIdleAnimation.Equals(rhs.SpeakerIdleAnimation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ListenerIdleAnimation) ?? true))
+            {
+                if (!lhs.ListenerIdleAnimation.Equals(rhs.ListenerIdleAnimation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.TRDTDataTypeState) ?? true))
+            {
+                if (lhs.TRDTDataTypeState != rhs.TRDTDataTypeState) return false;
+            }
             return true;
         }
         
@@ -2000,13 +2045,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseGetter rhs)) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseGetter rhs) return false;
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);

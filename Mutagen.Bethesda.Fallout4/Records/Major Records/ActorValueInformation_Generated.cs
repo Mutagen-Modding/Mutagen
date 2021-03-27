@@ -338,12 +338,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -479,11 +479,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IActorValueInformationGetter item,
-            IActorValueInformationGetter rhs)
+            IActorValueInformationGetter rhs,
+            ActorValueInformation.TranslationMask? equalsMask = null)
         {
             return ((ActorValueInformationCommon)((IActorValueInformationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -858,30 +860,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActorValueInformationGetter? lhs,
-            IActorValueInformationGetter? rhs)
+            IActorValueInformationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
-                rhs: rhs as IActorValueInformationGetter);
+                rhs: rhs as IActorValueInformationGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IActorValueInformationGetter?)lhs,
-                rhs: rhs as IActorValueInformationGetter);
+                rhs: rhs as IActorValueInformationGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IActorValueInformationGetter item)
@@ -1333,12 +1340,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IActorValueInformationGetter rhs) return false;
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValueInformationGetter? obj)
         {
-            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValueInformationCommon)((IActorValueInformationGetter)this).CommonInstance()!).GetHashCode(this);

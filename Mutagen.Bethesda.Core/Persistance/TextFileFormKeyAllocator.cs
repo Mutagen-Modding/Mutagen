@@ -12,8 +12,11 @@ namespace Mutagen.Bethesda.Core.Persistance
     /// </summary>
     public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     {
+        private readonly object _lock = new();
         private readonly Dictionary<string, FormKey> _cache = new();
         private readonly uint _initialNextFormID;
+
+        private readonly HashSet<uint> _formIDSet = new();
 
         public TextFileFormKeyAllocator(IMod mod, string saveLocation) 
             : base(mod, saveLocation)
@@ -31,17 +34,31 @@ namespace Mutagen.Bethesda.Core.Persistance
         /// <returns>The next FormKey from the Mod</returns>
         public override FormKey GetNextFormKey()
         {
-            lock (this.Mod)
+            lock (this._lock)
             {
-                return new FormKey(
-                    this.Mod.ModKey,
-                    checked(this.Mod.NextFormID++));
+                lock (this.Mod)
+                {
+                    var candidateFormID = this.Mod.NextFormID;
+                    if (candidateFormID > 0xFFFFFF)
+                        throw new OverflowException();
+
+                    while (_formIDSet.Contains(candidateFormID))
+                    {
+                        candidateFormID++;
+                        if (candidateFormID > 0xFFFFFF)
+                            throw new OverflowException();
+                    }
+
+                    Mod.NextFormID = candidateFormID + 1;
+
+                    return new FormKey(this.Mod.ModKey, candidateFormID);
+                }
             }
         }
 
         protected override FormKey GetNextFormKeyNotNull(string editorID)
         {
-            lock (this._cache)
+            lock (this._lock)
             {
                 if (_cache.TryGetValue(editorID, out var id))
                     return id;
@@ -73,7 +90,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         public override void Commit()
         {
-            lock (_cache)
+            lock (this._lock)
             {
                 WriteToFile(_saveLocation, _cache);
             }
@@ -97,13 +114,17 @@ namespace Mutagen.Bethesda.Core.Persistance
                 {
                     throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {Mod.ModKey}.");
                 }
+                if (!_formIDSet.Add(formKey.ID))
+                {
+                    throw new ArgumentException($"Duplicate formKey loaded from {_saveLocation}.");
+                }
                 _cache.Add(edidStr, formKey);
             }
         }
 
         public override void Rollback()
         {
-            lock (_cache)
+            lock (this._lock)
             {
                 lock (this.Mod)
                 {

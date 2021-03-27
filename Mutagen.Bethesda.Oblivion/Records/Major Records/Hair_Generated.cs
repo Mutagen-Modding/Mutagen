@@ -499,12 +499,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IHairGetter rhs) return false;
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHairGetter? obj)
         {
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);
@@ -652,11 +652,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IHairGetter item,
-            IHairGetter rhs)
+            IHairGetter rhs,
+            Hair.TranslationMask? equalsMask = null)
         {
             return ((HairCommon)((IHairGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1064,34 +1066,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHairGetter? lhs,
-            IHairGetter? rhs)
+            IHairGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Hair_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Hair_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Hair_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Hair_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IHairGetter?)lhs,
-                rhs: rhs as IHairGetter);
+                rhs: rhs as IHairGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IHairGetter?)lhs,
-                rhs: rhs as IHairGetter);
+                rhs: rhs as IHairGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IHairGetter item)
@@ -1744,12 +1763,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IHairGetter rhs) return false;
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHairGetter? obj)
         {
-            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HairCommon)((IHairGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HairCommon)((IHairGetter)this).CommonInstance()!).GetHashCode(this);

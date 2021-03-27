@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -21,11 +21,6 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class CameraPathBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, ICameraPathInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
-
             static partial void FillBinaryZoomCustom(MutagenFrame frame, ICameraPathInternal item)
             {
                 var subFrame = frame.ReadSubrecordFrame();
@@ -41,11 +36,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CameraPathBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, ICameraPathGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
-            }
-
             static partial void WriteBinaryZoomCustom(MutagenWriter writer, ICameraPathGetter item)
             {
                 byte e = (byte)item.Zoom;

@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationGetter rhs)) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationGetter rhs) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -510,11 +510,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILocationGetter item,
-            ILocationGetter rhs)
+            ILocationGetter rhs,
+            Location.TranslationMask? equalsMask = null)
         {
             return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -829,12 +831,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationGetter? lhs,
-            ILocationGetter? rhs)
+            ILocationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Rotation) ?? true))
+            {
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            }
             return true;
         }
         
@@ -1147,13 +1156,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationGetter rhs)) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationGetter rhs) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);

@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceCinematicGetter rhs)) return false;
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceCinematicGetter rhs) return false;
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceCinematicGetter? obj)
         {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).GetHashCode(this);
@@ -547,11 +547,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImageSpaceCinematicGetter item,
-            IImageSpaceCinematicGetter rhs)
+            IImageSpaceCinematicGetter rhs,
+            ImageSpaceCinematic.TranslationMask? equalsMask = null)
         {
             return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -877,13 +879,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceCinematicGetter? lhs,
-            IImageSpaceCinematicGetter? rhs)
+            IImageSpaceCinematicGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Saturation.EqualsWithin(rhs.Saturation)) return false;
-            if (!lhs.Brightness.EqualsWithin(rhs.Brightness)) return false;
-            if (!lhs.Contrast.EqualsWithin(rhs.Contrast)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Saturation) ?? true))
+            {
+                if (!lhs.Saturation.EqualsWithin(rhs.Saturation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Brightness) ?? true))
+            {
+                if (!lhs.Brightness.EqualsWithin(rhs.Brightness)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Contrast) ?? true))
+            {
+                if (!lhs.Contrast.EqualsWithin(rhs.Contrast)) return false;
+            }
             return true;
         }
         
@@ -1213,13 +1225,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceCinematicGetter rhs)) return false;
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceCinematicGetter rhs) return false;
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceCinematicGetter? obj)
         {
-            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)this).CommonInstance()!).GetHashCode(this);

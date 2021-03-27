@@ -64,13 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointModifyValueGetter rhs)) return false;
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointModifyValueGetter rhs) return false;
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointModifyValueGetter? obj)
         {
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).GetHashCode(this);
@@ -509,11 +509,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkEntryPointModifyValueGetter item,
-            IPerkEntryPointModifyValueGetter rhs)
+            IPerkEntryPointModifyValueGetter rhs,
+            PerkEntryPointModifyValue.TranslationMask? equalsMask = null)
         {
             return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -888,32 +890,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkEntryPointModifyValueGetter? lhs,
-            IPerkEntryPointModifyValueGetter? rhs)
+            IPerkEntryPointModifyValueGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
-            if (lhs.Modification != rhs.Modification) return false;
-            if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Modification) ?? true))
+            {
+                if (lhs.Modification != rhs.Modification) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointModifyValue_FieldIndex.Value) ?? true))
+            {
+                if (!lhs.Value.EqualsWithin(rhs.Value)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
-            IAPerkEntryPointEffectGetter? rhs)
+            IAPerkEntryPointEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointModifyValueGetter?)lhs,
-                rhs: rhs as IPerkEntryPointModifyValueGetter);
+                rhs: rhs as IPerkEntryPointModifyValueGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointModifyValueGetter?)lhs,
-                rhs: rhs as IPerkEntryPointModifyValueGetter);
+                rhs: rhs as IPerkEntryPointModifyValueGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkEntryPointModifyValueGetter item)
@@ -1359,13 +1372,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointModifyValueGetter rhs)) return false;
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointModifyValueGetter rhs) return false;
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointModifyValueGetter? obj)
         {
-            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointModifyValueCommon)((IPerkEntryPointModifyValueGetter)this).CommonInstance()!).GetHashCode(this);

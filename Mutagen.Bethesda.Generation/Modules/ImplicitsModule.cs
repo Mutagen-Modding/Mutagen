@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new FunctionWrapper(fg,
-                        $"public static ICollection<ModKey> {proto.Protocol.Namespace}"))
+                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                     {
                         args.Add($"this ImplicitBaseMasters _");
                         if (objData.HasMultipleReleases)
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine();
 
                     using (var args = new FunctionWrapper(fg,
-                        $"public static ICollection<ModKey> {proto.Protocol.Namespace}"))
+                        $"public static IReadOnlyCollection<ModKey> {proto.Protocol.Namespace}"))
                     {
                         args.Add($"this ImplicitListings _");
                         if (objData.HasMultipleReleases)
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine();
 
                     using (var args = new FunctionWrapper(fg,
-                        $"public static ICollection<FormKey> {proto.Protocol.Namespace}"))
+                        $"public static IReadOnlyCollection<FormKey> {proto.Protocol.Namespace}"))
                     {
                         args.Add($"this ImplicitRecordFormKeys _");
                         if (objData.HasMultipleReleases)

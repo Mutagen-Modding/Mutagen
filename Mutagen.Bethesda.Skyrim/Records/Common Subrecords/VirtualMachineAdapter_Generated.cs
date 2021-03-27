@@ -58,13 +58,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVirtualMachineAdapterGetter rhs)) return false;
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IVirtualMachineAdapterGetter rhs) return false;
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVirtualMachineAdapterGetter? obj)
         {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -423,11 +423,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IVirtualMachineAdapterGetter item,
-            IVirtualMachineAdapterGetter rhs)
+            IVirtualMachineAdapterGetter rhs,
+            VirtualMachineAdapter.TranslationMask? equalsMask = null)
         {
             return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -748,21 +750,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IVirtualMachineAdapterGetter? lhs,
-            IVirtualMachineAdapterGetter? rhs)
+            IVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IAVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IVirtualMachineAdapterGetter?)lhs,
-                rhs: rhs as IVirtualMachineAdapterGetter);
+                rhs: rhs as IVirtualMachineAdapterGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IVirtualMachineAdapterGetter item)
@@ -1078,13 +1083,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVirtualMachineAdapterGetter rhs)) return false;
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IVirtualMachineAdapterGetter rhs) return false;
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVirtualMachineAdapterGetter? obj)
         {
-            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)this).CommonInstance()!).GetHashCode(this);

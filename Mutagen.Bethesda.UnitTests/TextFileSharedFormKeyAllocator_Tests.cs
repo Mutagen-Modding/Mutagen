@@ -132,5 +132,25 @@ namespace Mutagen.Bethesda.UnitTests
             formID = allocator.GetNextFormKey(Utility.Edid2);
             Assert.Equal(formID, Utility.Form2);
         }
+
+        [Fact]
+        public void FailOnForeignFormKey()
+        {
+            using var folder = tempFolder.Value;
+
+            var foreignForm = Utility.PluginModKey2.MakeFormKey(0x123456);
+
+            File.WriteAllLines(
+                Path.Combine(folder.Dir.Path, Patcher1 + ".txt"),
+                new string[]
+                {
+                    Utility.Edid1,
+                    Utility.Form1.ToString(),
+                    Utility.Edid2,
+                    foreignForm.ToString(),
+                });
+            var mod = new OblivionMod(Utility.PluginModKey);
+            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, Patcher1));
+        }
     }
 }

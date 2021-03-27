@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine($"if ({rhs}.{VersioningModule.VersioningFieldName}.HasFlag({this.ObjectGen.ObjectName}.{VersioningModule.VersioningEnumName}.Break{Index})) return;");
         }
 
-        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
+        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
         {
             throw new NotImplementedException();
         }

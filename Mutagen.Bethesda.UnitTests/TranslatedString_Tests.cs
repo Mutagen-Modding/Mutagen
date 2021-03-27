@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -226,6 +227,96 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(EnglishString, arr[0].Value);
             Assert.Equal(Language.French, arr[1].Key);
             Assert.Equal(FrenchString, arr[1].Value);
+        }
+
+        [Fact]
+        public void Equality_OnlyDefault_Self()
+        {
+            var comp = TranslatedString.OnlyDefaultComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_OnlyDefault_EqualMany()
+        {
+            var comp = TranslatedString.OnlyDefaultComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            ITranslatedString str2 = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str2).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_OnlyDefault_Single()
+        {
+            var comp = TranslatedString.OnlyDefaultComparer;
+            ITranslatedString str = Create(EnglishString);
+            ITranslatedString str2 = Create(EnglishString);
+            comp.Equals(str, str2).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_OnlyDefault_NotEqual()
+        {
+            var comp = TranslatedString.OnlyDefaultComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, FrenchString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            ITranslatedString str2 = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str2).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equality_All_Self()
+        {
+            var comp = TranslatedString.AllLanguageComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_All_EqualMany()
+        {
+            var comp = TranslatedString.AllLanguageComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            ITranslatedString str2 = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str2).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_All_Single()
+        {
+            var comp = TranslatedString.AllLanguageComparer;
+            ITranslatedString str = Create(EnglishString);
+            ITranslatedString str2 = Create(EnglishString);
+            comp.Equals(str, str2).Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equality_All_NotEqual()
+        {
+            var comp = TranslatedString.AllLanguageComparer;
+            ITranslatedString str = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, EnglishString));
+            ITranslatedString str2 = Create(
+                new KeyValuePair<Language, string>(Language.English, EnglishString),
+                new KeyValuePair<Language, string>(Language.French, FrenchString));
+            comp.Equals(str, str2).Should().BeFalse();
         }
     }
 

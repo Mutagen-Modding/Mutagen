@@ -59,13 +59,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IATopicReferenceGetter rhs)) return false;
-            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IATopicReferenceGetter rhs) return false;
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IATopicReferenceGetter? obj)
         {
-            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -431,11 +431,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IATopicReferenceGetter item,
-            IATopicReferenceGetter rhs)
+            IATopicReferenceGetter rhs,
+            ATopicReference.TranslationMask? equalsMask = null)
         {
             return ((ATopicReferenceCommon)((IATopicReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -732,7 +734,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IATopicReferenceGetter? lhs,
-            IATopicReferenceGetter? rhs)
+            IATopicReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -993,13 +996,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IATopicReferenceGetter rhs)) return false;
-            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IATopicReferenceGetter rhs) return false;
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IATopicReferenceGetter? obj)
         {
-            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ATopicReferenceCommon)((IATopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);

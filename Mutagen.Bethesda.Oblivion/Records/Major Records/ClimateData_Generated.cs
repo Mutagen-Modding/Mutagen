@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IClimateDataGetter rhs)) return false;
-            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IClimateDataGetter rhs) return false;
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IClimateDataGetter? obj)
         {
-            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -680,11 +680,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IClimateDataGetter item,
-            IClimateDataGetter rhs)
+            IClimateDataGetter rhs,
+            ClimateData.TranslationMask? equalsMask = null)
         {
             return ((ClimateDataCommon)((IClimateDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1038,17 +1040,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IClimateDataGetter? lhs,
-            IClimateDataGetter? rhs)
+            IClimateDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
-            if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
-            if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
-            if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
-            if (lhs.Volatility != rhs.Volatility) return false;
-            if (lhs.Phase != rhs.Phase) return false;
-            if (lhs.PhaseLength != rhs.PhaseLength) return false;
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.SunriseBegin) ?? true))
+            {
+                if (lhs.SunriseBegin != rhs.SunriseBegin) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.SunriseEnd) ?? true))
+            {
+                if (lhs.SunriseEnd != rhs.SunriseEnd) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.SunsetBegin) ?? true))
+            {
+                if (lhs.SunsetBegin != rhs.SunsetBegin) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.SunsetEnd) ?? true))
+            {
+                if (lhs.SunsetEnd != rhs.SunsetEnd) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.Volatility) ?? true))
+            {
+                if (lhs.Volatility != rhs.Volatility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.Phase) ?? true))
+            {
+                if (lhs.Phase != rhs.Phase) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.PhaseLength) ?? true))
+            {
+                if (lhs.PhaseLength != rhs.PhaseLength) return false;
+            }
             return true;
         }
         
@@ -1533,13 +1557,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IClimateDataGetter rhs)) return false;
-            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IClimateDataGetter rhs) return false;
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IClimateDataGetter? obj)
         {
-            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ClimateDataCommon)((IClimateDataGetter)this).CommonInstance()!).GetHashCode(this);

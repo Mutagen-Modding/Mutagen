@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcConfigurationGetter rhs)) return false;
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcConfigurationGetter rhs) return false;
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcConfigurationGetter? obj)
         {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -679,11 +679,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this INpcConfigurationGetter item,
-            INpcConfigurationGetter rhs)
+            INpcConfigurationGetter rhs,
+            NpcConfiguration.TranslationMask? equalsMask = null)
         {
             return ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,17 +1039,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcConfigurationGetter? lhs,
-            INpcConfigurationGetter? rhs)
+            INpcConfigurationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
-            if (lhs.Fatigue != rhs.Fatigue) return false;
-            if (lhs.BarterGold != rhs.BarterGold) return false;
-            if (lhs.LevelOffset != rhs.LevelOffset) return false;
-            if (lhs.CalcMin != rhs.CalcMin) return false;
-            if (lhs.CalcMax != rhs.CalcMax) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.BaseSpellPoints) ?? true))
+            {
+                if (lhs.BaseSpellPoints != rhs.BaseSpellPoints) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Fatigue) ?? true))
+            {
+                if (lhs.Fatigue != rhs.Fatigue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.BarterGold) ?? true))
+            {
+                if (lhs.BarterGold != rhs.BarterGold) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.LevelOffset) ?? true))
+            {
+                if (lhs.LevelOffset != rhs.LevelOffset) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.CalcMin) ?? true))
+            {
+                if (lhs.CalcMin != rhs.CalcMin) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.CalcMax) ?? true))
+            {
+                if (lhs.CalcMax != rhs.CalcMax) return false;
+            }
             return true;
         }
         
@@ -1406,13 +1430,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcConfigurationGetter rhs)) return false;
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcConfigurationGetter rhs) return false;
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcConfigurationGetter? obj)
         {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).GetHashCode(this);

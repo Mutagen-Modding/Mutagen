@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcInheritSoundGetter rhs)) return false;
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcInheritSoundGetter rhs) return false;
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcInheritSoundGetter? obj)
         {
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -468,11 +468,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcInheritSoundGetter item,
-            INpcInheritSoundGetter rhs)
+            INpcInheritSoundGetter rhs,
+            NpcInheritSound.TranslationMask? equalsMask = null)
         {
             return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -790,22 +792,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcInheritSoundGetter? lhs,
-            INpcInheritSoundGetter? rhs)
+            INpcInheritSoundGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs)) return false;
-            if (!lhs.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom)) return false;
+            if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
+            {
+                if (!lhs.InheritsSoundsFrom.Equals(rhs.InheritsSoundsFrom)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IANpcSoundDefinitionGetter? lhs,
-            IANpcSoundDefinitionGetter? rhs)
+            IANpcSoundDefinitionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INpcInheritSoundGetter?)lhs,
-                rhs: rhs as INpcInheritSoundGetter);
+                rhs: rhs as INpcInheritSoundGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INpcInheritSoundGetter item)
@@ -1187,13 +1195,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcInheritSoundGetter rhs)) return false;
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcInheritSoundGetter rhs) return false;
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcInheritSoundGetter? obj)
         {
-            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcInheritSoundCommon)((INpcInheritSoundGetter)this).CommonInstance()!).GetHashCode(this);

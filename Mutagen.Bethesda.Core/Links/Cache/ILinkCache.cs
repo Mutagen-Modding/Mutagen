@@ -617,14 +617,61 @@ namespace Mutagen.Bethesda
         /// <returns>True if a matching record was found</returns>
         bool TryResolveIdentifier(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out FormKey formKey);
 
+        /// <summary>
+        /// Returns all winning identifiers for a given type.
+        /// </summary>
+        /// <param name="type">Type to retrieve identifiers for</param>
+        /// <param name="cancel">Optional cancel token</param>
+        /// <returns>Winning identifiers for a given type</returns>
         IEnumerable<IMajorRecordIdentifier> AllIdentifiers(Type type, CancellationToken? cancel = null);
 
+        /// <summary>
+        /// Returns all winning identifiers for a given type.
+        /// </summary>
+        /// <typeparam name="TMajor">Type to retrieve identifiers for</typeparam>
+        /// <param name="cancel">Optional cancel token</param>
+        /// <returns>Winning identifiers for a given type</returns>
         IEnumerable<IMajorRecordIdentifier> AllIdentifiers<TMajor>(CancellationToken? cancel = null)
             where TMajor : class, IMajorRecordCommonGetter;
 
+        /// <summary>
+        /// Returns all winning identifiers for the given types.
+        /// </summary>
+        /// <param name="types">Types to retrieve identifiers for</param>
+        /// <param name="cancel">Optional cancel token</param>
+        /// <returns>Winning identifiers for a given type</returns>
         IEnumerable<IMajorRecordIdentifier> AllIdentifiers(IEnumerable<Type> types, CancellationToken? cancel = null);
 
+        /// <summary>
+        /// Returns all winning identifiers for the given types.
+        /// </summary>
+        /// <param name="types">Types to retrieve identifiers for</param>
+        /// <returns>Winning identifiers for a given type</returns>
         IEnumerable<IMajorRecordIdentifier> AllIdentifiers(params Type[] types);
+
+        /// <summary>
+        /// Queries and caches all winning overrides of the given type within the cache
+        /// </summary>
+        /// <param name="type">Type to query and warm up for</param>
+        void Warmup(Type type);
+
+        /// <summary>
+        /// Queries and caches all winning overrides of the given type within the cache
+        /// </summary>
+        /// <typeparam name="TMajor">Type to query and warm up for</typeparam>
+        void Warmup<TMajor>();
+
+        /// <summary>
+        /// Queries and caches all winning overrides of the given types within the cache
+        /// </summary>
+        /// <param name="types">Types to query and warm up for</param>
+        void Warmup(params Type[] types);
+
+        /// <summary>
+        /// Queries and caches all winning overrides of the given types within the cache
+        /// </summary>
+        /// <param name="types">Types to query and warm up for</param>
+        void Warmup(IEnumerable<Type> types);
 
         /// <summary>
         /// Iterates through the contained mods in the order they were listed, with the least prioritized mod first.

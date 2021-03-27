@@ -112,13 +112,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectDataGetter rhs)) return false;
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectDataGetter rhs) return false;
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectDataGetter? obj)
         {
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -850,11 +850,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IMagicEffectDataGetter item,
-            IMagicEffectDataGetter rhs)
+            IMagicEffectDataGetter rhs,
+            MagicEffectData.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectDataCommon)((IMagicEffectDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1245,21 +1247,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectDataGetter? lhs,
-            IMagicEffectDataGetter? rhs)
+            IMagicEffectDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
-            if (lhs.Unused != rhs.Unused) return false;
-            if (lhs.MagicSchool != rhs.MagicSchool) return false;
-            if (lhs.Resistance != rhs.Resistance) return false;
-            if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
-            if (!lhs.Light.Equals(rhs.Light)) return false;
-            if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
-            if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
-            if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.BaseCost) ?? true))
+            {
+                if (!lhs.BaseCost.EqualsWithin(rhs.BaseCost)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.MagicSchool) ?? true))
+            {
+                if (lhs.MagicSchool != rhs.MagicSchool) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Resistance) ?? true))
+            {
+                if (lhs.Resistance != rhs.Resistance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.CounterEffectCount) ?? true))
+            {
+                if (lhs.CounterEffectCount != rhs.CounterEffectCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Light) ?? true))
+            {
+                if (!lhs.Light.Equals(rhs.Light)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.ProjectileSpeed) ?? true))
+            {
+                if (!lhs.ProjectileSpeed.EqualsWithin(rhs.ProjectileSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.EffectShader) ?? true))
+            {
+                if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
+            {
+                if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
+            }
             return true;
         }
         
@@ -1722,13 +1758,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectDataGetter rhs)) return false;
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectDataGetter rhs) return false;
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectDataGetter? obj)
         {
-            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectDataCommon)((IMagicEffectDataGetter)this).CommonInstance()!).GetHashCode(this);

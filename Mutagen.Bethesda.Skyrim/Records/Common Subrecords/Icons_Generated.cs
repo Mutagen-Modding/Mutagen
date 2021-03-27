@@ -64,13 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIconsGetter rhs)) return false;
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IIconsGetter rhs) return false;
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIconsGetter? obj)
         {
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IconsCommon)((IIconsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -516,11 +516,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIconsGetter item,
-            IIconsGetter rhs)
+            IIconsGetter rhs,
+            Icons.TranslationMask? equalsMask = null)
         {
             return ((IconsCommon)((IIconsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -838,12 +840,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIconsGetter? lhs,
-            IIconsGetter? rhs)
+            IIconsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
-            if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.LargeIconFilename) ?? true))
+            {
+                if (!string.Equals(lhs.LargeIconFilename, rhs.LargeIconFilename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Icons_FieldIndex.SmallIconFilename) ?? true))
+            {
+                if (!string.Equals(lhs.SmallIconFilename, rhs.SmallIconFilename)) return false;
+            }
             return true;
         }
         
@@ -1231,13 +1240,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIconsGetter rhs)) return false;
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IIconsGetter rhs) return false;
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIconsGetter? obj)
         {
-            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IconsCommon)((IIconsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IconsCommon)((IIconsGetter)this).CommonInstance()!).GetHashCode(this);

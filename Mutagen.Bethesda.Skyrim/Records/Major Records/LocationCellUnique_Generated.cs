@@ -86,13 +86,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCellUniqueGetter rhs)) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCellUniqueGetter rhs) return false;
+            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCellUniqueGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);
@@ -571,11 +571,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationCellUniqueGetter item,
-            ILocationCellUniqueGetter rhs)
+            ILocationCellUniqueGetter rhs,
+            LocationCellUnique.TranslationMask? equalsMask = null)
         {
             return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -900,13 +902,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationCellUniqueGetter? lhs,
-            ILocationCellUniqueGetter? rhs)
+            ILocationCellUniqueGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Actor.Equals(rhs.Actor)) return false;
-            if (!lhs.Ref.Equals(rhs.Ref)) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Actor) ?? true))
+            {
+                if (!lhs.Actor.Equals(rhs.Actor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Ref) ?? true))
+            {
+                if (!lhs.Ref.Equals(rhs.Ref)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationCellUnique_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
             return true;
         }
         
@@ -1242,13 +1254,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCellUniqueGetter rhs)) return false;
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCellUniqueGetter rhs) return false;
+            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCellUniqueGetter? obj)
         {
-            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCellUniqueCommon)((ILocationCellUniqueGetter)this).CommonInstance()!).GetHashCode(this);

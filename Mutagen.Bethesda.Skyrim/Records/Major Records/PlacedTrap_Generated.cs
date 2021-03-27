@@ -433,12 +433,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedTrapGetter rhs) return false;
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedTrapGetter? obj)
         {
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -576,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedTrapGetter item,
-            IPlacedTrapGetter rhs)
+            IPlacedTrapGetter rhs,
+            PlacedTrap.TranslationMask? equalsMask = null)
         {
             return ((PlacedTrapCommon)((IPlacedTrapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1051,40 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedTrapGetter? lhs,
-            IPlacedTrapGetter? rhs)
+            IPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedTrap_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
-                rhs: rhs as IPlacedTrapGetter);
+                rhs: rhs as IPlacedTrapGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
-                rhs: rhs as IPlacedTrapGetter);
+                rhs: rhs as IPlacedTrapGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedTrapGetter?)lhs,
-                rhs: rhs as IPlacedTrapGetter);
+                rhs: rhs as IPlacedTrapGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedTrapGetter item)
@@ -1609,12 +1621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedTrapGetter rhs) return false;
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedTrapGetter? obj)
         {
-            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedTrapCommon)((IPlacedTrapGetter)this).CommonInstance()!).GetHashCode(this);

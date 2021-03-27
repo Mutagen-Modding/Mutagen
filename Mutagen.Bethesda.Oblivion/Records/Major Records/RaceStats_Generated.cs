@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceStatsGetter rhs)) return false;
-            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceStatsGetter rhs) return false;
+            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceStatsGetter? obj)
         {
-            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -708,11 +708,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRaceStatsGetter item,
-            IRaceStatsGetter rhs)
+            IRaceStatsGetter rhs,
+            RaceStats.TranslationMask? equalsMask = null)
         {
             return ((RaceStatsCommon)((IRaceStatsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1069,18 +1071,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceStatsGetter? lhs,
-            IRaceStatsGetter? rhs)
+            IRaceStatsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Strength != rhs.Strength) return false;
-            if (lhs.Intelligence != rhs.Intelligence) return false;
-            if (lhs.Willpower != rhs.Willpower) return false;
-            if (lhs.Agility != rhs.Agility) return false;
-            if (lhs.Speed != rhs.Speed) return false;
-            if (lhs.Endurance != rhs.Endurance) return false;
-            if (lhs.Personality != rhs.Personality) return false;
-            if (lhs.Luck != rhs.Luck) return false;
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
+            {
+                if (lhs.Strength != rhs.Strength) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Intelligence) ?? true))
+            {
+                if (lhs.Intelligence != rhs.Intelligence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Willpower) ?? true))
+            {
+                if (lhs.Willpower != rhs.Willpower) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Agility) ?? true))
+            {
+                if (lhs.Agility != rhs.Agility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Speed) ?? true))
+            {
+                if (lhs.Speed != rhs.Speed) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Endurance) ?? true))
+            {
+                if (lhs.Endurance != rhs.Endurance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Personality) ?? true))
+            {
+                if (lhs.Personality != rhs.Personality) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Luck) ?? true))
+            {
+                if (lhs.Luck != rhs.Luck) return false;
+            }
             return true;
         }
         
@@ -1437,13 +1464,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceStatsGetter rhs)) return false;
-            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceStatsGetter rhs) return false;
+            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceStatsGetter? obj)
         {
-            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceStatsCommon)((IRaceStatsGetter)this).CommonInstance()!).GetHashCode(this);

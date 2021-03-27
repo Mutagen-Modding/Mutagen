@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectIdGetter rhs)) return false;
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectIdGetter rhs) return false;
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectIdGetter? obj)
         {
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).GetHashCode(this);
@@ -467,11 +467,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationObjectIdGetter item,
-            ILocationObjectIdGetter rhs)
+            ILocationObjectIdGetter rhs,
+            LocationObjectId.TranslationMask? equalsMask = null)
         {
             return ((LocationObjectIdCommon)((ILocationObjectIdGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -787,22 +789,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationObjectIdGetter? lhs,
-            ILocationObjectIdGetter? rhs)
+            ILocationObjectIdGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
-            if (!lhs.Link.Equals(rhs.Link)) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationObjectId_FieldIndex.Link) ?? true))
+            {
+                if (!lhs.Link.Equals(rhs.Link)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationObjectIdGetter?)lhs,
-                rhs: rhs as ILocationObjectIdGetter);
+                rhs: rhs as ILocationObjectIdGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationObjectIdGetter item)
@@ -1129,13 +1137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectIdGetter rhs)) return false;
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectIdGetter rhs) return false;
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectIdGetter? obj)
         {
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).GetHashCode(this);

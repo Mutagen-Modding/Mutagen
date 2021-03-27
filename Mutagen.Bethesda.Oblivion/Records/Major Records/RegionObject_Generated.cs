@@ -122,13 +122,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionObjectGetter rhs)) return false;
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionObjectGetter rhs) return false;
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionObjectGetter? obj)
         {
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1027,11 +1027,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRegionObjectGetter item,
-            IRegionObjectGetter rhs)
+            IRegionObjectGetter rhs,
+            RegionObject.TranslationMask? equalsMask = null)
         {
             return ((RegionObjectCommon)((IRegionObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1452,27 +1454,79 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionObjectGetter? lhs,
-            IRegionObjectGetter? rhs)
+            IRegionObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
-            if (lhs.ParentIndex != rhs.ParentIndex) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
-            if (lhs.Clustering != rhs.Clustering) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
-            if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
-            if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
-            if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
-            if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
-            if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
+            {
+                if (lhs.ParentIndex != rhs.ParentIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Density) ?? true))
+            {
+                if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Clustering) ?? true))
+            {
+                if (lhs.Clustering != rhs.Clustering) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtPercent) ?? true))
+            {
+                if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Radius) ?? true))
+            {
+                if (lhs.Radius != rhs.Radius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MinHeight) ?? true))
+            {
+                if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MaxHeight) ?? true))
+            {
+                if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Sink) ?? true))
+            {
+                if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.SinkVariance) ?? true))
+            {
+                if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.SizeVariance) ?? true))
+            {
+                if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVariance) ?? true))
+            {
+                if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
             return true;
         }
         
@@ -1927,13 +1981,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionObjectGetter rhs)) return false;
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionObjectGetter rhs) return false;
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionObjectGetter? obj)
         {
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).GetHashCode(this);

@@ -1084,12 +1084,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFurnitureGetter rhs) return false;
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFurnitureGetter? obj)
         {
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1277,11 +1277,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFurnitureGetter item,
-            IFurnitureGetter rhs)
+            IFurnitureGetter rhs,
+            Furniture.TranslationMask? equalsMask = null)
         {
             return ((FurnitureCommon)((IFurnitureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1814,43 +1816,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFurnitureGetter? lhs,
-            IFurnitureGetter? rhs)
+            IFurnitureGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
-            if (!object.Equals(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
-            if (!lhs.AssociatedSpell.Equals(rhs.AssociatedSpell)) return false;
-            if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
-            if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.PNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.InteractionKeyword) ?? true))
+            {
+                if (!lhs.InteractionKeyword.Equals(rhs.InteractionKeyword)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.WorkbenchData) ?? true))
+            {
+                if (!object.Equals(lhs.WorkbenchData, rhs.WorkbenchData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.AssociatedSpell) ?? true))
+            {
+                if (!lhs.AssociatedSpell.Equals(rhs.AssociatedSpell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Markers) ?? true))
+            {
+                if (!lhs.Markers.SequenceEqualNullable(rhs.Markers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.ModelFilename) ?? true))
+            {
+                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFurnitureGetter?)lhs,
-                rhs: rhs as IFurnitureGetter);
+                rhs: rhs as IFurnitureGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFurnitureGetter?)lhs,
-                rhs: rhs as IFurnitureGetter);
+                rhs: rhs as IFurnitureGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFurnitureGetter item)
@@ -3092,12 +3138,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IFurnitureGetter rhs) return false;
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFurnitureGetter? obj)
         {
-            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FurnitureCommon)((IFurnitureGetter)this).CommonInstance()!).GetHashCode(this);

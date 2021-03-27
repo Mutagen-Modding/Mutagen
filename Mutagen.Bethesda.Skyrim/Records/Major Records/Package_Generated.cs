@@ -1700,12 +1700,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1902,11 +1902,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageGetter item,
-            IPackageGetter rhs)
+            IPackageGetter rhs,
+            Package.TranslationMask? equalsMask = null)
         {
             return ((PackageCommon)((IPackageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2580,60 +2582,155 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageGetter? lhs,
-            IPackageGetter? rhs)
+            IPackageGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.InterruptOverride != rhs.InterruptOverride) return false;
-            if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.InteruptFlags != rhs.InteruptFlags) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (lhs.ScheduleMonth != rhs.ScheduleMonth) return false;
-            if (lhs.ScheduleDayOfWeek != rhs.ScheduleDayOfWeek) return false;
-            if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
-            if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
-            if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            if (lhs.ScheduleDurationInMinutes != rhs.ScheduleDurationInMinutes) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.Unknown4 != rhs.Unknown4) return false;
-            if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
-            if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
-            if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
-            if (!lhs.PackageTemplate.Equals(rhs.PackageTemplate)) return false;
-            if (lhs.DataInputVersion != rhs.DataInputVersion) return false;
-            if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.XnamMarker.Span, rhs.XnamMarker.Span)) return false;
-            if (!lhs.ProcedureTree.SequenceEqualNullable(rhs.ProcedureTree)) return false;
-            if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
-            if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
-            if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;
-            if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
-            if (lhs.PSDTDataTypeState != rhs.PSDTDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
+            {
+                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InterruptOverride) ?? true))
+            {
+                if (lhs.InterruptOverride != rhs.InterruptOverride) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PreferredSpeed) ?? true))
+            {
+                if (lhs.PreferredSpeed != rhs.PreferredSpeed) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.InteruptFlags) ?? true))
+            {
+                if (lhs.InteruptFlags != rhs.InteruptFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMonth) ?? true))
+            {
+                if (lhs.ScheduleMonth != rhs.ScheduleMonth) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDayOfWeek) ?? true))
+            {
+                if (lhs.ScheduleDayOfWeek != rhs.ScheduleDayOfWeek) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDate) ?? true))
+            {
+                if (lhs.ScheduleDate != rhs.ScheduleDate) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleHour) ?? true))
+            {
+                if (lhs.ScheduleHour != rhs.ScheduleHour) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleMinute) ?? true))
+            {
+                if (lhs.ScheduleMinute != rhs.ScheduleMinute) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ScheduleDurationInMinutes) ?? true))
+            {
+                if (lhs.ScheduleDurationInMinutes != rhs.ScheduleDurationInMinutes) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Unknown4) ?? true))
+            {
+                if (lhs.Unknown4 != rhs.Unknown4) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
+            {
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OwnerQuest) ?? true))
+            {
+                if (!lhs.OwnerQuest.Equals(rhs.OwnerQuest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PackageTemplate) ?? true))
+            {
+                if (!lhs.PackageTemplate.Equals(rhs.PackageTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.DataInputVersion) ?? true))
+            {
+                if (lhs.DataInputVersion != rhs.DataInputVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.SequenceEqualNullable(rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.XnamMarker) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.XnamMarker.Span, rhs.XnamMarker.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.ProcedureTree) ?? true))
+            {
+                if (!lhs.ProcedureTree.SequenceEqualNullable(rhs.ProcedureTree)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
+            {
+                if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
+            {
+                if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
+            {
+                if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
+            {
+                if (lhs.PKDTDataTypeState != rhs.PKDTDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PSDTDataTypeState) ?? true))
+            {
+                if (lhs.PSDTDataTypeState != rhs.PSDTDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
-                rhs: rhs as IPackageGetter);
+                rhs: rhs as IPackageGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageGetter?)lhs,
-                rhs: rhs as IPackageGetter);
+                rhs: rhs as IPackageGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageGetter item)
@@ -3270,19 +3367,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PackageBinaryWriteTranslation Instance = new PackageBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IPackageGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IPackageGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         static partial void WriteBinaryPackageTemplateCustom(
             MutagenWriter writer,
             IPackageGetter item);
@@ -3374,9 +3458,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Unknown3);
                 writer.Write(item.ScheduleDurationInMinutes);
             }
-            PackageBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown4,
@@ -3550,9 +3642,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    PackageBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)Package_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.IDLB:
@@ -3633,10 +3728,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IPackageInternal item);
 
         static partial void FillBinaryPackageTemplateCustom(
             MutagenFrame frame,
@@ -3995,12 +4086,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPackageGetter rhs) return false;
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageGetter? obj)
         {
-            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageCommon)((IPackageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageCommon)((IPackageGetter)this).CommonInstance()!).GetHashCode(this);

@@ -87,13 +87,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcConfigurationGetter rhs)) return false;
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcConfigurationGetter rhs) return false;
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcConfigurationGetter? obj)
         {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -816,11 +816,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcConfigurationGetter item,
-            INpcConfigurationGetter rhs)
+            INpcConfigurationGetter rhs,
+            NpcConfiguration.TranslationMask? equalsMask = null)
         {
             return ((NpcConfigurationCommon)((INpcConfigurationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1202,21 +1204,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcConfigurationGetter? lhs,
-            INpcConfigurationGetter? rhs)
+            INpcConfigurationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.MagickaOffset != rhs.MagickaOffset) return false;
-            if (lhs.StaminaOffset != rhs.StaminaOffset) return false;
-            if (!object.Equals(lhs.Level, rhs.Level)) return false;
-            if (lhs.CalcMinLevel != rhs.CalcMinLevel) return false;
-            if (lhs.CalcMaxLevel != rhs.CalcMaxLevel) return false;
-            if (lhs.SpeedMultiplier != rhs.SpeedMultiplier) return false;
-            if (lhs.DispositionBase != rhs.DispositionBase) return false;
-            if (lhs.TemplateFlags != rhs.TemplateFlags) return false;
-            if (lhs.HealthOffset != rhs.HealthOffset) return false;
-            if (lhs.BleedoutOverride != rhs.BleedoutOverride) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.MagickaOffset) ?? true))
+            {
+                if (lhs.MagickaOffset != rhs.MagickaOffset) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.StaminaOffset) ?? true))
+            {
+                if (lhs.StaminaOffset != rhs.StaminaOffset) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Level) ?? true))
+            {
+                if (!object.Equals(lhs.Level, rhs.Level)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.CalcMinLevel) ?? true))
+            {
+                if (lhs.CalcMinLevel != rhs.CalcMinLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.CalcMaxLevel) ?? true))
+            {
+                if (lhs.CalcMaxLevel != rhs.CalcMaxLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.SpeedMultiplier) ?? true))
+            {
+                if (lhs.SpeedMultiplier != rhs.SpeedMultiplier) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.DispositionBase) ?? true))
+            {
+                if (lhs.DispositionBase != rhs.DispositionBase) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.TemplateFlags) ?? true))
+            {
+                if (lhs.TemplateFlags != rhs.TemplateFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.HealthOffset) ?? true))
+            {
+                if (lhs.HealthOffset != rhs.HealthOffset) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.BleedoutOverride) ?? true))
+            {
+                if (lhs.BleedoutOverride != rhs.BleedoutOverride) return false;
+            }
             return true;
         }
         
@@ -1667,13 +1703,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcConfigurationGetter rhs)) return false;
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcConfigurationGetter rhs) return false;
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcConfigurationGetter? obj)
         {
-            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcConfigurationCommon)((INpcConfigurationGetter)this).CommonInstance()!).GetHashCode(this);

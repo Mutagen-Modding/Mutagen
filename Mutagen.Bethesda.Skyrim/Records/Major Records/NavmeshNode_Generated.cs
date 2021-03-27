@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshNodeGetter rhs)) return false;
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshNodeGetter rhs) return false;
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshNodeGetter? obj)
         {
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -524,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavmeshNodeGetter item,
-            INavmeshNodeGetter rhs)
+            INavmeshNodeGetter rhs,
+            NavmeshNode.TranslationMask? equalsMask = null)
         {
             return ((NavmeshNodeCommon)((INavmeshNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -844,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshNodeGetter? lhs,
-            INavmeshNodeGetter? rhs)
+            INavmeshNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
-            if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            if ((crystal?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
+            {
+                if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NodeIndex) ?? true))
+            {
+                if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            }
             return true;
         }
         
@@ -1165,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshNodeGetter rhs)) return false;
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshNodeGetter rhs) return false;
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshNodeGetter? obj)
         {
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).GetHashCode(this);

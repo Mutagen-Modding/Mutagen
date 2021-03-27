@@ -101,6 +101,18 @@ namespace Mutagen.Bethesda.Binary
             this.Writer.Write(b);
         }
 
+        public void Write(bool b, int length)
+        {
+            switch (length)
+            {
+                case 4:
+                    this.Writer.Write((int)(b ? 1 : 0));
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         /// <inheritdoc/>
         public void Write(bool? b)
         {

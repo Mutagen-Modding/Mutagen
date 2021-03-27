@@ -64,13 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INoOwnerGetter rhs)) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INoOwnerGetter rhs) return false;
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INoOwnerGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -493,11 +493,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INoOwnerGetter item,
-            INoOwnerGetter rhs)
+            INoOwnerGetter rhs,
+            NoOwner.TranslationMask? equalsMask = null)
         {
             return ((NoOwnerCommon)((INoOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -819,23 +821,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INoOwnerGetter? lhs,
-            INoOwnerGetter? rhs)
+            INoOwnerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
-            if (lhs.RawOwnerData != rhs.RawOwnerData) return false;
-            if (lhs.RawVariableData != rhs.RawVariableData) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NoOwner_FieldIndex.RawOwnerData) ?? true))
+            {
+                if (lhs.RawOwnerData != rhs.RawOwnerData) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NoOwner_FieldIndex.RawVariableData) ?? true))
+            {
+                if (lhs.RawVariableData != rhs.RawVariableData) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INoOwnerGetter?)lhs,
-                rhs: rhs as INoOwnerGetter);
+                rhs: rhs as INoOwnerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INoOwnerGetter item)
@@ -1163,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INoOwnerGetter rhs)) return false;
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INoOwnerGetter rhs) return false;
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INoOwnerGetter? obj)
         {
-            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NoOwnerCommon)((INoOwnerGetter)this).CommonInstance()!).GetHashCode(this);

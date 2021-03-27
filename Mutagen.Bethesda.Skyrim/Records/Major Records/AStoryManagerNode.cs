@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -19,33 +19,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class AStoryManagerNodeBinaryCreateTranslation
-        {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IAStoryManagerNodeInternal item)
-            {
-                if (!frame.TryReadSubrecordFrame(RecordTypes.CITC, out var countMeta)
-                    || countMeta.Content.Length != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, count);
-            }
-        }
-
-        public partial class AStoryManagerNodeBinaryWriteTranslation
-        {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IAStoryManagerNodeGetter item)
-            {
-                var conditions = item.Conditions;
-                using (HeaderExport.Subrecord(writer, RecordTypes.CITC))
-                {
-                    writer.Write(conditions.Count);
-                }
-                ConditionBinaryWriteTranslation.WriteConditionsList(conditions, writer);
-            }
-        }
-
         public partial class AStoryManagerNodeBinaryOverlay
         {
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();

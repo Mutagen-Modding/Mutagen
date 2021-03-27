@@ -30,6 +30,11 @@ namespace Mutagen.Bethesda
         bool TryLookup(Language language, [MaybeNullWhen(false)] out string str);
 
         TranslatedString DeepCopy();
+
+        /// <summary>
+        /// Number of languages registered
+        /// </summary>
+        int NumLanguages { get; }
     }
 
     /// <summary>

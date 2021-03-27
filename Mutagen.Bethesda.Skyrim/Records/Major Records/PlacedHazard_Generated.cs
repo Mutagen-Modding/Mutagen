@@ -433,12 +433,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedHazardGetter rhs) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedHazardGetter? obj)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);
@@ -576,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedHazardGetter item,
-            IPlacedHazardGetter rhs)
+            IPlacedHazardGetter rhs,
+            PlacedHazard.TranslationMask? equalsMask = null)
         {
             return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1051,40 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedHazardGetter? lhs,
-            IPlacedHazardGetter? rhs)
+            IPlacedHazardGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
+            {
+                if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedHazardGetter item)
@@ -1609,12 +1621,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IPlacedHazardGetter rhs) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedHazardGetter? obj)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);

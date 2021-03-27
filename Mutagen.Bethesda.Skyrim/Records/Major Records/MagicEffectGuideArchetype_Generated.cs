@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectGuideArchetypeGetter rhs)) return false;
-            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectGuideArchetypeGetter rhs) return false;
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectGuideArchetypeGetter? obj)
         {
-            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectGuideArchetypeGetter item,
-            IMagicEffectGuideArchetypeGetter rhs)
+            IMagicEffectGuideArchetypeGetter rhs,
+            MagicEffectGuideArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectGuideArchetypeGetter? lhs,
-            IMagicEffectGuideArchetypeGetter? rhs)
+            IMagicEffectGuideArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectGuideArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectGuideArchetypeGetter);
+                rhs: rhs as IMagicEffectGuideArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectGuideArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectGuideArchetypeGetter rhs)) return false;
-            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectGuideArchetypeGetter rhs) return false;
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectGuideArchetypeGetter? obj)
         {
-            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectGuideArchetypeCommon)((IMagicEffectGuideArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

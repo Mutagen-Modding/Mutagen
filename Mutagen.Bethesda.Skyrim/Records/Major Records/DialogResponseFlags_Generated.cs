@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseFlagsGetter rhs)) return false;
-            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseFlagsGetter rhs) return false;
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseFlagsGetter? obj)
         {
-            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogResponseFlagsGetter item,
-            IDialogResponseFlagsGetter rhs)
+            IDialogResponseFlagsGetter rhs,
+            DialogResponseFlags.TranslationMask? equalsMask = null)
         {
             return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseFlagsGetter? lhs,
-            IDialogResponseFlagsGetter? rhs)
+            IDialogResponseFlagsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.ResetHours.EqualsWithin(rhs.ResetHours)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogResponseFlags_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponseFlags_FieldIndex.ResetHours) ?? true))
+            {
+                if (!lhs.ResetHours.EqualsWithin(rhs.ResetHours)) return false;
+            }
             return true;
         }
         
@@ -1168,13 +1177,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseFlagsGetter rhs)) return false;
-            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseFlagsGetter rhs) return false;
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseFlagsGetter? obj)
         {
-            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)this).CommonInstance()!).GetHashCode(this);

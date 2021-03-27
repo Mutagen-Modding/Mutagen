@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetUnknownGetter rhs)) return false;
-            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetUnknownGetter rhs) return false;
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetUnknownGetter? obj)
         {
-            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,11 +461,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageTargetUnknownGetter item,
-            IPackageTargetUnknownGetter rhs)
+            IPackageTargetUnknownGetter rhs,
+            PackageTargetUnknown.TranslationMask? equalsMask = null)
         {
             return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -783,22 +785,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageTargetUnknownGetter? lhs,
-            IPackageTargetUnknownGetter? rhs)
+            IPackageTargetUnknownGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs)) return false;
-            if (lhs.Data != rhs.Data) return false;
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageTargetUnknown_FieldIndex.Data) ?? true))
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageTargetGetter? lhs,
-            IAPackageTargetGetter? rhs)
+            IAPackageTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageTargetUnknownGetter?)lhs,
-                rhs: rhs as IPackageTargetUnknownGetter);
+                rhs: rhs as IPackageTargetUnknownGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageTargetUnknownGetter item)
@@ -1124,13 +1132,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetUnknownGetter rhs)) return false;
-            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetUnknownGetter rhs) return false;
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetUnknownGetter? obj)
         {
-            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetUnknownCommon)((IPackageTargetUnknownGetter)this).CommonInstance()!).GetHashCode(this);

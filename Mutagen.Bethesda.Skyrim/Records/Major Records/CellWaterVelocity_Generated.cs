@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellWaterVelocityGetter rhs)) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellWaterVelocityGetter rhs) return false;
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellWaterVelocityGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
@@ -588,11 +588,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICellWaterVelocityGetter item,
-            ICellWaterVelocityGetter rhs)
+            ICellWaterVelocityGetter rhs,
+            CellWaterVelocity.TranslationMask? equalsMask = null)
         {
             return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -925,14 +927,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICellWaterVelocityGetter? lhs,
-            ICellWaterVelocityGetter? rhs)
+            ICellWaterVelocityGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Offset.Equals(rhs.Offset)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Angle.Equals(rhs.Angle)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Offset) ?? true))
+            {
+                if (!lhs.Offset.Equals(rhs.Offset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Angle) ?? true))
+            {
+                if (!lhs.Angle.Equals(rhs.Angle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellWaterVelocity_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
             return true;
         }
         
@@ -1272,13 +1287,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellWaterVelocityGetter rhs)) return false;
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellWaterVelocityGetter rhs) return false;
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellWaterVelocityGetter? obj)
         {
-            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellWaterVelocityCommon)((ICellWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);

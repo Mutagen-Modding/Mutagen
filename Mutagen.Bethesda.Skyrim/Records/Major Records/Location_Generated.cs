@@ -2660,12 +2660,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -2863,11 +2863,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationGetter item,
-            ILocationGetter rhs)
+            ILocationGetter rhs,
+            Location.TranslationMask? equalsMask = null)
         {
             return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3745,55 +3747,135 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationGetter? lhs,
-            ILocationGetter? rhs)
+            ILocationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
-            if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
-            if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
-            if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
-            if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
-            if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
-            if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
-            if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
-            if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
-            if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
-            if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
-            if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
-            if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
-            if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
-            if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
-            if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
-            if (!lhs.Music.Equals(rhs.Music)) return false;
-            if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
-            if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
-            if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
-            if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            {
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            {
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            {
+                if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            {
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            {
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            {
+                if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            {
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            {
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            {
+                if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            {
+                if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            {
+                if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            {
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            {
+                if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            {
+                if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            {
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            {
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            {
+                if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            {
+                if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            {
+                if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            {
+                if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
+            {
+                if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
-                rhs: rhs as ILocationGetter);
+                rhs: rhs as ILocationGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
-                rhs: rhs as ILocationGetter);
+                rhs: rhs as ILocationGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationGetter item)
@@ -5763,12 +5845,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ILocationGetter rhs) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);

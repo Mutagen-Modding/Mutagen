@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSpellGetter rhs)) return false;
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSpellGetter rhs) return false;
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSpellGetter? obj)
         {
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -467,11 +467,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IBookSpellGetter item,
-            IBookSpellGetter rhs)
+            IBookSpellGetter rhs,
+            BookSpell.TranslationMask? equalsMask = null)
         {
             return ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -787,22 +789,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBookSpellGetter? lhs,
-            IBookSpellGetter? rhs)
+            IBookSpellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IBookTeachTargetGetter? lhs,
-            IBookTeachTargetGetter? rhs)
+            IBookTeachTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBookSpellGetter?)lhs,
-                rhs: rhs as IBookSpellGetter);
+                rhs: rhs as IBookSpellGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBookSpellGetter item)
@@ -1129,13 +1137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSpellGetter rhs)) return false;
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSpellGetter rhs) return false;
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSpellGetter? obj)
         {
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).GetHashCode(this);

@@ -637,12 +637,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);
@@ -792,11 +792,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEncounterZoneGetter item,
-            IEncounterZoneGetter rhs)
+            IEncounterZoneGetter rhs,
+            EncounterZone.TranslationMask? equalsMask = null)
         {
             return ((EncounterZoneCommon)((IEncounterZoneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1222,37 +1224,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEncounterZoneGetter? lhs,
-            IEncounterZoneGetter? rhs)
+            IEncounterZoneGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Owner.Equals(rhs.Owner)) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (lhs.MinLevel != rhs.MinLevel) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.MaxLevel != rhs.MaxLevel) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Owner) ?? true))
+            {
+                if (!lhs.Owner.Equals(rhs.Owner)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MinLevel) ?? true))
+            {
+                if (lhs.MinLevel != rhs.MinLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.MaxLevel) ?? true))
+            {
+                if (lhs.MaxLevel != rhs.MaxLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EncounterZone_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
-                rhs: rhs as IEncounterZoneGetter);
+                rhs: rhs as IEncounterZoneGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEncounterZoneGetter?)lhs,
-                rhs: rhs as IEncounterZoneGetter);
+                rhs: rhs as IEncounterZoneGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IEncounterZoneGetter item)
@@ -1891,12 +1919,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IEncounterZoneGetter rhs) return false;
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEncounterZoneGetter? obj)
         {
-            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EncounterZoneCommon)((IEncounterZoneGetter)this).CommonInstance()!).GetHashCode(this);

@@ -496,12 +496,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IArtObjectGetter rhs) return false;
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArtObjectGetter? obj)
         {
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -649,11 +649,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IArtObjectGetter item,
-            IArtObjectGetter rhs)
+            IArtObjectGetter rhs,
+            ArtObject.TranslationMask? equalsMask = null)
         {
             return ((ArtObjectCommon)((IArtObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1056,33 +1058,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArtObjectGetter? lhs,
-            IArtObjectGetter? rhs)
+            IArtObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArtObjectGetter?)lhs,
-                rhs: rhs as IArtObjectGetter);
+                rhs: rhs as IArtObjectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArtObjectGetter?)lhs,
-                rhs: rhs as IArtObjectGetter);
+                rhs: rhs as IArtObjectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IArtObjectGetter item)
@@ -1722,12 +1738,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IArtObjectGetter rhs) return false;
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArtObjectGetter? obj)
         {
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);

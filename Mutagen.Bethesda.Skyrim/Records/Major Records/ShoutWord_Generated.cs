@@ -79,13 +79,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IShoutWordGetter rhs)) return false;
-            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IShoutWordGetter rhs) return false;
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IShoutWordGetter? obj)
         {
-            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -565,11 +565,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IShoutWordGetter item,
-            IShoutWordGetter rhs)
+            IShoutWordGetter rhs,
+            ShoutWord.TranslationMask? equalsMask = null)
         {
             return ((ShoutWordCommon)((IShoutWordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -897,13 +899,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IShoutWordGetter? lhs,
-            IShoutWordGetter? rhs)
+            IShoutWordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Word.Equals(rhs.Word)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
+            if ((crystal?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
+            {
+                if (!lhs.Word.Equals(rhs.Word)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ShoutWord_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ShoutWord_FieldIndex.RecoveryTime) ?? true))
+            {
+                if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
+            }
             return true;
         }
         
@@ -1242,13 +1254,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IShoutWordGetter rhs)) return false;
-            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IShoutWordGetter rhs) return false;
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IShoutWordGetter? obj)
         {
-            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ShoutWordCommon)((IShoutWordGetter)this).CommonInstance()!).GetHashCode(this);

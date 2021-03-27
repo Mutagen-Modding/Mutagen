@@ -71,7 +71,7 @@
   <Object name="QuestLogEntry" objType="Subrecord" GUID="300fef8b-f34a-4baa-b6de-5859d503d5b7" ID="364">
     <Fields>
       <Enum name="Flags" enumName="QuestLogEntry.Flag" byteLength="1" recordType="QSDT" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
       <String name="Entry" recordType="CNAM" translated="DL" />
       <FormLink name="NextQuest" refName="Quest" recordType="NAM0" />
       <ByteArray name="SCHR" recordType="SCHR" />
@@ -95,7 +95,7 @@
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
         </Fields>
       </Data>
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="QuestAlias" objType="Subrecord" GUID="68186d42-9951-43a6-9668-f21dc08c463c" ID="367">
@@ -119,7 +119,7 @@
       <RefDirect name="CreateReferenceToObject" refName="CreateReferenceToObject" />
       <RefDirect name="FindMatchingRefNearAlias" refName="FindMatchingRefNearAlias" />
       <RefDirect name="FindMatchingRefFromEvent" refName="FindMatchingRefFromEvent" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
       <List name="Keywords" counterRecType="KSIZ" recordType="KWDA">
         <FormLink refName="Keyword" />
       </List>
@@ -191,7 +191,7 @@
           <Enum name="Flags" enumName="Quest.TargetFlag" byteLength="4" />
         </Fields>
       </Data>
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
     </Fields>
   </Object>
 </Loqui>

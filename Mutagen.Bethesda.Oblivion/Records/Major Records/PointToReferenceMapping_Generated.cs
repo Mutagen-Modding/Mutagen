@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPointToReferenceMappingGetter rhs) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -609,11 +609,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs)
+            IPointToReferenceMappingGetter rhs,
+            PointToReferenceMapping.TranslationMask? equalsMask = null)
         {
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -950,12 +952,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPointToReferenceMappingGetter? lhs,
-            IPointToReferenceMappingGetter? rhs)
+            IPointToReferenceMappingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
+            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
+            {
+                if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
+            }
             return true;
         }
         
@@ -1300,13 +1309,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPointToReferenceMappingGetter rhs) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);

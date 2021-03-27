@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMountDataGetter rhs)) return false;
-            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMountDataGetter rhs) return false;
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMountDataGetter? obj)
         {
-            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -543,11 +543,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMountDataGetter item,
-            IMountDataGetter rhs)
+            IMountDataGetter rhs,
+            MountData.TranslationMask? equalsMask = null)
         {
             return ((MountDataCommon)((IMountDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -869,13 +871,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMountDataGetter? lhs,
-            IMountDataGetter? rhs)
+            IMountDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.MountOffset.Equals(rhs.MountOffset)) return false;
-            if (!lhs.DismountOffset.Equals(rhs.DismountOffset)) return false;
-            if (!lhs.MountCameraOffset.Equals(rhs.MountCameraOffset)) return false;
+            if ((crystal?.GetShouldTranslate((int)MountData_FieldIndex.MountOffset) ?? true))
+            {
+                if (!lhs.MountOffset.Equals(rhs.MountOffset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MountData_FieldIndex.DismountOffset) ?? true))
+            {
+                if (!lhs.DismountOffset.Equals(rhs.DismountOffset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MountData_FieldIndex.MountCameraOffset) ?? true))
+            {
+                if (!lhs.MountCameraOffset.Equals(rhs.MountCameraOffset)) return false;
+            }
             return true;
         }
         
@@ -1198,13 +1210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMountDataGetter rhs)) return false;
-            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMountDataGetter rhs) return false;
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMountDataGetter? obj)
         {
-            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MountDataCommon)((IMountDataGetter)this).CommonInstance()!).GetHashCode(this);

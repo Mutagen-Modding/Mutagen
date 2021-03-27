@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEdgeLinkGetter rhs)) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEdgeLinkGetter rhs) return false;
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEdgeLinkGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
@@ -557,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs)
+            IEdgeLinkGetter rhs,
+            EdgeLink.TranslationMask? equalsMask = null)
         {
             return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,13 +886,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEdgeLinkGetter? lhs,
-            IEdgeLinkGetter? rhs)
+            IEdgeLinkGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
-            if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
+            {
+                if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
+            {
+                if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
+            }
             return true;
         }
         
@@ -1214,13 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEdgeLinkGetter rhs)) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEdgeLinkGetter rhs) return false;
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEdgeLinkGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);

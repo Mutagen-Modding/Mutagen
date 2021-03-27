@@ -139,13 +139,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModGetter rhs)) return false;
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModGetter rhs) return false;
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModGetter? obj)
         {
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1165,11 +1165,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IFallout4ModGetter item,
-            IFallout4ModGetter rhs)
+            IFallout4ModGetter rhs,
+            Fallout4Mod.TranslationMask? equalsMask = null)
         {
             return ((Fallout4ModCommon)((IFallout4ModGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2066,20 +2068,51 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFallout4ModGetter? lhs,
-            IFallout4ModGetter? rhs)
+            IFallout4ModGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
-            if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
-            if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
-            if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
-            if (!object.Equals(lhs.Transforms, rhs.Transforms)) return false;
-            if (!object.Equals(lhs.Components, rhs.Components)) return false;
-            if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
-            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
-            if (!object.Equals(lhs.DamageTypes, rhs.DamageTypes)) return false;
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ModHeader) ?? true))
+            {
+                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GameSettings) ?? true))
+            {
+                if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keywords) ?? true))
+            {
+                if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LocationReferenceTypes) ?? true))
+            {
+                if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Actions) ?? true))
+            {
+                if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Transforms) ?? true))
+            {
+                if (!object.Equals(lhs.Transforms, rhs.Transforms)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Components) ?? true))
+            {
+                if (!object.Equals(lhs.Components, rhs.Components)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TextureSets) ?? true))
+            {
+                if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Globals) ?? true))
+            {
+                if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DamageTypes) ?? true))
+            {
+                if (!object.Equals(lhs.DamageTypes, rhs.DamageTypes)) return false;
+            }
             return true;
         }
         
@@ -3841,13 +3874,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModGetter rhs)) return false;
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModGetter rhs) return false;
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModGetter? obj)
         {
-            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModCommon)((IFallout4ModGetter)this).CommonInstance()!).GetHashCode(this);

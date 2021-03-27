@@ -85,13 +85,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptEffectDataGetter rhs)) return false;
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptEffectDataGetter rhs) return false;
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptEffectDataGetter? obj)
         {
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -637,11 +637,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IScriptEffectDataGetter item,
-            IScriptEffectDataGetter rhs)
+            IScriptEffectDataGetter rhs,
+            ScriptEffectData.TranslationMask? equalsMask = null)
         {
             return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -982,15 +984,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptEffectDataGetter? lhs,
-            IScriptEffectDataGetter? rhs)
+            IScriptEffectDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (lhs.MagicSchool != rhs.MagicSchool) return false;
-            if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.MagicSchool) ?? true))
+            {
+                if (lhs.MagicSchool != rhs.MagicSchool) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.VisualEffect) ?? true))
+            {
+                if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptEffectData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1371,13 +1389,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptEffectDataGetter rhs)) return false;
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptEffectDataGetter rhs) return false;
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptEffectDataGetter? obj)
         {
-            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptEffectDataCommon)((IScriptEffectDataGetter)this).CommonInstance()!).GetHashCode(this);

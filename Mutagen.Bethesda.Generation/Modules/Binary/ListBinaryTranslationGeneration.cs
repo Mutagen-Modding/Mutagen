@@ -467,6 +467,19 @@ namespace Mutagen.Bethesda.Generation
                     {
                         args.Add((gen) =>
                         {
+                            if (subGenTypes.All(s => s.Value is LoquiType))
+                            {
+                                var subGenObjs = subGenTypes.Select(x => ((LoquiType)x.Value).TargetObjectGeneration).ToHashSet();
+                                subGenTypes = subGenTypes.Where(s =>
+                                {
+                                    return !((LoquiType)s.Value).TargetObjectGeneration.BaseClassTrail().Any(b =>
+                                    {
+                                        if (!subGenObjs.Contains(b)) return false;
+                                        var lookup = subGenTypes.FirstOrDefault(l => ((LoquiType)l.Value).TargetObjectGeneration == b);
+                                        return s.Key.SequenceEqual(lookup.Key);
+                                    });
+                                }).ToList();
+                            }
                             if (subGenTypes.Count <= 1)
                             {
                                 if (subGen.AllowDirectParse(
@@ -519,12 +532,13 @@ namespace Mutagen.Bethesda.Generation
                                     {
                                         foreach (var item in subGenTypes)
                                         {
+                                            LoquiType specificLoqui = item.Value as LoquiType;
+                                            if (specificLoqui.TargetObjectGeneration.Abstract) continue;
                                             foreach (var trigger in item.Key)
                                             {
                                                 gen.AppendLine($"case 0x{trigger.TypeInt:X}: // {trigger.Type}");
                                             }
                                             LoquiType targetLoqui = list.SubTypeGeneration as LoquiType;
-                                            LoquiType specificLoqui = item.Value as LoquiType;
                                             using (new BraceWrapper(gen))
                                             {
                                                 subGen.GenerateCopyInRet(

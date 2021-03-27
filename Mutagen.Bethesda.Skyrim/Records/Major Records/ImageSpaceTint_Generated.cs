@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceTintGetter rhs)) return false;
-            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceTintGetter rhs) return false;
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceTintGetter? obj)
         {
-            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).GetHashCode(this);
@@ -515,11 +515,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImageSpaceTintGetter item,
-            IImageSpaceTintGetter rhs)
+            IImageSpaceTintGetter rhs,
+            ImageSpaceTint.TranslationMask? equalsMask = null)
         {
             return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -838,12 +840,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImageSpaceTintGetter? lhs,
-            IImageSpaceTintGetter? rhs)
+            IImageSpaceTintGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Amount.EqualsWithin(rhs.Amount)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceTint_FieldIndex.Amount) ?? true))
+            {
+                if (!lhs.Amount.EqualsWithin(rhs.Amount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImageSpaceTint_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
             return true;
         }
         
@@ -1164,13 +1173,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImageSpaceTintGetter rhs)) return false;
-            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImageSpaceTintGetter rhs) return false;
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImageSpaceTintGetter? obj)
         {
-            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImageSpaceTintCommon)((IImageSpaceTintGetter)this).CommonInstance()!).GetHashCode(this);

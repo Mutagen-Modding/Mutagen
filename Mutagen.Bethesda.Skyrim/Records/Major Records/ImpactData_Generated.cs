@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImpactDataGetter rhs)) return false;
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImpactDataGetter rhs) return false;
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactDataGetter? obj)
         {
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -532,11 +532,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImpactDataGetter item,
-            IImpactDataGetter rhs)
+            IImpactDataGetter rhs,
+            ImpactData.TranslationMask? equalsMask = null)
         {
             return ((ImpactDataCommon)((IImpactDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -857,12 +859,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImpactDataGetter? lhs,
-            IImpactDataGetter? rhs)
+            IImpactDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Material.Equals(rhs.Material)) return false;
-            if (!lhs.Impact.Equals(rhs.Impact)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImpactData_FieldIndex.Material) ?? true))
+            {
+                if (!lhs.Material.Equals(rhs.Material)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ImpactData_FieldIndex.Impact) ?? true))
+            {
+                if (!lhs.Impact.Equals(rhs.Impact)) return false;
+            }
             return true;
         }
         
@@ -1191,13 +1200,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImpactDataGetter rhs)) return false;
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IImpactDataGetter rhs) return false;
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactDataGetter? obj)
         {
-            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactDataCommon)((IImpactDataGetter)this).CommonInstance()!).GetHashCode(this);

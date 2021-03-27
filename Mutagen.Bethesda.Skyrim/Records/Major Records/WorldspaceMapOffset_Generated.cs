@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMapOffsetGetter rhs)) return false;
-            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMapOffsetGetter rhs) return false;
+            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMapOffsetGetter? obj)
         {
-            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceMapOffsetGetter item,
-            IWorldspaceMapOffsetGetter rhs)
+            IWorldspaceMapOffsetGetter rhs,
+            WorldspaceMapOffset.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceMapOffsetGetter? lhs,
-            IWorldspaceMapOffsetGetter? rhs)
+            IWorldspaceMapOffsetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!lhs.CellOffset.Equals(rhs.CellOffset)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMapOffset_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMapOffset_FieldIndex.CellOffset) ?? true))
+            {
+                if (!lhs.CellOffset.Equals(rhs.CellOffset)) return false;
+            }
             return true;
         }
         
@@ -1162,13 +1171,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMapOffsetGetter rhs)) return false;
-            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMapOffsetGetter rhs) return false;
+            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMapOffsetGetter? obj)
         {
-            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)this).CommonInstance()!).GetHashCode(this);

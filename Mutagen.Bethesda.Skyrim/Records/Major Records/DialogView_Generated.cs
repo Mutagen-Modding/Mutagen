@@ -707,12 +707,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IDialogViewGetter rhs) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogViewGetter? obj)
         {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
@@ -858,11 +858,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogViewGetter item,
-            IDialogViewGetter rhs)
+            IDialogViewGetter rhs,
+            DialogView.TranslationMask? equalsMask = null)
         {
             return ((DialogViewCommon)((IDialogViewGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1310,35 +1312,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogViewGetter? lhs,
-            IDialogViewGetter? rhs)
+            IDialogViewGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
-            if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
-            if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
+            {
+                if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.TNAMs) ?? true))
+            {
+                if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
-                rhs: rhs as IDialogViewGetter);
+                rhs: rhs as IDialogViewGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
-                rhs: rhs as IDialogViewGetter);
+                rhs: rhs as IDialogViewGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDialogViewGetter item)
@@ -2050,12 +2072,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IDialogViewGetter rhs) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogViewGetter? obj)
         {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);

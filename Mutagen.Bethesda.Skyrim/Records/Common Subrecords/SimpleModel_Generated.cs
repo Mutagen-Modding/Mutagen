@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISimpleModelGetter rhs)) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISimpleModelGetter rhs) return false;
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISimpleModelGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -535,11 +535,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISimpleModelGetter item,
-            ISimpleModelGetter rhs)
+            ISimpleModelGetter rhs,
+            SimpleModel.TranslationMask? equalsMask = null)
         {
             return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -857,12 +859,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISimpleModelGetter? lhs,
-            ISimpleModelGetter? rhs)
+            ISimpleModelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.File, rhs.File)) return false;
-            if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
+            {
+                if (!string.Equals(lhs.File, rhs.File)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
@@ -1255,13 +1264,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISimpleModelGetter rhs)) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISimpleModelGetter rhs) return false;
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISimpleModelGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);

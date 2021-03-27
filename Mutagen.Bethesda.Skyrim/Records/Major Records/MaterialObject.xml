@@ -17,7 +17,9 @@
           <Float name="NormalDampener" />
           <Break />
           <Color name="SinglePassColor" binaryType="NoAlphaFloat" />
-          <Enum name="Flags" enumName="MaterialObject.Flag" byteLength="4" binary="Custom" />
+          <Enum name="Flags" enumName="MaterialObject.Flag" byteLength="4" />
+          <Break />
+          <Bool name="HasSnow" byteLength="4" />
         </Fields>
       </Data>
     </Fields>

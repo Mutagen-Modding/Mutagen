@@ -849,12 +849,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IIdleAnimationGetter rhs) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIdleAnimationGetter? obj)
         {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1012,11 +1012,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIdleAnimationGetter item,
-            IIdleAnimationGetter rhs)
+            IIdleAnimationGetter rhs,
+            IdleAnimation.TranslationMask? equalsMask = null)
         {
             return ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1499,40 +1501,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIdleAnimationGetter? lhs,
-            IIdleAnimationGetter? rhs)
+            IIdleAnimationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
-            if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
-            if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
-            if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
-            if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
-            if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
+            {
+                if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMin) ?? true))
+            {
+                if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMax) ?? true))
+            {
+                if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
+            {
+                if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ReplayDelay) ?? true))
+            {
+                if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleAnimationGetter?)lhs,
-                rhs: rhs as IIdleAnimationGetter);
+                rhs: rhs as IIdleAnimationGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleAnimationGetter?)lhs,
-                rhs: rhs as IIdleAnimationGetter);
+                rhs: rhs as IIdleAnimationGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IIdleAnimationGetter item)
@@ -1889,19 +1926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IIdleAnimationGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IIdleAnimationGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IIdleAnimationGetter item,
             MutagenWriter writer)
@@ -1920,9 +1944,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            IdleAnimationBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Filename,
@@ -2047,9 +2079,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CTDA:
                 {
-                    IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
@@ -2097,10 +2132,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IIdleAnimationInternal item);
 
     }
 
@@ -2325,12 +2356,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IIdleAnimationGetter rhs) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIdleAnimationGetter? obj)
         {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);

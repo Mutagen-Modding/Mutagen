@@ -341,12 +341,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingGetter rhs) return false;
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGameSettingGetter? obj)
         {
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,11 +461,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IGameSettingGetter item,
-            IGameSettingGetter rhs)
+            IGameSettingGetter rhs,
+            GameSetting.TranslationMask? equalsMask = null)
         {
             return ((GameSettingCommon)((IGameSettingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -834,30 +836,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGameSettingGetter? lhs,
-            IGameSettingGetter? rhs)
+            IGameSettingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGameSettingGetter?)lhs,
-                rhs: rhs as IGameSettingGetter);
+                rhs: rhs as IGameSettingGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGameSettingGetter?)lhs,
-                rhs: rhs as IGameSettingGetter);
+                rhs: rhs as IGameSettingGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGameSettingGetter item)
@@ -1261,12 +1268,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingGetter rhs) return false;
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGameSettingGetter? obj)
         {
-            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GameSettingCommon)((IGameSettingGetter)this).CommonInstance()!).GetHashCode(this);

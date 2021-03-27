@@ -111,13 +111,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScenePhaseUnusedDataGetter rhs)) return false;
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScenePhaseUnusedDataGetter rhs) return false;
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScenePhaseUnusedDataGetter? obj)
         {
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -649,11 +649,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScenePhaseUnusedDataGetter item,
-            IScenePhaseUnusedDataGetter rhs)
+            IScenePhaseUnusedDataGetter rhs,
+            ScenePhaseUnusedData.TranslationMask? equalsMask = null)
         {
             return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1010,15 +1012,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScenePhaseUnusedDataGetter? lhs,
-            IScenePhaseUnusedDataGetter? rhs)
+            IScenePhaseUnusedDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCRO, rhs.SCRO)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCDA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCTX) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.QNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScenePhaseUnusedData_FieldIndex.SCRO) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCRO, rhs.SCRO)) return false;
+            }
             return true;
         }
         
@@ -1527,13 +1545,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScenePhaseUnusedDataGetter rhs)) return false;
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScenePhaseUnusedDataGetter rhs) return false;
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScenePhaseUnusedDataGetter? obj)
         {
-            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)this).CommonInstance()!).GetHashCode(this);

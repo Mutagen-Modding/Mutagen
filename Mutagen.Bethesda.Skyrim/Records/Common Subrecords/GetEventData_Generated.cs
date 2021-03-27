@@ -74,13 +74,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGetEventDataGetter rhs)) return false;
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGetEventDataGetter rhs) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGetEventDataGetter? obj)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -546,11 +546,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IGetEventDataGetter item,
-            IGetEventDataGetter rhs)
+            IGetEventDataGetter rhs,
+            GetEventData.TranslationMask? equalsMask = null)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -889,24 +891,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGetEventDataGetter? lhs,
-            IGetEventDataGetter? rhs)
+            IGetEventDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
-            if (lhs.EventFunction != rhs.EventFunction) return false;
-            if (lhs.EventMember != rhs.EventMember) return false;
-            if (!lhs.Parameter3.Equals(rhs.Parameter3)) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.EventFunction) ?? true))
+            {
+                if (lhs.EventFunction != rhs.EventFunction) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.EventMember) ?? true))
+            {
+                if (lhs.EventMember != rhs.EventMember) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.Parameter3) ?? true))
+            {
+                if (!lhs.Parameter3.Equals(rhs.Parameter3)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGetEventDataGetter?)lhs,
-                rhs: rhs as IGetEventDataGetter);
+                rhs: rhs as IGetEventDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGetEventDataGetter item)
@@ -1284,13 +1298,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGetEventDataGetter rhs)) return false;
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGetEventDataGetter rhs) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGetEventDataGetter? obj)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -548,12 +548,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IEnchantmentGetter rhs) return false;
-            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnchantmentGetter? obj)
         {
-            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -699,11 +699,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IEnchantmentGetter item,
-            IEnchantmentGetter rhs)
+            IEnchantmentGetter rhs,
+            Enchantment.TranslationMask? equalsMask = null)
         {
             return ((EnchantmentCommon)((IEnchantmentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1120,33 +1122,47 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEnchantmentGetter? lhs,
-            IEnchantmentGetter? rhs)
+            IEnchantmentGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Enchantment_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Enchantment_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Enchantment_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEnchantmentGetter?)lhs,
-                rhs: rhs as IEnchantmentGetter);
+                rhs: rhs as IEnchantmentGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEnchantmentGetter?)lhs,
-                rhs: rhs as IEnchantmentGetter);
+                rhs: rhs as IEnchantmentGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IEnchantmentGetter item)
@@ -1802,12 +1818,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IEnchantmentGetter rhs) return false;
-            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnchantmentGetter? obj)
         {
-            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnchantmentCommon)((IEnchantmentGetter)this).CommonInstance()!).GetHashCode(this);

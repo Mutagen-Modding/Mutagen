@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILayerHeaderGetter rhs)) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILayerHeaderGetter rhs) return false;
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -570,11 +570,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILayerHeaderGetter item,
-            ILayerHeaderGetter rhs)
+            ILayerHeaderGetter rhs,
+            LayerHeader.TranslationMask? equalsMask = null)
         {
             return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -900,13 +902,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILayerHeaderGetter? lhs,
-            ILayerHeaderGetter? rhs)
+            ILayerHeaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Texture.Equals(rhs.Texture)) return false;
-            if (lhs.Quadrant != rhs.Quadrant) return false;
-            if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
+            {
+                if (!lhs.Texture.Equals(rhs.Texture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
+            {
+                if (lhs.Quadrant != rhs.Quadrant) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
+            {
+                if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            }
             return true;
         }
         
@@ -1255,13 +1267,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILayerHeaderGetter rhs)) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILayerHeaderGetter rhs) return false;
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);

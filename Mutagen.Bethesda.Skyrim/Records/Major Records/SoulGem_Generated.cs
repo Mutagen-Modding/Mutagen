@@ -1015,12 +1015,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1214,11 +1214,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISoulGemGetter item,
-            ISoulGemGetter rhs)
+            ISoulGemGetter rhs,
+            SoulGem.TranslationMask? equalsMask = null)
         {
             return ((SoulGemCommon)((ISoulGemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1736,44 +1738,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoulGemGetter? lhs,
-            ISoulGemGetter? rhs)
+            ISoulGemGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
-            if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
-            if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.ContainedSoul) ?? true))
+            {
+                if (lhs.ContainedSoul != rhs.ContainedSoul) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.MaximumCapacity) ?? true))
+            {
+                if (lhs.MaximumCapacity != rhs.MaximumCapacity) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.LinkedTo) ?? true))
+            {
+                if (!lhs.LinkedTo.Equals(rhs.LinkedTo)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoulGem_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
-                rhs: rhs as ISoulGemGetter);
+                rhs: rhs as ISoulGemGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISoulGemGetter?)lhs,
-                rhs: rhs as ISoulGemGetter);
+                rhs: rhs as ISoulGemGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISoulGemGetter item)
@@ -2827,12 +2876,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ISoulGemGetter rhs) return false;
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoulGemGetter? obj)
         {
-            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoulGemCommon)((ISoulGemGetter)this).CommonInstance()!).GetHashCode(this);

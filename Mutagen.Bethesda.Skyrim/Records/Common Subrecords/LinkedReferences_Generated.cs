@@ -79,13 +79,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILinkedReferencesGetter rhs)) return false;
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILinkedReferencesGetter rhs) return false;
+            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILinkedReferencesGetter? obj)
         {
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -570,11 +570,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILinkedReferencesGetter item,
-            ILinkedReferencesGetter rhs)
+            ILinkedReferencesGetter rhs,
+            LinkedReferences.TranslationMask? equalsMask = null)
         {
             return ((LinkedReferencesCommon)((ILinkedReferencesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -903,13 +905,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILinkedReferencesGetter? lhs,
-            ILinkedReferencesGetter? rhs)
+            ILinkedReferencesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.KeywordOrReference.Equals(rhs.KeywordOrReference)) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if ((crystal?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LinkedReferences_FieldIndex.KeywordOrReference) ?? true))
+            {
+                if (!lhs.KeywordOrReference.Equals(rhs.KeywordOrReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LinkedReferences_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
             return true;
         }
         
@@ -1257,13 +1269,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILinkedReferencesGetter rhs)) return false;
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILinkedReferencesGetter rhs) return false;
+            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILinkedReferencesGetter? obj)
         {
-            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LinkedReferencesCommon)((ILinkedReferencesGetter)this).CommonInstance()!).GetHashCode(this);

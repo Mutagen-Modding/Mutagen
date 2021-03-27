@@ -392,12 +392,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingStringGetter rhs) return false;
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGameSettingStringGetter? obj)
         {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);
@@ -533,11 +533,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IGameSettingStringGetter item,
-            IGameSettingStringGetter rhs)
+            IGameSettingStringGetter rhs,
+            GameSettingString.TranslationMask? equalsMask = null)
         {
             return ((GameSettingStringCommon)((IGameSettingStringGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -957,40 +959,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGameSettingStringGetter? lhs,
-            IGameSettingStringGetter? rhs)
+            IGameSettingStringGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GameSettingString_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IGameSettingGetter? lhs,
-            IGameSettingGetter? rhs)
+            IGameSettingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
-                rhs: rhs as IGameSettingStringGetter);
+                rhs: rhs as IGameSettingStringGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
-                rhs: rhs as IGameSettingStringGetter);
+                rhs: rhs as IGameSettingStringGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGameSettingStringGetter?)lhs,
-                rhs: rhs as IGameSettingStringGetter);
+                rhs: rhs as IGameSettingStringGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGameSettingStringGetter item)
@@ -1587,12 +1599,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IGameSettingStringGetter rhs) return false;
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGameSettingStringGetter? obj)
         {
-            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GameSettingStringCommon)((IGameSettingStringGetter)this).CommonInstance()!).GetHashCode(this);

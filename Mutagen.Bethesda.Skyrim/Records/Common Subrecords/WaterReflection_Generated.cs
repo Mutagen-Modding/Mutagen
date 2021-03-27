@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterReflectionGetter rhs)) return false;
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterReflectionGetter rhs) return false;
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterReflectionGetter? obj)
         {
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -563,11 +563,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWaterReflectionGetter item,
-            IWaterReflectionGetter rhs)
+            IWaterReflectionGetter rhs,
+            WaterReflection.TranslationMask? equalsMask = null)
         {
             return ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -894,13 +896,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWaterReflectionGetter? lhs,
-            IWaterReflectionGetter? rhs)
+            IWaterReflectionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.Water.Equals(rhs.Water)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -1244,13 +1256,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterReflectionGetter rhs)) return false;
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterReflectionGetter rhs) return false;
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterReflectionGetter? obj)
         {
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).GetHashCode(this);

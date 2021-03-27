@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlternateTextureGetter rhs)) return false;
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlternateTextureGetter rhs) return false;
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlternateTextureGetter? obj)
         {
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -559,11 +559,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAlternateTextureGetter item,
-            IAlternateTextureGetter rhs)
+            IAlternateTextureGetter rhs,
+            AlternateTexture.TranslationMask? equalsMask = null)
         {
             return ((AlternateTextureCommon)((IAlternateTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -886,13 +888,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAlternateTextureGetter? lhs,
-            IAlternateTextureGetter? rhs)
+            IAlternateTextureGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.NewTexture.Equals(rhs.NewTexture)) return false;
-            if (lhs.Index != rhs.Index) return false;
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
+            {
+                if (!lhs.NewTexture.Equals(rhs.NewTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -1225,13 +1237,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlternateTextureGetter rhs)) return false;
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlternateTextureGetter rhs) return false;
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlternateTextureGetter? obj)
         {
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).GetHashCode(this);

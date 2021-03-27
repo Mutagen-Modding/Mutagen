@@ -552,12 +552,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IMiscellaneousGetter rhs) return false;
-            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMiscellaneousGetter? obj)
         {
-            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).GetHashCode(this);
@@ -711,11 +711,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IMiscellaneousGetter item,
-            IMiscellaneousGetter rhs)
+            IMiscellaneousGetter rhs,
+            Miscellaneous.TranslationMask? equalsMask = null)
         {
             return ((MiscellaneousCommon)((IMiscellaneousGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1135,35 +1137,55 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMiscellaneousGetter? lhs,
-            IMiscellaneousGetter? rhs)
+            IMiscellaneousGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Miscellaneous_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMiscellaneousGetter?)lhs,
-                rhs: rhs as IMiscellaneousGetter);
+                rhs: rhs as IMiscellaneousGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMiscellaneousGetter?)lhs,
-                rhs: rhs as IMiscellaneousGetter);
+                rhs: rhs as IMiscellaneousGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMiscellaneousGetter item)
@@ -1871,12 +1893,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IMiscellaneousGetter rhs) return false;
-            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMiscellaneousGetter? obj)
         {
-            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MiscellaneousCommon)((IMiscellaneousGetter)this).CommonInstance()!).GetHashCode(this);

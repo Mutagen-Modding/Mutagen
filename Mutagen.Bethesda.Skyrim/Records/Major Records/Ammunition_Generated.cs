@@ -1094,12 +1094,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmmunitionGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1301,11 +1301,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAmmunitionGetter item,
-            IAmmunitionGetter rhs)
+            IAmmunitionGetter rhs,
+            Ammunition.TranslationMask? equalsMask = null)
         {
             return ((AmmunitionCommon)((IAmmunitionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1834,46 +1836,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAmmunitionGetter? lhs,
-            IAmmunitionGetter? rhs)
+            IAmmunitionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
-            if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
-            if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
-            if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
+            {
+                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
+            {
+                if (!lhs.PickUpSound.Equals(rhs.PickUpSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PutDownSound) ?? true))
+            {
+                if (!lhs.PutDownSound.Equals(rhs.PutDownSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Damage) ?? true))
+            {
+                if (!lhs.Damage.EqualsWithin(rhs.Damage)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ShortName) ?? true))
+            {
+                if (!string.Equals(lhs.ShortName, rhs.ShortName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAmmunitionGetter?)lhs,
-                rhs: rhs as IAmmunitionGetter);
+                rhs: rhs as IAmmunitionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAmmunitionGetter?)lhs,
-                rhs: rhs as IAmmunitionGetter);
+                rhs: rhs as IAmmunitionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAmmunitionGetter item)
@@ -2967,12 +3022,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IAmmunitionGetter rhs) return false;
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmmunitionGetter? obj)
         {
-            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmmunitionCommon)((IAmmunitionGetter)this).CommonInstance()!).GetHashCode(this);

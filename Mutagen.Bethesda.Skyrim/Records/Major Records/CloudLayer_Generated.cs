@@ -94,13 +94,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICloudLayerGetter rhs)) return false;
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICloudLayerGetter rhs) return false;
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICloudLayerGetter? obj)
         {
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -646,11 +646,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICloudLayerGetter item,
-            ICloudLayerGetter rhs)
+            ICloudLayerGetter rhs,
+            CloudLayer.TranslationMask? equalsMask = null)
         {
             return ((CloudLayerCommon)((ICloudLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -999,15 +1001,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICloudLayerGetter? lhs,
-            ICloudLayerGetter? rhs)
+            ICloudLayerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Enabled != rhs.Enabled) return false;
-            if (!lhs.XSpeed.EqualsWithin(rhs.XSpeed)) return false;
-            if (!lhs.YSpeed.EqualsWithin(rhs.YSpeed)) return false;
-            if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
-            if (!object.Equals(lhs.Alphas, rhs.Alphas)) return false;
+            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Enabled) ?? true))
+            {
+                if (lhs.Enabled != rhs.Enabled) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.XSpeed) ?? true))
+            {
+                if (!lhs.XSpeed.EqualsWithin(rhs.XSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.YSpeed) ?? true))
+            {
+                if (!lhs.YSpeed.EqualsWithin(rhs.YSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Colors) ?? true))
+            {
+                if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Alphas) ?? true))
+            {
+                if (!object.Equals(lhs.Alphas, rhs.Alphas)) return false;
+            }
             return true;
         }
         
@@ -1383,13 +1401,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICloudLayerGetter rhs)) return false;
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICloudLayerGetter rhs) return false;
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICloudLayerGetter? obj)
         {
-            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CloudLayerCommon)((ICloudLayerGetter)this).CommonInstance()!).GetHashCode(this);

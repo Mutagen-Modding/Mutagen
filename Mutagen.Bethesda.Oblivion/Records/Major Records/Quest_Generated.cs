@@ -853,12 +853,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IQuestGetter rhs) return false;
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestGetter? obj)
         {
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1012,11 +1012,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IQuestGetter item,
-            IQuestGetter rhs)
+            IQuestGetter rhs,
+            Quest.TranslationMask? equalsMask = null)
         {
             return ((QuestCommon)((IQuestGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1498,37 +1500,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestGetter? lhs,
-            IQuestGetter? rhs)
+            IQuestGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
-            if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Stages) ?? true))
+            {
+                if (!lhs.Stages.SequenceEqualNullable(rhs.Stages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Quest_FieldIndex.Targets) ?? true))
+            {
+                if (!lhs.Targets.SequenceEqualNullable(rhs.Targets)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IQuestGetter?)lhs,
-                rhs: rhs as IQuestGetter);
+                rhs: rhs as IQuestGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IQuestGetter?)lhs,
-                rhs: rhs as IQuestGetter);
+                rhs: rhs as IQuestGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IQuestGetter item)
@@ -2367,12 +2395,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IQuestGetter rhs) return false;
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestGetter? obj)
         {
-            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestCommon)((IQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestCommon)((IQuestGetter)this).CommonInstance()!).GetHashCode(this);

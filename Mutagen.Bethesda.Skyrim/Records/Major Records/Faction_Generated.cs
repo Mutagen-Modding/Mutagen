@@ -1246,12 +1246,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1433,11 +1433,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFactionGetter item,
-            IFactionGetter rhs)
+            IFactionGetter rhs,
+            Faction.TranslationMask? equalsMask = null)
         {
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2003,46 +2005,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFactionGetter? lhs,
-            IFactionGetter? rhs)
+            IFactionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
-            if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
-            if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
-            if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
-            if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
-            if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
-            if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
-            if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
-            if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
-            if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
-            if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
-            if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
+            {
+                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
+            {
+                if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
+            {
+                if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
+            {
+                if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
+            {
+                if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
+            {
+                if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
+            {
+                if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
+            {
+                if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            {
+                if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
+            {
+                if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
+            {
+                if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
+            {
+                if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
+            {
+                if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
-                rhs: rhs as IFactionGetter);
+                rhs: rhs as IFactionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
-                rhs: rhs as IFactionGetter);
+                rhs: rhs as IFactionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFactionGetter item)
@@ -2576,19 +2631,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FactionBinaryWriteTranslation Instance = new FactionBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IFactionGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IFactionGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IFactionGetter item,
             MutagenWriter writer,
@@ -2687,9 +2729,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
-            FactionBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public void Write(
@@ -2910,9 +2962,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    FactionBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions = 
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary)
+                        .CastExtendedList<Condition>();
                     return (int)Faction_FieldIndex.Conditions;
                 }
                 default:
@@ -2924,10 +2982,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IFactionInternal item);
 
     }
 
@@ -3244,12 +3298,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IFactionGetter rhs) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);

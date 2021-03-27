@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMaxHeightGetter rhs)) return false;
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMaxHeightGetter rhs) return false;
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMaxHeightGetter? obj)
         {
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).GetHashCode(this);
@@ -555,11 +555,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceMaxHeightGetter item,
-            IWorldspaceMaxHeightGetter rhs)
+            IWorldspaceMaxHeightGetter rhs,
+            WorldspaceMaxHeight.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,13 +887,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceMaxHeightGetter? lhs,
-            IWorldspaceMaxHeightGetter? rhs)
+            IWorldspaceMaxHeightGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Min.Equals(rhs.Min)) return false;
-            if (!lhs.Max.Equals(rhs.Max)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.CellData.Span, rhs.CellData.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMaxHeight_FieldIndex.Min) ?? true))
+            {
+                if (!lhs.Min.Equals(rhs.Min)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMaxHeight_FieldIndex.Max) ?? true))
+            {
+                if (!lhs.Max.Equals(rhs.Max)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMaxHeight_FieldIndex.CellData) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.CellData.Span, rhs.CellData.Span)) return false;
+            }
             return true;
         }
         
@@ -1223,13 +1235,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMaxHeightGetter rhs)) return false;
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMaxHeightGetter rhs) return false;
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMaxHeightGetter? obj)
         {
-            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)this).CommonInstance()!).GetHashCode(this);

@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectLightArchetypeGetter rhs)) return false;
-            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectLightArchetypeGetter rhs) return false;
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectLightArchetypeGetter? obj)
         {
-            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectLightArchetypeGetter item,
-            IMagicEffectLightArchetypeGetter rhs)
+            IMagicEffectLightArchetypeGetter rhs,
+            MagicEffectLightArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectLightArchetypeGetter? lhs,
-            IMagicEffectLightArchetypeGetter? rhs)
+            IMagicEffectLightArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectLightArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectLightArchetypeGetter);
+                rhs: rhs as IMagicEffectLightArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectLightArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectLightArchetypeGetter rhs)) return false;
-            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectLightArchetypeGetter rhs) return false;
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectLightArchetypeGetter? obj)
         {
-            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectLightArchetypeCommon)((IMagicEffectLightArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

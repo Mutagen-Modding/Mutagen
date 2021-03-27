@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptPropertyGetter rhs)) return false;
-            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptPropertyGetter rhs) return false;
+            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptPropertyGetter? obj)
         {
-            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -528,11 +528,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScriptPropertyGetter item,
-            IScriptPropertyGetter rhs)
+            IScriptPropertyGetter rhs,
+            ScriptProperty.TranslationMask? equalsMask = null)
         {
             return ((ScriptPropertyCommon)((IScriptPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -847,12 +849,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptPropertyGetter? lhs,
-            IScriptPropertyGetter? rhs)
+            IScriptPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptProperty_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptProperty_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1155,13 +1164,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptPropertyGetter rhs)) return false;
-            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptPropertyGetter rhs) return false;
+            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptPropertyGetter? obj)
         {
-            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptPropertyCommon)((IScriptPropertyGetter)this).CommonInstance()!).GetHashCode(this);

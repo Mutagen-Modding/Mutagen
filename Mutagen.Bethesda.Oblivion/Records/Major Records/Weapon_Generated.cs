@@ -623,12 +623,12 @@ namespace Mutagen.Bethesda.Oblivion
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);
@@ -786,11 +786,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWeaponGetter item,
-            IWeaponGetter rhs)
+            IWeaponGetter rhs,
+            Weapon.TranslationMask? equalsMask = null)
         {
             return ((WeaponCommon)((IWeaponGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1226,37 +1228,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponGetter? lhs,
-            IWeaponGetter? rhs)
+            IWeaponGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
-            if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Enchantment) ?? true))
+            {
+                if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weapon_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
-                rhs: rhs as IWeaponGetter);
+                rhs: rhs as IWeaponGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeaponGetter?)lhs,
-                rhs: rhs as IWeaponGetter);
+                rhs: rhs as IWeaponGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWeaponGetter item)
@@ -2022,12 +2050,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IWeaponGetter rhs) return false;
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponGetter? obj)
         {
-            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponCommon)((IWeaponGetter)this).CommonInstance()!).GetHashCode(this);

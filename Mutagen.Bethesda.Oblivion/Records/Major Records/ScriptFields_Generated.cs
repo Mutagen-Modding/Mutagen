@@ -97,13 +97,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFieldsGetter rhs)) return false;
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFieldsGetter rhs) return false;
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFieldsGetter? obj)
         {
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -799,11 +799,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IScriptFieldsGetter item,
-            IScriptFieldsGetter rhs)
+            IScriptFieldsGetter rhs,
+            ScriptFields.TranslationMask? equalsMask = null)
         {
             return ((ScriptFieldsCommon)((IScriptFieldsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1188,15 +1190,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptFieldsGetter? lhs,
-            IScriptFieldsGetter? rhs)
+            IScriptFieldsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
-            if (!MemorySliceExt.Equal(lhs.CompiledScript, rhs.CompiledScript)) return false;
-            if (!string.Equals(lhs.SourceCode, rhs.SourceCode)) return false;
-            if (!lhs.LocalVariables.SequenceEqualNullable(rhs.LocalVariables)) return false;
-            if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
+            {
+                if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.CompiledScript, rhs.CompiledScript)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.SourceCode) ?? true))
+            {
+                if (!string.Equals(lhs.SourceCode, rhs.SourceCode)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.LocalVariables) ?? true))
+            {
+                if (!lhs.LocalVariables.SequenceEqualNullable(rhs.LocalVariables)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.References) ?? true))
+            {
+                if (!lhs.References.SequenceEqualNullable(rhs.References)) return false;
+            }
             return true;
         }
         
@@ -1827,13 +1845,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFieldsGetter rhs)) return false;
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFieldsGetter rhs) return false;
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFieldsGetter? obj)
         {
-            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFieldsCommon)((IScriptFieldsGetter)this).CommonInstance()!).GetHashCode(this);

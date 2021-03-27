@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IStoryManagerQuestGetter rhs) return false;
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);
@@ -567,11 +567,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs)
+            IStoryManagerQuestGetter rhs,
+            StoryManagerQuest.TranslationMask? equalsMask = null)
         {
             return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -910,13 +912,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IStoryManagerQuestGetter? lhs,
-            IStoryManagerQuestGetter? rhs)
+            IStoryManagerQuestGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
-            if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
+            {
+                if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
+            }
             return true;
         }
         
@@ -1347,13 +1359,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IStoryManagerQuestGetter rhs) return false;
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);

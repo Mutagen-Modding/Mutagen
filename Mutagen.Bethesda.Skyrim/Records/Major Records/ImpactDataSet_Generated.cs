@@ -478,12 +478,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IImpactDataSetGetter rhs) return false;
-            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactDataSetGetter? obj)
         {
-            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -621,11 +621,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImpactDataSetGetter item,
-            IImpactDataSetGetter rhs)
+            IImpactDataSetGetter rhs,
+            ImpactDataSet.TranslationMask? equalsMask = null)
         {
             return ((ImpactDataSetCommon)((IImpactDataSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1025,31 +1027,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImpactDataSetGetter? lhs,
-            IImpactDataSetGetter? rhs)
+            IImpactDataSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Impacts.SequenceEqualNullable(rhs.Impacts)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ImpactDataSet_FieldIndex.Impacts) ?? true))
+            {
+                if (!lhs.Impacts.SequenceEqualNullable(rhs.Impacts)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactDataSetGetter?)lhs,
-                rhs: rhs as IImpactDataSetGetter);
+                rhs: rhs as IImpactDataSetGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactDataSetGetter?)lhs,
-                rhs: rhs as IImpactDataSetGetter);
+                rhs: rhs as IImpactDataSetGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IImpactDataSetGetter item)
@@ -1623,12 +1633,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IImpactDataSetGetter rhs) return false;
-            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactDataSetGetter? obj)
         {
-            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactDataSetCommon)((IImpactDataSetGetter)this).CommonInstance()!).GetHashCode(this);

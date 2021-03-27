@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionDataGetter rhs)) return false;
-            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionDataGetter rhs) return false;
+            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionDataGetter? obj)
         {
-            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -480,11 +480,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRegionDataGetter item,
-            IRegionDataGetter rhs)
+            IRegionDataGetter rhs,
+            RegionData.TranslationMask? equalsMask = null)
         {
             return ((RegionDataCommon)((IRegionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -793,11 +795,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionDataGetter? lhs,
-            IRegionDataGetter? rhs)
+            IRegionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Header, rhs.Header)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
+            {
+                if (!object.Equals(lhs.Header, rhs.Header)) return false;
+            }
             return true;
         }
         
@@ -1150,13 +1156,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionDataGetter rhs)) return false;
-            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionDataGetter rhs) return false;
+            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionDataGetter? obj)
         {
-            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionDataCommon)((IRegionDataGetter)this).CommonInstance()!).GetHashCode(this);

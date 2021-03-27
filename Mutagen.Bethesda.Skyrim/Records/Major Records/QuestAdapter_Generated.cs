@@ -95,13 +95,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestAdapterGetter rhs)) return false;
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestAdapterGetter rhs) return false;
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestAdapterGetter? obj)
         {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -783,11 +783,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IQuestAdapterGetter item,
-            IQuestAdapterGetter rhs)
+            IQuestAdapterGetter rhs,
+            QuestAdapter.TranslationMask? equalsMask = null)
         {
             return ((QuestAdapterCommon)((IQuestAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1178,26 +1180,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestAdapterGetter? lhs,
-            IQuestAdapterGetter? rhs)
+            IQuestAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
-            if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.FileName) ?? true))
+            {
+                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Fragments) ?? true))
+            {
+                if (!lhs.Fragments.SequenceEqualNullable(rhs.Fragments)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestAdapter_FieldIndex.Aliases) ?? true))
+            {
+                if (!lhs.Aliases.SequenceEqualNullable(rhs.Aliases)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IAVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IQuestAdapterGetter?)lhs,
-                rhs: rhs as IQuestAdapterGetter);
+                rhs: rhs as IQuestAdapterGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IQuestAdapterGetter item)
@@ -1722,13 +1742,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestAdapterGetter rhs)) return false;
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestAdapterGetter rhs) return false;
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestAdapterGetter? obj)
         {
-            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestAdapterCommon)((IQuestAdapterGetter)this).CommonInstance()!).GetHashCode(this);

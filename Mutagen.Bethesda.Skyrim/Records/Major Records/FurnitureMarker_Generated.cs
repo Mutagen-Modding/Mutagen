@@ -92,13 +92,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFurnitureMarkerGetter rhs)) return false;
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFurnitureMarkerGetter rhs) return false;
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFurnitureMarkerGetter? obj)
         {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -621,11 +621,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFurnitureMarkerGetter item,
-            IFurnitureMarkerGetter rhs)
+            IFurnitureMarkerGetter rhs,
+            FurnitureMarker.TranslationMask? equalsMask = null)
         {
             return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -965,14 +967,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFurnitureMarkerGetter? lhs,
-            IFurnitureMarkerGetter? rhs)
+            IFurnitureMarkerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Enabled != rhs.Enabled) return false;
-            if (!object.Equals(lhs.DisabledEntryPoints, rhs.DisabledEntryPoints)) return false;
-            if (!lhs.MarkerKeyword.Equals(rhs.MarkerKeyword)) return false;
-            if (!object.Equals(lhs.EntryPoints, rhs.EntryPoints)) return false;
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.Enabled) ?? true))
+            {
+                if (lhs.Enabled != rhs.Enabled) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.DisabledEntryPoints) ?? true))
+            {
+                if (!object.Equals(lhs.DisabledEntryPoints, rhs.DisabledEntryPoints)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
+            {
+                if (!lhs.MarkerKeyword.Equals(rhs.MarkerKeyword)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
+            {
+                if (!object.Equals(lhs.EntryPoints, rhs.EntryPoints)) return false;
+            }
             return true;
         }
         
@@ -1370,13 +1385,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFurnitureMarkerGetter rhs)) return false;
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFurnitureMarkerGetter rhs) return false;
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFurnitureMarkerGetter? obj)
         {
-            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FurnitureMarkerCommon)((IFurnitureMarkerGetter)this).CommonInstance()!).GetHashCode(this);

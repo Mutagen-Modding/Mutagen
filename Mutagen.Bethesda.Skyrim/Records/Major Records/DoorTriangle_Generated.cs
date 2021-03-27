@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDoorTriangleGetter rhs)) return false;
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDoorTriangleGetter rhs) return false;
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDoorTriangleGetter? obj)
         {
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -557,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDoorTriangleGetter item,
-            IDoorTriangleGetter rhs)
+            IDoorTriangleGetter rhs,
+            DoorTriangle.TranslationMask? equalsMask = null)
         {
             return ((DoorTriangleCommon)((IDoorTriangleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,13 +886,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDoorTriangleGetter? lhs,
-            IDoorTriangleGetter? rhs)
+            IDoorTriangleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.TriangleBeforeDoor != rhs.TriangleBeforeDoor) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Door.Equals(rhs.Door)) return false;
+            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.TriangleBeforeDoor) ?? true))
+            {
+                if (lhs.TriangleBeforeDoor != rhs.TriangleBeforeDoor) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.Door) ?? true))
+            {
+                if (!lhs.Door.Equals(rhs.Door)) return false;
+            }
             return true;
         }
         
@@ -1214,13 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDoorTriangleGetter rhs)) return false;
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDoorTriangleGetter rhs) return false;
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDoorTriangleGetter? obj)
         {
-            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DoorTriangleCommon)((IDoorTriangleGetter)this).CommonInstance()!).GetHashCode(this);

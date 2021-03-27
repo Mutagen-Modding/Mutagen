@@ -59,13 +59,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IOwnerTargetGetter rhs)) return false;
-            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IOwnerTargetGetter rhs) return false;
+            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOwnerTargetGetter? obj)
         {
-            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -430,11 +430,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IOwnerTargetGetter item,
-            IOwnerTargetGetter rhs)
+            IOwnerTargetGetter rhs,
+            OwnerTarget.TranslationMask? equalsMask = null)
         {
             return ((OwnerTargetCommon)((IOwnerTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -730,7 +732,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -985,13 +988,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IOwnerTargetGetter rhs)) return false;
-            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IOwnerTargetGetter rhs) return false;
+            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOwnerTargetGetter? obj)
         {
-            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OwnerTargetCommon)((IOwnerTargetGetter)this).CommonInstance()!).GetHashCode(this);

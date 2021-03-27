@@ -75,13 +75,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionAreaGetter rhs)) return false;
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionAreaGetter rhs) return false;
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionAreaGetter? obj)
         {
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).GetHashCode(this);
@@ -596,11 +596,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionAreaGetter item,
-            IRegionAreaGetter rhs)
+            IRegionAreaGetter rhs,
+            RegionArea.TranslationMask? equalsMask = null)
         {
             return ((RegionAreaCommon)((IRegionAreaGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -947,12 +949,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionAreaGetter? lhs,
-            IRegionAreaGetter? rhs)
+            IRegionAreaGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
-            if (!lhs.RegionPointListData.SequenceEqualNullable(rhs.RegionPointListData)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
+            {
+                if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.RegionPointListData) ?? true))
+            {
+                if (!lhs.RegionPointListData.SequenceEqualNullable(rhs.RegionPointListData)) return false;
+            }
             return true;
         }
         
@@ -1367,13 +1376,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionAreaGetter rhs)) return false;
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionAreaGetter rhs) return false;
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionAreaGetter? obj)
         {
-            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionAreaCommon)((IRegionAreaGetter)this).CommonInstance()!).GetHashCode(this);

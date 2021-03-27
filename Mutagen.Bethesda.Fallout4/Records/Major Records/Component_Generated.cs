@@ -596,12 +596,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not IComponentGetter rhs) return false;
-            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IComponentGetter? obj)
         {
-            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -757,11 +757,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IComponentGetter item,
-            IComponentGetter rhs)
+            IComponentGetter rhs,
+            Component.TranslationMask? equalsMask = null)
         {
             return ((ComponentCommon)((IComponentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1183,36 +1185,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IComponentGetter? lhs,
-            IComponentGetter? rhs)
+            IComponentGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
-            if (lhs.AutoCalcValue != rhs.AutoCalcValue) return false;
-            if (!lhs.ScrapItem.Equals(rhs.ScrapItem)) return false;
-            if (!lhs.ModScrapScalar.Equals(rhs.ModScrapScalar)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.CraftingSound) ?? true))
+            {
+                if (!lhs.CraftingSound.Equals(rhs.CraftingSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.AutoCalcValue) ?? true))
+            {
+                if (lhs.AutoCalcValue != rhs.AutoCalcValue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.ScrapItem) ?? true))
+            {
+                if (!lhs.ScrapItem.Equals(rhs.ScrapItem)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Component_FieldIndex.ModScrapScalar) ?? true))
+            {
+                if (!lhs.ModScrapScalar.Equals(rhs.ModScrapScalar)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IComponentGetter?)lhs,
-                rhs: rhs as IComponentGetter);
+                rhs: rhs as IComponentGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IComponentGetter?)lhs,
-                rhs: rhs as IComponentGetter);
+                rhs: rhs as IComponentGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IComponentGetter item)
@@ -1918,12 +1943,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IComponentGetter rhs) return false;
-            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IComponentGetter? obj)
         {
-            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ComponentCommon)((IComponentGetter)this).CommonInstance()!).GetHashCode(this);

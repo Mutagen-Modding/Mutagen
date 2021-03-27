@@ -179,13 +179,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICombatStyleDataGetter rhs)) return false;
-            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICombatStyleDataGetter rhs) return false;
+            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICombatStyleDataGetter? obj)
         {
-            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1690,11 +1690,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICombatStyleDataGetter item,
-            ICombatStyleDataGetter rhs)
+            ICombatStyleDataGetter rhs,
+            CombatStyleData.TranslationMask? equalsMask = null)
         {
             return ((CombatStyleDataCommon)((ICombatStyleDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2258,47 +2260,159 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICombatStyleDataGetter? lhs,
-            ICombatStyleDataGetter? rhs)
+            ICombatStyleDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (lhs.DodgePercentChance != rhs.DodgePercentChance) return false;
-            if (lhs.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
-            if (!lhs.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
-            if (!lhs.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax)) return false;
-            if (!lhs.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
-            if (!lhs.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
-            if (!lhs.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
-            if (!lhs.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
-            if (!lhs.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
-            if (!lhs.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
-            if (lhs.BlockPercentChance != rhs.BlockPercentChance) return false;
-            if (lhs.AttackPercentChance != rhs.AttackPercentChance) return false;
-            if (!lhs.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
-            if (!lhs.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
-            if (!lhs.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
-            if (lhs.PowerAttackPercentChance != rhs.PowerAttackPercentChance) return false;
-            if (!lhs.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
-            if (!lhs.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
-            if (lhs.PowerAttackNormal != rhs.PowerAttackNormal) return false;
-            if (lhs.PowerAttackForward != rhs.PowerAttackForward) return false;
-            if (lhs.PowerAttackBack != rhs.PowerAttackBack) return false;
-            if (lhs.PowerAttackLeft != rhs.PowerAttackLeft) return false;
-            if (lhs.PowerAttackRight != rhs.PowerAttackRight) return false;
-            if (!lhs.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
-            if (!lhs.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.AcrobaticDodgePercentChance != rhs.AcrobaticDodgePercentChance) return false;
-            if (!lhs.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal)) return false;
-            if (!lhs.RangeMultMax.EqualsWithin(rhs.RangeMultMax)) return false;
-            if (!lhs.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee)) return false;
-            if (!lhs.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged)) return false;
-            if (!lhs.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance)) return false;
-            if (!lhs.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance)) return false;
-            if (!lhs.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
-            if (lhs.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
-            if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgePercentChance) ?? true))
+            {
+                if (lhs.DodgePercentChance != rhs.DodgePercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.LeftRightPercentChance) ?? true))
+            {
+                if (lhs.LeftRightPercentChance != rhs.LeftRightPercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeLeftRightTimerMin) ?? true))
+            {
+                if (!lhs.DodgeLeftRightTimerMin.EqualsWithin(rhs.DodgeLeftRightTimerMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeLeftRightTimerMax) ?? true))
+            {
+                if (!lhs.DodgeLeftRightTimerMax.EqualsWithin(rhs.DodgeLeftRightTimerMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeForwardTimerMin) ?? true))
+            {
+                if (!lhs.DodgeForwardTimerMin.EqualsWithin(rhs.DodgeForwardTimerMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeForwardTimerMax) ?? true))
+            {
+                if (!lhs.DodgeForwardTimerMax.EqualsWithin(rhs.DodgeForwardTimerMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeBackTimerMin) ?? true))
+            {
+                if (!lhs.DodgeBackTimerMin.EqualsWithin(rhs.DodgeBackTimerMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.DodgeBackTimerMax) ?? true))
+            {
+                if (!lhs.DodgeBackTimerMax.EqualsWithin(rhs.DodgeBackTimerMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.IdleTimerMin) ?? true))
+            {
+                if (!lhs.IdleTimerMin.EqualsWithin(rhs.IdleTimerMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.IdleTimerMax) ?? true))
+            {
+                if (!lhs.IdleTimerMax.EqualsWithin(rhs.IdleTimerMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.BlockPercentChance) ?? true))
+            {
+                if (lhs.BlockPercentChance != rhs.BlockPercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.AttackPercentChance) ?? true))
+            {
+                if (lhs.AttackPercentChance != rhs.AttackPercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RecoilStaggerBonusToAttack) ?? true))
+            {
+                if (!lhs.RecoilStaggerBonusToAttack.EqualsWithin(rhs.RecoilStaggerBonusToAttack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.UnconsciousBonusToAttack) ?? true))
+            {
+                if (!lhs.UnconsciousBonusToAttack.EqualsWithin(rhs.UnconsciousBonusToAttack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.HandToHandBonusToAttack) ?? true))
+            {
+                if (!lhs.HandToHandBonusToAttack.EqualsWithin(rhs.HandToHandBonusToAttack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackPercentChance) ?? true))
+            {
+                if (lhs.PowerAttackPercentChance != rhs.PowerAttackPercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RecoilStaggerBonusToPowerAttack) ?? true))
+            {
+                if (!lhs.RecoilStaggerBonusToPowerAttack.EqualsWithin(rhs.RecoilStaggerBonusToPowerAttack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.UnconsciousBonusToPowerAttack) ?? true))
+            {
+                if (!lhs.UnconsciousBonusToPowerAttack.EqualsWithin(rhs.UnconsciousBonusToPowerAttack)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackNormal) ?? true))
+            {
+                if (lhs.PowerAttackNormal != rhs.PowerAttackNormal) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackForward) ?? true))
+            {
+                if (lhs.PowerAttackForward != rhs.PowerAttackForward) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackBack) ?? true))
+            {
+                if (lhs.PowerAttackBack != rhs.PowerAttackBack) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackLeft) ?? true))
+            {
+                if (lhs.PowerAttackLeft != rhs.PowerAttackLeft) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.PowerAttackRight) ?? true))
+            {
+                if (lhs.PowerAttackRight != rhs.PowerAttackRight) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.HoldTimerMin) ?? true))
+            {
+                if (!lhs.HoldTimerMin.EqualsWithin(rhs.HoldTimerMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.HoldTimerMax) ?? true))
+            {
+                if (!lhs.HoldTimerMax.EqualsWithin(rhs.HoldTimerMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.AcrobaticDodgePercentChance) ?? true))
+            {
+                if (lhs.AcrobaticDodgePercentChance != rhs.AcrobaticDodgePercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RangeMultOptimal) ?? true))
+            {
+                if (!lhs.RangeMultOptimal.EqualsWithin(rhs.RangeMultOptimal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RangeMultMax) ?? true))
+            {
+                if (!lhs.RangeMultMax.EqualsWithin(rhs.RangeMultMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.SwitchDistanceMelee) ?? true))
+            {
+                if (!lhs.SwitchDistanceMelee.EqualsWithin(rhs.SwitchDistanceMelee)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.SwitchDistanceRanged) ?? true))
+            {
+                if (!lhs.SwitchDistanceRanged.EqualsWithin(rhs.SwitchDistanceRanged)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.BuffStandoffDistance) ?? true))
+            {
+                if (!lhs.BuffStandoffDistance.EqualsWithin(rhs.BuffStandoffDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RangedStandoffDistance) ?? true))
+            {
+                if (!lhs.RangedStandoffDistance.EqualsWithin(rhs.RangedStandoffDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.GroupStandoffDistance) ?? true))
+            {
+                if (!lhs.GroupStandoffDistance.EqualsWithin(rhs.GroupStandoffDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RushingAttackPercentChance) ?? true))
+            {
+                if (lhs.RushingAttackPercentChance != rhs.RushingAttackPercentChance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleData_FieldIndex.RushingAttackDistanceMult) ?? true))
+            {
+                if (!lhs.RushingAttackDistanceMult.EqualsWithin(rhs.RushingAttackDistanceMult)) return false;
+            }
             return true;
         }
         
@@ -3045,13 +3159,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICombatStyleDataGetter rhs)) return false;
-            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICombatStyleDataGetter rhs) return false;
+            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICombatStyleDataGetter? obj)
         {
-            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CombatStyleDataCommon)((ICombatStyleDataGetter)this).CommonInstance()!).GetHashCode(this);

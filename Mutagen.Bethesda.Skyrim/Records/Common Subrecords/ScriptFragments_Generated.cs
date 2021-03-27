@@ -88,13 +88,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFragmentsGetter rhs)) return false;
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFragmentsGetter rhs) return false;
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFragmentsGetter? obj)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -616,11 +616,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScriptFragmentsGetter item,
-            IScriptFragmentsGetter rhs)
+            IScriptFragmentsGetter rhs,
+            ScriptFragments.TranslationMask? equalsMask = null)
         {
             return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -959,14 +961,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptFragmentsGetter? lhs,
-            IScriptFragmentsGetter? rhs)
+            IScriptFragmentsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
-            if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.FileName) ?? true))
+            {
+                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnBegin) ?? true))
+            {
+                if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptFragments_FieldIndex.OnEnd) ?? true))
+            {
+                if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+            }
             return true;
         }
         
@@ -1361,13 +1376,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptFragmentsGetter rhs)) return false;
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptFragmentsGetter rhs) return false;
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptFragmentsGetter? obj)
         {
-            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptFragmentsCommon)((IScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);

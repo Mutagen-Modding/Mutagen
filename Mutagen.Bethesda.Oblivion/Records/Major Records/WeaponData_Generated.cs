@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponDataGetter rhs)) return false;
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponDataGetter rhs) return false;
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponDataGetter? obj)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -714,11 +714,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWeaponDataGetter item,
-            IWeaponDataGetter rhs)
+            IWeaponDataGetter rhs,
+            WeaponData.TranslationMask? equalsMask = null)
         {
             return ((WeaponDataCommon)((IWeaponDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1079,18 +1081,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeaponDataGetter? lhs,
-            IWeaponDataGetter? rhs)
+            IWeaponDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
-            if (!lhs.Reach.EqualsWithin(rhs.Reach)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Value != rhs.Value) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (lhs.Damage != rhs.Damage) return false;
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Speed) ?? true))
+            {
+                if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Reach) ?? true))
+            {
+                if (!lhs.Reach.EqualsWithin(rhs.Reach)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Value) ?? true))
+            {
+                if (lhs.Value != rhs.Value) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Damage) ?? true))
+            {
+                if (lhs.Damage != rhs.Damage) return false;
+            }
             return true;
         }
         
@@ -1466,13 +1493,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeaponDataGetter rhs)) return false;
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeaponDataGetter rhs) return false;
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeaponDataGetter? obj)
         {
-            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeaponDataCommon)((IWeaponDataGetter)this).CommonInstance()!).GetHashCode(this);

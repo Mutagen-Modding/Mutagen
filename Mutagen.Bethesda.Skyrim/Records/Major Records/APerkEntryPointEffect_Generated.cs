@@ -67,13 +67,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAPerkEntryPointEffectGetter rhs)) return false;
-            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAPerkEntryPointEffectGetter rhs) return false;
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAPerkEntryPointEffectGetter? obj)
         {
-            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -494,11 +494,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAPerkEntryPointEffectGetter item,
-            IAPerkEntryPointEffectGetter rhs)
+            IAPerkEntryPointEffectGetter rhs,
+            APerkEntryPointEffect.TranslationMask? equalsMask = null)
         {
             return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -828,23 +830,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
-            IAPerkEntryPointEffectGetter? rhs)
+            IAPerkEntryPointEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
-            if (lhs.EntryPoint != rhs.EntryPoint) return false;
-            if (lhs.PerkConditionTabCount != rhs.PerkConditionTabCount) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)APerkEntryPointEffect_FieldIndex.EntryPoint) ?? true))
+            {
+                if (lhs.EntryPoint != rhs.EntryPoint) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)APerkEntryPointEffect_FieldIndex.PerkConditionTabCount) ?? true))
+            {
+                if (lhs.PerkConditionTabCount != rhs.PerkConditionTabCount) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAPerkEntryPointEffectGetter?)lhs,
-                rhs: rhs as IAPerkEntryPointEffectGetter);
+                rhs: rhs as IAPerkEntryPointEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAPerkEntryPointEffectGetter item)
@@ -1254,13 +1265,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAPerkEntryPointEffectGetter rhs)) return false;
-            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAPerkEntryPointEffectGetter rhs) return false;
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAPerkEntryPointEffectGetter? obj)
         {
-            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((APerkEntryPointEffectCommon)((IAPerkEntryPointEffectGetter)this).CommonInstance()!).GetHashCode(this);

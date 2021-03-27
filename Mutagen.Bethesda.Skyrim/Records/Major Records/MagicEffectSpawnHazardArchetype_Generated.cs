@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectSpawnHazardArchetypeGetter rhs)) return false;
-            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectSpawnHazardArchetypeGetter rhs) return false;
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectSpawnHazardArchetypeGetter? obj)
         {
-            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectSpawnHazardArchetypeGetter item,
-            IMagicEffectSpawnHazardArchetypeGetter rhs)
+            IMagicEffectSpawnHazardArchetypeGetter rhs,
+            MagicEffectSpawnHazardArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectSpawnHazardArchetypeGetter? lhs,
-            IMagicEffectSpawnHazardArchetypeGetter? rhs)
+            IMagicEffectSpawnHazardArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectSpawnHazardArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectSpawnHazardArchetypeGetter);
+                rhs: rhs as IMagicEffectSpawnHazardArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectSpawnHazardArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectSpawnHazardArchetypeGetter rhs)) return false;
-            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectSpawnHazardArchetypeGetter rhs) return false;
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectSpawnHazardArchetypeGetter? obj)
         {
-            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectSpawnHazardArchetypeCommon)((IMagicEffectSpawnHazardArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

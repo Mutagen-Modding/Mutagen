@@ -430,12 +430,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);
@@ -575,11 +575,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFootstepGetter item,
-            IFootstepGetter rhs)
+            IFootstepGetter rhs,
+            Footstep.TranslationMask? equalsMask = null)
         {
             return ((FootstepCommon)((IFootstepGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -969,32 +971,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFootstepGetter? lhs,
-            IFootstepGetter? rhs)
+            IFootstepGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
-            if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Footstep_FieldIndex.Tag) ?? true))
+            {
+                if (!string.Equals(lhs.Tag, rhs.Tag)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
-                rhs: rhs as IFootstepGetter);
+                rhs: rhs as IFootstepGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepGetter?)lhs,
-                rhs: rhs as IFootstepGetter);
+                rhs: rhs as IFootstepGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFootstepGetter item)
@@ -1558,12 +1571,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IFootstepGetter rhs) return false;
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFootstepGetter? obj)
         {
-            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FootstepCommon)((IFootstepGetter)this).CommonInstance()!).GetHashCode(this);

@@ -65,13 +65,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundDataInternalGetter rhs)) return false;
-            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundDataInternalGetter rhs) return false;
+            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundDataInternalGetter? obj)
         {
-            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -590,11 +590,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISoundDataInternalGetter item,
-            ISoundDataInternalGetter rhs)
+            ISoundDataInternalGetter rhs,
+            SoundData.TranslationMask? equalsMask = null)
         {
             return ((SoundDataCommon)((ISoundDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -938,14 +940,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoundDataInternalGetter? lhs,
-            ISoundDataInternalGetter? rhs)
+            ISoundDataInternalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
-            if (lhs.MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
-            if (lhs.FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundData_FieldIndex.MinimumAttenuationDistance) ?? true))
+            {
+                if (lhs.MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundData_FieldIndex.MaximumAttenuationDistance) ?? true))
+            {
+                if (lhs.MaximumAttenuationDistance != rhs.MaximumAttenuationDistance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundData_FieldIndex.FrequencyAdjustment) ?? true))
+            {
+                if (lhs.FrequencyAdjustment != rhs.FrequencyAdjustment) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1341,13 +1356,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundDataInternalGetter rhs)) return false;
-            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundDataInternalGetter rhs) return false;
+            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundDataInternalGetter? obj)
         {
-            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundDataCommon)((ISoundDataGetter)this).CommonInstance()!).GetHashCode(this);

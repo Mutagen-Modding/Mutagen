@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackGetter rhs)) return false;
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackGetter rhs) return false;
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackGetter? obj)
         {
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackCommon)((IAttackGetter)this).CommonInstance()!).GetHashCode(this);
@@ -535,11 +535,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAttackGetter item,
-            IAttackGetter rhs)
+            IAttackGetter rhs,
+            Attack.TranslationMask? equalsMask = null)
         {
             return ((AttackCommon)((IAttackGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -874,12 +876,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAttackGetter? lhs,
-            IAttackGetter? rhs)
+            IAttackGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.AttackData, rhs.AttackData)) return false;
-            if (!string.Equals(lhs.AttackEvent, rhs.AttackEvent)) return false;
+            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
+            {
+                if (!object.Equals(lhs.AttackData, rhs.AttackData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackEvent) ?? true))
+            {
+                if (!string.Equals(lhs.AttackEvent, rhs.AttackEvent)) return false;
+            }
             return true;
         }
         
@@ -1301,13 +1310,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackGetter rhs)) return false;
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackGetter rhs) return false;
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackGetter? obj)
         {
-            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackCommon)((IAttackGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackCommon)((IAttackGetter)this).CommonInstance()!).GetHashCode(this);

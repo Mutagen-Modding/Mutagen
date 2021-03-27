@@ -82,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkQuestEffectGetter rhs)) return false;
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkQuestEffectGetter rhs) return false;
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkQuestEffectGetter? obj)
         {
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -557,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkQuestEffectGetter item,
-            IPerkQuestEffectGetter rhs)
+            IPerkQuestEffectGetter rhs,
+            PerkQuestEffect.TranslationMask? equalsMask = null)
         {
             return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -905,24 +907,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkQuestEffectGetter? lhs,
-            IPerkQuestEffectGetter? rhs)
+            IPerkQuestEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.Stage != rhs.Stage) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Stage) ?? true))
+            {
+                if (lhs.Stage != rhs.Stage) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkQuestEffect_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkQuestEffectGetter?)lhs,
-                rhs: rhs as IPerkQuestEffectGetter);
+                rhs: rhs as IPerkQuestEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkQuestEffectGetter item)
@@ -1278,13 +1292,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkQuestEffectGetter rhs)) return false;
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkQuestEffectGetter rhs) return false;
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkQuestEffectGetter? obj)
         {
-            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkQuestEffectCommon)((IPerkQuestEffectGetter)this).CommonInstance()!).GetHashCode(this);

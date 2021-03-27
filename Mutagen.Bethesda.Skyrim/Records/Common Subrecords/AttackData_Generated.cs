@@ -103,13 +103,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackDataGetter rhs)) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackDataGetter rhs) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -829,11 +829,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAttackDataGetter item,
-            IAttackDataGetter rhs)
+            IAttackDataGetter rhs,
+            AttackData.TranslationMask? equalsMask = null)
         {
             return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1217,21 +1219,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAttackDataGetter? lhs,
-            IAttackDataGetter? rhs)
+            IAttackDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
-            if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.AttackAngle.EqualsWithin(rhs.AttackAngle)) return false;
-            if (!lhs.StrikeAngle.EqualsWithin(rhs.StrikeAngle)) return false;
-            if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
-            if (!lhs.AttackType.Equals(rhs.AttackType)) return false;
-            if (!lhs.Knockdown.EqualsWithin(rhs.Knockdown)) return false;
-            if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
-            if (!lhs.StaminaMult.EqualsWithin(rhs.StaminaMult)) return false;
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.DamageMult) ?? true))
+            {
+                if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Chance) ?? true))
+            {
+                if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.AttackAngle) ?? true))
+            {
+                if (!lhs.AttackAngle.EqualsWithin(rhs.AttackAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StrikeAngle) ?? true))
+            {
+                if (!lhs.StrikeAngle.EqualsWithin(rhs.StrikeAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Stagger) ?? true))
+            {
+                if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
+            {
+                if (!lhs.AttackType.Equals(rhs.AttackType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
+            {
+                if (!lhs.Knockdown.EqualsWithin(rhs.Knockdown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.RecoveryTime) ?? true))
+            {
+                if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StaminaMult) ?? true))
+            {
+                if (!lhs.StaminaMult.EqualsWithin(rhs.StaminaMult)) return false;
+            }
             return true;
         }
         
@@ -1651,13 +1687,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackDataGetter rhs)) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackDataGetter rhs) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);

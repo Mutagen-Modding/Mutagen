@@ -528,12 +528,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -675,11 +675,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IBodyPartDataGetter item,
-            IBodyPartDataGetter rhs)
+            IBodyPartDataGetter rhs,
+            BodyPartData.TranslationMask? equalsMask = null)
         {
             return ((BodyPartDataCommon)((IBodyPartDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1092,32 +1094,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBodyPartDataGetter? lhs,
-            IBodyPartDataGetter? rhs)
+            IBodyPartDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)BodyPartData_FieldIndex.Parts) ?? true))
+            {
+                if (!lhs.Parts.SequenceEqualNullable(rhs.Parts)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
-                rhs: rhs as IBodyPartDataGetter);
+                rhs: rhs as IBodyPartDataGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBodyPartDataGetter?)lhs,
-                rhs: rhs as IBodyPartDataGetter);
+                rhs: rhs as IBodyPartDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBodyPartDataGetter item)
@@ -1746,12 +1759,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IBodyPartDataGetter rhs) return false;
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBodyPartDataGetter? obj)
         {
-            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BodyPartDataCommon)((IBodyPartDataGetter)this).CommonInstance()!).GetHashCode(this);

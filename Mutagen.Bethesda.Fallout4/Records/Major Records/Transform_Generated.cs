@@ -563,12 +563,12 @@ namespace Mutagen.Bethesda.Fallout4
                 return formLink.Equals(this);
             }
             if (obj is not ITransformGetter rhs) return false;
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITransformGetter? obj)
         {
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TransformCommon)((ITransformGetter)this).CommonInstance()!).GetHashCode(this);
@@ -714,11 +714,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ITransformGetter item,
-            ITransformGetter rhs)
+            ITransformGetter rhs,
+            Transform.TranslationMask? equalsMask = null)
         {
             return ((TransformCommon)((ITransformGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1135,36 +1137,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITransformGetter? lhs,
-            ITransformGetter? rhs)
+            ITransformGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
-            if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
-            if (!lhs.ZoomMin.EqualsWithin(rhs.ZoomMin)) return false;
-            if (!lhs.ZoomMax.EqualsWithin(rhs.ZoomMax)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.Rotation) ?? true))
+            {
+                if (!lhs.Rotation.Equals(rhs.Rotation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.ZoomMin) ?? true))
+            {
+                if (!lhs.ZoomMin.EqualsWithin(rhs.ZoomMin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.ZoomMax) ?? true))
+            {
+                if (!lhs.ZoomMax.EqualsWithin(rhs.ZoomMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITransformGetter?)lhs,
-                rhs: rhs as ITransformGetter);
+                rhs: rhs as ITransformGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITransformGetter?)lhs,
-                rhs: rhs as ITransformGetter);
+                rhs: rhs as ITransformGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITransformGetter item)
@@ -1785,12 +1810,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 return formLink.Equals(this);
             }
             if (obj is not ITransformGetter rhs) return false;
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITransformGetter? obj)
         {
-            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TransformCommon)((ITransformGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TransformCommon)((ITransformGetter)this).CommonInstance()!).GetHashCode(this);

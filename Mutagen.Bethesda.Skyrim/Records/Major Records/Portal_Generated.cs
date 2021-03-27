@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPortalGetter rhs)) return false;
-            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPortalGetter rhs) return false;
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPortalGetter? obj)
         {
-            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PortalCommon)((IPortalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -531,11 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPortalGetter item,
-            IPortalGetter rhs)
+            IPortalGetter rhs,
+            Portal.TranslationMask? equalsMask = null)
         {
             return ((PortalCommon)((IPortalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -852,12 +854,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPortalGetter? lhs,
-            IPortalGetter? rhs)
+            IPortalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Origin.Equals(rhs.Origin)) return false;
-            if (!lhs.Destination.Equals(rhs.Destination)) return false;
+            if ((crystal?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
+            {
+                if (!lhs.Origin.Equals(rhs.Origin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Portal_FieldIndex.Destination) ?? true))
+            {
+                if (!lhs.Destination.Equals(rhs.Destination)) return false;
+            }
             return true;
         }
         
@@ -1179,13 +1188,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPortalGetter rhs)) return false;
-            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPortalGetter rhs) return false;
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPortalGetter? obj)
         {
-            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PortalCommon)((IPortalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PortalCommon)((IPortalGetter)this).CommonInstance()!).GetHashCode(this);

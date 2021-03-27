@@ -59,13 +59,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAScriptReferenceGetter rhs)) return false;
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAScriptReferenceGetter rhs) return false;
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAScriptReferenceGetter? obj)
         {
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -430,11 +430,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAScriptReferenceGetter item,
-            IAScriptReferenceGetter rhs)
+            IAScriptReferenceGetter rhs,
+            AScriptReference.TranslationMask? equalsMask = null)
         {
             return ((AScriptReferenceCommon)((IAScriptReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -742,7 +744,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAScriptReferenceGetter? lhs,
-            IAScriptReferenceGetter? rhs)
+            IAScriptReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -997,13 +1000,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAScriptReferenceGetter rhs)) return false;
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAScriptReferenceGetter rhs) return false;
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAScriptReferenceGetter? obj)
         {
-            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AScriptReferenceCommon)((IAScriptReferenceGetter)this).CommonInstance()!).GetHashCode(this);

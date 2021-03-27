@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetSpecificReferenceGetter rhs)) return false;
-            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetSpecificReferenceGetter rhs) return false;
+            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetSpecificReferenceGetter? obj)
         {
-            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -475,11 +475,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageTargetSpecificReferenceGetter item,
-            IPackageTargetSpecificReferenceGetter rhs)
+            IPackageTargetSpecificReferenceGetter rhs,
+            PackageTargetSpecificReference.TranslationMask? equalsMask = null)
         {
             return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -798,22 +800,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageTargetSpecificReferenceGetter? lhs,
-            IPackageTargetSpecificReferenceGetter? rhs)
+            IPackageTargetSpecificReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs)) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageTargetSpecificReference_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageTargetGetter? lhs,
-            IAPackageTargetGetter? rhs)
+            IAPackageTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageTargetSpecificReferenceGetter?)lhs,
-                rhs: rhs as IPackageTargetSpecificReferenceGetter);
+                rhs: rhs as IPackageTargetSpecificReferenceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageTargetSpecificReferenceGetter item)
@@ -1146,13 +1154,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetSpecificReferenceGetter rhs)) return false;
-            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetSpecificReferenceGetter rhs) return false;
+            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetSpecificReferenceGetter? obj)
         {
-            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetSpecificReferenceCommon)((IPackageTargetSpecificReferenceGetter)this).CommonInstance()!).GetHashCode(this);

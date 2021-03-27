@@ -556,12 +556,12 @@ namespace Mutagen.Bethesda.Skyrim
                 return formLink.Equals(this);
             }
             if (obj is not IAStoryManagerNodeGetter rhs) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAStoryManagerNodeGetter? obj)
         {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -684,11 +684,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAStoryManagerNodeGetter item,
-            IAStoryManagerNodeGetter rhs)
+            IAStoryManagerNodeGetter rhs,
+            AStoryManagerNode.TranslationMask? equalsMask = null)
         {
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1114,33 +1116,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAStoryManagerNodeGetter? lhs,
-            IAStoryManagerNodeGetter? rhs)
+            IAStoryManagerNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Parent.Equals(rhs.Parent)) return false;
-            if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
+            {
+                if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
-                rhs: rhs as IAStoryManagerNodeGetter);
+                rhs: rhs as IAStoryManagerNodeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
-                rhs: rhs as IAStoryManagerNodeGetter);
+                rhs: rhs as IAStoryManagerNodeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAStoryManagerNodeGetter item)
@@ -1443,19 +1459,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IAStoryManagerNodeGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IAStoryManagerNodeGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IAStoryManagerNodeGetter item,
             MutagenWriter writer,
@@ -1473,9 +1476,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PreviousSibling,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            AStoryManagerNodeBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public virtual void Write(
@@ -1573,9 +1586,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    AStoryManagerNodeBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)AStoryManagerNode_FieldIndex.Conditions;
                 }
                 default:
@@ -1587,10 +1605,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IAStoryManagerNodeInternal item);
 
     }
 
@@ -1734,12 +1748,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return formLink.Equals(this);
             }
             if (obj is not IAStoryManagerNodeGetter rhs) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAStoryManagerNodeGetter? obj)
         {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
