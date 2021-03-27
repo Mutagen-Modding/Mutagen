@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceSubBlockGetter rhs) return false;
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceSubBlockGetter? obj)
         {
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -740,11 +740,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWorldspaceSubBlockGetter item,
-            IWorldspaceSubBlockGetter rhs)
+            IWorldspaceSubBlockGetter rhs,
+            WorldspaceSubBlock.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -886,10 +888,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this IWorldspaceSubBlock obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((WorldspaceSubBlockSetterCommon)((IWorldspaceSubBlockGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -1186,6 +1188,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IWorldspaceSubBlock obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IWorldspaceSubBlock obj,
             Type type,
@@ -1435,15 +1446,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceSubBlockGetter? lhs,
-            IWorldspaceSubBlockGetter? rhs)
+            IWorldspaceSubBlockGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
-            if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberY) ?? true))
+            {
+                if (lhs.BlockNumberY != rhs.BlockNumberY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.BlockNumberX) ?? true))
+            {
+                if (lhs.BlockNumberX != rhs.BlockNumberX) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.GroupType) ?? true))
+            {
+                if (lhs.GroupType != rhs.GroupType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceSubBlock_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
             return true;
         }
         
@@ -1486,6 +1513,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
+        }
+        
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IWorldspaceSubBlockGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -2087,13 +2123,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceSubBlockGetter rhs)) return false;
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceSubBlockGetter rhs) return false;
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceSubBlockGetter? obj)
         {
-            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceSubBlockCommon)((IWorldspaceSubBlockGetter)this).CommonInstance()!).GetHashCode(this);

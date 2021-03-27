@@ -89,13 +89,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDebrisModelGetter rhs)) return false;
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDebrisModelGetter rhs) return false;
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDebrisModelGetter? obj)
         {
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -636,11 +636,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDebrisModelGetter item,
-            IDebrisModelGetter rhs)
+            IDebrisModelGetter rhs,
+            DebrisModel.TranslationMask? equalsMask = null)
         {
             return ((DebrisModelCommon)((IDebrisModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -979,15 +981,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDebrisModelGetter? lhs,
-            IDebrisModelGetter? rhs)
+            IDebrisModelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Percentage != rhs.Percentage) return false;
-            if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemorySliceExt.Equal(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Percentage) ?? true))
+            {
+                if (lhs.Percentage != rhs.Percentage) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.ModelFilename) ?? true))
+            {
+                if (!string.Equals(lhs.ModelFilename, rhs.ModelFilename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.TextureFileHashes) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TextureFileHashes, rhs.TextureFileHashes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DebrisModel_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
@@ -1441,13 +1459,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDebrisModelGetter rhs)) return false;
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDebrisModelGetter rhs) return false;
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDebrisModelGetter? obj)
         {
-            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DebrisModelCommon)((IDebrisModelGetter)this).CommonInstance()!).GetHashCode(this);

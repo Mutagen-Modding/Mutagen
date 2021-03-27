@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public const int KWDA = 0x4144574B;
         public const int KYWD = 0x4457594B;
         public const int LCRT = 0x5452434C;
+        public const int LVSP = 0x5053564C;
         public const int MAST = 0x5453414D;
         public const int MISC = 0x4353494D;
         public const int MNAM = 0x4D414E4D;

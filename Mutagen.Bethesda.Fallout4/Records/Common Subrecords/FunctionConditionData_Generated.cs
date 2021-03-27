@@ -48,7 +48,14 @@ namespace Mutagen.Bethesda.Fallout4
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        public FormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; set; } = new FormLink<IFallout4MajorRecordGetter>();
+        private IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord
+        {
+            get => _ParameterOneRecord;
+            set => _ParameterOneRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -59,7 +66,14 @@ namespace Mutagen.Bethesda.Fallout4
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        public FormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; set; } = new FormLink<IFallout4MajorRecordGetter>();
+        private IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord
+        {
+            get => _ParameterTwoRecord;
+            set => _ParameterTwoRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -70,7 +84,14 @@ namespace Mutagen.Bethesda.Fallout4
         String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
         #endregion
         #region ParameterThreeRecord
-        public FormLink<IFallout4MajorRecordGetter> ParameterThreeRecord { get; set; } = new FormLink<IFallout4MajorRecordGetter>();
+        private IFormLink<IFallout4MajorRecordGetter> _ParameterThreeRecord = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> ParameterThreeRecord
+        {
+            get => _ParameterThreeRecord;
+            set => _ParameterThreeRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IFunctionConditionDataGetter.ParameterThreeRecord => this.ParameterThreeRecord;
         #endregion
         #region ParameterThreeNumber
         public Int32 ParameterThreeNumber { get; set; } = default;
@@ -104,13 +125,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -787,13 +808,13 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new UInt16 Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new FormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new FormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
-        new FormLink<IFallout4MajorRecordGetter> ParameterThreeRecord { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterThreeRecord { get; }
         new Int32 ParameterThreeNumber { get; set; }
         new String? ParameterThreeString { get; set; }
         new Int32 Unknown4 { get; set; }
@@ -809,13 +830,13 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
         UInt16 Function { get; }
         UInt16 Unknown2 { get; }
-        FormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        FormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
         Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
-        FormLink<IFallout4MajorRecordGetter> ParameterThreeRecord { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> ParameterThreeRecord { get; }
         Int32 ParameterThreeNumber { get; }
         String? ParameterThreeString { get; }
         Int32 Unknown4 { get; }
@@ -870,11 +891,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IFunctionConditionDataGetter item,
-            IFunctionConditionDataGetter rhs)
+            IFunctionConditionDataGetter rhs,
+            FunctionConditionData.TranslationMask? equalsMask = null)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1064,13 +1087,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = FormLink<IFallout4MajorRecordGetter>.Null;
+            item.ParameterOneRecord.Clear();
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = FormLink<IFallout4MajorRecordGetter>.Null;
+            item.ParameterTwoRecord.Clear();
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
-            item.ParameterThreeRecord = FormLink<IFallout4MajorRecordGetter>.Null;
+            item.ParameterThreeRecord.Clear();
             item.ParameterThreeNumber = default;
             item.ParameterThreeString = default;
             item.Unknown4 = default;
@@ -1087,9 +1110,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IFunctionConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ParameterOneRecord = obj.ParameterOneRecord.Relink(mapping);
-            obj.ParameterTwoRecord = obj.ParameterTwoRecord.Relink(mapping);
-            obj.ParameterThreeRecord = obj.ParameterThreeRecord.Relink(mapping);
+            obj.ParameterOneRecord.Relink(mapping);
+            obj.ParameterTwoRecord.Relink(mapping);
+            obj.ParameterThreeRecord.Relink(mapping);
         }
         
         #endregion
@@ -1279,34 +1302,76 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs)
+            IFunctionConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
-            if (lhs.Function != rhs.Function) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
-            if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
-            if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
-            if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
-            if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
-            if (!lhs.ParameterThreeRecord.Equals(rhs.ParameterThreeRecord)) return false;
-            if (lhs.ParameterThreeNumber != rhs.ParameterThreeNumber) return false;
-            if (!string.Equals(lhs.ParameterThreeString, rhs.ParameterThreeString)) return false;
-            if (lhs.Unknown4 != rhs.Unknown4) return false;
-            if (lhs.Unknown5 != rhs.Unknown5) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
+            {
+                if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
+            {
+                if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
+            {
+                if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
+            {
+                if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterThreeRecord) ?? true))
+            {
+                if (!lhs.ParameterThreeRecord.Equals(rhs.ParameterThreeRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterThreeNumber) ?? true))
+            {
+                if (lhs.ParameterThreeNumber != rhs.ParameterThreeNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterThreeString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterThreeString, rhs.ParameterThreeString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown4) ?? true))
+            {
+                if (lhs.Unknown4 != rhs.Unknown4) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown5) ?? true))
+            {
+                if (lhs.Unknown5 != rhs.Unknown5) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFunctionConditionDataGetter?)lhs,
-                rhs: rhs as IFunctionConditionDataGetter);
+                rhs: rhs as IFunctionConditionDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFunctionConditionDataGetter item)
@@ -1395,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>(rhs.ParameterOneRecord.FormKey);
+                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1407,7 +1472,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>(rhs.ParameterTwoRecord.FormKey);
+                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {
@@ -1419,7 +1484,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterThreeRecord) ?? true))
             {
-                item.ParameterThreeRecord = new FormLink<IFallout4MajorRecordGetter>(rhs.ParameterThreeRecord.FormKey);
+                item.ParameterThreeRecord.SetTo(rhs.ParameterThreeRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterThreeNumber) ?? true))
             {
@@ -1731,13 +1796,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);

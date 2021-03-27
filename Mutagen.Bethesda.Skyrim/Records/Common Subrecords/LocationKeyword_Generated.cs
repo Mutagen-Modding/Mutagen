@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Link
-        public FormLink<IKeywordGetter> Link { get; set; } = new FormLink<IKeywordGetter>();
+        private IFormLink<IKeywordGetter> _Link = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> Link
+        {
+            get => _Link;
+            set => _Link = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> ILocationKeywordGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationKeywordGetter rhs)) return false;
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationKeywordGetter rhs) return false;
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationKeywordGetter? obj)
         {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).GetHashCode(this);
@@ -399,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationKeywordGetter,
         ILoquiObjectSetter<ILocationKeyword>
     {
-        new FormLink<IKeywordGetter> Link { get; set; }
+        new IFormLink<IKeywordGetter> Link { get; }
     }
 
     public partial interface ILocationKeywordGetter :
@@ -409,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ILocationKeywordGetter>
     {
         static new ILoquiRegistration Registration => LocationKeyword_Registration.Instance;
-        FormLink<IKeywordGetter> Link { get; }
+        IFormLinkGetter<IKeywordGetter> Link { get; }
 
     }
 
@@ -460,11 +467,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationKeywordGetter item,
-            ILocationKeywordGetter rhs)
+            ILocationKeywordGetter rhs,
+            LocationKeyword.TranslationMask? equalsMask = null)
         {
             return ((LocationKeywordCommon)((ILocationKeywordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -640,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationKeyword item)
         {
             ClearPartial();
-            item.Link = FormLink<IKeywordGetter>.Null;
+            item.Link.Clear();
             base.Clear(item);
         }
         
@@ -653,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ILocationKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Link = obj.Link.Relink(mapping);
+            obj.Link.Relink(mapping);
         }
         
         #endregion
@@ -780,22 +789,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationKeywordGetter? lhs,
-            ILocationKeywordGetter? rhs)
+            ILocationKeywordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
-            if (!lhs.Link.Equals(rhs.Link)) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationKeyword_FieldIndex.Link) ?? true))
+            {
+                if (!lhs.Link.Equals(rhs.Link)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationKeywordGetter?)lhs,
-                rhs: rhs as ILocationKeywordGetter);
+                rhs: rhs as ILocationKeywordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationKeywordGetter item)
@@ -853,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LocationKeyword_FieldIndex.Link) ?? true))
             {
-                item.Link = new FormLink<IKeywordGetter>(rhs.Link.FormKey);
+                item.Link.SetTo(rhs.Link.FormKey);
             }
         }
         
@@ -1010,9 +1025,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationKeyword item,
             MutagenFrame frame)
         {
-            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Link.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1060,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IKeywordGetter> Link => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1121,13 +1137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationKeywordGetter rhs)) return false;
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationKeywordGetter rhs) return false;
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationKeywordGetter? obj)
         {
-            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationKeywordCommon)((ILocationKeywordGetter)this).CommonInstance()!).GetHashCode(this);

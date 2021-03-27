@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IPlacedGetter> Reference { get; set; } = new FormLink<IPlacedGetter>();
+        private IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IPointToReferenceMappingGetter.Reference => this.Reference;
         #endregion
         #region Points
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPointToReferenceMappingGetter rhs) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -533,7 +540,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IPointToReferenceMapping>,
         IPointToReferenceMappingGetter
     {
-        new FormLink<IPlacedGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; }
         new ExtendedList<Int16> Points { get; }
     }
 
@@ -550,7 +557,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PointToReferenceMapping_Registration.Instance;
-        FormLink<IPlacedGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         IReadOnlyList<Int16> Points { get; }
 
     }
@@ -602,11 +609,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPointToReferenceMappingGetter item,
-            IPointToReferenceMappingGetter rhs)
+            IPointToReferenceMappingGetter rhs,
+            PointToReferenceMapping.TranslationMask? equalsMask = null)
         {
             return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -809,14 +818,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IPointToReferenceMapping item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlacedGetter>.Null;
+            item.Reference.Clear();
             item.Points.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IPointToReferenceMapping obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -943,12 +952,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPointToReferenceMappingGetter? lhs,
-            IPointToReferenceMappingGetter? rhs)
+            IPointToReferenceMappingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
+            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
+            {
+                if (!lhs.Points.SequenceEqualNullable(rhs.Points)) return false;
+            }
             return true;
         }
         
@@ -992,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlacedGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)PointToReferenceMapping_FieldIndex.Points) ?? true))
             {
@@ -1153,9 +1169,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Points.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Parse(
                     frame: frame,
@@ -1226,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Points
         public IReadOnlyList<Int16> Points => BinaryOverlayList.FactoryByStartIndex<Int16>(_data.Slice(0x4), _package, 2, (s, p) => BinaryPrimitives.ReadInt16LittleEndian(s));
         protected int PointsEndingPos;
@@ -1292,13 +1309,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPointToReferenceMappingGetter rhs)) return false;
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPointToReferenceMappingGetter rhs) return false;
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPointToReferenceMappingGetter? obj)
         {
-            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PointToReferenceMappingCommon)((IPointToReferenceMappingGetter)this).CommonInstance()!).GetHashCode(this);

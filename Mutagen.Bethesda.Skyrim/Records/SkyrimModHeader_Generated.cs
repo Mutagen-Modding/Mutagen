@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? _OverriddenForms;
-        public ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms
+        private ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? ISkyrimModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? ISkyrimModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
@@ -148,13 +148,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimModHeaderGetter rhs)) return false;
-            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkyrimModHeaderGetter rhs) return false;
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimModHeaderGetter? obj)
         {
-            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1037,7 +1037,7 @@ namespace Mutagen.Bethesda.Skyrim
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
+        new ExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; set; }
         new Int32? INTV { get; set; }
         new Int32? INCC { get; set; }
     }
@@ -1066,7 +1066,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; }
+        IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; }
         Int32? INTV { get; }
         Int32? INCC { get; }
 
@@ -1119,11 +1119,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISkyrimModHeaderGetter item,
-            ISkyrimModHeaderGetter rhs)
+            ISkyrimModHeaderGetter rhs,
+            SkyrimModHeader.TranslationMask? equalsMask = null)
         {
             return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1569,24 +1571,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISkyrimModHeaderGetter? lhs,
-            ISkyrimModHeaderGetter? rhs)
+            ISkyrimModHeaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.FormID != rhs.FormID) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.FormVersion != rhs.FormVersion) return false;
-            if (lhs.Version2 != rhs.Version2) return false;
-            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
-            if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
-            if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
-            if (!string.Equals(lhs.Author, rhs.Author)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
-            if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
-            if (lhs.INTV != rhs.INTV) return false;
-            if (lhs.INCC != rhs.INCC) return false;
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.FormID) ?? true))
+            {
+                if (lhs.FormID != rhs.FormID) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Stats) ?? true))
+            {
+                if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.TypeOffsets) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Deleted) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Author) ?? true))
+            {
+                if (!string.Equals(lhs.Author, rhs.Author)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.MasterReferences) ?? true))
+            {
+                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.OverriddenForms) ?? true))
+            {
+                if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.INTV) ?? true))
+            {
+                if (lhs.INTV != rhs.INTV) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimModHeader_FieldIndex.INCC) ?? true))
+            {
+                if (lhs.INCC != rhs.INCC) return false;
+            }
             return true;
         }
         
@@ -1769,8 +1814,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+                            .Select(r => (IFormLinkGetter<ISkyrimMajorRecordGetter>)new FormLink<ISkyrimMajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     }
                     else
                     {
@@ -1945,12 +1990,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLink<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2075,10 +2120,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISkyrimMajorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ISkyrimMajorRecordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.INTV:
@@ -2194,7 +2239,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
-        public IReadOnlyList<IFormLink<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISkyrimMajorRecordGetter>>? OverriddenForms { get; private set; }
         #region INTV
         private int? _INTVLocation;
         public Int32? INTV => _INTVLocation.HasValue ? BinaryPrimitives.ReadInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _INTVLocation.Value, _package.MetaData.Constants)) : default(Int32?);
@@ -2314,7 +2359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         subLen = subMeta.ContentLength;
                     }
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<ISkyrimMajorRecordGetter>>(
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ISkyrimMajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2352,13 +2397,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimModHeaderGetter rhs)) return false;
-            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkyrimModHeaderGetter rhs) return false;
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimModHeaderGetter? obj)
         {
-            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimModHeaderCommon)((ISkyrimModHeaderGetter)this).CommonInstance()!).GetHashCode(this);

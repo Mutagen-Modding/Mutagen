@@ -13,11 +13,18 @@ namespace Mutagen.Bethesda.Tests
 {
     public class SkyrimProcessor : Processor
     {
-        public SkyrimProcessor(bool multithread) : base(multithread)
-        {
-        }
+        public override GameRelease GameRelease { get; }
 
-        public override GameRelease GameRelease => GameRelease.SkyrimLE;
+        private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
+        {
+            { (Constants.Update, StringsSource.Normal), new() { 34 } }
+        };
+
+        public SkyrimProcessor(GameRelease release, bool multithread) 
+            : base(multithread)
+        {
+            GameRelease = release;
+        }
 
         protected override void AddDynamicProcessorInstructions()
         {
@@ -793,11 +800,20 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return t;
             }
+            var bsaOrder = Archive.GetTypicalOrder(GameRelease).ToList();
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
                 {
-                    return ProcessStringsFilesIndices(streamGetter, new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)), Language.English, source, ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath)));
+                    var modKey = ModKey.FromNameAndExtension(Path.GetFileName(this.SourcePath));
+                    return ProcessStringsFilesIndices(
+                        streamGetter, 
+                        new DirectoryInfo(Path.GetDirectoryName(this.SourcePath)),
+                        Language.English, 
+                        source,
+                        modKey,
+                        _knownDeadKeys.GetOrDefault((modKey, source)),
+                        bsaOrder);
                 });
             }
         }
@@ -859,21 +875,30 @@ namespace Mutagen.Bethesda.Tests
             AStringsAlignment.ProcessStringLink(stream, instr, processedStrings, overlay, ref newIndex);
         }
 
-        private async Task ProcessStringsFilesIndices(Func<IMutagenReadStream> streamGetter, DirectoryInfo dataFolder, Language language, StringsSource source, ModKey modKey)
+        private async Task ProcessStringsFilesIndices(
+            Func<IMutagenReadStream> streamGetter,
+            DirectoryInfo dataFolder,
+            Language language, 
+            StringsSource source, 
+            ModKey modKey,
+            HashSet<uint> knownDeadKeys,
+            IEnumerable<string> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)
             {
                 case StringsSource.Normal:
                     ProcessStringsFiles(
-                        GameRelease.SkyrimLE,
+                        GameRelease,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.Normal,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
-                            GameRelease.SkyrimLE,
+                            GameRelease,
                             modKey,
                             stream,
                             dataFolder,
@@ -934,14 +959,16 @@ namespace Mutagen.Bethesda.Tests
                     break;
                 case StringsSource.DL:
                     ProcessStringsFiles(
-                        GameRelease.SkyrimLE,
+                        GameRelease,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.DL,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
-                            GameRelease.SkyrimLE,
+                            GameRelease,
                             modKey,
                             stream,
                             dataFolder,
@@ -966,14 +993,16 @@ namespace Mutagen.Bethesda.Tests
                     break;
                 case StringsSource.IL:
                     ProcessStringsFiles(
-                        GameRelease.SkyrimLE,
+                        GameRelease,
                         modKey,
                         dataFolder,
                         language,
                         StringsSource.IL,
                         strict: true,
+                        knownDeadKeys: knownDeadKeys,
+                        bsaOrder: bsaOrder,
                         RenumberStringsFileEntries(
-                            GameRelease.SkyrimLE,
+                            GameRelease,
                             modKey,
                             stream,
                             dataFolder,

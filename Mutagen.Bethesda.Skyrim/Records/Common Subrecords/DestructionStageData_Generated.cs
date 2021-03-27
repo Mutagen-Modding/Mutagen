@@ -55,10 +55,24 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 SelfDamagePerSecond { get; set; } = default;
         #endregion
         #region Explosion
-        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IDestructionStageDataGetter.Explosion => this.Explosion;
         #endregion
         #region Debris
-        public FormLink<IDebrisGetter> Debris { get; set; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _Debris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> Debris
+        {
+            get => _Debris;
+            set => _Debris = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IDestructionStageDataGetter.Debris => this.Debris;
         #endregion
         #region DebrisCount
         public Int32 DebrisCount { get; set; } = default;
@@ -80,13 +94,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructionStageDataGetter rhs)) return false;
-            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructionStageDataGetter rhs) return false;
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructionStageDataGetter? obj)
         {
-            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -640,8 +654,8 @@ namespace Mutagen.Bethesda.Skyrim
         new Byte ModelDamageStage { get; set; }
         new DestructionStageData.Flag Flags { get; set; }
         new Int32 SelfDamagePerSecond { get; set; }
-        new FormLink<IExplosionGetter> Explosion { get; set; }
-        new FormLink<IDebrisGetter> Debris { get; set; }
+        new IFormLink<IExplosionGetter> Explosion { get; }
+        new IFormLink<IDebrisGetter> Debris { get; }
         new Int32 DebrisCount { get; set; }
     }
 
@@ -663,8 +677,8 @@ namespace Mutagen.Bethesda.Skyrim
         Byte ModelDamageStage { get; }
         DestructionStageData.Flag Flags { get; }
         Int32 SelfDamagePerSecond { get; }
-        FormLink<IExplosionGetter> Explosion { get; }
-        FormLink<IDebrisGetter> Debris { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
+        IFormLinkGetter<IDebrisGetter> Debris { get; }
         Int32 DebrisCount { get; }
 
     }
@@ -716,11 +730,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDestructionStageDataGetter item,
-            IDestructionStageDataGetter rhs)
+            IDestructionStageDataGetter rhs,
+            DestructionStageData.TranslationMask? equalsMask = null)
         {
             return ((DestructionStageDataCommon)((IDestructionStageDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -934,16 +950,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = default;
             item.Flags = default;
             item.SelfDamagePerSecond = default;
-            item.Explosion = FormLink<IExplosionGetter>.Null;
-            item.Debris = FormLink<IDebrisGetter>.Null;
+            item.Explosion.Clear();
+            item.Debris.Clear();
             item.DebrisCount = default;
         }
         
         #region Mutagen
         public void RemapLinks(IDestructionStageData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.Debris = obj.Debris.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.Debris.Relink(mapping);
         }
         
         #endregion
@@ -1083,18 +1099,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDestructionStageDataGetter? lhs,
-            IDestructionStageDataGetter? rhs)
+            IDestructionStageDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.HealthPercent != rhs.HealthPercent) return false;
-            if (lhs.Index != rhs.Index) return false;
-            if (lhs.ModelDamageStage != rhs.ModelDamageStage) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.SelfDamagePerSecond != rhs.SelfDamagePerSecond) return false;
-            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
-            if (!lhs.Debris.Equals(rhs.Debris)) return false;
-            if (lhs.DebrisCount != rhs.DebrisCount) return false;
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.HealthPercent) ?? true))
+            {
+                if (lhs.HealthPercent != rhs.HealthPercent) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.ModelDamageStage) ?? true))
+            {
+                if (lhs.ModelDamageStage != rhs.ModelDamageStage) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.SelfDamagePerSecond) ?? true))
+            {
+                if (lhs.SelfDamagePerSecond != rhs.SelfDamagePerSecond) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
+            {
+                if (!lhs.Debris.Equals(rhs.Debris)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
+            {
+                if (lhs.DebrisCount != rhs.DebrisCount) return false;
+            }
             return true;
         }
         
@@ -1165,11 +1206,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.Debris) ?? true))
             {
-                item.Debris = new FormLink<IDebrisGetter>(rhs.Debris.FormKey);
+                item.Debris.SetTo(rhs.Debris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DestructionStageData_FieldIndex.DebrisCount) ?? true))
             {
@@ -1330,12 +1371,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = frame.ReadUInt8();
             item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.SelfDamagePerSecond = frame.ReadInt32();
-            item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Debris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Explosion.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Debris.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.DebrisCount = frame.ReadInt32();
         }
 
@@ -1408,8 +1451,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public Byte ModelDamageStage => _data.Span[0x2];
         public DestructionStageData.Flag Flags => (DestructionStageData.Flag)_data.Span.Slice(0x3, 0x1)[0];
         public Int32 SelfDamagePerSecond => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public FormLink<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public FormLink<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<IExplosionGetter> Explosion => new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<IDebrisGetter> Debris => new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         public Int32 DebrisCount => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x10, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1472,13 +1515,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDestructionStageDataGetter rhs)) return false;
-            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDestructionStageDataGetter rhs) return false;
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDestructionStageDataGetter? obj)
         {
-            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DestructionStageDataCommon)((IDestructionStageDataGetter)this).CommonInstance()!).GetHashCode(this);

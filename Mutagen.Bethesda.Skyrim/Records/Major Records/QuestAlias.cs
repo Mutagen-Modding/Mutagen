@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -57,11 +57,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item.ID = frame.ReadUInt32();
             }
 
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IQuestAlias item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
-
             static partial void FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item)
             {
                 // Skip
@@ -83,11 +78,6 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     writer.Write(item.ID);
                 }
-            }
-
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IQuestAliasGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
 
             static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)

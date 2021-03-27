@@ -103,13 +103,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlayerSkillsGetter rhs)) return false;
-            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPlayerSkillsGetter rhs) return false;
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlayerSkillsGetter? obj)
         {
-            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -969,11 +969,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlayerSkillsGetter item,
-            IPlayerSkillsGetter rhs)
+            IPlayerSkillsGetter rhs,
+            PlayerSkills.TranslationMask? equalsMask = null)
         {
             return ((PlayerSkillsCommon)((IPlayerSkillsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1377,19 +1379,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlayerSkillsGetter? lhs,
-            IPlayerSkillsGetter? rhs)
+            IPlayerSkillsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.SkillValues.SequenceEqualNullable(rhs.SkillValues)) return false;
-            if (!lhs.SkillOffsets.SequenceEqualNullable(rhs.SkillOffsets)) return false;
-            if (lhs.Health != rhs.Health) return false;
-            if (lhs.Magicka != rhs.Magicka) return false;
-            if (lhs.Stamina != rhs.Stamina) return false;
-            if (lhs.Unused != rhs.Unused) return false;
-            if (!lhs.FarAwayModelDistance.EqualsWithin(rhs.FarAwayModelDistance)) return false;
-            if (lhs.GearedUpWeapons != rhs.GearedUpWeapons) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillValues) ?? true))
+            {
+                if (!lhs.SkillValues.SequenceEqualNullable(rhs.SkillValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillOffsets) ?? true))
+            {
+                if (!lhs.SkillOffsets.SequenceEqualNullable(rhs.SkillOffsets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Health) ?? true))
+            {
+                if (lhs.Health != rhs.Health) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Magicka) ?? true))
+            {
+                if (lhs.Magicka != rhs.Magicka) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Stamina) ?? true))
+            {
+                if (lhs.Stamina != rhs.Stamina) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.FarAwayModelDistance) ?? true))
+            {
+                if (!lhs.FarAwayModelDistance.EqualsWithin(rhs.FarAwayModelDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.GearedUpWeapons) ?? true))
+            {
+                if (lhs.GearedUpWeapons != rhs.GearedUpWeapons) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.Unused2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused2.Span, rhs.Unused2.Span)) return false;
+            }
             return true;
         }
         
@@ -1787,13 +1817,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlayerSkillsGetter rhs)) return false;
-            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPlayerSkillsGetter rhs) return false;
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlayerSkillsGetter? obj)
         {
-            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlayerSkillsCommon)((IPlayerSkillsGetter)this).CommonInstance()!).GetHashCode(this);

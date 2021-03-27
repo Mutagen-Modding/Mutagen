@@ -70,22 +70,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IDebrisGetter rhs)) return false;
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IDebrisGetter? obj)
-        {
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -484,6 +468,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDebrisGetter rhs) return false;
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IDebrisGetter? obj)
+        {
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -613,11 +617,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDebrisGetter item,
-            IDebrisGetter rhs)
+            IDebrisGetter rhs,
+            Debris.TranslationMask? equalsMask = null)
         {
             return ((DebrisCommon)((IDebrisGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1016,31 +1022,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDebrisGetter? lhs,
-            IDebrisGetter? rhs)
+            IDebrisGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Debris_FieldIndex.Models) ?? true))
+            {
+                if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDebrisGetter?)lhs,
-                rhs: rhs as IDebrisGetter);
+                rhs: rhs as IDebrisGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDebrisGetter?)lhs,
-                rhs: rhs as IDebrisGetter);
+                rhs: rhs as IDebrisGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDebrisGetter item)
@@ -1085,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Debris(formKey, default(SkyrimRelease));
+            var newRec = new Debris(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1096,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDebris)item,
+                item: (IDebrisGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1107,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDebris)item,
+                item: (IDebrisGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1599,13 +1613,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDebrisGetter rhs)) return false;
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDebrisGetter rhs) return false;
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDebrisGetter? obj)
         {
-            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DebrisCommon)((IDebrisGetter)this).CommonInstance()!).GetHashCode(this);

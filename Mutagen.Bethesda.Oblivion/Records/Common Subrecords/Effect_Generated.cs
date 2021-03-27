@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectGetter rhs)) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectGetter rhs) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -542,11 +542,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IEffectGetter item,
-            IEffectGetter rhs)
+            IEffectGetter rhs,
+            Effect.TranslationMask? equalsMask = null)
         {
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -881,12 +883,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEffectGetter? lhs,
-            IEffectGetter? rhs)
+            IEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!object.Equals(lhs.ScriptEffect, rhs.ScriptEffect)) return false;
+            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
+            {
+                if (!object.Equals(lhs.ScriptEffect, rhs.ScriptEffect)) return false;
+            }
             return true;
         }
         
@@ -1368,13 +1377,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectGetter rhs)) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectGetter rhs) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);

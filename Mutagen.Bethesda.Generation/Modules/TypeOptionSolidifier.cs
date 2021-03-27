@@ -25,6 +25,8 @@ namespace Mutagen.Bethesda.Generation
             bool generate = false;
             FileGeneration fg = new FileGeneration();
 
+            var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == Binary.ObjectType.Mod);
+
             fg.AppendLine("using System.Collections.Generic;");
             fg.AppendLine("using Mutagen.Bethesda.Internals;");
             fg.AppendLine();
@@ -44,6 +46,15 @@ namespace Mutagen.Bethesda.Generation
                         {
                             if (!await obj.IsMajorRecord()) continue;
 
+                            var topLevel = modObj.Fields.Any(x =>
+                            {
+                                if (x is not GroupType grup) return false;
+                                var grupTarget = grup.GetGroupTarget();
+                                if (grupTarget == obj) return true;
+                                return obj.BaseClassTrail().Any(b => b == grupTarget);
+                            });
+                            var topLevelStr = topLevel ? "TopLevel" : string.Empty;
+
                             using (var comment = new CommentWrapper(fg))
                             {
                                 comment.Summary.AppendLine($"Scope a load order query to {obj.Name}");
@@ -51,14 +62,14 @@ namespace Mutagen.Bethesda.Generation
                                 comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                             }
                             using (var args = new FunctionWrapper(fg,
-                                $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
                             }
                             using (new BraceWrapper(fg))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                                    $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => listings.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
                                     args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");
@@ -73,14 +84,14 @@ namespace Mutagen.Bethesda.Generation
                                 comment.Return.AppendLine($"A typed object to do further queries on {obj.Name}");
                             }
                             using (var args = new FunctionWrapper(fg,
-                                $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
+                                $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                             {
                                 args.Add($"this IEnumerable<I{proto.Protocol.Namespace}ModGetter> mods");
                             }
                             using (new BraceWrapper(fg))
                             {
                                 using (var args = new ArgsWrapper(fg,
-                                    $"return new TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
+                                    $"return new {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>"))
                                 {
                                     args.Add($"(bool includeDeletedRecords) => mods.WinningOverrides<{obj.Interface(getter: true)}>(includeDeletedRecords: includeDeletedRecords)");
                                     args.Add($"({nameof(ILinkCache)} linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}>(linkCache, includeDeletedRecords: includeDeletedRecords)");

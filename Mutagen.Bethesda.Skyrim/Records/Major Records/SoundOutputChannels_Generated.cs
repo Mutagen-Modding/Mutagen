@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundOutputChannelsGetter rhs)) return false;
-            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundOutputChannelsGetter rhs) return false;
+            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundOutputChannelsGetter? obj)
         {
-            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -575,11 +575,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISoundOutputChannelsGetter item,
-            ISoundOutputChannelsGetter rhs)
+            ISoundOutputChannelsGetter rhs,
+            SoundOutputChannels.TranslationMask? equalsMask = null)
         {
             return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -905,13 +907,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoundOutputChannelsGetter? lhs,
-            ISoundOutputChannelsGetter? rhs)
+            ISoundOutputChannelsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Channel0, rhs.Channel0)) return false;
-            if (!object.Equals(lhs.Channel1, rhs.Channel1)) return false;
-            if (!object.Equals(lhs.Channel2, rhs.Channel2)) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel0) ?? true))
+            {
+                if (!object.Equals(lhs.Channel0, rhs.Channel0)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel1) ?? true))
+            {
+                if (!object.Equals(lhs.Channel1, rhs.Channel1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel2) ?? true))
+            {
+                if (!object.Equals(lhs.Channel2, rhs.Channel2)) return false;
+            }
             return true;
         }
         
@@ -1298,13 +1310,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundOutputChannelsGetter rhs)) return false;
-            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundOutputChannelsGetter rhs) return false;
+            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundOutputChannelsGetter? obj)
         {
-            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)this).CommonInstance()!).GetHashCode(this);

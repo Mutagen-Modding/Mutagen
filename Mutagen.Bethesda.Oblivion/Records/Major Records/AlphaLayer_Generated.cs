@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlphaLayerGetter rhs)) return false;
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlphaLayerGetter rhs) return false;
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlphaLayerGetter? obj)
         {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -473,11 +473,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAlphaLayerGetter item,
-            IAlphaLayerGetter rhs)
+            IAlphaLayerGetter rhs,
+            AlphaLayer.TranslationMask? equalsMask = null)
         {
             return ((AlphaLayerCommon)((IAlphaLayerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -802,22 +804,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAlphaLayerGetter? lhs,
-            IAlphaLayerGetter? rhs)
+            IAlphaLayerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+            if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.AlphaLayerData, rhs.AlphaLayerData)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IBaseLayerGetter? lhs,
-            IBaseLayerGetter? rhs)
+            IBaseLayerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAlphaLayerGetter?)lhs,
-                rhs: rhs as IAlphaLayerGetter);
+                rhs: rhs as IAlphaLayerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAlphaLayerGetter item)
@@ -1211,13 +1219,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlphaLayerGetter rhs)) return false;
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlphaLayerGetter rhs) return false;
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlphaLayerGetter? obj)
         {
-            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlphaLayerCommon)((IAlphaLayerGetter)this).CommonInstance()!).GetHashCode(this);

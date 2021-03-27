@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
+        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        public IFormLink<IFactionGetter> Faction
+        {
+            get => _Faction;
+            set => _Faction = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFactionGetter> IRankPlacementGetter.Faction => this.Faction;
         #endregion
         #region Rank
         public Byte Rank { get; set; } = default;
@@ -73,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRankPlacementGetter rhs) return false;
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRankPlacementGetter? obj)
         {
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).GetHashCode(this);
@@ -488,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRankPlacement>,
         IRankPlacementGetter
     {
-        new FormLink<IFactionGetter> Faction { get; set; }
+        new IFormLink<IFactionGetter> Faction { get; }
         new Byte Rank { get; set; }
         new MemorySlice<Byte> Fluff { get; set; }
     }
@@ -506,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RankPlacement_Registration.Instance;
-        FormLink<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Byte Rank { get; }
         ReadOnlyMemorySlice<Byte> Fluff { get; }
 
@@ -559,11 +566,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRankPlacementGetter item,
-            IRankPlacementGetter rhs)
+            IRankPlacementGetter rhs,
+            RankPlacement.TranslationMask? equalsMask = null)
         {
             return ((RankPlacementCommon)((IRankPlacementGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -767,7 +776,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRankPlacement item)
         {
             ClearPartial();
-            item.Faction = FormLink<IFactionGetter>.Null;
+            item.Faction.Clear();
             item.Rank = default;
             item.Fluff = new byte[3];
         }
@@ -775,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IRankPlacement obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Faction = obj.Faction.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion
@@ -890,13 +899,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRankPlacementGetter? lhs,
-            IRankPlacementGetter? rhs)
+            IRankPlacementGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
-            if (lhs.Rank != rhs.Rank) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
+            {
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
+            {
+                if (lhs.Rank != rhs.Rank) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RankPlacement_FieldIndex.Fluff) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Fluff.Span, rhs.Fluff.Span)) return false;
+            }
             return true;
         }
         
@@ -941,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
+                item.Faction.SetTo(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RankPlacement_FieldIndex.Rank) ?? true))
             {
@@ -1093,9 +1112,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankPlacement item,
             MutagenFrame frame)
         {
-            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Faction.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Rank = frame.ReadUInt8();
             item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
@@ -1164,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Byte Rank => _data.Span[0x4];
         public ReadOnlyMemorySlice<Byte> Fluff => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
@@ -1228,13 +1248,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRankPlacementGetter rhs)) return false;
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRankPlacementGetter rhs) return false;
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRankPlacementGetter? obj)
         {
-            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RankPlacementCommon)((IRankPlacementGetter)this).CommonInstance()!).GetHashCode(this);

@@ -70,22 +70,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IDamageTypeIndexedGetter rhs)) return false;
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IDamageTypeIndexedGetter? obj)
-        {
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             ADamageType.Mask<TItem>,
@@ -475,6 +459,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDamageTypeIndexedGetter rhs) return false;
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IDamageTypeIndexedGetter? obj)
+        {
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -604,11 +608,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IDamageTypeIndexedGetter item,
-            IDamageTypeIndexedGetter rhs)
+            IDamageTypeIndexedGetter rhs,
+            DamageTypeIndexed.TranslationMask? equalsMask = null)
         {
             return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1045,40 +1051,50 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDamageTypeIndexedGetter? lhs,
-            IDamageTypeIndexedGetter? rhs)
+            IDamageTypeIndexedGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IADamageTypeGetter)lhs, (IADamageTypeGetter)rhs)) return false;
-            if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes)) return false;
+            if (!base.Equals((IADamageTypeGetter)lhs, (IADamageTypeGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DamageTypeIndexed_FieldIndex.DamageTypes) ?? true))
+            {
+                if (!lhs.DamageTypes.SequenceEqualNullable(rhs.DamageTypes)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IADamageTypeGetter? lhs,
-            IADamageTypeGetter? rhs)
+            IADamageTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
-                rhs: rhs as IDamageTypeIndexedGetter);
+                rhs: rhs as IDamageTypeIndexedGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
-                rhs: rhs as IDamageTypeIndexedGetter);
+                rhs: rhs as IDamageTypeIndexedGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDamageTypeIndexedGetter?)lhs,
-                rhs: rhs as IDamageTypeIndexedGetter);
+                rhs: rhs as IDamageTypeIndexedGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDamageTypeIndexedGetter item)
@@ -1139,7 +1155,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDamageTypeIndexed)item,
+                item: (IDamageTypeIndexedGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1150,7 +1166,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDamageTypeIndexed)item,
+                item: (IDamageTypeIndexedGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1161,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDamageTypeIndexed)item,
+                item: (IDamageTypeIndexedGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1693,13 +1709,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDamageTypeIndexedGetter rhs)) return false;
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDamageTypeIndexedGetter rhs) return false;
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDamageTypeIndexedGetter? obj)
         {
-            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DamageTypeIndexedCommon)((IDamageTypeIndexedGetter)this).CommonInstance()!).GetHashCode(this);

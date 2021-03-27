@@ -60,19 +60,54 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IDualCastDataGetter.Projectile => this.Projectile;
         #endregion
         #region Explosion
-        public FormLink<IExplosionGetter> Explosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _Explosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> Explosion
+        {
+            get => _Explosion;
+            set => _Explosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IDualCastDataGetter.Explosion => this.Explosion;
         #endregion
         #region EffectShader
-        public FormLink<IEffectShaderGetter> EffectShader { get; set; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _EffectShader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> EffectShader
+        {
+            get => _EffectShader;
+            set => _EffectShader = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IDualCastDataGetter.EffectShader => this.EffectShader;
         #endregion
         #region HitEffectArt
-        public FormLink<IArtObjectGetter> HitEffectArt { get; set; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _HitEffectArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> HitEffectArt
+        {
+            get => _HitEffectArt;
+            set => _HitEffectArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IDualCastDataGetter.HitEffectArt => this.HitEffectArt;
         #endregion
         #region ImpactDataSet
-        public FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ImpactDataSet
+        {
+            get => _ImpactDataSet;
+            set => _ImpactDataSet = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IDualCastDataGetter.ImpactDataSet => this.ImpactDataSet;
         #endregion
         #region InheritScale
         public DualCastData.InheritScaleType InheritScale { get; set; } = default;
@@ -91,22 +126,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IDualCastDataGetter rhs)) return false;
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IDualCastDataGetter? obj)
-        {
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -642,6 +661,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDualCastDataGetter rhs) return false;
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IDualCastDataGetter? obj)
+        {
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -707,11 +746,11 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new ObjectBounds ObjectBounds { get; set; }
-        new FormLink<IProjectileGetter> Projectile { get; set; }
-        new FormLink<IExplosionGetter> Explosion { get; set; }
-        new FormLink<IEffectShaderGetter> EffectShader { get; set; }
-        new FormLink<IArtObjectGetter> HitEffectArt { get; set; }
-        new FormLink<IImpactDataSetGetter> ImpactDataSet { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
+        new IFormLink<IExplosionGetter> Explosion { get; }
+        new IFormLink<IEffectShaderGetter> EffectShader { get; }
+        new IFormLink<IArtObjectGetter> HitEffectArt { get; }
+        new IFormLink<IImpactDataSetGetter> ImpactDataSet { get; }
         new DualCastData.InheritScaleType InheritScale { get; set; }
         new DualCastData.DATADataType DATADataTypeState { get; set; }
     }
@@ -734,11 +773,11 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => DualCastData_Registration.Instance;
         IObjectBoundsGetter ObjectBounds { get; }
-        FormLink<IProjectileGetter> Projectile { get; }
-        FormLink<IExplosionGetter> Explosion { get; }
-        FormLink<IEffectShaderGetter> EffectShader { get; }
-        FormLink<IArtObjectGetter> HitEffectArt { get; }
-        FormLink<IImpactDataSetGetter> ImpactDataSet { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IExplosionGetter> Explosion { get; }
+        IFormLinkGetter<IEffectShaderGetter> EffectShader { get; }
+        IFormLinkGetter<IArtObjectGetter> HitEffectArt { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet { get; }
         DualCastData.InheritScaleType InheritScale { get; }
         DualCastData.DATADataType DATADataTypeState { get; }
 
@@ -791,11 +830,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDualCastDataGetter item,
-            IDualCastDataGetter rhs)
+            IDualCastDataGetter rhs,
+            DualCastData.TranslationMask? equalsMask = null)
         {
             return ((DualCastDataCommon)((IDualCastDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1000,11 +1041,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.ObjectBounds.Clear();
-            item.Projectile = FormLink<IProjectileGetter>.Null;
-            item.Explosion = FormLink<IExplosionGetter>.Null;
-            item.EffectShader = FormLink<IEffectShaderGetter>.Null;
-            item.HitEffectArt = FormLink<IArtObjectGetter>.Null;
-            item.ImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
+            item.Projectile.Clear();
+            item.Explosion.Clear();
+            item.EffectShader.Clear();
+            item.HitEffectArt.Clear();
+            item.ImpactDataSet.Clear();
             item.InheritScale = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -1024,11 +1065,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IDualCastData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
-            obj.Explosion = obj.Explosion.Relink(mapping);
-            obj.EffectShader = obj.EffectShader.Relink(mapping);
-            obj.HitEffectArt = obj.HitEffectArt.Relink(mapping);
-            obj.ImpactDataSet = obj.ImpactDataSet.Relink(mapping);
+            obj.Projectile.Relink(mapping);
+            obj.Explosion.Relink(mapping);
+            obj.EffectShader.Relink(mapping);
+            obj.HitEffectArt.Relink(mapping);
+            obj.ImpactDataSet.Relink(mapping);
         }
         
         #endregion
@@ -1231,38 +1272,67 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDualCastDataGetter? lhs,
-            IDualCastDataGetter? rhs)
+            IDualCastDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
-            if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
-            if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
-            if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
-            if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
-            if (lhs.InheritScale != rhs.InheritScale) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
+            {
+                if (!lhs.Explosion.Equals(rhs.Explosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
+            {
+                if (!lhs.EffectShader.Equals(rhs.EffectShader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
+            {
+                if (!lhs.HitEffectArt.Equals(rhs.HitEffectArt)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
+            {
+                if (!lhs.ImpactDataSet.Equals(rhs.ImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
+            {
+                if (lhs.InheritScale != rhs.InheritScale) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DualCastData_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDualCastDataGetter?)lhs,
-                rhs: rhs as IDualCastDataGetter);
+                rhs: rhs as IDualCastDataGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDualCastDataGetter?)lhs,
-                rhs: rhs as IDualCastDataGetter);
+                rhs: rhs as IDualCastDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDualCastDataGetter item)
@@ -1319,7 +1389,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new DualCastData(formKey, default(SkyrimRelease));
+            var newRec = new DualCastData(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1330,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDualCastData)item,
+                item: (IDualCastDataGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1341,7 +1411,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDualCastData)item,
+                item: (IDualCastDataGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1408,23 +1478,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.Explosion) ?? true))
             {
-                item.Explosion = new FormLink<IExplosionGetter>(rhs.Explosion.FormKey);
+                item.Explosion.SetTo(rhs.Explosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.EffectShader) ?? true))
             {
-                item.EffectShader = new FormLink<IEffectShaderGetter>(rhs.EffectShader.FormKey);
+                item.EffectShader.SetTo(rhs.EffectShader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.HitEffectArt) ?? true))
             {
-                item.HitEffectArt = new FormLink<IArtObjectGetter>(rhs.HitEffectArt.FormKey);
+                item.HitEffectArt.SetTo(rhs.HitEffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.ImpactDataSet) ?? true))
             {
-                item.ImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ImpactDataSet.FormKey);
+                item.ImpactDataSet.SetTo(rhs.ImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DualCastData_FieldIndex.InheritScale) ?? true))
             {
@@ -1727,21 +1797,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Projectile = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Explosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.EffectShader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.HitEffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Projectile.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Explosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.EffectShader.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.HitEffectArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ImpactDataSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.InheritScale = EnumBinaryTranslation<DualCastData.InheritScaleType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return (int)DualCastData_FieldIndex.InheritScale;
                 }
@@ -1810,27 +1885,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Projectile
         private int _ProjectileLocation => _DATALocation!.Value;
         private bool _Projectile_IsSet => _DATALocation.HasValue;
-        public FormLink<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
+        public IFormLinkGetter<IProjectileGetter> Projectile => _Projectile_IsSet ? new FormLink<IProjectileGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ProjectileLocation, 0x4)))) : FormLink<IProjectileGetter>.Null;
         #endregion
         #region Explosion
         private int _ExplosionLocation => _DATALocation!.Value + 0x4;
         private bool _Explosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> Explosion => _Explosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region EffectShader
         private int _EffectShaderLocation => _DATALocation!.Value + 0x8;
         private bool _EffectShader_IsSet => _DATALocation.HasValue;
-        public FormLink<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> EffectShader => _EffectShader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region HitEffectArt
         private int _HitEffectArtLocation => _DATALocation!.Value + 0xC;
         private bool _HitEffectArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> HitEffectArt => _HitEffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_HitEffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region ImpactDataSet
         private int _ImpactDataSetLocation => _DATALocation!.Value + 0x10;
         private bool _ImpactDataSet_IsSet => _DATALocation.HasValue;
-        public FormLink<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ImpactDataSet => _ImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region InheritScale
         private int _InheritScaleLocation => _DATALocation!.Value + 0x14;
@@ -1939,13 +2014,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDualCastDataGetter rhs)) return false;
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDualCastDataGetter rhs) return false;
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDualCastDataGetter? obj)
         {
-            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DualCastDataCommon)((IDualCastDataGetter)this).CommonInstance()!).GetHashCode(this);

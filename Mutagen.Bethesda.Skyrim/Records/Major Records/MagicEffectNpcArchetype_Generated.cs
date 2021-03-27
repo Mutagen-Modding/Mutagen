@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectNpcArchetypeGetter rhs)) return false;
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectNpcArchetypeGetter rhs) return false;
+            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectNpcArchetypeGetter? obj)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectNpcArchetypeGetter item,
-            IMagicEffectNpcArchetypeGetter rhs)
+            IMagicEffectNpcArchetypeGetter rhs,
+            MagicEffectNpcArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectNpcArchetypeGetter? lhs,
-            IMagicEffectNpcArchetypeGetter? rhs)
+            IMagicEffectNpcArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectNpcArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectNpcArchetypeGetter);
+                rhs: rhs as IMagicEffectNpcArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectNpcArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectNpcArchetypeGetter rhs)) return false;
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectNpcArchetypeGetter rhs) return false;
+            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectNpcArchetypeGetter? obj)
         {
-            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectNpcArchetypeCommon)((IMagicEffectNpcArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

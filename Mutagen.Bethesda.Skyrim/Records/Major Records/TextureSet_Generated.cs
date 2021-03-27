@@ -129,22 +129,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ITextureSetGetter? obj)
-        {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -762,6 +746,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITextureSetGetter rhs) return false;
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ITextureSetGetter? obj)
+        {
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -917,11 +921,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITextureSetGetter item,
-            ITextureSetGetter rhs)
+            ITextureSetGetter rhs,
+            TextureSet.TranslationMask? equalsMask = null)
         {
             return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1387,41 +1393,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITextureSetGetter? lhs,
-            ITextureSetGetter? rhs)
+            ITextureSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
-            if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
-            if (!string.Equals(lhs.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
-            if (!string.Equals(lhs.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
-            if (!string.Equals(lhs.Height, rhs.Height)) return false;
-            if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
-            if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
-            if (!string.Equals(lhs.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
-            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
+            {
+                if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
+            {
+                if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.EnvironmentMaskOrSubsurfaceTint) ?? true))
+            {
+                if (!string.Equals(lhs.EnvironmentMaskOrSubsurfaceTint, rhs.EnvironmentMaskOrSubsurfaceTint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.GlowOrDetailMap) ?? true))
+            {
+                if (!string.Equals(lhs.GlowOrDetailMap, rhs.GlowOrDetailMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
+            {
+                if (!string.Equals(lhs.Height, rhs.Height)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
+            {
+                if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
+            {
+                if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.BacklightMaskOrSpecular) ?? true))
+            {
+                if (!string.Equals(lhs.BacklightMaskOrSpecular, rhs.BacklightMaskOrSpecular)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
+            {
+                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                rhs: rhs as ITextureSetGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                rhs: rhs as ITextureSetGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITextureSetGetter item)
@@ -1506,7 +1550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new TextureSet(formKey, default(SkyrimRelease));
+            var newRec = new TextureSet(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1517,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ITextureSet)item,
+                item: (ITextureSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1528,7 +1572,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ITextureSet)item,
+                item: (ITextureSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2286,13 +2330,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITextureSetGetter rhs) return false;
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITextureSetGetter? obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);

@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAdapterGetter rhs)) return false;
-            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAdapterGetter rhs) return false;
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAdapterGetter? obj)
         {
-            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -485,11 +485,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkAdapterGetter item,
-            IPerkAdapterGetter rhs)
+            IPerkAdapterGetter rhs,
+            PerkAdapter.TranslationMask? equalsMask = null)
         {
             return ((PerkAdapterCommon)((IPerkAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -822,22 +824,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkAdapterGetter? lhs,
-            IPerkAdapterGetter? rhs)
+            IPerkAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
-            if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkAdapter_FieldIndex.ScriptFragments) ?? true))
+            {
+                if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IAVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkAdapterGetter?)lhs,
-                rhs: rhs as IPerkAdapterGetter);
+                rhs: rhs as IPerkAdapterGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkAdapterGetter item)
@@ -1221,13 +1229,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAdapterGetter rhs)) return false;
-            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAdapterGetter rhs) return false;
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAdapterGetter? obj)
         {
-            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAdapterCommon)((IPerkAdapterGetter)this).CommonInstance()!).GetHashCode(this);

@@ -67,13 +67,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMorphGetter rhs)) return false;
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMorphGetter rhs) return false;
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMorphGetter? obj)
         {
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MorphCommon)((IMorphGetter)this).CommonInstance()!).GetHashCode(this);
@@ -479,11 +479,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMorphGetter item,
-            IMorphGetter rhs)
+            IMorphGetter rhs,
+            Morph.TranslationMask? equalsMask = null)
         {
             return ((MorphCommon)((IMorphGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -791,11 +793,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMorphGetter? lhs,
-            IMorphGetter? rhs)
+            IMorphGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)Morph_FieldIndex.Data) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;
+            }
             return true;
         }
         
@@ -1098,13 +1104,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMorphGetter rhs)) return false;
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMorphGetter rhs) return false;
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMorphGetter? obj)
         {
-            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MorphCommon)((IMorphGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MorphCommon)((IMorphGetter)this).CommonInstance()!).GetHashCode(this);

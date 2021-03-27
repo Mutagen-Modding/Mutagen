@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
+        private IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> IActivateParentGetter.Reference => this.Reference;
         #endregion
         #region Delay
         public Single Delay { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActivateParentGetter rhs)) return false;
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActivateParentGetter rhs) return false;
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActivateParentGetter? obj)
         {
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActivateParent>
     {
-        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; }
         new Single Delay { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ActivateParent_Registration.Instance;
-        FormLink<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
         Single Delay { get; }
 
     }
@@ -518,11 +525,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IActivateParentGetter item,
-            IActivateParentGetter rhs)
+            IActivateParentGetter rhs,
+            ActivateParent.TranslationMask? equalsMask = null)
         {
             return ((ActivateParentCommon)((IActivateParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -725,14 +734,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActivateParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
+            item.Reference.Clear();
             item.Delay = default;
         }
         
         #region Mutagen
         public void RemapLinks(IActivateParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -842,12 +851,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActivateParentGetter? lhs,
-            IActivateParentGetter? rhs)
+            IActivateParentGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (!lhs.Delay.EqualsWithin(rhs.Delay)) return false;
+            if ((crystal?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
+            {
+                if (!lhs.Delay.EqualsWithin(rhs.Delay)) return false;
+            }
             return true;
         }
         
@@ -891,7 +907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActivateParent_FieldIndex.Delay) ?? true))
             {
@@ -1038,9 +1054,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActivateParent item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Delay = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
@@ -1108,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Single Delay => _data.Slice(0x4, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1171,13 +1188,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActivateParentGetter rhs)) return false;
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActivateParentGetter rhs) return false;
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActivateParentGetter? obj)
         {
-            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActivateParentCommon)((IActivateParentGetter)this).CommonInstance()!).GetHashCode(this);

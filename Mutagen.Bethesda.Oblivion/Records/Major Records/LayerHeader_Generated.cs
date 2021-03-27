@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Texture
-        public FormLink<ILandTextureGetter> Texture { get; set; } = new FormLink<ILandTextureGetter>();
+        private IFormLink<ILandTextureGetter> _Texture = new FormLink<ILandTextureGetter>();
+        public IFormLink<ILandTextureGetter> Texture
+        {
+            get => _Texture;
+            set => _Texture = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILandTextureGetter> ILayerHeaderGetter.Texture => this.Texture;
         #endregion
         #region Quadrant
         public Quadrant Quadrant { get; set; } = default;
@@ -71,13 +78,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILayerHeaderGetter rhs)) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILayerHeaderGetter rhs) return false;
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -486,7 +493,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILayerHeaderGetter,
         ILoquiObjectSetter<ILayerHeaderInternal>
     {
-        new FormLink<ILandTextureGetter> Texture { get; set; }
+        new IFormLink<ILandTextureGetter> Texture { get; }
         new Quadrant Quadrant { get; set; }
     }
 
@@ -510,7 +517,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LayerHeader_Registration.Instance;
-        FormLink<ILandTextureGetter> Texture { get; }
+        IFormLinkGetter<ILandTextureGetter> Texture { get; }
         Quadrant Quadrant { get; }
         UInt16 LayerNumber { get; }
 
@@ -563,11 +570,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILayerHeaderGetter item,
-            ILayerHeaderGetter rhs)
+            ILayerHeaderGetter rhs,
+            LayerHeader.TranslationMask? equalsMask = null)
         {
             return ((LayerHeaderCommon)((ILayerHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -771,14 +780,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ILayerHeaderInternal item)
         {
             ClearPartial();
-            item.Texture = FormLink<ILandTextureGetter>.Null;
+            item.Texture.Clear();
             item.Quadrant = default;
         }
         
         #region Mutagen
         public void RemapLinks(ILayerHeader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Texture = obj.Texture.Relink(mapping);
+            obj.Texture.Relink(mapping);
         }
         
         #endregion
@@ -893,13 +902,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILayerHeaderGetter? lhs,
-            ILayerHeaderGetter? rhs)
+            ILayerHeaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Texture.Equals(rhs.Texture)) return false;
-            if (lhs.Quadrant != rhs.Quadrant) return false;
-            if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
+            {
+                if (!lhs.Texture.Equals(rhs.Texture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
+            {
+                if (lhs.Quadrant != rhs.Quadrant) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.LayerNumber) ?? true))
+            {
+                if (lhs.LayerNumber != rhs.LayerNumber) return false;
+            }
             return true;
         }
         
@@ -963,7 +982,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
-                item.Texture = new FormLink<ILandTextureGetter>(rhs.Texture.FormKey);
+                item.Texture.SetTo(rhs.Texture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LayerHeader_FieldIndex.Quadrant) ?? true))
             {
@@ -1112,9 +1131,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILayerHeaderInternal item,
             MutagenFrame frame)
         {
-            item.Texture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Texture.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.LayerNumber = frame.ReadUInt16();
         }
@@ -1183,7 +1203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILandTextureGetter> Texture => new FormLink<ILandTextureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Quadrant Quadrant => (Quadrant)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x4, 0x2));
         public UInt16 LayerNumber => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
@@ -1247,13 +1267,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILayerHeaderGetter rhs)) return false;
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILayerHeaderGetter rhs) return false;
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILayerHeaderGetter? obj)
         {
-            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LayerHeaderCommon)((ILayerHeaderGetter)this).CommonInstance()!).GetHashCode(this);

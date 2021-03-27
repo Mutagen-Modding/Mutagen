@@ -59,22 +59,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlaceGetter rhs)) return false;
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlaceGetter? obj)
-        {
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -349,7 +333,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -372,6 +356,26 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlaceGetter rhs) return false;
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IPlaceGetter? obj)
+        {
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -484,11 +488,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPlaceGetter item,
-            IPlaceGetter rhs)
+            IPlaceGetter rhs,
+            Place.TranslationMask? equalsMask = null)
         {
             return ((PlaceCommon)((IPlaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -605,10 +611,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this IPlaceInternal obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((PlaceSetterCommon)((IPlaceGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -933,6 +939,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IPlaceInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IPlaceInternal obj,
             Type type,
@@ -1133,30 +1148,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlaceGetter? lhs,
-            IPlaceGetter? rhs)
+            IPlaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlaceGetter?)lhs,
-                rhs: rhs as IPlaceGetter);
+                rhs: rhs as IPlaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlaceGetter?)lhs,
-                rhs: rhs as IPlaceGetter);
+                rhs: rhs as IPlaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlaceGetter item)
@@ -1197,6 +1217,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IPlaceGetter obj)
         {
             yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IPlaceGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -1252,7 +1281,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlace)item,
+                item: (IPlaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1263,7 +1292,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlace)item,
+                item: (IPlaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1599,13 +1628,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlaceGetter rhs)) return false;
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlaceGetter rhs) return false;
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlaceGetter? obj)
         {
-            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlaceCommon)((IPlaceGetter)this).CommonInstance()!).GetHashCode(this);

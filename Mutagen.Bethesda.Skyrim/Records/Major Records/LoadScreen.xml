@@ -4,7 +4,7 @@
     <Fields>
       <RefDirect name="Icons" refName="Icons" />
       <String name="Description" recordType="DESC" translated="Normal" nullable="False" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
       <FormLink name="LoadingScreenNif" recordType="NNAM" refName="Static" nullable="False" />
       <Float name="InitialScale" recordType="SNAM" />
       <P3Int16 name="InitialRotation" recordType="RNAM" />

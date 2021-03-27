@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void GetApplicableArchivePaths_Empty()
         {
             var temp = Utility.GetTempFolder(nameof(Archive_Tests));
-            Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim)
+            Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<string>())
                 .Should().BeEmpty();
         }
 
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests
             File.WriteAllText(Path.Combine(temp.Dir.Path, "Skyrim.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "Skyrim - Textures.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
-            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim)
+            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<string>())
                 .ToArray();
             applicable.Should().BeEquivalentTo(new string[]
             {

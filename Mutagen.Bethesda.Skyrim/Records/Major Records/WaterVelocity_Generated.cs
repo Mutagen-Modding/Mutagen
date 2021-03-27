@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterVelocityGetter rhs)) return false;
-            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterVelocityGetter rhs) return false;
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterVelocityGetter? obj)
         {
-            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);
@@ -588,11 +588,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWaterVelocityGetter item,
-            IWaterVelocityGetter rhs)
+            IWaterVelocityGetter rhs,
+            WaterVelocity.TranslationMask? equalsMask = null)
         {
             return ((WaterVelocityCommon)((IWaterVelocityGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -925,14 +927,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWaterVelocityGetter? lhs,
-            IWaterVelocityGetter? rhs)
+            IWaterVelocityGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Offset.Equals(rhs.Offset)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Angle.Equals(rhs.Angle)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Offset) ?? true))
+            {
+                if (!lhs.Offset.Equals(rhs.Offset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Angle) ?? true))
+            {
+                if (!lhs.Angle.Equals(rhs.Angle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterVelocity_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
             return true;
         }
         
@@ -1270,13 +1285,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterVelocityGetter rhs)) return false;
-            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterVelocityGetter rhs) return false;
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterVelocityGetter? obj)
         {
-            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterVelocityCommon)((IWaterVelocityGetter)this).CommonInstance()!).GetHashCode(this);

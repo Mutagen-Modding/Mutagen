@@ -54,7 +54,14 @@ namespace Mutagen.Bethesda.Fallout4
         public Condition.RunOnType RunOnType { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<IFallout4MajorRecordGetter> Reference { get; set; } = new FormLink<IFallout4MajorRecordGetter>();
+        private IFormLink<IFallout4MajorRecordGetter> _Reference = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IGetEventDataGetter.Reference => this.Reference;
         #endregion
         #region ParameterThreeNumber
         public readonly static Int32 _ParameterThreeNumber_Default = -1;
@@ -77,13 +84,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGetEventDataGetter rhs)) return false;
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGetEventDataGetter rhs) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGetEventDataGetter? obj)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -566,7 +573,7 @@ namespace Mutagen.Bethesda.Fallout4
         new UInt16 EventFunction { get; set; }
         new UInt16 EventMember { get; set; }
         new Condition.RunOnType RunOnType { get; set; }
-        new FormLink<IFallout4MajorRecordGetter> Reference { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> Reference { get; }
         new Int32 ParameterThreeNumber { get; set; }
     }
 
@@ -581,7 +588,7 @@ namespace Mutagen.Bethesda.Fallout4
         UInt16 EventFunction { get; }
         UInt16 EventMember { get; }
         Condition.RunOnType RunOnType { get; }
-        FormLink<IFallout4MajorRecordGetter> Reference { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> Reference { get; }
         Int32 ParameterThreeNumber { get; }
 
     }
@@ -633,11 +640,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IGetEventDataGetter item,
-            IGetEventDataGetter rhs)
+            IGetEventDataGetter rhs,
+            GetEventData.TranslationMask? equalsMask = null)
         {
             return ((GetEventDataCommon)((IGetEventDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -822,7 +831,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.EventFunction = default;
             item.EventMember = default;
             item.RunOnType = default;
-            item.Reference = FormLink<IFallout4MajorRecordGetter>.Null;
+            item.Reference.Clear();
             item.ParameterThreeNumber = GetEventData._ParameterThreeNumber_Default;
             base.Clear(item);
         }
@@ -836,7 +845,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IGetEventData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -988,27 +997,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGetEventDataGetter? lhs,
-            IGetEventDataGetter? rhs)
+            IGetEventDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (lhs.EventFunction != rhs.EventFunction) return false;
-            if (lhs.EventMember != rhs.EventMember) return false;
-            if (lhs.RunOnType != rhs.RunOnType) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (lhs.ParameterThreeNumber != rhs.ParameterThreeNumber) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.EventFunction) ?? true))
+            {
+                if (lhs.EventFunction != rhs.EventFunction) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.EventMember) ?? true))
+            {
+                if (lhs.EventMember != rhs.EventMember) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.RunOnType) ?? true))
+            {
+                if (lhs.RunOnType != rhs.RunOnType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.ParameterThreeNumber) ?? true))
+            {
+                if (lhs.ParameterThreeNumber != rhs.ParameterThreeNumber) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGetEventDataGetter?)lhs,
-                rhs: rhs as IGetEventDataGetter);
+                rhs: rhs as IGetEventDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGetEventDataGetter item)
@@ -1087,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IFallout4MajorRecordGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)GetEventData_FieldIndex.ParameterThreeNumber) ?? true))
             {
@@ -1260,9 +1290,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.EventFunction = frame.ReadUInt16();
             item.EventMember = frame.ReadUInt16();
             item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.ParameterThreeNumber = frame.ReadInt32();
         }
 
@@ -1315,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public UInt16 EventFunction => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         public UInt16 EventMember => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public Condition.RunOnType RunOnType => (Condition.RunOnType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x6, 0x4));
-        public FormLink<IFallout4MajorRecordGetter> Reference => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xA, 0x4))));
+        public IFormLinkGetter<IFallout4MajorRecordGetter> Reference => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xA, 0x4))));
         public Int32 ParameterThreeNumber => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0xE, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1377,13 +1408,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGetEventDataGetter rhs)) return false;
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGetEventDataGetter rhs) return false;
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGetEventDataGetter? obj)
         {
-            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GetEventDataCommon)((IGetEventDataGetter)this).CommonInstance()!).GetHashCode(this);

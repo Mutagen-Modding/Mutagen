@@ -40,10 +40,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Actor
-        public FormLink<ILinkedReferenceGetter> Actor { get; set; } = new FormLink<ILinkedReferenceGetter>();
+        private IFormLink<ILinkedReferenceGetter> _Actor = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Actor
+        {
+            get => _Actor;
+            set => _Actor = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> ILocationReferenceGetter.Actor => this.Actor;
         #endregion
         #region Location
-        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
+        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        public IFormLink<IComplexLocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IComplexLocationGetter> ILocationReferenceGetter.Location => this.Location;
         #endregion
         #region Grid
         public P2Int16 Grid { get; set; } = default;
@@ -65,13 +79,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationReferenceGetter rhs)) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationReferenceGetter rhs) return false;
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -479,8 +493,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationReferenceGetter,
         ILoquiObjectSetter<ILocationReference>
     {
-        new FormLink<ILinkedReferenceGetter> Actor { get; set; }
-        new FormLink<IComplexLocationGetter> Location { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Actor { get; }
+        new IFormLink<IComplexLocationGetter> Location { get; }
         new P2Int16 Grid { get; set; }
     }
 
@@ -497,8 +511,8 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationReference_Registration.Instance;
-        FormLink<ILinkedReferenceGetter> Actor { get; }
-        FormLink<IComplexLocationGetter> Location { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Actor { get; }
+        IFormLinkGetter<IComplexLocationGetter> Location { get; }
         P2Int16 Grid { get; }
 
     }
@@ -550,11 +564,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationReferenceGetter item,
-            ILocationReferenceGetter rhs)
+            ILocationReferenceGetter rhs,
+            LocationReference.TranslationMask? equalsMask = null)
         {
             return ((LocationReferenceCommon)((ILocationReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -757,16 +773,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationReference item)
         {
             ClearPartial();
-            item.Actor = FormLink<ILinkedReferenceGetter>.Null;
-            item.Location = FormLink<IComplexLocationGetter>.Null;
+            item.Actor.Clear();
+            item.Location.Clear();
             item.Grid = default;
         }
         
         #region Mutagen
         public void RemapLinks(ILocationReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Actor = obj.Actor.Relink(mapping);
-            obj.Location = obj.Location.Relink(mapping);
+            obj.Actor.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion
@@ -878,13 +894,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationReferenceGetter? lhs,
-            ILocationReferenceGetter? rhs)
+            ILocationReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Actor.Equals(rhs.Actor)) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
+            {
+                if (!lhs.Actor.Equals(rhs.Actor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
+            {
+                if (!lhs.Grid.Equals(rhs.Grid)) return false;
+            }
             return true;
         }
         
@@ -930,11 +956,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Actor) ?? true))
             {
-                item.Actor = new FormLink<ILinkedReferenceGetter>(rhs.Actor.FormKey);
+                item.Actor.SetTo(rhs.Actor.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationReference_FieldIndex.Grid) ?? true))
             {
@@ -1079,12 +1105,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReference item,
             MutagenFrame frame)
         {
-            item.Actor = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Actor.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Location.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Grid = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
                 frame: frame,
                 swapCoords: true);
@@ -1154,8 +1182,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Actor => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public P2Int16 Grid => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1217,13 +1245,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationReferenceGetter rhs)) return false;
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationReferenceGetter rhs) return false;
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationReferenceGetter? obj)
         {
-            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationReferenceCommon)((ILocationReferenceGetter)this).CommonInstance()!).GetHashCode(this);

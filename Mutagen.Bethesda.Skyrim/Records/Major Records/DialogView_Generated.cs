@@ -43,19 +43,26 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLink<IQuestGetter> Quest { get; set; } = new FormLink<IQuestGetter>();
+        private IFormLink<IQuestGetter> _Quest = new FormLink<IQuestGetter>();
+        public IFormLink<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IQuestGetter> IDialogViewGetter.Quest => this.Quest;
         #endregion
         #region Branches
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLink<IDialogBranchGetter>>();
-        public ExtendedList<IFormLink<IDialogBranchGetter>> Branches
+        private ExtendedList<IFormLinkGetter<IDialogBranchGetter>> _Branches = new ExtendedList<IFormLinkGetter<IDialogBranchGetter>>();
+        public ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
             protected set => this._Branches = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IDialogBranchGetter>> IDialogViewGetter.Branches => _Branches;
+        IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> IDialogViewGetter.Branches => _Branches;
         #endregion
 
         #endregion
@@ -106,22 +113,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IDialogViewGetter rhs)) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IDialogViewGetter? obj)
-        {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -708,6 +699,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDialogViewGetter rhs) return false;
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IDialogViewGetter? obj)
+        {
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -770,8 +781,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogViewInternal>,
         ISkyrimMajorRecordInternal
     {
-        new FormLink<IQuestGetter> Quest { get; set; }
-        new ExtendedList<IFormLink<IDialogBranchGetter>> Branches { get; }
+        new IFormLink<IQuestGetter> Quest { get; }
+        new ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         new SliceList<byte> TNAMs { get; }
         new MemorySlice<Byte>? ENAM { get; set; }
         new MemorySlice<Byte>? DNAM { get; set; }
@@ -792,8 +803,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IDialogViewGetter>
     {
         static new ILoquiRegistration Registration => DialogView_Registration.Instance;
-        FormLink<IQuestGetter> Quest { get; }
-        IReadOnlyList<IFormLink<IDialogBranchGetter>> Branches { get; }
+        IFormLinkGetter<IQuestGetter> Quest { get; }
+        IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; }
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; }
         ReadOnlyMemorySlice<Byte>? ENAM { get; }
         ReadOnlyMemorySlice<Byte>? DNAM { get; }
@@ -847,11 +858,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogViewGetter item,
-            IDialogViewGetter rhs)
+            IDialogViewGetter rhs,
+            DialogView.TranslationMask? equalsMask = null)
         {
             return ((DialogViewCommon)((IDialogViewGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1052,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IDialogViewInternal item)
         {
             ClearPartial();
-            item.Quest = FormLink<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.Branches.Clear();
             item.TNAMs.Clear();
             item.ENAM = default;
@@ -1074,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IDialogView obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
             obj.Branches.RemapLinks(mapping);
         }
         
@@ -1299,35 +1312,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogViewGetter? lhs,
-            IDialogViewGetter? rhs)
+            IDialogViewGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
-            if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
-            if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
+            {
+                if (!lhs.Branches.SequenceEqualNullable(rhs.Branches)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.TNAMs) ?? true))
+            {
+                if (!lhs.TNAMs.SequenceEqualNullable(rhs.TNAMs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.ENAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ENAM, rhs.ENAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogView_FieldIndex.DNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
-                rhs: rhs as IDialogViewGetter);
+                rhs: rhs as IDialogViewGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IDialogViewGetter?)lhs,
-                rhs: rhs as IDialogViewGetter);
+                rhs: rhs as IDialogViewGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IDialogViewGetter item)
@@ -1387,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new DialogView(formKey, default(SkyrimRelease));
+            var newRec = new DialogView(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1398,7 +1431,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDialogView)item,
+                item: (IDialogViewGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1409,7 +1442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IDialogView)item,
+                item: (IDialogViewGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1454,7 +1487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLink<IQuestGetter>(rhs.Quest.FormKey);
+                item.Quest.SetTo(rhs.Quest.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogView_FieldIndex.Branches) ?? true))
             {
@@ -1463,7 +1496,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Branches.SetTo(
                         rhs.Branches
-                        .Select(r => (IFormLink<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IDialogBranchGetter>)new FormLink<IDialogBranchGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1677,10 +1710,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Branches,
-                transl: (MutagenWriter subWriter, IFormLink<IDialogBranchGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogBranchGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1794,15 +1827,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogView_FieldIndex.Quest;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     item.Branches.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IDialogBranchGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1886,9 +1920,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public FormLink<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
+        public IFormLinkGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLink<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLink<IQuestGetter>.Null;
         #endregion
-        public IReadOnlyList<IFormLink<IDialogBranchGetter>> Branches { get; private set; } = ListExt.Empty<IFormLink<IDialogBranchGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IDialogBranchGetter>> Branches { get; private set; } = ListExt.Empty<IFormLinkGetter<IDialogBranchGetter>>();
         public IReadOnlyList<ReadOnlyMemorySlice<Byte>> TNAMs { get; private set; } = ListExt.Empty<ReadOnlyMemorySlice<Byte>>();
         #region ENAM
         private int? _ENAMLocation;
@@ -1971,7 +2005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.BNAM:
                 {
-                    this.Branches = BinaryOverlayList.FactoryByArray<IFormLink<IDialogBranchGetter>>(
+                    this.Branches = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IDialogBranchGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IDialogBranchGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2033,13 +2067,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogViewGetter rhs)) return false;
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IDialogViewGetter rhs) return false;
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogViewGetter? obj)
         {
-            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogViewCommon)((IDialogViewGetter)this).CommonInstance()!).GetHashCode(this);

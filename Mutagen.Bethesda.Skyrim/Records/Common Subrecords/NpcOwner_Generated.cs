@@ -42,10 +42,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Npc
-        public FormLink<INpcGetter> Npc { get; set; } = new FormLink<INpcGetter>();
+        private IFormLink<INpcGetter> _Npc = new FormLink<INpcGetter>();
+        public IFormLink<INpcGetter> Npc
+        {
+            get => _Npc;
+            set => _Npc = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<INpcGetter> INpcOwnerGetter.Npc => this.Npc;
         #endregion
         #region Global
-        public FormLink<IGlobalGetter> Global { get; set; } = new FormLink<IGlobalGetter>();
+        private IFormLink<IGlobalGetter> _Global = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IGlobalGetter> INpcOwnerGetter.Global => this.Global;
         #endregion
 
         #region To String
@@ -64,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcOwnerGetter rhs)) return false;
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcOwnerGetter rhs) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcOwnerGetter? obj)
         {
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -437,8 +451,8 @@ namespace Mutagen.Bethesda.Skyrim
         INpcOwnerGetter,
         IOwnerTarget
     {
-        new FormLink<INpcGetter> Npc { get; set; }
-        new FormLink<IGlobalGetter> Global { get; set; }
+        new IFormLink<INpcGetter> Npc { get; }
+        new IFormLink<IGlobalGetter> Global { get; }
     }
 
     public partial interface INpcOwnerGetter :
@@ -448,8 +462,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<INpcOwnerGetter>
     {
         static new ILoquiRegistration Registration => NpcOwner_Registration.Instance;
-        FormLink<INpcGetter> Npc { get; }
-        FormLink<IGlobalGetter> Global { get; }
+        IFormLinkGetter<INpcGetter> Npc { get; }
+        IFormLinkGetter<IGlobalGetter> Global { get; }
 
     }
 
@@ -500,11 +514,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcOwnerGetter item,
-            INpcOwnerGetter rhs)
+            INpcOwnerGetter rhs,
+            NpcOwner.TranslationMask? equalsMask = null)
         {
             return ((NpcOwnerCommon)((INpcOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -681,8 +697,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INpcOwner item)
         {
             ClearPartial();
-            item.Npc = FormLink<INpcGetter>.Null;
-            item.Global = FormLink<IGlobalGetter>.Null;
+            item.Npc.Clear();
+            item.Global.Clear();
             base.Clear(item);
         }
         
@@ -695,8 +711,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(INpcOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Npc = obj.Npc.Relink(mapping);
-            obj.Global = obj.Global.Relink(mapping);
+            obj.Npc.Relink(mapping);
+            obj.Global.Relink(mapping);
         }
         
         #endregion
@@ -828,23 +844,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcOwnerGetter? lhs,
-            INpcOwnerGetter? rhs)
+            INpcOwnerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
-            if (!lhs.Npc.Equals(rhs.Npc)) return false;
-            if (!lhs.Global.Equals(rhs.Global)) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
+            {
+                if (!lhs.Npc.Equals(rhs.Npc)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NpcOwner_FieldIndex.Global) ?? true))
+            {
+                if (!lhs.Global.Equals(rhs.Global)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INpcOwnerGetter?)lhs,
-                rhs: rhs as INpcOwnerGetter);
+                rhs: rhs as INpcOwnerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INpcOwnerGetter item)
@@ -904,11 +929,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {
-                item.Npc = new FormLink<INpcGetter>(rhs.Npc.FormKey);
+                item.Npc.SetTo(rhs.Npc.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NpcOwner_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLink<IGlobalGetter>(rhs.Global.FormKey);
+                item.Global.SetTo(rhs.Global.FormKey);
             }
         }
         
@@ -1068,12 +1093,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcOwner item,
             MutagenFrame frame)
         {
-            item.Npc = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
-            item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Npc.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
+            item.Global.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1121,8 +1148,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
-        public FormLink<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<INpcGetter> Npc => new FormLink<INpcGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> Global => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1183,13 +1210,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcOwnerGetter rhs)) return false;
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcOwnerGetter rhs) return false;
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcOwnerGetter? obj)
         {
-            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcOwnerCommon)((INpcOwnerGetter)this).CommonInstance()!).GetHashCode(this);

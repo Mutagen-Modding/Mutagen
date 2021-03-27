@@ -113,10 +113,24 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IWeatherGetter.LNAM => this.LNAM;
         #endregion
         #region Precipitation
-        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; } = new FormLinkNullable<IShaderParticleGeometryGetter>();
+        private IFormLinkNullable<IShaderParticleGeometryGetter> _Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>();
+        public IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation
+        {
+            get => _Precipitation;
+            set => _Precipitation = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IShaderParticleGeometryGetter> IWeatherGetter.Precipitation => this.Precipitation;
         #endregion
         #region VisualEffect
-        public FormLink<IVisualEffectGetter> VisualEffect { get; set; } = new FormLink<IVisualEffectGetter>();
+        private IFormLink<IVisualEffectGetter> _VisualEffect = new FormLink<IVisualEffectGetter>();
+        public IFormLink<IVisualEffectGetter> VisualEffect
+        {
+            get => _VisualEffect;
+            set => _VisualEffect = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IVisualEffectGetter> IWeatherGetter.VisualEffect => this.VisualEffect;
         #endregion
         #region ONAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -319,15 +333,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region SkyStatics
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLink<IStaticGetter>>();
-        public ExtendedList<IFormLink<IStaticGetter>> SkyStatics
+        private ExtendedList<IFormLinkGetter<IStaticGetter>> _SkyStatics = new ExtendedList<IFormLinkGetter<IStaticGetter>>();
+        public ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
             protected set => this._SkyStatics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> IWeatherGetter.SkyStatics => _SkyStatics;
         #endregion
 
         #endregion
@@ -398,7 +412,14 @@ namespace Mutagen.Bethesda.Skyrim
         IModelGetter? IWeatherGetter.Aurora => this.Aurora;
         #endregion
         #region SunGlareLensFlare
-        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; } = new FormLinkNullable<ILensFlareGetter>();
+        private IFormLinkNullable<ILensFlareGetter> _SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>();
+        public IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare
+        {
+            get => _SunGlareLensFlare;
+            set => _SunGlareLensFlare = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILensFlareGetter> IWeatherGetter.SunGlareLensFlare => this.SunGlareLensFlare;
         #endregion
         #region NAM0DataTypeState
         public Weather.NAM0DataType NAM0DataTypeState { get; set; } = default;
@@ -420,22 +441,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IWeatherGetter rhs)) return false;
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IWeatherGetter? obj)
-        {
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -2957,6 +2962,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IWeatherGetter rhs) return false;
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IWeatherGetter? obj)
+        {
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -3025,8 +3050,8 @@ namespace Mutagen.Bethesda.Skyrim
         new MemorySlice<Byte>? ANAM { get; set; }
         new MemorySlice<Byte>? BNAM { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
-        new FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; set; }
-        new FormLink<IVisualEffectGetter> VisualEffect { get; set; }
+        new IFormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
+        new IFormLink<IVisualEffectGetter> VisualEffect { get; }
         new MemorySlice<Byte>? ONAM { get; set; }
         new CloudLayer[] Clouds { get; }
         new WeatherColor SkyUpperColor { get; set; }
@@ -3071,14 +3096,14 @@ namespace Mutagen.Bethesda.Skyrim
         new Single WindDirection { get; set; }
         new Single WindDirectionRange { get; set; }
         new ExtendedList<WeatherSound> Sounds { get; }
-        new ExtendedList<IFormLink<IStaticGetter>> SkyStatics { get; }
+        new ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         new WeatherImageSpaces? ImageSpaces { get; set; }
         new WeatherVolumetricLighting? VolumetricLighting { get; set; }
         new WeatherAmbientColorSet? DirectionalAmbientLightingColors { get; set; }
         new MemorySlice<Byte>? NAM2 { get; set; }
         new MemorySlice<Byte>? NAM3 { get; set; }
         new Model? Aurora { get; set; }
-        new FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; set; }
+        new IFormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
         new Weather.NAM0DataType NAM0DataTypeState { get; set; }
         new Weather.FNAMDataType FNAMDataTypeState { get; set; }
         new Weather.DATADataType DATADataTypeState { get; set; }
@@ -3105,8 +3130,8 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? ANAM { get; }
         ReadOnlyMemorySlice<Byte>? BNAM { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
-        FormLinkNullable<IShaderParticleGeometryGetter> Precipitation { get; }
-        FormLink<IVisualEffectGetter> VisualEffect { get; }
+        IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation { get; }
+        IFormLinkGetter<IVisualEffectGetter> VisualEffect { get; }
         ReadOnlyMemorySlice<Byte>? ONAM { get; }
         ReadOnlyMemorySlice<ICloudLayerGetter> Clouds { get; }
         IWeatherColorGetter SkyUpperColor { get; }
@@ -3151,14 +3176,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single WindDirection { get; }
         Single WindDirectionRange { get; }
         IReadOnlyList<IWeatherSoundGetter> Sounds { get; }
-        IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; }
+        IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; }
         IWeatherImageSpacesGetter? ImageSpaces { get; }
         IWeatherVolumetricLightingGetter? VolumetricLighting { get; }
         IWeatherAmbientColorSetGetter? DirectionalAmbientLightingColors { get; }
         ReadOnlyMemorySlice<Byte>? NAM2 { get; }
         ReadOnlyMemorySlice<Byte>? NAM3 { get; }
         IModelGetter? Aurora { get; }
-        FormLinkNullable<ILensFlareGetter> SunGlareLensFlare { get; }
+        IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare { get; }
         Weather.NAM0DataType NAM0DataTypeState { get; }
         Weather.FNAMDataType FNAMDataTypeState { get; }
         Weather.DATADataType DATADataTypeState { get; }
@@ -3212,11 +3237,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWeatherGetter item,
-            IWeatherGetter rhs)
+            IWeatherGetter rhs,
+            Weather.TranslationMask? equalsMask = null)
         {
             return ((WeatherCommon)((IWeatherGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3481,8 +3508,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ANAM = default;
             item.BNAM = default;
             item.LNAM = default;
-            item.Precipitation = FormLinkNullable<IShaderParticleGeometryGetter>.Null;
-            item.VisualEffect = FormLink<IVisualEffectGetter>.Null;
+            item.Precipitation.Clear();
+            item.VisualEffect.Clear();
             item.ONAM = default;
             item.Clouds.Fill(() => new CloudLayer());
             item.SkyUpperColor.Clear();
@@ -3534,7 +3561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NAM2 = default;
             item.NAM3 = default;
             item.Aurora = null;
-            item.SunGlareLensFlare = FormLinkNullable<ILensFlareGetter>.Null;
+            item.SunGlareLensFlare.Clear();
             item.NAM0DataTypeState = default;
             item.FNAMDataTypeState = default;
             item.DATADataTypeState = default;
@@ -3555,14 +3582,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IWeather obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Precipitation = obj.Precipitation.Relink(mapping);
-            obj.VisualEffect = obj.VisualEffect.Relink(mapping);
+            obj.Precipitation.Relink(mapping);
+            obj.VisualEffect.Relink(mapping);
             obj.Sounds.RemapLinks(mapping);
             obj.SkyStatics.RemapLinks(mapping);
             obj.ImageSpaces?.RemapLinks(mapping);
             obj.VolumetricLighting?.RemapLinks(mapping);
             obj.Aurora?.RemapLinks(mapping);
-            obj.SunGlareLensFlare = obj.SunGlareLensFlare.Relink(mapping);
+            obj.SunGlareLensFlare.Relink(mapping);
         }
         
         #endregion
@@ -4136,93 +4163,287 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherGetter? lhs,
-            IWeatherGetter? rhs)
+            IWeatherGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
-            if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.ANAM, rhs.ANAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.BNAM, rhs.BNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
-            if (!lhs.Precipitation.Equals(rhs.Precipitation)) return false;
-            if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
-            if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
-            if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
-            if (!object.Equals(lhs.SkyUpperColor, rhs.SkyUpperColor)) return false;
-            if (!object.Equals(lhs.FogNearColor, rhs.FogNearColor)) return false;
-            if (!object.Equals(lhs.UnknownColor, rhs.UnknownColor)) return false;
-            if (!object.Equals(lhs.AmbientColor, rhs.AmbientColor)) return false;
-            if (!object.Equals(lhs.SunlightColor, rhs.SunlightColor)) return false;
-            if (!object.Equals(lhs.SunColor, rhs.SunColor)) return false;
-            if (!object.Equals(lhs.StarsColor, rhs.StarsColor)) return false;
-            if (!object.Equals(lhs.SkyLowerColor, rhs.SkyLowerColor)) return false;
-            if (!object.Equals(lhs.HorizonColor, rhs.HorizonColor)) return false;
-            if (!object.Equals(lhs.EffectLightingColor, rhs.EffectLightingColor)) return false;
-            if (!object.Equals(lhs.CloudLodDiffuseColor, rhs.CloudLodDiffuseColor)) return false;
-            if (!object.Equals(lhs.CloudLodAmbientColor, rhs.CloudLodAmbientColor)) return false;
-            if (!object.Equals(lhs.FogFarColor, rhs.FogFarColor)) return false;
-            if (!object.Equals(lhs.SkyStaticsColor, rhs.SkyStaticsColor)) return false;
-            if (!object.Equals(lhs.WaterMultiplierColor, rhs.WaterMultiplierColor)) return false;
-            if (!object.Equals(lhs.SunGlareColor, rhs.SunGlareColor)) return false;
-            if (!object.Equals(lhs.MoonGlareColor, rhs.MoonGlareColor)) return false;
-            if (!lhs.FogDistanceDayNear.EqualsWithin(rhs.FogDistanceDayNear)) return false;
-            if (!lhs.FogDistanceDayFar.EqualsWithin(rhs.FogDistanceDayFar)) return false;
-            if (!lhs.FogDistanceNightNear.EqualsWithin(rhs.FogDistanceNightNear)) return false;
-            if (!lhs.FogDistanceNightFar.EqualsWithin(rhs.FogDistanceNightFar)) return false;
-            if (!lhs.FogDistanceDayPower.EqualsWithin(rhs.FogDistanceDayPower)) return false;
-            if (!lhs.FogDistanceNightPower.EqualsWithin(rhs.FogDistanceNightPower)) return false;
-            if (!lhs.FogDistanceDayMax.EqualsWithin(rhs.FogDistanceDayMax)) return false;
-            if (!lhs.FogDistanceNightMax.EqualsWithin(rhs.FogDistanceNightMax)) return false;
-            if (!lhs.WindSpeed.Equals(rhs.WindSpeed)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.TransDelta.EqualsWithin(rhs.TransDelta)) return false;
-            if (!lhs.SunGlare.Equals(rhs.SunGlare)) return false;
-            if (!lhs.SunDamage.Equals(rhs.SunDamage)) return false;
-            if (!lhs.PrecipitationBeginFadeIn.Equals(rhs.PrecipitationBeginFadeIn)) return false;
-            if (!lhs.PrecipitationEndFadeOut.Equals(rhs.PrecipitationEndFadeOut)) return false;
-            if (!lhs.ThunderLightningBeginFadeIn.Equals(rhs.ThunderLightningBeginFadeIn)) return false;
-            if (!lhs.ThunderLightningEndFadeOut.Equals(rhs.ThunderLightningEndFadeOut)) return false;
-            if (!lhs.ThunderLightningFrequency.Equals(rhs.ThunderLightningFrequency)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
-            if (!lhs.VisualEffectBegin.Equals(rhs.VisualEffectBegin)) return false;
-            if (!lhs.VisualEffectEnd.Equals(rhs.VisualEffectEnd)) return false;
-            if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
-            if (!lhs.WindDirectionRange.EqualsWithin(rhs.WindDirectionRange)) return false;
-            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
-            if (!lhs.SkyStatics.SequenceEqualNullable(rhs.SkyStatics)) return false;
-            if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
-            if (!object.Equals(lhs.VolumetricLighting, rhs.VolumetricLighting)) return false;
-            if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
-            if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
-            if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
-            if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
-            if (!lhs.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare)) return false;
-            if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
-            if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudTextures) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual<string>(lhs.CloudTextures.Span!, rhs.CloudTextures.Span!)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DNAM, rhs.DNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.CNAM, rhs.CNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ANAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ANAM, rhs.ANAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.BNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.BNAM, rhs.BNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.LNAM, rhs.LNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
+            {
+                if (!lhs.Precipitation.Equals(rhs.Precipitation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
+            {
+                if (!lhs.VisualEffect.Equals(rhs.VisualEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Clouds) ?? true))
+            {
+                if (!lhs.Clouds.SequenceEqualNullable(rhs.Clouds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyUpperColor) ?? true))
+            {
+                if (!object.Equals(lhs.SkyUpperColor, rhs.SkyUpperColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogNearColor) ?? true))
+            {
+                if (!object.Equals(lhs.FogNearColor, rhs.FogNearColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.UnknownColor) ?? true))
+            {
+                if (!object.Equals(lhs.UnknownColor, rhs.UnknownColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.AmbientColor) ?? true))
+            {
+                if (!object.Equals(lhs.AmbientColor, rhs.AmbientColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunlightColor) ?? true))
+            {
+                if (!object.Equals(lhs.SunlightColor, rhs.SunlightColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunColor) ?? true))
+            {
+                if (!object.Equals(lhs.SunColor, rhs.SunColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.StarsColor) ?? true))
+            {
+                if (!object.Equals(lhs.StarsColor, rhs.StarsColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyLowerColor) ?? true))
+            {
+                if (!object.Equals(lhs.SkyLowerColor, rhs.SkyLowerColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.HorizonColor) ?? true))
+            {
+                if (!object.Equals(lhs.HorizonColor, rhs.HorizonColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.EffectLightingColor) ?? true))
+            {
+                if (!object.Equals(lhs.EffectLightingColor, rhs.EffectLightingColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodDiffuseColor) ?? true))
+            {
+                if (!object.Equals(lhs.CloudLodDiffuseColor, rhs.CloudLodDiffuseColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.CloudLodAmbientColor) ?? true))
+            {
+                if (!object.Equals(lhs.CloudLodAmbientColor, rhs.CloudLodAmbientColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogFarColor) ?? true))
+            {
+                if (!object.Equals(lhs.FogFarColor, rhs.FogFarColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStaticsColor) ?? true))
+            {
+                if (!object.Equals(lhs.SkyStaticsColor, rhs.SkyStaticsColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WaterMultiplierColor) ?? true))
+            {
+                if (!object.Equals(lhs.WaterMultiplierColor, rhs.WaterMultiplierColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareColor) ?? true))
+            {
+                if (!object.Equals(lhs.SunGlareColor, rhs.SunGlareColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.MoonGlareColor) ?? true))
+            {
+                if (!object.Equals(lhs.MoonGlareColor, rhs.MoonGlareColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayNear) ?? true))
+            {
+                if (!lhs.FogDistanceDayNear.EqualsWithin(rhs.FogDistanceDayNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayFar) ?? true))
+            {
+                if (!lhs.FogDistanceDayFar.EqualsWithin(rhs.FogDistanceDayFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightNear) ?? true))
+            {
+                if (!lhs.FogDistanceNightNear.EqualsWithin(rhs.FogDistanceNightNear)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightFar) ?? true))
+            {
+                if (!lhs.FogDistanceNightFar.EqualsWithin(rhs.FogDistanceNightFar)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayPower) ?? true))
+            {
+                if (!lhs.FogDistanceDayPower.EqualsWithin(rhs.FogDistanceDayPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightPower) ?? true))
+            {
+                if (!lhs.FogDistanceNightPower.EqualsWithin(rhs.FogDistanceNightPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceDayMax) ?? true))
+            {
+                if (!lhs.FogDistanceDayMax.EqualsWithin(rhs.FogDistanceDayMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FogDistanceNightMax) ?? true))
+            {
+                if (!lhs.FogDistanceNightMax.EqualsWithin(rhs.FogDistanceNightMax)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindSpeed) ?? true))
+            {
+                if (!lhs.WindSpeed.Equals(rhs.WindSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.TransDelta) ?? true))
+            {
+                if (!lhs.TransDelta.EqualsWithin(rhs.TransDelta)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlare) ?? true))
+            {
+                if (!lhs.SunGlare.Equals(rhs.SunGlare)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunDamage) ?? true))
+            {
+                if (!lhs.SunDamage.Equals(rhs.SunDamage)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationBeginFadeIn) ?? true))
+            {
+                if (!lhs.PrecipitationBeginFadeIn.Equals(rhs.PrecipitationBeginFadeIn)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.PrecipitationEndFadeOut) ?? true))
+            {
+                if (!lhs.PrecipitationEndFadeOut.Equals(rhs.PrecipitationEndFadeOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningBeginFadeIn) ?? true))
+            {
+                if (!lhs.ThunderLightningBeginFadeIn.Equals(rhs.ThunderLightningBeginFadeIn)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningEndFadeOut) ?? true))
+            {
+                if (!lhs.ThunderLightningEndFadeOut.Equals(rhs.ThunderLightningEndFadeOut)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ThunderLightningFrequency) ?? true))
+            {
+                if (!lhs.ThunderLightningFrequency.Equals(rhs.ThunderLightningFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.LightningColor) ?? true))
+            {
+                if (!lhs.LightningColor.ColorOnlyEquals(rhs.LightningColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectBegin) ?? true))
+            {
+                if (!lhs.VisualEffectBegin.Equals(rhs.VisualEffectBegin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffectEnd) ?? true))
+            {
+                if (!lhs.VisualEffectEnd.Equals(rhs.VisualEffectEnd)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindDirection) ?? true))
+            {
+                if (!lhs.WindDirection.EqualsWithin(rhs.WindDirection)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.WindDirectionRange) ?? true))
+            {
+                if (!lhs.WindDirectionRange.EqualsWithin(rhs.WindDirectionRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SkyStatics) ?? true))
+            {
+                if (!lhs.SkyStatics.SequenceEqualNullable(rhs.SkyStatics)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.ImageSpaces) ?? true))
+            {
+                if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.VolumetricLighting) ?? true))
+            {
+                if (!object.Equals(lhs.VolumetricLighting, rhs.VolumetricLighting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DirectionalAmbientLightingColors) ?? true))
+            {
+                if (!object.Equals(lhs.DirectionalAmbientLightingColors, rhs.DirectionalAmbientLightingColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM2) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM2, rhs.NAM2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM3) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NAM3, rhs.NAM3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.Aurora) ?? true))
+            {
+                if (!object.Equals(lhs.Aurora, rhs.Aurora)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
+            {
+                if (!lhs.SunGlareLensFlare.Equals(rhs.SunGlareLensFlare)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
+            {
+                if (lhs.NAM0DataTypeState != rhs.NAM0DataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.FNAMDataTypeState) ?? true))
+            {
+                if (lhs.FNAMDataTypeState != rhs.FNAMDataTypeState) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Weather_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeatherGetter?)lhs,
-                rhs: rhs as IWeatherGetter);
+                rhs: rhs as IWeatherGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWeatherGetter?)lhs,
-                rhs: rhs as IWeatherGetter);
+                rhs: rhs as IWeatherGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWeatherGetter item)
@@ -4403,7 +4624,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Weather(formKey, default(SkyrimRelease));
+            var newRec = new Weather(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -4414,7 +4635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeather)item,
+                item: (IWeatherGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -4425,7 +4646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IWeather)item,
+                item: (IWeatherGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -4529,11 +4750,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.Precipitation) ?? true))
             {
-                item.Precipitation = new FormLinkNullable<IShaderParticleGeometryGetter>(rhs.Precipitation.FormKeyNullable);
+                item.Precipitation.SetTo(rhs.Precipitation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.VisualEffect) ?? true))
             {
-                item.VisualEffect = new FormLink<IVisualEffectGetter>(rhs.VisualEffect.FormKey);
+                item.VisualEffect.SetTo(rhs.VisualEffect.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.ONAM) ?? true))
             {
@@ -5058,7 +5279,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SkyStatics.SetTo(
                         rhs.SkyStatics
-                        .Select(r => (IFormLink<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IStaticGetter>)new FormLink<IStaticGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -5198,7 +5419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.SunGlareLensFlare) ?? true))
             {
-                item.SunGlareLensFlare = new FormLinkNullable<ILensFlareGetter>(rhs.SunGlareLensFlare.FormKeyNullable);
+                item.SunGlareLensFlare.SetTo(rhs.SunGlareLensFlare.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Weather_FieldIndex.NAM0DataTypeState) ?? true))
             {
@@ -5718,10 +5939,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Write(
                 writer: writer,
                 items: item.SkyStatics,
-                transl: (MutagenWriter subWriter, IFormLink<IStaticGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IStaticGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5894,17 +6115,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Precipitation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Precipitation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VisualEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.VisualEffect.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
@@ -6059,7 +6282,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     item.SkyStatics.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IStaticGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -6109,9 +6332,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SunGlareLensFlare = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            defaultVal: FormKey.Null);
+                        item.SunGlareLensFlare.SetTo(
+                            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                                frame: frame,
+                                defaultVal: FormKey.Null));
                     }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }
@@ -6227,11 +6451,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Precipitation
         private int? _PrecipitationLocation;
-        public FormLinkNullable<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
+        public IFormLinkNullableGetter<IShaderParticleGeometryGetter> Precipitation => _PrecipitationLocation.HasValue ? new FormLinkNullable<IShaderParticleGeometryGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PrecipitationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IShaderParticleGeometryGetter>.Null;
         #endregion
         #region VisualEffect
         private int? _VisualEffectLocation;
-        public FormLink<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
+        public IFormLinkGetter<IVisualEffectGetter> VisualEffect => _VisualEffectLocation.HasValue ? new FormLink<IVisualEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VisualEffectLocation.Value, _package.MetaData.Constants)))) : FormLink<IVisualEffectGetter>.Null;
         #endregion
         #region ONAM
         private int? _ONAMLocation;
@@ -6494,7 +6718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         public IReadOnlyList<IWeatherSoundGetter> Sounds { get; private set; } = ListExt.Empty<WeatherSoundBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLink<IStaticGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IStaticGetter>> SkyStatics { get; private set; } = ListExt.Empty<IFormLinkGetter<IStaticGetter>>();
         #region ImageSpaces
         private RangeInt32? _ImageSpacesLocation;
         public IWeatherImageSpacesGetter? ImageSpaces => _ImageSpacesLocation.HasValue ? WeatherImageSpacesBinaryOverlay.WeatherImageSpacesFactory(new OverlayStream(_data.Slice(_ImageSpacesLocation!.Value.Min), _package), _package) : default;
@@ -6521,7 +6745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IModelGetter? Aurora { get; private set; }
         #region SunGlareLensFlare
         private int? _SunGlareLensFlareLocation;
-        public FormLinkNullable<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
+        public IFormLinkNullableGetter<ILensFlareGetter> SunGlareLensFlare => _SunGlareLensFlareLocation.HasValue ? new FormLinkNullable<ILensFlareGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SunGlareLensFlareLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILensFlareGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -6707,7 +6931,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 case RecordTypeInts.TNAM:
                 {
-                    this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLink<IStaticGetter>>(
+                    this.SkyStatics = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IStaticGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IStaticGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -6785,13 +7009,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherGetter rhs)) return false;
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IWeatherGetter rhs) return false;
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherGetter? obj)
         {
-            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherCommon)((IWeatherGetter)this).CommonInstance()!).GetHashCode(this);

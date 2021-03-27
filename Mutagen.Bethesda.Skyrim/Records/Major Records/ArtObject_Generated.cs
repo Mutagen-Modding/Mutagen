@@ -93,22 +93,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IArtObjectGetter rhs)) return false;
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IArtObjectGetter? obj)
-        {
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -504,6 +488,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArtObjectGetter rhs) return false;
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IArtObjectGetter? obj)
+        {
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -645,11 +649,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IArtObjectGetter item,
-            IArtObjectGetter rhs)
+            IArtObjectGetter rhs,
+            ArtObject.TranslationMask? equalsMask = null)
         {
             return ((ArtObjectCommon)((IArtObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1052,33 +1058,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArtObjectGetter? lhs,
-            IArtObjectGetter? rhs)
+            IArtObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArtObject_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArtObjectGetter?)lhs,
-                rhs: rhs as IArtObjectGetter);
+                rhs: rhs as IArtObjectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArtObjectGetter?)lhs,
-                rhs: rhs as IArtObjectGetter);
+                rhs: rhs as IArtObjectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IArtObjectGetter item)
@@ -1138,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ArtObject(formKey, default(SkyrimRelease));
+            var newRec = new ArtObject(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1149,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArtObject)item,
+                item: (IArtObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1160,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArtObject)item,
+                item: (IArtObjectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1713,13 +1733,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArtObjectGetter rhs)) return false;
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArtObjectGetter rhs) return false;
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArtObjectGetter? obj)
         {
-            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArtObjectCommon)((IArtObjectGetter)this).CommonInstance()!).GetHashCode(this);

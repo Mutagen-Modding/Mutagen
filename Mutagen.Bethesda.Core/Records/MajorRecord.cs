@@ -87,6 +87,12 @@ namespace Mutagen.Bethesda
             }
         }
         #endregion
+
+        public bool Equals(IFormLinkGetter? other)
+        {
+            if (other == null) return false;
+            return other.Equals(this);
+        }
     }
 }
 
@@ -101,5 +107,11 @@ namespace Mutagen.Bethesda.Internals
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;
         ushort? IFormVersionGetter.FormVersion => FormVersionAbstract;
+
+        public bool Equals(IFormLinkGetter? other)
+        {
+            if (other == null) return false;
+            return other.Equals(this);
+        }
     }
 }

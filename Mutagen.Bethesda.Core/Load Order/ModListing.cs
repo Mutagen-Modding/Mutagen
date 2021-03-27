@@ -99,5 +99,38 @@ namespace Mutagen.Bethesda
             item = default;
             return false;
         }
+
+        public static IModListing<TMod> GetIfEnabled<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey)
+            where TMod : class, IModGetter
+        {
+            if (TryGetIfEnabled(loadOrder, modKey, out var listing))
+            {
+                return listing;
+            }
+            throw new MissingModException(modKey);
+        }
+
+        public static bool TryGetIfEnabledAndExists<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
+            where TMod : class, IModGetter
+        {
+            if (!TryGetIfEnabled(loadOrder, modKey, out var listing))
+            {
+                item = default;
+                return false;
+            }
+
+            item = listing.Mod;
+            return item != null;
+        }
+
+        public static TMod GetIfEnabledAndExists<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey)
+            where TMod : class, IModGetter
+        {
+            if (TryGetIfEnabledAndExists(loadOrder, modKey, out var mod))
+            {
+                return mod;
+            }
+            throw new MissingModException(modKey);
+        }
     }
 }

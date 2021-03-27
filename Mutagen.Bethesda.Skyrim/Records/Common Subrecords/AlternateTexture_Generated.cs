@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region NewTexture
-        public FormLink<ITextureSetGetter> NewTexture { get; set; } = new FormLink<ITextureSetGetter>();
+        private IFormLink<ITextureSetGetter> _NewTexture = new FormLink<ITextureSetGetter>();
+        public IFormLink<ITextureSetGetter> NewTexture
+        {
+            get => _NewTexture;
+            set => _NewTexture = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ITextureSetGetter> IAlternateTextureGetter.NewTexture => this.NewTexture;
         #endregion
         #region Index
         public Int32 Index { get; set; } = default;
@@ -65,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlternateTextureGetter rhs)) return false;
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlternateTextureGetter rhs) return false;
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlternateTextureGetter? obj)
         {
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).GetHashCode(this);
@@ -481,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired
     {
         new String Name { get; set; }
-        new FormLink<ITextureSetGetter> NewTexture { get; set; }
+        new IFormLink<ITextureSetGetter> NewTexture { get; }
         new Int32 Index { get; set; }
     }
 
@@ -500,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AlternateTexture_Registration.Instance;
         String Name { get; }
-        FormLink<ITextureSetGetter> NewTexture { get; }
+        IFormLinkGetter<ITextureSetGetter> NewTexture { get; }
         Int32 Index { get; }
 
     }
@@ -552,11 +559,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAlternateTextureGetter item,
-            IAlternateTextureGetter rhs)
+            IAlternateTextureGetter rhs,
+            AlternateTexture.TranslationMask? equalsMask = null)
         {
             return ((AlternateTextureCommon)((IAlternateTextureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -760,14 +769,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.NewTexture = FormLink<ITextureSetGetter>.Null;
+            item.NewTexture.Clear();
             item.Index = default;
         }
         
         #region Mutagen
         public void RemapLinks(IAlternateTexture obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NewTexture = obj.NewTexture.Relink(mapping);
+            obj.NewTexture.Relink(mapping);
         }
         
         #endregion
@@ -879,13 +888,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAlternateTextureGetter? lhs,
-            IAlternateTextureGetter? rhs)
+            IAlternateTextureGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.NewTexture.Equals(rhs.NewTexture)) return false;
-            if (lhs.Index != rhs.Index) return false;
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
+            {
+                if (!lhs.NewTexture.Equals(rhs.NewTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -934,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.NewTexture) ?? true))
             {
-                item.NewTexture = new FormLink<ITextureSetGetter>(rhs.NewTexture.FormKey);
+                item.NewTexture.SetTo(rhs.NewTexture.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AlternateTexture_FieldIndex.Index) ?? true))
             {
@@ -1080,9 +1099,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLength);
-            item.NewTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.NewTexture.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Index = frame.ReadInt32();
         }
 
@@ -1154,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public String Name => BinaryStringUtility.ParsePrependedString(_data.Slice(0x0), lengthLength: 4);
         protected int NameEndingPos;
         #endregion
-        public FormLink<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
+        public IFormLinkGetter<ITextureSetGetter> NewTexture => new FormLink<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(NameEndingPos, 0x4))));
         public Int32 Index => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(NameEndingPos + 0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1217,13 +1237,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAlternateTextureGetter rhs)) return false;
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAlternateTextureGetter rhs) return false;
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAlternateTextureGetter? obj)
         {
-            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AlternateTextureCommon)((IAlternateTextureGetter)this).CommonInstance()!).GetHashCode(this);

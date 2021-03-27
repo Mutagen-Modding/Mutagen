@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Potion :
-        AItem,
+        OblivionMajorRecord,
         IEquatable<IPotionGetter>,
         ILoquiObjectSetter<Potion>,
         IPotionInternal
@@ -78,7 +78,14 @@ namespace Mutagen.Bethesda.Oblivion
         String? IPotionGetter.Icon => this.Icon;
         #endregion
         #region Script
-        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IPotionGetter.Script => this.Script;
         #endregion
         #region Weight
         public Single? Weight { get; set; }
@@ -124,25 +131,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPotionGetter rhs)) return false;
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPotionGetter? obj)
-        {
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -419,7 +410,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -627,7 +618,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -703,6 +694,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPotionGetter rhs) return false;
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IPotionGetter? obj)
+        {
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -760,34 +771,36 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IPotion :
-        IAItemInternal,
         IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<IPotionInternal>,
         IModeled,
         INamed,
         INamedRequired,
+        IOblivionMajorRecordInternal,
         IPotionGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
         new Single? Weight { get; set; }
         new PotionData? Data { get; set; }
         new ExtendedList<Effect> Effects { get; }
     }
 
     public partial interface IPotionInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         IPotion,
         IPotionGetter
     {
     }
 
     public partial interface IPotionGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<IPotionGetter>,
         IMapsToGetter<IPotionGetter>,
         IModeledGetter,
@@ -798,7 +811,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        FormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         Single? Weight { get; }
         IPotionDataGetter? Data { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
@@ -852,11 +865,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IPotionGetter item,
-            IPotionGetter rhs)
+            IPotionGetter rhs,
+            Potion.TranslationMask? equalsMask = null)
         {
             return ((PotionCommon)((IPotionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1049,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class PotionSetterCommon : AItemSetterCommon
+    public partial class PotionSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly PotionSetterCommon Instance = new PotionSetterCommon();
 
@@ -1061,16 +1076,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Script.Clear();
             item.Weight = default;
             item.Data = null;
             item.Effects.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IPotionInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1087,7 +1097,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IPotion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1105,17 +1115,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: PotionBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: PotionBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Potion)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -1143,7 +1142,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PotionCommon : AItemCommon
+    public partial class PotionCommon : OblivionMajorRecordCommon
     {
         public new static readonly PotionCommon Instance = new PotionCommon();
 
@@ -1233,7 +1232,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Potion.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1286,26 +1285,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Potion_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Potion_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Potion_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Potion_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Potion_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Potion_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Potion_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Potion_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1344,46 +1324,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPotionGetter? lhs,
-            IPotionGetter? rhs)
+            IPotionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
+            {
+                if (!lhs.Weight.EqualsWithin(rhs.Weight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Potion_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IPotionGetter?)lhs,
-                rhs: rhs as IPotionGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPotionGetter?)lhs,
-                rhs: rhs as IPotionGetter);
+                rhs: rhs as IPotionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPotionGetter?)lhs,
-                rhs: rhs as IPotionGetter);
+                rhs: rhs as IPotionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPotionGetter item)
@@ -1413,11 +1410,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Effects);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (IPotionGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1467,24 +1459,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IPotion)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPotion)item,
+                item: (IPotionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1495,7 +1476,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPotion)item,
+                item: (IPotionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1505,7 +1486,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class PotionSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class PotionSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly PotionSetterTranslationCommon Instance = new PotionSetterTranslationCommon();
 
@@ -1533,8 +1514,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1574,7 +1555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Potion_FieldIndex.Weight) ?? true))
             {
@@ -1630,36 +1611,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPotionInternal)item,
-                rhs: (IPotionGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPotion)item,
-                rhs: (IPotionGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1803,7 +1754,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class PotionBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static PotionBinaryWriteTranslation Instance = new PotionBinaryWriteTranslation();
@@ -1904,17 +1855,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IPotionGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1937,7 +1877,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class PotionBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class PotionBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static PotionBinaryCreateTranslation Instance = new PotionBinaryCreateTranslation();
 
@@ -1946,7 +1886,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPotionInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1988,9 +1928,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Potion_FieldIndex.Script;
                 }
                 case RecordTypeInts.DATA:
@@ -2016,7 +1957,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Potion_FieldIndex.Effects;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -2041,7 +1982,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class PotionBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IPotionGetter
     {
         #region Common Routing
@@ -2085,7 +2026,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region Weight
         private int? _WeightLocation;
@@ -2231,13 +2172,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPotionGetter rhs)) return false;
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPotionGetter rhs) return false;
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPotionGetter? obj)
         {
-            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PotionCommon)((IPotionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PotionCommon)((IPotionGetter)this).CommonInstance()!).GetHashCode(this);

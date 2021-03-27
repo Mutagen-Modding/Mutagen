@@ -67,48 +67,55 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RacePresets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<INpcGetter>> _RacePresets = new ExtendedList<IFormLink<INpcGetter>>();
-        public ExtendedList<IFormLink<INpcGetter>> RacePresets
+        private ExtendedList<IFormLinkGetter<INpcGetter>> _RacePresets = new ExtendedList<IFormLinkGetter<INpcGetter>>();
+        public ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets
         {
             get => this._RacePresets;
             protected set => this._RacePresets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<INpcGetter>> IHeadDataGetter.RacePresets => _RacePresets;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>> IHeadDataGetter.RacePresets => _RacePresets;
         #endregion
 
         #endregion
         #region AvailableHairColors
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IColorRecordGetter>> _AvailableHairColors = new ExtendedList<IFormLink<IColorRecordGetter>>();
-        public ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors
+        private ExtendedList<IFormLinkGetter<IColorRecordGetter>> _AvailableHairColors = new ExtendedList<IFormLinkGetter<IColorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors
         {
             get => this._AvailableHairColors;
             protected set => this._AvailableHairColors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IColorRecordGetter>> IHeadDataGetter.AvailableHairColors => _AvailableHairColors;
+        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> IHeadDataGetter.AvailableHairColors => _AvailableHairColors;
         #endregion
 
         #endregion
         #region FaceDetails
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ITextureSetGetter>> _FaceDetails = new ExtendedList<IFormLink<ITextureSetGetter>>();
-        public ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails
+        private ExtendedList<IFormLinkGetter<ITextureSetGetter>> _FaceDetails = new ExtendedList<IFormLinkGetter<ITextureSetGetter>>();
+        public ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails
         {
             get => this._FaceDetails;
             protected set => this._FaceDetails = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ITextureSetGetter>> IHeadDataGetter.FaceDetails => _FaceDetails;
+        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> IHeadDataGetter.FaceDetails => _FaceDetails;
         #endregion
 
         #endregion
         #region DefaultFaceTexture
-        public FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture
+        {
+            get => _DefaultFaceTexture;
+            set => _DefaultFaceTexture = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IHeadDataGetter.DefaultFaceTexture => this.DefaultFaceTexture;
         #endregion
         #region TintMasks
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -156,13 +163,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHeadDataGetter rhs)) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHeadDataGetter rhs) return false;
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1096,10 +1103,10 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<HeadPartReference> HeadParts { get; }
         new AvailableMorphs? AvailableMorphs { get; set; }
-        new ExtendedList<IFormLink<INpcGetter>> RacePresets { get; }
-        new ExtendedList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; }
-        new ExtendedList<IFormLink<ITextureSetGetter>> FaceDetails { get; }
-        new FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; set; }
+        new ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
+        new ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
+        new ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
+        new IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
         new ExtendedList<TintAssets> TintMasks { get; }
         new Model? Model { get; set; }
     }
@@ -1120,10 +1127,10 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => HeadData_Registration.Instance;
         IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; }
         IAvailableMorphsGetter? AvailableMorphs { get; }
-        IReadOnlyList<IFormLink<INpcGetter>> RacePresets { get; }
-        IReadOnlyList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; }
-        IReadOnlyList<IFormLink<ITextureSetGetter>> FaceDetails { get; }
-        FormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; }
+        IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; }
+        IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture { get; }
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
         IModelGetter? Model { get; }
 
@@ -1176,11 +1183,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IHeadDataGetter item,
-            IHeadDataGetter rhs)
+            IHeadDataGetter rhs,
+            HeadData.TranslationMask? equalsMask = null)
         {
             return ((HeadDataCommon)((IHeadDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1418,7 +1427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.RacePresets.Clear();
             item.AvailableHairColors.Clear();
             item.FaceDetails.Clear();
-            item.DefaultFaceTexture = FormLinkNullable<ITextureSetGetter>.Null;
+            item.DefaultFaceTexture.Clear();
             item.TintMasks.Clear();
             item.Model = null;
         }
@@ -1430,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.RacePresets.RemapLinks(mapping);
             obj.AvailableHairColors.RemapLinks(mapping);
             obj.FaceDetails.RemapLinks(mapping);
-            obj.DefaultFaceTexture = obj.DefaultFaceTexture.Relink(mapping);
+            obj.DefaultFaceTexture.Relink(mapping);
             obj.TintMasks.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
@@ -1665,18 +1674,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IHeadDataGetter? lhs,
-            IHeadDataGetter? rhs)
+            IHeadDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
-            if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
-            if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
-            if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
-            if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
-            if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
-            if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
+            {
+                if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
+            {
+                if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
+            {
+                if (!lhs.RacePresets.SequenceEqualNullable(rhs.RacePresets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableHairColors) ?? true))
+            {
+                if (!lhs.AvailableHairColors.SequenceEqualNullable(rhs.AvailableHairColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.FaceDetails) ?? true))
+            {
+                if (!lhs.FaceDetails.SequenceEqualNullable(rhs.FaceDetails)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
+            {
+                if (!lhs.DefaultFaceTexture.Equals(rhs.DefaultFaceTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
+            {
+                if (!lhs.TintMasks.SequenceEqualNullable(rhs.TintMasks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
             return true;
         }
         
@@ -1817,7 +1851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RacePresets.SetTo(
                         rhs.RacePresets
-                        .Select(r => (IFormLink<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1836,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.AvailableHairColors.SetTo(
                         rhs.AvailableHairColors
-                        .Select(r => (IFormLink<IColorRecordGetter>)new FormLink<IColorRecordGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IColorRecordGetter>)new FormLink<IColorRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1855,7 +1889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.FaceDetails.SetTo(
                         rhs.FaceDetails
-                        .Select(r => (IFormLink<ITextureSetGetter>)new FormLink<ITextureSetGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ITextureSetGetter>)new FormLink<ITextureSetGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1869,7 +1903,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.DefaultFaceTexture) ?? true))
             {
-                item.DefaultFaceTexture = new FormLinkNullable<ITextureSetGetter>(rhs.DefaultFaceTexture.FormKeyNullable);
+                item.DefaultFaceTexture.SetTo(rhs.DefaultFaceTexture.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)HeadData_FieldIndex.TintMasks) ?? true))
             {
@@ -2036,30 +2070,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
-                transl: (MutagenWriter subWriter, IFormLink<INpcGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IColorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AvailableHairColors,
-                transl: (MutagenWriter subWriter, IFormLink<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ITextureSetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FaceDetails,
-                transl: (MutagenWriter subWriter, IFormLink<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2158,7 +2192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
                     item.RacePresets.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2168,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IColorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2178,7 +2212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ITextureSetGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2188,9 +2222,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.DefaultFaceTexture.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:
@@ -2289,12 +2324,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<IHeadPartReferenceGetter> HeadParts { get; private set; } = ListExt.Empty<HeadPartReferenceBinaryOverlay>();
         public IAvailableMorphsGetter? AvailableMorphs { get; private set; }
-        public IReadOnlyList<IFormLink<INpcGetter>> RacePresets { get; private set; } = ListExt.Empty<IFormLink<INpcGetter>>();
-        public IReadOnlyList<IFormLink<IColorRecordGetter>> AvailableHairColors { get; private set; } = ListExt.Empty<IFormLink<IColorRecordGetter>>();
-        public IReadOnlyList<IFormLink<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLink<ITextureSetGetter>>();
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>> RacePresets { get; private set; } = ListExt.Empty<IFormLinkGetter<INpcGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors { get; private set; } = ListExt.Empty<IFormLinkGetter<IColorRecordGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; private set; } = ListExt.Empty<IFormLinkGetter<ITextureSetGetter>>();
         #region DefaultFaceTexture
         private int? _DefaultFaceTextureLocation;
-        public FormLinkNullable<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture => _DefaultFaceTextureLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DefaultFaceTextureLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         public IReadOnlyList<ITintAssetsGetter> TintMasks { get; private set; } = ListExt.Empty<TintAssetsBinaryOverlay>();
         public IModelGetter? Model { get; private set; }
@@ -2378,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RPRM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
-                    this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLink<INpcGetter>>(
+                    this.RacePresets = BinaryOverlayList.FactoryByArray<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<INpcGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2393,7 +2428,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.AHCM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
-                    this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLink<IColorRecordGetter>>(
+                    this.AvailableHairColors = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IColorRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IColorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2408,7 +2443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FTSM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
-                    this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLink<ITextureSetGetter>>(
+                    this.FaceDetails = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ITextureSetGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ITextureSetGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -2471,13 +2506,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IHeadDataGetter rhs)) return false;
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IHeadDataGetter rhs) return false;
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IHeadDataGetter? obj)
         {
-            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((HeadDataCommon)((IHeadDataGetter)this).CommonInstance()!).GetHashCode(this);

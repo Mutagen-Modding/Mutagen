@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreatureSoundGetter rhs)) return false;
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreatureSoundGetter rhs) return false;
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureSoundGetter? obj)
         {
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).GetHashCode(this);
@@ -606,11 +606,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICreatureSoundGetter item,
-            ICreatureSoundGetter rhs)
+            ICreatureSoundGetter rhs,
+            CreatureSound.TranslationMask? equalsMask = null)
         {
             return ((CreatureSoundCommon)((ICreatureSoundGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -958,12 +960,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICreatureSoundGetter? lhs,
-            ICreatureSoundGetter? rhs)
+            ICreatureSoundGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.SoundType != rhs.SoundType) return false;
-            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            if ((crystal?.GetShouldTranslate((int)CreatureSound_FieldIndex.SoundType) ?? true))
+            {
+                if (lhs.SoundType != rhs.SoundType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureSound_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
             return true;
         }
         
@@ -1387,13 +1396,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreatureSoundGetter rhs)) return false;
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreatureSoundGetter rhs) return false;
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureSoundGetter? obj)
         {
-            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureSoundCommon)((ICreatureSoundGetter)this).CommonInstance()!).GetHashCode(this);

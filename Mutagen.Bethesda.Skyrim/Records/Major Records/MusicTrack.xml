@@ -11,7 +11,7 @@
       <List name="CuePoints" recordType="FNAM">
         <Float />
       </List>
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
       <List name="Tracks" recordType="SNAM">
         <FormLink refName="MusicTrack" />
       </List>

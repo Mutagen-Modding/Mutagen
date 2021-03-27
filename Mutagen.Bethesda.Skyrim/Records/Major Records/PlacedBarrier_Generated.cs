@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Projectile
-        public FormLink<IProjectileGetter> Projectile { get; set; } = new FormLink<IProjectileGetter>();
+        private IFormLink<IProjectileGetter> _Projectile = new FormLink<IProjectileGetter>();
+        public IFormLink<IProjectileGetter> Projectile
+        {
+            get => _Projectile;
+            set => _Projectile = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IProjectileGetter> IPlacedBarrierGetter.Projectile => this.Projectile;
         #endregion
 
         #region To String
@@ -56,22 +63,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlacedBarrierGetter rhs)) return false;
-            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlacedBarrierGetter? obj)
-        {
-            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -389,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedBarrier_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedBarrierCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedBarrierSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedBarrier(
@@ -433,6 +424,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedBarrierGetter rhs) return false;
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IPlacedBarrierGetter? obj)
+        {
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -496,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedBarrierInternal>,
         IPlacedBarrierGetter
     {
-        new FormLink<IProjectileGetter> Projectile { get; set; }
+        new IFormLink<IProjectileGetter> Projectile { get; }
     }
 
     public partial interface IPlacedBarrierInternal :
@@ -514,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedBarrierGetter>
     {
         static new ILoquiRegistration Registration => PlacedBarrier_Registration.Instance;
-        FormLink<IProjectileGetter> Projectile { get; }
+        IFormLinkGetter<IProjectileGetter> Projectile { get; }
 
     }
 
@@ -565,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedBarrierGetter item,
-            IPlacedBarrierGetter rhs)
+            IPlacedBarrierGetter rhs,
+            PlacedBarrier.TranslationMask? equalsMask = null)
         {
             return ((PlacedBarrierCommon)((IPlacedBarrierGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -783,16 +796,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedBarrierInternal item)
         {
             ClearPartial();
-            item.Projectile = FormLink<IProjectileGetter>.Null;
+            item.Projectile.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IAPlacedTrapInternal item)
-        {
-            Clear(item: (IPlacedBarrierInternal)item);
-        }
-        
-        public override void Clear(IAPlacedInternal item)
         {
             Clear(item: (IPlacedBarrierInternal)item);
         }
@@ -811,7 +819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPlacedBarrier obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Projectile = obj.Projectile.Relink(mapping);
+            obj.Projectile.Relink(mapping);
         }
         
         #endregion
@@ -832,17 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (PlacedBarrier)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1015,27 +1012,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static new PlacedBarrier_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
-        {
-            switch (index)
-            {
-                case APlaced_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormKey:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                case APlaced_FieldIndex.VersionControl:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                case APlaced_FieldIndex.EditorID:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormVersion:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                case APlaced_FieldIndex.Version2:
-                    return (PlacedBarrier_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new PlacedBarrier_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1077,49 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedBarrierGetter? lhs,
-            IPlacedBarrierGetter? rhs)
+            IPlacedBarrierGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedBarrier_FieldIndex.Projectile) ?? true))
+            {
+                if (!lhs.Projectile.Equals(rhs.Projectile)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedBarrierGetter?)lhs,
-                rhs: rhs as IPlacedBarrierGetter);
-        }
-        
-        public override bool Equals(
-            IAPlacedGetter? lhs,
-            IAPlacedGetter? rhs)
-        {
-            return Equals(
-                lhs: (IPlacedBarrierGetter?)lhs,
-                rhs: rhs as IPlacedBarrierGetter);
+                rhs: rhs as IPlacedBarrierGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedBarrierGetter?)lhs,
-                rhs: rhs as IPlacedBarrierGetter);
+                rhs: rhs as IPlacedBarrierGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedBarrierGetter?)lhs,
-                rhs: rhs as IPlacedBarrierGetter);
+                rhs: rhs as IPlacedBarrierGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedBarrierGetter item)
@@ -1131,11 +1108,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
-        {
-            return GetHashCode(item: (IPlacedBarrierGetter)item);
-        }
-        
-        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedBarrierGetter)item);
         }
@@ -1175,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new PlacedBarrier(formKey, default(SkyrimRelease));
+            var newRec = new PlacedBarrier(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1186,18 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedBarrier)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override APlaced Duplicate(
-            IAPlacedGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IPlacedBarrier)item,
+                item: (IPlacedBarrierGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1208,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedBarrier)item,
+                item: (IPlacedBarrierGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1219,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedBarrier)item,
+                item: (IPlacedBarrierGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1264,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedBarrier_FieldIndex.Projectile) ?? true))
             {
-                item.Projectile = new FormLink<IProjectileGetter>(rhs.Projectile.FormKey);
+                item.Projectile.SetTo(rhs.Projectile.FormKey);
             }
         }
         
@@ -1286,36 +1247,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedBarrier)item,
-                rhs: (IPlacedBarrierGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlacedInternal item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedBarrierInternal)item,
-                rhs: (IPlacedBarrierGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlaced item,
-            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1534,17 +1465,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAPlacedGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IPlacedBarrierGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1696,13 +1616,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlacedBarrierGetter rhs)) return false;
-            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedBarrierGetter rhs) return false;
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedBarrierGetter? obj)
         {
-            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedBarrierCommon)((IPlacedBarrierGetter)this).CommonInstance()!).GetHashCode(this);

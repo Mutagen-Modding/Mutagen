@@ -42,13 +42,20 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Function
-        public UInt16 Function { get; set; } = default;
+        public Condition.Function Function { get; set; } = default;
         #endregion
         #region Unknown2
         public UInt16 Unknown2 { get; set; } = default;
         #endregion
         #region ParameterOneRecord
-        public FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord
+        {
+            get => _ParameterOneRecord;
+            set => _ParameterOneRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
         #endregion
         #region ParameterOneNumber
         public Int32 ParameterOneNumber { get; set; } = default;
@@ -59,7 +66,14 @@ namespace Mutagen.Bethesda.Skyrim
         String? IFunctionConditionDataGetter.ParameterOneString => this.ParameterOneString;
         #endregion
         #region ParameterTwoRecord
-        public FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord
+        {
+            get => _ParameterTwoRecord;
+            set => _ParameterTwoRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IFunctionConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
         #endregion
         #region ParameterTwoNumber
         public Int32 ParameterTwoNumber { get; set; } = default;
@@ -68,16 +82,6 @@ namespace Mutagen.Bethesda.Skyrim
         public String? ParameterTwoString { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFunctionConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
-        #endregion
-        #region Unknown3
-        public Int32 Unknown3 { get; set; } = default;
-        #endregion
-        #region Unknown4
-        public Int32 Unknown4 { get; set; } = default;
-        #endregion
-        #region Unknown5
-        public readonly static Int32 _Unknown5_Default = -1;
-        public Int32 Unknown5 { get; set; } = _Unknown5_Default;
         #endregion
 
         #region To String
@@ -96,13 +100,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -127,12 +131,12 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ParameterTwoRecord = initialValue;
                 this.ParameterTwoNumber = initialValue;
                 this.ParameterTwoString = initialValue;
-                this.Unknown3 = initialValue;
-                this.Unknown4 = initialValue;
-                this.Unknown5 = initialValue;
             }
 
             public Mask(
+                TItem RunOnType,
+                TItem Reference,
+                TItem Unknown3,
                 TItem Function,
                 TItem Unknown2,
                 TItem ParameterOneRecord,
@@ -140,11 +144,11 @@ namespace Mutagen.Bethesda.Skyrim
                 TItem ParameterOneString,
                 TItem ParameterTwoRecord,
                 TItem ParameterTwoNumber,
-                TItem ParameterTwoString,
-                TItem Unknown3,
-                TItem Unknown4,
-                TItem Unknown5)
-            : base()
+                TItem ParameterTwoString)
+            : base(
+                RunOnType: RunOnType,
+                Reference: Reference,
+                Unknown3: Unknown3)
             {
                 this.Function = Function;
                 this.Unknown2 = Unknown2;
@@ -154,9 +158,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ParameterTwoRecord = ParameterTwoRecord;
                 this.ParameterTwoNumber = ParameterTwoNumber;
                 this.ParameterTwoString = ParameterTwoString;
-                this.Unknown3 = Unknown3;
-                this.Unknown4 = Unknown4;
-                this.Unknown5 = Unknown5;
             }
 
             #pragma warning disable CS8618
@@ -176,9 +177,6 @@ namespace Mutagen.Bethesda.Skyrim
             public TItem ParameterTwoRecord;
             public TItem ParameterTwoNumber;
             public TItem ParameterTwoString;
-            public TItem Unknown3;
-            public TItem Unknown4;
-            public TItem Unknown5;
             #endregion
 
             #region Equals
@@ -200,9 +198,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!object.Equals(this.ParameterTwoRecord, rhs.ParameterTwoRecord)) return false;
                 if (!object.Equals(this.ParameterTwoNumber, rhs.ParameterTwoNumber)) return false;
                 if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
-                if (!object.Equals(this.Unknown3, rhs.Unknown3)) return false;
-                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
-                if (!object.Equals(this.Unknown5, rhs.Unknown5)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -216,9 +211,6 @@ namespace Mutagen.Bethesda.Skyrim
                 hash.Add(this.ParameterTwoRecord);
                 hash.Add(this.ParameterTwoNumber);
                 hash.Add(this.ParameterTwoString);
-                hash.Add(this.Unknown3);
-                hash.Add(this.Unknown4);
-                hash.Add(this.Unknown5);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
             }
@@ -237,9 +229,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (!eval(this.ParameterTwoRecord)) return false;
                 if (!eval(this.ParameterTwoNumber)) return false;
                 if (!eval(this.ParameterTwoString)) return false;
-                if (!eval(this.Unknown3)) return false;
-                if (!eval(this.Unknown4)) return false;
-                if (!eval(this.Unknown5)) return false;
                 return true;
             }
             #endregion
@@ -256,9 +245,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (eval(this.ParameterTwoRecord)) return true;
                 if (eval(this.ParameterTwoNumber)) return true;
                 if (eval(this.ParameterTwoString)) return true;
-                if (eval(this.Unknown3)) return true;
-                if (eval(this.Unknown4)) return true;
-                if (eval(this.Unknown5)) return true;
                 return false;
             }
             #endregion
@@ -282,9 +268,6 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.ParameterTwoRecord = eval(this.ParameterTwoRecord);
                 obj.ParameterTwoNumber = eval(this.ParameterTwoNumber);
                 obj.ParameterTwoString = eval(this.ParameterTwoString);
-                obj.Unknown3 = eval(this.Unknown3);
-                obj.Unknown4 = eval(this.Unknown4);
-                obj.Unknown5 = eval(this.Unknown5);
             }
             #endregion
 
@@ -339,18 +322,6 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         fg.AppendItem(ParameterTwoString, "ParameterTwoString");
                     }
-                    if (printMask?.Unknown3 ?? true)
-                    {
-                        fg.AppendItem(Unknown3, "Unknown3");
-                    }
-                    if (printMask?.Unknown4 ?? true)
-                    {
-                        fg.AppendItem(Unknown4, "Unknown4");
-                    }
-                    if (printMask?.Unknown5 ?? true)
-                    {
-                        fg.AppendItem(Unknown5, "Unknown5");
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -371,9 +342,6 @@ namespace Mutagen.Bethesda.Skyrim
             public Exception? ParameterTwoRecord;
             public Exception? ParameterTwoNumber;
             public Exception? ParameterTwoString;
-            public Exception? Unknown3;
-            public Exception? Unknown4;
-            public Exception? Unknown5;
             #endregion
 
             #region IErrorMask
@@ -398,12 +366,6 @@ namespace Mutagen.Bethesda.Skyrim
                         return ParameterTwoNumber;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         return ParameterTwoString;
-                    case FunctionConditionData_FieldIndex.Unknown3:
-                        return Unknown3;
-                    case FunctionConditionData_FieldIndex.Unknown4:
-                        return Unknown4;
-                    case FunctionConditionData_FieldIndex.Unknown5:
-                        return Unknown5;
                     default:
                         return base.GetNthMask(index);
                 }
@@ -437,15 +399,6 @@ namespace Mutagen.Bethesda.Skyrim
                         break;
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         this.ParameterTwoString = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.Unknown3:
-                        this.Unknown3 = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.Unknown4:
-                        this.Unknown4 = ex;
-                        break;
-                    case FunctionConditionData_FieldIndex.Unknown5:
-                        this.Unknown5 = ex;
                         break;
                     default:
                         base.SetNthException(index, ex);
@@ -482,15 +435,6 @@ namespace Mutagen.Bethesda.Skyrim
                     case FunctionConditionData_FieldIndex.ParameterTwoString:
                         this.ParameterTwoString = (Exception?)obj;
                         break;
-                    case FunctionConditionData_FieldIndex.Unknown3:
-                        this.Unknown3 = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.Unknown4:
-                        this.Unknown4 = (Exception?)obj;
-                        break;
-                    case FunctionConditionData_FieldIndex.Unknown5:
-                        this.Unknown5 = (Exception?)obj;
-                        break;
                     default:
                         base.SetNthMask(index, obj);
                         break;
@@ -508,9 +452,6 @@ namespace Mutagen.Bethesda.Skyrim
                 if (ParameterTwoRecord != null) return true;
                 if (ParameterTwoNumber != null) return true;
                 if (ParameterTwoString != null) return true;
-                if (Unknown3 != null) return true;
-                if (Unknown4 != null) return true;
-                if (Unknown5 != null) return true;
                 return false;
             }
             #endregion
@@ -554,9 +495,6 @@ namespace Mutagen.Bethesda.Skyrim
                 fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
                 fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
                 fg.AppendItem(ParameterTwoString, "ParameterTwoString");
-                fg.AppendItem(Unknown3, "Unknown3");
-                fg.AppendItem(Unknown4, "Unknown4");
-                fg.AppendItem(Unknown5, "Unknown5");
             }
             #endregion
 
@@ -573,9 +511,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.ParameterTwoRecord = this.ParameterTwoRecord.Combine(rhs.ParameterTwoRecord);
                 ret.ParameterTwoNumber = this.ParameterTwoNumber.Combine(rhs.ParameterTwoNumber);
                 ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
-                ret.Unknown3 = this.Unknown3.Combine(rhs.Unknown3);
-                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
-                ret.Unknown5 = this.Unknown5.Combine(rhs.Unknown5);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -606,9 +541,6 @@ namespace Mutagen.Bethesda.Skyrim
             public bool ParameterTwoRecord;
             public bool ParameterTwoNumber;
             public bool ParameterTwoString;
-            public bool Unknown3;
-            public bool Unknown4;
-            public bool Unknown5;
             #endregion
 
             #region Ctors
@@ -625,9 +557,6 @@ namespace Mutagen.Bethesda.Skyrim
                 this.ParameterTwoRecord = defaultOn;
                 this.ParameterTwoNumber = defaultOn;
                 this.ParameterTwoString = defaultOn;
-                this.Unknown3 = defaultOn;
-                this.Unknown4 = defaultOn;
-                this.Unknown5 = defaultOn;
             }
 
             #endregion
@@ -643,9 +572,6 @@ namespace Mutagen.Bethesda.Skyrim
                 ret.Add((ParameterTwoRecord, null));
                 ret.Add((ParameterTwoNumber, null));
                 ret.Add((ParameterTwoString, null));
-                ret.Add((Unknown3, null));
-                ret.Add((Unknown4, null));
-                ret.Add((Unknown5, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -721,17 +647,14 @@ namespace Mutagen.Bethesda.Skyrim
         IFunctionConditionDataGetter,
         ILoquiObjectSetter<IFunctionConditionData>
     {
-        new UInt16 Function { get; set; }
+        new Condition.Function Function { get; set; }
         new UInt16 Unknown2 { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         new Int32 ParameterOneNumber { get; set; }
         new String? ParameterOneString { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         new Int32 ParameterTwoNumber { get; set; }
         new String? ParameterTwoString { get; set; }
-        new Int32 Unknown3 { get; set; }
-        new Int32 Unknown4 { get; set; }
-        new Int32 Unknown5 { get; set; }
     }
 
     public partial interface IFunctionConditionDataGetter :
@@ -741,17 +664,14 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFunctionConditionDataGetter>
     {
         static new ILoquiRegistration Registration => FunctionConditionData_Registration.Instance;
-        UInt16 Function { get; }
+        Condition.Function Function { get; }
         UInt16 Unknown2 { get; }
-        FormLink<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterOneRecord { get; }
         Int32 ParameterOneNumber { get; }
         String? ParameterOneString { get; }
-        FormLink<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> ParameterTwoRecord { get; }
         Int32 ParameterTwoNumber { get; }
         String? ParameterTwoString { get; }
-        Int32 Unknown3 { get; }
-        Int32 Unknown4 { get; }
-        Int32 Unknown5 { get; }
 
     }
 
@@ -802,11 +722,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFunctionConditionDataGetter item,
-            IFunctionConditionDataGetter rhs)
+            IFunctionConditionDataGetter rhs,
+            FunctionConditionData.TranslationMask? equalsMask = null)
         {
             return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -894,17 +816,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     #region Field Index
     public enum FunctionConditionData_FieldIndex
     {
-        Function = 0,
-        Unknown2 = 1,
-        ParameterOneRecord = 2,
-        ParameterOneNumber = 3,
-        ParameterOneString = 4,
-        ParameterTwoRecord = 5,
-        ParameterTwoNumber = 6,
-        ParameterTwoString = 7,
-        Unknown3 = 8,
-        Unknown4 = 9,
-        Unknown5 = 10,
+        RunOnType = 0,
+        Reference = 1,
+        Unknown3 = 2,
+        Function = 3,
+        Unknown2 = 4,
+        ParameterOneRecord = 5,
+        ParameterOneNumber = 6,
+        ParameterOneString = 7,
+        ParameterTwoRecord = 8,
+        ParameterTwoNumber = 9,
+        ParameterTwoString = 10,
     }
     #endregion
 
@@ -922,7 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public const string GUID = "c7686727-e470-4c34-80ce-423cf65c7b92";
 
-        public const ushort AdditionalFieldCount = 11;
+        public const ushort AdditionalFieldCount = 8;
 
         public const ushort FieldCount = 11;
 
@@ -994,15 +916,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Function = default;
             item.Unknown2 = default;
-            item.ParameterOneRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.ParameterOneRecord.Clear();
             item.ParameterOneNumber = default;
             item.ParameterOneString = default;
-            item.ParameterTwoRecord = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.ParameterTwoRecord.Clear();
             item.ParameterTwoNumber = default;
             item.ParameterTwoString = default;
-            item.Unknown3 = default;
-            item.Unknown4 = default;
-            item.Unknown5 = FunctionConditionData._Unknown5_Default;
             base.Clear(item);
         }
         
@@ -1015,8 +934,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IFunctionConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ParameterOneRecord = obj.ParameterOneRecord.Relink(mapping);
-            obj.ParameterTwoRecord = obj.ParameterTwoRecord.Relink(mapping);
+            obj.ParameterOneRecord.Relink(mapping);
+            obj.ParameterTwoRecord.Relink(mapping);
         }
         
         #endregion
@@ -1081,9 +1000,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ret.ParameterTwoRecord = item.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord);
             ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
             ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
-            ret.Unknown3 = item.Unknown3 == rhs.Unknown3;
-            ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
-            ret.Unknown5 = item.Unknown5 == rhs.Unknown5;
             base.FillEqualsMask(item, rhs, ret, include);
         }
         
@@ -1169,24 +1085,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
             }
-            if (printMask?.Unknown3 ?? true)
-            {
-                fg.AppendItem(item.Unknown3, "Unknown3");
-            }
-            if (printMask?.Unknown4 ?? true)
-            {
-                fg.AppendItem(item.Unknown4, "Unknown4");
-            }
-            if (printMask?.Unknown5 ?? true)
-            {
-                fg.AppendItem(item.Unknown5, "Unknown5");
-            }
         }
         
         public static FunctionConditionData_FieldIndex ConvertFieldIndex(ConditionData_FieldIndex index)
         {
             switch (index)
             {
+                case ConditionData_FieldIndex.RunOnType:
+                    return (FunctionConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.Reference:
+                    return (FunctionConditionData_FieldIndex)((int)index);
+                case ConditionData_FieldIndex.Unknown3:
+                    return (FunctionConditionData_FieldIndex)((int)index);
                 default:
                     throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
             }
@@ -1195,32 +1105,56 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFunctionConditionDataGetter? lhs,
-            IFunctionConditionDataGetter? rhs)
+            IFunctionConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs)) return false;
-            if (lhs.Function != rhs.Function) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
-            if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
-            if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
-            if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
-            if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
-            if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
-            if (lhs.Unknown3 != rhs.Unknown3) return false;
-            if (lhs.Unknown4 != rhs.Unknown4) return false;
-            if (lhs.Unknown5 != rhs.Unknown5) return false;
+            if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
+            {
+                if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
+            {
+                if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
+            {
+                if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
+            {
+                if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFunctionConditionDataGetter?)lhs,
-                rhs: rhs as IFunctionConditionDataGetter);
+                rhs: rhs as IFunctionConditionDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFunctionConditionDataGetter item)
@@ -1240,9 +1174,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 hash.Add(ParameterTwoStringitem);
             }
-            hash.Add(item.Unknown3);
-            hash.Add(item.Unknown4);
-            hash.Add(item.Unknown5);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1303,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneRecord) ?? true))
             {
-                item.ParameterOneRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterOneRecord.FormKey);
+                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterOneNumber) ?? true))
             {
@@ -1315,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoRecord) ?? true))
             {
-                item.ParameterTwoRecord = new FormLink<ISkyrimMajorRecordGetter>(rhs.ParameterTwoRecord.FormKey);
+                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoNumber) ?? true))
             {
@@ -1324,18 +1255,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.ParameterTwoString) ?? true))
             {
                 item.ParameterTwoString = rhs.ParameterTwoString;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown3) ?? true))
-            {
-                item.Unknown3 = rhs.Unknown3;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown4) ?? true))
-            {
-                item.Unknown4 = rhs.Unknown4;
-            }
-            if ((copyMask?.GetShouldTranslate((int)FunctionConditionData_FieldIndex.Unknown5) ?? true))
-            {
-                item.Unknown5 = rhs.Unknown5;
             }
         }
         
@@ -1458,7 +1377,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionDataGetter item,
             MutagenWriter writer)
         {
-            writer.Write(item.Function);
+            ConditionDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.Function>.Instance.Write(
+                writer,
+                item.Function,
+                length: 2);
             writer.Write(item.Unknown2);
             FunctionConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
                 writer: writer,
@@ -1507,7 +1432,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFunctionConditionData item,
             MutagenFrame frame)
         {
-            item.Function = frame.ReadUInt16();
+            ConditionDataBinaryCreateTranslation.FillBinaryStructs(
+                item: item,
+                frame: frame);
+            item.Function = EnumBinaryTranslation<Condition.Function>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.Unknown2 = frame.ReadUInt16();
             FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,
@@ -1563,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public UInt16 Function => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
+        public Condition.Function Function => (Condition.Function)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
         public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
         #region ParameterParsing
         partial void ParameterParsingCustomParse(
@@ -1631,13 +1559,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFunctionConditionDataGetter rhs)) return false;
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFunctionConditionDataGetter rhs) return false;
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFunctionConditionDataGetter? obj)
         {
-            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FunctionConditionDataCommon)((IFunctionConditionDataGetter)this).CommonInstance()!).GetHashCode(this);

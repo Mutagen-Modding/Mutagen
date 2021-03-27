@@ -56,7 +56,14 @@ namespace Mutagen.Bethesda.Skyrim
         TintAssets.TintMaskType? ITintAssetsGetter.MaskType => this.MaskType;
         #endregion
         #region PresetDefault
-        public FormLinkNullable<IColorRecordGetter> PresetDefault { get; set; } = new FormLinkNullable<IColorRecordGetter>();
+        private IFormLinkNullable<IColorRecordGetter> _PresetDefault = new FormLinkNullable<IColorRecordGetter>();
+        public IFormLinkNullable<IColorRecordGetter> PresetDefault
+        {
+            get => _PresetDefault;
+            set => _PresetDefault = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IColorRecordGetter> ITintAssetsGetter.PresetDefault => this.PresetDefault;
         #endregion
         #region Presets
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,13 +96,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintAssetsGetter rhs)) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintAssetsGetter rhs) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -637,7 +644,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt16? Index { get; set; }
         new String? FileName { get; set; }
         new TintAssets.TintMaskType? MaskType { get; set; }
-        new FormLinkNullable<IColorRecordGetter> PresetDefault { get; set; }
+        new IFormLinkNullable<IColorRecordGetter> PresetDefault { get; }
         new ExtendedList<TintPreset> Presets { get; }
     }
 
@@ -657,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim
         UInt16? Index { get; }
         String? FileName { get; }
         TintAssets.TintMaskType? MaskType { get; }
-        FormLinkNullable<IColorRecordGetter> PresetDefault { get; }
+        IFormLinkNullableGetter<IColorRecordGetter> PresetDefault { get; }
         IReadOnlyList<ITintPresetGetter> Presets { get; }
 
     }
@@ -709,11 +716,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITintAssetsGetter item,
-            ITintAssetsGetter rhs)
+            ITintAssetsGetter rhs,
+            TintAssets.TranslationMask? equalsMask = null)
         {
             return ((TintAssetsCommon)((ITintAssetsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -938,14 +947,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Index = default;
             item.FileName = default;
             item.MaskType = default;
-            item.PresetDefault = FormLinkNullable<IColorRecordGetter>.Null;
+            item.PresetDefault.Clear();
             item.Presets.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ITintAssets obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.PresetDefault = obj.PresetDefault.Relink(mapping);
+            obj.PresetDefault.Relink(mapping);
             obj.Presets.RemapLinks(mapping);
         }
         
@@ -1089,15 +1098,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITintAssetsGetter? lhs,
-            ITintAssetsGetter? rhs)
+            ITintAssetsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Index != rhs.Index) return false;
-            if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
-            if (lhs.MaskType != rhs.MaskType) return false;
-            if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
-            if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.FileName) ?? true))
+            {
+                if (!string.Equals(lhs.FileName, rhs.FileName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.MaskType) ?? true))
+            {
+                if (lhs.MaskType != rhs.MaskType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
+            {
+                if (!lhs.PresetDefault.Equals(rhs.PresetDefault)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
+            {
+                if (!lhs.Presets.SequenceEqualNullable(rhs.Presets)) return false;
+            }
             return true;
         }
         
@@ -1172,7 +1197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.PresetDefault) ?? true))
             {
-                item.PresetDefault = new FormLinkNullable<IColorRecordGetter>(rhs.PresetDefault.FormKeyNullable);
+                item.PresetDefault.SetTo(rhs.PresetDefault.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)TintAssets_FieldIndex.Presets) ?? true))
             {
@@ -1399,9 +1424,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PresetDefault = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PresetDefault.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
@@ -1500,7 +1526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region PresetDefault
         private int? _PresetDefaultLocation;
-        public FormLinkNullable<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
+        public IFormLinkNullableGetter<IColorRecordGetter> PresetDefault => _PresetDefaultLocation.HasValue ? new FormLinkNullable<IColorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PresetDefaultLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IColorRecordGetter>.Null;
         #endregion
         public IReadOnlyList<ITintPresetGetter> Presets { get; private set; } = ListExt.Empty<TintPresetBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -1616,13 +1642,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITintAssetsGetter rhs)) return false;
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITintAssetsGetter rhs) return false;
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITintAssetsGetter? obj)
         {
-            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TintAssetsCommon)((ITintAssetsGetter)this).CommonInstance()!).GetHashCode(this);

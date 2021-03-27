@@ -51,7 +51,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte>? IDialogResponsesUnknownDataGetter.SCHR => this.SCHR;
         #endregion
         #region QNAM
-        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; } = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        private IFormLinkNullable<ISkyrimMajorRecordGetter> _QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>();
+        public IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM
+        {
+            get => _QNAM;
+            set => _QNAM = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> IDialogResponsesUnknownDataGetter.QNAM => this.QNAM;
         #endregion
         #region NEXT
         public Boolean NEXT { get; set; } = default;
@@ -73,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesUnknownDataGetter rhs)) return false;
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponsesUnknownDataGetter rhs) return false;
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponsesUnknownDataGetter? obj)
         {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -488,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDialogResponsesUnknownData>
     {
         new MemorySlice<Byte>? SCHR { get; set; }
-        new FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; set; }
+        new IFormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
         new Boolean NEXT { get; set; }
     }
 
@@ -506,7 +513,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DialogResponsesUnknownData_Registration.Instance;
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
-        FormLinkNullable<ISkyrimMajorRecordGetter> QNAM { get; }
+        IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM { get; }
         Boolean NEXT { get; }
 
     }
@@ -558,11 +565,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDialogResponsesUnknownDataGetter item,
-            IDialogResponsesUnknownDataGetter rhs)
+            IDialogResponsesUnknownDataGetter rhs,
+            DialogResponsesUnknownData.TranslationMask? equalsMask = null)
         {
             return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -779,14 +788,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.SCHR = default;
-            item.QNAM = FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+            item.QNAM.Clear();
             item.NEXT = default;
         }
         
         #region Mutagen
         public void RemapLinks(IDialogResponsesUnknownData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.QNAM = obj.QNAM.Relink(mapping);
+            obj.QNAM.Relink(mapping);
         }
         
         #endregion
@@ -900,13 +909,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponsesUnknownDataGetter? lhs,
-            IDialogResponsesUnknownDataGetter? rhs)
+            IDialogResponsesUnknownDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!lhs.QNAM.Equals(rhs.QNAM)) return false;
-            if (lhs.NEXT != rhs.NEXT) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
+            {
+                if (!lhs.QNAM.Equals(rhs.QNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
+            {
+                if (lhs.NEXT != rhs.NEXT) return false;
+            }
             return true;
         }
         
@@ -968,7 +987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.QNAM) ?? true))
             {
-                item.QNAM = new FormLinkNullable<ISkyrimMajorRecordGetter>(rhs.QNAM.FormKeyNullable);
+                item.QNAM.SetTo(rhs.QNAM.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)DialogResponsesUnknownData_FieldIndex.NEXT) ?? true))
             {
@@ -1142,9 +1161,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.QNAM.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:
@@ -1228,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region QNAM
         private int? _QNAMLocation;
-        public FormLinkNullable<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
+        public IFormLinkNullableGetter<ISkyrimMajorRecordGetter> QNAM => _QNAMLocation.HasValue ? new FormLinkNullable<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QNAMLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISkyrimMajorRecordGetter>.Null;
         #endregion
         #region NEXT
         private int? _NEXTLocation;
@@ -1329,13 +1349,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponsesUnknownDataGetter rhs)) return false;
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponsesUnknownDataGetter rhs) return false;
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponsesUnknownDataGetter? obj)
         {
-            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponsesUnknownDataCommon)((IDialogResponsesUnknownDataGetter)this).CommonInstance()!).GetHashCode(this);

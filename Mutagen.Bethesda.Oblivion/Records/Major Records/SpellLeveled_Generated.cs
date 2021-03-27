@@ -56,22 +56,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISpellLeveledGetter rhs)) return false;
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISpellLeveledGetter? obj)
-        {
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Spell.Mask<TItem>,
@@ -336,6 +320,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellLeveledGetter rhs) return false;
+            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ISpellLeveledGetter? obj)
+        {
+            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -467,11 +471,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISpellLeveledGetter item,
-            ISpellLeveledGetter rhs)
+            ISpellLeveledGetter rhs,
+            SpellLeveled.TranslationMask? equalsMask = null)
         {
             return ((SpellLeveledCommon)((ISpellLeveledGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -675,11 +681,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Clear(item: (ISpellLeveledInternal)item);
         }
         
-        public override void Clear(IASpellInternal item)
-        {
-            Clear(item: (ISpellLeveledInternal)item);
-        }
-        
         public override void Clear(IOblivionMajorRecordInternal item)
         {
             Clear(item: (ISpellLeveledInternal)item);
@@ -714,17 +715,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         
         public override void CopyInFromBinary(
             ISpellInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (SpellLeveled)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IASpellInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -858,25 +848,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static new SpellLeveled_FieldIndex ConvertFieldIndex(ASpell_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ASpell_FieldIndex.MajorRecordFlagsRaw:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.FormKey:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.VersionControl:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.EditorID:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                case ASpell_FieldIndex.OblivionMajorRecordFlags:
-                    return (SpellLeveled_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new SpellLeveled_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -916,48 +887,46 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISpellLeveledGetter? lhs,
-            ISpellLeveledGetter? rhs)
+            ISpellLeveledGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs)) return false;
+            if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             ISpellGetter? lhs,
-            ISpellGetter? rhs)
+            ISpellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellLeveledGetter?)lhs,
-                rhs: rhs as ISpellLeveledGetter);
-        }
-        
-        public override bool Equals(
-            IASpellGetter? lhs,
-            IASpellGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISpellLeveledGetter?)lhs,
-                rhs: rhs as ISpellLeveledGetter);
+                rhs: rhs as ISpellLeveledGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellLeveledGetter?)lhs,
-                rhs: rhs as ISpellLeveledGetter);
+                rhs: rhs as ISpellLeveledGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISpellLeveledGetter?)lhs,
-                rhs: rhs as ISpellLeveledGetter);
+                rhs: rhs as ISpellLeveledGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISpellLeveledGetter item)
@@ -968,11 +937,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         public override int GetHashCode(ISpellGetter item)
-        {
-            return GetHashCode(item: (ISpellLeveledGetter)item);
-        }
-        
-        public override int GetHashCode(IASpellGetter item)
         {
             return GetHashCode(item: (ISpellLeveledGetter)item);
         }
@@ -1022,18 +986,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellLeveled)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override ASpell Duplicate(
-            IASpellGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISpellLeveled)item,
+                item: (ISpellLeveledGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1044,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellLeveled)item,
+                item: (ISpellLeveledGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1055,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISpellLeveled)item,
+                item: (ISpellLeveledGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1118,36 +1071,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public override void DeepCopyIn(
             ISpell item,
             ISpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellLeveled)item,
-                rhs: (ISpellLeveledGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpellInternal item,
-            IASpellGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISpellLeveledInternal)item,
-                rhs: (ISpellLeveledGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IASpell item,
-            IASpellGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1357,17 +1280,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IASpellGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISpellLeveledGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1518,13 +1430,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpellLeveledGetter rhs)) return false;
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISpellLeveledGetter rhs) return false;
+            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpellLeveledGetter? obj)
         {
-            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpellLeveledCommon)((ISpellLeveledGetter)this).CommonInstance()!).GetHashCode(this);

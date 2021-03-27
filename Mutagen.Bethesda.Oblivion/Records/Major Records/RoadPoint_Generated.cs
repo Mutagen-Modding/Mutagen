@@ -84,13 +84,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRoadPointGetter rhs)) return false;
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRoadPointGetter rhs) return false;
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRoadPointGetter? obj)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).GetHashCode(this);
@@ -635,11 +635,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRoadPointGetter item,
-            IRoadPointGetter rhs)
+            IRoadPointGetter rhs,
+            RoadPoint.TranslationMask? equalsMask = null)
         {
             return ((RoadPointCommon)((IRoadPointGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -978,13 +980,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRoadPointGetter? lhs,
-            IRoadPointGetter? rhs)
+            IRoadPointGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes.Span, rhs.NumConnectionsFluffBytes.Span)) return false;
-            if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
+            if ((crystal?.GetShouldTranslate((int)RoadPoint_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RoadPoint_FieldIndex.NumConnectionsFluffBytes) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.NumConnectionsFluffBytes.Span, rhs.NumConnectionsFluffBytes.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RoadPoint_FieldIndex.Connections) ?? true))
+            {
+                if (!lhs.Connections.SequenceEqualNullable(rhs.Connections)) return false;
+            }
             return true;
         }
         
@@ -1328,13 +1340,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRoadPointGetter rhs)) return false;
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRoadPointGetter rhs) return false;
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRoadPointGetter? obj)
         {
-            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RoadPointCommon)((IRoadPointGetter)this).CommonInstance()!).GetHashCode(this);

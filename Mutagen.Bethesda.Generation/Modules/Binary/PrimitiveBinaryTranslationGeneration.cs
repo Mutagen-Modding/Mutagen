@@ -89,6 +89,10 @@ namespace Mutagen.Bethesda.Generation
                     }
                 }
             }
+            else if (typeGen.GetFieldData().Length > 1)
+            {
+                fg.AppendLine($"{writerAccessor}.Write({itemAccessor}, length: {typeGen.GetFieldData().Length});");
+            }
             else
             {
                 fg.AppendLine($"{writerAccessor}.Write({itemAccessor});");

@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreatureAIDataGetter rhs)) return false;
-            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreatureAIDataGetter rhs) return false;
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureAIDataGetter? obj)
         {
-            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -679,11 +679,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICreatureAIDataGetter item,
-            ICreatureAIDataGetter rhs)
+            ICreatureAIDataGetter rhs,
+            CreatureAIData.TranslationMask? equalsMask = null)
         {
             return ((CreatureAIDataCommon)((ICreatureAIDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,17 +1039,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICreatureAIDataGetter? lhs,
-            ICreatureAIDataGetter? rhs)
+            ICreatureAIDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.BuySellServices != rhs.BuySellServices) return false;
-            if (lhs.Teaches != rhs.Teaches) return false;
-            if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.Aggression) ?? true))
+            {
+                if (lhs.Aggression != rhs.Aggression) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.Confidence) ?? true))
+            {
+                if (lhs.Confidence != rhs.Confidence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.EnergyLevel) ?? true))
+            {
+                if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.Responsibility) ?? true))
+            {
+                if (lhs.Responsibility != rhs.Responsibility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.BuySellServices) ?? true))
+            {
+                if (lhs.BuySellServices != rhs.BuySellServices) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.Teaches) ?? true))
+            {
+                if (lhs.Teaches != rhs.Teaches) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CreatureAIData_FieldIndex.MaximumTrainingLevel) ?? true))
+            {
+                if (lhs.MaximumTrainingLevel != rhs.MaximumTrainingLevel) return false;
+            }
             return true;
         }
         
@@ -1411,13 +1435,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreatureAIDataGetter rhs)) return false;
-            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICreatureAIDataGetter rhs) return false;
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureAIDataGetter? obj)
         {
-            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureAIDataCommon)((ICreatureAIDataGetter)this).CommonInstance()!).GetHashCode(this);

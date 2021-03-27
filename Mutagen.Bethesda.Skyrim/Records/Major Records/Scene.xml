@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="us-ascii"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="Scene" recordType="SCEN" objType="Record" baseClass="SkyrimMajorRecord" GUID="1b4d8bf2-2bfe-484e-9447-4dda9d66a0f1" ID="464">
     <Fields>
@@ -12,7 +12,7 @@
       <FormLink name="Quest" refName="Quest" recordType="PNAM" />
       <UInt32 name="LastActionIndex" recordType="INAM" />
       <ByteArray name="VNAM" recordType="VNAM" />
-      <RefList name="Conditions" refName="Condition" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
     </Fields>
   </Object>
   <Object name="SceneAdapter" baseClass="AVirtualMachineAdapter" recordType="VMAD" objType="Subrecord" GUID="a0b825f4-0bce-4fbd-8655-db9ba9e77e0e" ID="465">

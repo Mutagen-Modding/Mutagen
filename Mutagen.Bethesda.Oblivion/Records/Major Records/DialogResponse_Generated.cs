@@ -78,13 +78,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseGetter rhs)) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseGetter rhs) return false;
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);
@@ -563,11 +563,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IDialogResponseGetter item,
-            IDialogResponseGetter rhs)
+            IDialogResponseGetter rhs,
+            DialogResponse.TranslationMask? equalsMask = null)
         {
             return ((DialogResponseCommon)((IDialogResponseGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -910,13 +912,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDialogResponseGetter? lhs,
-            IDialogResponseGetter? rhs)
+            IDialogResponseGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
-            if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ResponseText) ?? true))
+            {
+                if (!string.Equals(lhs.ResponseText, rhs.ResponseText)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.ActorNotes) ?? true))
+            {
+                if (!string.Equals(lhs.ActorNotes, rhs.ActorNotes)) return false;
+            }
             return true;
         }
         
@@ -1362,13 +1374,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDialogResponseGetter rhs)) return false;
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDialogResponseGetter rhs) return false;
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDialogResponseGetter? obj)
         {
-            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DialogResponseCommon)((IDialogResponseGetter)this).CommonInstance()!).GetHashCode(this);

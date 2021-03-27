@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Faction
-        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
+        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        public IFormLink<IFactionGetter> Faction
+        {
+            get => _Faction;
+            set => _Faction = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFactionGetter> IRelationGetter.Faction => this.Faction;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelationGetter rhs) return false;
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new FormLink<IFactionGetter> Faction { get; set; }
+        new IFormLink<IFactionGetter> Faction { get; }
         new Int32 Modifier { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        FormLink<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 Modifier { get; }
 
     }
@@ -518,11 +525,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRelationGetter item,
-            IRelationGetter rhs)
+            IRelationGetter rhs,
+            Relation.TranslationMask? equalsMask = null)
         {
             return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -725,14 +734,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Faction = FormLink<IFactionGetter>.Null;
+            item.Faction.Clear();
             item.Modifier = default;
         }
         
         #region Mutagen
         public void RemapLinks(IRelation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Faction = obj.Faction.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion
@@ -842,12 +851,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRelationGetter? lhs,
-            IRelationGetter? rhs)
+            IRelationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
-            if (lhs.Modifier != rhs.Modifier) return false;
+            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
+            {
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
+            {
+                if (lhs.Modifier != rhs.Modifier) return false;
+            }
             return true;
         }
         
@@ -891,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
+                item.Faction.SetTo(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1036,9 +1052,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Faction.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Modifier = frame.ReadInt32();
         }
 
@@ -1106,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1169,13 +1186,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelationGetter rhs) return false;
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);

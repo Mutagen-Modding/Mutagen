@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Oblivion
         public AIPackageLocation.LocationType Type { get; set; } = default;
         #endregion
         #region LocationReference
-        public FormLink<IPlacedGetter> LocationReference { get; set; } = new FormLink<IPlacedGetter>();
+        private IFormLink<IPlacedGetter> _LocationReference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> LocationReference
+        {
+            get => _LocationReference;
+            set => _LocationReference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IAIPackageLocationGetter.LocationReference => this.LocationReference;
         #endregion
         #region Radius
         public Single Radius { get; set; } = default;
@@ -65,13 +72,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageLocationGetter rhs)) return false;
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageLocationGetter rhs) return false;
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageLocationGetter? obj)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -481,7 +488,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<IAIPackageLocation>
     {
         new AIPackageLocation.LocationType Type { get; set; }
-        new FormLink<IPlacedGetter> LocationReference { get; set; }
+        new IFormLink<IPlacedGetter> LocationReference { get; }
         new Single Radius { get; set; }
     }
 
@@ -499,7 +506,7 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => AIPackageLocation_Registration.Instance;
         AIPackageLocation.LocationType Type { get; }
-        FormLink<IPlacedGetter> LocationReference { get; }
+        IFormLinkGetter<IPlacedGetter> LocationReference { get; }
         Single Radius { get; }
 
     }
@@ -551,11 +558,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IAIPackageLocationGetter item,
-            IAIPackageLocationGetter rhs)
+            IAIPackageLocationGetter rhs,
+            AIPackageLocation.TranslationMask? equalsMask = null)
         {
             return ((AIPackageLocationCommon)((IAIPackageLocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -760,14 +769,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             ClearPartial();
             item.Type = default;
-            item.LocationReference = FormLink<IPlacedGetter>.Null;
+            item.LocationReference.Clear();
             item.Radius = default;
         }
         
         #region Mutagen
         public void RemapLinks(IAIPackageLocation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.LocationReference = obj.LocationReference.Relink(mapping);
+            obj.LocationReference.Relink(mapping);
         }
         
         #endregion
@@ -882,13 +891,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAIPackageLocationGetter? lhs,
-            IAIPackageLocationGetter? rhs)
+            IAIPackageLocationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
-            if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            if ((crystal?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
+            {
+                if (!lhs.LocationReference.Equals(rhs.LocationReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
+            {
+                if (!lhs.Radius.EqualsWithin(rhs.Radius)) return false;
+            }
             return true;
         }
         
@@ -937,7 +956,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.LocationReference) ?? true))
             {
-                item.LocationReference = new FormLink<IPlacedGetter>(rhs.LocationReference.FormKey);
+                item.LocationReference.SetTo(rhs.LocationReference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AIPackageLocation_FieldIndex.Radius) ?? true))
             {
@@ -1089,9 +1108,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.LocationReference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.LocationReference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Radius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
@@ -1160,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         public AIPackageLocation.LocationType Type => (AIPackageLocation.LocationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x0, 0x4));
-        public FormLink<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> LocationReference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Single Radius => _data.Slice(0x8, 0x4).Float();
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1223,13 +1243,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIPackageLocationGetter rhs)) return false;
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIPackageLocationGetter rhs) return false;
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIPackageLocationGetter? obj)
         {
-            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIPackageLocationCommon)((IAIPackageLocationGetter)this).CommonInstance()!).GetHashCode(this);

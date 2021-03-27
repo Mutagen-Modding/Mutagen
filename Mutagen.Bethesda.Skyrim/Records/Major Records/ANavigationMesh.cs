@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
                     case IWorldspaceNavigationMesh worldspace:
                         {
                             var ret = WorldspaceNavigationMeshData.CreateFromBinary(frame);
-                            ret.Parent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
+                            ret.Parent.FormKey = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
                             ret.Coordinates = new P2Int16(
                                 BinaryPrimitives.ReadInt16LittleEndian(parentBytes.Slice(4)),
                                 BinaryPrimitives.ReadInt16LittleEndian(parentBytes.Slice(6)));
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
                     case ICellNavigationMesh cell:
                         {
                             var ret = CellNavigationMeshData.CreateFromBinary(frame);
-                            ret.UnusedWorldspaceParent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
-                            ret.Parent = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(4, 4), frame.MetaData.MasterReferences!);
+                            ret.UnusedWorldspaceParent.FormKey = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(0, 4), frame.MetaData.MasterReferences!);
+                            ret.Parent.FormKey = FormKeyBinaryTranslation.Instance.Parse(parentBytes.Slice(4, 4), frame.MetaData.MasterReferences!);
                             cell.Data = ret;
                         }
                         break;

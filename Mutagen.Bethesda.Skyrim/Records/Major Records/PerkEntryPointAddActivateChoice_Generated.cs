@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLinkNullable<ISpellGetter> Spell { get; set; } = new FormLinkNullable<ISpellGetter>();
+        private IFormLinkNullable<ISpellGetter> _Spell = new FormLinkNullable<ISpellGetter>();
+        public IFormLinkNullable<ISpellGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISpellGetter> IPerkEntryPointAddActivateChoiceGetter.Spell => this.Spell;
         #endregion
         #region ButtonLabel
         public TranslatedString? ButtonLabel { get; set; }
@@ -71,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointAddActivateChoiceGetter rhs)) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -492,7 +499,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkEntryPointAddActivateChoice>,
         IPerkEntryPointAddActivateChoiceGetter
     {
-        new FormLinkNullable<ISpellGetter> Spell { get; set; }
+        new IFormLinkNullable<ISpellGetter> Spell { get; }
         new TranslatedString? ButtonLabel { get; set; }
         new PerkScriptFlag Flags { get; set; }
     }
@@ -504,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkEntryPointAddActivateChoiceGetter>
     {
         static new ILoquiRegistration Registration => PerkEntryPointAddActivateChoice_Registration.Instance;
-        FormLinkNullable<ISpellGetter> Spell { get; }
+        IFormLinkNullableGetter<ISpellGetter> Spell { get; }
         ITranslatedStringGetter? ButtonLabel { get; }
         IPerkScriptFlagGetter Flags { get; }
 
@@ -557,11 +564,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkEntryPointAddActivateChoiceGetter item,
-            IPerkEntryPointAddActivateChoiceGetter rhs)
+            IPerkEntryPointAddActivateChoiceGetter rhs,
+            PerkEntryPointAddActivateChoice.TranslationMask? equalsMask = null)
         {
             return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -746,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkEntryPointAddActivateChoice item)
         {
             ClearPartial();
-            item.Spell = FormLinkNullable<ISpellGetter>.Null;
+            item.Spell.Clear();
             item.ButtonLabel = default;
             item.Flags.Clear();
             base.Clear(item);
@@ -766,7 +775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkEntryPointAddActivateChoice obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Spell = obj.Spell.Relink(mapping);
+            obj.Spell.Relink(mapping);
         }
         
         #endregion
@@ -945,33 +954,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkEntryPointAddActivateChoiceGetter? lhs,
-            IPerkEntryPointAddActivateChoiceGetter? rhs)
+            IPerkEntryPointAddActivateChoiceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
-            if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+            if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
+            {
+                if (!object.Equals(lhs.ButtonLabel, rhs.ButtonLabel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
+            {
+                if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEntryPointEffectGetter? lhs,
-            IAPerkEntryPointEffectGetter? rhs)
+            IAPerkEntryPointEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
-                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter);
+                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkEntryPointAddActivateChoiceGetter?)lhs,
-                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter);
+                rhs: rhs as IPerkEntryPointAddActivateChoiceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkEntryPointAddActivateChoiceGetter item)
@@ -1042,7 +1065,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLinkNullable<ISpellGetter>(rhs.Spell.FormKeyNullable);
+                item.Spell.SetTo(rhs.Spell.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.ButtonLabel) ?? true))
             {
@@ -1285,9 +1308,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             if (frame.Complete) return;
-            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Spell.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1372,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLinkNullable<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
+        public IFormLinkNullableGetter<ISpellGetter> Spell => new FormLinkNullable<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x2, 0x4))));
         #region ButtonLabel
         private int? _ButtonLabelLocation;
         public ITranslatedStringGetter? ButtonLabel => _ButtonLabelLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _ButtonLabelLocation.Value, _package.MetaData.Constants), StringsSource.Normal, _package.MetaData.StringsLookup) : default(TranslatedString?);
@@ -1475,13 +1499,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkEntryPointAddActivateChoiceGetter rhs)) return false;
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkEntryPointAddActivateChoiceGetter rhs) return false;
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkEntryPointAddActivateChoiceGetter? obj)
         {
-            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkEntryPointAddActivateChoiceCommon)((IPerkEntryPointAddActivateChoiceGetter)this).CommonInstance()!).GetHashCode(this);

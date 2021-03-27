@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnchantmentDataGetter rhs)) return false;
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnchantmentDataGetter rhs) return false;
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnchantmentDataGetter? obj)
         {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IEnchantmentDataGetter item,
-            IEnchantmentDataGetter rhs)
+            IEnchantmentDataGetter rhs,
+            EnchantmentData.TranslationMask? equalsMask = null)
         {
             return ((EnchantmentDataCommon)((IEnchantmentDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEnchantmentDataGetter? lhs,
-            IEnchantmentDataGetter? rhs)
+            IEnchantmentDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
-            if (lhs.EnchantCost != rhs.EnchantCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.ChargeAmount) ?? true))
+            {
+                if (lhs.ChargeAmount != rhs.ChargeAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.EnchantCost) ?? true))
+            {
+                if (lhs.EnchantCost != rhs.EnchantCost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnchantmentData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1262,13 +1277,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnchantmentDataGetter rhs)) return false;
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnchantmentDataGetter rhs) return false;
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnchantmentDataGetter? obj)
         {
-            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnchantmentDataCommon)((IEnchantmentDataGetter)this).CommonInstance()!).GetHashCode(this);

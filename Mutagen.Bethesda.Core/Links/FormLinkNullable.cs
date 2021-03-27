@@ -12,63 +12,38 @@ namespace Mutagen.Bethesda
     /// FormKey allowed to be null to communicate the absence of the field.
     /// </summary>
     /// <typeparam name="TMajorGetter">The type of Major Record the Link is allowed to connect with</typeparam>
-    public struct FormLinkNullable<TMajorGetter> :
-        IFormLink<TMajorGetter>,
+    public class FormLinkNullableGetter<TMajorGetter> :
+        IFormLinkNullableGetter<TMajorGetter>,
         IEquatable<FormLink<TMajorGetter>>,
         IEquatable<FormLinkNullable<TMajorGetter>>,
-        IEquatable<IFormLink<TMajorGetter>>,
-        IEquatable<IFormLinkNullable<TMajorGetter>>
+        IEquatable<IFormLinkGetter<TMajorGetter>>,
+        IEquatable<IFormLinkNullableGetter<TMajorGetter>>
         where TMajorGetter : class, IMajorRecordCommonGetter
     {
+        protected FormKey? _formKey;
+
         /// <summary>
         /// A readonly singleton representing an unlinked and null FormLinkNullable
         /// </summary>
-        public static readonly FormLinkNullable<TMajorGetter> Null = new FormLinkNullable<TMajorGetter>();
+        public static readonly IFormLinkNullableGetter<TMajorGetter> Null = new FormLinkNullableGetter<TMajorGetter>();
 
         /// <summary>
         /// FormKey of the target record.
         /// </summary>
-        public FormKey? FormKeyNullable { get; }
+        public FormKey? FormKeyNullable => _formKey;
 
         /// <summary>
         /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
-        /// </summary>
-        public FormKey FormKey => FormKeyNullable ?? FormKey.Null;
-        
-        Type ILink.TargetType => typeof(TMajorGetter);
+        /// </summary>o
+        public FormKey FormKey => _formKey ?? FormKey.Null;
+
+        /// <inheritdoc />
+        public Type Type => typeof(TMajorGetter);
 
         /// <summary>
         /// True if unlinked and ID points to Null
         /// </summary>
-        public bool IsNull => this.FormKeyNullable?.IsNull ?? true;
-
-        /// <summary>
-        /// Default constructor that creates a link to the target FormKey
-        /// </summary>
-        public FormLinkNullable(FormKey? formKey)
-        {
-            this.FormKeyNullable = formKey;
-        }
-
-        public static bool operator ==(FormLinkNullable<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
-        {
-            return lhs.FormKeyNullable?.Equals(rhs.FormKey) ?? false;
-        }
-
-        public static bool operator !=(FormLinkNullable<TMajorGetter> lhs, FormLink<TMajorGetter> rhs)
-        {
-            return !lhs.FormKeyNullable?.Equals(rhs.FormKey) ?? true;
-        }
-
-        public static bool operator ==(FormLink<TMajorGetter> lhs, FormLinkNullable<TMajorGetter> rhs)
-        {
-            return EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
-        }
-
-        public static bool operator !=(FormLink<TMajorGetter> lhs, FormLinkNullable<TMajorGetter> rhs)
-        {
-            return !EqualityComparer<FormKey?>.Default.Equals(lhs.FormKey, rhs.FormKeyNullable);
-        }
+        public bool IsNull => this._formKey?.IsNull ?? true;
 
         /// <summary>
         /// Default Equality
@@ -85,138 +60,44 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLink<TMajorGetter> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKey);
+        public bool Equals(FormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(FormLinkNullable<TMajorGetter> other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other.FormKeyNullable);
+        public bool Equals(FormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?._formKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a non nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLink<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKey);
+        public bool Equals(IFormLinkGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKey);
 
         /// <summary>
         /// Compares equality of two links, where rhs is a nullable link.
         /// </summary>
         /// <param name="other">Other link to compare to</param>
         /// <returns>True if FormKey members are equal</returns>
-        public bool Equals(IFormLinkNullable<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this.FormKeyNullable, other?.FormKeyNullable);
+        public bool Equals(IFormLinkNullableGetter<TMajorGetter>? other) => EqualityComparer<FormKey?>.Default.Equals(this._formKey, other?.FormKeyNullable);
 
         /// <summary>
         /// Returns hash code
         /// </summary>
         /// <returns>Hash code evaluated from FormKey member</returns>
-        public override int GetHashCode() => this.FormKeyNullable?.GetHashCode() ?? 0;
+        public override int GetHashCode() => this._formKey?.GetHashCode() ?? 0;
 
         /// <summary>
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => this.FormKeyNullable?.ToString() ?? "Null";
-
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="major">Located record if successful</param>
-        /// <returns>True if link was resolved and a record was retrieved</returns>
-        public bool TryResolve(ILinkCache cache, [MaybeNullWhen(false)] out TMajorGetter major)
-        {
-            if (this.FormKeyNullable == null
-                || this.FormKeyNullable.Equals(Mutagen.Bethesda.FormKey.Null))
-            {
-                major = default!;
-                return false;
-            }
-            if (cache.TryResolve<TMajorGetter>(this.FormKeyNullable.Value, out var majorRec))
-            {
-                major = majorRec;
-                return true;
-            }
-            major = default!;
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to locate an associated FormKey from the link
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="formKey">FormKey if found</param>
-        /// <returns>True if FormKey is not null</returns>
-        public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
-        {
-            if (this.FormKeyNullable == null)
-            {
-                formKey = default!;
-                return false;
-            }
-            formKey = this.FormKeyNullable.Value;
-            return true;
-        }
-
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="major">Located record if successful</param>
-        /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam>
-        public bool TryResolve<TScopedMajor>(ILinkCache cache, [MaybeNullWhen(false)] out TScopedMajor major)
-            where TScopedMajor : class, TMajorGetter
-        {
-            if (this.FormKeyNullable?.Equals(Mutagen.Bethesda.FormKey.Null) ?? true)
-            {
-                major = default!;
-                return false;
-            }
-            if (cache.TryResolve<TScopedMajor>(this.FormKeyNullable.Value, out var majorRec))
-            {
-                major = majorRec;
-                return true;
-            }
-            major = default!;
-            return false;
-        }
-
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>TLocated record if successful, or null</returns>
-        public TMajorGetter? Resolve(ILinkCache cache)
-        {
-            if (TryResolve(cache, out var major))
-            {
-                return major;
-            }
-            return default;
-        }
-
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>TLocated record if successful, or null</returns>
-        /// <typeparam name="TScopedMajor">Major Record type to resolve to</typeparam>
-        public TMajorGetter? Resolve<TScopedMajor>(ILinkCache cache)
-            where TScopedMajor : class, TMajorGetter
-        {
-            if (TryResolve<TScopedMajor>(cache, out var major))
-            {
-                return major;
-            }
-            return default;
-        }
+        public override string ToString() => this._formKey?.ToString() ?? "Null";
 
         bool ILink.TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter formKey)
         {
-            if (TryResolve(cache, out var rec))
+            if (this.TryResolve(cache, out var rec))
             {
                 formKey = rec;
                 return true;
@@ -225,123 +106,31 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        /// <summary>
-        /// Attempts to locate link target in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>TryGet object with located record if successful</returns>
-        public ITryGetter<TMajorGetter> TryResolve(ILinkCache cache)
+        /// <summary> 
+        /// Attempts to locate an associated FormKey from the link 
+        /// </summary> 
+        /// <param name="cache">Link Cache to resolve against</param> 
+        /// <param name="formKey">FormKey if found</param> 
+        /// <returns>True if FormKey is not null</returns> 
+        public bool TryResolveFormKey(ILinkCache cache, [MaybeNullWhen(false)] out FormKey formKey)
         {
-            if (TryResolve(cache, out var rec))
+            if (this._formKey == null)
             {
-                return TryGet<TMajorGetter>.Succeed(rec);
-            }
-            return TryGet<TMajorGetter>.Failure;
-        }
-
-        /// <summary>
-        /// Attempts to locate link's target record in given Link Cache. 
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="majorRecord">Major Record if located</param>
-        /// <returns>True if successful in linking to record</returns>
-        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
-        /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
-        public bool TryResolveContext<TMod, TModGetter, TMajor>(
-            ILinkCache<TMod, TModGetter> cache,
-            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRecord)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-        {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
-            {
-                majorRecord = default;
+                formKey = default!;
                 return false;
             }
-            return cache.TryResolveContext<TMajor, TMajorGetter>(formKey, out majorRecord);
-        }
-
-        /// <summary>
-        /// Locates link target record in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>Located Major Record</returns>
-        /// <exception cref="NullReferenceException">If link was not succesful</exception>
-        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TMajor">Major Record setter type to resolve to</typeparam>
-        public IModContext<TMod, TModGetter, TMajor, TMajorGetter>? ResolveContext<TMod, TModGetter, TMajor>(
-            ILinkCache<TMod, TModGetter> cache)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-        {
-            if (this.TryResolveContext<TMod, TModGetter, TMajor, TMajorGetter>(cache, out var majorRecord))
-            {
-                return majorRecord;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Attempts to locate link target record in given Link Cache.
-        /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <param name="majorRecord">Located record if successful</param>
-        /// <returns>True if link was resolved and a record was retrieved</returns>
-        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
-        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
-        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public bool TryResolveContext<TMod, TModGetter, TScopedSetter, TScopedGetter>(
-            ILinkCache<TMod, TModGetter> cache,
-            [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter> majorRecord)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
-            where TScopedGetter : class, TMajorGetter
-        {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
-            {
-                majorRecord = default;
-                return false;
-            }
-            return cache.TryResolveContext<TScopedSetter, TScopedGetter>(formKey, out majorRecord);
+            formKey = this._formKey.Value;
+            return true;
         }
 
         /// <summary> 
-        /// Locates link target record in given Link Cache. 
+        /// Attempts to locate an associated ModKey from the link 
         /// </summary> 
-        /// <param name="cache">Link Cache to resolve against</param> 
-        /// <returns>Located Major Record</returns> 
-        /// <exception cref="NullReferenceException">If link was not succesful</exception> 
-        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TModGetter">Mod getter type that can be overridden into</typeparam>
-        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
-        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>? ResolveContext<TMod, TModGetter, TScopedSetter, TScopedGetter>(
-            ILinkCache<TMod, TModGetter> cache)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
-            where TScopedGetter : class, TMajorGetter
-        {
-            if (this.TryResolveContext<TMod, TModGetter, TMajorGetter, TScopedSetter, TScopedGetter>(cache, out var majorRecord))
-            {
-                return majorRecord;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Attempts to locate an associated ModKey from the link
-        /// </summary>
-        /// <param name="modKey">ModKey if found</param>
-        /// <returns>True if FormKey is not null</returns>
+        /// <param name="modKey">ModKey if found</param> 
+        /// <returns>True if FormKey is not null</returns> 
         public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
         {
-            if (this.FormKeyNullable.TryGet(out var formKey))
+            if (this._formKey.TryGet(out var formKey))
             {
                 modKey = formKey.ModKey;
                 return true;
@@ -351,77 +140,106 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Locate all of a link's target records in given Link Cache.<br /> 
-        /// The winning override will be returned first, and finished by the original defining definition.
+        /// Attempts to locate link target in given Link Cache.
         /// </summary>
         /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>Enumerable of the linked records</returns>
-        public IEnumerable<TMajorGetter> ResolveAll(ILinkCache cache)
+        /// <returns>TryGet object with located record if successful</returns>
+        public TMajorGetter? TryResolve(ILinkCache cache)
         {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
+            if (this.TryResolve(cache, out var rec))
             {
-                return Enumerable.Empty<TMajorGetter>();
+                return rec;
             }
-            return cache.ResolveAll<TMajorGetter>(formKey);
+            return default;
+        }
+
+        IFormLinkNullable<TMajorRet> IFormLinkNullableGetter<TMajorGetter>.Cast<TMajorRet>()
+        {
+            return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        }
+
+        IFormLink<TMajorRet> IFormLinkGetter<TMajorGetter>.Cast<TMajorRet>()
+        {
+            return new FormLinkNullable<TMajorRet>(this.FormKeyNullable);
+        }
+    }
+
+    public class FormLinkNullable<TMajorGetter> : FormLinkNullableGetter<TMajorGetter>, IFormLinkNullable<TMajorGetter>
+        where TMajorGetter : class, IMajorRecordCommonGetter
+    {
+        /// <summary>
+        /// FormKey of the target record.
+        /// </summary>
+        public new FormKey? FormKeyNullable
+        {
+            get => _formKey;
+            set => _formKey = value;
         }
 
         /// <summary>
-        /// Locate all of a link's target records in given Link Cache.<br /> 
-        /// The winning override will be returned first, and finished by the original defining definition.
+        /// Non null FormKey of the target record.  If null, it will instead return FormKey.Null.
         /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>Enumerable of the linked records</returns>
-        /// <typeparam name="TScopedMajor">Inheriting Major Record type to scope to</typeparam>
-        public IEnumerable<TScopedMajor> ResolveAll<TScopedMajor>(ILinkCache cache)
-            where TScopedMajor : class, TMajorGetter
+        public new FormKey FormKey
         {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
-            {
-                return Enumerable.Empty<TScopedMajor>();
-            }
-            return cache.ResolveAll<TScopedMajor>(formKey);
+            get => _formKey ?? FormKey.Null;
+            set => _formKey = value;
+        }
+
+        public FormLinkNullable()
+        {
         }
 
         /// <summary>
-        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
-        /// The winning override will be returned first, and finished by the original defining definition.
+        /// Default constructor that creates a link to the target FormKey
         /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>Enumerable of the linked records</returns>
-        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMod, TModGetter, TMajor>(
-            ILinkCache<TMod, TModGetter> cache)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
+        public FormLinkNullable(FormKey? formKey)
         {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
-            {
-                return Enumerable.Empty<IModContext<TMod, TModGetter, TMajor, TMajorGetter>>();
-            }
-            return cache.ResolveAllContexts<TMajor, TMajorGetter>(this.FormKey);
+            this._formKey = formKey;
         }
 
         /// <summary>
-        /// Locate all of a link's target record contexts in given Link Cache.<br /> 
-        /// The winning override will be returned first, and finished by the original defining definition.
+        /// Default constructor that creates a link to the target record
         /// </summary>
-        /// <param name="cache">Link Cache to resolve against</param>
-        /// <returns>Enumerable of the linked records</returns>
-        /// <typeparam name="TMod">Mod setter type that can be overridden into</typeparam>
-        /// <typeparam name="TScopedSetter">Inheriting Major Record setter type to scope to</typeparam>
-        /// <typeparam name="TScopedGetter">Inheriting Major Record getter type to scope to</typeparam>
-        public IEnumerable<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>> ResolveAllContexts<TMod, TModGetter, TScopedSetter, TScopedGetter>(
-            ILinkCache<TMod, TModGetter> cache)
-            where TModGetter : class, IModGetter
-            where TMod : class, TModGetter, IContextMod<TMod, TModGetter>
-            where TScopedSetter : class, TScopedGetter, IMajorRecordCommon
-            where TScopedGetter : class, TMajorGetter
+        public FormLinkNullable(TMajorGetter? record)
         {
-            if (!this.FormKeyNullable.TryGet(out var formKey))
-            {
-                return Enumerable.Empty<IModContext<TMod, TModGetter, TScopedSetter, TScopedGetter>>();
-            }
-            return cache.ResolveAllContexts<TScopedSetter, TScopedGetter>(this.FormKey);
+            this._formKey = record?.FormKey;
+        }
+
+        /// <summary>
+        /// Sets the link to the target FormKey
+        /// </summary>
+        /// <param name="formKey">Target FormKey to link to</param>
+        public void SetTo(FormKey? formKey)
+        {
+            this._formKey = formKey;
+        }
+
+        /// <summary>
+        /// Sets the link to the target Record
+        /// </summary>
+        /// <param name="record">Target record to link to</param>
+        public void SetTo(TMajorGetter? record)
+        {
+            this._formKey = record?.FormKey;
+        }
+
+        /// <summary>
+        /// Sets the link to match another link
+        /// </summary>
+        /// <param name="link">Target link to set to</param>
+        public void SetTo(IFormLinkNullableGetter<TMajorGetter> link)
+        {
+            this._formKey = link.FormKeyNullable;
+        }
+
+        public void Clear()
+        {
+            this._formKey = null;
+        }
+
+        public void SetToNull()
+        {
+            this._formKey = null;
         }
 
         public static implicit operator FormLinkNullable<TMajorGetter>(TMajorGetter? major)

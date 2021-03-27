@@ -43,10 +43,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region EffectArt
-        public FormLink<IArtObjectGetter> EffectArt { get; set; } = new FormLink<IArtObjectGetter>();
+        private IFormLink<IArtObjectGetter> _EffectArt = new FormLink<IArtObjectGetter>();
+        public IFormLink<IArtObjectGetter> EffectArt
+        {
+            get => _EffectArt;
+            set => _EffectArt = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IArtObjectGetter> IVisualEffectGetter.EffectArt => this.EffectArt;
         #endregion
         #region Shader
-        public FormLink<IEffectShaderGetter> Shader { get; set; } = new FormLink<IEffectShaderGetter>();
+        private IFormLink<IEffectShaderGetter> _Shader = new FormLink<IEffectShaderGetter>();
+        public IFormLink<IEffectShaderGetter> Shader
+        {
+            get => _Shader;
+            set => _Shader = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IEffectShaderGetter> IVisualEffectGetter.Shader => this.Shader;
         #endregion
         #region Flags
         public VisualEffect.Flag Flags { get; set; } = default;
@@ -65,22 +79,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IVisualEffectGetter rhs)) return false;
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IVisualEffectGetter? obj)
-        {
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -497,6 +495,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IVisualEffectGetter rhs) return false;
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IVisualEffectGetter? obj)
+        {
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -559,8 +577,8 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         IVisualEffectGetter
     {
-        new FormLink<IArtObjectGetter> EffectArt { get; set; }
-        new FormLink<IEffectShaderGetter> Shader { get; set; }
+        new IFormLink<IArtObjectGetter> EffectArt { get; }
+        new IFormLink<IEffectShaderGetter> Shader { get; }
         new VisualEffect.Flag Flags { get; set; }
         new VisualEffect.DATADataType DATADataTypeState { get; set; }
     }
@@ -580,8 +598,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IVisualEffectGetter>
     {
         static new ILoquiRegistration Registration => VisualEffect_Registration.Instance;
-        FormLink<IArtObjectGetter> EffectArt { get; }
-        FormLink<IEffectShaderGetter> Shader { get; }
+        IFormLinkGetter<IArtObjectGetter> EffectArt { get; }
+        IFormLinkGetter<IEffectShaderGetter> Shader { get; }
         VisualEffect.Flag Flags { get; }
         VisualEffect.DATADataType DATADataTypeState { get; }
 
@@ -634,11 +652,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IVisualEffectGetter item,
-            IVisualEffectGetter rhs)
+            IVisualEffectGetter rhs,
+            VisualEffect.TranslationMask? equalsMask = null)
         {
             return ((VisualEffectCommon)((IVisualEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -838,8 +858,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IVisualEffectInternal item)
         {
             ClearPartial();
-            item.EffectArt = FormLink<IArtObjectGetter>.Null;
-            item.Shader = FormLink<IEffectShaderGetter>.Null;
+            item.EffectArt.Clear();
+            item.Shader.Clear();
             item.Flags = default;
             item.DATADataTypeState = default;
             base.Clear(item);
@@ -859,8 +879,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IVisualEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.EffectArt = obj.EffectArt.Relink(mapping);
-            obj.Shader = obj.Shader.Relink(mapping);
+            obj.EffectArt.Relink(mapping);
+            obj.Shader.Relink(mapping);
         }
         
         #endregion
@@ -1043,34 +1063,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IVisualEffectGetter? lhs,
-            IVisualEffectGetter? rhs)
+            IVisualEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
-            if (!lhs.Shader.Equals(rhs.Shader)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
+            {
+                if (!lhs.EffectArt.Equals(rhs.EffectArt)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
+            {
+                if (!lhs.Shader.Equals(rhs.Shader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)VisualEffect_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IVisualEffectGetter?)lhs,
-                rhs: rhs as IVisualEffectGetter);
+                rhs: rhs as IVisualEffectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IVisualEffectGetter?)lhs,
-                rhs: rhs as IVisualEffectGetter);
+                rhs: rhs as IVisualEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IVisualEffectGetter item)
@@ -1120,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new VisualEffect(formKey, default(SkyrimRelease));
+            var newRec = new VisualEffect(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1131,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IVisualEffect)item,
+                item: (IVisualEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1142,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IVisualEffect)item,
+                item: (IVisualEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1187,11 +1224,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.EffectArt) ?? true))
             {
-                item.EffectArt = new FormLink<IArtObjectGetter>(rhs.EffectArt.FormKey);
+                item.EffectArt.SetTo(rhs.EffectArt.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Shader) ?? true))
             {
-                item.Shader = new FormLink<IEffectShaderGetter>(rhs.Shader.FormKey);
+                item.Shader.SetTo(rhs.Shader.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)VisualEffect_FieldIndex.Flags) ?? true))
             {
@@ -1475,12 +1512,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.EffectArt = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.Shader = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.EffectArt.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.Shader.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return (int)VisualEffect_FieldIndex.Flags;
                 }
@@ -1544,12 +1583,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region EffectArt
         private int _EffectArtLocation => _DATALocation!.Value;
         private bool _EffectArt_IsSet => _DATALocation.HasValue;
-        public FormLink<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
+        public IFormLinkGetter<IArtObjectGetter> EffectArt => _EffectArt_IsSet ? new FormLink<IArtObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_EffectArtLocation, 0x4)))) : FormLink<IArtObjectGetter>.Null;
         #endregion
         #region Shader
         private int _ShaderLocation => _DATALocation!.Value + 0x4;
         private bool _Shader_IsSet => _DATALocation.HasValue;
-        public FormLink<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
+        public IFormLinkGetter<IEffectShaderGetter> Shader => _Shader_IsSet ? new FormLink<IEffectShaderGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ShaderLocation, 0x4)))) : FormLink<IEffectShaderGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _DATALocation!.Value + 0x8;
@@ -1653,13 +1692,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IVisualEffectGetter rhs)) return false;
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IVisualEffectGetter rhs) return false;
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IVisualEffectGetter? obj)
         {
-            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((VisualEffectCommon)((IVisualEffectGetter)this).CommonInstance()!).GetHashCode(this);

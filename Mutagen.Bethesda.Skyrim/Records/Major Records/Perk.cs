@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PerkBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPerkInternal item)
+            static void FillBinaryConditionsCustom(MutagenFrame frame, IPerkInternal item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
             }
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
                             case Perk.EffectType.Quest:
                                 effect = new PerkQuestEffect()
                                 {
-                                    Quest = FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!),
+                                    Quest = new FormLink<IQuestGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
                                     Stage = dataFrame.Content[4],
                                     Unknown = dataFrame.Content.Slice(5, 3).ToArray(),
                                 };
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
                             case Perk.EffectType.Ability:
                                 effect = new PerkAbilityEffect()
                                 {
-                                    Ability = FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!),
+                                    Ability = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
                                 };
                                 effect.Conditions.SetTo(
                                     Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -208,7 +208,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointAddLeveledItem()
                                         {
-                                            Item = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null
+                                            Item = new FormLink<ILeveledItemGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null)
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.AddActivateChoice:
@@ -220,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointAddActivateChoice()
                                         {
-                                            Spell = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?),
+                                            Spell = new FormLinkNullable<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : default(FormKey?)),
                                             ButtonLabel = epf2.HasValue ? StringBinaryTranslation.Instance.Parse(epf2.Value, StringsSource.Normal, stream.MetaData.StringsLookup!) : null,
                                             Flags = new PerkScriptFlag()
                                             {
@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Skyrim
                                         }
                                         entryPointEffect = new PerkEntryPointSelectSpell()
                                         {
-                                            Spell = epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null,
+                                            Spell = new FormLink<ISpellGetter>(epfd.HasValue ? FormKeyBinaryTranslation.Instance.Parse(epfd.Value, stream.MetaData.MasterReferences!) : FormKey.Null),
                                         };
                                         break;
                                     case APerkEntryPointEffect.FunctionType.SelectText:
@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PerkBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IPerkGetter item)
+            static void WriteBinaryConditionsCustom(MutagenWriter writer, IPerkGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }

@@ -54,7 +54,14 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte> ILockInformationGetter.Unused => this.Unused;
         #endregion
         #region Key
-        public FormLink<IKeyGetter> Key { get; set; } = new FormLink<IKeyGetter>();
+        private IFormLink<IKeyGetter> _Key = new FormLink<IKeyGetter>();
+        public IFormLink<IKeyGetter> Key
+        {
+            get => _Key;
+            set => _Key = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeyGetter> ILockInformationGetter.Key => this.Key;
         #endregion
         #region Flags
         public LockInformation.Flag Flags { get; set; } = default;
@@ -76,13 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockInformationGetter rhs) return false;
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockInformationGetter? obj)
         {
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -521,7 +528,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new Byte LockLevel { get; set; }
         new MemorySlice<Byte> Unused { get; set; }
-        new FormLink<IKeyGetter> Key { get; set; }
+        new IFormLink<IKeyGetter> Key { get; }
         new LockInformation.Flag Flags { get; set; }
     }
 
@@ -540,7 +547,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => LockInformation_Registration.Instance;
         Byte LockLevel { get; }
         ReadOnlyMemorySlice<Byte> Unused { get; }
-        FormLink<IKeyGetter> Key { get; }
+        IFormLinkGetter<IKeyGetter> Key { get; }
         LockInformation.Flag Flags { get; }
 
     }
@@ -592,11 +599,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILockInformationGetter item,
-            ILockInformationGetter rhs)
+            ILockInformationGetter rhs,
+            LockInformation.TranslationMask? equalsMask = null)
         {
             return ((LockInformationCommon)((ILockInformationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -803,14 +812,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.LockLevel = default;
             item.Unused = new byte[3];
-            item.Key = FormLink<IKeyGetter>.Null;
+            item.Key.Clear();
             item.Flags = default;
         }
         
         #region Mutagen
         public void RemapLinks(ILockInformation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Key = obj.Key.Relink(mapping);
+            obj.Key.Relink(mapping);
         }
         
         #endregion
@@ -930,14 +939,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILockInformationGetter? lhs,
-            ILockInformationGetter? rhs)
+            ILockInformationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.LockLevel != rhs.LockLevel) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
-            if (!lhs.Key.Equals(rhs.Key)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.LockLevel) ?? true))
+            {
+                if (lhs.LockLevel != rhs.LockLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Unused) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unused.Span, rhs.Unused.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
+            {
+                if (!lhs.Key.Equals(rhs.Key)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -991,7 +1013,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Key) ?? true))
             {
-                item.Key = new FormLink<IKeyGetter>(rhs.Key.FormKey);
+                item.Key.SetTo(rhs.Key.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LockInformation_FieldIndex.Flags) ?? true))
             {
@@ -1145,9 +1167,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.LockLevel = frame.ReadUInt8();
             item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Key = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Key.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
@@ -1217,7 +1240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public Byte LockLevel => _data.Span[0x0];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0x1, 0x3).ToArray();
-        public FormLink<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IKeyGetter> Key => new FormLink<IKeyGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public LockInformation.Flag Flags => (LockInformation.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1280,13 +1303,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILockInformationGetter rhs)) return false;
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILockInformationGetter rhs) return false;
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILockInformationGetter? obj)
         {
-            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LockInformationCommon)((ILockInformationGetter)this).CommonInstance()!).GetHashCode(this);

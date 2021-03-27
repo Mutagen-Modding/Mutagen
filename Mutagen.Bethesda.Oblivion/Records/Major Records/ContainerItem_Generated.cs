@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Item
-        public FormLink<IAItemGetter> Item { get; set; } = new FormLink<IAItemGetter>();
+        private IFormLink<IItemGetter> _Item = new FormLink<IItemGetter>();
+        public IFormLink<IItemGetter> Item
+        {
+            get => _Item;
+            set => _Item = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IItemGetter> IContainerItemGetter.Item => this.Item;
         #endregion
         #region Count
         public UInt32 Count { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IContainerItemGetter rhs)) return false;
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IContainerItemGetter rhs) return false;
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IContainerItemGetter? obj)
         {
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IContainerItem>
     {
-        new FormLink<IAItemGetter> Item { get; set; }
+        new IFormLink<IItemGetter> Item { get; }
         new UInt32 Count { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ContainerItem_Registration.Instance;
-        FormLink<IAItemGetter> Item { get; }
+        IFormLinkGetter<IItemGetter> Item { get; }
         UInt32 Count { get; }
 
     }
@@ -518,11 +525,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IContainerItemGetter item,
-            IContainerItemGetter rhs)
+            IContainerItemGetter rhs,
+            ContainerItem.TranslationMask? equalsMask = null)
         {
             return ((ContainerItemCommon)((IContainerItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -725,14 +734,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IContainerItem item)
         {
             ClearPartial();
-            item.Item = FormLink<IAItemGetter>.Null;
+            item.Item.Clear();
             item.Count = default;
         }
         
         #region Mutagen
         public void RemapLinks(IContainerItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Item = obj.Item.Relink(mapping);
+            obj.Item.Relink(mapping);
         }
         
         #endregion
@@ -842,12 +851,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IContainerItemGetter? lhs,
-            IContainerItemGetter? rhs)
+            IContainerItemGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Item.Equals(rhs.Item)) return false;
-            if (lhs.Count != rhs.Count) return false;
+            if ((crystal?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
+            {
+                if (!lhs.Item.Equals(rhs.Item)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
             return true;
         }
         
@@ -891,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Item) ?? true))
             {
-                item.Item = new FormLink<IAItemGetter>(rhs.Item.FormKey);
+                item.Item.SetTo(rhs.Item.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ContainerItem_FieldIndex.Count) ?? true))
             {
@@ -1036,9 +1052,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Item.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Count = frame.ReadUInt32();
         }
 
@@ -1106,7 +1123,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IAItemGetter> Item => new FormLink<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IItemGetter> Item => new FormLink<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 Count => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1169,13 +1186,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IContainerItemGetter rhs)) return false;
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IContainerItemGetter rhs) return false;
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IContainerItemGetter? obj)
         {
-            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ContainerItemCommon)((IContainerItemGetter)this).CommonInstance()!).GetHashCode(this);

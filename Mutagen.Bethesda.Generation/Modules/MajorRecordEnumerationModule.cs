@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Generation
                 fg.AppendLine("[DebuggerStepThrough]");
                 fg.AppendLine($"IEnumerable<TMajor> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal, "TMajor")}(throwIfUnknown: throwIfUnknown);");
                 fg.AppendLine("[DebuggerStepThrough]");
-                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
+                fg.AppendLine($"IEnumerable<{nameof(IMajorRecordCommon)}> {nameof(IMajorRecordEnumerable)}.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);");
             }
         }
 
@@ -178,14 +178,14 @@ namespace Mutagen.Bethesda.Generation
                 $"public static IEnumerable<{nameof(IMajorRecordCommon)}> EnumerateMajorRecords{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Add($"this {obj.Interface(getter: false, internalInterface: true)} obj");
-                args.Add($"Type type");
+                args.Add($"Type? type");
                 args.Add($"bool throwIfUnknown = true");
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.ISetter, obj.Generics));
             }
             using (new BraceWrapper(fg))
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumerateMajorRecords"))
+                    $"return {obj.CommonClassInstance("obj", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.EnumeratePotentiallyTypedMajorRecords"))
                 {
                     args.AddPassArg("obj");
                     args.AddPassArg("type");
@@ -208,7 +208,8 @@ namespace Mutagen.Bethesda.Generation
             Accessor loquiAccessor,
             LoquiType loquiType,
             string generic,
-            bool checkType)
+            bool checkType,
+            ObjectGeneration targetObj = null)
         {
             // ToDo  
             // Quick hack.  Real solution should use reflection to investigate the interface  
@@ -226,7 +227,8 @@ namespace Mutagen.Bethesda.Generation
             }
 
             if (loquiType.TargetObjectGeneration != null
-                && await loquiType.TargetObjectGeneration.IsMajorRecord())
+                && await loquiType.TargetObjectGeneration.IsMajorRecord()
+                && (targetObj == null || targetObj == loquiType.TargetObjectGeneration))
             {
                 if (checkType)
                 {
@@ -429,6 +431,20 @@ namespace Mutagen.Bethesda.Generation
             }
 
             using (var args = new FunctionWrapper(fg,
+                $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumeratePotentiallyTypedMajorRecords"))
+            {
+                args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
+                args.Add($"Type? type");
+                args.Add($"bool throwIfUnknown");
+            }
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("if (type == null) return EnumerateMajorRecords(obj);");
+                fg.AppendLine("return EnumerateMajorRecords(obj, type, throwIfUnknown);");
+            }
+            fg.AppendLine();
+
+            using (var args = new FunctionWrapper(fg,
                 $"public{overrideStr}IEnumerable<{nameof(IMajorRecordCommonGetter)}> EnumerateMajorRecords"))
             {
                 args.Add($"{obj.Interface(getter: getter, internalInterface: true)} obj");
@@ -565,7 +581,7 @@ namespace Mutagen.Bethesda.Generation
                                 FileGeneration deepFg = generationDict.GetOrAdd(deepRec.Key);
                                 foreach (var field in deepRec.Value)
                                 {
-                                    await ApplyIterationLines(field, deepFg, accessor, getter, nickname: deepRec.Key.ObjectName);
+                                    await ApplyIterationLines(field, deepFg, accessor, getter, targetObj: deepRec.Key);
                                 }
                             }
 
@@ -740,7 +756,7 @@ namespace Mutagen.Bethesda.Generation
             FileGeneration fieldGen,
             Accessor accessor,
             bool getter,
-            string nickname = null,
+            ObjectGeneration targetObj = null,
             HashSet<ObjectGeneration> blackList = null)
         {
             if (field is GroupType group)
@@ -755,7 +771,7 @@ namespace Mutagen.Bethesda.Generation
             else if (field is LoquiType loqui)
             {
                 if (blackList?.Contains(loqui.TargetObjectGeneration) ?? false) return;
-                var fieldAccessor = loqui.Nullable ? $"{nickname}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
+                var fieldAccessor = loqui.Nullable ? $"{targetObj?.ObjectName}{loqui.Name}item" : $"{accessor}.{loqui.Name}";
                 if (loqui.TargetObjectGeneration.GetObjectType() == ObjectType.Group)
                 { // List groups 
                     fieldGen.AppendLine($"foreach (var item in obj.{field.Name}.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))");
@@ -766,7 +782,7 @@ namespace Mutagen.Bethesda.Generation
                     return;
                 }
                 var subFg = new FileGeneration();
-                await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: "TMajor", checkType: false);
+                await LoquiTypeHandler(subFg, fieldAccessor, loqui, generic: "TMajor", checkType: false, targetObj: targetObj);
                 if (subFg.Count == 0) return;
                 if (loqui.Singleton
                     || !loqui.Nullable)

@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 if (item.ParentWorldspace.IsNull)
                 {
-                    item.ParentCell = FormKeyBinaryTranslation.Instance.Parse(frame);
+                    item.ParentCell.SetTo(FormKeyBinaryTranslation.Instance.Parse(frame));
                 }
                 else
                 {
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            public FormLink<ICellGetter> ParentCell
+            public IFormLinkGetter<ICellGetter> ParentCell
             {
                 get
                 {

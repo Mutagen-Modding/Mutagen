@@ -101,7 +101,14 @@ namespace Mutagen.Bethesda.Skyrim
         }
         #endregion
         #region ImageSpaceModifier
-        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; } = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        private IFormLinkNullable<IImageSpaceAdapterGetter> _ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>();
+        public IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier
+        {
+            get => _ImageSpaceModifier;
+            set => _ImageSpaceModifier = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ICameraShotGetter.ImageSpaceModifier => this.ImageSpaceModifier;
         #endregion
         #region DATADataTypeState
         public CameraShot.DATADataType DATADataTypeState { get; set; } = default;
@@ -117,22 +124,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ICameraShotGetter rhs)) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ICameraShotGetter? obj)
-        {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -837,6 +828,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICameraShotGetter rhs) return false;
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ICameraShotGetter? obj)
+        {
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -912,7 +923,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single MinTime { get; set; }
         new Single TargetPercentBetweenActors { get; set; }
         new Single NearTargetDistance { get; set; }
-        new FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; set; }
+        new IFormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         new CameraShot.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -944,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single MinTime { get; }
         Single TargetPercentBetweenActors { get; }
         Single NearTargetDistance { get; }
-        FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
+        IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier { get; }
         CameraShot.DATADataType DATADataTypeState { get; }
 
     }
@@ -996,11 +1007,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICameraShotGetter item,
-            ICameraShotGetter rhs)
+            ICameraShotGetter rhs,
+            CameraShot.TranslationMask? equalsMask = null)
         {
             return ((CameraShotCommon)((ICameraShotGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1222,7 +1235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MinTime = default;
             item.TargetPercentBetweenActors = default;
             item.NearTargetDistance = default;
-            item.ImageSpaceModifier = FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+            item.ImageSpaceModifier.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1242,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.ImageSpaceModifier = obj.ImageSpaceModifier.Relink(mapping);
+            obj.ImageSpaceModifier.Relink(mapping);
         }
         
         #endregion
@@ -1480,44 +1493,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICameraShotGetter? lhs,
-            ICameraShotGetter? rhs)
+            ICameraShotGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Action != rhs.Action) return false;
-            if (lhs.Location != rhs.Location) return false;
-            if (lhs.Target != rhs.Target) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
-            if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
-            if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
-            if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
-            if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
-            if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
-            if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
-            if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Action) ?? true))
+            {
+                if (lhs.Action != rhs.Action) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Location) ?? true))
+            {
+                if (lhs.Location != rhs.Location) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Target) ?? true))
+            {
+                if (lhs.Target != rhs.Target) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierPlayer) ?? true))
+            {
+                if (!lhs.TimeMultiplierPlayer.EqualsWithin(rhs.TimeMultiplierPlayer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierTarget) ?? true))
+            {
+                if (!lhs.TimeMultiplierTarget.EqualsWithin(rhs.TimeMultiplierTarget)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TimeMultiplierGlobal) ?? true))
+            {
+                if (!lhs.TimeMultiplierGlobal.EqualsWithin(rhs.TimeMultiplierGlobal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MaxTime) ?? true))
+            {
+                if (!lhs.MaxTime.EqualsWithin(rhs.MaxTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.MinTime) ?? true))
+            {
+                if (!lhs.MinTime.EqualsWithin(rhs.MinTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.TargetPercentBetweenActors) ?? true))
+            {
+                if (!lhs.TargetPercentBetweenActors.EqualsWithin(rhs.TargetPercentBetweenActors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.NearTargetDistance) ?? true))
+            {
+                if (!lhs.NearTargetDistance.EqualsWithin(rhs.NearTargetDistance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
+            {
+                if (!lhs.ImageSpaceModifier.Equals(rhs.ImageSpaceModifier)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
-                rhs: rhs as ICameraShotGetter);
+                rhs: rhs as ICameraShotGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICameraShotGetter?)lhs,
-                rhs: rhs as ICameraShotGetter);
+                rhs: rhs as ICameraShotGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICameraShotGetter item)
@@ -1589,7 +1649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new CameraShot(formKey, default(SkyrimRelease));
+            var newRec = new CameraShot(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1600,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICameraShot)item,
+                item: (ICameraShotGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1611,7 +1671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICameraShot)item,
+                item: (ICameraShotGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1726,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.ImageSpaceModifier) ?? true))
             {
-                item.ImageSpaceModifier = new FormLinkNullable<IImageSpaceAdapterGetter>(rhs.ImageSpaceModifier.FormKeyNullable);
+                item.ImageSpaceModifier.SetTo(rhs.ImageSpaceModifier.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)CameraShot_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2075,9 +2135,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceModifier = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ImageSpaceModifier.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }
                 default:
@@ -2195,7 +2256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region ImageSpaceModifier
         private int? _ImageSpaceModifierLocation;
-        public FormLinkNullable<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
+        public IFormLinkNullableGetter<IImageSpaceAdapterGetter> ImageSpaceModifier => _ImageSpaceModifierLocation.HasValue ? new FormLinkNullable<IImageSpaceAdapterGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ImageSpaceModifierLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IImageSpaceAdapterGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2312,13 +2373,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICameraShotGetter rhs)) return false;
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICameraShotGetter rhs) return false;
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICameraShotGetter? obj)
         {
-            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CameraShotCommon)((ICameraShotGetter)this).CommonInstance()!).GetHashCode(this);

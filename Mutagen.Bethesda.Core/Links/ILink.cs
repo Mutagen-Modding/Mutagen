@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// The MajorRecord Type that the link is associated with
         /// </summary>
-        Type TargetType { get; }
+        Type Type { get; }
         
         /// <summary>
         /// Attempts to locate an associated ModKey from the link
@@ -50,6 +50,6 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="cache">Link Cache to resolve against</param>
         /// <returns>TryGet object with located record if successful</returns>
-        ITryGetter<TMajor> TryResolve(ILinkCache cache);
+        TMajor? TryResolve(ILinkCache cache);
     }
 }

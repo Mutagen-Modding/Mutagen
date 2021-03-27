@@ -72,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISceneScriptFragmentsGetter rhs)) return false;
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISceneScriptFragmentsGetter rhs) return false;
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneScriptFragmentsGetter? obj)
         {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -554,11 +554,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISceneScriptFragmentsGetter item,
-            ISceneScriptFragmentsGetter rhs)
+            ISceneScriptFragmentsGetter rhs,
+            SceneScriptFragments.TranslationMask? equalsMask = null)
         {
             return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -901,22 +903,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISceneScriptFragmentsGetter? lhs,
-            ISceneScriptFragmentsGetter? rhs)
+            ISceneScriptFragmentsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs)) return false;
-            if (!lhs.PhaseFragments.SequenceEqualNullable(rhs.PhaseFragments)) return false;
+            if (!base.Equals((IScriptFragmentsGetter)lhs, (IScriptFragmentsGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SceneScriptFragments_FieldIndex.PhaseFragments) ?? true))
+            {
+                if (!lhs.PhaseFragments.SequenceEqualNullable(rhs.PhaseFragments)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IScriptFragmentsGetter? lhs,
-            IScriptFragmentsGetter? rhs)
+            IScriptFragmentsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISceneScriptFragmentsGetter?)lhs,
-                rhs: rhs as ISceneScriptFragmentsGetter);
+                rhs: rhs as ISceneScriptFragmentsGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISceneScriptFragmentsGetter item)
@@ -1276,13 +1284,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISceneScriptFragmentsGetter rhs)) return false;
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISceneScriptFragmentsGetter rhs) return false;
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISceneScriptFragmentsGetter? obj)
         {
-            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SceneScriptFragmentsCommon)((ISceneScriptFragmentsGetter)this).CommonInstance()!).GetHashCode(this);

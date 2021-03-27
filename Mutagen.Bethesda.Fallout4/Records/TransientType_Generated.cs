@@ -44,15 +44,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Links
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFallout4MajorRecordGetter>> _Links = new ExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
-        public ExtendedList<IFormLink<IFallout4MajorRecordGetter>> Links
+        private ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> _Links = new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links
         {
             get => this._Links;
             protected set => this._Links = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>> ITransientTypeGetter.Links => _Links;
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> ITransientTypeGetter.Links => _Links;
         #endregion
 
         #endregion
@@ -73,13 +73,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITransientTypeGetter rhs)) return false;
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITransientTypeGetter rhs) return false;
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -534,7 +534,7 @@ namespace Mutagen.Bethesda.Fallout4
         ITransientTypeGetter
     {
         new UInt32 FormType { get; set; }
-        new ExtendedList<IFormLink<IFallout4MajorRecordGetter>> Links { get; }
+        new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links { get; }
     }
 
     public partial interface ITransientTypeGetter :
@@ -551,7 +551,7 @@ namespace Mutagen.Bethesda.Fallout4
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => TransientType_Registration.Instance;
         UInt32 FormType { get; }
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>> Links { get; }
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links { get; }
 
     }
 
@@ -602,11 +602,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ITransientTypeGetter item,
-            ITransientTypeGetter rhs)
+            ITransientTypeGetter rhs,
+            TransientType.TranslationMask? equalsMask = null)
         {
             return ((TransientTypeCommon)((ITransientTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -943,12 +945,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITransientTypeGetter? lhs,
-            ITransientTypeGetter? rhs)
+            ITransientTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.FormType != rhs.FormType) return false;
-            if (!lhs.Links.SequenceEqualNullable(rhs.Links)) return false;
+            if ((crystal?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
+            {
+                if (lhs.FormType != rhs.FormType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TransientType_FieldIndex.Links) ?? true))
+            {
+                if (!lhs.Links.SequenceEqualNullable(rhs.Links)) return false;
+            }
             return true;
         }
         
@@ -1004,7 +1013,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.Links.SetTo(
                         rhs.Links
-                        .Select(r => (IFormLink<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1113,10 +1122,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer)
         {
             writer.Write(item.FormType);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Links,
-                transl: (MutagenWriter subWriter, IFormLink<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1163,7 +1172,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.FormType = frame.ReadUInt32();
             item.Links.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }
@@ -1234,7 +1243,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public UInt32 FormType => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x0, 0x4));
         #region Links
-        public IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLink<IFallout4MajorRecordGetter>>(_data.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links => BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(_data.Slice(0x4), _package, 4, (s, p) => new FormLink<IFallout4MajorRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int LinksEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1298,13 +1307,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITransientTypeGetter rhs)) return false;
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITransientTypeGetter rhs) return false;
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITransientTypeGetter? obj)
         {
-            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TransientTypeCommon)((ITransientTypeGetter)this).CommonInstance()!).GetHashCode(this);

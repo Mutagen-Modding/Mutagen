@@ -112,13 +112,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILodGetter rhs)) return false;
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILodGetter rhs) return false;
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILodGetter? obj)
         {
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LodCommon)((ILodGetter)this).CommonInstance()!).GetHashCode(this);
@@ -744,11 +744,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILodGetter item,
-            ILodGetter rhs)
+            ILodGetter rhs,
+            Lod.TranslationMask? equalsMask = null)
         {
             return ((LodCommon)((ILodGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1113,18 +1115,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILodGetter? lhs,
-            ILodGetter? rhs)
+            ILodGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.Level0, rhs.Level0)) return false;
-            if (!MemorySliceExt.Equal(lhs.Level0Extra, rhs.Level0Extra)) return false;
-            if (!string.Equals(lhs.Level1, rhs.Level1)) return false;
-            if (!MemorySliceExt.Equal(lhs.Level1Extra, rhs.Level1Extra)) return false;
-            if (!string.Equals(lhs.Level2, rhs.Level2)) return false;
-            if (!MemorySliceExt.Equal(lhs.Level2Extra, rhs.Level2Extra)) return false;
-            if (!string.Equals(lhs.Level3, rhs.Level3)) return false;
-            if (!MemorySliceExt.Equal(lhs.Level3Extra, rhs.Level3Extra)) return false;
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
+            {
+                if (!string.Equals(lhs.Level0, rhs.Level0)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0Extra) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Level0Extra, rhs.Level0Extra)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1) ?? true))
+            {
+                if (!string.Equals(lhs.Level1, rhs.Level1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level1Extra) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Level1Extra, rhs.Level1Extra)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2) ?? true))
+            {
+                if (!string.Equals(lhs.Level2, rhs.Level2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level2Extra) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Level2Extra, rhs.Level2Extra)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3) ?? true))
+            {
+                if (!string.Equals(lhs.Level3, rhs.Level3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level3Extra) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Level3Extra, rhs.Level3Extra)) return false;
+            }
             return true;
         }
         
@@ -1527,13 +1554,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILodGetter rhs)) return false;
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILodGetter rhs) return false;
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILodGetter? obj)
         {
-            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LodCommon)((ILodGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LodCommon)((ILodGetter)this).CommonInstance()!).GetHashCode(this);

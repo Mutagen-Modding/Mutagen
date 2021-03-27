@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [ActorValueInformation, ASpell]
+    /// Implemented by: [ActorValueInformation]
     /// </summary>
     public partial interface IDamageTypeTarget :
         IDamageTypeTargetGetter,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ActorValueInformation, ASpell]
+    /// Implemented by: [ActorValueInformation]
     /// </summary>
     public partial interface IDamageTypeTargetGetter : IFallout4MajorRecordGetter
     {

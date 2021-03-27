@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellBlockGetter rhs)) return false;
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellBlockGetter rhs) return false;
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellBlockGetter? obj)
         {
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).GetHashCode(this);
@@ -577,7 +577,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -740,11 +740,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICellBlockGetter item,
-            ICellBlockGetter rhs)
+            ICellBlockGetter rhs,
+            CellBlock.TranslationMask? equalsMask = null)
         {
             return ((CellBlockCommon)((ICellBlockGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -886,10 +888,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this ICellBlock obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((CellBlockSetterCommon)((ICellBlockGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -1186,6 +1188,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellBlock obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             ICellBlock obj,
             Type type,
@@ -1273,15 +1284,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        subItem.Remove(keys, type, throwIfUnknown: false);
-                    }
-                    break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         subItem.Remove(keys, type, throwIfUnknown: false);
@@ -1501,15 +1503,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICellBlockGetter? lhs,
-            ICellBlockGetter? rhs)
+            ICellBlockGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BlockNumber != rhs.BlockNumber) return false;
-            if (lhs.GroupType != rhs.GroupType) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.SubBlocks.SequenceEqualNullable(rhs.SubBlocks)) return false;
+            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.BlockNumber) ?? true))
+            {
+                if (lhs.BlockNumber != rhs.BlockNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.GroupType) ?? true))
+            {
+                if (lhs.GroupType != rhs.GroupType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CellBlock_FieldIndex.SubBlocks) ?? true))
+            {
+                if (!lhs.SubBlocks.SequenceEqualNullable(rhs.SubBlocks)) return false;
+            }
             return true;
         }
         
@@ -1551,6 +1569,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     yield return item;
                 }
             }
+        }
+        
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            ICellBlockGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -1642,18 +1669,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IPlacedObjectGetter":
                 case "IPlacedObject":
                 case "IPlacedObjectInternal":
-                    foreach (var subItem in obj.SubBlocks)
-                    {
-                        foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
                     foreach (var subItem in obj.SubBlocks)
                     {
                         foreach (var item in subItem.EnumerateMajorRecords(type, throwIfUnknown: false))
@@ -2295,13 +2310,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICellBlockGetter rhs)) return false;
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICellBlockGetter rhs) return false;
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICellBlockGetter? obj)
         {
-            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CellBlockCommon)((ICellBlockGetter)this).CommonInstance()!).GetHashCode(this);

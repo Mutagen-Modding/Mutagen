@@ -46,7 +46,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Int16 Unknown { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<ISpellSpawnGetter> Reference { get; set; } = new FormLink<ISpellSpawnGetter>();
+        private IFormLink<ISpellRecordGetter> _Reference = new FormLink<ISpellRecordGetter>();
+        public IFormLink<ISpellRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellRecordGetter> ILeveledSpellEntryDataGetter.Reference => this.Reference;
         #endregion
         #region Count
         public Int16 Count { get; set; } = default;
@@ -71,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILeveledSpellEntryDataGetter rhs)) return false;
-            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILeveledSpellEntryDataGetter rhs) return false;
+            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILeveledSpellEntryDataGetter? obj)
         {
-            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -544,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Int16 Level { get; set; }
         new Int16 Unknown { get; set; }
-        new FormLink<ISpellSpawnGetter> Reference { get; set; }
+        new IFormLink<ISpellRecordGetter> Reference { get; }
         new Int16 Count { get; set; }
         new Int16 Unknown2 { get; set; }
     }
@@ -564,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => LeveledSpellEntryData_Registration.Instance;
         Int16 Level { get; }
         Int16 Unknown { get; }
-        FormLink<ISpellSpawnGetter> Reference { get; }
+        IFormLinkGetter<ISpellRecordGetter> Reference { get; }
         Int16 Count { get; }
         Int16 Unknown2 { get; }
 
@@ -617,11 +624,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILeveledSpellEntryDataGetter item,
-            ILeveledSpellEntryDataGetter rhs)
+            ILeveledSpellEntryDataGetter rhs,
+            LeveledSpellEntryData.TranslationMask? equalsMask = null)
         {
             return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -829,7 +838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.Level = default;
             item.Unknown = default;
-            item.Reference = FormLink<ISpellSpawnGetter>.Null;
+            item.Reference.Clear();
             item.Count = default;
             item.Unknown2 = default;
         }
@@ -837,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(ILeveledSpellEntryData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -962,15 +971,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILeveledSpellEntryDataGetter? lhs,
-            ILeveledSpellEntryDataGetter? rhs)
+            ILeveledSpellEntryDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Level != rhs.Level) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (lhs.Count != rhs.Count) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
+            if ((crystal?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Count) ?? true))
+            {
+                if (lhs.Count != rhs.Count) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
             return true;
         }
         
@@ -1025,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ISpellSpawnGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledSpellEntryData_FieldIndex.Count) ?? true))
             {
@@ -1179,9 +1204,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Level = frame.ReadInt16();
             item.Unknown = frame.ReadInt16();
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Count = frame.ReadInt16();
             item.Unknown2 = frame.ReadInt16();
         }
@@ -1252,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Int16 Level => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x0, 0x2));
         public Int16 Unknown => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x2, 0x2));
-        public FormLink<ISpellSpawnGetter> Reference => new FormLink<ISpellSpawnGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISpellRecordGetter> Reference => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 Count => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 Unknown2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));
         partial void CustomFactoryEnd(
@@ -1316,13 +1342,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILeveledSpellEntryDataGetter rhs)) return false;
-            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILeveledSpellEntryDataGetter rhs) return false;
+            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILeveledSpellEntryDataGetter? obj)
         {
-            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LeveledSpellEntryDataCommon)((ILeveledSpellEntryDataGetter)this).CommonInstance()!).GetHashCode(this);

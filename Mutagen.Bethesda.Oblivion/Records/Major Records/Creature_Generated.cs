@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Creature :
-        ANpc,
+        OblivionMajorRecord,
         ICreatureInternal,
         IEquatable<ICreatureGetter>,
         ILoquiObjectSetter<Creature>
@@ -88,15 +88,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IASpellGetter>> _Spells = new ExtendedList<IFormLink<IASpellGetter>>();
-        public ExtendedList<IFormLink<IASpellGetter>> Spells
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>> _Spells = new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IASpellGetter>> ICreatureGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> ICreatureGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -151,10 +151,24 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region DeathItem
-        public FormLinkNullable<IAItemGetter> DeathItem { get; set; } = new FormLinkNullable<IAItemGetter>();
+        private IFormLinkNullable<IItemGetter> _DeathItem = new FormLinkNullable<IItemGetter>();
+        public IFormLinkNullable<IItemGetter> DeathItem
+        {
+            get => _DeathItem;
+            set => _DeathItem = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IItemGetter> ICreatureGetter.DeathItem => this.DeathItem;
         #endregion
         #region Script
-        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> ICreatureGetter.Script => this.Script;
         #endregion
         #region AIData
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -169,15 +183,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region AIPackages
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IAIPackageGetter>> _AIPackages = new ExtendedList<IFormLink<IAIPackageGetter>>();
-        public ExtendedList<IFormLink<IAIPackageGetter>> AIPackages
+        private ExtendedList<IFormLinkGetter<IAIPackageGetter>> _AIPackages = new ExtendedList<IFormLinkGetter<IAIPackageGetter>>();
+        public ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages
         {
             get => this._AIPackages;
             protected set => this._AIPackages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IAIPackageGetter>> ICreatureGetter.AIPackages => _AIPackages;
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> ICreatureGetter.AIPackages => _AIPackages;
         #endregion
 
         #endregion
@@ -212,7 +226,14 @@ namespace Mutagen.Bethesda.Oblivion
         Byte? ICreatureGetter.AttackReach => this.AttackReach;
         #endregion
         #region CombatStyle
-        public FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; } = new FormLinkNullable<ICombatStyleGetter>();
+        private IFormLinkNullable<ICombatStyleGetter> _CombatStyle = new FormLinkNullable<ICombatStyleGetter>();
+        public IFormLinkNullable<ICombatStyleGetter> CombatStyle
+        {
+            get => _CombatStyle;
+            set => _CombatStyle = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICombatStyleGetter> ICreatureGetter.CombatStyle => this.CombatStyle;
         #endregion
         #region TurningSpeed
         public Single? TurningSpeed { get; set; }
@@ -240,7 +261,14 @@ namespace Mutagen.Bethesda.Oblivion
         String? ICreatureGetter.BloodDecal => this.BloodDecal;
         #endregion
         #region InheritsSoundFrom
-        public FormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; set; } = new FormLinkNullable<ICreatureGetter>();
+        private IFormLinkNullable<ICreatureGetter> _InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>();
+        public IFormLinkNullable<ICreatureGetter> InheritsSoundFrom
+        {
+            get => _InheritsSoundFrom;
+            set => _InheritsSoundFrom = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ICreatureGetter> ICreatureGetter.InheritsSoundFrom => this.InheritsSoundFrom;
         #endregion
         #region Sounds
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -270,25 +298,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ICreatureGetter rhs)) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ICreatureGetter? obj)
-        {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
-            ANpc.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -1107,7 +1119,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            ANpc.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -1633,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            ANpc.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -1753,6 +1765,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICreatureGetter rhs) return false;
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ICreatureGetter? obj)
+        {
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1810,79 +1842,83 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ICreature :
-        IANpcInternal,
         ICreatureGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<ICreatureInternal>,
         IModeled,
         INamed,
-        INamedRequired
+        INamedRequired,
+        INpcRecord,
+        INpcSpawn,
+        IOblivionMajorRecordInternal
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
-        new ExtendedList<IFormLink<IASpellGetter>> Spells { get; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         new ExtendedList<String>? Models { get; set; }
         new MemorySlice<Byte>? NIFT { get; set; }
         new CreatureConfiguration? Configuration { get; set; }
         new ExtendedList<RankPlacement> Factions { get; }
-        new FormLinkNullable<IAItemGetter> DeathItem { get; set; }
-        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IItemGetter> DeathItem { get; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
         new CreatureAIData? AIData { get; set; }
-        new ExtendedList<IFormLink<IAIPackageGetter>> AIPackages { get; }
+        new ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         new ExtendedList<String>? Animations { get; set; }
         new CreatureData? Data { get; set; }
         new Byte? AttackReach { get; set; }
-        new FormLinkNullable<ICombatStyleGetter> CombatStyle { get; set; }
+        new IFormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
         new Single? TurningSpeed { get; set; }
         new Single? BaseScale { get; set; }
         new Single? FootWeight { get; set; }
         new String? BloodSpray { get; set; }
         new String? BloodDecal { get; set; }
-        new FormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; set; }
+        new IFormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; }
         new ExtendedList<CreatureSound> Sounds { get; }
     }
 
     public partial interface ICreatureInternal :
-        IANpcInternal,
+        IOblivionMajorRecordInternal,
         ICreature,
         ICreatureGetter
     {
     }
 
     public partial interface ICreatureGetter :
-        IANpcGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<ICreatureGetter>,
         IMapsToGetter<ICreatureGetter>,
         IModeledGetter,
         INamedGetter,
-        INamedRequiredGetter
+        INamedRequiredGetter,
+        INpcRecordGetter,
+        INpcSpawnGetter
     {
         static new ILoquiRegistration Registration => Creature_Registration.Instance;
         String? Name { get; }
         IModelGetter? Model { get; }
         IReadOnlyList<IItemEntryGetter> Items { get; }
-        IReadOnlyList<IFormLink<IASpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         IReadOnlyList<String>? Models { get; }
         ReadOnlyMemorySlice<Byte>? NIFT { get; }
         ICreatureConfigurationGetter? Configuration { get; }
         IReadOnlyList<IRankPlacementGetter> Factions { get; }
-        FormLinkNullable<IAItemGetter> DeathItem { get; }
-        FormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IItemGetter> DeathItem { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         ICreatureAIDataGetter? AIData { get; }
-        IReadOnlyList<IFormLink<IAIPackageGetter>> AIPackages { get; }
+        IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; }
         IReadOnlyList<String>? Animations { get; }
         ICreatureDataGetter? Data { get; }
         Byte? AttackReach { get; }
-        FormLinkNullable<ICombatStyleGetter> CombatStyle { get; }
+        IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle { get; }
         Single? TurningSpeed { get; }
         Single? BaseScale { get; }
         Single? FootWeight { get; }
         String? BloodSpray { get; }
         String? BloodDecal { get; }
-        FormLinkNullable<ICreatureGetter> InheritsSoundFrom { get; }
+        IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom { get; }
         IReadOnlyList<ICreatureSoundGetter> Sounds { get; }
 
     }
@@ -1934,11 +1970,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICreatureGetter item,
-            ICreatureGetter rhs)
+            ICreatureGetter rhs,
+            Creature.TranslationMask? equalsMask = null)
         {
             return ((CreatureCommon)((ICreatureGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2147,7 +2185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class CreatureSetterCommon : ANpcSetterCommon
+    public partial class CreatureSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly CreatureSetterCommon Instance = new CreatureSetterCommon();
 
@@ -2164,32 +2202,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NIFT = default;
             item.Configuration = null;
             item.Factions.Clear();
-            item.DeathItem = FormLinkNullable<IAItemGetter>.Null;
-            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.DeathItem.Clear();
+            item.Script.Clear();
             item.AIData = null;
             item.AIPackages.Clear();
             item.Animations = null;
             item.Data = null;
             item.AttackReach = default;
-            item.CombatStyle = FormLinkNullable<ICombatStyleGetter>.Null;
+            item.CombatStyle.Clear();
             item.TurningSpeed = default;
             item.BaseScale = default;
             item.FootWeight = default;
             item.BloodSpray = default;
             item.BloodDecal = default;
-            item.InheritsSoundFrom = FormLinkNullable<ICreatureGetter>.Null;
+            item.InheritsSoundFrom.Clear();
             item.Sounds.Clear();
             base.Clear(item);
-        }
-        
-        public override void Clear(IANpcInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
-        }
-        
-        public override void Clear(IANpcSpawnInternal item)
-        {
-            Clear(item: (ICreatureInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -2209,11 +2237,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             obj.Items.RemapLinks(mapping);
             obj.Spells.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
-            obj.DeathItem = obj.DeathItem.Relink(mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.DeathItem.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.AIPackages.RemapLinks(mapping);
-            obj.CombatStyle = obj.CombatStyle.Relink(mapping);
-            obj.InheritsSoundFrom = obj.InheritsSoundFrom.Relink(mapping);
+            obj.CombatStyle.Relink(mapping);
+            obj.InheritsSoundFrom.Relink(mapping);
             obj.Sounds.RemapLinks(mapping);
         }
         
@@ -2231,28 +2259,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: CreatureBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: CreatureBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IANpcInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Creature)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IANpcSpawnInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Creature)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -2280,7 +2286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureCommon : ANpcCommon
+    public partial class CreatureCommon : OblivionMajorRecordCommon
     {
         public new static readonly CreatureCommon Instance = new CreatureCommon();
 
@@ -2412,7 +2418,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Creature.Mask<bool>? printMask = null)
         {
-            ANpcCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -2622,45 +2628,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Creature_FieldIndex ConvertFieldIndex(ANpc_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpc_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.VersionControl:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpc_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Creature_FieldIndex ConvertFieldIndex(ANpcSpawn_FieldIndex index)
-        {
-            switch (index)
-            {
-                case ANpcSpawn_FieldIndex.MajorRecordFlagsRaw:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.FormKey:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.VersionControl:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.EditorID:
-                    return (Creature_FieldIndex)((int)index);
-                case ANpcSpawn_FieldIndex.OblivionMajorRecordFlags:
-                    return (Creature_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Creature_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -2699,71 +2667,127 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICreatureGetter? lhs,
-            ICreatureGetter? rhs)
+            ICreatureGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANpcGetter)lhs, (IANpcGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
-            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
-            if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
-            if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
-            if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
-            if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
-            if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
-            if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
-            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (lhs.AttackReach != rhs.AttackReach) return false;
-            if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
-            if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
-            if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
-            if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
-            if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
-            if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
-            if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
-            if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Spells) ?? true))
+            {
+                if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Models) ?? true))
+            {
+                if (!lhs.Models.SequenceEqualNullable(rhs.Models)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.NIFT) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NIFT, rhs.NIFT)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
+            {
+                if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
+            {
+                if (!lhs.Factions.SequenceEqualNullable(rhs.Factions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
+            {
+                if (!lhs.DeathItem.Equals(rhs.DeathItem)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
+            {
+                if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
+            {
+                if (!lhs.AIPackages.SequenceEqualNullable(rhs.AIPackages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Animations) ?? true))
+            {
+                if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
+            {
+                if (lhs.AttackReach != rhs.AttackReach) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
+            {
+                if (!lhs.CombatStyle.Equals(rhs.CombatStyle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
+            {
+                if (!lhs.TurningSpeed.EqualsWithin(rhs.TurningSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BaseScale) ?? true))
+            {
+                if (!lhs.BaseScale.EqualsWithin(rhs.BaseScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.FootWeight) ?? true))
+            {
+                if (!lhs.FootWeight.EqualsWithin(rhs.FootWeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodSpray) ?? true))
+            {
+                if (!string.Equals(lhs.BloodSpray, rhs.BloodSpray)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.BloodDecal) ?? true))
+            {
+                if (!string.Equals(lhs.BloodDecal, rhs.BloodDecal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
+            {
+                if (!lhs.InheritsSoundFrom.Equals(rhs.InheritsSoundFrom)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
+            {
+                if (!lhs.Sounds.SequenceEqualNullable(rhs.Sounds)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IANpcGetter? lhs,
-            IANpcGetter? rhs)
-        {
-            return Equals(
-                lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
-        }
-        
-        public override bool Equals(
-            IANpcSpawnGetter? lhs,
-            IANpcSpawnGetter? rhs)
-        {
-            return Equals(
-                lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
+                rhs: rhs as ICreatureGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICreatureGetter?)lhs,
-                rhs: rhs as ICreatureGetter);
+                rhs: rhs as ICreatureGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICreatureGetter item)
@@ -2830,16 +2854,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             hash.Add(item.Sounds);
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IANpcGetter item)
-        {
-            return GetHashCode(item: (ICreatureGetter)item);
-        }
-        
-        public override int GetHashCode(IANpcSpawnGetter item)
-        {
-            return GetHashCode(item: (ICreatureGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -2917,35 +2931,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override ANpc Duplicate(
-            IANpcGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICreature)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override ANpcSpawn Duplicate(
-            IANpcSpawnGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ICreature)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICreature)item,
+                item: (ICreatureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2956,7 +2948,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICreature)item,
+                item: (ICreatureGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2966,7 +2958,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class CreatureSetterTranslationCommon : ANpcSetterTranslationCommon
+    public partial class CreatureSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly CreatureSetterTranslationCommon Instance = new CreatureSetterTranslationCommon();
 
@@ -2994,8 +2986,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IANpc)item,
-                (IANpcGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -3060,7 +3052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3161,11 +3153,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.DeathItem) ?? true))
             {
-                item.DeathItem = new FormLinkNullable<IAItemGetter>(rhs.DeathItem.FormKeyNullable);
+                item.DeathItem.SetTo(rhs.DeathItem.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
@@ -3200,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetTo(
                         rhs.AIPackages
-                        .Select(r => (IFormLink<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IAIPackageGetter>)new FormLink<IAIPackageGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -3270,7 +3262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.CombatStyle) ?? true))
             {
-                item.CombatStyle = new FormLinkNullable<ICombatStyleGetter>(rhs.CombatStyle.FormKeyNullable);
+                item.CombatStyle.SetTo(rhs.CombatStyle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.TurningSpeed) ?? true))
             {
@@ -3294,7 +3286,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.InheritsSoundFrom) ?? true))
             {
-                item.InheritsSoundFrom = new FormLinkNullable<ICreatureGetter>(rhs.InheritsSoundFrom.FormKeyNullable);
+                item.InheritsSoundFrom.SetTo(rhs.InheritsSoundFrom.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Creature_FieldIndex.Sounds) ?? true))
             {
@@ -3320,66 +3312,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IANpcInternal item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreatureInternal)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpc item,
-            IANpcGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreature)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawnInternal item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreatureInternal)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IANpcSpawn item,
-            IANpcSpawnGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ICreature)item,
-                rhs: (ICreatureGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -3523,7 +3455,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryWriteTranslation :
-        ANpcBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static CreatureBinaryWriteTranslation Instance = new CreatureBinaryWriteTranslation();
@@ -3560,10 +3492,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLink<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3612,10 +3544,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IAIPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AIPackages,
-                transl: (MutagenWriter subWriter, IFormLink<IAIPackageGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IAIPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3723,28 +3655,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IANpcGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ICreatureGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IANpcSpawnGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ICreatureGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -3767,7 +3677,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class CreatureBinaryCreateTranslation : ANpcBinaryCreateTranslation
+    public partial class CreatureBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static CreatureBinaryCreateTranslation Instance = new CreatureBinaryCreateTranslation();
 
@@ -3776,7 +3686,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureInternal item,
             MutagenFrame frame)
         {
-            ANpcBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -3820,7 +3730,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3867,17 +3777,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.DeathItem.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Creature_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Creature_FieldIndex.Script;
                 }
                 case RecordTypeInts.AIDT:
@@ -3888,7 +3800,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PKID:
                 {
                     item.AIPackages.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IAIPackageGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -3925,9 +3837,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.CombatStyle.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Creature_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.TNAM:
@@ -3967,9 +3880,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CSCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundFrom = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.InheritsSoundFrom.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Creature_FieldIndex.InheritsSoundFrom;
                 }
                 case RecordTypeInts.CSDT:
@@ -3985,7 +3899,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)Creature_FieldIndex.Sounds;
                 }
                 default:
-                    return ANpcBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -4010,7 +3924,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureBinaryOverlay :
-        ANpcBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ICreatureGetter
     {
         #region Common Routing
@@ -4049,7 +3963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         public IModelGetter? Model { get; private set; }
         public IReadOnlyList<IItemEntryGetter> Items { get; private set; } = ListExt.Empty<ItemEntryBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IASpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<IASpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellRecordGetter>>();
         public IReadOnlyList<String>? Models { get; private set; }
         #region NIFT
         private int? _NIFTLocation;
@@ -4062,17 +3976,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public IReadOnlyList<IRankPlacementGetter> Factions { get; private set; } = ListExt.Empty<RankPlacementBinaryOverlay>();
         #region DeathItem
         private int? _DeathItemLocation;
-        public FormLinkNullable<IAItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IAItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAItemGetter>.Null;
+        public IFormLinkNullableGetter<IItemGetter> DeathItem => _DeathItemLocation.HasValue ? new FormLinkNullable<IItemGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _DeathItemLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IItemGetter>.Null;
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         #region AIData
         private RangeInt32? _AIDataLocation;
         public ICreatureAIDataGetter? AIData => _AIDataLocation.HasValue ? CreatureAIDataBinaryOverlay.CreatureAIDataFactory(new OverlayStream(_data.Slice(_AIDataLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLink<IAIPackageGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IAIPackageGetter>> AIPackages { get; private set; } = ListExt.Empty<IFormLinkGetter<IAIPackageGetter>>();
         public IReadOnlyList<String>? Animations { get; private set; }
         #region Data
         private RangeInt32? _DataLocation;
@@ -4084,7 +3998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region CombatStyle
         private int? _CombatStyleLocation;
-        public FormLinkNullable<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
+        public IFormLinkNullableGetter<ICombatStyleGetter> CombatStyle => _CombatStyleLocation.HasValue ? new FormLinkNullable<ICombatStyleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _CombatStyleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICombatStyleGetter>.Null;
         #endregion
         #region TurningSpeed
         private int? _TurningSpeedLocation;
@@ -4108,7 +4022,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region InheritsSoundFrom
         private int? _InheritsSoundFromLocation;
-        public FormLinkNullable<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
+        public IFormLinkNullableGetter<ICreatureGetter> InheritsSoundFrom => _InheritsSoundFromLocation.HasValue ? new FormLinkNullable<ICreatureGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _InheritsSoundFromLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ICreatureGetter>.Null;
         #endregion
         public IReadOnlyList<ICreatureSoundGetter> Sounds { get; private set; } = ListExt.Empty<CreatureSoundBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -4206,10 +4120,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<IASpellGetter>>(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellRecordGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
-                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
                         locs: ParseRecordLocations(
                             stream: stream,
                             constants: _package.MetaData.Constants.SubConstants,
@@ -4270,7 +4184,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.PKID:
                 {
-                    this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLink<IAIPackageGetter>>(
+                    this.AIPackages = BinaryOverlayList.FactoryByArray<IFormLinkGetter<IAIPackageGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<IAIPackageGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -4375,13 +4289,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICreatureGetter rhs)) return false;
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICreatureGetter rhs) return false;
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICreatureGetter? obj)
         {
-            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CreatureCommon)((ICreatureGetter)this).CommonInstance()!).GetHashCode(this);

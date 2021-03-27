@@ -41,6 +41,11 @@ namespace Mutagen.Bethesda.Generation
             {
                 fg.AppendLine($"{accessorPrefix} = null;");
             }
+            else if (SubTypeGeneration is FormLinkType linkType)
+            {
+                fg.AppendLine($"{accessorPrefix}.Male = {linkType.DirectTypeName(getter: false)}.Null;");
+                fg.AppendLine($"{accessorPrefix}.Female = {linkType.DirectTypeName(getter: false)}.Null;");
+            }
             else
             {
                 SubTypeGeneration.GenerateClear(fg, $"{accessorPrefix}.Male");
@@ -113,9 +118,13 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor)
+        public override void GenerateForEquals(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, Accessor maskAccessor)
         {
-            fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+            fg.AppendLine($"if ({this.GetTranslationIfAccessor(maskAccessor)})");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"if (!Equals({accessor}, {rhsAccessor})) return false;");
+            }
         }
 
         public override void GenerateForEqualsMask(FileGeneration fg, Accessor accessor, Accessor rhsAccessor, string retAccessor)

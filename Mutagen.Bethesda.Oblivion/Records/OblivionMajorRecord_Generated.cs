@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather]
     /// </summary>
     public abstract partial class OblivionMajorRecord :
         MajorRecord,
@@ -55,22 +55,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IOblivionMajorRecordGetter rhs)) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IOblivionMajorRecordGetter? obj)
-        {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -388,7 +372,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -411,6 +395,26 @@ namespace Mutagen.Bethesda.Oblivion
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOblivionMajorRecordGetter rhs) return false;
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IOblivionMajorRecordGetter? obj)
+        {
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -444,7 +448,7 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather]
     /// </summary>
     public partial interface IOblivionMajorRecord :
         IFormLinkContainer,
@@ -464,7 +468,7 @@ namespace Mutagen.Bethesda.Oblivion
     }
 
     /// <summary>
-    /// Implemented by: [Activator, AIPackage, AItem, AnimatedObject, ANpcSpawn, ASpell, Birthsign, Class, Climate, CombatStyle, Container, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Landscape, LandTexture, LoadScreen, MagicEffect, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Quest, Race, Region, Road, Script, SkillRecord, Sound, Static, Subspace, Tree, Water, Weather]
+    /// Implemented by: [Activator, AIPackage, AlchemicalApparatus, Ammunition, AnimatedObject, Armor, Birthsign, Book, Class, Climate, Clothing, CombatStyle, Container, Creature, DialogTopic, DialogItem, Door, EffectShader, Enchantment, Eye, Faction, Flora, Furniture, GameSetting, Global, Grass, Hair, IdleAnimation, Ingredient, Key, Landscape, LandTexture, LeveledCreature, LeveledItem, LeveledSpell, Light, LoadScreen, MagicEffect, Miscellaneous, Npc, PathGrid, Place, PlacedCreature, PlacedNpc, PlacedObject, Potion, Quest, Race, Region, Road, Script, SigilStone, SkillRecord, SoulGem, Sound, Spell, Static, Subspace, Tree, Water, Weapon, Weather]
     /// </summary>
     public partial interface IOblivionMajorRecordGetter :
         IMajorRecordGetter,
@@ -525,11 +529,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IOblivionMajorRecordGetter item,
-            IOblivionMajorRecordGetter rhs)
+            IOblivionMajorRecordGetter rhs,
+            OblivionMajorRecord.TranslationMask? equalsMask = null)
         {
             return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -646,10 +652,10 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this IOblivionMajorRecordInternal obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((OblivionMajorRecordSetterCommon)((IOblivionMajorRecordGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -958,6 +964,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IOblivionMajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IOblivionMajorRecordInternal obj,
             Type type,
@@ -1133,22 +1148,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs)) return false;
-            if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
+            if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)OblivionMajorRecord_FieldIndex.OblivionMajorRecordFlags) ?? true))
+            {
+                if (lhs.OblivionMajorRecordFlags != rhs.OblivionMajorRecordFlags) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOblivionMajorRecordGetter?)lhs,
-                rhs: rhs as IOblivionMajorRecordGetter);
+                rhs: rhs as IOblivionMajorRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1185,6 +1206,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IOblivionMajorRecordGetter obj)
         {
             yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IOblivionMajorRecordGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -1240,7 +1270,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOblivionMajorRecord)item,
+                item: (IOblivionMajorRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1557,13 +1587,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IOblivionMajorRecordGetter rhs)) return false;
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOblivionMajorRecordGetter rhs) return false;
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOblivionMajorRecordGetter? obj)
         {
-            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OblivionMajorRecordCommon)((IOblivionMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

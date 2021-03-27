@@ -51,7 +51,14 @@ namespace Mutagen.Bethesda.Fallout4
         Single? ISimpleModelGetter.ColorRemappingIndex => this.ColorRemappingIndex;
         #endregion
         #region MaterialSwap
-        public FormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; } = new FormLinkNullable<IMaterialSwapGetter>();
+        private IFormLinkNullable<IMaterialSwapGetter> _MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>();
+        public IFormLinkNullable<IMaterialSwapGetter> MaterialSwap
+        {
+            get => _MaterialSwap;
+            set => _MaterialSwap = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMaterialSwapGetter> ISimpleModelGetter.MaterialSwap => this.MaterialSwap;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,13 +88,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISimpleModelGetter rhs)) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISimpleModelGetter rhs) return false;
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISimpleModelGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -529,7 +536,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new String File { get; set; }
         new Single? ColorRemappingIndex { get; set; }
-        new FormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; set; }
+        new IFormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; }
         new MemorySlice<Byte>? Data { get; set; }
     }
 
@@ -551,7 +558,7 @@ namespace Mutagen.Bethesda.Fallout4
         static ILoquiRegistration Registration => SimpleModel_Registration.Instance;
         String File { get; }
         Single? ColorRemappingIndex { get; }
-        FormLinkNullable<IMaterialSwapGetter> MaterialSwap { get; }
+        IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap { get; }
         ReadOnlyMemorySlice<Byte>? Data { get; }
 
     }
@@ -603,11 +610,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ISimpleModelGetter item,
-            ISimpleModelGetter rhs)
+            ISimpleModelGetter rhs,
+            SimpleModel.TranslationMask? equalsMask = null)
         {
             return ((SimpleModelCommon)((ISimpleModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -814,14 +823,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ClearPartial();
             item.File = string.Empty;
             item.ColorRemappingIndex = default;
-            item.MaterialSwap = FormLinkNullable<IMaterialSwapGetter>.Null;
+            item.MaterialSwap.Clear();
             item.Data = default;
         }
         
         #region Mutagen
         public void RemapLinks(ISimpleModel obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.MaterialSwap = obj.MaterialSwap.Relink(mapping);
+            obj.MaterialSwap.Relink(mapping);
         }
         
         #endregion
@@ -941,14 +950,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISimpleModelGetter? lhs,
-            ISimpleModelGetter? rhs)
+            ISimpleModelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!string.Equals(lhs.File, rhs.File)) return false;
-            if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
-            if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
-            if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.File) ?? true))
+            {
+                if (!string.Equals(lhs.File, rhs.File)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.ColorRemappingIndex) ?? true))
+            {
+                if (!lhs.ColorRemappingIndex.EqualsWithin(rhs.ColorRemappingIndex)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
+            {
+                if (!lhs.MaterialSwap.Equals(rhs.MaterialSwap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
@@ -1011,7 +1033,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.MaterialSwap) ?? true))
             {
-                item.MaterialSwap = new FormLinkNullable<IMaterialSwapGetter>(rhs.MaterialSwap.FormKeyNullable);
+                item.MaterialSwap.SetTo(rhs.MaterialSwap.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SimpleModel_FieldIndex.Data) ?? true))
             {
@@ -1204,9 +1226,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MODS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MaterialSwap.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 case RecordTypeInts.MODT:
@@ -1294,7 +1317,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region MaterialSwap
         private int? _MaterialSwapLocation;
-        public FormLinkNullable<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
+        public IFormLinkNullableGetter<IMaterialSwapGetter> MaterialSwap => _MaterialSwapLocation.HasValue ? new FormLinkNullable<IMaterialSwapGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MaterialSwapLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMaterialSwapGetter>.Null;
         #endregion
         #region Data
         private int? _DataLocation;
@@ -1398,13 +1421,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISimpleModelGetter rhs)) return false;
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISimpleModelGetter rhs) return false;
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISimpleModelGetter? obj)
         {
-            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SimpleModelCommon)((ISimpleModelGetter)this).CommonInstance()!).GetHashCode(this);

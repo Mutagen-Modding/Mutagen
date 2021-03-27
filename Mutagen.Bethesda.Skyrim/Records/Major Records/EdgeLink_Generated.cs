@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown { get; set; } = default;
         #endregion
         #region Mesh
-        public FormLink<IANavigationMeshGetter> Mesh { get; set; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _Mesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> Mesh
+        {
+            get => _Mesh;
+            set => _Mesh = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IANavigationMeshGetter> IEdgeLinkGetter.Mesh => this.Mesh;
         #endregion
         #region TriangleIndex
         public Int16 TriangleIndex { get; set; } = default;
@@ -65,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEdgeLinkGetter rhs)) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEdgeLinkGetter rhs) return false;
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEdgeLinkGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);
@@ -480,7 +487,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEdgeLink>
     {
         new Int32 Unknown { get; set; }
-        new FormLink<IANavigationMeshGetter> Mesh { get; set; }
+        new IFormLink<IANavigationMeshGetter> Mesh { get; }
         new Int16 TriangleIndex { get; set; }
     }
 
@@ -498,7 +505,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EdgeLink_Registration.Instance;
         Int32 Unknown { get; }
-        FormLink<IANavigationMeshGetter> Mesh { get; }
+        IFormLinkGetter<IANavigationMeshGetter> Mesh { get; }
         Int16 TriangleIndex { get; }
 
     }
@@ -550,11 +557,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEdgeLinkGetter item,
-            IEdgeLinkGetter rhs)
+            IEdgeLinkGetter rhs,
+            EdgeLink.TranslationMask? equalsMask = null)
         {
             return ((EdgeLinkCommon)((IEdgeLinkGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -758,14 +767,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Unknown = default;
-            item.Mesh = FormLink<IANavigationMeshGetter>.Null;
+            item.Mesh.Clear();
             item.TriangleIndex = default;
         }
         
         #region Mutagen
         public void RemapLinks(IEdgeLink obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Mesh = obj.Mesh.Relink(mapping);
+            obj.Mesh.Relink(mapping);
         }
         
         #endregion
@@ -877,13 +886,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEdgeLinkGetter? lhs,
-            IEdgeLinkGetter? rhs)
+            IEdgeLinkGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
-            if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
+            {
+                if (!lhs.Mesh.Equals(rhs.Mesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
+            {
+                if (lhs.TriangleIndex != rhs.TriangleIndex) return false;
+            }
             return true;
         }
         
@@ -932,7 +951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.Mesh) ?? true))
             {
-                item.Mesh = new FormLink<IANavigationMeshGetter>(rhs.Mesh.FormKey);
+                item.Mesh.SetTo(rhs.Mesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EdgeLink_FieldIndex.TriangleIndex) ?? true))
             {
@@ -1073,9 +1092,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
-            item.Mesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Mesh.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.TriangleIndex = frame.ReadInt16();
         }
 
@@ -1144,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4));
-        public FormLink<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IANavigationMeshGetter> Mesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public Int16 TriangleIndex => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1206,13 +1226,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEdgeLinkGetter rhs)) return false;
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEdgeLinkGetter rhs) return false;
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEdgeLinkGetter? obj)
         {
-            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EdgeLinkCommon)((IEdgeLinkGetter)this).CommonInstance()!).GetHashCode(this);

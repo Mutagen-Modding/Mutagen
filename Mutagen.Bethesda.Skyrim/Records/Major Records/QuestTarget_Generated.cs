@@ -41,7 +41,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Target
-        public FormLink<IPlacedGetter> Target { get; set; } = new FormLink<IPlacedGetter>();
+        private IFormLink<IPlacedGetter> _Target = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Target
+        {
+            get => _Target;
+            set => _Target = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IQuestTargetGetter.Target => this.Target;
         #endregion
         #region Flags
         public Quest.TargetFlag Flags { get; set; } = default;
@@ -80,13 +87,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestTargetGetter rhs)) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestTargetGetter rhs) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -602,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IQuestTarget>,
         IQuestTargetGetter
     {
-        new FormLink<IPlacedGetter> Target { get; set; }
+        new IFormLink<IPlacedGetter> Target { get; }
         new Quest.TargetFlag Flags { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new QuestTarget.QSTADataType QSTADataTypeState { get; set; }
@@ -621,7 +628,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => QuestTarget_Registration.Instance;
-        FormLink<IPlacedGetter> Target { get; }
+        IFormLinkGetter<IPlacedGetter> Target { get; }
         Quest.TargetFlag Flags { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         QuestTarget.QSTADataType QSTADataTypeState { get; }
@@ -675,11 +682,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IQuestTargetGetter item,
-            IQuestTargetGetter rhs)
+            IQuestTargetGetter rhs,
+            QuestTarget.TranslationMask? equalsMask = null)
         {
             return ((QuestTargetCommon)((IQuestTargetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -884,7 +893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IQuestTarget item)
         {
             ClearPartial();
-            item.Target = FormLink<IPlacedGetter>.Null;
+            item.Target.Clear();
             item.Flags = default;
             item.Conditions.Clear();
             item.QSTADataTypeState = default;
@@ -893,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IQuestTarget obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Target = obj.Target.Relink(mapping);
+            obj.Target.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         
@@ -1029,14 +1038,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestTargetGetter? lhs,
-            IQuestTargetGetter? rhs)
+            IQuestTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Target.Equals(rhs.Target)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
+            {
+                if (!lhs.Target.Equals(rhs.Target)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestTarget_FieldIndex.QSTADataTypeState) ?? true))
+            {
+                if (lhs.QSTADataTypeState != rhs.QSTADataTypeState) return false;
+            }
             return true;
         }
         
@@ -1087,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IPlacedGetter>(rhs.Target.FormKey);
+                item.Target.SetTo(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)QuestTarget_FieldIndex.Flags) ?? true))
             {
@@ -1213,19 +1235,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestTargetBinaryWriteTranslation Instance = new QuestTargetBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IQuestTargetGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IQuestTargetGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestTargetGetter item,
             MutagenWriter writer)
@@ -1247,9 +1256,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Flags,
                     length: 4);
             }
-            QuestTargetBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public void Write(
@@ -1306,27 +1323,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.Target.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     return (int)QuestTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    QuestTargetBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)QuestTarget_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IQuestTarget item);
 
     }
 
@@ -1397,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Target
         private int _TargetLocation => _QSTALocation!.Value;
         private bool _Target_IsSet => _QSTALocation.HasValue;
-        public FormLink<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
+        public IFormLinkGetter<IPlacedGetter> Target => _Target_IsSet ? new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_TargetLocation, 0x4)))) : FormLink<IPlacedGetter>.Null;
         #endregion
         #region Flags
         private int _FlagsLocation => _QSTALocation!.Value + 0x4;
@@ -1505,13 +1522,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestTargetGetter rhs)) return false;
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestTargetGetter rhs) return false;
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestTargetGetter? obj)
         {
-            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestTargetCommon)((IQuestTargetGetter)this).CommonInstance()!).GetHashCode(this);

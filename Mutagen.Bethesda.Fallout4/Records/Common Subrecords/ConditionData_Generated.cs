@@ -59,13 +59,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionDataGetter rhs)) return false;
-            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionDataGetter rhs) return false;
+            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionDataGetter? obj)
         {
-            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -430,11 +430,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IConditionDataGetter item,
-            IConditionDataGetter rhs)
+            IConditionDataGetter rhs,
+            ConditionData.TranslationMask? equalsMask = null)
         {
             return ((ConditionDataCommon)((IConditionDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -730,7 +732,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConditionDataGetter? lhs,
-            IConditionDataGetter? rhs)
+            IConditionDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
@@ -985,13 +988,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionDataGetter rhs)) return false;
-            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionDataGetter rhs) return false;
+            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionDataGetter? obj)
         {
-            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionDataCommon)((IConditionDataGetter)this).CommonInstance()!).GetHashCode(this);

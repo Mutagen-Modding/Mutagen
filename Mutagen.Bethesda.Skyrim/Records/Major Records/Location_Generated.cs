@@ -73,15 +73,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellPersistentReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimpleGetter>>? _ReferenceCellPersistentReferences;
-        public ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences
+        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _ReferenceCellPersistentReferences;
+        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences
         {
             get => this._ReferenceCellPersistentReferences;
             set => this._ReferenceCellPersistentReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellPersistentReferences => _ReferenceCellPersistentReferences;
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellPersistentReferences => _ReferenceCellPersistentReferences;
         #endregion
 
         #endregion
@@ -115,15 +115,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellUnique
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<INpcGetter>>? _ReferenceCellUnique;
-        public ExtendedList<IFormLink<INpcGetter>>? ReferenceCellUnique
+        private ExtendedList<IFormLinkGetter<INpcGetter>>? _ReferenceCellUnique;
+        public ExtendedList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique
         {
             get => this._ReferenceCellUnique;
             set => this._ReferenceCellUnique = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<INpcGetter>>? ILocationGetter.ReferenceCellUnique => _ReferenceCellUnique;
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ILocationGetter.ReferenceCellUnique => _ReferenceCellUnique;
         #endregion
 
         #endregion
@@ -157,15 +157,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ReferenceCellStaticReferences
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedSimpleGetter>>? _ReferenceCellStaticReferences;
-        public ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences
+        private ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? _ReferenceCellStaticReferences;
+        public ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences
         {
             get => this._ReferenceCellStaticReferences;
             set => this._ReferenceCellStaticReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellStaticReferences => _ReferenceCellStaticReferences;
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ILocationGetter.ReferenceCellStaticReferences => _ReferenceCellStaticReferences;
         #endregion
 
         #endregion
@@ -213,29 +213,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ActorCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedGetter>>? _ActorCellMarkerReference;
-        public ExtendedList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference
+        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _ActorCellMarkerReference;
+        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference
         {
             get => this._ActorCellMarkerReference;
             set => this._ActorCellMarkerReference = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedGetter>>? ILocationGetter.ActorCellMarkerReference => _ActorCellMarkerReference;
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.ActorCellMarkerReference => _ActorCellMarkerReference;
         #endregion
 
         #endregion
         #region LocationCellMarkerReference
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IPlacedGetter>>? _LocationCellMarkerReference;
-        public ExtendedList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference
+        private ExtendedList<IFormLinkGetter<IPlacedGetter>>? _LocationCellMarkerReference;
+        public ExtendedList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference
         {
             get => this._LocationCellMarkerReference;
             set => this._LocationCellMarkerReference = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IPlacedGetter>>? ILocationGetter.LocationCellMarkerReference => _LocationCellMarkerReference;
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ILocationGetter.LocationCellMarkerReference => _LocationCellMarkerReference;
         #endregion
 
         #endregion
@@ -302,33 +302,61 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? ILocationGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? ILocationGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region ParentLocation
-        public FormLinkNullable<ILocationGetter> ParentLocation { get; set; } = new FormLinkNullable<ILocationGetter>();
+        private IFormLinkNullable<ILocationGetter> _ParentLocation = new FormLinkNullable<ILocationGetter>();
+        public IFormLinkNullable<ILocationGetter> ParentLocation
+        {
+            get => _ParentLocation;
+            set => _ParentLocation = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ILocationGetter> ILocationGetter.ParentLocation => this.ParentLocation;
         #endregion
         #region Music
-        public FormLinkNullable<IMusicTypeGetter> Music { get; set; } = new FormLinkNullable<IMusicTypeGetter>();
+        private IFormLinkNullable<IMusicTypeGetter> _Music = new FormLinkNullable<IMusicTypeGetter>();
+        public IFormLinkNullable<IMusicTypeGetter> Music
+        {
+            get => _Music;
+            set => _Music = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMusicTypeGetter> ILocationGetter.Music => this.Music;
         #endregion
         #region UnreportedCrimeFaction
-        public FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; } = new FormLinkNullable<IFactionGetter>();
+        private IFormLinkNullable<IFactionGetter> _UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>();
+        public IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction
+        {
+            get => _UnreportedCrimeFaction;
+            set => _UnreportedCrimeFaction = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFactionGetter> ILocationGetter.UnreportedCrimeFaction => this.UnreportedCrimeFaction;
         #endregion
         #region WorldLocationMarkerRef
-        public FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; } = new FormLinkNullable<IPlacedSimpleGetter>();
+        private IFormLinkNullable<IPlacedSimpleGetter> _WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>();
+        public IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef
+        {
+            get => _WorldLocationMarkerRef;
+            set => _WorldLocationMarkerRef = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedSimpleGetter> ILocationGetter.WorldLocationMarkerRef => this.WorldLocationMarkerRef;
         #endregion
         #region WorldLocationRadius
         public Single? WorldLocationRadius { get; set; }
@@ -336,7 +364,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? ILocationGetter.WorldLocationRadius => this.WorldLocationRadius;
         #endregion
         #region HorseMarkerRef
-        public FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef
+        {
+            get => _HorseMarkerRef;
+            set => _HorseMarkerRef = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> ILocationGetter.HorseMarkerRef => this.HorseMarkerRef;
         #endregion
         #region Color
         public Color? Color { get; set; }
@@ -354,22 +389,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ILocationGetter rhs)) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ILocationGetter? obj)
-        {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -2633,6 +2652,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILocationGetter rhs) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ILocationGetter? obj)
+        {
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2703,28 +2742,28 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<LocationReference>? ActorCellPersistentReferences { get; set; }
         new ExtendedList<LocationReference>? LocationCellPersistentReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; set; }
         new ExtendedList<LocationReference>? ActorCellUniques { get; set; }
         new ExtendedList<LocationReference>? LocationCellUniques { get; set; }
-        new ExtendedList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; set; }
+        new ExtendedList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; set; }
         new ExtendedList<LocationCellStaticReference>? ActorCellStaticReferences { get; set; }
         new ExtendedList<LocationCellStaticReference>? LocationCellStaticReferences { get; set; }
-        new ExtendedList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; set; }
         new ExtendedList<LocationCoordinate> ActorCellEncounterCell { get; }
         new ExtendedList<LocationCoordinate> LocationCellEncounterCell { get; }
         new ExtendedList<LocationCoordinate> ReferenceCellEncounterCell { get; }
-        new ExtendedList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; set; }
-        new ExtendedList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; set; }
+        new ExtendedList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; set; }
         new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
         new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         new TranslatedString? Name { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
-        new FormLinkNullable<ILocationGetter> ParentLocation { get; set; }
-        new FormLinkNullable<IMusicTypeGetter> Music { get; set; }
-        new FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; set; }
-        new FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
+        new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
+        new IFormLinkNullable<IMusicTypeGetter> Music { get; }
+        new IFormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
+        new IFormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         new Single? WorldLocationRadius { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
         new Color? Color { get; set; }
     }
 
@@ -2751,28 +2790,28 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Location_Registration.Instance;
         IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; }
-        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; }
         IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; }
         IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; }
-        IReadOnlyList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; }
+        IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; }
         IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; }
         IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; }
-        IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; }
         IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; }
         IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; }
         IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; }
-        IReadOnlyList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; }
-        IReadOnlyList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; }
+        IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
         ITranslatedStringGetter? Name { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
-        FormLinkNullable<ILocationGetter> ParentLocation { get; }
-        FormLinkNullable<IMusicTypeGetter> Music { get; }
-        FormLinkNullable<IFactionGetter> UnreportedCrimeFaction { get; }
-        FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        IFormLinkNullableGetter<ILocationGetter> ParentLocation { get; }
+        IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
+        IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction { get; }
+        IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef { get; }
         Single? WorldLocationRadius { get; }
-        FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef { get; }
         Color? Color { get; }
 
     }
@@ -2824,11 +2863,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationGetter item,
-            ILocationGetter rhs)
+            ILocationGetter rhs,
+            Location.TranslationMask? equalsMask = null)
         {
             return ((LocationCommon)((ILocationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -3067,12 +3108,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LocationCellEnablePoint = null;
             item.Name = default;
             item.Keywords = null;
-            item.ParentLocation = FormLinkNullable<ILocationGetter>.Null;
-            item.Music = FormLinkNullable<IMusicTypeGetter>.Null;
-            item.UnreportedCrimeFaction = FormLinkNullable<IFactionGetter>.Null;
-            item.WorldLocationMarkerRef = FormLinkNullable<IPlacedSimpleGetter>.Null;
+            item.ParentLocation.Clear();
+            item.Music.Clear();
+            item.UnreportedCrimeFaction.Clear();
+            item.WorldLocationMarkerRef.Clear();
             item.WorldLocationRadius = default;
-            item.HorseMarkerRef = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.HorseMarkerRef.Clear();
             item.Color = default;
             base.Clear(item);
         }
@@ -3108,11 +3149,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             obj.ActorCellEnablePoint?.RemapLinks(mapping);
             obj.LocationCellEnablePoint?.RemapLinks(mapping);
             obj.Keywords?.RemapLinks(mapping);
-            obj.ParentLocation = obj.ParentLocation.Relink(mapping);
-            obj.Music = obj.Music.Relink(mapping);
-            obj.UnreportedCrimeFaction = obj.UnreportedCrimeFaction.Relink(mapping);
-            obj.WorldLocationMarkerRef = obj.WorldLocationMarkerRef.Relink(mapping);
-            obj.HorseMarkerRef = obj.HorseMarkerRef.Relink(mapping);
+            obj.ParentLocation.Relink(mapping);
+            obj.Music.Relink(mapping);
+            obj.UnreportedCrimeFaction.Relink(mapping);
+            obj.WorldLocationMarkerRef.Relink(mapping);
+            obj.HorseMarkerRef.Relink(mapping);
         }
         
         #endregion
@@ -3706,55 +3747,135 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationGetter? lhs,
-            ILocationGetter? rhs)
+            ILocationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
-            if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
-            if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
-            if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
-            if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
-            if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
-            if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
-            if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
-            if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
-            if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
-            if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
-            if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
-            if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
-            if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
-            if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
-            if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
-            if (!lhs.Music.Equals(rhs.Music)) return false;
-            if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
-            if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
-            if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
-            if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellPersistentReferences) ?? true))
+            {
+                if (!lhs.ActorCellPersistentReferences.SequenceEqualNullable(rhs.ActorCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellPersistentReferences) ?? true))
+            {
+                if (!lhs.LocationCellPersistentReferences.SequenceEqualNullable(rhs.LocationCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellPersistentReferences) ?? true))
+            {
+                if (!lhs.ReferenceCellPersistentReferences.SequenceEqualNullable(rhs.ReferenceCellPersistentReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellUniques) ?? true))
+            {
+                if (!lhs.ActorCellUniques.SequenceEqualNullable(rhs.ActorCellUniques)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellUniques) ?? true))
+            {
+                if (!lhs.LocationCellUniques.SequenceEqualNullable(rhs.LocationCellUniques)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellUnique) ?? true))
+            {
+                if (!lhs.ReferenceCellUnique.SequenceEqualNullable(rhs.ReferenceCellUnique)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellStaticReferences) ?? true))
+            {
+                if (!lhs.ActorCellStaticReferences.SequenceEqualNullable(rhs.ActorCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellStaticReferences) ?? true))
+            {
+                if (!lhs.LocationCellStaticReferences.SequenceEqualNullable(rhs.LocationCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellStaticReferences) ?? true))
+            {
+                if (!lhs.ReferenceCellStaticReferences.SequenceEqualNullable(rhs.ReferenceCellStaticReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEncounterCell) ?? true))
+            {
+                if (!lhs.ActorCellEncounterCell.SequenceEqualNullable(rhs.ActorCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEncounterCell) ?? true))
+            {
+                if (!lhs.LocationCellEncounterCell.SequenceEqualNullable(rhs.LocationCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ReferenceCellEncounterCell) ?? true))
+            {
+                if (!lhs.ReferenceCellEncounterCell.SequenceEqualNullable(rhs.ReferenceCellEncounterCell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellMarkerReference) ?? true))
+            {
+                if (!lhs.ActorCellMarkerReference.SequenceEqualNullable(rhs.ActorCellMarkerReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellMarkerReference) ?? true))
+            {
+                if (!lhs.LocationCellMarkerReference.SequenceEqualNullable(rhs.LocationCellMarkerReference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ActorCellEnablePoint) ?? true))
+            {
+                if (!lhs.ActorCellEnablePoint.SequenceEqualNullable(rhs.ActorCellEnablePoint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.LocationCellEnablePoint) ?? true))
+            {
+                if (!lhs.LocationCellEnablePoint.SequenceEqualNullable(rhs.LocationCellEnablePoint)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
+            {
+                if (!lhs.ParentLocation.Equals(rhs.ParentLocation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
+            {
+                if (!lhs.Music.Equals(rhs.Music)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
+            {
+                if (!lhs.UnreportedCrimeFaction.Equals(rhs.UnreportedCrimeFaction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
+            {
+                if (!lhs.WorldLocationMarkerRef.Equals(rhs.WorldLocationMarkerRef)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
+            {
+                if (!lhs.WorldLocationRadius.EqualsWithin(rhs.WorldLocationRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
+            {
+                if (!lhs.HorseMarkerRef.Equals(rhs.HorseMarkerRef)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
-                rhs: rhs as ILocationGetter);
+                rhs: rhs as ILocationGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationGetter?)lhs,
-                rhs: rhs as ILocationGetter);
+                rhs: rhs as ILocationGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationGetter item)
@@ -3962,7 +4083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Location(formKey, default(SkyrimRelease));
+            var newRec = new Location(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -3973,7 +4094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILocation)item,
+                item: (ILocationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -3984,7 +4105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILocation)item,
+                item: (ILocationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -4100,8 +4221,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellPersistentReferences = 
                             rhs.ReferenceCellPersistentReferences
-                            .Select(r => (IFormLink<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedSimpleGetter>>();
+                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
                     {
@@ -4191,8 +4312,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellUnique = 
                             rhs.ReferenceCellUnique
-                            .Select(r => (IFormLink<INpcGetter>)new FormLink<INpcGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<INpcGetter>>();
+                            .Select(r => (IFormLinkGetter<INpcGetter>)new FormLink<INpcGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<INpcGetter>>();
                     }
                     else
                     {
@@ -4282,8 +4403,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ReferenceCellStaticReferences = 
                             rhs.ReferenceCellStaticReferences
-                            .Select(r => (IFormLink<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedSimpleGetter>>();
+                            .Select(r => (IFormLinkGetter<IPlacedSimpleGetter>)new FormLink<IPlacedSimpleGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     }
                     else
                     {
@@ -4381,8 +4502,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.ActorCellMarkerReference = 
                             rhs.ActorCellMarkerReference
-                            .Select(r => (IFormLink<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedGetter>>();
+                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
                     {
@@ -4408,8 +4529,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.LocationCellMarkerReference = 
                             rhs.LocationCellMarkerReference
-                            .Select(r => (IFormLink<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IPlacedGetter>>();
+                            .Select(r => (IFormLinkGetter<IPlacedGetter>)new FormLink<IPlacedGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     }
                     else
                     {
@@ -4503,8 +4624,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -4523,19 +4644,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.ParentLocation) ?? true))
             {
-                item.ParentLocation = new FormLinkNullable<ILocationGetter>(rhs.ParentLocation.FormKeyNullable);
+                item.ParentLocation.SetTo(rhs.ParentLocation.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Music) ?? true))
             {
-                item.Music = new FormLinkNullable<IMusicTypeGetter>(rhs.Music.FormKeyNullable);
+                item.Music.SetTo(rhs.Music.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.UnreportedCrimeFaction) ?? true))
             {
-                item.UnreportedCrimeFaction = new FormLinkNullable<IFactionGetter>(rhs.UnreportedCrimeFaction.FormKeyNullable);
+                item.UnreportedCrimeFaction.SetTo(rhs.UnreportedCrimeFaction.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationMarkerRef) ?? true))
             {
-                item.WorldLocationMarkerRef = new FormLinkNullable<IPlacedSimpleGetter>(rhs.WorldLocationMarkerRef.FormKeyNullable);
+                item.WorldLocationMarkerRef.SetTo(rhs.WorldLocationMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.WorldLocationRadius) ?? true))
             {
@@ -4543,7 +4664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.HorseMarkerRef) ?? true))
             {
-                item.HorseMarkerRef = new FormLinkNullable<IPlacedObjectGetter>(rhs.HorseMarkerRef.FormKeyNullable);
+                item.HorseMarkerRef.SetTo(rhs.HorseMarkerRef.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Location_FieldIndex.Color) ?? true))
             {
@@ -4730,11 +4851,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ReferenceCellPersistentReferences,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCPR),
-                transl: (MutagenWriter subWriter, IFormLink<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4764,11 +4885,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ReferenceCellUnique,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCUN),
-                transl: (MutagenWriter subWriter, IFormLink<INpcGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4798,11 +4919,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ReferenceCellStaticReferences,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RCSR),
-                transl: (MutagenWriter subWriter, IFormLink<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedSimpleGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4850,21 +4971,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             recordTypeConverter: conv);
                     }
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Write(
                 writer: writer,
                 items: item.ActorCellMarkerReference,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ACID),
-                transl: (MutagenWriter subWriter, IFormLink<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Write(
                 writer: writer,
                 items: item.LocationCellMarkerReference,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LCID),
-                transl: (MutagenWriter subWriter, IFormLink<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IPlacedGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4900,13 +5021,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -5055,10 +5176,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellPersistentReferences = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedSimpleGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
                 }
                 case RecordTypeInts.ACUN:
@@ -5085,10 +5206,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellUnique = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<INpcGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<INpcGetter>>();
+                        .CastExtendedList<IFormLinkGetter<INpcGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellUnique;
                 }
                 case RecordTypeInts.ACSR:
@@ -5115,10 +5236,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellStaticReferences = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedSimpleGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedSimpleGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellStaticReferences;
                 }
                 case RecordTypeInts.ACEC:
@@ -5158,20 +5279,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellMarkerReference = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     return (int)Location_FieldIndex.ActorCellMarkerReference;
                 }
                 case RecordTypeInts.LCID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellMarkerReference = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IPlacedGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IPlacedGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     return (int)Location_FieldIndex.LocationCellMarkerReference;
                 }
                 case RecordTypeInts.ACEP:
@@ -5207,45 +5328,49 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Location_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ParentLocation = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ParentLocation.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.ParentLocation;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Music.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.Music;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnreportedCrimeFaction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.UnreportedCrimeFaction.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.UnreportedCrimeFaction;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorldLocationMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.WorldLocationMarkerRef.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.WorldLocationMarkerRef;
                 }
                 case RecordTypeInts.RNAM:
@@ -5257,9 +5382,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HorseMarkerRef = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.HorseMarkerRef.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Location_FieldIndex.HorseMarkerRef;
                 }
                 case RecordTypeInts.CNAM:
@@ -5325,18 +5451,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IReadOnlyList<ILocationReferenceGetter>? ActorCellPersistentReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? LocationCellPersistentReferences { get; private set; }
-        public IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellPersistentReferences { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? ActorCellUniques { get; private set; }
         public IReadOnlyList<ILocationReferenceGetter>? LocationCellUniques { get; private set; }
-        public IReadOnlyList<IFormLink<INpcGetter>>? ReferenceCellUnique { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<INpcGetter>>? ReferenceCellUnique { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? ActorCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCellStaticReferenceGetter>? LocationCellStaticReferences { get; private set; }
-        public IReadOnlyList<IFormLink<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedSimpleGetter>>? ReferenceCellStaticReferences { get; private set; }
         public IReadOnlyList<ILocationCoordinateGetter> ActorCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
         public IReadOnlyList<ILocationCoordinateGetter> LocationCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
         public IReadOnlyList<ILocationCoordinateGetter> ReferenceCellEncounterCell { get; private set; } = ListExt.Empty<LocationCoordinateBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
-        public IReadOnlyList<IFormLink<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? ActorCellMarkerReference { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; private set; }
         public IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; private set; }
         #region Name
@@ -5352,24 +5478,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region ParentLocation
         private int? _ParentLocationLocation;
-        public FormLinkNullable<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
+        public IFormLinkNullableGetter<ILocationGetter> ParentLocation => _ParentLocationLocation.HasValue ? new FormLinkNullable<ILocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocationLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ILocationGetter>.Null;
         #endregion
         #region Music
         private int? _MusicLocation;
-        public FormLinkNullable<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMusicTypeGetter> Music => _MusicLocation.HasValue ? new FormLinkNullable<IMusicTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MusicLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMusicTypeGetter>.Null;
         #endregion
         #region UnreportedCrimeFaction
         private int? _UnreportedCrimeFactionLocation;
-        public FormLinkNullable<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
+        public IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction => _UnreportedCrimeFactionLocation.HasValue ? new FormLinkNullable<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _UnreportedCrimeFactionLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFactionGetter>.Null;
         #endregion
         #region WorldLocationMarkerRef
         private int? _WorldLocationMarkerRefLocation;
-        public FormLinkNullable<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedSimpleGetter> WorldLocationMarkerRef => _WorldLocationMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedSimpleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldLocationMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedSimpleGetter>.Null;
         #endregion
         #region WorldLocationRadius
         private int? _WorldLocationRadiusLocation;
@@ -5377,7 +5503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HorseMarkerRef
         private int? _HorseMarkerRefLocation;
-        public FormLinkNullable<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> HorseMarkerRef => _HorseMarkerRefLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HorseMarkerRefLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region Color
         private int? _ColorLocation;
@@ -5477,7 +5603,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
+                    this.ReferenceCellPersistentReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5513,7 +5639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLink<INpcGetter>>(
+                    this.ReferenceCellUnique = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<INpcGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5549,7 +5675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedSimpleGetter>>(
+                    this.ReferenceCellStaticReferences = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedSimpleGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5591,7 +5717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
+                    this.ActorCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5603,7 +5729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLink<IPlacedGetter>>(
+                    this.LocationCellMarkerReference = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IPlacedGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -5643,7 +5769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -5714,13 +5840,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationGetter rhs)) return false;
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILocationGetter rhs) return false;
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationGetter? obj)
         {
-            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCommon)((ILocationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCommon)((ILocationGetter)this).CommonInstance()!).GetHashCode(this);

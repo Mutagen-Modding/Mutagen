@@ -50,13 +50,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectVampireArchetypeGetter rhs)) return false;
-            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectVampireArchetypeGetter rhs) return false;
+            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectVampireArchetypeGetter? obj)
         {
-            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -418,11 +418,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMagicEffectVampireArchetypeGetter item,
-            IMagicEffectVampireArchetypeGetter rhs)
+            IMagicEffectVampireArchetypeGetter rhs,
+            MagicEffectVampireArchetype.TranslationMask? equalsMask = null)
         {
             return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -738,21 +740,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMagicEffectVampireArchetypeGetter? lhs,
-            IMagicEffectVampireArchetypeGetter? rhs)
+            IMagicEffectVampireArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs)) return false;
+            if (!base.Equals((IMagicEffectArchetypeGetter)lhs, (IMagicEffectArchetypeGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IMagicEffectArchetypeGetter? lhs,
-            IMagicEffectArchetypeGetter? rhs)
+            IMagicEffectArchetypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMagicEffectVampireArchetypeGetter?)lhs,
-                rhs: rhs as IMagicEffectVampireArchetypeGetter);
+                rhs: rhs as IMagicEffectVampireArchetypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMagicEffectVampireArchetypeGetter item)
@@ -1076,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMagicEffectVampireArchetypeGetter rhs)) return false;
-            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMagicEffectVampireArchetypeGetter rhs) return false;
+            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMagicEffectVampireArchetypeGetter? obj)
         {
-            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MagicEffectVampireArchetypeCommon)((IMagicEffectVampireArchetypeGetter)this).CommonInstance()!).GetHashCode(this);

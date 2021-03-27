@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<IPlacedObjectGetter> Reference { get; set; } = new FormLink<IPlacedObjectGetter>();
+        private IFormLink<IPlacedObjectGetter> _Reference = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedObjectGetter> IWorldspaceReferenceGetter.Reference => this.Reference;
         #endregion
         #region Position
         public P2Int16 Position { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceReferenceGetter rhs)) return false;
-            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceReferenceGetter rhs) return false;
+            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceReferenceGetter? obj)
         {
-            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -448,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceReference>,
         IWorldspaceReferenceGetter
     {
-        new FormLink<IPlacedObjectGetter> Reference { get; set; }
+        new IFormLink<IPlacedObjectGetter> Reference { get; }
         new P2Int16 Position { get; set; }
     }
 
@@ -465,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WorldspaceReference_Registration.Instance;
-        FormLink<IPlacedObjectGetter> Reference { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Reference { get; }
         P2Int16 Position { get; }
 
     }
@@ -517,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceReferenceGetter item,
-            IWorldspaceReferenceGetter rhs)
+            IWorldspaceReferenceGetter rhs,
+            WorldspaceReference.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -723,14 +732,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlacedObjectGetter>.Null;
+            item.Reference.Clear();
             item.Position = default;
         }
         
         #region Mutagen
         public void RemapLinks(IWorldspaceReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -837,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceReferenceGetter? lhs,
-            IWorldspaceReferenceGetter? rhs)
+            IWorldspaceReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (!lhs.Position.Equals(rhs.Position)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Position) ?? true))
+            {
+                if (!lhs.Position.Equals(rhs.Position)) return false;
+            }
             return true;
         }
         
@@ -886,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlacedObjectGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Position) ?? true))
             {
@@ -1027,9 +1043,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceReference item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Position = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
         }
 
@@ -1097,7 +1114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Reference => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public P2Int16 Position => P2Int16BinaryTranslation.Read(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1159,13 +1176,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceReferenceGetter rhs)) return false;
-            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceReferenceGetter rhs) return false;
+            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceReferenceGetter? obj)
         {
-            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceReferenceCommon)((IWorldspaceReferenceGetter)this).CommonInstance()!).GetHashCode(this);

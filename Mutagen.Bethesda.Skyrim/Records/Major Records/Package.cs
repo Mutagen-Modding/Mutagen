@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                     throw new ArgumentException();
                 }
                 var dataCount = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(pkcuRecord.Content));
-                item.PackageTemplate = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
+                item.PackageTemplate.FormKey = FormKeyBinaryTranslation.Instance.Parse(pkcuRecord.Content.Slice(4, 4), frame.MetaData.MasterReferences!);
                 item.DataInputVersion = BinaryPrimitives.ReadInt32LittleEndian(pkcuRecord.Content.Slice(8));
 
                 FillPackageData(frame.Reader, dataCount, item.Data);
@@ -356,11 +356,6 @@ namespace Mutagen.Bethesda.Skyrim
                     stream.Position += subRecord.TotalLength;
                 }
             }
-
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IPackageInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
         }
 
         public partial class PackageBinaryWriteTranslation
@@ -475,11 +470,6 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IPackageGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
-            }
-
             static partial void WriteBinaryXnamMarkerCustom(MutagenWriter writer, IPackageGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XNAM)) 
@@ -534,7 +524,7 @@ namespace Mutagen.Bethesda.Skyrim
             ReadOnlyMemorySlice<Byte> _xnam;
             public ReadOnlyMemorySlice<Byte> GetXnamMarkerCustom() => _xnam;
 
-            FormLink<IPackageGetter> _packageTemplate;
+            FormLink<IPackageGetter> _packageTemplate = null!;
             public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
 
             private void PackageTemplateCustomParse(

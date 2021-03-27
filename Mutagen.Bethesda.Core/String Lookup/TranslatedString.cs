@@ -11,8 +11,15 @@ namespace Mutagen.Bethesda
     /// A string that can be represented in multiple different languages.<br/>
     /// Threadsafe.
     /// </summary>
-    public class TranslatedString : ITranslatedString
+    public class TranslatedString : ITranslatedString, IEquatable<TranslatedString>
     {
+        /// <summary>
+        /// Whether to only consider the DefaultLanguage in equality/hash comparisons.
+        /// This is not good to change during a program's execution.  It should only be 
+        /// modified early during initialization.
+        /// </summary>
+        public static bool DefaultLanguageComparisonOnly = true;
+
         /// <summary>
         /// The default language to use as the main target language
         /// </summary>
@@ -25,7 +32,7 @@ namespace Mutagen.Bethesda
 
         private string? _directString;
         private readonly object _lock = new object();
-        private Dictionary<Language, string?>? _localization;
+        internal Dictionary<Language, string?>? _localization;
 
         // Alternate way of populating a Translated String
         // Will cause it to act in a lazy lookup fashion
@@ -33,7 +40,7 @@ namespace Mutagen.Bethesda
         internal IStringsFolderLookup? StringsLookup;
         internal StringsSource StringsSource;
 
-        private bool UsingLocalizationDictionary => _localization != null || StringsLookup != null;
+        internal bool UsingLocalizationDictionary => _localization != null || StringsLookup != null;
 
         /// <inheritdoc />
         public string? String
@@ -51,6 +58,15 @@ namespace Mutagen.Bethesda
                 }
             }
             set => Set(TargetLanguage, value);
+        }
+
+        public int NumLanguages
+        {
+            get
+            {
+                ResolveAllStringSources();
+                return _localization?.Count ?? 1;
+            }
         }
 
         private readonly static TranslatedString _empty = new TranslatedString(string.Empty);
@@ -251,7 +267,7 @@ namespace Mutagen.Bethesda
             }
         }
 
-        private void ResolveAllStringSources()
+        internal void ResolveAllStringSources()
         {
             lock (_lock)
             {
@@ -305,6 +321,66 @@ namespace Mutagen.Bethesda
                     language: this.TargetLanguage,
                     directString: this._directString);
             }
+        }
+
+        public static readonly IEqualityComparer<ITranslatedStringGetter> OnlyDefaultComparer = new TranslatedStringOnlyDefaultComparer();
+
+        public static readonly IEqualityComparer<ITranslatedStringGetter> AllLanguageComparer = new TranslatedStringComparer();
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is not TranslatedString str) return false;
+            return Equals(str);
+        }
+
+        public override int GetHashCode()
+        {
+            return (DefaultLanguageComparisonOnly ? OnlyDefaultComparer : AllLanguageComparer).GetHashCode(this);
+        }
+
+        public bool Equals(TranslatedString? other)
+        {
+            return (DefaultLanguageComparisonOnly ? OnlyDefaultComparer : AllLanguageComparer).Equals(this, other);
+        }
+    }
+
+    class TranslatedStringOnlyDefaultComparer : IEqualityComparer<ITranslatedStringGetter>
+    {
+        public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
+        {
+            if (object.ReferenceEquals(x, y)) return true;
+            if (x?.TargetLanguage != y?.TargetLanguage) return false;
+            return string.Equals(x?.String, y?.String);
+        }
+
+        public int GetHashCode(ITranslatedStringGetter obj)
+        {
+            var ret = new HashCode();
+            ret.Add(obj.String);
+            ret.Add(obj.TargetLanguage);
+            return ret.ToHashCode();
+        }
+    }
+
+    class TranslatedStringComparer : IEqualityComparer<ITranslatedStringGetter>
+    {
+        public bool Equals(ITranslatedStringGetter? x, ITranslatedStringGetter? y)
+        {
+            if (object.ReferenceEquals(x, y)) return true;
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            if (x.NumLanguages != y.NumLanguages) return false;
+            return x.OrderBy(kv => kv.Key).SequenceEqual(y.OrderBy(kv => kv.Key));
+        }
+
+        public int GetHashCode(ITranslatedStringGetter obj)
+        {
+            var code = new HashCode();
+            foreach (var kv in obj)
+            {
+                code.Add(kv);
+            }
+            return code.ToHashCode();
         }
     }
 }

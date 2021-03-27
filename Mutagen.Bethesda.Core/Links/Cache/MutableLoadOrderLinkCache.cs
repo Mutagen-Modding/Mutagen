@@ -31,6 +31,17 @@ namespace Mutagen.Bethesda
             _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
         }
 
+        /// <summary>
+        /// Constructs a mutable load order link cache by combining an existing immutable load order cache,
+        /// plus a set of mods to be put at the end of the load order and allow to be mutable.
+        /// </summary>
+        /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
+        public MutableLoadOrderLinkCache(params TMod[] mutableMods)
+        {
+            WrappedImmutableCache = ImmutableLoadOrderLinkCache<TMod, TModGetter>.Empty;
+            _mutableMods = mutableMods.Select(m => m.ToMutableLinkCache<TMod, TModGetter>()).ToList();
+        }
+
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> ListedOrder => throw new NotImplementedException();
 
@@ -135,28 +146,28 @@ namespace Mutagen.Bethesda
         public IMajorRecordCommonGetter Resolve(FormKey formKey)
         {
             if (TryResolve<IMajorRecordCommonGetter>(formKey, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
         }
 
         /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(string editorId)
         {
             if (TryResolve<IMajorRecordCommonGetter>(editorId, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
         }
 
         /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(FormKey formKey, Type type)
         {
             if (TryResolve(formKey, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, type);
         }
 
         /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(string editorId, Type type)
         {
             if (TryResolve(editorId, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, type);
         }
 
         /// <inheritdoc />
@@ -164,7 +175,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(formKey, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, typeof(TMajor));
         }
 
         /// <inheritdoc />
@@ -172,7 +183,7 @@ namespace Mutagen.Bethesda
             where TMajor : class, IMajorRecordCommonGetter
         {
             if (TryResolve<TMajor>(editorId, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, typeof(TMajor));
         }
 
         /// <summary>
@@ -285,7 +296,7 @@ namespace Mutagen.Bethesda
         public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey)
         {
             if (TryResolveContext(formKey, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, typeof(IMajorRecordCommonGetter));
         }
 
         /// <inheritdoc />
@@ -293,21 +304,21 @@ namespace Mutagen.Bethesda
         public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId)
         {
             if (TryResolveContext(editorId, out var majorRec)) return majorRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, typeof(IMajorRecordCommonGetter));
         }
 
         /// <inheritdoc />
         public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, type);
         }
 
         /// <inheritdoc />
         public IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type)
         {
             if (TryResolveContext(editorId, type, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, type);
         }
 
         /// <inheritdoc />
@@ -316,7 +327,7 @@ namespace Mutagen.Bethesda
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (TryResolveContext<TMajor, TMajorGetter>(formKey, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, typeof(TMajorGetter));
         }
 
         /// <inheritdoc />
@@ -325,7 +336,7 @@ namespace Mutagen.Bethesda
             where TMajorGetter : class, IMajorRecordCommonGetter
         {
             if (TryResolveContext<TMajor, TMajorGetter>(editorId, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, typeof(TMajorGetter));
         }
 
         /// <inheritdoc />
@@ -586,14 +597,14 @@ namespace Mutagen.Bethesda
         public IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types)
         {
             if (TryResolve(formKey, types, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"FormKey {formKey} could not be found.");
+            throw new MissingRecordException(formKey, types.ToArray());
         }
 
         /// <inheritdoc />
         public IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types)
         {
             if (TryResolve(editorId, types, out var commonRec)) return commonRec;
-            throw new KeyNotFoundException($"EditorID {editorId} could not be found.");
+            throw new MissingRecordException(editorId, types.ToArray());
         }
 
         /// <inheritdoc />
@@ -746,6 +757,26 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public void Dispose()
         {
+        }
+
+        public void Warmup(Type type)
+        {
+            WrappedImmutableCache.Warmup(type);
+        }
+
+        public void Warmup<TMajor>()
+        {
+            WrappedImmutableCache.Warmup<TMajor>();
+        }
+
+        public void Warmup(params Type[] types)
+        {
+            WrappedImmutableCache.Warmup(types);
+        }
+
+        public void Warmup(IEnumerable<Type> types)
+        {
+            WrappedImmutableCache.Warmup(types);
         }
     }
 }

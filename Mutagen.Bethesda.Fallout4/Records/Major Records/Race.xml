@@ -6,7 +6,9 @@
       <String name="Name" recordType="FULL" />
       <String name="Description" recordType="DESC" nullable="False" translated="DL" />
       <List name="ActorEffect" counterRecType="SPCT">
-        <FormLink refName="ASpell" recordType="SPLO" />
+        <FormLink recordType="SPLO" >
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
       </List>
       <FormLink name="Skin" refName="Armor" recordType="WNAM" />
       <RefDirect name="BipedBodyTemplate" refName="BipedBodyTemplate" />

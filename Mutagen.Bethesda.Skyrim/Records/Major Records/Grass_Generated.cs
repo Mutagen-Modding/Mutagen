@@ -138,22 +138,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGrassGetter rhs)) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGrassGetter? obj)
-        {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -917,6 +901,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGrassGetter rhs) return false;
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IGrassGetter? obj)
+        {
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1084,11 +1088,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IGrassGetter item,
-            IGrassGetter rhs)
+            IGrassGetter rhs,
+            Grass.TranslationMask? equalsMask = null)
         {
             return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1581,46 +1587,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGrassGetter? lhs,
-            IGrassGetter? rhs)
+            IGrassGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.Density != rhs.Density) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.UnitsFromWater != rhs.UnitsFromWater) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (lhs.UnitsFromWaterType != rhs.UnitsFromWaterType) return false;
-            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
-            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
-            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
-            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Density) ?? true))
+            {
+                if (lhs.Density != rhs.Density) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWater) ?? true))
+            {
+                if (lhs.UnitsFromWater != rhs.UnitsFromWater) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.UnitsFromWaterType) ?? true))
+            {
+                if (lhs.UnitsFromWaterType != rhs.UnitsFromWaterType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.PositionRange) ?? true))
+            {
+                if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.HeightRange) ?? true))
+            {
+                if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.ColorRange) ?? true))
+            {
+                if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.WavePeriod) ?? true))
+            {
+                if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Unknown3) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown3.Span, rhs.Unknown3.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
-                rhs: rhs as IGrassGetter);
+                rhs: rhs as IGrassGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
-                rhs: rhs as IGrassGetter);
+                rhs: rhs as IGrassGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGrassGetter item)
@@ -1690,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Grass(formKey, default(SkyrimRelease));
+            var newRec = new Grass(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1701,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGrass)item,
+                item: (IGrassGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1712,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGrass)item,
+                item: (IGrassGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2429,13 +2488,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGrassGetter rhs)) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGrassGetter rhs) return false;
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGrassGetter? obj)
         {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);

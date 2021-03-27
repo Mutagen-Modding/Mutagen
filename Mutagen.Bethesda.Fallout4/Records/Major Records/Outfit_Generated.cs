@@ -56,22 +56,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IOutfitGetter rhs)) return false;
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IOutfitGetter? obj)
-        {
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -346,6 +330,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOutfitGetter rhs) return false;
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IOutfitGetter? obj)
+        {
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -473,11 +477,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IOutfitGetter item,
-            IOutfitGetter rhs)
+            IOutfitGetter rhs,
+            Outfit.TranslationMask? equalsMask = null)
         {
             return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -852,30 +858,35 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IOutfitGetter? lhs,
-            IOutfitGetter? rhs)
+            IOutfitGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOutfitGetter?)lhs,
-                rhs: rhs as IOutfitGetter);
+                rhs: rhs as IOutfitGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOutfitGetter?)lhs,
-                rhs: rhs as IOutfitGetter);
+                rhs: rhs as IOutfitGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IOutfitGetter item)
@@ -930,7 +941,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -941,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1322,13 +1333,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IOutfitGetter rhs)) return false;
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOutfitGetter rhs) return false;
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOutfitGetter? obj)
         {
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);

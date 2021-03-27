@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavMesh
-        public FormLink<IANavigationMeshGetter> NavMesh { get; set; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _NavMesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> NavMesh
+        {
+            get => _NavMesh;
+            set => _NavMesh = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IANavigationMeshGetter> INavmeshNodeGetter.NavMesh => this.NavMesh;
         #endregion
         #region NodeIndex
         public UInt32 NodeIndex { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshNodeGetter rhs)) return false;
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshNodeGetter rhs) return false;
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshNodeGetter? obj)
         {
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -448,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshNode>,
         INavmeshNodeGetter
     {
-        new FormLink<IANavigationMeshGetter> NavMesh { get; set; }
+        new IFormLink<IANavigationMeshGetter> NavMesh { get; }
         new UInt32 NodeIndex { get; set; }
     }
 
@@ -465,7 +472,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavmeshNode_Registration.Instance;
-        FormLink<IANavigationMeshGetter> NavMesh { get; }
+        IFormLinkGetter<IANavigationMeshGetter> NavMesh { get; }
         UInt32 NodeIndex { get; }
 
     }
@@ -517,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavmeshNodeGetter item,
-            INavmeshNodeGetter rhs)
+            INavmeshNodeGetter rhs,
+            NavmeshNode.TranslationMask? equalsMask = null)
         {
             return ((NavmeshNodeCommon)((INavmeshNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -723,14 +732,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavmeshNode item)
         {
             ClearPartial();
-            item.NavMesh = FormLink<IANavigationMeshGetter>.Null;
+            item.NavMesh.Clear();
             item.NodeIndex = default;
         }
         
         #region Mutagen
         public void RemapLinks(INavmeshNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NavMesh = obj.NavMesh.Relink(mapping);
+            obj.NavMesh.Relink(mapping);
         }
         
         #endregion
@@ -837,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshNodeGetter? lhs,
-            INavmeshNodeGetter? rhs)
+            INavmeshNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
-            if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            if ((crystal?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
+            {
+                if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NodeIndex) ?? true))
+            {
+                if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            }
             return true;
         }
         
@@ -886,7 +902,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
             {
-                item.NavMesh = new FormLink<IANavigationMeshGetter>(rhs.NavMesh.FormKey);
+                item.NavMesh.SetTo(rhs.NavMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NodeIndex) ?? true))
             {
@@ -1025,9 +1041,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshNode item,
             MutagenFrame frame)
         {
-            item.NavMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.NavMesh.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.NodeIndex = frame.ReadUInt32();
         }
 
@@ -1095,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IANavigationMeshGetter> NavMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt32 NodeIndex => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1157,13 +1174,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshNodeGetter rhs)) return false;
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshNodeGetter rhs) return false;
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshNodeGetter? obj)
         {
-            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshNodeCommon)((INavmeshNodeGetter)this).CommonInstance()!).GetHashCode(this);

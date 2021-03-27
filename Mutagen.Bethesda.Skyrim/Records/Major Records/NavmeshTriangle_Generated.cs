@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshTriangleGetter rhs)) return false;
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshTriangleGetter rhs) return false;
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshTriangleGetter? obj)
         {
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).GetHashCode(this);
@@ -675,11 +675,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavmeshTriangleGetter item,
-            INavmeshTriangleGetter rhs)
+            INavmeshTriangleGetter rhs,
+            NavmeshTriangle.TranslationMask? equalsMask = null)
         {
             return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1029,17 +1031,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshTriangleGetter? lhs,
-            INavmeshTriangleGetter? rhs)
+            INavmeshTriangleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Vertices.Equals(rhs.Vertices)) return false;
-            if (lhs.EdgeLink_0_1 != rhs.EdgeLink_0_1) return false;
-            if (lhs.EdgeLink_1_2 != rhs.EdgeLink_1_2) return false;
-            if (lhs.EdgeLink_2_0 != rhs.EdgeLink_2_0) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.CoverFlags != rhs.CoverFlags) return false;
-            if (lhs.IsCover != rhs.IsCover) return false;
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.Vertices) ?? true))
+            {
+                if (!lhs.Vertices.Equals(rhs.Vertices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.EdgeLink_0_1) ?? true))
+            {
+                if (lhs.EdgeLink_0_1 != rhs.EdgeLink_0_1) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.EdgeLink_1_2) ?? true))
+            {
+                if (lhs.EdgeLink_1_2 != rhs.EdgeLink_1_2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.EdgeLink_2_0) ?? true))
+            {
+                if (lhs.EdgeLink_2_0 != rhs.EdgeLink_2_0) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.CoverFlags) ?? true))
+            {
+                if (lhs.CoverFlags != rhs.CoverFlags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.IsCover) ?? true))
+            {
+                if (lhs.IsCover != rhs.IsCover) return false;
+            }
             return true;
         }
         
@@ -1390,13 +1414,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshTriangleGetter rhs)) return false;
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshTriangleGetter rhs) return false;
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshTriangleGetter? obj)
         {
-            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshTriangleCommon)((INavmeshTriangleGetter)this).CommonInstance()!).GetHashCode(this);

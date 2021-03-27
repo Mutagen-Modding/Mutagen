@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Reference
-        public FormLink<IPlacedGetter> Reference { get; set; } = new FormLink<IPlacedGetter>();
+        private IFormLink<IPlacedGetter> _Reference = new FormLink<IPlacedGetter>();
+        public IFormLink<IPlacedGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnableParentGetter rhs)) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkContainer,
         ILoquiObjectSetter<IEnableParent>
     {
-        new FormLink<IPlacedGetter> Reference { get; set; }
+        new IFormLink<IPlacedGetter> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
     }
 
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
-        FormLink<IPlacedGetter> Reference { get; }
+        IFormLinkGetter<IPlacedGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
 
     }
@@ -518,11 +525,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IEnableParentGetter item,
-            IEnableParentGetter rhs)
+            IEnableParentGetter rhs,
+            EnableParent.TranslationMask? equalsMask = null)
         {
             return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -725,14 +734,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IEnableParent item)
         {
             ClearPartial();
-            item.Reference = FormLink<IPlacedGetter>.Null;
+            item.Reference.Clear();
             item.Flags = default;
         }
         
         #region Mutagen
         public void RemapLinks(IEnableParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -842,12 +851,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEnableParentGetter? lhs,
-            IEnableParentGetter? rhs)
+            IEnableParentGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -891,7 +907,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IPlacedGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
             {
@@ -1039,9 +1055,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
 
@@ -1109,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedGetter> Reference => new FormLink<IPlacedGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1172,13 +1189,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnableParentGetter rhs)) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);

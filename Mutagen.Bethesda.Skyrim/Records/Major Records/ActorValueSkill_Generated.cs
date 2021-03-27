@@ -68,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValueSkillGetter rhs)) return false;
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValueSkillGetter rhs) return false;
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValueSkillGetter? obj)
         {
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).GetHashCode(this);
@@ -580,11 +580,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IActorValueSkillGetter item,
-            IActorValueSkillGetter rhs)
+            IActorValueSkillGetter rhs,
+            ActorValueSkill.TranslationMask? equalsMask = null)
         {
             return ((ActorValueSkillCommon)((IActorValueSkillGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -917,14 +919,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActorValueSkillGetter? lhs,
-            IActorValueSkillGetter? rhs)
+            IActorValueSkillGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.UseMult.EqualsWithin(rhs.UseMult)) return false;
-            if (!lhs.OffsetMult.EqualsWithin(rhs.OffsetMult)) return false;
-            if (!lhs.ImproveMult.EqualsWithin(rhs.ImproveMult)) return false;
-            if (!lhs.ImproveOffset.EqualsWithin(rhs.ImproveOffset)) return false;
+            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.UseMult) ?? true))
+            {
+                if (!lhs.UseMult.EqualsWithin(rhs.UseMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.OffsetMult) ?? true))
+            {
+                if (!lhs.OffsetMult.EqualsWithin(rhs.OffsetMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveMult) ?? true))
+            {
+                if (!lhs.ImproveMult.EqualsWithin(rhs.ImproveMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValueSkill_FieldIndex.ImproveOffset) ?? true))
+            {
+                if (!lhs.ImproveOffset.EqualsWithin(rhs.ImproveOffset)) return false;
+            }
             return true;
         }
         
@@ -1264,13 +1279,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValueSkillGetter rhs)) return false;
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValueSkillGetter rhs) return false;
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValueSkillGetter? obj)
         {
-            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValueSkillCommon)((IActorValueSkillGetter)this).CommonInstance()!).GetHashCode(this);

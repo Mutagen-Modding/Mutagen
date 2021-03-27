@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGetter rhs) return false;
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGetter? obj)
         {
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -544,11 +544,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IConditionGetter item,
-            IConditionGetter rhs)
+            IConditionGetter rhs,
+            Condition.TranslationMask? equalsMask = null)
         {
             return ((ConditionCommon)((IConditionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -866,13 +868,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConditionGetter? lhs,
-            IConditionGetter? rhs)
+            IConditionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.CompareOperator != rhs.CompareOperator) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.CompareOperator) ?? true))
+            {
+                if (lhs.CompareOperator != rhs.CompareOperator) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Condition_FieldIndex.Unknown1) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown1.Span, rhs.Unknown1.Span)) return false;
+            }
             return true;
         }
         
@@ -1189,13 +1201,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGetter rhs)) return false;
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGetter rhs) return false;
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGetter? obj)
         {
-            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionCommon)((IConditionGetter)this).CommonInstance()!).GetHashCode(this);

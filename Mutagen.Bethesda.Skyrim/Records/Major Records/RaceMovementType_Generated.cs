@@ -41,7 +41,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region MovementType
-        public FormLinkNullable<IMovementTypeGetter> MovementType { get; set; } = new FormLinkNullable<IMovementTypeGetter>();
+        private IFormLinkNullable<IMovementTypeGetter> _MovementType = new FormLinkNullable<IMovementTypeGetter>();
+        public IFormLinkNullable<IMovementTypeGetter> MovementType
+        {
+            get => _MovementType;
+            set => _MovementType = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMovementTypeGetter> IRaceMovementTypeGetter.MovementType => this.MovementType;
         #endregion
         #region Overrides
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,13 +78,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceMovementTypeGetter rhs)) return false;
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceMovementTypeGetter rhs) return false;
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceMovementTypeGetter? obj)
         {
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -464,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRaceMovementType>,
         IRaceMovementTypeGetter
     {
-        new FormLinkNullable<IMovementTypeGetter> MovementType { get; set; }
+        new IFormLinkNullable<IMovementTypeGetter> MovementType { get; }
         new SpeedOverrides? Overrides { get; set; }
     }
 
@@ -481,7 +488,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RaceMovementType_Registration.Instance;
-        FormLinkNullable<IMovementTypeGetter> MovementType { get; }
+        IFormLinkNullableGetter<IMovementTypeGetter> MovementType { get; }
         ISpeedOverridesGetter? Overrides { get; }
 
     }
@@ -533,11 +540,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRaceMovementTypeGetter item,
-            IRaceMovementTypeGetter rhs)
+            IRaceMovementTypeGetter rhs,
+            RaceMovementType.TranslationMask? equalsMask = null)
         {
             return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -751,14 +760,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRaceMovementType item)
         {
             ClearPartial();
-            item.MovementType = FormLinkNullable<IMovementTypeGetter>.Null;
+            item.MovementType.Clear();
             item.Overrides = null;
         }
         
         #region Mutagen
         public void RemapLinks(IRaceMovementType obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.MovementType = obj.MovementType.Relink(mapping);
+            obj.MovementType.Relink(mapping);
         }
         
         #endregion
@@ -871,12 +880,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceMovementTypeGetter? lhs,
-            IRaceMovementTypeGetter? rhs)
+            IRaceMovementTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
-            if (!object.Equals(lhs.Overrides, rhs.Overrides)) return false;
+            if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
+            {
+                if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
+            {
+                if (!object.Equals(lhs.Overrides, rhs.Overrides)) return false;
+            }
             return true;
         }
         
@@ -926,7 +942,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
-                item.MovementType = new FormLinkNullable<IMovementTypeGetter>(rhs.MovementType.FormKeyNullable);
+                item.MovementType.SetTo(rhs.MovementType.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {
@@ -1114,9 +1130,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MovementType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MovementType.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:
@@ -1196,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region MovementType
         private int? _MovementTypeLocation;
-        public FormLinkNullable<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
+        public IFormLinkNullableGetter<IMovementTypeGetter> MovementType => _MovementTypeLocation.HasValue ? new FormLinkNullable<IMovementTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MovementTypeLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMovementTypeGetter>.Null;
         #endregion
         #region Overrides
         private RangeInt32? _OverridesLocation;
@@ -1291,13 +1308,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceMovementTypeGetter rhs)) return false;
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRaceMovementTypeGetter rhs) return false;
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceMovementTypeGetter? obj)
         {
-            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceMovementTypeCommon)((IRaceMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -91,7 +91,14 @@ namespace Mutagen.Bethesda.Skyrim
         ReadOnlyMemorySlice<Byte> IMessageGetter.INAM => this.INAM;
         #endregion
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IMessageGetter.Quest => this.Quest;
         #endregion
         #region Flags
         public Message.Flag Flags { get; set; } = default;
@@ -126,22 +133,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMessageGetter rhs)) return false;
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMessageGetter? obj)
-        {
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -713,6 +704,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMessageGetter rhs) return false;
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IMessageGetter? obj)
+        {
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -782,7 +793,7 @@ namespace Mutagen.Bethesda.Skyrim
         new TranslatedString Description { get; set; }
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new Message.Flag Flags { get; set; }
         new UInt32? DisplayTime { get; set; }
         new ExtendedList<MessageButton> MenuButtons { get; }
@@ -810,7 +821,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter Description { get; }
         ITranslatedStringGetter? Name { get; }
         ReadOnlyMemorySlice<Byte> INAM { get; }
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         Message.Flag Flags { get; }
         UInt32? DisplayTime { get; }
         IReadOnlyList<IMessageButtonGetter> MenuButtons { get; }
@@ -864,11 +875,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMessageGetter item,
-            IMessageGetter rhs)
+            IMessageGetter rhs,
+            Message.TranslationMask? equalsMask = null)
         {
             return ((MessageCommon)((IMessageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1074,7 +1087,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Description.Clear();
             item.Name = default;
             item.INAM = new byte[0];
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.Flags = default;
             item.DisplayTime = default;
             item.MenuButtons.Clear();
@@ -1095,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IMessage obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
             obj.MenuButtons.RemapLinks(mapping);
         }
         
@@ -1313,37 +1326,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMessageGetter? lhs,
-            IMessageGetter? rhs)
+            IMessageGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.DisplayTime != rhs.DisplayTime) return false;
-            if (!lhs.MenuButtons.SequenceEqualNullable(rhs.MenuButtons)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.INAM) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.INAM.Span, rhs.INAM.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.DisplayTime) ?? true))
+            {
+                if (lhs.DisplayTime != rhs.DisplayTime) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Message_FieldIndex.MenuButtons) ?? true))
+            {
+                if (!lhs.MenuButtons.SequenceEqualNullable(rhs.MenuButtons)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMessageGetter?)lhs,
-                rhs: rhs as IMessageGetter);
+                rhs: rhs as IMessageGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMessageGetter?)lhs,
-                rhs: rhs as IMessageGetter);
+                rhs: rhs as IMessageGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMessageGetter item)
@@ -1409,7 +1448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Message(formKey, default(SkyrimRelease));
+            var newRec = new Message(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1420,7 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMessage)item,
+                item: (IMessageGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1431,7 +1470,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMessage)item,
+                item: (IMessageGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1488,7 +1527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Message_FieldIndex.Flags) ?? true))
             {
@@ -1837,9 +1876,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Message_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DNAM:
@@ -1942,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region Flags
         private int? _FlagsLocation;
@@ -2085,13 +2125,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMessageGetter rhs)) return false;
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMessageGetter rhs) return false;
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMessageGetter? obj)
         {
-            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MessageCommon)((IMessageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MessageCommon)((IMessageGetter)this).CommonInstance()!).GetHashCode(this);

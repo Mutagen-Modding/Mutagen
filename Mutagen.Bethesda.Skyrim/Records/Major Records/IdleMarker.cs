@@ -35,10 +35,10 @@ namespace Mutagen.Bethesda.Skyrim
                 frame.ReadSubrecordFrame();
             }
 
-            public static ExtendedList<IFormLink<IIdleAnimationGetter>> ParseAnimations(IMutagenReadStream stream)
+            public static ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> ParseAnimations(IMutagenReadStream stream)
             {
                 var subFrame = stream.ReadSubrecordFrame();
-                var ret = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
+                var ret = new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
                 int pos = 0;
                 while (pos < subFrame.Content.Length)
                 {
@@ -88,12 +88,12 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.ReadSubrecordFrame();
             }
 
-            public IReadOnlyList<IFormLink<IIdleAnimationGetter>>? Animations { get; private set; }
+            public IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; private set; }
 
             partial void AnimationsCustomParse(OverlayStream stream, long finalPos, int offset, RecordType type, int? lastParsed)
             {
                 var subHeader = stream.ReadSubrecord();
-                Animations = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleAnimationGetter>>(
+                Animations = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleAnimationGetter>>(
                     mem: stream.RemainingMemory.Slice(0, subHeader.ContentLength),
                     package: _package,
                     itemLength: 4,

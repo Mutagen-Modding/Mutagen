@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class SigilStone :
-        AItem,
+        OblivionMajorRecord,
         IEquatable<ISigilStoneGetter>,
         ILoquiObjectSetter<SigilStone>,
         ISigilStoneInternal
@@ -78,7 +78,14 @@ namespace Mutagen.Bethesda.Oblivion
         String? ISigilStoneGetter.Icon => this.Icon;
         #endregion
         #region Script
-        public FormLinkNullable<IScriptGetter> Script { get; set; } = new FormLinkNullable<IScriptGetter>();
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> ISigilStoneGetter.Script => this.Script;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -119,25 +126,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISigilStoneGetter rhs)) return false;
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISigilStoneGetter? obj)
-        {
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
-            AItem.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -401,7 +392,7 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AItem.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
@@ -597,7 +588,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AItem.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
@@ -670,6 +661,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISigilStoneGetter rhs) return false;
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ISigilStoneGetter? obj)
+        {
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -727,33 +738,35 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface ISigilStone :
-        IAItemInternal,
         IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<ISigilStoneInternal>,
         IModeled,
         INamed,
         INamedRequired,
+        IOblivionMajorRecordInternal,
         ISigilStoneGetter
     {
         new String? Name { get; set; }
         new Model? Model { get; set; }
         new String? Icon { get; set; }
-        new FormLinkNullable<IScriptGetter> Script { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
         new ExtendedList<Effect> Effects { get; }
         new SigilStoneData? Data { get; set; }
     }
 
     public partial interface ISigilStoneInternal :
-        IAItemInternal,
+        IOblivionMajorRecordInternal,
         ISigilStone,
         ISigilStoneGetter
     {
     }
 
     public partial interface ISigilStoneGetter :
-        IAItemGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<ISigilStoneGetter>,
         IMapsToGetter<ISigilStoneGetter>,
         IModeledGetter,
@@ -764,7 +777,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         IModelGetter? Model { get; }
         String? Icon { get; }
-        FormLinkNullable<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         ISigilStoneDataGetter? Data { get; }
 
@@ -817,11 +830,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISigilStoneGetter item,
-            ISigilStoneGetter rhs)
+            ISigilStoneGetter rhs,
+            SigilStone.TranslationMask? equalsMask = null)
         {
             return ((SigilStoneCommon)((ISigilStoneGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1013,7 +1028,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class SigilStoneSetterCommon : AItemSetterCommon
+    public partial class SigilStoneSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly SigilStoneSetterCommon Instance = new SigilStoneSetterCommon();
 
@@ -1025,15 +1040,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Name = default;
             item.Model = null;
             item.Icon = default;
-            item.Script = FormLinkNullable<IScriptGetter>.Null;
+            item.Script.Clear();
             item.Effects.Clear();
             item.Data = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (ISigilStoneInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -1050,7 +1060,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(ISigilStone obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Script = obj.Script.Relink(mapping);
+            obj.Script.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1068,17 +1078,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: SigilStoneBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: SigilStoneBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (SigilStone)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -1106,7 +1105,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneCommon : AItemCommon
+    public partial class SigilStoneCommon : OblivionMajorRecordCommon
     {
         public new static readonly SigilStoneCommon Instance = new SigilStoneCommon();
 
@@ -1195,7 +1194,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             SigilStone.Mask<bool>? printMask = null)
         {
-            AItemCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
@@ -1243,26 +1242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static SigilStone_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (SigilStone_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (SigilStone_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (SigilStone_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (SigilStone_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (SigilStone_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new SigilStone_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static SigilStone_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1301,45 +1281,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISigilStoneGetter? lhs,
-            ISigilStoneGetter? rhs)
+            ISigilStoneGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAItemGetter)lhs, (IAItemGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.Script.Equals(rhs.Script)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SigilStone_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (ISigilStoneGetter?)lhs,
-                rhs: rhs as ISigilStoneGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISigilStoneGetter?)lhs,
-                rhs: rhs as ISigilStoneGetter);
+                rhs: rhs as ISigilStoneGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISigilStoneGetter?)lhs,
-                rhs: rhs as ISigilStoneGetter);
+                rhs: rhs as ISigilStoneGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISigilStoneGetter item)
@@ -1365,11 +1359,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (ISigilStoneGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1419,24 +1408,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (ISigilStone)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISigilStone)item,
+                item: (ISigilStoneGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1447,7 +1425,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISigilStone)item,
+                item: (ISigilStoneGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1457,7 +1435,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class SigilStoneSetterTranslationCommon : AItemSetterTranslationCommon
+    public partial class SigilStoneSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly SigilStoneSetterTranslationCommon Instance = new SigilStoneSetterTranslationCommon();
 
@@ -1485,8 +1463,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAItem)item,
-                (IAItemGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
@@ -1526,7 +1504,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Script) ?? true))
             {
-                item.Script = new FormLinkNullable<IScriptGetter>(rhs.Script.FormKeyNullable);
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SigilStone_FieldIndex.Effects) ?? true))
             {
@@ -1578,36 +1556,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISigilStoneInternal)item,
-                rhs: (ISigilStoneGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (ISigilStone)item,
-                rhs: (ISigilStoneGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1751,7 +1699,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SigilStoneBinaryWriteTranslation :
-        AItemBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static SigilStoneBinaryWriteTranslation Instance = new SigilStoneBinaryWriteTranslation();
@@ -1848,17 +1796,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (ISigilStoneGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1881,7 +1818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class SigilStoneBinaryCreateTranslation : AItemBinaryCreateTranslation
+    public partial class SigilStoneBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static SigilStoneBinaryCreateTranslation Instance = new SigilStoneBinaryCreateTranslation();
 
@@ -1890,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneInternal item,
             MutagenFrame frame)
         {
-            AItemBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1932,9 +1869,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SigilStone_FieldIndex.Script;
                 }
                 case RecordTypeInts.EFID:
@@ -1954,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     return (int)SigilStone_FieldIndex.Data;
                 }
                 default:
-                    return AItemBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1979,7 +1917,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SigilStoneBinaryOverlay :
-        AItemBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         ISigilStoneGetter
     {
         #region Common Routing
@@ -2023,7 +1961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Script
         private int? _ScriptLocation;
-        public FormLinkNullable<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         #region Data
@@ -2160,13 +2098,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISigilStoneGetter rhs)) return false;
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISigilStoneGetter rhs) return false;
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISigilStoneGetter? obj)
         {
-            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SigilStoneCommon)((ISigilStoneGetter)this).CommonInstance()!).GetHashCode(this);

@@ -68,15 +68,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region RelatedIdles
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLink<IIdleRelationGetter>>();
-        public ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles
+        private ExtendedList<IFormLinkGetter<IIdleRelationGetter>> _RelatedIdles = new ExtendedList<IFormLinkGetter<IIdleRelationGetter>>();
+        public ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles
         {
             get => this._RelatedIdles;
             protected set => this._RelatedIdles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IIdleRelationGetter>> IIdleAnimationGetter.RelatedIdles => _RelatedIdles;
+        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> IIdleAnimationGetter.RelatedIdles => _RelatedIdles;
         #endregion
 
         #endregion
@@ -109,22 +109,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IIdleAnimationGetter? obj)
-        {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -857,6 +841,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IIdleAnimationGetter? obj)
+        {
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -923,7 +927,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<Condition> Conditions { get; }
         new String? Filename { get; set; }
         new String? AnimationEvent { get; set; }
-        new ExtendedList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
+        new ExtendedList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         new Byte LoopingSecondsMin { get; set; }
         new Byte LoopingSecondsMax { get; set; }
         new IdleAnimation.Flag Flags { get; set; }
@@ -951,7 +955,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         String? Filename { get; }
         String? AnimationEvent { get; }
-        IReadOnlyList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; }
         Byte LoopingSecondsMin { get; }
         Byte LoopingSecondsMax { get; }
         IdleAnimation.Flag Flags { get; }
@@ -1008,11 +1012,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IIdleAnimationGetter item,
-            IIdleAnimationGetter rhs)
+            IIdleAnimationGetter rhs,
+            IdleAnimation.TranslationMask? equalsMask = null)
         {
             return ((IdleAnimationCommon)((IIdleAnimationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1495,40 +1501,75 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IIdleAnimationGetter? lhs,
-            IIdleAnimationGetter? rhs)
+            IIdleAnimationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
-            if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
-            if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
-            if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
-            if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
-            if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
-            if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Filename) ?? true))
+            {
+                if (!string.Equals(lhs.Filename, rhs.Filename)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationEvent) ?? true))
+            {
+                if (!string.Equals(lhs.AnimationEvent, rhs.AnimationEvent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.RelatedIdles) ?? true))
+            {
+                if (!lhs.RelatedIdles.SequenceEqualNullable(rhs.RelatedIdles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMin) ?? true))
+            {
+                if (lhs.LoopingSecondsMin != rhs.LoopingSecondsMin) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.LoopingSecondsMax) ?? true))
+            {
+                if (lhs.LoopingSecondsMax != rhs.LoopingSecondsMax) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.AnimationGroupSection) ?? true))
+            {
+                if (lhs.AnimationGroupSection != rhs.AnimationGroupSection) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.ReplayDelay) ?? true))
+            {
+                if (lhs.ReplayDelay != rhs.ReplayDelay) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)IdleAnimation_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleAnimationGetter?)lhs,
-                rhs: rhs as IIdleAnimationGetter);
+                rhs: rhs as IIdleAnimationGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IIdleAnimationGetter?)lhs,
-                rhs: rhs as IIdleAnimationGetter);
+                rhs: rhs as IIdleAnimationGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IIdleAnimationGetter item)
@@ -1597,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new IdleAnimation(formKey, default(SkyrimRelease));
+            var newRec = new IdleAnimation(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1608,7 +1649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleAnimation)item,
+                item: (IIdleAnimationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1619,7 +1660,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IIdleAnimation)item,
+                item: (IIdleAnimationGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1701,7 +1742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RelatedIdles.SetTo(
                         rhs.RelatedIdles
-                        .Select(r => (IFormLink<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IIdleRelationGetter>)new FormLink<IIdleRelationGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1885,19 +1926,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleAnimationBinaryWriteTranslation Instance = new IdleAnimationBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IIdleAnimationGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IIdleAnimationGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IIdleAnimationGetter item,
             MutagenWriter writer)
@@ -1916,9 +1944,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            IdleAnimationBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
             Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Filename,
@@ -1929,11 +1965,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.AnimationEvent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RelatedIdles,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
-                transl: (MutagenWriter subWriter, IFormLink<IIdleRelationGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IIdleRelationGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2043,9 +2079,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 case RecordTypeInts.CTDA:
                 {
-                    IdleAnimationBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)IdleAnimation_FieldIndex.Conditions;
                 }
                 case RecordTypeInts.DNAM:
@@ -2068,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RelatedIdles.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IIdleRelationGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IIdleRelationGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)IdleAnimation_FieldIndex.RelatedIdles;
@@ -2093,10 +2132,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IIdleAnimationInternal item);
 
     }
 
@@ -2159,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         private int? _AnimationEventLocation;
         public String? AnimationEvent => _AnimationEventLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationEventLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLink<IIdleRelationGetter>> RelatedIdles { get; private set; } = ListExt.Empty<IFormLink<IIdleRelationGetter>>();
+        public IReadOnlyList<IFormLinkGetter<IIdleRelationGetter>> RelatedIdles { get; private set; } = ListExt.Empty<IFormLinkGetter<IIdleRelationGetter>>();
         private int? _DATALocation;
         public IdleAnimation.DATADataType DATADataTypeState { get; private set; }
         #region LoopingSecondsMin
@@ -2277,7 +2312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLink<IIdleRelationGetter>>(
+                    this.RelatedIdles = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IIdleRelationGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2316,13 +2351,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IIdleAnimationGetter rhs)) return false;
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IIdleAnimationGetter rhs) return false;
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IIdleAnimationGetter? obj)
         {
-            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((IdleAnimationCommon)((IIdleAnimationGetter)this).CommonInstance()!).GetHashCode(this);

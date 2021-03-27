@@ -50,6 +50,11 @@ namespace Mutagen.Bethesda.Binary
             }
         }
 
+        public float Parse(MutagenFrame frame, float multiplier)
+        {
+            return Parse(frame) * multiplier;
+        }
+
         public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
@@ -94,6 +99,28 @@ namespace Mutagen.Bethesda.Binary
             {
                 writer.Write(item);
             }
+        }
+
+        public void Write(MutagenWriter writer, float item, float multiplier)
+        {
+            Write(writer, item / multiplier);
+        }
+
+        public void Write(MutagenWriter writer, float item, RecordType header, float multiplier)
+        {
+            Write(writer, item / multiplier, header);
+        }
+
+        public void WriteNullable(MutagenWriter writer, float? item, float multiplier)
+        {
+            if (!item.HasValue) return;
+            Write(writer, item.Value / multiplier);
+        }
+
+        public void WriteNullable(MutagenWriter writer, float? item, RecordType header, float multiplier)
+        {
+            if (!item.HasValue) return;
+            Write(writer, item.Value / multiplier, header);
         }
 
         public static void Write(MutagenWriter writer, float? item, FloatIntegerType integerType, double multiplier)

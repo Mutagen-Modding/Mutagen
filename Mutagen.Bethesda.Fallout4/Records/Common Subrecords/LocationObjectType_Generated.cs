@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectTypeGetter rhs)) return false;
-            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectTypeGetter rhs) return false;
+            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectTypeGetter? obj)
         {
-            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -453,11 +453,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ILocationObjectTypeGetter item,
-            ILocationObjectTypeGetter rhs)
+            ILocationObjectTypeGetter rhs,
+            LocationObjectType.TranslationMask? equalsMask = null)
         {
             return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -772,22 +774,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationObjectTypeGetter? lhs,
-            ILocationObjectTypeGetter? rhs)
+            ILocationObjectTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationObjectType_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationObjectTypeGetter?)lhs,
-                rhs: rhs as ILocationObjectTypeGetter);
+                rhs: rhs as ILocationObjectTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationObjectTypeGetter item)
@@ -1110,13 +1118,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectTypeGetter rhs)) return false;
-            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectTypeGetter rhs) return false;
+            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectTypeGetter? obj)
         {
-            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectTypeCommon)((ILocationObjectTypeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -26,7 +26,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             dict[typeof(IDamageTypeTarget)] = new Type[]
             {
                 typeof(ActorValueInformation),
-                typeof(ASpell),
             };
             dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)];
             dict[typeof(IObjectId)] = new Type[]
@@ -57,6 +56,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 typeof(Keyword),
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
+            dict[typeof(ISpellRecord)] = new Type[]
+            {
+                typeof(LeveledSpell),
+            };
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
             dict[typeof(ILocationRecord)] = new Type[]
             {
                 typeof(LocationReferenceType),

@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Ability
-        public FormLink<ISpellGetter> Ability { get; set; } = new FormLink<ISpellGetter>();
+        private IFormLink<ISpellGetter> _Ability = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Ability
+        {
+            get => _Ability;
+            set => _Ability = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IPerkAbilityEffectGetter.Ability => this.Ability;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAbilityEffectGetter rhs)) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAbilityEffectGetter rhs) return false;
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -415,7 +422,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPerkAbilityEffect>,
         IPerkAbilityEffectGetter
     {
-        new FormLink<ISpellGetter> Ability { get; set; }
+        new IFormLink<ISpellGetter> Ability { get; }
     }
 
     public partial interface IPerkAbilityEffectGetter :
@@ -425,7 +432,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPerkAbilityEffectGetter>
     {
         static new ILoquiRegistration Registration => PerkAbilityEffect_Registration.Instance;
-        FormLink<ISpellGetter> Ability { get; }
+        IFormLinkGetter<ISpellGetter> Ability { get; }
 
     }
 
@@ -476,11 +483,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPerkAbilityEffectGetter item,
-            IPerkAbilityEffectGetter rhs)
+            IPerkAbilityEffectGetter rhs,
+            PerkAbilityEffect.TranslationMask? equalsMask = null)
         {
             return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -661,7 +670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPerkAbilityEffect item)
         {
             ClearPartial();
-            item.Ability = FormLink<ISpellGetter>.Null;
+            item.Ability.Clear();
             base.Clear(item);
         }
         
@@ -674,7 +683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPerkAbilityEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Ability = obj.Ability.Relink(mapping);
+            obj.Ability.Relink(mapping);
         }
         
         #endregion
@@ -810,22 +819,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPerkAbilityEffectGetter? lhs,
-            IPerkAbilityEffectGetter? rhs)
+            IPerkAbilityEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs)) return false;
-            if (!lhs.Ability.Equals(rhs.Ability)) return false;
+            if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
+            {
+                if (!lhs.Ability.Equals(rhs.Ability)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPerkEffectGetter? lhs,
-            IAPerkEffectGetter? rhs)
+            IAPerkEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPerkAbilityEffectGetter?)lhs,
-                rhs: rhs as IPerkAbilityEffectGetter);
+                rhs: rhs as IPerkAbilityEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPerkAbilityEffectGetter item)
@@ -883,7 +898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {
-                item.Ability = new FormLink<ISpellGetter>(rhs.Ability.FormKey);
+                item.Ability.SetTo(rhs.Ability.FormKey);
             }
         }
         
@@ -1050,9 +1065,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Ability = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Ability.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1100,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Ability => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1162,13 +1178,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPerkAbilityEffectGetter rhs)) return false;
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPerkAbilityEffectGetter rhs) return false;
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPerkAbilityEffectGetter? obj)
         {
-            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PerkAbilityEffectCommon)((IPerkAbilityEffectGetter)this).CommonInstance()!).GetHashCode(this);

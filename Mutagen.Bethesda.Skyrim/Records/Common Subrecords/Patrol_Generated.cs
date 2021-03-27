@@ -44,7 +44,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single IdleTime { get; set; } = default;
         #endregion
         #region Idle
-        public FormLink<IIdleAnimationGetter> Idle { get; set; } = new FormLink<IIdleAnimationGetter>();
+        private IFormLink<IIdleAnimationGetter> _Idle = new FormLink<IIdleAnimationGetter>();
+        public IFormLink<IIdleAnimationGetter> Idle
+        {
+            get => _Idle;
+            set => _Idle = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IIdleAnimationGetter> IPatrolGetter.Idle => this.Idle;
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,13 +106,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPatrolGetter rhs)) return false;
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPatrolGetter rhs) return false;
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPatrolGetter? obj)
         {
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);
@@ -646,7 +653,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPatrolGetter
     {
         new Single IdleTime { get; set; }
-        new FormLink<IIdleAnimationGetter> Idle { get; set; }
+        new IFormLink<IIdleAnimationGetter> Idle { get; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
         new ExtendedList<ATopicReference> Topics { get; }
@@ -666,7 +673,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Patrol_Registration.Instance;
         Single IdleTime { get; }
-        FormLink<IIdleAnimationGetter> Idle { get; }
+        IFormLinkGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
         IReadOnlyList<IATopicReferenceGetter> Topics { get; }
@@ -720,11 +727,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPatrolGetter item,
-            IPatrolGetter rhs)
+            IPatrolGetter rhs,
+            Patrol.TranslationMask? equalsMask = null)
         {
             return ((PatrolCommon)((IPatrolGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -931,7 +940,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.IdleTime = default;
-            item.Idle = FormLink<IIdleAnimationGetter>.Null;
+            item.Idle.Clear();
             item.SCHR = default;
             item.SCTX = default;
             item.Topics.Clear();
@@ -940,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IPatrol obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Idle = obj.Idle.Relink(mapping);
+            obj.Idle.Relink(mapping);
             obj.Topics.RemapLinks(mapping);
         }
         
@@ -1083,15 +1092,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPatrolGetter? lhs,
-            IPatrolGetter? rhs)
+            IPatrolGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.IdleTime.EqualsWithin(rhs.IdleTime)) return false;
-            if (!lhs.Idle.Equals(rhs.Idle)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.IdleTime) ?? true))
+            {
+                if (!lhs.IdleTime.EqualsWithin(rhs.IdleTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
+            {
+                if (!lhs.Idle.Equals(rhs.Idle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.SCTX) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Patrol_FieldIndex.Topics) ?? true))
+            {
+                if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            }
             return true;
         }
         
@@ -1153,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLink<IIdleAnimationGetter>(rhs.Idle.FormKey);
+                item.Idle.SetTo(rhs.Idle.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Patrol_FieldIndex.SCHR) ?? true))
             {
@@ -1411,9 +1436,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Idle.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
@@ -1523,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Idle
         private int? _IdleLocation;
-        public FormLink<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
+        public IFormLinkGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLink<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLink<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;
@@ -1656,13 +1682,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPatrolGetter rhs)) return false;
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPatrolGetter rhs) return false;
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPatrolGetter? obj)
         {
-            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PatrolCommon)((IPatrolGetter)this).CommonInstance()!).GetHashCode(this);

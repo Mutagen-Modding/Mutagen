@@ -75,22 +75,64 @@ namespace Mutagen.Bethesda.Fallout4
         public Faction.FactionFlag Flags { get; set; } = default;
         #endregion
         #region ExteriorJailMarker
-        public FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker
+        {
+            get => _ExteriorJailMarker;
+            set => _ExteriorJailMarker = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.ExteriorJailMarker => this.ExteriorJailMarker;
         #endregion
         #region FollowerWaitMarker
-        public FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _FollowerWaitMarker = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker
+        {
+            get => _FollowerWaitMarker;
+            set => _FollowerWaitMarker = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.FollowerWaitMarker => this.FollowerWaitMarker;
         #endregion
         #region StolenGoodsContainer
-        public FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _StolenGoodsContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer
+        {
+            get => _StolenGoodsContainer;
+            set => _StolenGoodsContainer = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.StolenGoodsContainer => this.StolenGoodsContainer;
         #endregion
         #region PlayerInventoryContainer
-        public FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _PlayerInventoryContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer
+        {
+            get => _PlayerInventoryContainer;
+            set => _PlayerInventoryContainer = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.PlayerInventoryContainer => this.PlayerInventoryContainer;
         #endregion
         #region SharedCrimeFactionList
-        public FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> SharedCrimeFactionList
+        {
+            get => _SharedCrimeFactionList;
+            set => _SharedCrimeFactionList = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.SharedCrimeFactionList => this.SharedCrimeFactionList;
         #endregion
         #region JailOutfit
-        public FormLinkNullable<IOutfitGetter> JailOutfit { get; set; } = new FormLinkNullable<IOutfitGetter>();
+        private IFormLinkNullable<IOutfitGetter> _JailOutfit = new FormLinkNullable<IOutfitGetter>();
+        public IFormLinkNullable<IOutfitGetter> JailOutfit
+        {
+            get => _JailOutfit;
+            set => _JailOutfit = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IOutfitGetter> IFactionGetter.JailOutfit => this.JailOutfit;
         #endregion
         #region CrimeValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -118,10 +160,24 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
         #region VendorBuySellList
-        public FormLinkNullable<IFormListGetter> VendorBuySellList { get; set; } = new FormLinkNullable<IFormListGetter>();
+        private IFormLinkNullable<IFormListGetter> _VendorBuySellList = new FormLinkNullable<IFormListGetter>();
+        public IFormLinkNullable<IFormListGetter> VendorBuySellList
+        {
+            get => _VendorBuySellList;
+            set => _VendorBuySellList = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IFormListGetter> IFactionGetter.VendorBuySellList => this.VendorBuySellList;
         #endregion
         #region MerchantContainer
-        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; } = new FormLinkNullable<IPlacedObjectGetter>();
+        private IFormLinkNullable<IPlacedObjectGetter> _MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>();
+        public IFormLinkNullable<IPlacedObjectGetter> MerchantContainer
+        {
+            get => _MerchantContainer;
+            set => _MerchantContainer = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IPlacedObjectGetter> IFactionGetter.MerchantContainer => this.MerchantContainer;
         #endregion
         #region VendorValues
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -170,22 +226,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IFactionGetter rhs)) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IFactionGetter? obj)
-        {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -1173,6 +1213,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFactionGetter rhs) return false;
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IFactionGetter? obj)
+        {
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1243,16 +1303,16 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; set; }
-        new FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; set; }
-        new FormLinkNullable<IOutfitGetter> JailOutfit { get; set; }
+        new IFormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; }
+        new IFormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; }
+        new IFormLinkNullable<IOutfitGetter> JailOutfit { get; }
         new CrimeValues? CrimeValues { get; set; }
         new ExtendedList<Rank> Ranks { get; }
-        new FormLinkNullable<IFormListGetter> VendorBuySellList { get; set; }
-        new FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; set; }
+        new IFormLinkNullable<IFormListGetter> VendorBuySellList { get; }
+        new IFormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
         new VendorValues? VendorValues { get; set; }
         new LocationTargetRadius? VendorLocation { get; set; }
         new ExtendedList<Condition>? Conditions { get; set; }
@@ -1281,16 +1341,16 @@ namespace Mutagen.Bethesda.Fallout4
         String? Name { get; }
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag Flags { get; }
-        FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker { get; }
-        FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker { get; }
-        FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer { get; }
-        FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer { get; }
-        FormLinkNullable<IFormListGetter> SharedCrimeFactionList { get; }
-        FormLinkNullable<IOutfitGetter> JailOutfit { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer { get; }
+        IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList { get; }
+        IFormLinkNullableGetter<IOutfitGetter> JailOutfit { get; }
         ICrimeValuesGetter? CrimeValues { get; }
         IReadOnlyList<IRankGetter> Ranks { get; }
-        FormLinkNullable<IFormListGetter> VendorBuySellList { get; }
-        FormLinkNullable<IPlacedObjectGetter> MerchantContainer { get; }
+        IFormLinkNullableGetter<IFormListGetter> VendorBuySellList { get; }
+        IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer { get; }
         IVendorValuesGetter? VendorValues { get; }
         ILocationTargetRadiusGetter? VendorLocation { get; }
         IReadOnlyList<IConditionGetter>? Conditions { get; }
@@ -1344,11 +1404,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IFactionGetter item,
-            IFactionGetter rhs)
+            IFactionGetter rhs,
+            Faction.TranslationMask? equalsMask = null)
         {
             return ((FactionCommon)((IFactionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1563,16 +1625,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Name = default;
             item.Relations.Clear();
             item.Flags = default;
-            item.ExteriorJailMarker = FormLinkNullable<IPlacedObjectGetter>.Null;
-            item.FollowerWaitMarker = FormLinkNullable<IPlacedObjectGetter>.Null;
-            item.StolenGoodsContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
-            item.PlayerInventoryContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
-            item.SharedCrimeFactionList = FormLinkNullable<IFormListGetter>.Null;
-            item.JailOutfit = FormLinkNullable<IOutfitGetter>.Null;
+            item.ExteriorJailMarker.Clear();
+            item.FollowerWaitMarker.Clear();
+            item.StolenGoodsContainer.Clear();
+            item.PlayerInventoryContainer.Clear();
+            item.SharedCrimeFactionList.Clear();
+            item.JailOutfit.Clear();
             item.CrimeValues = null;
             item.Ranks.Clear();
-            item.VendorBuySellList = FormLinkNullable<IFormListGetter>.Null;
-            item.MerchantContainer = FormLinkNullable<IPlacedObjectGetter>.Null;
+            item.VendorBuySellList.Clear();
+            item.MerchantContainer.Clear();
             item.VendorValues = null;
             item.VendorLocation = null;
             item.Conditions = null;
@@ -1594,14 +1656,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Relations.RemapLinks(mapping);
-            obj.ExteriorJailMarker = obj.ExteriorJailMarker.Relink(mapping);
-            obj.FollowerWaitMarker = obj.FollowerWaitMarker.Relink(mapping);
-            obj.StolenGoodsContainer = obj.StolenGoodsContainer.Relink(mapping);
-            obj.PlayerInventoryContainer = obj.PlayerInventoryContainer.Relink(mapping);
-            obj.SharedCrimeFactionList = obj.SharedCrimeFactionList.Relink(mapping);
-            obj.JailOutfit = obj.JailOutfit.Relink(mapping);
-            obj.VendorBuySellList = obj.VendorBuySellList.Relink(mapping);
-            obj.MerchantContainer = obj.MerchantContainer.Relink(mapping);
+            obj.ExteriorJailMarker.Relink(mapping);
+            obj.FollowerWaitMarker.Relink(mapping);
+            obj.StolenGoodsContainer.Relink(mapping);
+            obj.PlayerInventoryContainer.Relink(mapping);
+            obj.SharedCrimeFactionList.Relink(mapping);
+            obj.JailOutfit.Relink(mapping);
+            obj.VendorBuySellList.Relink(mapping);
+            obj.MerchantContainer.Relink(mapping);
             obj.VendorLocation?.RemapLinks(mapping);
             obj.Conditions?.RemapLinks(mapping);
         }
@@ -1914,46 +1976,99 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFactionGetter? lhs,
-            IFactionGetter? rhs)
+            IFactionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
-            if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
-            if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
-            if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
-            if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
-            if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
-            if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
-            if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
-            if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
-            if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
-            if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
-            if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Relations) ?? true))
+            {
+                if (!lhs.Relations.SequenceEqualNullable(rhs.Relations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
+            {
+                if (!lhs.ExteriorJailMarker.Equals(rhs.ExteriorJailMarker)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
+            {
+                if (!lhs.FollowerWaitMarker.Equals(rhs.FollowerWaitMarker)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
+            {
+                if (!lhs.StolenGoodsContainer.Equals(rhs.StolenGoodsContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
+            {
+                if (!lhs.PlayerInventoryContainer.Equals(rhs.PlayerInventoryContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
+            {
+                if (!lhs.SharedCrimeFactionList.Equals(rhs.SharedCrimeFactionList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
+            {
+                if (!lhs.JailOutfit.Equals(rhs.JailOutfit)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
+            {
+                if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
+            {
+                if (!lhs.Ranks.SequenceEqualNullable(rhs.Ranks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
+            {
+                if (!lhs.VendorBuySellList.Equals(rhs.VendorBuySellList)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
+            {
+                if (!lhs.MerchantContainer.Equals(rhs.MerchantContainer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
+            {
+                if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
+            {
+                if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
-                rhs: rhs as IFactionGetter);
+                rhs: rhs as IFactionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionGetter?)lhs,
-                rhs: rhs as IFactionGetter);
+                rhs: rhs as IFactionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFactionGetter item)
@@ -2087,7 +2202,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFaction)item,
+                item: (IFactionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2098,7 +2213,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFaction)item,
+                item: (IFactionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2175,27 +2290,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.ExteriorJailMarker) ?? true))
             {
-                item.ExteriorJailMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.ExteriorJailMarker.FormKeyNullable);
+                item.ExteriorJailMarker.SetTo(rhs.ExteriorJailMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.FollowerWaitMarker) ?? true))
             {
-                item.FollowerWaitMarker = new FormLinkNullable<IPlacedObjectGetter>(rhs.FollowerWaitMarker.FormKeyNullable);
+                item.FollowerWaitMarker.SetTo(rhs.FollowerWaitMarker.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.StolenGoodsContainer) ?? true))
             {
-                item.StolenGoodsContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.StolenGoodsContainer.FormKeyNullable);
+                item.StolenGoodsContainer.SetTo(rhs.StolenGoodsContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.PlayerInventoryContainer) ?? true))
             {
-                item.PlayerInventoryContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.PlayerInventoryContainer.FormKeyNullable);
+                item.PlayerInventoryContainer.SetTo(rhs.PlayerInventoryContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.SharedCrimeFactionList) ?? true))
             {
-                item.SharedCrimeFactionList = new FormLinkNullable<IFormListGetter>(rhs.SharedCrimeFactionList.FormKeyNullable);
+                item.SharedCrimeFactionList.SetTo(rhs.SharedCrimeFactionList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.JailOutfit) ?? true))
             {
-                item.JailOutfit = new FormLinkNullable<IOutfitGetter>(rhs.JailOutfit.FormKeyNullable);
+                item.JailOutfit.SetTo(rhs.JailOutfit.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
@@ -2249,11 +2364,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorBuySellList) ?? true))
             {
-                item.VendorBuySellList = new FormLinkNullable<IFormListGetter>(rhs.VendorBuySellList.FormKeyNullable);
+                item.VendorBuySellList.SetTo(rhs.VendorBuySellList.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.MerchantContainer) ?? true))
             {
-                item.MerchantContainer = new FormLinkNullable<IPlacedObjectGetter>(rhs.MerchantContainer.FormKeyNullable);
+                item.MerchantContainer.SetTo(rhs.MerchantContainer.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
@@ -2718,49 +2833,55 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.JAIL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorJailMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.ExteriorJailMarker.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowerWaitMarker = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.FollowerWaitMarker.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StolenGoodsContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.StolenGoodsContainer.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PlayerInventoryContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PlayerInventoryContainer.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.SharedCrimeFactionList.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JailOutfit = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.JailOutfit.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
@@ -2784,17 +2905,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.VEND:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.VendorBuySellList.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.MerchantContainer.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:
@@ -2890,27 +3013,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region ExteriorJailMarker
         private int? _ExteriorJailMarkerLocation;
-        public FormLinkNullable<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker => _ExteriorJailMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ExteriorJailMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region FollowerWaitMarker
         private int? _FollowerWaitMarkerLocation;
-        public FormLinkNullable<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> FollowerWaitMarker => _FollowerWaitMarkerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _FollowerWaitMarkerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region StolenGoodsContainer
         private int? _StolenGoodsContainerLocation;
-        public FormLinkNullable<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> StolenGoodsContainer => _StolenGoodsContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _StolenGoodsContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region PlayerInventoryContainer
         private int? _PlayerInventoryContainerLocation;
-        public FormLinkNullable<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> PlayerInventoryContainer => _PlayerInventoryContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PlayerInventoryContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region SharedCrimeFactionList
         private int? _SharedCrimeFactionListLocation;
-        public FormLinkNullable<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> SharedCrimeFactionList => _SharedCrimeFactionListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SharedCrimeFactionListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region JailOutfit
         private int? _JailOutfitLocation;
-        public FormLinkNullable<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
+        public IFormLinkNullableGetter<IOutfitGetter> JailOutfit => _JailOutfitLocation.HasValue ? new FormLinkNullable<IOutfitGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _JailOutfitLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IOutfitGetter>.Null;
         #endregion
         #region CrimeValues
         private RangeInt32? _CrimeValuesLocation;
@@ -2919,11 +3042,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public IReadOnlyList<IRankGetter> Ranks { get; private set; } = ListExt.Empty<RankBinaryOverlay>();
         #region VendorBuySellList
         private int? _VendorBuySellListLocation;
-        public FormLinkNullable<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
+        public IFormLinkNullableGetter<IFormListGetter> VendorBuySellList => _VendorBuySellListLocation.HasValue ? new FormLinkNullable<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _VendorBuySellListLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IFormListGetter>.Null;
         #endregion
         #region MerchantContainer
         private int? _MerchantContainerLocation;
-        public FormLinkNullable<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
+        public IFormLinkNullableGetter<IPlacedObjectGetter> MerchantContainer => _MerchantContainerLocation.HasValue ? new FormLinkNullable<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _MerchantContainerLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IPlacedObjectGetter>.Null;
         #endregion
         #region VendorValues
         private RangeInt32? _VendorValuesLocation;
@@ -3136,13 +3259,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionGetter rhs)) return false;
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFactionGetter rhs) return false;
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionGetter? obj)
         {
-            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionCommon)((IFactionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionCommon)((IFactionGetter)this).CommonInstance()!).GetHashCode(this);

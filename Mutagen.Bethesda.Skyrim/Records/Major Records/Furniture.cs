@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 };
                                 break;
                             case 0x4B4D4E46: // FNMK
-                                marker.MarkerKeyword = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
+                                marker.MarkerKeyword.FormKey = FormKeyBinaryTranslation.Instance.Parse(subMeta.Content, stream.MetaData.MasterReferences!);
                                 break;
                             default:
                                 throw new ArgumentException($"Unexpected record type: {subMeta.RecordType}");

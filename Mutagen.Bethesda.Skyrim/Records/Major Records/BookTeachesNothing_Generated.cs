@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookTeachesNothingGetter rhs)) return false;
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookTeachesNothingGetter rhs) return false;
+            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookTeachesNothingGetter? obj)
         {
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).GetHashCode(this);
@@ -453,11 +453,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IBookTeachesNothingGetter item,
-            IBookTeachesNothingGetter rhs)
+            IBookTeachesNothingGetter rhs,
+            BookTeachesNothing.TranslationMask? equalsMask = null)
         {
             return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -772,22 +774,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBookTeachesNothingGetter? lhs,
-            IBookTeachesNothingGetter? rhs)
+            IBookTeachesNothingGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
-            if (lhs.RawContent != rhs.RawContent) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)BookTeachesNothing_FieldIndex.RawContent) ?? true))
+            {
+                if (lhs.RawContent != rhs.RawContent) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IBookTeachTargetGetter? lhs,
-            IBookTeachTargetGetter? rhs)
+            IBookTeachTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBookTeachesNothingGetter?)lhs,
-                rhs: rhs as IBookTeachesNothingGetter);
+                rhs: rhs as IBookTeachesNothingGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBookTeachesNothingGetter item)
@@ -1107,13 +1115,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookTeachesNothingGetter rhs)) return false;
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookTeachesNothingGetter rhs) return false;
+            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookTeachesNothingGetter? obj)
         {
-            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookTeachesNothingCommon)((IBookTeachesNothingGetter)this).CommonInstance()!).GetHashCode(this);

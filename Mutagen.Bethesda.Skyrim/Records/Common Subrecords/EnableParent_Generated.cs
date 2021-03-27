@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public EnableParent.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Reference
-        public FormLink<ILinkedReferenceGetter> Reference { get; set; } = new FormLink<ILinkedReferenceGetter>();
+        private IFormLink<ILinkedReferenceGetter> _Reference = new FormLink<ILinkedReferenceGetter>();
+        public IFormLink<ILinkedReferenceGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ILinkedReferenceGetter> IEnableParentGetter.Reference => this.Reference;
         #endregion
         #region Flags
         public EnableParent.Flag Flags { get; set; } = default;
@@ -76,13 +83,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnableParentGetter rhs)) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);
@@ -525,7 +532,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IEnableParent>
     {
         new EnableParent.VersioningBreaks Versioning { get; set; }
-        new FormLink<ILinkedReferenceGetter> Reference { get; set; }
+        new IFormLink<ILinkedReferenceGetter> Reference { get; }
         new EnableParent.Flag Flags { get; set; }
         new MemorySlice<Byte> Unknown { get; set; }
     }
@@ -544,7 +551,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => EnableParent_Registration.Instance;
         EnableParent.VersioningBreaks Versioning { get; }
-        FormLink<ILinkedReferenceGetter> Reference { get; }
+        IFormLinkGetter<ILinkedReferenceGetter> Reference { get; }
         EnableParent.Flag Flags { get; }
         ReadOnlyMemorySlice<Byte> Unknown { get; }
 
@@ -597,11 +604,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEnableParentGetter item,
-            IEnableParentGetter rhs)
+            IEnableParentGetter rhs,
+            EnableParent.TranslationMask? equalsMask = null)
         {
             return ((EnableParentCommon)((IEnableParentGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -807,7 +816,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Reference = FormLink<ILinkedReferenceGetter>.Null;
+            item.Reference.Clear();
             item.Flags = default;
             item.Unknown = new byte[3];
         }
@@ -815,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IEnableParent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -935,14 +944,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEnableParentGetter? lhs,
-            IEnableParentGetter? rhs)
+            IEnableParentGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
             return true;
         }
         
@@ -992,7 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ILinkedReferenceGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
             if (rhs.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)EnableParent_FieldIndex.Flags) ?? true))
@@ -1151,9 +1173,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.Complete)
             {
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;
@@ -1228,7 +1251,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public EnableParent.VersioningBreaks Versioning { get; private set; }
-        public FormLink<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ILinkedReferenceGetter> Reference => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public EnableParent.Flag Flags => (EnableParent.Flag)_data.Span.Slice(0x4, 0x1)[0];
         public ReadOnlyMemorySlice<Byte> Unknown => _data.Span.Slice(0x5, 0x3).ToArray();
         partial void CustomFactoryEnd(
@@ -1295,13 +1318,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEnableParentGetter rhs)) return false;
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEnableParentGetter rhs) return false;
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEnableParentGetter? obj)
         {
-            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EnableParentCommon)((IEnableParentGetter)this).CommonInstance()!).GetHashCode(this);

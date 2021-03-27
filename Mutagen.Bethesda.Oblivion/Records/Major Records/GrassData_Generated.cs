@@ -92,13 +92,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGrassDataGetter rhs)) return false;
-            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGrassDataGetter rhs) return false;
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGrassDataGetter? obj)
         {
-            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -844,11 +844,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IGrassDataGetter item,
-            IGrassDataGetter rhs)
+            IGrassDataGetter rhs,
+            GrassData.TranslationMask? equalsMask = null)
         {
             return ((GrassDataCommon)((IGrassDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1237,22 +1239,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGrassDataGetter? lhs,
-            IGrassDataGetter? rhs)
+            IGrassDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Density != rhs.Density) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Fluff1 != rhs.Fluff1) return false;
-            if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
-            if (lhs.Fluff2 != rhs.Fluff2) return false;
-            if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
-            if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
-            if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
-            if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
-            if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.Density) ?? true))
+            {
+                if (lhs.Density != rhs.Density) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.Fluff1) ?? true))
+            {
+                if (lhs.Fluff1 != rhs.Fluff1) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.UnitFromWaterAmount) ?? true))
+            {
+                if (lhs.UnitFromWaterAmount != rhs.UnitFromWaterAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.Fluff2) ?? true))
+            {
+                if (lhs.Fluff2 != rhs.Fluff2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.UnitFromWaterMode) ?? true))
+            {
+                if (lhs.UnitFromWaterMode != rhs.UnitFromWaterMode) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.PositionRange) ?? true))
+            {
+                if (!lhs.PositionRange.EqualsWithin(rhs.PositionRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.HeightRange) ?? true))
+            {
+                if (!lhs.HeightRange.EqualsWithin(rhs.HeightRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.ColorRange) ?? true))
+            {
+                if (!lhs.ColorRange.EqualsWithin(rhs.ColorRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.WavePeriod) ?? true))
+            {
+                if (!lhs.WavePeriod.EqualsWithin(rhs.WavePeriod)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)GrassData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
             return true;
         }
         
@@ -1662,13 +1701,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGrassDataGetter rhs)) return false;
-            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IGrassDataGetter rhs) return false;
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGrassDataGetter? obj)
         {
-            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GrassDataCommon)((IGrassDataGetter)this).CommonInstance()!).GetHashCode(this);

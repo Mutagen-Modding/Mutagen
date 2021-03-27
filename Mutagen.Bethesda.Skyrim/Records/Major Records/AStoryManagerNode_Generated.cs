@@ -46,10 +46,24 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; } = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private IFormLinkNullable<IAStoryManagerNodeGetter> _Parent = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        public IFormLinkNullable<IAStoryManagerNodeGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.Parent => this.Parent;
         #endregion
         #region PreviousSibling
-        public FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; } = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        private IFormLinkNullable<IAStoryManagerNodeGetter> _PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>();
+        public IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling
+        {
+            get => _PreviousSibling;
+            set => _PreviousSibling = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAStoryManagerNodeGetter> IAStoryManagerNodeGetter.PreviousSibling => this.PreviousSibling;
         #endregion
         #region Conditions
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,22 +90,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IAStoryManagerNodeGetter rhs)) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IAStoryManagerNodeGetter? obj)
-        {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -550,6 +548,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAStoryManagerNodeGetter rhs) return false;
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IAStoryManagerNodeGetter? obj)
+        {
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -591,8 +609,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAStoryManagerNodeInternal>,
         ISkyrimMajorRecordInternal
     {
-        new FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; set; }
-        new FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; set; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }
+        new IFormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; }
         new ExtendedList<Condition> Conditions { get; }
     }
 
@@ -613,8 +631,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IAStoryManagerNodeGetter>
     {
         static new ILoquiRegistration Registration => AStoryManagerNode_Registration.Instance;
-        FormLinkNullable<IAStoryManagerNodeGetter> Parent { get; }
-        FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling { get; }
+        IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent { get; }
+        IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
     }
@@ -666,11 +684,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAStoryManagerNodeGetter item,
-            IAStoryManagerNodeGetter rhs)
+            IAStoryManagerNodeGetter rhs,
+            AStoryManagerNode.TranslationMask? equalsMask = null)
         {
             return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -885,8 +905,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public virtual void Clear(IAStoryManagerNodeInternal item)
         {
             ClearPartial();
-            item.Parent = FormLinkNullable<IAStoryManagerNodeGetter>.Null;
-            item.PreviousSibling = FormLinkNullable<IAStoryManagerNodeGetter>.Null;
+            item.Parent.Clear();
+            item.PreviousSibling.Clear();
             item.Conditions.Clear();
             base.Clear(item);
         }
@@ -905,8 +925,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IAStoryManagerNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
-            obj.PreviousSibling = obj.PreviousSibling.Relink(mapping);
+            obj.Parent.Relink(mapping);
+            obj.PreviousSibling.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         
@@ -1096,33 +1116,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAStoryManagerNodeGetter? lhs,
-            IAStoryManagerNodeGetter? rhs)
+            IAStoryManagerNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Parent.Equals(rhs.Parent)) return false;
-            if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
+            {
+                if (!lhs.PreviousSibling.Equals(rhs.PreviousSibling)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
-                rhs: rhs as IAStoryManagerNodeGetter);
+                rhs: rhs as IAStoryManagerNodeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAStoryManagerNodeGetter?)lhs,
-                rhs: rhs as IAStoryManagerNodeGetter);
+                rhs: rhs as IAStoryManagerNodeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAStoryManagerNodeGetter item)
@@ -1191,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAStoryManagerNode)item,
+                item: (IAStoryManagerNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1202,7 +1236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAStoryManagerNode)item,
+                item: (IAStoryManagerNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1247,11 +1281,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.Parent.FormKeyNullable);
+                item.Parent.SetTo(rhs.Parent.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.PreviousSibling) ?? true))
             {
-                item.PreviousSibling = new FormLinkNullable<IAStoryManagerNodeGetter>(rhs.PreviousSibling.FormKeyNullable);
+                item.PreviousSibling.SetTo(rhs.PreviousSibling.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AStoryManagerNode_FieldIndex.Conditions) ?? true))
             {
@@ -1425,19 +1459,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AStoryManagerNodeBinaryWriteTranslation Instance = new AStoryManagerNodeBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IAStoryManagerNodeGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IAStoryManagerNodeGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IAStoryManagerNodeGetter item,
             MutagenWriter writer,
@@ -1455,9 +1476,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PreviousSibling,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            AStoryManagerNodeBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                counterType: RecordTypes.CITC,
+                counterLength: 4,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public virtual void Write(
@@ -1537,25 +1568,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Parent.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)AStoryManagerNode_FieldIndex.Parent;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousSibling = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.PreviousSibling.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)AStoryManagerNode_FieldIndex.PreviousSibling;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
-                    AStoryManagerNodeBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            frame: frame,
+                            countLengthLength: 4,
+                            countRecord: RecordTypes.CITC,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)AStoryManagerNode_FieldIndex.Conditions;
                 }
                 default:
@@ -1567,10 +1605,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IAStoryManagerNodeInternal item);
 
     }
 
@@ -1619,11 +1653,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Parent
         private int? _ParentLocation;
-        public FormLinkNullable<IAStoryManagerNodeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> Parent => _ParentLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ParentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
         #endregion
         #region PreviousSibling
         private int? _PreviousSiblingLocation;
-        public FormLinkNullable<IAStoryManagerNodeGetter> PreviousSibling => _PreviousSiblingLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousSiblingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
+        public IFormLinkNullableGetter<IAStoryManagerNodeGetter> PreviousSibling => _PreviousSiblingLocation.HasValue ? new FormLinkNullable<IAStoryManagerNodeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PreviousSiblingLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAStoryManagerNodeGetter>.Null;
         #endregion
         #region Conditions
         partial void ConditionsCustomParse(
@@ -1709,13 +1743,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAStoryManagerNodeGetter rhs)) return false;
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAStoryManagerNodeGetter rhs) return false;
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAStoryManagerNodeGetter? obj)
         {
-            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AStoryManagerNodeCommon)((IAStoryManagerNodeGetter)this).CommonInstance()!).GetHashCode(this);

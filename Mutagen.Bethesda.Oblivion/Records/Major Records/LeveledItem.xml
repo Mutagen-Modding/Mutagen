@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="LeveledItem" baseClass="AItem" objType="Record" recordType="LVLI" GUID="cf615d0b-eccd-4f4d-ac20-6c771930fb98" ID="101">
+  <Object name="LeveledItem" baseClass="OblivionMajorRecord" objType="Record" recordType="LVLI" GUID="cf615d0b-eccd-4f4d-ac20-6c771930fb98" ID="101">
     <Fields>
       <UInt8 name="ChanceNone" recordType="LVLD" />
       <Enum name="Flags" enumName="LeveledFlag" byteLength="1" recordType="LVLF" binaryOverlay="Custom" />
-      <RefList name="Entries" refName="LeveledEntry">
-        <GenericSpecification TypeToSpecify="T" Definition="AItem" />
-      </RefList>
+      <RefList name="Entries" refName="LeveledItemEntry" />
       <CustomLogic name="Vestigial" recordType="DATA" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
-  </Loqui>
+  <Object name="LeveledItemEntry" objType="Subrecord" recordType="LVLO" GUID="71008cec-6776-4778-81b4-0110ed02d6fc" ID="222">
+    <Fields>
+      <Int16 name="Level" />
+      <Int16 name="Unknown" />
+      <FormLink name="Reference" >
+        <Interface>IItem</Interface>
+      </FormLink>
+      <Int16 name="Count" nullable="True" />
+      <Int16 name="Unknown2" nullable="True" />
+    </Fields>
+  </Object>
+</Loqui>

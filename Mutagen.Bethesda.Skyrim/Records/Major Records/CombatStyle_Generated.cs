@@ -225,22 +225,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ICombatStyleGetter rhs)) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ICombatStyleGetter? obj)
-        {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -1044,6 +1028,26 @@ namespace Mutagen.Bethesda.Skyrim
             Break0 = 1,
             Break1 = 2
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICombatStyleGetter rhs) return false;
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ICombatStyleGetter? obj)
+        {
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1213,11 +1217,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ICombatStyleGetter item,
-            ICombatStyleGetter rhs)
+            ICombatStyleGetter rhs,
+            CombatStyle.TranslationMask? equalsMask = null)
         {
             return ((CombatStyleCommon)((ICombatStyleGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1729,47 +1735,103 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICombatStyleGetter? lhs,
-            ICombatStyleGetter? rhs)
+            ICombatStyleGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
-            if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
-            if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
-            if (!lhs.EquipmentScoreMultMelee.EqualsWithin(rhs.EquipmentScoreMultMelee)) return false;
-            if (!lhs.EquipmentScoreMultMagic.EqualsWithin(rhs.EquipmentScoreMultMagic)) return false;
-            if (!lhs.EquipmentScoreMultRanged.EqualsWithin(rhs.EquipmentScoreMultRanged)) return false;
-            if (!lhs.EquipmentScoreMultShout.EqualsWithin(rhs.EquipmentScoreMultShout)) return false;
-            if (!lhs.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed)) return false;
-            if (!lhs.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff)) return false;
-            if (!lhs.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance)) return false;
-            if (!MemorySliceExt.Equal(lhs.CSMD, rhs.CSMD)) return false;
-            if (!object.Equals(lhs.Melee, rhs.Melee)) return false;
-            if (!object.Equals(lhs.CloseRange, rhs.CloseRange)) return false;
-            if (!lhs.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult)) return false;
-            if (!object.Equals(lhs.Flight, rhs.Flight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.CSGDDataTypeState != rhs.CSGDDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
+            {
+                if (!lhs.OffensiveMult.EqualsWithin(rhs.OffensiveMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.DefensiveMult) ?? true))
+            {
+                if (!lhs.DefensiveMult.EqualsWithin(rhs.DefensiveMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.GroupOffensiveMult) ?? true))
+            {
+                if (!lhs.GroupOffensiveMult.EqualsWithin(rhs.GroupOffensiveMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMelee) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultMelee.EqualsWithin(rhs.EquipmentScoreMultMelee)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultMagic) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultMagic.EqualsWithin(rhs.EquipmentScoreMultMagic)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultRanged) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultRanged.EqualsWithin(rhs.EquipmentScoreMultRanged)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultShout) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultShout.EqualsWithin(rhs.EquipmentScoreMultShout)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultUnarmed.EqualsWithin(rhs.EquipmentScoreMultUnarmed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.EquipmentScoreMultStaff) ?? true))
+            {
+                if (!lhs.EquipmentScoreMultStaff.EqualsWithin(rhs.EquipmentScoreMultStaff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.AvoidThreatChance) ?? true))
+            {
+                if (!lhs.AvoidThreatChance.EqualsWithin(rhs.AvoidThreatChance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSMD) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.CSMD, rhs.CSMD)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Melee) ?? true))
+            {
+                if (!object.Equals(lhs.Melee, rhs.Melee)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRange) ?? true))
+            {
+                if (!object.Equals(lhs.CloseRange, rhs.CloseRange)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
+            {
+                if (!lhs.LongRangeStrafeMult.EqualsWithin(rhs.LongRangeStrafeMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flight) ?? true))
+            {
+                if (!object.Equals(lhs.Flight, rhs.Flight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CSGDDataTypeState) ?? true))
+            {
+                if (lhs.CSGDDataTypeState != rhs.CSGDDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
-                rhs: rhs as ICombatStyleGetter);
+                rhs: rhs as ICombatStyleGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ICombatStyleGetter?)lhs,
-                rhs: rhs as ICombatStyleGetter);
+                rhs: rhs as ICombatStyleGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ICombatStyleGetter item)
@@ -1848,7 +1910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new CombatStyle(formKey, default(SkyrimRelease));
+            var newRec = new CombatStyle(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1859,7 +1921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICombatStyle)item,
+                item: (ICombatStyleGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1870,7 +1932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ICombatStyle)item,
+                item: (ICombatStyleGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2710,13 +2772,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICombatStyleGetter rhs)) return false;
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ICombatStyleGetter rhs) return false;
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICombatStyleGetter? obj)
         {
-            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CombatStyleCommon)((ICombatStyleGetter)this).CommonInstance()!).GetHashCode(this);

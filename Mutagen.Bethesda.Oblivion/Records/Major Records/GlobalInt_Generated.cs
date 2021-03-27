@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGlobalIntGetter rhs)) return false;
-            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGlobalIntGetter? obj)
-        {
-            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Global.Mask<TItem>,
@@ -381,6 +365,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGlobalIntGetter rhs) return false;
+            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IGlobalIntGetter? obj)
+        {
+            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -510,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IGlobalIntGetter item,
-            IGlobalIntGetter rhs)
+            IGlobalIntGetter rhs,
+            GlobalInt.TranslationMask? equalsMask = null)
         {
             return ((GlobalIntCommon)((IGlobalIntGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -929,40 +935,50 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGlobalIntGetter? lhs,
-            IGlobalIntGetter? rhs)
+            IGlobalIntGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs)) return false;
-            if (lhs.Data != rhs.Data) return false;
+            if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)GlobalInt_FieldIndex.Data) ?? true))
+            {
+                if (lhs.Data != rhs.Data) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IGlobalGetter? lhs,
-            IGlobalGetter? rhs)
+            IGlobalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalIntGetter?)lhs,
-                rhs: rhs as IGlobalIntGetter);
+                rhs: rhs as IGlobalIntGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalIntGetter?)lhs,
-                rhs: rhs as IGlobalIntGetter);
+                rhs: rhs as IGlobalIntGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGlobalIntGetter?)lhs,
-                rhs: rhs as IGlobalIntGetter);
+                rhs: rhs as IGlobalIntGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGlobalIntGetter item)
@@ -1026,7 +1042,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalInt)item,
+                item: (IGlobalIntGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1037,7 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalInt)item,
+                item: (IGlobalIntGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1048,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGlobalInt)item,
+                item: (IGlobalIntGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1572,13 +1588,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGlobalIntGetter rhs)) return false;
-            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGlobalIntGetter rhs) return false;
+            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGlobalIntGetter? obj)
         {
-            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GlobalIntCommon)((IGlobalIntGetter)this).CommonInstance()!).GetHashCode(this);

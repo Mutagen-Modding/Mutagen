@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherColorsGetter rhs)) return false;
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherColorsGetter rhs) return false;
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherColorsGetter? obj)
         {
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -577,11 +577,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IWeatherColorsGetter item,
-            IWeatherColorsGetter rhs)
+            IWeatherColorsGetter rhs,
+            WeatherColors.TranslationMask? equalsMask = null)
         {
             return ((WeatherColorsCommon)((IWeatherColorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -910,14 +912,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWeatherColorsGetter? lhs,
-            IWeatherColorsGetter? rhs)
+            IWeatherColorsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
-            if (!lhs.Day.ColorOnlyEquals(rhs.Day)) return false;
-            if (!lhs.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
-            if (!lhs.Night.ColorOnlyEquals(rhs.Night)) return false;
+            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunrise) ?? true))
+            {
+                if (!lhs.Sunrise.ColorOnlyEquals(rhs.Sunrise)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Day) ?? true))
+            {
+                if (!lhs.Day.ColorOnlyEquals(rhs.Day)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Sunset) ?? true))
+            {
+                if (!lhs.Sunset.ColorOnlyEquals(rhs.Sunset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WeatherColors_FieldIndex.Night) ?? true))
+            {
+                if (!lhs.Night.ColorOnlyEquals(rhs.Night)) return false;
+            }
             return true;
         }
         
@@ -1250,13 +1265,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWeatherColorsGetter rhs)) return false;
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWeatherColorsGetter rhs) return false;
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWeatherColorsGetter? obj)
         {
-            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WeatherColorsCommon)((IWeatherColorsGetter)this).CommonInstance()!).GetHashCode(this);

@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Quest
-        public FormLinkNullable<IQuestGetter> Quest { get; set; } = new FormLinkNullable<IQuestGetter>();
+        private IFormLinkNullable<IQuestGetter> _Quest = new FormLinkNullable<IQuestGetter>();
+        public IFormLinkNullable<IQuestGetter> Quest
+        {
+            get => _Quest;
+            set => _Quest = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IQuestGetter> IStoryManagerQuestGetter.Quest => this.Quest;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -75,13 +82,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IStoryManagerQuestGetter rhs) return false;
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);
@@ -489,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IStoryManagerQuest>,
         IStoryManagerQuestGetter
     {
-        new FormLinkNullable<IQuestGetter> Quest { get; set; }
+        new IFormLinkNullable<IQuestGetter> Quest { get; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new Single? HoursUntilReset { get; set; }
     }
@@ -507,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => StoryManagerQuest_Registration.Instance;
-        FormLinkNullable<IQuestGetter> Quest { get; }
+        IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         Single? HoursUntilReset { get; }
 
@@ -560,11 +567,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IStoryManagerQuestGetter item,
-            IStoryManagerQuestGetter rhs)
+            IStoryManagerQuestGetter rhs,
+            StoryManagerQuest.TranslationMask? equalsMask = null)
         {
             return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -780,7 +789,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IStoryManagerQuest item)
         {
             ClearPartial();
-            item.Quest = FormLinkNullable<IQuestGetter>.Null;
+            item.Quest.Clear();
             item.FNAM = default;
             item.HoursUntilReset = default;
         }
@@ -788,7 +797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IStoryManagerQuest obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Quest = obj.Quest.Relink(mapping);
+            obj.Quest.Relink(mapping);
         }
         
         #endregion
@@ -903,13 +912,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IStoryManagerQuestGetter? lhs,
-            IStoryManagerQuestGetter? rhs)
+            IStoryManagerQuestGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Quest.Equals(rhs.Quest)) return false;
-            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
-            if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
+            {
+                if (!lhs.Quest.Equals(rhs.Quest)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.HoursUntilReset) ?? true))
+            {
+                if (!lhs.HoursUntilReset.EqualsWithin(rhs.HoursUntilReset)) return false;
+            }
             return true;
         }
         
@@ -963,7 +982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
-                item.Quest = new FormLinkNullable<IQuestGetter>(rhs.Quest.FormKeyNullable);
+                item.Quest.SetTo(rhs.Quest.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.FNAM) ?? true))
             {
@@ -1088,7 +1107,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HoursUntilReset,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
+                multiplier: 24f);
         }
 
         public void Write(
@@ -1141,9 +1161,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.Quest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Quest.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)StoryManagerQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.FNAM:
@@ -1157,7 +1178,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.HoursUntilReset) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.HoursUntilReset = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        multiplier: 24f);
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;
                 }
                 default:
@@ -1231,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Quest
         private int? _QuestLocation;
-        public FormLinkNullable<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
+        public IFormLinkNullableGetter<IQuestGetter> Quest => _QuestLocation.HasValue ? new FormLinkNullable<IQuestGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _QuestLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IQuestGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1239,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region HoursUntilReset
         private int? _HoursUntilResetLocation;
-        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
+        public Single? HoursUntilReset => _HoursUntilResetLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _HoursUntilResetLocation.Value, _package.MetaData.Constants).Float() * 24f : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1336,13 +1359,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IStoryManagerQuestGetter rhs)) return false;
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IStoryManagerQuestGetter rhs) return false;
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IStoryManagerQuestGetter? obj)
         {
-            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((StoryManagerQuestCommon)((IStoryManagerQuestGetter)this).CommonInstance()!).GetHashCode(this);

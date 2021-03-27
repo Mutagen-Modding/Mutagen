@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Noggog;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -17,6 +18,22 @@ namespace Mutagen.Bethesda.Generation
             PreferDirectTranslation = false;
             this.CustomRead = ReadFloat;
             this.CustomWrite = WriteFloat;
+            this.AdditionalWriteParams.Add(AdditionalParam);
+            this.AdditionalCopyInParams.Add(AdditionalParam);
+            this.AdditionalCopyInRetParams.Add(AdditionalParam);
+        }
+
+        private static TryGet<string> AdditionalParam(
+           ObjectGeneration objGen,
+           TypeGeneration typeGen)
+        {
+            var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
+            if (floatType.IntegerType == null
+                && !floatType.Multiplier.EqualsWithin(1))
+            {
+                return TryGet<string>.Succeed($"multiplier: {(float)floatType.Multiplier}f");
+            }
+            return TryGet<string>.Failure;
         }
 
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
@@ -49,6 +66,10 @@ namespace Mutagen.Bethesda.Generation
             if (floatType.IntegerType.HasValue)
             {
                 return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
+            }
+            else if (!floatType.Multiplier.EqualsWithin(1))
+            {
+                return $"{dataAccessor}.Float() * {(float)floatType.Multiplier}f";
             }
             else
             {

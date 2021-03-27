@@ -128,22 +128,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMovementTypeGetter rhs)) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMovementTypeGetter? obj)
-        {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -843,6 +827,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMovementTypeGetter rhs) return false;
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IMovementTypeGetter? obj)
+        {
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1002,11 +1006,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IMovementTypeGetter item,
-            IMovementTypeGetter rhs)
+            IMovementTypeGetter rhs,
+            MovementType.TranslationMask? equalsMask = null)
         {
             return ((MovementTypeCommon)((IMovementTypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1485,44 +1491,91 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMovementTypeGetter? lhs,
-            IMovementTypeGetter? rhs)
+            IMovementTypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
-            if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
-            if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
-            if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
-            if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
-            if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
-            if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
-            if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
-            if (!lhs.RotateInPlaceWalk.EqualsWithin(rhs.RotateInPlaceWalk)) return false;
-            if (!lhs.RotateInPlaceRun.EqualsWithin(rhs.RotateInPlaceRun)) return false;
-            if (!lhs.RotateWhileMovingRun.EqualsWithin(rhs.RotateWhileMovingRun)) return false;
-            if (!object.Equals(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds)) return false;
-            if (lhs.SPEDDataTypeState != rhs.SPEDDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftWalk) ?? true))
+            {
+                if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.LeftRun) ?? true))
+            {
+                if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightWalk) ?? true))
+            {
+                if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RightRun) ?? true))
+            {
+                if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardWalk) ?? true))
+            {
+                if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.ForwardRun) ?? true))
+            {
+                if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackWalk) ?? true))
+            {
+                if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.BackRun) ?? true))
+            {
+                if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceWalk) ?? true))
+            {
+                if (!lhs.RotateInPlaceWalk.EqualsWithin(rhs.RotateInPlaceWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateInPlaceRun) ?? true))
+            {
+                if (!lhs.RotateInPlaceRun.EqualsWithin(rhs.RotateInPlaceRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.RotateWhileMovingRun) ?? true))
+            {
+                if (!lhs.RotateWhileMovingRun.EqualsWithin(rhs.RotateWhileMovingRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
+            {
+                if (!object.Equals(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
+            {
+                if (lhs.SPEDDataTypeState != rhs.SPEDDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
-                rhs: rhs as IMovementTypeGetter);
+                rhs: rhs as IMovementTypeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IMovementTypeGetter?)lhs,
-                rhs: rhs as IMovementTypeGetter);
+                rhs: rhs as IMovementTypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IMovementTypeGetter item)
@@ -1586,7 +1639,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new MovementType(formKey, default(SkyrimRelease));
+            var newRec = new MovementType(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1597,7 +1650,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMovementType)item,
+                item: (IMovementTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1608,7 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IMovementType)item,
+                item: (IMovementTypeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1928,15 +1981,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.BackRun);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.RotateInPlaceWalk);
+                    item: item.RotateInPlaceWalk,
+                    multiplier: 57.2958f);
                 Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
-                    item: item.RotateInPlaceRun);
+                    item: item.RotateInPlaceRun,
+                    multiplier: 57.2958f);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
                     Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
-                        item: item.RotateWhileMovingRun);
+                        item: item.RotateWhileMovingRun,
+                        multiplier: 57.2958f);
                 }
             }
             if (item.AnimationChangeThresholds.TryGet(out var AnimationChangeThresholdsItem))
@@ -2057,14 +2113,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ForwardRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BackWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.BackRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RotateInPlaceWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RotateInPlaceRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateInPlaceWalk = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
+                    item.RotateInPlaceRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
                     if (dataFrame.Complete)
                     {
                         item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
                         return (int)MovementType_FieldIndex.RotateInPlaceRun;
                     }
-                    item.RotateWhileMovingRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RotateWhileMovingRun = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
+                        frame: dataFrame,
+                        multiplier: 57.2958f);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;
                 }
                 case RecordTypeInts.INAM:
@@ -2179,17 +2241,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region RotateInPlaceWalk
         private int _RotateInPlaceWalkLocation => _SPEDLocation!.Value + 0x20;
         private bool _RotateInPlaceWalk_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() : default;
+        public Single RotateInPlaceWalk => _RotateInPlaceWalk_IsSet ? _data.Slice(_RotateInPlaceWalkLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateInPlaceRun
         private int _RotateInPlaceRunLocation => _SPEDLocation!.Value + 0x24;
         private bool _RotateInPlaceRun_IsSet => _SPEDLocation.HasValue;
-        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() : default;
+        public Single RotateInPlaceRun => _RotateInPlaceRun_IsSet ? _data.Slice(_RotateInPlaceRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region RotateWhileMovingRun
         private int _RotateWhileMovingRunLocation => _SPEDLocation!.Value + 0x28;
         private bool _RotateWhileMovingRun_IsSet => _SPEDLocation.HasValue && !SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0);
-        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() : default;
+        public Single RotateWhileMovingRun => _RotateWhileMovingRun_IsSet ? _data.Slice(_RotateWhileMovingRunLocation, 4).Float() * 57.2958f : default;
         #endregion
         #region AnimationChangeThresholds
         private RangeInt32? _AnimationChangeThresholdsLocation;
@@ -2307,13 +2369,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMovementTypeGetter rhs)) return false;
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMovementTypeGetter rhs) return false;
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMovementTypeGetter? obj)
         {
-            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MovementTypeCommon)((IMovementTypeGetter)this).CommonInstance()!).GetHashCode(this);

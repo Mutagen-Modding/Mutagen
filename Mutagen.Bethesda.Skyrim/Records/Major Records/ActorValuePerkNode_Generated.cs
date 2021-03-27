@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Perk
-        public FormLink<IPerkGetter> Perk { get; set; } = new FormLink<IPerkGetter>();
+        private IFormLink<IPerkGetter> _Perk = new FormLink<IPerkGetter>();
+        public IFormLink<IPerkGetter> Perk
+        {
+            get => _Perk;
+            set => _Perk = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPerkGetter> IActorValuePerkNodeGetter.Perk => this.Perk;
         #endregion
         #region FNAM
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +81,14 @@ namespace Mutagen.Bethesda.Skyrim
         Single? IActorValuePerkNodeGetter.VerticalPosition => this.VerticalPosition;
         #endregion
         #region AssociatedSkill
-        public FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; } = new FormLinkNullable<IActorValueInformationGetter>();
+        private IFormLinkNullable<IActorValueInformationGetter> _AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>();
+        public IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill
+        {
+            get => _AssociatedSkill;
+            set => _AssociatedSkill = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IActorValueInformationGetter> IActorValuePerkNodeGetter.AssociatedSkill => this.AssociatedSkill;
         #endregion
         #region ConnectionLineToIndices
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -112,13 +126,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValuePerkNodeGetter rhs) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValuePerkNodeGetter? obj)
         {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -768,13 +782,13 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IActorValuePerkNode>
     {
-        new FormLink<IPerkGetter> Perk { get; set; }
+        new IFormLink<IPerkGetter> Perk { get; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new UInt32? PerkGridX { get; set; }
         new UInt32? PerkGridY { get; set; }
         new Single? HorizontalPosition { get; set; }
         new Single? VerticalPosition { get; set; }
-        new FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; set; }
+        new IFormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
         new ExtendedList<UInt32> ConnectionLineToIndices { get; }
         new UInt32? Index { get; set; }
     }
@@ -792,13 +806,13 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ActorValuePerkNode_Registration.Instance;
-        FormLink<IPerkGetter> Perk { get; }
+        IFormLinkGetter<IPerkGetter> Perk { get; }
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         UInt32? PerkGridX { get; }
         UInt32? PerkGridY { get; }
         Single? HorizontalPosition { get; }
         Single? VerticalPosition { get; }
-        FormLinkNullable<IActorValueInformationGetter> AssociatedSkill { get; }
+        IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill { get; }
         IReadOnlyList<UInt32> ConnectionLineToIndices { get; }
         UInt32? Index { get; }
 
@@ -851,11 +865,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IActorValuePerkNodeGetter item,
-            IActorValuePerkNodeGetter rhs)
+            IActorValuePerkNodeGetter rhs,
+            ActorValuePerkNode.TranslationMask? equalsMask = null)
         {
             return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1065,13 +1081,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IActorValuePerkNode item)
         {
             ClearPartial();
-            item.Perk = FormLink<IPerkGetter>.Null;
+            item.Perk.Clear();
             item.FNAM = default;
             item.PerkGridX = default;
             item.PerkGridY = default;
             item.HorizontalPosition = default;
             item.VerticalPosition = default;
-            item.AssociatedSkill = FormLinkNullable<IActorValueInformationGetter>.Null;
+            item.AssociatedSkill.Clear();
             item.ConnectionLineToIndices.Clear();
             item.Index = default;
         }
@@ -1079,8 +1095,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IActorValuePerkNode obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Perk = obj.Perk.Relink(mapping);
-            obj.AssociatedSkill = obj.AssociatedSkill.Relink(mapping);
+            obj.Perk.Relink(mapping);
+            obj.AssociatedSkill.Relink(mapping);
         }
         
         #endregion
@@ -1246,19 +1262,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IActorValuePerkNodeGetter? lhs,
-            IActorValuePerkNodeGetter? rhs)
+            IActorValuePerkNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Perk.Equals(rhs.Perk)) return false;
-            if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
-            if (lhs.PerkGridX != rhs.PerkGridX) return false;
-            if (lhs.PerkGridY != rhs.PerkGridY) return false;
-            if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
-            if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
-            if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
-            if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
-            if (lhs.Index != rhs.Index) return false;
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
+            {
+                if (!lhs.Perk.Equals(rhs.Perk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.FNAM, rhs.FNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.PerkGridX) ?? true))
+            {
+                if (lhs.PerkGridX != rhs.PerkGridX) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.PerkGridY) ?? true))
+            {
+                if (lhs.PerkGridY != rhs.PerkGridY) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.HorizontalPosition) ?? true))
+            {
+                if (!lhs.HorizontalPosition.EqualsWithin(rhs.HorizontalPosition)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.VerticalPosition) ?? true))
+            {
+                if (!lhs.VerticalPosition.EqualsWithin(rhs.VerticalPosition)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
+            {
+                if (!lhs.AssociatedSkill.Equals(rhs.AssociatedSkill)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
+            {
+                if (!lhs.ConnectionLineToIndices.SequenceEqualNullable(rhs.ConnectionLineToIndices)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Index) ?? true))
+            {
+                if (lhs.Index != rhs.Index) return false;
+            }
             return true;
         }
         
@@ -1331,7 +1375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.Perk) ?? true))
             {
-                item.Perk = new FormLink<IPerkGetter>(rhs.Perk.FormKey);
+                item.Perk.SetTo(rhs.Perk.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.FNAM) ?? true))
             {
@@ -1362,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.AssociatedSkill) ?? true))
             {
-                item.AssociatedSkill = new FormLinkNullable<IActorValueInformationGetter>(rhs.AssociatedSkill.FormKeyNullable);
+                item.AssociatedSkill.SetTo(rhs.AssociatedSkill.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)ActorValuePerkNode_FieldIndex.ConnectionLineToIndices) ?? true))
             {
@@ -1571,9 +1615,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Perk.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
@@ -1609,9 +1654,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSkill = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AssociatedSkill.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:
@@ -1700,7 +1746,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Perk
         private int? _PerkLocation;
-        public FormLink<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
+        public IFormLinkGetter<IPerkGetter> Perk => _PerkLocation.HasValue ? new FormLink<IPerkGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _PerkLocation.Value, _package.MetaData.Constants)))) : FormLink<IPerkGetter>.Null;
         #endregion
         #region FNAM
         private int? _FNAMLocation;
@@ -1724,7 +1770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region AssociatedSkill
         private int? _AssociatedSkillLocation;
-        public FormLinkNullable<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
+        public IFormLinkNullableGetter<IActorValueInformationGetter> AssociatedSkill => _AssociatedSkillLocation.HasValue ? new FormLinkNullable<IActorValueInformationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AssociatedSkillLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IActorValueInformationGetter>.Null;
         #endregion
         public IReadOnlyList<UInt32> ConnectionLineToIndices { get; private set; } = ListExt.Empty<UInt32>();
         #region Index
@@ -1863,13 +1909,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IActorValuePerkNodeGetter rhs)) return false;
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IActorValuePerkNodeGetter rhs) return false;
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IActorValuePerkNodeGetter? obj)
         {
-            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ActorValuePerkNodeCommon)((IActorValuePerkNodeGetter)this).CommonInstance()!).GetHashCode(this);

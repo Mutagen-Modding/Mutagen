@@ -102,22 +102,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISkillRecordGetter rhs)) return false;
-            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISkillRecordGetter? obj)
-        {
-            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -625,6 +609,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISkillRecordGetter rhs) return false;
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ISkillRecordGetter? obj)
+        {
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -768,11 +772,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISkillRecordGetter item,
-            ISkillRecordGetter rhs)
+            ISkillRecordGetter rhs,
+            SkillRecord.TranslationMask? equalsMask = null)
         {
             return ((SkillRecordCommon)((ISkillRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1212,38 +1218,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISkillRecordGetter? lhs,
-            ISkillRecordGetter? rhs)
+            ISkillRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (lhs.Skill != rhs.Skill) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
-            if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
-            if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
-            if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
+            {
+                if (lhs.Skill != rhs.Skill) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
+            {
+                if (!string.Equals(lhs.ApprenticeText, rhs.ApprenticeText)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.JourneymanText) ?? true))
+            {
+                if (!string.Equals(lhs.JourneymanText, rhs.JourneymanText)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.ExpertText) ?? true))
+            {
+                if (!string.Equals(lhs.ExpertText, rhs.ExpertText)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.MasterText) ?? true))
+            {
+                if (!string.Equals(lhs.MasterText, rhs.MasterText)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISkillRecordGetter?)lhs,
-                rhs: rhs as ISkillRecordGetter);
+                rhs: rhs as ISkillRecordGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISkillRecordGetter?)lhs,
-                rhs: rhs as ISkillRecordGetter);
+                rhs: rhs as ISkillRecordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISkillRecordGetter item)
@@ -1330,7 +1365,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISkillRecord)item,
+                item: (ISkillRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1341,7 +1376,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISkillRecord)item,
+                item: (ISkillRecordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2005,13 +2040,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkillRecordGetter rhs)) return false;
-            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISkillRecordGetter rhs) return false;
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkillRecordGetter? obj)
         {
-            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkillRecordCommon)((ISkillRecordGetter)this).CommonInstance()!).GetHashCode(this);

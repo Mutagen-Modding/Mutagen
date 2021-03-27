@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Object = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Object
+        {
+            get => _Object;
+            set => _Object = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IScriptObjectPropertyGetter.Object => this.Object;
         #endregion
         #region Alias
         public readonly static Int16 _Alias_Default = -1;
@@ -68,13 +75,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptObjectPropertyGetter rhs)) return false;
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptObjectPropertyGetter rhs) return false;
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptObjectPropertyGetter? obj)
         {
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).GetHashCode(this);
@@ -474,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptObjectPropertyGetter,
         IScriptProperty
     {
-        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
         new Int16 Alias { get; set; }
         new UInt16 Unused { get; set; }
     }
@@ -487,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ScriptObjectProperty_Registration.Instance;
-        FormLink<ISkyrimMajorRecordGetter> Object { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
         Int16 Alias { get; }
         UInt16 Unused { get; }
 
@@ -540,11 +547,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IScriptObjectPropertyGetter item,
-            IScriptObjectPropertyGetter rhs)
+            IScriptObjectPropertyGetter rhs,
+            ScriptObjectProperty.TranslationMask? equalsMask = null)
         {
             return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -724,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IScriptObjectProperty item)
         {
             ClearPartial();
-            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.Object.Clear();
             item.Alias = ScriptObjectProperty._Alias_Default;
             item.Unused = default;
             base.Clear(item);
@@ -739,7 +748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IScriptObjectProperty obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Object = obj.Object.Relink(mapping);
+            obj.Object.Relink(mapping);
         }
         
         #endregion
@@ -880,24 +889,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IScriptObjectPropertyGetter? lhs,
-            IScriptObjectPropertyGetter? rhs)
+            IScriptObjectPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs)) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
-            if (lhs.Alias != rhs.Alias) return false;
-            if (lhs.Unused != rhs.Unused) return false;
+            if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
+            {
+                if (lhs.Alias != rhs.Alias) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IScriptPropertyGetter? lhs,
-            IScriptPropertyGetter? rhs)
+            IScriptPropertyGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IScriptObjectPropertyGetter?)lhs,
-                rhs: rhs as IScriptObjectPropertyGetter);
+                rhs: rhs as IScriptObjectPropertyGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IScriptObjectPropertyGetter item)
@@ -957,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ScriptObjectProperty_FieldIndex.Alias) ?? true))
             {
@@ -1130,9 +1151,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Object.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Alias = frame.ReadInt16();
             item.Unused = frame.ReadUInt16();
         }
@@ -1182,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int16 Alias => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unused => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         partial void CustomFactoryEnd(
@@ -1245,13 +1267,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IScriptObjectPropertyGetter rhs)) return false;
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IScriptObjectPropertyGetter rhs) return false;
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IScriptObjectPropertyGetter? obj)
         {
-            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)this).CommonInstance()!).GetHashCode(this);

@@ -44,71 +44,71 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region WalkForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps
         {
             get => this._WalkForwardFootsteps;
             protected set => this._WalkForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardFootsteps => _WalkForwardFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardFootsteps => _WalkForwardFootsteps;
         #endregion
 
         #endregion
         #region RunForwardFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFootstepGetter>> _RunForwardFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunForwardFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps
         {
             get => this._RunForwardFootsteps;
             protected set => this._RunForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.RunForwardFootsteps => _RunForwardFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunForwardFootsteps => _RunForwardFootsteps;
         #endregion
 
         #endregion
         #region WalkForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardAlternateFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps
         {
             get => this._WalkForwardAlternateFootsteps;
             protected set => this._WalkForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps => _WalkForwardAlternateFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps => _WalkForwardAlternateFootsteps;
         #endregion
 
         #endregion
         #region RunForwardAlternateFootsteps
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFootstepGetter>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public ExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _RunForwardAlternateFootsteps = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps
         {
             get => this._RunForwardAlternateFootsteps;
             protected set => this._RunForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.RunForwardAlternateFootsteps => _RunForwardAlternateFootsteps;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.RunForwardAlternateFootsteps => _RunForwardAlternateFootsteps;
         #endregion
 
         #endregion
         #region WalkForwardAlternateFootsteps2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFootstepGetter>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLink<IFootstepGetter>>();
-        public ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2
+        private ExtendedList<IFormLinkGetter<IFootstepGetter>> _WalkForwardAlternateFootsteps2 = new ExtendedList<IFormLinkGetter<IFootstepGetter>>();
+        public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2
         {
             get => this._WalkForwardAlternateFootsteps2;
             protected set => this._WalkForwardAlternateFootsteps2 = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps2 => _WalkForwardAlternateFootsteps2;
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> IFootstepSetGetter.WalkForwardAlternateFootsteps2 => _WalkForwardAlternateFootsteps2;
         #endregion
 
         #endregion
@@ -123,22 +123,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IFootstepSetGetter rhs)) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IFootstepSetGetter? obj)
-        {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -944,6 +928,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFootstepSetGetter rhs) return false;
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IFootstepSetGetter? obj)
+        {
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1006,11 +1010,11 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFootstepSetInternal>,
         ISkyrimMajorRecordInternal
     {
-        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
-        new ExtendedList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
-        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
-        new ExtendedList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
+        new ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
     }
 
     public partial interface IFootstepSetInternal :
@@ -1028,11 +1032,11 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IFootstepSetGetter>
     {
         static new ILoquiRegistration Registration => FootstepSet_Registration.Instance;
-        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardFootsteps { get; }
-        IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardFootsteps { get; }
-        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
-        IReadOnlyList<IFormLink<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
-        IReadOnlyList<IFormLink<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps { get; }
+        IReadOnlyList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2 { get; }
 
     }
 
@@ -1083,11 +1087,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFootstepSetGetter item,
-            IFootstepSetGetter rhs)
+            IFootstepSetGetter rhs,
+            FootstepSet.TranslationMask? equalsMask = null)
         {
             return ((FootstepSetCommon)((IFootstepSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1587,35 +1593,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFootstepSetGetter? lhs,
-            IFootstepSetGetter? rhs)
+            IFootstepSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
-            if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
-            if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
-            if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardFootsteps) ?? true))
+            {
+                if (!lhs.WalkForwardFootsteps.SequenceEqualNullable(rhs.WalkForwardFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardFootsteps) ?? true))
+            {
+                if (!lhs.RunForwardFootsteps.SequenceEqualNullable(rhs.RunForwardFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps) ?? true))
+            {
+                if (!lhs.WalkForwardAlternateFootsteps.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.RunForwardAlternateFootsteps) ?? true))
+            {
+                if (!lhs.RunForwardAlternateFootsteps.SequenceEqualNullable(rhs.RunForwardAlternateFootsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FootstepSet_FieldIndex.WalkForwardAlternateFootsteps2) ?? true))
+            {
+                if (!lhs.WalkForwardAlternateFootsteps2.SequenceEqualNullable(rhs.WalkForwardAlternateFootsteps2)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
-                rhs: rhs as IFootstepSetGetter);
+                rhs: rhs as IFootstepSetGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFootstepSetGetter?)lhs,
-                rhs: rhs as IFootstepSetGetter);
+                rhs: rhs as IFootstepSetGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFootstepSetGetter item)
@@ -1684,7 +1710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new FootstepSet(formKey, default(SkyrimRelease));
+            var newRec = new FootstepSet(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1695,7 +1721,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFootstepSet)item,
+                item: (IFootstepSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1706,7 +1732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IFootstepSet)item,
+                item: (IFootstepSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1756,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.WalkForwardFootsteps.SetTo(
                         rhs.WalkForwardFootsteps
-                        .Select(r => (IFormLink<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1775,7 +1801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RunForwardFootsteps.SetTo(
                         rhs.RunForwardFootsteps
-                        .Select(r => (IFormLink<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1794,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.WalkForwardAlternateFootsteps.SetTo(
                         rhs.WalkForwardAlternateFootsteps
-                        .Select(r => (IFormLink<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1813,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RunForwardAlternateFootsteps.SetTo(
                         rhs.RunForwardAlternateFootsteps
-                        .Select(r => (IFormLink<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1832,7 +1858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.WalkForwardAlternateFootsteps2.SetTo(
                         rhs.WalkForwardAlternateFootsteps2
-                        .Select(r => (IFormLink<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IFootstepGetter>)new FormLink<IFootstepGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -2287,13 +2313,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFootstepSetGetter rhs)) return false;
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IFootstepSetGetter rhs) return false;
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFootstepSetGetter? obj)
         {
-            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FootstepSetCommon)((IFootstepSetGetter)this).CommonInstance()!).GetHashCode(this);

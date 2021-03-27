@@ -70,22 +70,6 @@ namespace Mutagen.Bethesda
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IMajorRecordGetter rhs)) return false;
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IMajorRecordGetter? obj)
-        {
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public class Mask<TItem> :
             IEquatable<Mask<TItem>>,
@@ -488,7 +472,7 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -511,6 +495,26 @@ namespace Mutagen.Bethesda
         void IMajorRecordEnumerable.Remove<TMajor>(TMajor record, bool throwIfUnknown) => this.Remove<TMajor>(record, throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove<TMajor>(IEnumerable<TMajor> records, bool throwIfUnknown) => this.Remove<TMajor>(records, throwIfUnknown);
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMajorRecordGetter rhs) return false;
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IMajorRecordGetter? obj)
+        {
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -637,11 +641,13 @@ namespace Mutagen.Bethesda
 
         public static bool Equals(
             this IMajorRecordGetter item,
-            IMajorRecordGetter rhs)
+            IMajorRecordGetter rhs,
+            MajorRecord.TranslationMask? equalsMask = null)
         {
             return ((MajorRecordCommon)((IMajorRecordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -783,10 +789,10 @@ namespace Mutagen.Bethesda
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this IMajorRecordInternal obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((MajorRecordSetterCommon)((IMajorRecordGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -1089,6 +1095,15 @@ namespace Mutagen.Bethesda.Internals
             }
         }
         
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IMajorRecordInternal obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IMajorRecordInternal obj,
             Type type,
@@ -1244,14 +1259,27 @@ namespace Mutagen.Bethesda.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
-            if (lhs.FormKey != rhs.FormKey) return false;
-            if (lhs.VersionControl != rhs.VersionControl) return false;
-            if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
+            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
+            {
+                if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.FormKey) ?? true))
+            {
+                if (lhs.FormKey != rhs.FormKey) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.VersionControl) ?? true))
+            {
+                if (lhs.VersionControl != rhs.VersionControl) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.EditorID) ?? true))
+            {
+                if (!string.Equals(lhs.EditorID, rhs.EditorID)) return false;
+            }
             return true;
         }
         
@@ -1285,6 +1313,15 @@ namespace Mutagen.Bethesda.Internals
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(IMajorRecordGetter obj)
         {
             yield break;
+        }
+        
+        public virtual IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IMajorRecordGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public virtual IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -1700,13 +1737,17 @@ namespace Mutagen.Bethesda.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMajorRecordGetter rhs)) return false;
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IMajorRecordGetter rhs) return false;
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMajorRecordGetter? obj)
         {
-            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).GetHashCode(this);

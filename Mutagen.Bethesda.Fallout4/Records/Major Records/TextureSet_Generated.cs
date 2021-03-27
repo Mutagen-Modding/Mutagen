@@ -132,22 +132,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ITextureSetGetter? obj)
-        {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             Fallout4MajorRecord.Mask<TItem>,
@@ -786,6 +770,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITextureSetGetter rhs) return false;
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ITextureSetGetter? obj)
+        {
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -943,11 +947,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ITextureSetGetter item,
-            ITextureSetGetter rhs)
+            ITextureSetGetter rhs,
+            TextureSet.TranslationMask? equalsMask = null)
         {
             return ((TextureSetCommon)((ITextureSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1420,42 +1426,83 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITextureSetGetter? lhs,
-            ITextureSetGetter? rhs)
+            ITextureSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
-            if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
-            if (!string.Equals(lhs.Glow, rhs.Glow)) return false;
-            if (!string.Equals(lhs.Height, rhs.Height)) return false;
-            if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
-            if (!string.Equals(lhs.Wrinkles, rhs.Wrinkles)) return false;
-            if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
-            if (!string.Equals(lhs.SmoothSpec, rhs.SmoothSpec)) return false;
-            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!string.Equals(lhs.Material, rhs.Material)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Diffuse) ?? true))
+            {
+                if (!string.Equals(lhs.Diffuse, rhs.Diffuse)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.NormalOrGloss) ?? true))
+            {
+                if (!string.Equals(lhs.NormalOrGloss, rhs.NormalOrGloss)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Glow) ?? true))
+            {
+                if (!string.Equals(lhs.Glow, rhs.Glow)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Height) ?? true))
+            {
+                if (!string.Equals(lhs.Height, rhs.Height)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Environment) ?? true))
+            {
+                if (!string.Equals(lhs.Environment, rhs.Environment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Wrinkles) ?? true))
+            {
+                if (!string.Equals(lhs.Wrinkles, rhs.Wrinkles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Multilayer) ?? true))
+            {
+                if (!string.Equals(lhs.Multilayer, rhs.Multilayer)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.SmoothSpec) ?? true))
+            {
+                if (!string.Equals(lhs.SmoothSpec, rhs.SmoothSpec)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Decal) ?? true))
+            {
+                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TextureSet_FieldIndex.Material) ?? true))
+            {
+                if (!string.Equals(lhs.Material, rhs.Material)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                rhs: rhs as ITextureSetGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITextureSetGetter?)lhs,
-                rhs: rhs as ITextureSetGetter);
+                rhs: rhs as ITextureSetGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITextureSetGetter item)
@@ -1552,7 +1599,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ITextureSet)item,
+                item: (ITextureSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1563,7 +1610,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ITextureSet)item,
+                item: (ITextureSetGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2347,13 +2394,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITextureSetGetter rhs)) return false;
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ITextureSetGetter rhs) return false;
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITextureSetGetter? obj)
         {
-            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TextureSetCommon)((ITextureSetGetter)this).CommonInstance()!).GetHashCode(this);

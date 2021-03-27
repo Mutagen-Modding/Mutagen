@@ -41,7 +41,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Idle
-        public FormLinkNullable<IIdleAnimationGetter> Idle { get; set; } = new FormLinkNullable<IIdleAnimationGetter>();
+        private IFormLinkNullable<IIdleAnimationGetter> _Idle = new FormLinkNullable<IIdleAnimationGetter>();
+        public IFormLinkNullable<IIdleAnimationGetter> Idle
+        {
+            get => _Idle;
+            set => _Idle = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IIdleAnimationGetter> IPackageEventGetter.Idle => this.Idle;
         #endregion
         #region SCHR
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -129,13 +136,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageEventGetter rhs)) return false;
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageEventGetter rhs) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageEventGetter? obj)
         {
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);
@@ -730,7 +737,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageEvent>,
         IPackageEventGetter
     {
-        new FormLinkNullable<IIdleAnimationGetter> Idle { get; set; }
+        new IFormLinkNullable<IIdleAnimationGetter> Idle { get; }
         new MemorySlice<Byte>? SCHR { get; set; }
         new MemorySlice<Byte>? SCDA { get; set; }
         new MemorySlice<Byte>? SCTX { get; set; }
@@ -752,7 +759,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PackageEvent_Registration.Instance;
-        FormLinkNullable<IIdleAnimationGetter> Idle { get; }
+        IFormLinkNullableGetter<IIdleAnimationGetter> Idle { get; }
         ReadOnlyMemorySlice<Byte>? SCHR { get; }
         ReadOnlyMemorySlice<Byte>? SCDA { get; }
         ReadOnlyMemorySlice<Byte>? SCTX { get; }
@@ -809,11 +816,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageEventGetter item,
-            IPackageEventGetter rhs)
+            IPackageEventGetter rhs,
+            PackageEvent.TranslationMask? equalsMask = null)
         {
             return ((PackageEventCommon)((IPackageEventGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1037,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageEvent item)
         {
             ClearPartial();
-            item.Idle = FormLinkNullable<IIdleAnimationGetter>.Null;
+            item.Idle.Clear();
             item.SCHR = default;
             item.SCDA = default;
             item.SCTX = default;
@@ -1049,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IPackageEvent obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Idle = obj.Idle.Relink(mapping);
+            obj.Idle.Relink(mapping);
             obj.Topics.RemapLinks(mapping);
         }
         
@@ -1205,17 +1214,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageEventGetter? lhs,
-            IPackageEventGetter? rhs)
+            IPackageEventGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Idle.Equals(rhs.Idle)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
-            if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
-            if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
-            if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
+            {
+                if (!lhs.Idle.Equals(rhs.Idle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCHR, rhs.SCHR)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCDA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCDA, rhs.SCDA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCTX) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.SCTX, rhs.SCTX)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.QNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.QNAM, rhs.QNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.TNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TNAM, rhs.TNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Topics) ?? true))
+            {
+                if (!lhs.Topics.SequenceEqualNullable(rhs.Topics)) return false;
+            }
             return true;
         }
         
@@ -1287,7 +1318,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
-                item.Idle = new FormLinkNullable<IIdleAnimationGetter>(rhs.Idle.FormKeyNullable);
+                item.Idle.SetTo(rhs.Idle.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)PackageEvent_FieldIndex.SCHR) ?? true))
             {
@@ -1557,9 +1588,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Idle.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)PackageEvent_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
@@ -1680,7 +1712,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region Idle
         private int? _IdleLocation;
-        public FormLinkNullable<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
+        public IFormLinkNullableGetter<IIdleAnimationGetter> Idle => _IdleLocation.HasValue ? new FormLinkNullable<IIdleAnimationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _IdleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IIdleAnimationGetter>.Null;
         #endregion
         #region SCHR
         private int? _SCHRLocation;
@@ -1834,13 +1866,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageEventGetter rhs)) return false;
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageEventGetter rhs) return false;
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageEventGetter? obj)
         {
-            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageEventCommon)((IPackageEventGetter)this).CommonInstance()!).GetHashCode(this);

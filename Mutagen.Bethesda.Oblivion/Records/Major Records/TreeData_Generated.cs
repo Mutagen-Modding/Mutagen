@@ -80,13 +80,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITreeDataGetter rhs)) return false;
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITreeDataGetter rhs) return false;
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITreeDataGetter? obj)
         {
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -712,11 +712,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ITreeDataGetter item,
-            ITreeDataGetter rhs)
+            ITreeDataGetter rhs,
+            TreeData.TranslationMask? equalsMask = null)
         {
             return ((TreeDataCommon)((ITreeDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1077,18 +1079,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITreeDataGetter? lhs,
-            ITreeDataGetter? rhs)
+            ITreeDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
-            if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
-            if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
-            if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
-            if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
-            if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
-            if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
-            if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.LeafCurvature) ?? true))
+            {
+                if (!lhs.LeafCurvature.EqualsWithin(rhs.LeafCurvature)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.MinimumLeafAngle) ?? true))
+            {
+                if (!lhs.MinimumLeafAngle.EqualsWithin(rhs.MinimumLeafAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.MaximumLeafAngle) ?? true))
+            {
+                if (!lhs.MaximumLeafAngle.EqualsWithin(rhs.MaximumLeafAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.BranchDimmingValue) ?? true))
+            {
+                if (!lhs.BranchDimmingValue.EqualsWithin(rhs.BranchDimmingValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.LeafDimmingValue) ?? true))
+            {
+                if (!lhs.LeafDimmingValue.EqualsWithin(rhs.LeafDimmingValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.ShadowRadius) ?? true))
+            {
+                if (lhs.ShadowRadius != rhs.ShadowRadius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.RockingSpeed) ?? true))
+            {
+                if (!lhs.RockingSpeed.EqualsWithin(rhs.RockingSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)TreeData_FieldIndex.RustleSpeed) ?? true))
+            {
+                if (!lhs.RustleSpeed.EqualsWithin(rhs.RustleSpeed)) return false;
+            }
             return true;
         }
         
@@ -1466,13 +1493,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITreeDataGetter rhs)) return false;
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITreeDataGetter rhs) return false;
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITreeDataGetter? obj)
         {
-            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TreeDataCommon)((ITreeDataGetter)this).CommonInstance()!).GetHashCode(this);

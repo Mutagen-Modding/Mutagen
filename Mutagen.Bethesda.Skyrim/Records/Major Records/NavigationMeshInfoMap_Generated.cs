@@ -97,22 +97,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is INavigationMeshInfoMapGetter rhs)) return false;
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(INavigationMeshInfoMapGetter? obj)
-        {
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -604,6 +588,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not INavigationMeshInfoMapGetter rhs) return false;
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(INavigationMeshInfoMapGetter? obj)
+        {
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -741,11 +745,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavigationMeshInfoMapGetter item,
-            INavigationMeshInfoMapGetter rhs)
+            INavigationMeshInfoMapGetter rhs,
+            NavigationMeshInfoMap.TranslationMask? equalsMask = null)
         {
             return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1174,34 +1180,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavigationMeshInfoMapGetter? lhs,
-            INavigationMeshInfoMapGetter? rhs)
+            INavigationMeshInfoMapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
-            if (!lhs.MapInfos.SequenceEqualNullable(rhs.MapInfos)) return false;
-            if (!object.Equals(lhs.PreferredPathing, rhs.PreferredPathing)) return false;
-            if (!MemorySliceExt.Equal(lhs.NVSI, rhs.NVSI)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
+            {
+                if (lhs.NavMeshVersion != rhs.NavMeshVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.MapInfos) ?? true))
+            {
+                if (!lhs.MapInfos.SequenceEqualNullable(rhs.MapInfos)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
+            {
+                if (!object.Equals(lhs.PreferredPathing, rhs.PreferredPathing)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NVSI, rhs.NVSI)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INavigationMeshInfoMapGetter?)lhs,
-                rhs: rhs as INavigationMeshInfoMapGetter);
+                rhs: rhs as INavigationMeshInfoMapGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INavigationMeshInfoMapGetter?)lhs,
-                rhs: rhs as INavigationMeshInfoMapGetter);
+                rhs: rhs as INavigationMeshInfoMapGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INavigationMeshInfoMapGetter item)
@@ -1269,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new NavigationMeshInfoMap(formKey, default(SkyrimRelease));
+            var newRec = new NavigationMeshInfoMap(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1280,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INavigationMeshInfoMap)item,
+                item: (INavigationMeshInfoMapGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1291,7 +1314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (INavigationMeshInfoMap)item,
+                item: (INavigationMeshInfoMapGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1889,13 +1912,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMeshInfoMapGetter rhs)) return false;
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not INavigationMeshInfoMapGetter rhs) return false;
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationMeshInfoMapGetter? obj)
         {
-            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationMeshInfoMapCommon)((INavigationMeshInfoMapGetter)this).CommonInstance()!).GetHashCode(this);

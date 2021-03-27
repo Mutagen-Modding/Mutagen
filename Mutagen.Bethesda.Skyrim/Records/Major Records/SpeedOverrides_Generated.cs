@@ -89,13 +89,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpeedOverridesGetter rhs)) return false;
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISpeedOverridesGetter rhs) return false;
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpeedOverridesGetter? obj)
         {
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -811,11 +811,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISpeedOverridesGetter item,
-            ISpeedOverridesGetter rhs)
+            ISpeedOverridesGetter rhs,
+            SpeedOverrides.TranslationMask? equalsMask = null)
         {
             return ((SpeedOverridesCommon)((ISpeedOverridesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1197,21 +1199,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISpeedOverridesGetter? lhs,
-            ISpeedOverridesGetter? rhs)
+            ISpeedOverridesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
-            if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
-            if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
-            if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
-            if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
-            if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
-            if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
-            if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
-            if (!lhs.RotateWalk.EqualsWithin(rhs.RotateWalk)) return false;
-            if (!lhs.RotateRun.EqualsWithin(rhs.RotateRun)) return false;
-            if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.LeftWalk) ?? true))
+            {
+                if (!lhs.LeftWalk.EqualsWithin(rhs.LeftWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.LeftRun) ?? true))
+            {
+                if (!lhs.LeftRun.EqualsWithin(rhs.LeftRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.RightWalk) ?? true))
+            {
+                if (!lhs.RightWalk.EqualsWithin(rhs.RightWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.RightRun) ?? true))
+            {
+                if (!lhs.RightRun.EqualsWithin(rhs.RightRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.ForwardWalk) ?? true))
+            {
+                if (!lhs.ForwardWalk.EqualsWithin(rhs.ForwardWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.ForwardRun) ?? true))
+            {
+                if (!lhs.ForwardRun.EqualsWithin(rhs.ForwardRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.BackWalk) ?? true))
+            {
+                if (!lhs.BackWalk.EqualsWithin(rhs.BackWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.BackRun) ?? true))
+            {
+                if (!lhs.BackRun.EqualsWithin(rhs.BackRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.RotateWalk) ?? true))
+            {
+                if (!lhs.RotateWalk.EqualsWithin(rhs.RotateWalk)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.RotateRun) ?? true))
+            {
+                if (!lhs.RotateRun.EqualsWithin(rhs.RotateRun)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SpeedOverrides_FieldIndex.Unknown) ?? true))
+            {
+                if (!lhs.Unknown.EqualsWithin(rhs.Unknown)) return false;
+            }
             return true;
         }
         
@@ -1621,13 +1657,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISpeedOverridesGetter rhs)) return false;
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISpeedOverridesGetter rhs) return false;
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISpeedOverridesGetter? obj)
         {
-            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SpeedOverridesCommon)((ISpeedOverridesGetter)this).CommonInstance()!).GetHashCode(this);

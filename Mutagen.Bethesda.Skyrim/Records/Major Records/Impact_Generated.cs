@@ -93,19 +93,54 @@ namespace Mutagen.Bethesda.Skyrim
         IDecalGetter? IImpactGetter.Decal => this.Decal;
         #endregion
         #region TextureSet
-        public FormLinkNullable<ITextureSetGetter> TextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _TextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> TextureSet
+        {
+            get => _TextureSet;
+            set => _TextureSet = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.TextureSet => this.TextureSet;
         #endregion
         #region SecondaryTextureSet
-        public FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; } = new FormLinkNullable<ITextureSetGetter>();
+        private IFormLinkNullable<ITextureSetGetter> _SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>();
+        public IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet
+        {
+            get => _SecondaryTextureSet;
+            set => _SecondaryTextureSet = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ITextureSetGetter> IImpactGetter.SecondaryTextureSet => this.SecondaryTextureSet;
         #endregion
         #region Sound1
-        public FormLinkNullable<ISoundGetter> Sound1 { get; set; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound1 = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound1
+        {
+            get => _Sound1;
+            set => _Sound1 = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound1 => this.Sound1;
         #endregion
         #region Sound2
-        public FormLinkNullable<ISoundGetter> Sound2 { get; set; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound2 = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound2
+        {
+            get => _Sound2;
+            set => _Sound2 = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> IImpactGetter.Sound2 => this.Sound2;
         #endregion
         #region Hazard
-        public FormLinkNullable<IHazardGetter> Hazard { get; set; } = new FormLinkNullable<IHazardGetter>();
+        private IFormLinkNullable<IHazardGetter> _Hazard = new FormLinkNullable<IHazardGetter>();
+        public IFormLinkNullable<IHazardGetter> Hazard
+        {
+            get => _Hazard;
+            set => _Hazard = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IHazardGetter> IImpactGetter.Hazard => this.Hazard;
         #endregion
         #region DATADataTypeState
         public Impact.DATADataType DATADataTypeState { get; set; } = default;
@@ -121,22 +156,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IImpactGetter rhs)) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IImpactGetter? obj)
-        {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -903,6 +922,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IImpactGetter rhs) return false;
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IImpactGetter? obj)
+        {
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -976,11 +1015,11 @@ namespace Mutagen.Bethesda.Skyrim
         new Impact.ResultType Result { get; set; }
         new Int16 Unknown { get; set; }
         new Decal? Decal { get; set; }
-        new FormLinkNullable<ITextureSetGetter> TextureSet { get; set; }
-        new FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; set; }
-        new FormLinkNullable<ISoundGetter> Sound1 { get; set; }
-        new FormLinkNullable<ISoundGetter> Sound2 { get; set; }
-        new FormLinkNullable<IHazardGetter> Hazard { get; set; }
+        new IFormLinkNullable<ITextureSetGetter> TextureSet { get; }
+        new IFormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
+        new IFormLinkNullable<ISoundGetter> Sound1 { get; }
+        new IFormLinkNullable<ISoundGetter> Sound2 { get; }
+        new IFormLinkNullable<IHazardGetter> Hazard { get; }
         new Impact.DATADataType DATADataTypeState { get; set; }
     }
 
@@ -1010,11 +1049,11 @@ namespace Mutagen.Bethesda.Skyrim
         Impact.ResultType Result { get; }
         Int16 Unknown { get; }
         IDecalGetter? Decal { get; }
-        FormLinkNullable<ITextureSetGetter> TextureSet { get; }
-        FormLinkNullable<ITextureSetGetter> SecondaryTextureSet { get; }
-        FormLinkNullable<ISoundGetter> Sound1 { get; }
-        FormLinkNullable<ISoundGetter> Sound2 { get; }
-        FormLinkNullable<IHazardGetter> Hazard { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> TextureSet { get; }
+        IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound1 { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound2 { get; }
+        IFormLinkNullableGetter<IHazardGetter> Hazard { get; }
         Impact.DATADataType DATADataTypeState { get; }
 
     }
@@ -1066,11 +1105,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IImpactGetter item,
-            IImpactGetter rhs)
+            IImpactGetter rhs,
+            Impact.TranslationMask? equalsMask = null)
         {
             return ((ImpactCommon)((IImpactGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1292,11 +1333,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Result = default;
             item.Unknown = default;
             item.Decal = null;
-            item.TextureSet = FormLinkNullable<ITextureSetGetter>.Null;
-            item.SecondaryTextureSet = FormLinkNullable<ITextureSetGetter>.Null;
-            item.Sound1 = FormLinkNullable<ISoundGetter>.Null;
-            item.Sound2 = FormLinkNullable<ISoundGetter>.Null;
-            item.Hazard = FormLinkNullable<IHazardGetter>.Null;
+            item.TextureSet.Clear();
+            item.SecondaryTextureSet.Clear();
+            item.Sound1.Clear();
+            item.Sound2.Clear();
+            item.Hazard.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -1316,11 +1357,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.TextureSet = obj.TextureSet.Relink(mapping);
-            obj.SecondaryTextureSet = obj.SecondaryTextureSet.Relink(mapping);
-            obj.Sound1 = obj.Sound1.Relink(mapping);
-            obj.Sound2 = obj.Sound2.Relink(mapping);
-            obj.Hazard = obj.Hazard.Relink(mapping);
+            obj.TextureSet.Relink(mapping);
+            obj.SecondaryTextureSet.Relink(mapping);
+            obj.Sound1.Relink(mapping);
+            obj.Sound2.Relink(mapping);
+            obj.Hazard.Relink(mapping);
         }
         
         #endregion
@@ -1573,46 +1614,99 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IImpactGetter? lhs,
-            IImpactGetter? rhs)
+            IImpactGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
-            if (lhs.Orientation != rhs.Orientation) return false;
-            if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
-            if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
-            if (lhs.SoundLevel != rhs.SoundLevel) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Result != rhs.Result) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
-            if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
-            if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
-            if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
-            if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
-            if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
+            {
+                if (!lhs.Duration.EqualsWithin(rhs.Duration)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Orientation) ?? true))
+            {
+                if (lhs.Orientation != rhs.Orientation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.AngleThreshold) ?? true))
+            {
+                if (!lhs.AngleThreshold.EqualsWithin(rhs.AngleThreshold)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.PlacementRadius) ?? true))
+            {
+                if (!lhs.PlacementRadius.EqualsWithin(rhs.PlacementRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SoundLevel) ?? true))
+            {
+                if (lhs.SoundLevel != rhs.SoundLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Result) ?? true))
+            {
+                if (lhs.Result != rhs.Result) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
+            {
+                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
+            {
+                if (!lhs.TextureSet.Equals(rhs.TextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
+            {
+                if (!lhs.SecondaryTextureSet.Equals(rhs.SecondaryTextureSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
+            {
+                if (!lhs.Sound1.Equals(rhs.Sound1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
+            {
+                if (!lhs.Sound2.Equals(rhs.Sound2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
+            {
+                if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
-                rhs: rhs as IImpactGetter);
+                rhs: rhs as IImpactGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IImpactGetter?)lhs,
-                rhs: rhs as IImpactGetter);
+                rhs: rhs as IImpactGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IImpactGetter item)
@@ -1705,7 +1799,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Impact(formKey, default(SkyrimRelease));
+            var newRec = new Impact(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1716,7 +1810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IImpact)item,
+                item: (IImpactGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1727,7 +1821,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IImpact)item,
+                item: (IImpactGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1856,23 +1950,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {
-                item.TextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.TextureSet.FormKeyNullable);
+                item.TextureSet.SetTo(rhs.TextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.SecondaryTextureSet) ?? true))
             {
-                item.SecondaryTextureSet = new FormLinkNullable<ITextureSetGetter>(rhs.SecondaryTextureSet.FormKeyNullable);
+                item.SecondaryTextureSet.SetTo(rhs.SecondaryTextureSet.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound1) ?? true))
             {
-                item.Sound1 = new FormLinkNullable<ISoundGetter>(rhs.Sound1.FormKeyNullable);
+                item.Sound1.SetTo(rhs.Sound1.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Sound2) ?? true))
             {
-                item.Sound2 = new FormLinkNullable<ISoundGetter>(rhs.Sound2.FormKeyNullable);
+                item.Sound2.SetTo(rhs.Sound2.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLinkNullable<IHazardGetter>(rhs.Hazard.FormKeyNullable);
+                item.Hazard.SetTo(rhs.Hazard.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Impact_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -2227,41 +2321,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.TextureSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SecondaryTextureSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.SecondaryTextureSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound1 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Sound1.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound2 = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Sound2.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Hazard = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Hazard.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Impact_FieldIndex.Hazard;
                 }
                 default:
@@ -2368,23 +2467,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region TextureSet
         private int? _TextureSetLocation;
-        public FormLinkNullable<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> TextureSet => _TextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _TextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region SecondaryTextureSet
         private int? _SecondaryTextureSetLocation;
-        public FormLinkNullable<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
+        public IFormLinkNullableGetter<ITextureSetGetter> SecondaryTextureSet => _SecondaryTextureSetLocation.HasValue ? new FormLinkNullable<ITextureSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SecondaryTextureSetLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ITextureSetGetter>.Null;
         #endregion
         #region Sound1
         private int? _Sound1Location;
-        public FormLinkNullable<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound1 => _Sound1Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound1Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Sound2
         private int? _Sound2Location;
-        public FormLinkNullable<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound2 => _Sound2Location.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _Sound2Location.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Hazard
         private int? _HazardLocation;
-        public FormLinkNullable<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
+        public IFormLinkNullableGetter<IHazardGetter> Hazard => _HazardLocation.HasValue ? new FormLinkNullable<IHazardGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _HazardLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IHazardGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -2521,13 +2620,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IImpactGetter rhs)) return false;
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IImpactGetter rhs) return false;
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IImpactGetter? obj)
         {
-            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ImpactCommon)((IImpactGetter)this).CommonInstance()!).GetHashCode(this);

@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcLevelGetter rhs)) return false;
-            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcLevelGetter rhs) return false;
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcLevelGetter? obj)
         {
-            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -453,11 +453,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INpcLevelGetter item,
-            INpcLevelGetter rhs)
+            INpcLevelGetter rhs,
+            NpcLevel.TranslationMask? equalsMask = null)
         {
             return ((NpcLevelCommon)((INpcLevelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -771,22 +773,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INpcLevelGetter? lhs,
-            INpcLevelGetter? rhs)
+            INpcLevelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANpcLevelGetter)lhs, (IANpcLevelGetter)rhs)) return false;
-            if (lhs.Level != rhs.Level) return false;
+            if (!base.Equals((IANpcLevelGetter)lhs, (IANpcLevelGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)NpcLevel_FieldIndex.Level) ?? true))
+            {
+                if (lhs.Level != rhs.Level) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IANpcLevelGetter? lhs,
-            IANpcLevelGetter? rhs)
+            IANpcLevelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (INpcLevelGetter?)lhs,
-                rhs: rhs as INpcLevelGetter);
+                rhs: rhs as INpcLevelGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(INpcLevelGetter item)
@@ -1102,13 +1110,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INpcLevelGetter rhs)) return false;
-            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INpcLevelGetter rhs) return false;
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INpcLevelGetter? obj)
         {
-            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NpcLevelCommon)((INpcLevelGetter)this).CommonInstance()!).GetHashCode(this);

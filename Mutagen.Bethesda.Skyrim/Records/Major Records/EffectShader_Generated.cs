@@ -260,7 +260,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; } = default;
         #endregion
         #region AddonModels
-        public FormLink<IDebrisGetter> AddonModels { get; set; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _AddonModels = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> AddonModels
+        {
+            get => _AddonModels;
+            set => _AddonModels = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IEffectShaderGetter.AddonModels => this.AddonModels;
         #endregion
         #region HolesStartTime
         public Single HolesStartTime { get; set; } = default;
@@ -308,7 +315,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single AddonModelsScaleOutTime { get; set; } = default;
         #endregion
         #region AmbientSound
-        public FormLink<ISoundGetter> AmbientSound { get; set; } = new FormLink<ISoundGetter>();
+        private IFormLink<ISoundGetter> _AmbientSound = new FormLink<ISoundGetter>();
+        public IFormLink<ISoundGetter> AmbientSound
+        {
+            get => _AmbientSound;
+            set => _AmbientSound = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISoundGetter> IEffectShaderGetter.AmbientSound => this.AmbientSound;
         #endregion
         #region FillColorKey2
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -647,22 +661,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IEffectShaderGetter rhs)) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IEffectShaderGetter? obj)
-        {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -3939,6 +3937,26 @@ namespace Mutagen.Bethesda.Skyrim
             Break2 = 4,
             Break3 = 8
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IEffectShaderGetter rhs) return false;
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IEffectShaderGetter? obj)
+        {
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -4067,7 +4085,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single ParticleInitialRotationDegreePlusMinus { get; set; }
         new Single ParticleRotationSpeedDegreePerSec { get; set; }
         new Single ParticleRotationSpeedDegreePerSecPlusMinus { get; set; }
-        new FormLink<IDebrisGetter> AddonModels { get; set; }
+        new IFormLink<IDebrisGetter> AddonModels { get; }
         new Single HolesStartTime { get; set; }
         new Single HolesEndTime { get; set; }
         new Single HolesStartValue { get; set; }
@@ -4083,7 +4101,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Single AddonModelsScaleEnd { get; set; }
         new Single AddonModelsScaleInTime { get; set; }
         new Single AddonModelsScaleOutTime { get; set; }
-        new FormLink<ISoundGetter> AmbientSound { get; set; }
+        new IFormLink<ISoundGetter> AmbientSound { get; }
         new Color FillColorKey2 { get; set; }
         new Color FillColorKey3 { get; set; }
         new Single FillColorKey1Scale { get; set; }
@@ -4190,7 +4208,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single ParticleInitialRotationDegreePlusMinus { get; }
         Single ParticleRotationSpeedDegreePerSec { get; }
         Single ParticleRotationSpeedDegreePerSecPlusMinus { get; }
-        FormLink<IDebrisGetter> AddonModels { get; }
+        IFormLinkGetter<IDebrisGetter> AddonModels { get; }
         Single HolesStartTime { get; }
         Single HolesEndTime { get; }
         Single HolesStartValue { get; }
@@ -4206,7 +4224,7 @@ namespace Mutagen.Bethesda.Skyrim
         Single AddonModelsScaleEnd { get; }
         Single AddonModelsScaleInTime { get; }
         Single AddonModelsScaleOutTime { get; }
-        FormLink<ISoundGetter> AmbientSound { get; }
+        IFormLinkGetter<ISoundGetter> AmbientSound { get; }
         Color FillColorKey2 { get; }
         Color FillColorKey3 { get; }
         Single FillColorKey1Scale { get; }
@@ -4280,11 +4298,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEffectShaderGetter item,
-            IEffectShaderGetter rhs)
+            IEffectShaderGetter rhs,
+            EffectShader.TranslationMask? equalsMask = null)
         {
             return ((EffectShaderCommon)((IEffectShaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -4652,7 +4672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ParticleInitialRotationDegreePlusMinus = default;
             item.ParticleRotationSpeedDegreePerSec = default;
             item.ParticleRotationSpeedDegreePerSecPlusMinus = default;
-            item.AddonModels = FormLink<IDebrisGetter>.Null;
+            item.AddonModels.Clear();
             item.HolesStartTime = default;
             item.HolesEndTime = default;
             item.HolesStartValue = default;
@@ -4668,7 +4688,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AddonModelsScaleEnd = default;
             item.AddonModelsScaleInTime = default;
             item.AddonModelsScaleOutTime = default;
-            item.AmbientSound = FormLink<ISoundGetter>.Null;
+            item.AmbientSound.Clear();
             item.FillColorKey2 = default;
             item.FillColorKey3 = default;
             item.FillColorKey1Scale = default;
@@ -4709,8 +4729,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IEffectShader obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AddonModels = obj.AddonModels.Relink(mapping);
-            obj.AmbientSound = obj.AmbientSound.Relink(mapping);
+            obj.AddonModels.Relink(mapping);
+            obj.AmbientSound.Relink(mapping);
         }
         
         #endregion
@@ -5408,136 +5428,459 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEffectShaderGetter? lhs,
-            IEffectShaderGetter? rhs)
+            IEffectShaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
-            if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
-            if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
-            if (!string.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
-            if (!string.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.MembraneSourceBlendMode != rhs.MembraneSourceBlendMode) return false;
-            if (lhs.MembraneBlendOperation != rhs.MembraneBlendOperation) return false;
-            if (lhs.MembraneZTest != rhs.MembraneZTest) return false;
-            if (!lhs.FillColorKey1.ColorOnlyEquals(rhs.FillColorKey1)) return false;
-            if (!lhs.FillAlphaFadeInTime.EqualsWithin(rhs.FillAlphaFadeInTime)) return false;
-            if (!lhs.FillFullAlphaTime.EqualsWithin(rhs.FillFullAlphaTime)) return false;
-            if (!lhs.FillFadeOutTime.EqualsWithin(rhs.FillFadeOutTime)) return false;
-            if (!lhs.FillPersistentAlphaRatio.EqualsWithin(rhs.FillPersistentAlphaRatio)) return false;
-            if (!lhs.FillAlphaPulseAmplitude.EqualsWithin(rhs.FillAlphaPulseAmplitude)) return false;
-            if (!lhs.FillAlphaPulseFrequency.EqualsWithin(rhs.FillAlphaPulseFrequency)) return false;
-            if (!lhs.FillTextureAnimationSpeedU.EqualsWithin(rhs.FillTextureAnimationSpeedU)) return false;
-            if (!lhs.FillTextureAnimationSpeedV.EqualsWithin(rhs.FillTextureAnimationSpeedV)) return false;
-            if (!lhs.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff)) return false;
-            if (!lhs.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor)) return false;
-            if (!lhs.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime)) return false;
-            if (!lhs.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime)) return false;
-            if (!lhs.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime)) return false;
-            if (!lhs.EdgeEffectPersistentAlphaRatio.EqualsWithin(rhs.EdgeEffectPersistentAlphaRatio)) return false;
-            if (!lhs.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude)) return false;
-            if (!lhs.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency)) return false;
-            if (!lhs.FillFullAlphaRatio.EqualsWithin(rhs.FillFullAlphaRatio)) return false;
-            if (!lhs.EdgeEffectFullAlphaRatio.EqualsWithin(rhs.EdgeEffectFullAlphaRatio)) return false;
-            if (lhs.MembraneDestBlendMode != rhs.MembraneDestBlendMode) return false;
-            if (lhs.ParticleSourceBlendMode != rhs.ParticleSourceBlendMode) return false;
-            if (lhs.ParticleBlendOperation != rhs.ParticleBlendOperation) return false;
-            if (lhs.ParticleZTest != rhs.ParticleZTest) return false;
-            if (lhs.ParticleDestBlendMode != rhs.ParticleDestBlendMode) return false;
-            if (!lhs.ParticleBirthRampUpTime.EqualsWithin(rhs.ParticleBirthRampUpTime)) return false;
-            if (!lhs.ParticleFullBirthTime.EqualsWithin(rhs.ParticleFullBirthTime)) return false;
-            if (!lhs.ParticleBirthRampDownTime.EqualsWithin(rhs.ParticleBirthRampDownTime)) return false;
-            if (!lhs.ParticleFullBirthRatio.EqualsWithin(rhs.ParticleFullBirthRatio)) return false;
-            if (!lhs.ParticlePeristentCount.EqualsWithin(rhs.ParticlePeristentCount)) return false;
-            if (!lhs.ParticleLifetime.EqualsWithin(rhs.ParticleLifetime)) return false;
-            if (!lhs.ParticleLifetimePlusMinus.EqualsWithin(rhs.ParticleLifetimePlusMinus)) return false;
-            if (!lhs.ParticleInitialSpeedAlongNormal.EqualsWithin(rhs.ParticleInitialSpeedAlongNormal)) return false;
-            if (!lhs.ParticleAccelerationAlongNormal.EqualsWithin(rhs.ParticleAccelerationAlongNormal)) return false;
-            if (!lhs.ParticleInitialVelocity1.EqualsWithin(rhs.ParticleInitialVelocity1)) return false;
-            if (!lhs.ParticleInitialVelocity2.EqualsWithin(rhs.ParticleInitialVelocity2)) return false;
-            if (!lhs.ParticleInitialVelocity3.EqualsWithin(rhs.ParticleInitialVelocity3)) return false;
-            if (!lhs.ParticleAcceleration1.EqualsWithin(rhs.ParticleAcceleration1)) return false;
-            if (!lhs.ParticleAcceleration2.EqualsWithin(rhs.ParticleAcceleration2)) return false;
-            if (!lhs.ParticleAcceleration3.EqualsWithin(rhs.ParticleAcceleration3)) return false;
-            if (!lhs.ParticleScaleKey1.EqualsWithin(rhs.ParticleScaleKey1)) return false;
-            if (!lhs.ParticleScaleKey2.EqualsWithin(rhs.ParticleScaleKey2)) return false;
-            if (!lhs.ParticleScaleKey1Time.EqualsWithin(rhs.ParticleScaleKey1Time)) return false;
-            if (!lhs.ParticleScaleKey2Time.EqualsWithin(rhs.ParticleScaleKey2Time)) return false;
-            if (!lhs.ColorKey1.ColorOnlyEquals(rhs.ColorKey1)) return false;
-            if (!lhs.ColorKey2.ColorOnlyEquals(rhs.ColorKey2)) return false;
-            if (!lhs.ColorKey3.ColorOnlyEquals(rhs.ColorKey3)) return false;
-            if (!lhs.ColorKey1Alpha.EqualsWithin(rhs.ColorKey1Alpha)) return false;
-            if (!lhs.ColorKey2Alpha.EqualsWithin(rhs.ColorKey2Alpha)) return false;
-            if (!lhs.ColorKey3Alpha.EqualsWithin(rhs.ColorKey3Alpha)) return false;
-            if (!lhs.ColorKey1Time.EqualsWithin(rhs.ColorKey1Time)) return false;
-            if (!lhs.ColorKey2Time.EqualsWithin(rhs.ColorKey2Time)) return false;
-            if (!lhs.ColorKey3Time.EqualsWithin(rhs.ColorKey3Time)) return false;
-            if (!lhs.ParticleInitialSpeedAlongNormalPlusMinus.EqualsWithin(rhs.ParticleInitialSpeedAlongNormalPlusMinus)) return false;
-            if (!lhs.ParticleInitialRotationDegree.EqualsWithin(rhs.ParticleInitialRotationDegree)) return false;
-            if (!lhs.ParticleInitialRotationDegreePlusMinus.EqualsWithin(rhs.ParticleInitialRotationDegreePlusMinus)) return false;
-            if (!lhs.ParticleRotationSpeedDegreePerSec.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSec)) return false;
-            if (!lhs.ParticleRotationSpeedDegreePerSecPlusMinus.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSecPlusMinus)) return false;
-            if (!lhs.AddonModels.Equals(rhs.AddonModels)) return false;
-            if (!lhs.HolesStartTime.EqualsWithin(rhs.HolesStartTime)) return false;
-            if (!lhs.HolesEndTime.EqualsWithin(rhs.HolesEndTime)) return false;
-            if (!lhs.HolesStartValue.EqualsWithin(rhs.HolesStartValue)) return false;
-            if (!lhs.HolesEndValue.EqualsWithin(rhs.HolesEndValue)) return false;
-            if (!lhs.EdgeWidth.EqualsWithin(rhs.EdgeWidth)) return false;
-            if (!lhs.EdgeColor.ColorOnlyEquals(rhs.EdgeColor)) return false;
-            if (!lhs.ExplosionWindSpeed.EqualsWithin(rhs.ExplosionWindSpeed)) return false;
-            if (lhs.TextureCountU != rhs.TextureCountU) return false;
-            if (lhs.TextureCountV != rhs.TextureCountV) return false;
-            if (!lhs.AddonModelsFadeInTime.EqualsWithin(rhs.AddonModelsFadeInTime)) return false;
-            if (!lhs.AddonModelsFadeOutTime.EqualsWithin(rhs.AddonModelsFadeOutTime)) return false;
-            if (!lhs.AddonModelsScaleStart.EqualsWithin(rhs.AddonModelsScaleStart)) return false;
-            if (!lhs.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd)) return false;
-            if (!lhs.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime)) return false;
-            if (!lhs.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime)) return false;
-            if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
-            if (!lhs.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2)) return false;
-            if (!lhs.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3)) return false;
-            if (!lhs.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale)) return false;
-            if (!lhs.FillColorKey2Scale.EqualsWithin(rhs.FillColorKey2Scale)) return false;
-            if (!lhs.FillColorKey3Scale.EqualsWithin(rhs.FillColorKey3Scale)) return false;
-            if (!lhs.FillColorKey1Time.EqualsWithin(rhs.FillColorKey1Time)) return false;
-            if (!lhs.FillColorKey2Time.EqualsWithin(rhs.FillColorKey2Time)) return false;
-            if (!lhs.FillColorKey3Time.EqualsWithin(rhs.FillColorKey3Time)) return false;
-            if (!lhs.ColorScale.EqualsWithin(rhs.ColorScale)) return false;
-            if (!lhs.BirthPositionOffset.EqualsWithin(rhs.BirthPositionOffset)) return false;
-            if (!lhs.BirthPositionOffsetRangePlusMinus.EqualsWithin(rhs.BirthPositionOffsetRangePlusMinus)) return false;
-            if (lhs.ParticleAnimatedStartFrame != rhs.ParticleAnimatedStartFrame) return false;
-            if (lhs.ParticleAnimatedStartFrameVariation != rhs.ParticleAnimatedStartFrameVariation) return false;
-            if (lhs.ParticleAnimatedEndFrame != rhs.ParticleAnimatedEndFrame) return false;
-            if (lhs.ParticleAnimatedLoopStartFrame != rhs.ParticleAnimatedLoopStartFrame) return false;
-            if (lhs.ParticleAnimatedLoopStartVariation != rhs.ParticleAnimatedLoopStartVariation) return false;
-            if (lhs.ParticleAnimatedFrameCount != rhs.ParticleAnimatedFrameCount) return false;
-            if (lhs.ParticleAnimatedFrameCountVariation != rhs.ParticleAnimatedFrameCountVariation) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.FillTextureScaleU.EqualsWithin(rhs.FillTextureScaleU)) return false;
-            if (!lhs.FillTextureScaleV.EqualsWithin(rhs.FillTextureScaleV)) return false;
-            if (lhs.SceneGraphEmitDepthLimit != rhs.SceneGraphEmitDepthLimit) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTexture) ?? true))
+            {
+                if (!string.Equals(lhs.FillTexture, rhs.FillTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleShaderTexture) ?? true))
+            {
+                if (!string.Equals(lhs.ParticleShaderTexture, rhs.ParticleShaderTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesTexture) ?? true))
+            {
+                if (!string.Equals(lhs.HolesTexture, rhs.HolesTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembranePaletteTexture) ?? true))
+            {
+                if (!string.Equals(lhs.MembranePaletteTexture, rhs.MembranePaletteTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePaletteTexture) ?? true))
+            {
+                if (!string.Equals(lhs.ParticlePaletteTexture, rhs.ParticlePaletteTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneSourceBlendMode) ?? true))
+            {
+                if (lhs.MembraneSourceBlendMode != rhs.MembraneSourceBlendMode) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneBlendOperation) ?? true))
+            {
+                if (lhs.MembraneBlendOperation != rhs.MembraneBlendOperation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneZTest) ?? true))
+            {
+                if (lhs.MembraneZTest != rhs.MembraneZTest) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1) ?? true))
+            {
+                if (!lhs.FillColorKey1.ColorOnlyEquals(rhs.FillColorKey1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaFadeInTime) ?? true))
+            {
+                if (!lhs.FillAlphaFadeInTime.EqualsWithin(rhs.FillAlphaFadeInTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaTime) ?? true))
+            {
+                if (!lhs.FillFullAlphaTime.EqualsWithin(rhs.FillFullAlphaTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFadeOutTime) ?? true))
+            {
+                if (!lhs.FillFadeOutTime.EqualsWithin(rhs.FillFadeOutTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillPersistentAlphaRatio) ?? true))
+            {
+                if (!lhs.FillPersistentAlphaRatio.EqualsWithin(rhs.FillPersistentAlphaRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseAmplitude) ?? true))
+            {
+                if (!lhs.FillAlphaPulseAmplitude.EqualsWithin(rhs.FillAlphaPulseAmplitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillAlphaPulseFrequency) ?? true))
+            {
+                if (!lhs.FillAlphaPulseFrequency.EqualsWithin(rhs.FillAlphaPulseFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedU) ?? true))
+            {
+                if (!lhs.FillTextureAnimationSpeedU.EqualsWithin(rhs.FillTextureAnimationSpeedU)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureAnimationSpeedV) ?? true))
+            {
+                if (!lhs.FillTextureAnimationSpeedV.EqualsWithin(rhs.FillTextureAnimationSpeedV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFallOff) ?? true))
+            {
+                if (!lhs.EdgeEffectFallOff.EqualsWithin(rhs.EdgeEffectFallOff)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectColor) ?? true))
+            {
+                if (!lhs.EdgeEffectColor.ColorOnlyEquals(rhs.EdgeEffectColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeInTime) ?? true))
+            {
+                if (!lhs.EdgeEffectAlphaFadeInTime.EqualsWithin(rhs.EdgeEffectAlphaFadeInTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaTime) ?? true))
+            {
+                if (!lhs.EdgeEffectFullAlphaTime.EqualsWithin(rhs.EdgeEffectFullAlphaTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaFadeOutTime) ?? true))
+            {
+                if (!lhs.EdgeEffectAlphaFadeOutTime.EqualsWithin(rhs.EdgeEffectAlphaFadeOutTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectPersistentAlphaRatio) ?? true))
+            {
+                if (!lhs.EdgeEffectPersistentAlphaRatio.EqualsWithin(rhs.EdgeEffectPersistentAlphaRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseAmplitude) ?? true))
+            {
+                if (!lhs.EdgeEffectAlphaPulseAmplitude.EqualsWithin(rhs.EdgeEffectAlphaPulseAmplitude)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectAlphaPulseFrequency) ?? true))
+            {
+                if (!lhs.EdgeEffectAlphaPulseFrequency.EqualsWithin(rhs.EdgeEffectAlphaPulseFrequency)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillFullAlphaRatio) ?? true))
+            {
+                if (!lhs.FillFullAlphaRatio.EqualsWithin(rhs.FillFullAlphaRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeEffectFullAlphaRatio) ?? true))
+            {
+                if (!lhs.EdgeEffectFullAlphaRatio.EqualsWithin(rhs.EdgeEffectFullAlphaRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.MembraneDestBlendMode) ?? true))
+            {
+                if (lhs.MembraneDestBlendMode != rhs.MembraneDestBlendMode) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleSourceBlendMode) ?? true))
+            {
+                if (lhs.ParticleSourceBlendMode != rhs.ParticleSourceBlendMode) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBlendOperation) ?? true))
+            {
+                if (lhs.ParticleBlendOperation != rhs.ParticleBlendOperation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleZTest) ?? true))
+            {
+                if (lhs.ParticleZTest != rhs.ParticleZTest) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleDestBlendMode) ?? true))
+            {
+                if (lhs.ParticleDestBlendMode != rhs.ParticleDestBlendMode) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampUpTime) ?? true))
+            {
+                if (!lhs.ParticleBirthRampUpTime.EqualsWithin(rhs.ParticleBirthRampUpTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthTime) ?? true))
+            {
+                if (!lhs.ParticleFullBirthTime.EqualsWithin(rhs.ParticleFullBirthTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleBirthRampDownTime) ?? true))
+            {
+                if (!lhs.ParticleBirthRampDownTime.EqualsWithin(rhs.ParticleBirthRampDownTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleFullBirthRatio) ?? true))
+            {
+                if (!lhs.ParticleFullBirthRatio.EqualsWithin(rhs.ParticleFullBirthRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticlePeristentCount) ?? true))
+            {
+                if (!lhs.ParticlePeristentCount.EqualsWithin(rhs.ParticlePeristentCount)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetime) ?? true))
+            {
+                if (!lhs.ParticleLifetime.EqualsWithin(rhs.ParticleLifetime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleLifetimePlusMinus) ?? true))
+            {
+                if (!lhs.ParticleLifetimePlusMinus.EqualsWithin(rhs.ParticleLifetimePlusMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormal) ?? true))
+            {
+                if (!lhs.ParticleInitialSpeedAlongNormal.EqualsWithin(rhs.ParticleInitialSpeedAlongNormal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAccelerationAlongNormal) ?? true))
+            {
+                if (!lhs.ParticleAccelerationAlongNormal.EqualsWithin(rhs.ParticleAccelerationAlongNormal)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity1) ?? true))
+            {
+                if (!lhs.ParticleInitialVelocity1.EqualsWithin(rhs.ParticleInitialVelocity1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity2) ?? true))
+            {
+                if (!lhs.ParticleInitialVelocity2.EqualsWithin(rhs.ParticleInitialVelocity2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialVelocity3) ?? true))
+            {
+                if (!lhs.ParticleInitialVelocity3.EqualsWithin(rhs.ParticleInitialVelocity3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration1) ?? true))
+            {
+                if (!lhs.ParticleAcceleration1.EqualsWithin(rhs.ParticleAcceleration1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration2) ?? true))
+            {
+                if (!lhs.ParticleAcceleration2.EqualsWithin(rhs.ParticleAcceleration2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAcceleration3) ?? true))
+            {
+                if (!lhs.ParticleAcceleration3.EqualsWithin(rhs.ParticleAcceleration3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1) ?? true))
+            {
+                if (!lhs.ParticleScaleKey1.EqualsWithin(rhs.ParticleScaleKey1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2) ?? true))
+            {
+                if (!lhs.ParticleScaleKey2.EqualsWithin(rhs.ParticleScaleKey2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey1Time) ?? true))
+            {
+                if (!lhs.ParticleScaleKey1Time.EqualsWithin(rhs.ParticleScaleKey1Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleScaleKey2Time) ?? true))
+            {
+                if (!lhs.ParticleScaleKey2Time.EqualsWithin(rhs.ParticleScaleKey2Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1) ?? true))
+            {
+                if (!lhs.ColorKey1.ColorOnlyEquals(rhs.ColorKey1)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2) ?? true))
+            {
+                if (!lhs.ColorKey2.ColorOnlyEquals(rhs.ColorKey2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3) ?? true))
+            {
+                if (!lhs.ColorKey3.ColorOnlyEquals(rhs.ColorKey3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Alpha) ?? true))
+            {
+                if (!lhs.ColorKey1Alpha.EqualsWithin(rhs.ColorKey1Alpha)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Alpha) ?? true))
+            {
+                if (!lhs.ColorKey2Alpha.EqualsWithin(rhs.ColorKey2Alpha)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Alpha) ?? true))
+            {
+                if (!lhs.ColorKey3Alpha.EqualsWithin(rhs.ColorKey3Alpha)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey1Time) ?? true))
+            {
+                if (!lhs.ColorKey1Time.EqualsWithin(rhs.ColorKey1Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey2Time) ?? true))
+            {
+                if (!lhs.ColorKey2Time.EqualsWithin(rhs.ColorKey2Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorKey3Time) ?? true))
+            {
+                if (!lhs.ColorKey3Time.EqualsWithin(rhs.ColorKey3Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialSpeedAlongNormalPlusMinus) ?? true))
+            {
+                if (!lhs.ParticleInitialSpeedAlongNormalPlusMinus.EqualsWithin(rhs.ParticleInitialSpeedAlongNormalPlusMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegree) ?? true))
+            {
+                if (!lhs.ParticleInitialRotationDegree.EqualsWithin(rhs.ParticleInitialRotationDegree)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleInitialRotationDegreePlusMinus) ?? true))
+            {
+                if (!lhs.ParticleInitialRotationDegreePlusMinus.EqualsWithin(rhs.ParticleInitialRotationDegreePlusMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSec) ?? true))
+            {
+                if (!lhs.ParticleRotationSpeedDegreePerSec.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSec)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleRotationSpeedDegreePerSecPlusMinus) ?? true))
+            {
+                if (!lhs.ParticleRotationSpeedDegreePerSecPlusMinus.EqualsWithin(rhs.ParticleRotationSpeedDegreePerSecPlusMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
+            {
+                if (!lhs.AddonModels.Equals(rhs.AddonModels)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
+            {
+                if (!lhs.HolesStartTime.EqualsWithin(rhs.HolesStartTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndTime) ?? true))
+            {
+                if (!lhs.HolesEndTime.EqualsWithin(rhs.HolesEndTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartValue) ?? true))
+            {
+                if (!lhs.HolesStartValue.EqualsWithin(rhs.HolesStartValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesEndValue) ?? true))
+            {
+                if (!lhs.HolesEndValue.EqualsWithin(rhs.HolesEndValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeWidth) ?? true))
+            {
+                if (!lhs.EdgeWidth.EqualsWithin(rhs.EdgeWidth)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.EdgeColor) ?? true))
+            {
+                if (!lhs.EdgeColor.ColorOnlyEquals(rhs.EdgeColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ExplosionWindSpeed) ?? true))
+            {
+                if (!lhs.ExplosionWindSpeed.EqualsWithin(rhs.ExplosionWindSpeed)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountU) ?? true))
+            {
+                if (lhs.TextureCountU != rhs.TextureCountU) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.TextureCountV) ?? true))
+            {
+                if (lhs.TextureCountV != rhs.TextureCountV) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeInTime) ?? true))
+            {
+                if (!lhs.AddonModelsFadeInTime.EqualsWithin(rhs.AddonModelsFadeInTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsFadeOutTime) ?? true))
+            {
+                if (!lhs.AddonModelsFadeOutTime.EqualsWithin(rhs.AddonModelsFadeOutTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleStart) ?? true))
+            {
+                if (!lhs.AddonModelsScaleStart.EqualsWithin(rhs.AddonModelsScaleStart)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleEnd) ?? true))
+            {
+                if (!lhs.AddonModelsScaleEnd.EqualsWithin(rhs.AddonModelsScaleEnd)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleInTime) ?? true))
+            {
+                if (!lhs.AddonModelsScaleInTime.EqualsWithin(rhs.AddonModelsScaleInTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModelsScaleOutTime) ?? true))
+            {
+                if (!lhs.AddonModelsScaleOutTime.EqualsWithin(rhs.AddonModelsScaleOutTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
+            {
+                if (!lhs.AmbientSound.Equals(rhs.AmbientSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
+            {
+                if (!lhs.FillColorKey2.ColorOnlyEquals(rhs.FillColorKey2)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3) ?? true))
+            {
+                if (!lhs.FillColorKey3.ColorOnlyEquals(rhs.FillColorKey3)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Scale) ?? true))
+            {
+                if (!lhs.FillColorKey1Scale.EqualsWithin(rhs.FillColorKey1Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Scale) ?? true))
+            {
+                if (!lhs.FillColorKey2Scale.EqualsWithin(rhs.FillColorKey2Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Scale) ?? true))
+            {
+                if (!lhs.FillColorKey3Scale.EqualsWithin(rhs.FillColorKey3Scale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey1Time) ?? true))
+            {
+                if (!lhs.FillColorKey1Time.EqualsWithin(rhs.FillColorKey1Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2Time) ?? true))
+            {
+                if (!lhs.FillColorKey2Time.EqualsWithin(rhs.FillColorKey2Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey3Time) ?? true))
+            {
+                if (!lhs.FillColorKey3Time.EqualsWithin(rhs.FillColorKey3Time)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ColorScale) ?? true))
+            {
+                if (!lhs.ColorScale.EqualsWithin(rhs.ColorScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffset) ?? true))
+            {
+                if (!lhs.BirthPositionOffset.EqualsWithin(rhs.BirthPositionOffset)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.BirthPositionOffsetRangePlusMinus) ?? true))
+            {
+                if (!lhs.BirthPositionOffsetRangePlusMinus.EqualsWithin(rhs.BirthPositionOffsetRangePlusMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrame) ?? true))
+            {
+                if (lhs.ParticleAnimatedStartFrame != rhs.ParticleAnimatedStartFrame) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedStartFrameVariation) ?? true))
+            {
+                if (lhs.ParticleAnimatedStartFrameVariation != rhs.ParticleAnimatedStartFrameVariation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedEndFrame) ?? true))
+            {
+                if (lhs.ParticleAnimatedEndFrame != rhs.ParticleAnimatedEndFrame) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartFrame) ?? true))
+            {
+                if (lhs.ParticleAnimatedLoopStartFrame != rhs.ParticleAnimatedLoopStartFrame) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedLoopStartVariation) ?? true))
+            {
+                if (lhs.ParticleAnimatedLoopStartVariation != rhs.ParticleAnimatedLoopStartVariation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCount) ?? true))
+            {
+                if (lhs.ParticleAnimatedFrameCount != rhs.ParticleAnimatedFrameCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.ParticleAnimatedFrameCountVariation) ?? true))
+            {
+                if (lhs.ParticleAnimatedFrameCountVariation != rhs.ParticleAnimatedFrameCountVariation) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleU) ?? true))
+            {
+                if (!lhs.FillTextureScaleU.EqualsWithin(rhs.FillTextureScaleU)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.FillTextureScaleV) ?? true))
+            {
+                if (!lhs.FillTextureScaleV.EqualsWithin(rhs.FillTextureScaleV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.SceneGraphEmitDepthLimit) ?? true))
+            {
+                if (lhs.SceneGraphEmitDepthLimit != rhs.SceneGraphEmitDepthLimit) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)EffectShader_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
-                rhs: rhs as IEffectShaderGetter);
+                rhs: rhs as IEffectShaderGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IEffectShaderGetter?)lhs,
-                rhs: rhs as IEffectShaderGetter);
+                rhs: rhs as IEffectShaderGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IEffectShaderGetter item)
@@ -5704,7 +6047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new EffectShader(formKey, default(SkyrimRelease));
+            var newRec = new EffectShader(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -5715,7 +6058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IEffectShader)item,
+                item: (IEffectShaderGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -5726,7 +6069,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IEffectShader)item,
+                item: (IEffectShaderGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -6035,7 +6378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AddonModels) ?? true))
             {
-                item.AddonModels = new FormLink<IDebrisGetter>(rhs.AddonModels.FormKey);
+                item.AddonModels.SetTo(rhs.AddonModels.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.HolesStartTime) ?? true))
             {
@@ -6099,7 +6442,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.AmbientSound) ?? true))
             {
-                item.AmbientSound = new FormLink<ISoundGetter>(rhs.AmbientSound.FormKey);
+                item.AmbientSound.SetTo(rhs.AmbientSound.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)EffectShader_FieldIndex.FillColorKey2) ?? true))
             {
@@ -6882,9 +7225,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleInitialRotationDegreePlusMinus = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ParticleRotationSpeedDegreePerSec = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ParticleRotationSpeedDegreePerSecPlusMinus = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.AddonModels = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.AddonModels.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.HolesStartTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.HolesEndTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.HolesStartValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -6905,9 +7249,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
                         return (int)EffectShader_FieldIndex.AddonModelsScaleOutTime;
                     }
-                    item.AmbientSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.AmbientSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break1;
@@ -7332,7 +7677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AddonModels
         private int _AddonModelsLocation => _DATALocation!.Value + 0xF4;
         private bool _AddonModels_IsSet => _DATALocation.HasValue;
-        public FormLink<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> AddonModels => _AddonModels_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AddonModelsLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region HolesStartTime
         private int _HolesStartTimeLocation => _DATALocation!.Value + 0xF8;
@@ -7412,7 +7757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region AmbientSound
         private int _AmbientSoundLocation => _DATALocation!.Value + 0x134;
         private bool _AmbientSound_IsSet => _DATALocation.HasValue && !DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0);
-        public FormLink<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
+        public IFormLinkGetter<ISoundGetter> AmbientSound => _AmbientSound_IsSet ? new FormLink<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_AmbientSoundLocation, 0x4)))) : FormLink<ISoundGetter>.Null;
         #endregion
         #region FillColorKey2
         private int _FillColorKey2Location => _DATALocation!.Value + 0x138;
@@ -7663,13 +8008,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectShaderGetter rhs)) return false;
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IEffectShaderGetter rhs) return false;
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectShaderGetter? obj)
         {
-            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectShaderCommon)((IEffectShaderGetter)this).CommonInstance()!).GetHashCode(this);

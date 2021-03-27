@@ -66,7 +66,14 @@ namespace Mutagen.Bethesda.Skyrim
         public LeveledNpc.Flag Flags { get; set; } = default;
         #endregion
         #region Global
-        public FormLinkNullable<IGlobalGetter> Global { get; set; } = new FormLinkNullable<IGlobalGetter>();
+        private IFormLinkNullable<IGlobalGetter> _Global = new FormLinkNullable<IGlobalGetter>();
+        public IFormLinkNullable<IGlobalGetter> Global
+        {
+            get => _Global;
+            set => _Global = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IGlobalGetter> ILeveledNpcGetter.Global => this.Global;
         #endregion
         #region Entries
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,22 +115,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ILeveledNpcGetter rhs)) return false;
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ILeveledNpcGetter? obj)
-        {
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -681,6 +672,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILeveledNpcGetter rhs) return false;
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ILeveledNpcGetter? obj)
+        {
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -750,7 +761,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
-        new FormLinkNullable<IGlobalGetter> Global { get; set; }
+        new IFormLinkNullable<IGlobalGetter> Global { get; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
         new Model? Model { get; set; }
     }
@@ -777,7 +788,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         Byte ChanceNone { get; }
         LeveledNpc.Flag Flags { get; }
-        FormLinkNullable<IGlobalGetter> Global { get; }
+        IFormLinkNullableGetter<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; }
         IModelGetter? Model { get; }
 
@@ -830,11 +841,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILeveledNpcGetter item,
-            ILeveledNpcGetter rhs)
+            ILeveledNpcGetter rhs,
+            LeveledNpc.TranslationMask? equalsMask = null)
         {
             return ((LeveledNpcCommon)((ILeveledNpcGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1039,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.ChanceNone = default;
             item.Flags = default;
-            item.Global = FormLinkNullable<IGlobalGetter>.Null;
+            item.Global.Clear();
             item.Entries = null;
             item.Model = null;
             base.Clear(item);
@@ -1059,7 +1072,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ILeveledNpc obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Global = obj.Global.Relink(mapping);
+            obj.Global.Relink(mapping);
             obj.Entries?.RemapLinks(mapping);
             obj.Model?.RemapLinks(mapping);
         }
@@ -1277,36 +1290,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILeveledNpcGetter? lhs,
-            ILeveledNpcGetter? rhs)
+            ILeveledNpcGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (lhs.ChanceNone != rhs.ChanceNone) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.Global.Equals(rhs.Global)) return false;
-            if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.ChanceNone) ?? true))
+            {
+                if (lhs.ChanceNone != rhs.ChanceNone) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
+            {
+                if (!lhs.Global.Equals(rhs.Global)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
+            {
+                if (!lhs.Entries.SequenceEqualNullable(rhs.Entries)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILeveledNpcGetter?)lhs,
-                rhs: rhs as ILeveledNpcGetter);
+                rhs: rhs as ILeveledNpcGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILeveledNpcGetter?)lhs,
-                rhs: rhs as ILeveledNpcGetter);
+                rhs: rhs as ILeveledNpcGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILeveledNpcGetter item)
@@ -1378,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new LeveledNpc(formKey, default(SkyrimRelease));
+            var newRec = new LeveledNpc(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1389,7 +1425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILeveledNpc)item,
+                item: (ILeveledNpcGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1400,7 +1436,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILeveledNpc)item,
+                item: (ILeveledNpcGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1475,7 +1511,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Global) ?? true))
             {
-                item.Global = new FormLinkNullable<IGlobalGetter>(rhs.Global.FormKeyNullable);
+                item.Global.SetTo(rhs.Global.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)LeveledNpc_FieldIndex.Entries) ?? true))
             {
@@ -1841,9 +1877,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Global.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)LeveledNpc_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:
@@ -1938,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Global
         private int? _GlobalLocation;
-        public FormLinkNullable<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
+        public IFormLinkNullableGetter<IGlobalGetter> Global => _GlobalLocation.HasValue ? new FormLinkNullable<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _GlobalLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IGlobalGetter>.Null;
         #endregion
         public IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; private set; }
         public IModelGetter? Model { get; private set; }
@@ -2077,13 +2114,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILeveledNpcGetter rhs)) return false;
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILeveledNpcGetter rhs) return false;
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILeveledNpcGetter? obj)
         {
-            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LeveledNpcCommon)((ILeveledNpcGetter)this).CommonInstance()!).GetHashCode(this);

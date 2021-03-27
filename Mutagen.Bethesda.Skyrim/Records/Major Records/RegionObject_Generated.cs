@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Object
-        public FormLink<IRegionTargetGetter> Object { get; set; } = new FormLink<IRegionTargetGetter>();
+        private IFormLink<IRegionTargetGetter> _Object = new FormLink<IRegionTargetGetter>();
+        public IFormLink<IRegionTargetGetter> Object
+        {
+            get => _Object;
+            set => _Object = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IRegionTargetGetter> IRegionObjectGetter.Object => this.Object;
         #endregion
         #region ParentIndex
         public UInt16 ParentIndex { get; set; } = default;
@@ -115,13 +122,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionObjectGetter rhs)) return false;
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionObjectGetter rhs) return false;
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionObjectGetter? obj)
         {
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -921,7 +928,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IRegionObject>,
         IRegionObjectGetter
     {
-        new FormLink<IRegionTargetGetter> Object { get; set; }
+        new IFormLink<IRegionTargetGetter> Object { get; }
         new UInt16 ParentIndex { get; set; }
         new UInt16 Unknown { get; set; }
         new Single Density { get; set; }
@@ -953,7 +960,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionObject_Registration.Instance;
-        FormLink<IRegionTargetGetter> Object { get; }
+        IFormLinkGetter<IRegionTargetGetter> Object { get; }
         UInt16 ParentIndex { get; }
         UInt16 Unknown { get; }
         Single Density { get; }
@@ -1020,11 +1027,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IRegionObjectGetter item,
-            IRegionObjectGetter rhs)
+            IRegionObjectGetter rhs,
+            RegionObject.TranslationMask? equalsMask = null)
         {
             return ((RegionObjectCommon)((IRegionObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1241,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IRegionObject item)
         {
             ClearPartial();
-            item.Object = FormLink<IRegionTargetGetter>.Null;
+            item.Object.Clear();
             item.ParentIndex = default;
             item.Unknown = default;
             item.Density = default;
@@ -1263,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IRegionObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Object = obj.Object.Relink(mapping);
+            obj.Object.Relink(mapping);
         }
         
         #endregion
@@ -1445,27 +1454,79 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionObjectGetter? lhs,
-            IRegionObjectGetter? rhs)
+            IRegionObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
-            if (lhs.ParentIndex != rhs.ParentIndex) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
-            if (lhs.Clustering != rhs.Clustering) return false;
-            if (lhs.MinSlope != rhs.MinSlope) return false;
-            if (lhs.MaxSlope != rhs.MaxSlope) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
-            if (lhs.Radius != rhs.Radius) return false;
-            if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
-            if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
-            if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
-            if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
-            if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
-            if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
+            {
+                if (lhs.ParentIndex != rhs.ParentIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Density) ?? true))
+            {
+                if (!lhs.Density.EqualsWithin(rhs.Density)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Clustering) ?? true))
+            {
+                if (lhs.Clustering != rhs.Clustering) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MinSlope) ?? true))
+            {
+                if (lhs.MinSlope != rhs.MinSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MaxSlope) ?? true))
+            {
+                if (lhs.MaxSlope != rhs.MaxSlope) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.RadiusWrtPercent) ?? true))
+            {
+                if (lhs.RadiusWrtPercent != rhs.RadiusWrtPercent) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Radius) ?? true))
+            {
+                if (lhs.Radius != rhs.Radius) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MinHeight) ?? true))
+            {
+                if (!lhs.MinHeight.EqualsWithin(rhs.MinHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.MaxHeight) ?? true))
+            {
+                if (!lhs.MaxHeight.EqualsWithin(rhs.MaxHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Sink) ?? true))
+            {
+                if (!lhs.Sink.EqualsWithin(rhs.Sink)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.SinkVariance) ?? true))
+            {
+                if (!lhs.SinkVariance.EqualsWithin(rhs.SinkVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.SizeVariance) ?? true))
+            {
+                if (!lhs.SizeVariance.EqualsWithin(rhs.SizeVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.AngleVariance) ?? true))
+            {
+                if (!lhs.AngleVariance.Equals(rhs.AngleVariance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
             return true;
         }
         
@@ -1524,7 +1585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<IRegionTargetGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)RegionObject_FieldIndex.ParentIndex) ?? true))
             {
@@ -1757,9 +1818,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionObject item,
             MutagenFrame frame)
         {
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Object.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadUInt16();
             item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1842,7 +1904,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRegionTargetGetter> Object => new FormLink<IRegionTargetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public UInt16 ParentIndex => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x4, 0x2));
         public UInt16 Unknown => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Single Density => _data.Slice(0x8, 0x4).Float();
@@ -1919,13 +1981,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionObjectGetter rhs)) return false;
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRegionObjectGetter rhs) return false;
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionObjectGetter? obj)
         {
-            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionObjectCommon)((IRegionObjectGetter)this).CommonInstance()!).GetHashCode(this);

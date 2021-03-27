@@ -119,13 +119,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICombatStyleAdvancedGetter rhs) return false;
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICombatStyleAdvancedGetter? obj)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1141,11 +1141,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ICombatStyleAdvancedGetter item,
-            ICombatStyleAdvancedGetter rhs)
+            ICombatStyleAdvancedGetter rhs,
+            CombatStyleAdvanced.TranslationMask? equalsMask = null)
         {
             return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1597,31 +1599,95 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICombatStyleAdvancedGetter? lhs,
-            ICombatStyleAdvancedGetter? rhs)
+            ICombatStyleAdvancedGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult)) return false;
-            if (!lhs.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase)) return false;
-            if (!lhs.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase)) return false;
-            if (!lhs.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult)) return false;
-            if (!lhs.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult)) return false;
-            if (!lhs.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult)) return false;
-            if (!lhs.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult)) return false;
-            if (!lhs.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult)) return false;
-            if (!lhs.DodgeForwardWhileUnderAttackMult.EqualsWithin(rhs.DodgeForwardWhileUnderAttackMult)) return false;
-            if (!lhs.DodgeForwardNotUnderAttackMult.EqualsWithin(rhs.DodgeForwardNotUnderAttackMult)) return false;
-            if (!lhs.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult)) return false;
-            if (!lhs.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase)) return false;
-            if (!lhs.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult)) return false;
-            if (!lhs.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult)) return false;
-            if (!lhs.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult)) return false;
-            if (!lhs.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase)) return false;
-            if (!lhs.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult)) return false;
-            if (!lhs.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult)) return false;
-            if (!lhs.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult)) return false;
-            if (!lhs.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase)) return false;
-            if (!lhs.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult)) return false;
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModMult) ?? true))
+            {
+                if (!lhs.DodgeFatigueModMult.EqualsWithin(rhs.DodgeFatigueModMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeFatigueModBase) ?? true))
+            {
+                if (!lhs.DodgeFatigueModBase.EqualsWithin(rhs.DodgeFatigueModBase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModBase) ?? true))
+            {
+                if (!lhs.EncumbSpeedModBase.EqualsWithin(rhs.EncumbSpeedModBase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.EncumbSpeedModMult) ?? true))
+            {
+                if (!lhs.EncumbSpeedModMult.EqualsWithin(rhs.EncumbSpeedModMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeWhileUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeWhileUnderAttackMult.EqualsWithin(rhs.DodgeWhileUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeNotUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeNotUnderAttackMult.EqualsWithin(rhs.DodgeNotUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackWhileUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeBackWhileUnderAttackMult.EqualsWithin(rhs.DodgeBackWhileUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeBackNotUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeBackNotUnderAttackMult.EqualsWithin(rhs.DodgeBackNotUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardWhileUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeForwardWhileUnderAttackMult.EqualsWithin(rhs.DodgeForwardWhileUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.DodgeForwardNotUnderAttackMult) ?? true))
+            {
+                if (!lhs.DodgeForwardNotUnderAttackMult.EqualsWithin(rhs.DodgeForwardNotUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierMult) ?? true))
+            {
+                if (!lhs.BlockSkillModifierMult.EqualsWithin(rhs.BlockSkillModifierMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockSkillModifierBase) ?? true))
+            {
+                if (!lhs.BlockSkillModifierBase.EqualsWithin(rhs.BlockSkillModifierBase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockWhileUnderAttackMult) ?? true))
+            {
+                if (!lhs.BlockWhileUnderAttackMult.EqualsWithin(rhs.BlockWhileUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.BlockNotUnderAttackMult) ?? true))
+            {
+                if (!lhs.BlockNotUnderAttackMult.EqualsWithin(rhs.BlockNotUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierMult) ?? true))
+            {
+                if (!lhs.AttackSkillModifierMult.EqualsWithin(rhs.AttackSkillModifierMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackSkillModifierBase) ?? true))
+            {
+                if (!lhs.AttackSkillModifierBase.EqualsWithin(rhs.AttackSkillModifierBase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackWhileUnderAttackMult) ?? true))
+            {
+                if (!lhs.AttackWhileUnderAttackMult.EqualsWithin(rhs.AttackWhileUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackNotUnderAttackMult) ?? true))
+            {
+                if (!lhs.AttackNotUnderAttackMult.EqualsWithin(rhs.AttackNotUnderAttackMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.AttackDuringBlockMult) ?? true))
+            {
+                if (!lhs.AttackDuringBlockMult.EqualsWithin(rhs.AttackDuringBlockMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModBase) ?? true))
+            {
+                if (!lhs.PowerAttackFatigueModBase.EqualsWithin(rhs.PowerAttackFatigueModBase)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CombatStyleAdvanced_FieldIndex.PowerAttackFatigueModMult) ?? true))
+            {
+                if (!lhs.PowerAttackFatigueModMult.EqualsWithin(rhs.PowerAttackFatigueModMult)) return false;
+            }
             return true;
         }
         
@@ -2131,13 +2197,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICombatStyleAdvancedGetter rhs)) return false;
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICombatStyleAdvancedGetter rhs) return false;
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICombatStyleAdvancedGetter? obj)
         {
-            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)this).CommonInstance()!).GetHashCode(this);

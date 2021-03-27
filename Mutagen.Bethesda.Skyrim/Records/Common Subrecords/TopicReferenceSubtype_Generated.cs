@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITopicReferenceSubtypeGetter rhs)) return false;
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITopicReferenceSubtypeGetter rhs) return false;
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITopicReferenceSubtypeGetter? obj)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).GetHashCode(this);
@@ -457,11 +457,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITopicReferenceSubtypeGetter item,
-            ITopicReferenceSubtypeGetter rhs)
+            ITopicReferenceSubtypeGetter rhs,
+            TopicReferenceSubtype.TranslationMask? equalsMask = null)
         {
             return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -777,22 +779,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITopicReferenceSubtypeGetter? lhs,
-            ITopicReferenceSubtypeGetter? rhs)
+            ITopicReferenceSubtypeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs)) return false;
-            if (lhs.Subtype != rhs.Subtype) return false;
+            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)TopicReferenceSubtype_FieldIndex.Subtype) ?? true))
+            {
+                if (lhs.Subtype != rhs.Subtype) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IATopicReferenceGetter? lhs,
-            IATopicReferenceGetter? rhs)
+            IATopicReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITopicReferenceSubtypeGetter?)lhs,
-                rhs: rhs as ITopicReferenceSubtypeGetter);
+                rhs: rhs as ITopicReferenceSubtypeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITopicReferenceSubtypeGetter item)
@@ -1114,13 +1122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITopicReferenceSubtypeGetter rhs)) return false;
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITopicReferenceSubtypeGetter rhs) return false;
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITopicReferenceSubtypeGetter? obj)
         {
-            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceSubtypeCommon)((ITopicReferenceSubtypeGetter)this).CommonInstance()!).GetHashCode(this);

@@ -41,7 +41,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region BaseEffect
-        public FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; } = new FormLinkNullable<IMagicEffectGetter>();
+        private IFormLinkNullable<IMagicEffectGetter> _BaseEffect = new FormLinkNullable<IMagicEffectGetter>();
+        public IFormLinkNullable<IMagicEffectGetter> BaseEffect
+        {
+            get => _BaseEffect;
+            set => _BaseEffect = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IMagicEffectGetter> IEffectGetter.BaseEffect => this.BaseEffect;
         #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,13 +92,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectGetter rhs)) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectGetter rhs) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -581,7 +588,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IEffect>
     {
-        new FormLinkNullable<IMagicEffectGetter> BaseEffect { get; set; }
+        new IFormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
         new EffectData? Data { get; set; }
         new ExtendedList<Condition> Conditions { get; }
     }
@@ -599,7 +606,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Effect_Registration.Instance;
-        FormLinkNullable<IMagicEffectGetter> BaseEffect { get; }
+        IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect { get; }
         IEffectDataGetter? Data { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
 
@@ -652,11 +659,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IEffectGetter item,
-            IEffectGetter rhs)
+            IEffectGetter rhs,
+            Effect.TranslationMask? equalsMask = null)
         {
             return ((EffectCommon)((IEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -872,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IEffect item)
         {
             ClearPartial();
-            item.BaseEffect = FormLinkNullable<IMagicEffectGetter>.Null;
+            item.BaseEffect.Clear();
             item.Data = null;
             item.Conditions.Clear();
         }
@@ -880,7 +889,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.BaseEffect = obj.BaseEffect.Relink(mapping);
+            obj.BaseEffect.Relink(mapping);
             obj.Conditions.RemapLinks(mapping);
         }
         
@@ -1016,13 +1025,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IEffectGetter? lhs,
-            IEffectGetter? rhs)
+            IEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.BaseEffect.Equals(rhs.BaseEffect)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
-            if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
+            {
+                if (!lhs.BaseEffect.Equals(rhs.BaseEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Conditions) ?? true))
+            {
+                if (!lhs.Conditions.SequenceEqualNullable(rhs.Conditions)) return false;
+            }
             return true;
         }
         
@@ -1078,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
-                item.BaseEffect = new FormLinkNullable<IMagicEffectGetter>(rhs.BaseEffect.FormKeyNullable);
+                item.BaseEffect.SetTo(rhs.BaseEffect.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
@@ -1222,19 +1241,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IEffectGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IEffectGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IEffectGetter item,
             MutagenWriter writer,
@@ -1251,9 +1257,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            EffectBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public void Write(
@@ -1306,9 +1320,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseEffect = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.BaseEffect.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:
@@ -1320,19 +1335,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.Conditions) return ParseResult.Stop;
-                    EffectBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)Effect_FieldIndex.Conditions;
                 }
                 default:
                     return ParseResult.Stop;
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IEffect item);
 
     }
 
@@ -1400,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         #region BaseEffect
         private int? _BaseEffectLocation;
-        public FormLinkNullable<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
+        public IFormLinkNullableGetter<IMagicEffectGetter> BaseEffect => _BaseEffectLocation.HasValue ? new FormLinkNullable<IMagicEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _BaseEffectLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IMagicEffectGetter>.Null;
         #endregion
         #region Data
         private RangeInt32? _DataLocation;
@@ -1514,13 +1528,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IEffectGetter rhs)) return false;
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IEffectGetter rhs) return false;
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IEffectGetter? obj)
         {
-            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((EffectCommon)((IEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((EffectCommon)((IEffectGetter)this).CommonInstance()!).GetHashCode(this);

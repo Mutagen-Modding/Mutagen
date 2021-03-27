@@ -89,13 +89,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIDataGetter rhs)) return false;
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIDataGetter rhs) return false;
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIDataGetter? obj)
         {
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -811,11 +811,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAIDataGetter item,
-            IAIDataGetter rhs)
+            IAIDataGetter rhs,
+            AIData.TranslationMask? equalsMask = null)
         {
             return ((AIDataCommon)((IAIDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1197,21 +1199,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAIDataGetter? lhs,
-            IAIDataGetter? rhs)
+            IAIDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Aggression != rhs.Aggression) return false;
-            if (lhs.Confidence != rhs.Confidence) return false;
-            if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
-            if (lhs.Responsibility != rhs.Responsibility) return false;
-            if (lhs.Mood != rhs.Mood) return false;
-            if (lhs.Assistance != rhs.Assistance) return false;
-            if (lhs.AggroRadiusBehavior != rhs.AggroRadiusBehavior) return false;
-            if (lhs.Unused != rhs.Unused) return false;
-            if (lhs.Warn != rhs.Warn) return false;
-            if (lhs.WarnOrAttack != rhs.WarnOrAttack) return false;
-            if (lhs.Attack != rhs.Attack) return false;
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Aggression) ?? true))
+            {
+                if (lhs.Aggression != rhs.Aggression) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Confidence) ?? true))
+            {
+                if (lhs.Confidence != rhs.Confidence) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.EnergyLevel) ?? true))
+            {
+                if (lhs.EnergyLevel != rhs.EnergyLevel) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Responsibility) ?? true))
+            {
+                if (lhs.Responsibility != rhs.Responsibility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Mood) ?? true))
+            {
+                if (lhs.Mood != rhs.Mood) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Assistance) ?? true))
+            {
+                if (lhs.Assistance != rhs.Assistance) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.AggroRadiusBehavior) ?? true))
+            {
+                if (lhs.AggroRadiusBehavior != rhs.AggroRadiusBehavior) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Unused) ?? true))
+            {
+                if (lhs.Unused != rhs.Unused) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Warn) ?? true))
+            {
+                if (lhs.Warn != rhs.Warn) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.WarnOrAttack) ?? true))
+            {
+                if (lhs.WarnOrAttack != rhs.WarnOrAttack) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Attack) ?? true))
+            {
+                if (lhs.Attack != rhs.Attack) return false;
+            }
             return true;
         }
         
@@ -1614,13 +1650,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAIDataGetter rhs)) return false;
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAIDataGetter rhs) return false;
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAIDataGetter? obj)
         {
-            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AIDataCommon)((IAIDataGetter)this).CommonInstance()!).GetHashCode(this);

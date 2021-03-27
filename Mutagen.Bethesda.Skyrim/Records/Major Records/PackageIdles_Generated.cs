@@ -47,15 +47,15 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Animations
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLink<IIdleAnimationGetter>>();
-        public ExtendedList<IFormLink<IIdleAnimationGetter>> Animations
+        private ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> _Animations = new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>();
+        public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations
         {
             get => this._Animations;
             protected set => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>> IPackageIdlesGetter.Animations => _Animations;
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> IPackageIdlesGetter.Animations => _Animations;
         #endregion
 
         #endregion
@@ -76,13 +76,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageIdlesGetter rhs)) return false;
-            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageIdlesGetter rhs) return false;
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageIdlesGetter? obj)
         {
-            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -566,7 +566,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PackageIdles.Types Type { get; set; }
         new Single TimerSetting { get; set; }
-        new ExtendedList<IFormLink<IIdleAnimationGetter>> Animations { get; }
+        new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
     }
 
     public partial interface IPackageIdlesGetter :
@@ -584,7 +584,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => PackageIdles_Registration.Instance;
         PackageIdles.Types Type { get; }
         Single TimerSetting { get; }
-        IReadOnlyList<IFormLink<IIdleAnimationGetter>> Animations { get; }
+        IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>> Animations { get; }
 
     }
 
@@ -635,11 +635,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageIdlesGetter item,
-            IPackageIdlesGetter rhs)
+            IPackageIdlesGetter rhs,
+            PackageIdles.TranslationMask? equalsMask = null)
         {
             return ((PackageIdlesCommon)((IPackageIdlesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -981,13 +983,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageIdlesGetter? lhs,
-            IPackageIdlesGetter? rhs)
+            IPackageIdlesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.TimerSetting.EqualsWithin(rhs.TimerSetting)) return false;
-            if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageIdles_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageIdles_FieldIndex.TimerSetting) ?? true))
+            {
+                if (!lhs.TimerSetting.EqualsWithin(rhs.TimerSetting)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)PackageIdles_FieldIndex.Animations) ?? true))
+            {
+                if (!lhs.Animations.SequenceEqualNullable(rhs.Animations)) return false;
+            }
             return true;
         }
         
@@ -1048,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Animations.SetTo(
                         rhs.Animations
-                        .Select(r => (IFormLink<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IIdleAnimationGetter>)new FormLink<IIdleAnimationGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1462,13 +1474,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageIdlesGetter rhs)) return false;
-            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageIdlesGetter rhs) return false;
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageIdlesGetter? obj)
         {
-            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageIdlesCommon)((IPackageIdlesGetter)this).CommonInstance()!).GetHashCode(this);

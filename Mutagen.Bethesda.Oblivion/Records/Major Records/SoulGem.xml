@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="SoulGem" objType="Record" baseClass="AItem" recordType="SLGM" GUID="89d80e87-52e9-4c7c-8a27-bb4303d77edf" ID="96">
+  <Object name="SoulGem" objType="Record" baseClass="OblivionMajorRecord" recordType="SLGM" GUID="89d80e87-52e9-4c7c-8a27-bb4303d77edf" ID="96">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -10,6 +10,7 @@
       <Enum name="ContainedSoul" enumName="SoulLevel" recordType="SOUL" byteLength="1" />
       <Enum name="MaximumCapacity" enumName="SoulLevel" recordType="SLCP" byteLength="1" />
     </Fields>
+    <LinkInterface>IItem</LinkInterface>
   </Object>
   <Object name="SoulGemData" objType="Subrecord" recordType="DATA" GUID="fbd6e35a-823a-449e-9f19-64a248547970" ID="210">
     <Fields>

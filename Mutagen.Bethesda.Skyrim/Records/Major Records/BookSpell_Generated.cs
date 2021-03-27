@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Spell
-        public FormLink<ISpellGetter> Spell { get; set; } = new FormLink<ISpellGetter>();
+        private IFormLink<ISpellGetter> _Spell = new FormLink<ISpellGetter>();
+        public IFormLink<ISpellGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellGetter> IBookSpellGetter.Spell => this.Spell;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSpellGetter rhs)) return false;
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSpellGetter rhs) return false;
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSpellGetter? obj)
         {
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).GetHashCode(this);
@@ -399,7 +406,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkContainer,
         ILoquiObjectSetter<IBookSpell>
     {
-        new FormLink<ISpellGetter> Spell { get; set; }
+        new IFormLink<ISpellGetter> Spell { get; }
     }
 
     public partial interface IBookSpellGetter :
@@ -409,7 +416,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IBookSpellGetter>
     {
         static new ILoquiRegistration Registration => BookSpell_Registration.Instance;
-        FormLink<ISpellGetter> Spell { get; }
+        IFormLinkGetter<ISpellGetter> Spell { get; }
 
     }
 
@@ -460,11 +467,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IBookSpellGetter item,
-            IBookSpellGetter rhs)
+            IBookSpellGetter rhs,
+            BookSpell.TranslationMask? equalsMask = null)
         {
             return ((BookSpellCommon)((IBookSpellGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -640,7 +649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IBookSpell item)
         {
             ClearPartial();
-            item.Spell = FormLink<ISpellGetter>.Null;
+            item.Spell.Clear();
             base.Clear(item);
         }
         
@@ -653,7 +662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IBookSpell obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Spell = obj.Spell.Relink(mapping);
+            obj.Spell.Relink(mapping);
         }
         
         #endregion
@@ -780,22 +789,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBookSpellGetter? lhs,
-            IBookSpellGetter? rhs)
+            IBookSpellGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IBookTeachTargetGetter? lhs,
-            IBookTeachTargetGetter? rhs)
+            IBookTeachTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBookSpellGetter?)lhs,
-                rhs: rhs as IBookSpellGetter);
+                rhs: rhs as IBookSpellGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBookSpellGetter item)
@@ -853,7 +868,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)BookSpell_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<ISpellGetter>(rhs.Spell.FormKey);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
         }
         
@@ -1010,9 +1025,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSpell item,
             MutagenFrame frame)
         {
-            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Spell.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1060,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<ISpellGetter> Spell => new FormLink<ISpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1121,13 +1137,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSpellGetter rhs)) return false;
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSpellGetter rhs) return false;
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSpellGetter? obj)
         {
-            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSpellCommon)((IBookSpellGetter)this).CommonInstance()!).GetHashCode(this);

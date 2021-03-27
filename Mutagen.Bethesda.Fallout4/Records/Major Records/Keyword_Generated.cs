@@ -59,7 +59,14 @@ namespace Mutagen.Bethesda.Fallout4
         Keyword.TypeEnum? IKeywordGetter.Type => this.Type;
         #endregion
         #region AttractionRule
-        public FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; } = new FormLinkNullable<IAttractionRuleGetter>();
+        private IFormLinkNullable<IAttractionRuleGetter> _AttractionRule = new FormLinkNullable<IAttractionRuleGetter>();
+        public IFormLinkNullable<IAttractionRuleGetter> AttractionRule
+        {
+            get => _AttractionRule;
+            set => _AttractionRule = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -110,22 +117,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IKeywordGetter rhs)) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IKeywordGetter? obj)
-        {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -587,6 +578,26 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IKeywordGetter rhs) return false;
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IKeywordGetter? obj)
+        {
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -658,7 +669,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Color? Color { get; set; }
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
-        new FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; set; }
+        new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
     }
@@ -687,7 +698,7 @@ namespace Mutagen.Bethesda.Fallout4
         Color? Color { get; }
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
-        FormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
         ITranslatedStringGetter? Name { get; }
         String? DisplayName { get; }
 
@@ -740,11 +751,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IKeywordGetter item,
-            IKeywordGetter rhs)
+            IKeywordGetter rhs,
+            Keyword.TranslationMask? equalsMask = null)
         {
             return ((KeywordCommon)((IKeywordGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -949,7 +962,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Color = default;
             item.Notes = default;
             item.Type = default;
-            item.AttractionRule = FormLinkNullable<IAttractionRuleGetter>.Null;
+            item.AttractionRule.Clear();
             item.Name = default;
             item.DisplayName = default;
             base.Clear(item);
@@ -969,7 +982,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IKeyword obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AttractionRule = obj.AttractionRule.Relink(mapping);
+            obj.AttractionRule.Relink(mapping);
         }
         
         #endregion
@@ -1167,36 +1180,59 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IKeywordGetter? lhs,
-            IKeywordGetter? rhs)
+            IKeywordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
-            if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Color) ?? true))
+            {
+                if (!lhs.Color.ColorOnlyEquals(rhs.Color)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Notes) ?? true))
+            {
+                if (!string.Equals(lhs.Notes, rhs.Notes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
+            {
+                if (!lhs.AttractionRule.Equals(rhs.AttractionRule)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Keyword_FieldIndex.DisplayName) ?? true))
+            {
+                if (!string.Equals(lhs.DisplayName, rhs.DisplayName)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
-                rhs: rhs as IKeywordGetter);
+                rhs: rhs as IKeywordGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IKeywordGetter?)lhs,
-                rhs: rhs as IKeywordGetter);
+                rhs: rhs as IKeywordGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IKeywordGetter item)
@@ -1276,7 +1312,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IKeyword)item,
+                item: (IKeywordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1287,7 +1323,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IKeyword)item,
+                item: (IKeywordGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1344,7 +1380,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.AttractionRule) ?? true))
             {
-                item.AttractionRule = new FormLinkNullable<IAttractionRuleGetter>(rhs.AttractionRule.FormKeyNullable);
+                item.AttractionRule.SetTo(rhs.AttractionRule.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Keyword_FieldIndex.Name) ?? true))
             {
@@ -1654,9 +1690,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttractionRule = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AttractionRule.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Keyword_FieldIndex.AttractionRule;
                 }
                 case RecordTypeInts.FULL:
@@ -1745,7 +1782,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #endregion
         #region AttractionRule
         private int? _AttractionRuleLocation;
-        public FormLinkNullable<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
+        public IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule => _AttractionRuleLocation.HasValue ? new FormLinkNullable<IAttractionRuleGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AttractionRuleLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAttractionRuleGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -1885,13 +1922,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IKeywordGetter rhs)) return false;
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IKeywordGetter rhs) return false;
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IKeywordGetter? obj)
         {
-            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((KeywordCommon)((IKeywordGetter)this).CommonInstance()!).GetHashCode(this);

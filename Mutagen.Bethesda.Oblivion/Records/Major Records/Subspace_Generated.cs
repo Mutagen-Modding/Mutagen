@@ -61,22 +61,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ISubspaceGetter rhs)) return false;
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ISubspaceGetter? obj)
-        {
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -381,6 +365,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISubspaceGetter rhs) return false;
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ISubspaceGetter? obj)
+        {
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -510,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISubspaceGetter item,
-            ISubspaceGetter rhs)
+            ISubspaceGetter rhs,
+            Subspace.TranslationMask? equalsMask = null)
         {
             return ((SubspaceCommon)((ISubspaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -894,31 +900,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISubspaceGetter? lhs,
-            ISubspaceGetter? rhs)
+            ISubspaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Subspace_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISubspaceGetter?)lhs,
-                rhs: rhs as ISubspaceGetter);
+                rhs: rhs as ISubspaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ISubspaceGetter?)lhs,
-                rhs: rhs as ISubspaceGetter);
+                rhs: rhs as ISubspaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ISubspaceGetter item)
@@ -977,7 +991,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISubspace)item,
+                item: (ISubspaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -988,7 +1002,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ISubspace)item,
+                item: (ISubspaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1448,13 +1462,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISubspaceGetter rhs)) return false;
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ISubspaceGetter rhs) return false;
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISubspaceGetter? obj)
         {
-            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SubspaceCommon)((ISubspaceGetter)this).CommonInstance()!).GetHashCode(this);

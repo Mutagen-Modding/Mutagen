@@ -82,22 +82,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IGrassGetter rhs)) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IGrassGetter? obj)
-        {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             OblivionMajorRecord.Mask<TItem>,
@@ -444,6 +428,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGrassGetter rhs) return false;
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IGrassGetter? obj)
+        {
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -577,11 +581,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IGrassGetter item,
-            IGrassGetter rhs)
+            IGrassGetter rhs,
+            Grass.TranslationMask? equalsMask = null)
         {
             return ((GrassCommon)((IGrassGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -977,32 +983,43 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IGrassGetter? lhs,
-            IGrassGetter? rhs)
+            IGrassGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Grass_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
-                rhs: rhs as IGrassGetter);
+                rhs: rhs as IGrassGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IGrassGetter?)lhs,
-                rhs: rhs as IGrassGetter);
+                rhs: rhs as IGrassGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IGrassGetter item)
@@ -1065,7 +1082,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGrass)item,
+                item: (IGrassGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1076,7 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IGrass)item,
+                item: (IGrassGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1609,13 +1626,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IGrassGetter rhs)) return false;
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IGrassGetter rhs) return false;
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IGrassGetter? obj)
         {
-            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((GrassCommon)((IGrassGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((GrassCommon)((IGrassGetter)this).CommonInstance()!).GetHashCode(this);

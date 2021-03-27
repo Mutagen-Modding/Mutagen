@@ -102,15 +102,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Textures
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ILandTextureGetter>>? _Textures;
-        public ExtendedList<IFormLink<ILandTextureGetter>>? Textures
+        private ExtendedList<IFormLinkGetter<ILandTextureGetter>>? _Textures;
+        public ExtendedList<IFormLinkGetter<ILandTextureGetter>>? Textures
         {
             get => this._Textures;
             set => this._Textures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ILandTextureGetter>>? ILandscapeGetter.Textures => _Textures;
+        IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? ILandscapeGetter.Textures => _Textures;
         #endregion
 
         #endregion
@@ -125,22 +125,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is ILandscapeGetter rhs)) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(ILandscapeGetter? obj)
-        {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -738,6 +722,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILandscapeGetter rhs) return false;
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(ILandscapeGetter? obj)
+        {
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -806,7 +810,7 @@ namespace Mutagen.Bethesda.Oblivion
         new MemorySlice<Byte>? VertexHeightMap { get; set; }
         new MemorySlice<Byte>? VertexColors { get; set; }
         new ExtendedList<BaseLayer> Layers { get; }
-        new ExtendedList<IFormLink<ILandTextureGetter>>? Textures { get; set; }
+        new ExtendedList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; set; }
     }
 
     public partial interface ILandscapeInternal :
@@ -830,7 +834,7 @@ namespace Mutagen.Bethesda.Oblivion
         ReadOnlyMemorySlice<Byte>? VertexHeightMap { get; }
         ReadOnlyMemorySlice<Byte>? VertexColors { get; }
         IReadOnlyList<IBaseLayerGetter> Layers { get; }
-        IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; }
+        IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; }
 
     }
 
@@ -881,11 +885,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ILandscapeGetter item,
-            ILandscapeGetter rhs)
+            ILandscapeGetter rhs,
+            Landscape.TranslationMask? equalsMask = null)
         {
             return ((LandscapeCommon)((ILandscapeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1340,36 +1346,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILandscapeGetter? lhs,
-            ILandscapeGetter? rhs)
+            ILandscapeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
-            if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
-            if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
-            if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.DATA) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.DATA, rhs.DATA)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexNormals) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexNormals, rhs.VertexNormals)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexHeightMap) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexHeightMap, rhs.VertexHeightMap)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.VertexColors) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.VertexColors, rhs.VertexColors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Layers) ?? true))
+            {
+                if (!lhs.Layers.SequenceEqualNullable(rhs.Layers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Landscape_FieldIndex.Textures) ?? true))
+            {
+                if (!lhs.Textures.SequenceEqualNullable(rhs.Textures)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
-                rhs: rhs as ILandscapeGetter);
+                rhs: rhs as ILandscapeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILandscapeGetter?)lhs,
-                rhs: rhs as ILandscapeGetter);
+                rhs: rhs as ILandscapeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILandscapeGetter item)
@@ -1453,7 +1482,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscape)item,
+                item: (ILandscapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1464,7 +1493,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (ILandscape)item,
+                item: (ILandscapeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1584,8 +1613,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Textures = 
                             rhs.Textures
-                            .Select(r => (IFormLink<ILandTextureGetter>)new FormLink<ILandTextureGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<ILandTextureGetter>>();
+                            .Select(r => (IFormLinkGetter<ILandTextureGetter>)new FormLink<ILandTextureGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ILandTextureGetter>>();
                     }
                     else
                     {
@@ -1786,11 +1815,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandTextureGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VTEX),
-                transl: (MutagenWriter subWriter, IFormLink<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1945,10 +1974,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ILandTextureGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<ILandTextureGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ILandTextureGetter>>();
                     return (int)Landscape_FieldIndex.Textures;
                 }
                 default:
@@ -2023,7 +2052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public ReadOnlyMemorySlice<Byte>? VertexColors => _VertexColorsLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _VertexColorsLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
         #endregion
         public IReadOnlyList<IBaseLayerGetter> Layers { get; private set; } = ListExt.Empty<BaseLayerBinaryOverlay>();
-        public IReadOnlyList<IFormLink<ILandTextureGetter>>? Textures { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ILandTextureGetter>>? Textures { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -2135,7 +2164,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLink<ILandTextureGetter>>(
+                    this.Textures = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<ILandTextureGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2169,13 +2198,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILandscapeGetter rhs)) return false;
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not ILandscapeGetter rhs) return false;
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILandscapeGetter? obj)
         {
-            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LandscapeCommon)((ILandscapeGetter)this).CommonInstance()!).GetHashCode(this);

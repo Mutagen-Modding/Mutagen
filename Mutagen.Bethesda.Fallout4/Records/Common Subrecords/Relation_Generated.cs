@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Target
-        public FormLink<IRelatableGetter> Target { get; set; } = new FormLink<IRelatableGetter>();
+        private IFormLink<IRelatableGetter> _Target = new FormLink<IRelatableGetter>();
+        public IFormLink<IRelatableGetter> Target
+        {
+            get => _Target;
+            set => _Target = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IRelatableGetter> IRelationGetter.Target => this.Target;
         #endregion
         #region Modifier
         public Int32 Modifier { get; set; } = default;
@@ -65,13 +72,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelationGetter rhs) return false;
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);
@@ -480,7 +487,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObjectSetter<IRelation>,
         IRelationGetter
     {
-        new FormLink<IRelatableGetter> Target { get; set; }
+        new IFormLink<IRelatableGetter> Target { get; }
         new Int32 Modifier { get; set; }
         new CombatReaction Reaction { get; set; }
     }
@@ -498,7 +505,7 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Relation_Registration.Instance;
-        FormLink<IRelatableGetter> Target { get; }
+        IFormLinkGetter<IRelatableGetter> Target { get; }
         Int32 Modifier { get; }
         CombatReaction Reaction { get; }
 
@@ -551,11 +558,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IRelationGetter item,
-            IRelationGetter rhs)
+            IRelationGetter rhs,
+            Relation.TranslationMask? equalsMask = null)
         {
             return ((RelationCommon)((IRelationGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -759,7 +768,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IRelation item)
         {
             ClearPartial();
-            item.Target = FormLink<IRelatableGetter>.Null;
+            item.Target.Clear();
             item.Modifier = default;
             item.Reaction = default;
         }
@@ -767,7 +776,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public void RemapLinks(IRelation obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Target = obj.Target.Relink(mapping);
+            obj.Target.Relink(mapping);
         }
         
         #endregion
@@ -882,13 +891,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRelationGetter? lhs,
-            IRelationGetter? rhs)
+            IRelationGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Target.Equals(rhs.Target)) return false;
-            if (lhs.Modifier != rhs.Modifier) return false;
-            if (lhs.Reaction != rhs.Reaction) return false;
+            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
+            {
+                if (!lhs.Target.Equals(rhs.Target)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
+            {
+                if (lhs.Modifier != rhs.Modifier) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Reaction) ?? true))
+            {
+                if (lhs.Reaction != rhs.Reaction) return false;
+            }
             return true;
         }
         
@@ -933,7 +952,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Target) ?? true))
             {
-                item.Target = new FormLink<IRelatableGetter>(rhs.Target.FormKey);
+                item.Target.SetTo(rhs.Target.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Relation_FieldIndex.Modifier) ?? true))
             {
@@ -1086,9 +1105,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Target = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Target.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Modifier = frame.ReadInt32();
             item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(frame: frame.SpawnWithLength(4));
         }
@@ -1157,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IRelatableGetter> Target => new FormLink<IRelatableGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Modifier => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public CombatReaction Reaction => (CombatReaction)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
@@ -1221,13 +1241,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRelationGetter rhs)) return false;
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IRelationGetter rhs) return false;
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRelationGetter? obj)
         {
-            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RelationCommon)((IRelationGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RelationCommon)((IRelationGetter)this).CommonInstance()!).GetHashCode(this);

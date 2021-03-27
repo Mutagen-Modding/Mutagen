@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -104,12 +104,12 @@ namespace Mutagen.Bethesda.Skyrim
                     case 2:
                         obj.Unused = frame.ReadUInt16();
                         obj.Alias = frame.ReadInt16();
-                        obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        obj.Object.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                             frame: frame,
                             defaultVal: FormKey.Null);
                         break;
                     case 1:
-                        obj.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        obj.Object.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
                             frame: frame,
                             defaultVal: FormKey.Null);
                         obj.Alias = frame.ReadInt16();

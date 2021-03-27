@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Hazard
-        public FormLink<IHazardGetter> Hazard { get; set; } = new FormLink<IHazardGetter>();
+        private IFormLink<IHazardGetter> _Hazard = new FormLink<IHazardGetter>();
+        public IFormLink<IHazardGetter> Hazard
+        {
+            get => _Hazard;
+            set => _Hazard = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IHazardGetter> IPlacedHazardGetter.Hazard => this.Hazard;
         #endregion
 
         #region To String
@@ -56,22 +63,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IPlacedHazardGetter rhs)) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IPlacedHazardGetter? obj)
-        {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -389,7 +380,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public new static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
+        public static readonly RecordType GrupRecordType = PlacedHazard_Registration.TriggeringRecordType;
         public override IEnumerable<FormLinkInformation> ContainedFormLinks => PlacedHazardCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PlacedHazardSetterCommon.Instance.RemapLinks(this, mapping);
         public PlacedHazard(
@@ -433,6 +424,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedHazardGetter rhs) return false;
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IPlacedHazardGetter? obj)
+        {
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -496,7 +507,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPlacedHazardInternal>,
         IPlacedHazardGetter
     {
-        new FormLink<IHazardGetter> Hazard { get; set; }
+        new IFormLink<IHazardGetter> Hazard { get; }
     }
 
     public partial interface IPlacedHazardInternal :
@@ -514,7 +525,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedHazardGetter>
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
-        FormLink<IHazardGetter> Hazard { get; }
+        IFormLinkGetter<IHazardGetter> Hazard { get; }
 
     }
 
@@ -565,11 +576,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPlacedHazardGetter item,
-            IPlacedHazardGetter rhs)
+            IPlacedHazardGetter rhs,
+            PlacedHazard.TranslationMask? equalsMask = null)
         {
             return ((PlacedHazardCommon)((IPlacedHazardGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -783,16 +796,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPlacedHazardInternal item)
         {
             ClearPartial();
-            item.Hazard = FormLink<IHazardGetter>.Null;
+            item.Hazard.Clear();
             base.Clear(item);
         }
         
         public override void Clear(IAPlacedTrapInternal item)
-        {
-            Clear(item: (IPlacedHazardInternal)item);
-        }
-        
-        public override void Clear(IAPlacedInternal item)
         {
             Clear(item: (IPlacedHazardInternal)item);
         }
@@ -811,7 +819,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPlacedHazard obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Hazard = obj.Hazard.Relink(mapping);
+            obj.Hazard.Relink(mapping);
         }
         
         #endregion
@@ -832,17 +840,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public override void CopyInFromBinary(
             IAPlacedTrapInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (PlacedHazard)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAPlacedInternal item,
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1015,27 +1012,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
-        public static new PlacedHazard_FieldIndex ConvertFieldIndex(APlaced_FieldIndex index)
-        {
-            switch (index)
-            {
-                case APlaced_FieldIndex.MajorRecordFlagsRaw:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormKey:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlaced_FieldIndex.VersionControl:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlaced_FieldIndex.EditorID:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlaced_FieldIndex.FormVersion:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                case APlaced_FieldIndex.Version2:
-                    return (PlacedHazard_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
         public static new PlacedHazard_FieldIndex ConvertFieldIndex(SkyrimMajorRecord_FieldIndex index)
         {
             switch (index)
@@ -1077,49 +1053,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPlacedHazardGetter? lhs,
-            IPlacedHazardGetter? rhs)
+            IPlacedHazardGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs)) return false;
-            if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
+            {
+                if (!lhs.Hazard.Equals(rhs.Hazard)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPlacedTrapGetter? lhs,
-            IAPlacedTrapGetter? rhs)
+            IAPlacedTrapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
-        }
-        
-        public override bool Equals(
-            IAPlacedGetter? lhs,
-            IAPlacedGetter? rhs)
-        {
-            return Equals(
-                lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPlacedHazardGetter?)lhs,
-                rhs: rhs as IPlacedHazardGetter);
+                rhs: rhs as IPlacedHazardGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPlacedHazardGetter item)
@@ -1131,11 +1108,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         public override int GetHashCode(IAPlacedTrapGetter item)
-        {
-            return GetHashCode(item: (IPlacedHazardGetter)item);
-        }
-        
-        public override int GetHashCode(IAPlacedGetter item)
         {
             return GetHashCode(item: (IPlacedHazardGetter)item);
         }
@@ -1175,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new PlacedHazard(formKey, default(SkyrimRelease));
+            var newRec = new PlacedHazard(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1186,18 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedHazard)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override APlaced Duplicate(
-            IAPlacedGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IPlacedHazard)item,
+                item: (IPlacedHazardGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1208,7 +1169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedHazard)item,
+                item: (IPlacedHazardGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1219,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IPlacedHazard)item,
+                item: (IPlacedHazardGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1264,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PlacedHazard_FieldIndex.Hazard) ?? true))
             {
-                item.Hazard = new FormLink<IHazardGetter>(rhs.Hazard.FormKey);
+                item.Hazard.SetTo(rhs.Hazard.FormKey);
             }
         }
         
@@ -1286,36 +1247,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public override void DeepCopyIn(
             IAPlacedTrap item,
             IAPlacedTrapGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedHazard)item,
-                rhs: (IPlacedHazardGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlacedInternal item,
-            IAPlacedGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IPlacedHazardInternal)item,
-                rhs: (IPlacedHazardGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAPlaced item,
-            IAPlacedGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
@@ -1534,17 +1465,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAPlacedGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IPlacedHazardGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             ISkyrimMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1696,13 +1616,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPlacedHazardGetter rhs)) return false;
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IPlacedHazardGetter rhs) return false;
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPlacedHazardGetter? obj)
         {
-            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PlacedHazardCommon)((IPlacedHazardGetter)this).CommonInstance()!).GetHashCode(this);

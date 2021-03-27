@@ -69,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageAdapterGetter rhs)) return false;
-            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageAdapterGetter rhs) return false;
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageAdapterGetter? obj)
         {
-            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).GetHashCode(this);
@@ -485,11 +485,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageAdapterGetter item,
-            IPackageAdapterGetter rhs)
+            IPackageAdapterGetter rhs,
+            PackageAdapter.TranslationMask? equalsMask = null)
         {
             return ((PackageAdapterCommon)((IPackageAdapterGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -822,22 +824,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageAdapterGetter? lhs,
-            IPackageAdapterGetter? rhs)
+            IPackageAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs)) return false;
-            if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
+            if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageAdapter_FieldIndex.ScriptFragments) ?? true))
+            {
+                if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAVirtualMachineAdapterGetter? lhs,
-            IAVirtualMachineAdapterGetter? rhs)
+            IAVirtualMachineAdapterGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageAdapterGetter?)lhs,
-                rhs: rhs as IPackageAdapterGetter);
+                rhs: rhs as IPackageAdapterGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageAdapterGetter item)
@@ -1221,13 +1229,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageAdapterGetter rhs)) return false;
-            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageAdapterGetter rhs) return false;
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageAdapterGetter? obj)
         {
-            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageAdapterCommon)((IPackageAdapterGetter)this).CommonInstance()!).GetHashCode(this);

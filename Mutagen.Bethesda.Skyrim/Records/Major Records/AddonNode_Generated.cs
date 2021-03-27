@@ -78,7 +78,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 NodeIndex { get; set; } = default;
         #endregion
         #region Sound
-        public FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; } = new FormLinkNullable<ISoundDescriptorGetter>();
+        private IFormLinkNullable<ISoundDescriptorGetter> _Sound = new FormLinkNullable<ISoundDescriptorGetter>();
+        public IFormLinkNullable<ISoundDescriptorGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundDescriptorGetter> IAddonNodeGetter.Sound => this.Sound;
         #endregion
         #region MasterParticleSystemCap
         public UInt16 MasterParticleSystemCap { get; set; } = default;
@@ -100,22 +107,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IAddonNodeGetter rhs)) return false;
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IAddonNodeGetter? obj)
-        {
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -630,6 +621,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DNAMDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAddonNodeGetter rhs) return false;
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IAddonNodeGetter? obj)
+        {
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -698,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         new ObjectBounds ObjectBounds { get; set; }
         new Model? Model { get; set; }
         new Int32 NodeIndex { get; set; }
-        new FormLinkNullable<ISoundDescriptorGetter> Sound { get; set; }
+        new IFormLinkNullable<ISoundDescriptorGetter> Sound { get; }
         new UInt16 MasterParticleSystemCap { get; set; }
         new Boolean AlwaysLoaded { get; set; }
         new AddonNode.DNAMDataType DNAMDataTypeState { get; set; }
@@ -725,7 +736,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundsGetter ObjectBounds { get; }
         IModelGetter? Model { get; }
         Int32 NodeIndex { get; }
-        FormLinkNullable<ISoundDescriptorGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundDescriptorGetter> Sound { get; }
         UInt16 MasterParticleSystemCap { get; }
         Boolean AlwaysLoaded { get; }
         AddonNode.DNAMDataType DNAMDataTypeState { get; }
@@ -779,11 +790,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAddonNodeGetter item,
-            IAddonNodeGetter rhs)
+            IAddonNodeGetter rhs,
+            AddonNode.TranslationMask? equalsMask = null)
         {
             return ((AddonNodeCommon)((IAddonNodeGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -989,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ObjectBounds.Clear();
             item.Model = null;
             item.NodeIndex = default;
-            item.Sound = FormLinkNullable<ISoundDescriptorGetter>.Null;
+            item.Sound.Clear();
             item.MasterParticleSystemCap = default;
             item.AlwaysLoaded = default;
             item.DNAMDataTypeState = default;
@@ -1011,7 +1024,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             base.RemapLinks(obj, mapping);
             obj.Model?.RemapLinks(mapping);
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion
@@ -1214,37 +1227,63 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAddonNodeGetter? lhs,
-            IAddonNodeGetter? rhs)
+            IAddonNodeGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.NodeIndex != rhs.NodeIndex) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
-            if (lhs.AlwaysLoaded != rhs.AlwaysLoaded) return false;
-            if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.NodeIndex) ?? true))
+            {
+                if (lhs.NodeIndex != rhs.NodeIndex) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
+            {
+                if (lhs.MasterParticleSystemCap != rhs.MasterParticleSystemCap) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.AlwaysLoaded) ?? true))
+            {
+                if (lhs.AlwaysLoaded != rhs.AlwaysLoaded) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AddonNode_FieldIndex.DNAMDataTypeState) ?? true))
+            {
+                if (lhs.DNAMDataTypeState != rhs.DNAMDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAddonNodeGetter?)lhs,
-                rhs: rhs as IAddonNodeGetter);
+                rhs: rhs as IAddonNodeGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IAddonNodeGetter?)lhs,
-                rhs: rhs as IAddonNodeGetter);
+                rhs: rhs as IAddonNodeGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IAddonNodeGetter item)
@@ -1309,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new AddonNode(formKey, default(SkyrimRelease));
+            var newRec = new AddonNode(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1320,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAddonNode)item,
+                item: (IAddonNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1331,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IAddonNode)item,
+                item: (IAddonNodeGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1428,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundDescriptorGetter>(rhs.Sound.FormKeyNullable);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)AddonNode_FieldIndex.MasterParticleSystemCap) ?? true))
             {
@@ -1760,9 +1799,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Sound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)AddonNode_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DNAM:
@@ -1846,7 +1886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region Sound
         private int? _SoundLocation;
-        public FormLinkNullable<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
+        public IFormLinkNullableGetter<ISoundDescriptorGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundDescriptorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundDescriptorGetter>.Null;
         #endregion
         private int? _DNAMLocation;
         public AddonNode.DNAMDataType DNAMDataTypeState { get; private set; }
@@ -1979,13 +2019,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAddonNodeGetter rhs)) return false;
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IAddonNodeGetter rhs) return false;
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAddonNodeGetter? obj)
         {
-            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AddonNodeCommon)((IAddonNodeGetter)this).CommonInstance()!).GetHashCode(this);

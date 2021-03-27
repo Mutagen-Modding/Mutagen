@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestDataGetter rhs)) return false;
-            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestDataGetter rhs) return false;
+            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestDataGetter? obj)
         {
-            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -514,11 +514,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IQuestDataGetter item,
-            IQuestDataGetter rhs)
+            IQuestDataGetter rhs,
+            QuestData.TranslationMask? equalsMask = null)
         {
             return ((QuestDataCommon)((IQuestDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -837,12 +839,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestDataGetter? lhs,
-            IQuestDataGetter? rhs)
+            IQuestDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.Priority != rhs.Priority) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestData_FieldIndex.Priority) ?? true))
+            {
+                if (lhs.Priority != rhs.Priority) return false;
+            }
             return true;
         }
         
@@ -1161,13 +1170,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestDataGetter rhs)) return false;
-            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestDataGetter rhs) return false;
+            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestDataGetter? obj)
         {
-            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestDataCommon)((IQuestDataGetter)this).CommonInstance()!).GetHashCode(this);

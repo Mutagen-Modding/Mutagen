@@ -44,15 +44,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Items
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IOutfitTargetGetter>>? _Items;
-        public ExtendedList<IFormLink<IOutfitTargetGetter>>? Items
+        private ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? _Items;
+        public ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? Items
         {
             get => this._Items;
             set => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IOutfitTargetGetter>>? IOutfitGetter.Items => _Items;
+        IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? IOutfitGetter.Items => _Items;
         #endregion
 
         #endregion
@@ -67,22 +67,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IOutfitGetter rhs)) return false;
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IOutfitGetter? obj)
-        {
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -484,6 +468,26 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOutfitGetter rhs) return false;
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IOutfitGetter? obj)
+        {
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -546,7 +550,7 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitGetter,
         ISkyrimMajorRecordInternal
     {
-        new ExtendedList<IFormLink<IOutfitTargetGetter>>? Items { get; set; }
+        new ExtendedList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; set; }
     }
 
     public partial interface IOutfitInternal :
@@ -564,7 +568,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IOutfitGetter>
     {
         static new ILoquiRegistration Registration => Outfit_Registration.Instance;
-        IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; }
+        IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; }
 
     }
 
@@ -615,11 +619,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IOutfitGetter item,
-            IOutfitGetter rhs)
+            IOutfitGetter rhs,
+            Outfit.TranslationMask? equalsMask = null)
         {
             return ((OutfitCommon)((IOutfitGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1020,31 +1026,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IOutfitGetter? lhs,
-            IOutfitGetter? rhs)
+            IOutfitGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Outfit_FieldIndex.Items) ?? true))
+            {
+                if (!lhs.Items.SequenceEqualNullable(rhs.Items)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOutfitGetter?)lhs,
-                rhs: rhs as IOutfitGetter);
+                rhs: rhs as IOutfitGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IOutfitGetter?)lhs,
-                rhs: rhs as IOutfitGetter);
+                rhs: rhs as IOutfitGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IOutfitGetter item)
@@ -1096,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Outfit(formKey, default(SkyrimRelease));
+            var newRec = new Outfit(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1107,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1118,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IOutfit)item,
+                item: (IOutfitGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1170,8 +1184,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     {
                         item.Items = 
                             rhs.Items
-                            .Select(r => (IFormLink<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IOutfitTargetGetter>>();
+                            .Select(r => (IFormLinkGetter<IOutfitTargetGetter>)new FormLink<IOutfitTargetGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IOutfitTargetGetter>>();
                     }
                     else
                     {
@@ -1345,11 +1359,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTargetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IOutfitTargetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Items,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
-                transl: (MutagenWriter subWriter, IFormLink<IOutfitTargetGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IOutfitTargetGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1450,10 +1464,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IOutfitTargetGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IOutfitTargetGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IOutfitTargetGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IOutfitTargetGetter>>();
                     return (int)Outfit_FieldIndex.Items;
                 }
                 default:
@@ -1511,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public IReadOnlyList<IFormLink<IOutfitTargetGetter>>? Items { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IOutfitTargetGetter>>? Items { get; private set; }
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1582,7 +1596,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLink<IOutfitTargetGetter>>(
+                    this.Items = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IOutfitTargetGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -1616,13 +1630,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IOutfitGetter rhs)) return false;
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IOutfitGetter rhs) return false;
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IOutfitGetter? obj)
         {
-            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((OutfitCommon)((IOutfitGetter)this).CommonInstance()!).GetHashCode(this);

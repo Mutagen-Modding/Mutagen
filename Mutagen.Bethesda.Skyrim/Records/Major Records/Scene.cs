@@ -1,4 +1,4 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -20,22 +20,6 @@ namespace Mutagen.Bethesda.Skyrim
 
     namespace Internals
     {
-        public partial class SceneBinaryCreateTranslation
-        {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, ISceneInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
-        }
-
-        public partial class SceneBinaryWriteTranslation
-        {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, ISceneGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
-            }
-        }
-
         public partial class SceneBinaryOverlay
         {
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();

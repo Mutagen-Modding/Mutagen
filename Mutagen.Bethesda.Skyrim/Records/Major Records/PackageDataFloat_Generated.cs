@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataFloatGetter rhs)) return false;
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataFloatGetter rhs) return false;
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataFloatGetter? obj)
         {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).GetHashCode(this);
@@ -468,11 +468,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageDataFloatGetter item,
-            IPackageDataFloatGetter rhs)
+            IPackageDataFloatGetter rhs,
+            PackageDataFloat.TranslationMask? equalsMask = null)
         {
             return ((PackageDataFloatCommon)((IPackageDataFloatGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -806,22 +808,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageDataFloatGetter? lhs,
-            IPackageDataFloatGetter? rhs)
+            IPackageDataFloatGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs)) return false;
-            if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageDataFloat_FieldIndex.Data) ?? true))
+            {
+                if (!lhs.Data.EqualsWithin(rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageDataGetter? lhs,
-            IAPackageDataGetter? rhs)
+            IAPackageDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageDataFloatGetter?)lhs,
-                rhs: rhs as IPackageDataFloatGetter);
+                rhs: rhs as IPackageDataFloatGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageDataFloatGetter item)
@@ -1143,13 +1151,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageDataFloatGetter rhs)) return false;
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageDataFloatGetter rhs) return false;
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageDataFloatGetter? obj)
         {
-            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageDataFloatCommon)((IPackageDataFloatGetter)this).CommonInstance()!).GetHashCode(this);

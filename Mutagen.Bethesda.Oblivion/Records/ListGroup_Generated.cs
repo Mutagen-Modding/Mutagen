@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IListGroupGetter<T> rhs)) return false;
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
+            if (obj is not IListGroupGetter<T> rhs) return false;
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IListGroupGetter<T>? obj)
         {
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<T, TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -281,7 +281,21 @@ namespace Mutagen.Bethesda.Oblivion
         {
             return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: null);
+        }
+
+        public static bool Equals<T, T_TranslMask>(
+            this IListGroupGetter<T> item,
+            IListGroupGetter<T> rhs,
+            ListGroup.TranslationMask<T_TranslMask> equalsMask)
+            where T : class, ICellBlockGetter, IBinaryItem
+            where T_TranslMask : CellBlock.TranslationMask, ITranslationMask
+        {
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)item).CommonInstance(typeof(T))!).Equals(
+                lhs: item,
+                rhs: rhs,
+                crystal: equalsMask.GetCrystal());
         }
 
         public static void DeepCopyIn<T, TGetter>(
@@ -448,11 +462,11 @@ namespace Mutagen.Bethesda.Oblivion
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords<T>(
             this IListGroup<T> obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
             where T : class, ICellBlock, IBinaryItem
         {
-            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumerateMajorRecords(
+            return ((ListGroupSetterCommon<T>)((IListGroupGetter<T>)obj).CommonSetterInstance(typeof(T))!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -781,6 +795,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IListGroup<T> obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             IListGroup<T> obj,
             Type type,
@@ -957,13 +980,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IListGroupGetter<T>? lhs,
-            IListGroupGetter<T>? rhs)
+            IListGroupGetter<T>? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Type != rhs.Type) return false;
-            if (lhs.LastModified != rhs.LastModified) return false;
-            if (!lhs.Records.SequenceEqualNullable(rhs.Records)) return false;
+            if ((crystal?.GetShouldTranslate((int)ListGroup_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ListGroup_FieldIndex.LastModified) ?? true))
+            {
+                if (lhs.LastModified != rhs.LastModified) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ListGroup_FieldIndex.Records) ?? true))
+            {
+                if (!lhs.Records.SequenceEqualNullable(rhs.Records)) return false;
+            }
             return true;
         }
         
@@ -1004,6 +1037,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     yield return item;
                 }
             }
+        }
+        
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            IListGroupGetter<T> obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -1481,13 +1523,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IListGroupGetter<T> rhs)) return false;
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs);
+            if (obj is not IListGroupGetter<T> rhs) return false;
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IListGroupGetter<T>? obj)
         {
-            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj);
+            return ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ListGroupCommon<T>)((IListGroupGetter<T>)this).CommonInstance(typeof(T))!).GetHashCode(this);

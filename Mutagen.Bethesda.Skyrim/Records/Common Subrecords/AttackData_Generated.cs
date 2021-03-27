@@ -46,7 +46,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Chance { get; set; } = default;
         #endregion
         #region Spell
-        public FormLink<IASpellGetter> Spell { get; set; } = new FormLink<IASpellGetter>();
+        private IFormLink<ISpellRecordGetter> _Spell = new FormLink<ISpellRecordGetter>();
+        public IFormLink<ISpellRecordGetter> Spell
+        {
+            get => _Spell;
+            set => _Spell = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISpellRecordGetter> IAttackDataGetter.Spell => this.Spell;
         #endregion
         #region Flags
         public AttackData.Flag Flags { get; set; } = default;
@@ -61,7 +68,14 @@ namespace Mutagen.Bethesda.Skyrim
         public Single Stagger { get; set; } = default;
         #endregion
         #region AttackType
-        public FormLink<IKeywordGetter> AttackType { get; set; } = new FormLink<IKeywordGetter>();
+        private IFormLink<IKeywordGetter> _AttackType = new FormLink<IKeywordGetter>();
+        public IFormLink<IKeywordGetter> AttackType
+        {
+            get => _AttackType;
+            set => _AttackType = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IKeywordGetter> IAttackDataGetter.AttackType => this.AttackType;
         #endregion
         #region Knockdown
         public Single Knockdown { get; set; } = default;
@@ -89,13 +103,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackDataGetter rhs)) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackDataGetter rhs) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -730,12 +744,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new Single DamageMult { get; set; }
         new Single Chance { get; set; }
-        new FormLink<IASpellGetter> Spell { get; set; }
+        new IFormLink<ISpellRecordGetter> Spell { get; }
         new AttackData.Flag Flags { get; set; }
         new Single AttackAngle { get; set; }
         new Single StrikeAngle { get; set; }
         new Single Stagger { get; set; }
-        new FormLink<IKeywordGetter> AttackType { get; set; }
+        new IFormLink<IKeywordGetter> AttackType { get; }
         new Single Knockdown { get; set; }
         new Single RecoveryTime { get; set; }
         new Single StaminaMult { get; set; }
@@ -756,12 +770,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => AttackData_Registration.Instance;
         Single DamageMult { get; }
         Single Chance { get; }
-        FormLink<IASpellGetter> Spell { get; }
+        IFormLinkGetter<ISpellRecordGetter> Spell { get; }
         AttackData.Flag Flags { get; }
         Single AttackAngle { get; }
         Single StrikeAngle { get; }
         Single Stagger { get; }
-        FormLink<IKeywordGetter> AttackType { get; }
+        IFormLinkGetter<IKeywordGetter> AttackType { get; }
         Single Knockdown { get; }
         Single RecoveryTime { get; }
         Single StaminaMult { get; }
@@ -815,11 +829,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAttackDataGetter item,
-            IAttackDataGetter rhs)
+            IAttackDataGetter rhs,
+            AttackData.TranslationMask? equalsMask = null)
         {
             return ((AttackDataCommon)((IAttackDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1033,12 +1049,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ClearPartial();
             item.DamageMult = default;
             item.Chance = default;
-            item.Spell = FormLink<IASpellGetter>.Null;
+            item.Spell.Clear();
             item.Flags = default;
             item.AttackAngle = default;
             item.StrikeAngle = default;
             item.Stagger = default;
-            item.AttackType = FormLink<IKeywordGetter>.Null;
+            item.AttackType.Clear();
             item.Knockdown = default;
             item.RecoveryTime = default;
             item.StaminaMult = default;
@@ -1047,8 +1063,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Mutagen
         public void RemapLinks(IAttackData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Spell = obj.Spell.Relink(mapping);
-            obj.AttackType = obj.AttackType.Relink(mapping);
+            obj.Spell.Relink(mapping);
+            obj.AttackType.Relink(mapping);
         }
         
         #endregion
@@ -1203,21 +1219,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAttackDataGetter? lhs,
-            IAttackDataGetter? rhs)
+            IAttackDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
-            if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
-            if (!lhs.Spell.Equals(rhs.Spell)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.AttackAngle.EqualsWithin(rhs.AttackAngle)) return false;
-            if (!lhs.StrikeAngle.EqualsWithin(rhs.StrikeAngle)) return false;
-            if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
-            if (!lhs.AttackType.Equals(rhs.AttackType)) return false;
-            if (!lhs.Knockdown.EqualsWithin(rhs.Knockdown)) return false;
-            if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
-            if (!lhs.StaminaMult.EqualsWithin(rhs.StaminaMult)) return false;
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.DamageMult) ?? true))
+            {
+                if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Chance) ?? true))
+            {
+                if (!lhs.Chance.EqualsWithin(rhs.Chance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
+            {
+                if (!lhs.Spell.Equals(rhs.Spell)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.AttackAngle) ?? true))
+            {
+                if (!lhs.AttackAngle.EqualsWithin(rhs.AttackAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StrikeAngle) ?? true))
+            {
+                if (!lhs.StrikeAngle.EqualsWithin(rhs.StrikeAngle)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Stagger) ?? true))
+            {
+                if (!lhs.Stagger.EqualsWithin(rhs.Stagger)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
+            {
+                if (!lhs.AttackType.Equals(rhs.AttackType)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
+            {
+                if (!lhs.Knockdown.EqualsWithin(rhs.Knockdown)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.RecoveryTime) ?? true))
+            {
+                if (!lhs.RecoveryTime.EqualsWithin(rhs.RecoveryTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.StaminaMult) ?? true))
+            {
+                if (!lhs.StaminaMult.EqualsWithin(rhs.StaminaMult)) return false;
+            }
             return true;
         }
         
@@ -1279,7 +1329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Spell) ?? true))
             {
-                item.Spell = new FormLink<IASpellGetter>(rhs.Spell.FormKey);
+                item.Spell.SetTo(rhs.Spell.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Flags) ?? true))
             {
@@ -1299,7 +1349,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.AttackType) ?? true))
             {
-                item.AttackType = new FormLink<IKeywordGetter>(rhs.AttackType.FormKey);
+                item.AttackType.SetTo(rhs.AttackType.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)AttackData_FieldIndex.Knockdown) ?? true))
             {
@@ -1484,16 +1534,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.DamageMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Chance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Spell = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Spell.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<AttackData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.AttackAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StrikeAngle = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Stagger = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AttackType = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.AttackType.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Knockdown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.RecoveryTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.StaminaMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
@@ -1565,12 +1617,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single DamageMult => _data.Slice(0x0, 0x4).Float();
         public Single Chance => _data.Slice(0x4, 0x4).Float();
-        public FormLink<IASpellGetter> Spell => new FormLink<IASpellGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
+        public IFormLinkGetter<ISpellRecordGetter> Spell => new FormLink<ISpellRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
         public AttackData.Flag Flags => (AttackData.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0xC, 0x4));
         public Single AttackAngle => _data.Slice(0x10, 0x4).Float();
         public Single StrikeAngle => _data.Slice(0x14, 0x4).Float();
         public Single Stagger => _data.Slice(0x18, 0x4).Float();
-        public FormLink<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
+        public IFormLinkGetter<IKeywordGetter> AttackType => new FormLink<IKeywordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x1C, 0x4))));
         public Single Knockdown => _data.Slice(0x20, 0x4).Float();
         public Single RecoveryTime => _data.Slice(0x24, 0x4).Float();
         public Single StaminaMult => _data.Slice(0x28, 0x4).Float();
@@ -1635,13 +1687,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAttackDataGetter rhs)) return false;
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAttackDataGetter rhs) return false;
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAttackDataGetter? obj)
         {
-            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AttackDataCommon)((IAttackDataGetter)this).CommonInstance()!).GetHashCode(this);

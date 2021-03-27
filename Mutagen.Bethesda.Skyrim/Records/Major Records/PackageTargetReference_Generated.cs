@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<ISkyrimMajorRecordGetter> Reference { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Reference = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IPackageTargetReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetReferenceGetter rhs)) return false;
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetReferenceGetter rhs) return false;
+            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetReferenceGetter? obj)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -407,7 +414,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IPackageTargetReference>,
         IPackageTargetReferenceGetter
     {
-        new FormLink<ISkyrimMajorRecordGetter> Reference { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Reference { get; }
     }
 
     public partial interface IPackageTargetReferenceGetter :
@@ -417,7 +424,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IPackageTargetReferenceGetter>
     {
         static new ILoquiRegistration Registration => PackageTargetReference_Registration.Instance;
-        FormLink<ISkyrimMajorRecordGetter> Reference { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Reference { get; }
 
     }
 
@@ -468,11 +475,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IPackageTargetReferenceGetter item,
-            IPackageTargetReferenceGetter rhs)
+            IPackageTargetReferenceGetter rhs,
+            PackageTargetReference.TranslationMask? equalsMask = null)
         {
             return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -649,7 +658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IPackageTargetReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.Reference.Clear();
             base.Clear(item);
         }
         
@@ -662,7 +671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IPackageTargetReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -791,22 +800,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IPackageTargetReferenceGetter? lhs,
-            IPackageTargetReferenceGetter? rhs)
+            IPackageTargetReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs)) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if (!base.Equals((IAPackageTargetGetter)lhs, (IAPackageTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)PackageTargetReference_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IAPackageTargetGetter? lhs,
-            IAPackageTargetGetter? rhs)
+            IAPackageTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IPackageTargetReferenceGetter?)lhs,
-                rhs: rhs as IPackageTargetReferenceGetter);
+                rhs: rhs as IPackageTargetReferenceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IPackageTargetReferenceGetter item)
@@ -864,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)PackageTargetReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<ISkyrimMajorRecordGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
         }
         
@@ -1027,9 +1042,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1077,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Reference => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0xC, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1138,13 +1154,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IPackageTargetReferenceGetter rhs)) return false;
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IPackageTargetReferenceGetter rhs) return false;
+            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IPackageTargetReferenceGetter? obj)
         {
-            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((PackageTargetReferenceCommon)((IPackageTargetReferenceGetter)this).CommonInstance()!).GetHashCode(this);

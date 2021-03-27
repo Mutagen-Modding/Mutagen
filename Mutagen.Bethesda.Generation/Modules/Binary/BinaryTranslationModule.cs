@@ -1341,6 +1341,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     prop.Add($"{nameof(WritingBundle.StringsWriter)} = stringsWriter");
                 }
+                prop.Add($"{nameof(WritingBundle.CleanNulls)} = param.{nameof(BinaryWriteParameters.CleanNulls)}");
             }
             fg.AppendLine("using var memStream = new MemoryTributary();");
             using (var args = new ArgsWrapper(fg,
@@ -3251,11 +3252,13 @@ namespace Mutagen.Bethesda.Generation
                 await obj.GenerateToStringCode(fg);
 
                 obj.GenerateEqualsSection(fg);
+                await MajorRecordLinkEqualityModule.Generate(obj, fg);
 
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
                 }
+
             }
             fg.AppendLine();
         }

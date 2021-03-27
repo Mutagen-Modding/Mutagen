@@ -29,9 +29,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-    <PackageReference Include="Loqui" Version="2.8.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.8.0" />
+    <PackageReference Include="Loqui" Version="2.12.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.12.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -83,9 +84,12 @@
     <Compile Include="Enums\StringsSource.cs" />
     <Compile Include="Exceptions\BsaException.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
+    <Compile Include="Exceptions\MissingRecordException.cs" />
     <Compile Include="Exceptions\RecordCollisionException.cs" />
     <Compile Include="Exceptions\RecordException.cs" />
     <Compile Include="Exceptions\SubrecordException.cs" />
+    <Compile Include="Extensions\IGroupMixIns.cs" />
+    <Compile Include="Extensions\DuplicateFromMixIn.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
     <Compile Include="Extensions\FormLinkListMixIn.cs" />
     <Compile Include="Extensions\FormLinkMixIn.cs" />
@@ -96,6 +100,10 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
+    <Compile Include="Implicits\ImplicitRecordFormKeys.cs" />
+    <Compile Include="Implicits\ImplicitListings.cs" />
+    <Compile Include="Implicits\ImplicitBaseMasters.cs" />
+    <Compile Include="Ini\Ini.cs" />
     <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
     <Compile Include="Interfaces\IGameSettingCommon.cs" />
     <Compile Include="Interfaces\IGroup.cs" />
@@ -121,6 +129,7 @@
     <Compile Include="Links\Cache\LinkCacheItem.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlyIdentifiers.cs" />
     <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
+    <Compile Include="Links\FormLinkInformation.cs" />
     <Compile Include="Links\FormLinkNullable.cs" />
     <Compile Include="Links\IFormLink.cs" />
     <Compile Include="Links\Cache\ILinkCache.cs" />
@@ -128,13 +137,17 @@
     <Compile Include="Links\Cache\Preferences\LinkCachePreferences.cs" />
     <Compile Include="Links\Cache\MutableModLinkCache.cs" />
     <Compile Include="Links\Cache\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Links\FormLinkTypelessComparer.cs" />
     <Compile Include="Load Order\CreationClubListings.cs" />
-    <Compile Include="Load Order\ImplicitListings.cs" />
     <Compile Include="Load Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
     <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Load Order\PluginListings.cs" />
+    <Compile Include="Persistance\IPersistentFormKeyAllocator.cs" />
+    <Compile Include="Persistance\ISharedFormKeyAllocator.cs" />
+    <Compile Include="Persistance\TextFileSharedFormKeyAllocator.cs" />
+    <Compile Include="Implicits\Implicits.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />

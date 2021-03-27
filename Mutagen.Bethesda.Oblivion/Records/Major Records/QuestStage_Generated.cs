@@ -74,13 +74,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestStageGetter rhs)) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestStageGetter rhs) return false;
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);
@@ -605,11 +605,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IQuestStageGetter item,
-            IQuestStageGetter rhs)
+            IQuestStageGetter rhs,
+            QuestStage.TranslationMask? equalsMask = null)
         {
             return ((QuestStageCommon)((IQuestStageGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -944,12 +946,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IQuestStageGetter? lhs,
-            IQuestStageGetter? rhs)
+            IQuestStageGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Stage != rhs.Stage) return false;
-            if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
+            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
+            {
+                if (lhs.Stage != rhs.Stage) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.LogEntries) ?? true))
+            {
+                if (!lhs.LogEntries.SequenceEqualNullable(rhs.LogEntries)) return false;
+            }
             return true;
         }
         
@@ -1376,13 +1385,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IQuestStageGetter rhs)) return false;
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IQuestStageGetter rhs) return false;
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IQuestStageGetter? obj)
         {
-            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((QuestStageCommon)((IQuestStageGetter)this).CommonInstance()!).GetHashCode(this);

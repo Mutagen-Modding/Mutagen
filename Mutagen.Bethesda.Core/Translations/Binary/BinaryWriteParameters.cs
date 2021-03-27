@@ -272,7 +272,12 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Optional StringsWriter override, for mods that are able to localize.
         /// </summary>
-        public StringsWriter? StringsWriter;
+        public StringsWriter? StringsWriter { get; set; }
+
+        /// <summary>
+        /// If a FormID has all zeros for the ID, but a non-zero mod index, then set mod index to zero as well.
+        /// </summary>
+        public bool CleanNulls { get; set; } = true;
 
         /// <summary>
         /// Aligns a mod's ModKey to a path's implied ModKey.

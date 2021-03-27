@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Sound
-        public FormLinkNullable<ISoundGetter> Sound { get; set; } = new FormLinkNullable<ISoundGetter>();
+        private IFormLinkNullable<ISoundGetter> _Sound = new FormLinkNullable<ISoundGetter>();
+        public IFormLinkNullable<ISoundGetter> Sound
+        {
+            get => _Sound;
+            set => _Sound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<ISoundGetter> ISoundItemGetter.Sound => this.Sound;
         #endregion
         #region Chance
         public Byte? Chance { get; set; }
@@ -64,13 +71,13 @@ namespace Mutagen.Bethesda.Oblivion
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundItemGetter rhs)) return false;
-            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundItemGetter rhs) return false;
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundItemGetter? obj)
         {
-            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).GetHashCode(this);
@@ -450,7 +457,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILoquiObjectSetter<ISoundItem>,
         ISoundItemGetter
     {
-        new FormLinkNullable<ISoundGetter> Sound { get; set; }
+        new IFormLinkNullable<ISoundGetter> Sound { get; }
         new Byte? Chance { get; set; }
     }
 
@@ -467,7 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SoundItem_Registration.Instance;
-        FormLinkNullable<ISoundGetter> Sound { get; }
+        IFormLinkNullableGetter<ISoundGetter> Sound { get; }
         Byte? Chance { get; }
 
     }
@@ -519,11 +526,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this ISoundItemGetter item,
-            ISoundItemGetter rhs)
+            ISoundItemGetter rhs,
+            SoundItem.TranslationMask? equalsMask = null)
         {
             return ((SoundItemCommon)((ISoundItemGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -737,14 +746,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(ISoundItem item)
         {
             ClearPartial();
-            item.Sound = FormLinkNullable<ISoundGetter>.Null;
+            item.Sound.Clear();
             item.Chance = default;
         }
         
         #region Mutagen
         public void RemapLinks(ISoundItem obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Sound = obj.Sound.Relink(mapping);
+            obj.Sound.Relink(mapping);
         }
         
         #endregion
@@ -853,12 +862,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISoundItemGetter? lhs,
-            ISoundItemGetter? rhs)
+            ISoundItemGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Sound.Equals(rhs.Sound)) return false;
-            if (lhs.Chance != rhs.Chance) return false;
+            if ((crystal?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
+            {
+                if (!lhs.Sound.Equals(rhs.Sound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
+            {
+                if (lhs.Chance != rhs.Chance) return false;
+            }
             return true;
         }
         
@@ -908,7 +924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Sound) ?? true))
             {
-                item.Sound = new FormLinkNullable<ISoundGetter>(rhs.Sound.FormKeyNullable);
+                item.Sound.SetTo(rhs.Sound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)SoundItem_FieldIndex.Chance) ?? true))
             {
@@ -1071,9 +1087,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Sound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:
@@ -1154,7 +1171,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         #region Sound
         private int? _SoundLocation;
-        public FormLinkNullable<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
+        public IFormLinkNullableGetter<ISoundGetter> Sound => _SoundLocation.HasValue ? new FormLinkNullable<ISoundGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<ISoundGetter>.Null;
         #endregion
         #region Chance
         private int? _ChanceLocation;
@@ -1249,13 +1266,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISoundItemGetter rhs)) return false;
-            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISoundItemGetter rhs) return false;
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISoundItemGetter? obj)
         {
-            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SoundItemCommon)((ISoundItemGetter)this).CommonInstance()!).GetHashCode(this);

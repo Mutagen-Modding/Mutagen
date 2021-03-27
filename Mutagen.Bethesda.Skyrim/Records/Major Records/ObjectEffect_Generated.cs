@@ -114,10 +114,24 @@ namespace Mutagen.Bethesda.Skyrim
         public Single ChargeTime { get; set; } = default;
         #endregion
         #region BaseEnchantment
-        public FormLink<IObjectEffectGetter> BaseEnchantment { get; set; } = new FormLink<IObjectEffectGetter>();
+        private IFormLink<IObjectEffectGetter> _BaseEnchantment = new FormLink<IObjectEffectGetter>();
+        public IFormLink<IObjectEffectGetter> BaseEnchantment
+        {
+            get => _BaseEnchantment;
+            set => _BaseEnchantment = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IObjectEffectGetter> IObjectEffectGetter.BaseEnchantment => this.BaseEnchantment;
         #endregion
         #region WornRestrictions
-        public FormLink<IFormListGetter> WornRestrictions { get; set; } = new FormLink<IFormListGetter>();
+        private IFormLink<IFormListGetter> _WornRestrictions = new FormLink<IFormListGetter>();
+        public IFormLink<IFormListGetter> WornRestrictions
+        {
+            get => _WornRestrictions;
+            set => _WornRestrictions = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFormListGetter> IObjectEffectGetter.WornRestrictions => this.WornRestrictions;
         #endregion
         #region Effects
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,22 +161,6 @@ namespace Mutagen.Bethesda.Skyrim
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IObjectEffectGetter rhs)) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IObjectEffectGetter? obj)
-        {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -914,6 +912,26 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IObjectEffectGetter rhs) return false;
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IObjectEffectGetter? obj)
+        {
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -992,8 +1010,8 @@ namespace Mutagen.Bethesda.Skyrim
         new TargetType TargetType { get; set; }
         new ObjectEffect.EnchantTypeEnum EnchantType { get; set; }
         new Single ChargeTime { get; set; }
-        new FormLink<IObjectEffectGetter> BaseEnchantment { get; set; }
-        new FormLink<IFormListGetter> WornRestrictions { get; set; }
+        new IFormLink<IObjectEffectGetter> BaseEnchantment { get; }
+        new IFormLink<IFormListGetter> WornRestrictions { get; }
         new ExtendedList<Effect> Effects { get; }
         new ObjectEffect.ENITDataType ENITDataTypeState { get; set; }
     }
@@ -1029,8 +1047,8 @@ namespace Mutagen.Bethesda.Skyrim
         TargetType TargetType { get; }
         ObjectEffect.EnchantTypeEnum EnchantType { get; }
         Single ChargeTime { get; }
-        FormLink<IObjectEffectGetter> BaseEnchantment { get; }
-        FormLink<IFormListGetter> WornRestrictions { get; }
+        IFormLinkGetter<IObjectEffectGetter> BaseEnchantment { get; }
+        IFormLinkGetter<IFormListGetter> WornRestrictions { get; }
         IReadOnlyList<IEffectGetter> Effects { get; }
         ObjectEffect.ENITDataType ENITDataTypeState { get; }
 
@@ -1083,11 +1101,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IObjectEffectGetter item,
-            IObjectEffectGetter rhs)
+            IObjectEffectGetter rhs,
+            ObjectEffect.TranslationMask? equalsMask = null)
         {
             return ((ObjectEffectCommon)((IObjectEffectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1305,8 +1325,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.TargetType = default;
             item.EnchantType = default;
             item.ChargeTime = default;
-            item.BaseEnchantment = FormLink<IObjectEffectGetter>.Null;
-            item.WornRestrictions = FormLink<IFormListGetter>.Null;
+            item.BaseEnchantment.Clear();
+            item.WornRestrictions.Clear();
             item.Effects.Clear();
             item.ENITDataTypeState = default;
             base.Clear(item);
@@ -1326,8 +1346,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IObjectEffect obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.BaseEnchantment = obj.BaseEnchantment.Relink(mapping);
-            obj.WornRestrictions = obj.WornRestrictions.Relink(mapping);
+            obj.BaseEnchantment.Relink(mapping);
+            obj.WornRestrictions.Relink(mapping);
             obj.Effects.RemapLinks(mapping);
         }
         
@@ -1574,43 +1594,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IObjectEffectGetter? lhs,
-            IObjectEffectGetter? rhs)
+            IObjectEffectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
-            if (!object.Equals(lhs.Name, rhs.Name)) return false;
-            if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.CastType != rhs.CastType) return false;
-            if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
-            if (lhs.TargetType != rhs.TargetType) return false;
-            if (lhs.EnchantType != rhs.EnchantType) return false;
-            if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
-            if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
-            if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
-            if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
-            if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ObjectBounds) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Name) ?? true))
+            {
+                if (!object.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentCost) ?? true))
+            {
+                if (lhs.EnchantmentCost != rhs.EnchantmentCost) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.CastType) ?? true))
+            {
+                if (lhs.CastType != rhs.CastType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantmentAmount) ?? true))
+            {
+                if (lhs.EnchantmentAmount != rhs.EnchantmentAmount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.TargetType) ?? true))
+            {
+                if (lhs.TargetType != rhs.TargetType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.EnchantType) ?? true))
+            {
+                if (lhs.EnchantType != rhs.EnchantType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ChargeTime) ?? true))
+            {
+                if (!lhs.ChargeTime.EqualsWithin(rhs.ChargeTime)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
+            {
+                if (!lhs.BaseEnchantment.Equals(rhs.BaseEnchantment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
+            {
+                if (!lhs.WornRestrictions.Equals(rhs.WornRestrictions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
+            {
+                if (!lhs.Effects.SequenceEqualNullable(rhs.Effects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ObjectEffect_FieldIndex.ENITDataTypeState) ?? true))
+            {
+                if (lhs.ENITDataTypeState != rhs.ENITDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
-                rhs: rhs as IObjectEffectGetter);
+                rhs: rhs as IObjectEffectGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IObjectEffectGetter?)lhs,
-                rhs: rhs as IObjectEffectGetter);
+                rhs: rhs as IObjectEffectGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IObjectEffectGetter item)
@@ -1676,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ObjectEffect(formKey, default(SkyrimRelease));
+            var newRec = new ObjectEffect(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1687,7 +1751,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectEffect)item,
+                item: (IObjectEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1698,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IObjectEffect)item,
+                item: (IObjectEffectGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1797,11 +1861,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.BaseEnchantment) ?? true))
             {
-                item.BaseEnchantment = new FormLink<IObjectEffectGetter>(rhs.BaseEnchantment.FormKey);
+                item.BaseEnchantment.SetTo(rhs.BaseEnchantment.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.WornRestrictions) ?? true))
             {
-                item.WornRestrictions = new FormLink<IFormListGetter>(rhs.WornRestrictions.FormKey);
+                item.WornRestrictions.SetTo(rhs.WornRestrictions.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ObjectEffect_FieldIndex.Effects) ?? true))
             {
@@ -2168,17 +2232,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BaseEnchantment = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.BaseEnchantment.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     if (dataFrame.Complete)
                     {
                         item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                         return (int)ObjectEffect_FieldIndex.BaseEnchantment;
                     }
-                    item.WornRestrictions = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.WornRestrictions.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }
                 case RecordTypeInts.EFID:
@@ -2305,12 +2371,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region BaseEnchantment
         private int _BaseEnchantmentLocation => _ENITLocation!.Value + 0x1C;
         private bool _BaseEnchantment_IsSet => _ENITLocation.HasValue;
-        public FormLink<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
+        public IFormLinkGetter<IObjectEffectGetter> BaseEnchantment => _BaseEnchantment_IsSet ? new FormLink<IObjectEffectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_BaseEnchantmentLocation, 0x4)))) : FormLink<IObjectEffectGetter>.Null;
         #endregion
         #region WornRestrictions
         private int _WornRestrictionsLocation => _ENITLocation!.Value + 0x20;
         private bool _WornRestrictions_IsSet => _ENITLocation.HasValue && !ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0);
-        public FormLink<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
+        public IFormLinkGetter<IFormListGetter> WornRestrictions => _WornRestrictions_IsSet ? new FormLink<IFormListGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_WornRestrictionsLocation, 0x4)))) : FormLink<IFormListGetter>.Null;
         #endregion
         public IReadOnlyList<IEffectGetter> Effects { get; private set; } = ListExt.Empty<EffectBinaryOverlay>();
         partial void CustomFactoryEnd(
@@ -2436,13 +2502,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IObjectEffectGetter rhs)) return false;
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IObjectEffectGetter rhs) return false;
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IObjectEffectGetter? obj)
         {
-            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ObjectEffectCommon)((IObjectEffectGetter)this).CommonInstance()!).GetHashCode(this);

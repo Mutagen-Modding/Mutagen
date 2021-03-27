@@ -54,7 +54,14 @@ namespace Mutagen.Bethesda.Oblivion
         Color? IRegionGetter.MapColor => this.MapColor;
         #endregion
         #region Worldspace
-        public FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; } = new FormLinkNullable<IWorldspaceGetter>();
+        private IFormLinkNullable<IWorldspaceGetter> _Worldspace = new FormLinkNullable<IWorldspaceGetter>();
+        public IFormLinkNullable<IWorldspaceGetter> Worldspace
+        {
+            get => _Worldspace;
+            set => _Worldspace = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IWorldspaceGetter> IRegionGetter.Worldspace => this.Worldspace;
         #endregion
         #region Areas
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -136,22 +143,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IRegionGetter rhs)) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IRegionGetter? obj)
-        {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -795,6 +786,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRegionGetter rhs) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IRegionGetter? obj)
+        {
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -859,7 +870,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? Icon { get; set; }
         new Color? MapColor { get; set; }
-        new FormLinkNullable<IWorldspaceGetter> Worldspace { get; set; }
+        new IFormLinkNullable<IWorldspaceGetter> Worldspace { get; }
         new ExtendedList<RegionArea> Areas { get; }
         new RegionObjects? Objects { get; set; }
         new RegionWeather? Weather { get; set; }
@@ -885,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Region_Registration.Instance;
         String? Icon { get; }
         Color? MapColor { get; }
-        FormLinkNullable<IWorldspaceGetter> Worldspace { get; }
+        IFormLinkNullableGetter<IWorldspaceGetter> Worldspace { get; }
         IReadOnlyList<IRegionAreaGetter> Areas { get; }
         IRegionObjectsGetter? Objects { get; }
         IRegionWeatherGetter? Weather { get; }
@@ -942,11 +953,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IRegionGetter item,
-            IRegionGetter rhs)
+            IRegionGetter rhs,
+            Region.TranslationMask? equalsMask = null)
         {
             return ((RegionCommon)((IRegionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1152,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ClearPartial();
             item.Icon = default;
             item.MapColor = default;
-            item.Worldspace = FormLinkNullable<IWorldspaceGetter>.Null;
+            item.Worldspace.Clear();
             item.Areas.Clear();
             item.Objects = null;
             item.Weather = null;
@@ -1176,7 +1189,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IRegion obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Worldspace = obj.Worldspace.Relink(mapping);
+            obj.Worldspace.Relink(mapping);
             obj.Objects?.RemapLinks(mapping);
             obj.Weather?.RemapLinks(mapping);
             obj.Grasses?.RemapLinks(mapping);
@@ -1430,39 +1443,71 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRegionGetter? lhs,
-            IRegionGetter? rhs)
+            IRegionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
-            if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
-            if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
-            if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
-            if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
-            if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
-            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
+            {
+                if (!lhs.MapColor.ColorOnlyEquals(rhs.MapColor)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
+            {
+                if (!lhs.Worldspace.Equals(rhs.Worldspace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
+            {
+                if (!lhs.Areas.SequenceEqualNullable(rhs.Areas)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
+            {
+                if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
+            {
+                if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapName) ?? true))
+            {
+                if (!object.Equals(lhs.MapName, rhs.MapName)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
+            {
+                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
+            {
+                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter);
+                rhs: rhs as IRegionGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRegionGetter?)lhs,
-                rhs: rhs as IRegionGetter);
+                rhs: rhs as IRegionGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRegionGetter item)
@@ -1579,7 +1624,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegion)item,
+                item: (IRegionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1590,7 +1635,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRegion)item,
+                item: (IRegionGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1643,7 +1688,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Worldspace) ?? true))
             {
-                item.Worldspace = new FormLinkNullable<IWorldspaceGetter>(rhs.Worldspace.FormKeyNullable);
+                item.Worldspace.SetTo(rhs.Worldspace.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Region_FieldIndex.Areas) ?? true))
             {
@@ -2104,9 +2149,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Worldspace.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
@@ -2199,7 +2245,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Worldspace
         private int? _WorldspaceLocation;
-        public FormLinkNullable<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
+        public IFormLinkNullableGetter<IWorldspaceGetter> Worldspace => _WorldspaceLocation.HasValue ? new FormLinkNullable<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _WorldspaceLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IWorldspaceGetter>.Null;
         #endregion
         public IReadOnlyList<IRegionAreaGetter> Areas { get; private set; } = ListExt.Empty<RegionAreaBinaryOverlay>();
         #region RegionAreaLogic
@@ -2334,13 +2380,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRegionGetter rhs)) return false;
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRegionGetter rhs) return false;
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRegionGetter? obj)
         {
-            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RegionCommon)((IRegionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RegionCommon)((IRegionGetter)this).CommonInstance()!).GetHashCode(this);

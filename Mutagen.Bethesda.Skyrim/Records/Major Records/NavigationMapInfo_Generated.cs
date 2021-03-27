@@ -41,7 +41,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region NavigationMesh
-        public FormLink<IANavigationMeshGetter> NavigationMesh { get; set; } = new FormLink<IANavigationMeshGetter>();
+        private IFormLink<IANavigationMeshGetter> _NavigationMesh = new FormLink<IANavigationMeshGetter>();
+        public IFormLink<IANavigationMeshGetter> NavigationMesh
+        {
+            get => _NavigationMesh;
+            set => _NavigationMesh = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IANavigationMeshGetter> INavigationMapInfoGetter.NavigationMesh => this.NavigationMesh;
         #endregion
         #region Unknown
         public Int32 Unknown { get; set; } = default;
@@ -54,29 +61,29 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region MergedTo
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo
+        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _MergedTo = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
             protected set => this._MergedTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.MergedTo => _MergedTo;
         #endregion
 
         #endregion
         #region PreferredMerges
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges
+        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _PreferredMerges = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
             protected set => this._PreferredMerges = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavigationMapInfoGetter.PreferredMerges => _PreferredMerges;
         #endregion
 
         #endregion
@@ -109,13 +116,27 @@ namespace Mutagen.Bethesda.Skyrim
         public Int32 Unknown2 { get; set; } = default;
         #endregion
         #region ParentWorldspace
-        public FormLink<IWorldspaceGetter> ParentWorldspace { get; set; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _ParentWorldspace = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> ParentWorldspace
+        {
+            get => _ParentWorldspace;
+            set => _ParentWorldspace = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> INavigationMapInfoGetter.ParentWorldspace => this.ParentWorldspace;
         #endregion
         #region ParentWorldspaceCoord
         public P2Int16 ParentWorldspaceCoord { get; set; } = default;
         #endregion
         #region ParentCell
-        public FormLink<ICellGetter> ParentCell { get; set; } = new FormLink<ICellGetter>();
+        private IFormLink<ICellGetter> _ParentCell = new FormLink<ICellGetter>();
+        public IFormLink<ICellGetter> ParentCell
+        {
+            get => _ParentCell;
+            set => _ParentCell = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ICellGetter> INavigationMapInfoGetter.ParentCell => this.ParentCell;
         #endregion
 
         #region To String
@@ -134,13 +155,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMapInfoGetter rhs)) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationMapInfoGetter rhs) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1029,18 +1050,18 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavigationMapInfo>,
         INavigationMapInfoGetter
     {
-        new FormLink<IANavigationMeshGetter> NavigationMesh { get; set; }
+        new IFormLink<IANavigationMeshGetter> NavigationMesh { get; }
         new Int32 Unknown { get; set; }
         new P3Float Point { get; set; }
         new UInt32 PreferredMergesFlag { get; set; }
-        new ExtendedList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
-        new ExtendedList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
+        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
         new ExtendedList<LinkedDoor> LinkedDoors { get; }
         new IslandData? Island { get; set; }
         new Int32 Unknown2 { get; set; }
-        new FormLink<IWorldspaceGetter> ParentWorldspace { get; set; }
+        new IFormLink<IWorldspaceGetter> ParentWorldspace { get; }
         new P2Int16 ParentWorldspaceCoord { get; set; }
-        new FormLink<ICellGetter> ParentCell { get; set; }
+        new IFormLink<ICellGetter> ParentCell { get; }
     }
 
     public partial interface INavigationMapInfoGetter :
@@ -1056,18 +1077,18 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavigationMapInfo_Registration.Instance;
-        FormLink<IANavigationMeshGetter> NavigationMesh { get; }
+        IFormLinkGetter<IANavigationMeshGetter> NavigationMesh { get; }
         Int32 Unknown { get; }
         P3Float Point { get; }
         UInt32 PreferredMergesFlag { get; }
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo { get; }
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges { get; }
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo { get; }
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges { get; }
         IReadOnlyList<ILinkedDoorGetter> LinkedDoors { get; }
         IIslandDataGetter? Island { get; }
         Int32 Unknown2 { get; }
-        FormLink<IWorldspaceGetter> ParentWorldspace { get; }
+        IFormLinkGetter<IWorldspaceGetter> ParentWorldspace { get; }
         P2Int16 ParentWorldspaceCoord { get; }
-        FormLink<ICellGetter> ParentCell { get; }
+        IFormLinkGetter<ICellGetter> ParentCell { get; }
 
     }
 
@@ -1118,11 +1139,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavigationMapInfoGetter item,
-            INavigationMapInfoGetter rhs)
+            INavigationMapInfoGetter rhs,
+            NavigationMapInfo.TranslationMask? equalsMask = null)
         {
             return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1335,7 +1358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(INavigationMapInfo item)
         {
             ClearPartial();
-            item.NavigationMesh = FormLink<IANavigationMeshGetter>.Null;
+            item.NavigationMesh.Clear();
             item.Unknown = default;
             item.Point = default;
             item.PreferredMergesFlag = default;
@@ -1344,20 +1367,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LinkedDoors.Clear();
             item.Island = null;
             item.Unknown2 = default;
-            item.ParentWorldspace = FormLink<IWorldspaceGetter>.Null;
+            item.ParentWorldspace.Clear();
             item.ParentWorldspaceCoord = default;
-            item.ParentCell = FormLink<ICellGetter>.Null;
+            item.ParentCell.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(INavigationMapInfo obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.NavigationMesh = obj.NavigationMesh.Relink(mapping);
+            obj.NavigationMesh.Relink(mapping);
             obj.MergedTo.RemapLinks(mapping);
             obj.PreferredMerges.RemapLinks(mapping);
             obj.LinkedDoors.RemapLinks(mapping);
-            obj.ParentWorldspace = obj.ParentWorldspace.Relink(mapping);
-            obj.ParentCell = obj.ParentCell.Relink(mapping);
+            obj.ParentWorldspace.Relink(mapping);
+            obj.ParentCell.Relink(mapping);
         }
         
         #endregion
@@ -1573,22 +1596,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavigationMapInfoGetter? lhs,
-            INavigationMapInfoGetter? rhs)
+            INavigationMapInfoGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.Point.Equals(rhs.Point)) return false;
-            if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
-            if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
-            if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
-            if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
-            if (!object.Equals(lhs.Island, rhs.Island)) return false;
-            if (lhs.Unknown2 != rhs.Unknown2) return false;
-            if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
-            if (!lhs.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord)) return false;
-            if (!lhs.ParentCell.Equals(rhs.ParentCell)) return false;
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
+            {
+                if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Point) ?? true))
+            {
+                if (!lhs.Point.Equals(rhs.Point)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMergesFlag) ?? true))
+            {
+                if (lhs.PreferredMergesFlag != rhs.PreferredMergesFlag) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.MergedTo) ?? true))
+            {
+                if (!lhs.MergedTo.SequenceEqualNullable(rhs.MergedTo)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.PreferredMerges) ?? true))
+            {
+                if (!lhs.PreferredMerges.SequenceEqualNullable(rhs.PreferredMerges)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.LinkedDoors) ?? true))
+            {
+                if (!lhs.LinkedDoors.SequenceEqualNullable(rhs.LinkedDoors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
+            {
+                if (!object.Equals(lhs.Island, rhs.Island)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
+            {
+                if (!lhs.ParentWorldspace.Equals(rhs.ParentWorldspace)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
+            {
+                if (!lhs.ParentWorldspaceCoord.Equals(rhs.ParentWorldspaceCoord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
+            {
+                if (!lhs.ParentCell.Equals(rhs.ParentCell)) return false;
+            }
             return true;
         }
         
@@ -1659,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
-                item.NavigationMesh = new FormLink<IANavigationMeshGetter>(rhs.NavigationMesh.FormKey);
+                item.NavigationMesh.SetTo(rhs.NavigationMesh.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown) ?? true))
             {
@@ -1680,7 +1740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MergedTo.SetTo(
                         rhs.MergedTo
-                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1699,7 +1759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PreferredMerges.SetTo(
                         rhs.PreferredMerges
-                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1767,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspace) ?? true))
             {
-                item.ParentWorldspace = new FormLink<IWorldspaceGetter>(rhs.ParentWorldspace.FormKey);
+                item.ParentWorldspace.SetTo(rhs.ParentWorldspace.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentWorldspaceCoord) ?? true))
             {
@@ -1775,7 +1835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.ParentCell) ?? true))
             {
-                item.ParentCell = new FormLink<ICellGetter>(rhs.ParentCell.FormKey);
+                item.ParentCell.SetTo(rhs.ParentCell.FormKey);
             }
         }
         
@@ -1907,21 +1967,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Point);
             writer.Write(item.PreferredMergesFlag);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MergedTo,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PreferredMerges,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1988,19 +2048,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfo item,
             MutagenFrame frame)
         {
-            item.NavigationMesh = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.NavigationMesh.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Unknown = frame.ReadInt32();
             item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -2014,9 +2075,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.ParentWorldspace.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);
@@ -2094,16 +2156,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IANavigationMeshGetter> NavigationMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IANavigationMeshGetter> NavigationMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
         #region MergedTo
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int MergedToEndingPos;
         #endregion
         #region PreferredMerges
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(MergedToEndingPos), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int PreferredMergesEndingPos;
         #endregion
         #region LinkedDoors
@@ -2116,7 +2178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         partial void CustomIslandEndPos();
         #endregion
         public Int32 Unknown2 => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(IslandEndingPos, 0x4));
-        public FormLink<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
+        public IFormLinkGetter<IWorldspaceGetter> ParentWorldspace => new FormLink<IWorldspaceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(IslandEndingPos + 0x4, 0x4))));
         #region ParentParseLogic
         partial void ParentParseLogicCustomParse(
             OverlayStream stream,
@@ -2187,13 +2249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavigationMapInfoGetter rhs)) return false;
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavigationMapInfoGetter rhs) return false;
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavigationMapInfoGetter? obj)
         {
-            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavigationMapInfoCommon)((INavigationMapInfoGetter)this).CommonInstance()!).GetHashCode(this);

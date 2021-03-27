@@ -50,6 +50,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly RecordType KWDA = new RecordType(0x4144574B);
         public static readonly RecordType KYWD = new RecordType(0x4457594B);
         public static readonly RecordType LCRT = new RecordType(0x5452434C);
+        public static readonly RecordType LVSP = new RecordType(0x5053564C);
         public static readonly RecordType MAST = new RecordType(0x5453414D);
         public static readonly RecordType MISC = new RecordType(0x4353494D);
         public static readonly RecordType MNAM = new RecordType(0x4D414E4D);

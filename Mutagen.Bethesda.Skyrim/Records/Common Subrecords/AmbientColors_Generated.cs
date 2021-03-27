@@ -84,13 +84,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmbientColorsGetter rhs)) return false;
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAmbientColorsGetter rhs) return false;
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmbientColorsGetter? obj)
         {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);
@@ -752,11 +752,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IAmbientColorsGetter item,
-            IAmbientColorsGetter rhs)
+            IAmbientColorsGetter rhs,
+            AmbientColors.TranslationMask? equalsMask = null)
         {
             return ((AmbientColorsCommon)((IAmbientColorsGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1120,19 +1122,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IAmbientColorsGetter? lhs,
-            IAmbientColorsGetter? rhs)
+            IAmbientColorsGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus)) return false;
-            if (!lhs.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus)) return false;
-            if (!lhs.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus)) return false;
-            if (!lhs.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus)) return false;
-            if (!lhs.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus)) return false;
-            if (!lhs.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus)) return false;
-            if (!lhs.Specular.ColorOnlyEquals(rhs.Specular)) return false;
-            if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXPlus) ?? true))
+            {
+                if (!lhs.DirectionalXPlus.ColorOnlyEquals(rhs.DirectionalXPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalXMinus) ?? true))
+            {
+                if (!lhs.DirectionalXMinus.ColorOnlyEquals(rhs.DirectionalXMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYPlus) ?? true))
+            {
+                if (!lhs.DirectionalYPlus.ColorOnlyEquals(rhs.DirectionalYPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalYMinus) ?? true))
+            {
+                if (!lhs.DirectionalYMinus.ColorOnlyEquals(rhs.DirectionalYMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZPlus) ?? true))
+            {
+                if (!lhs.DirectionalZPlus.ColorOnlyEquals(rhs.DirectionalZPlus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.DirectionalZMinus) ?? true))
+            {
+                if (!lhs.DirectionalZMinus.ColorOnlyEquals(rhs.DirectionalZMinus)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.Specular) ?? true))
+            {
+                if (!lhs.Specular.ColorOnlyEquals(rhs.Specular)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)AmbientColors_FieldIndex.Scale) ?? true))
+            {
+                if (!lhs.Scale.EqualsWithin(rhs.Scale)) return false;
+            }
             return true;
         }
         
@@ -1525,13 +1555,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IAmbientColorsGetter rhs)) return false;
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IAmbientColorsGetter rhs) return false;
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IAmbientColorsGetter? obj)
         {
-            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((AmbientColorsCommon)((IAmbientColorsGetter)this).CommonInstance()!).GetHashCode(this);

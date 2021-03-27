@@ -77,13 +77,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMapGetter rhs)) return false;
-            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMapGetter rhs) return false;
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMapGetter? obj)
         {
-            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).GetHashCode(this);
@@ -684,11 +684,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceMapGetter item,
-            IWorldspaceMapGetter rhs)
+            IWorldspaceMapGetter rhs,
+            WorldspaceMap.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceMapCommon)((IWorldspaceMapGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1042,17 +1044,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceMapGetter? lhs,
-            IWorldspaceMapGetter? rhs)
+            IWorldspaceMapGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
-            if (!lhs.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords)) return false;
-            if (!lhs.SoutheastCellCoords.Equals(rhs.SoutheastCellCoords)) return false;
-            if (!lhs.CameraMinHeight.EqualsWithin(rhs.CameraMinHeight)) return false;
-            if (!lhs.CameraMaxHeight.EqualsWithin(rhs.CameraMaxHeight)) return false;
-            if (!lhs.CameraInitialPitch.EqualsWithin(rhs.CameraInitialPitch)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.UsableDimensions) ?? true))
+            {
+                if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.NorthwestCellCoords) ?? true))
+            {
+                if (!lhs.NorthwestCellCoords.Equals(rhs.NorthwestCellCoords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.SoutheastCellCoords) ?? true))
+            {
+                if (!lhs.SoutheastCellCoords.Equals(rhs.SoutheastCellCoords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.CameraMinHeight) ?? true))
+            {
+                if (!lhs.CameraMinHeight.EqualsWithin(rhs.CameraMinHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.CameraMaxHeight) ?? true))
+            {
+                if (!lhs.CameraMaxHeight.EqualsWithin(rhs.CameraMaxHeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceMap_FieldIndex.CameraInitialPitch) ?? true))
+            {
+                if (!lhs.CameraInitialPitch.EqualsWithin(rhs.CameraInitialPitch)) return false;
+            }
             return true;
         }
         
@@ -1430,13 +1454,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceMapGetter rhs)) return false;
-            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceMapGetter rhs) return false;
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceMapGetter? obj)
         {
-            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceMapCommon)((IWorldspaceMapGetter)this).CommonInstance()!).GetHashCode(this);

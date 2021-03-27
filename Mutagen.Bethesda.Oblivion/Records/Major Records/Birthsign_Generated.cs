@@ -69,15 +69,15 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Spells
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<ISpellGetter>> _Spells = new ExtendedList<IFormLink<ISpellGetter>>();
-        public ExtendedList<IFormLink<ISpellGetter>> Spells
+        private ExtendedList<IFormLinkGetter<ISpellGetter>> _Spells = new ExtendedList<IFormLinkGetter<ISpellGetter>>();
+        public ExtendedList<IFormLinkGetter<ISpellGetter>> Spells
         {
             get => this._Spells;
             protected set => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<ISpellGetter>> IBirthsignGetter.Spells => _Spells;
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>> IBirthsignGetter.Spells => _Spells;
         #endregion
 
         #endregion
@@ -92,22 +92,6 @@ namespace Mutagen.Bethesda.Oblivion
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IBirthsignGetter rhs)) return false;
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IBirthsignGetter? obj)
-        {
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -574,6 +558,26 @@ namespace Mutagen.Bethesda.Oblivion
             this.EditorID = editorID;
         }
 
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IBirthsignGetter rhs) return false;
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IBirthsignGetter? obj)
+        {
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -641,7 +645,7 @@ namespace Mutagen.Bethesda.Oblivion
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
-        new ExtendedList<IFormLink<ISpellGetter>> Spells { get; }
+        new ExtendedList<IFormLinkGetter<ISpellGetter>> Spells { get; }
     }
 
     public partial interface IBirthsignInternal :
@@ -664,7 +668,7 @@ namespace Mutagen.Bethesda.Oblivion
         String? Name { get; }
         String? Icon { get; }
         String? Description { get; }
-        IReadOnlyList<IFormLink<ISpellGetter>> Spells { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; }
 
     }
 
@@ -715,11 +719,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IBirthsignGetter item,
-            IBirthsignGetter rhs)
+            IBirthsignGetter rhs,
+            Birthsign.TranslationMask? equalsMask = null)
         {
             return ((BirthsignCommon)((IBirthsignGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1140,34 +1146,51 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBirthsignGetter? lhs,
-            IBirthsignGetter? rhs)
+            IBirthsignGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Icon) ?? true))
+            {
+                if (!string.Equals(lhs.Icon, rhs.Icon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Birthsign_FieldIndex.Spells) ?? true))
+            {
+                if (!lhs.Spells.SequenceEqualNullable(rhs.Spells)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBirthsignGetter?)lhs,
-                rhs: rhs as IBirthsignGetter);
+                rhs: rhs as IBirthsignGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBirthsignGetter?)lhs,
-                rhs: rhs as IBirthsignGetter);
+                rhs: rhs as IBirthsignGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBirthsignGetter item)
@@ -1239,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBirthsign)item,
+                item: (IBirthsignGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1250,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IBirthsign)item,
+                item: (IBirthsignGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1312,7 +1335,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         rhs.Spells
-                        .Select(r => (IFormLink<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<ISpellGetter>)new FormLink<ISpellGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1496,10 +1519,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
-                transl: (MutagenWriter subWriter, IFormLink<ISpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1624,7 +1647,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SPLO:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<ISpellGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1701,7 +1724,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         private int? _DescriptionLocation;
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
-        public IReadOnlyList<IFormLink<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLink<ISpellGetter>>();
+        public IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; private set; } = ListExt.Empty<IFormLinkGetter<ISpellGetter>>();
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1785,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 case RecordTypeInts.SPLO:
                 {
-                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLink<ISpellGetter>>(
+                    this.Spells = BinaryOverlayList.FactoryByArray<IFormLinkGetter<ISpellGetter>>(
                         mem: stream.RemainingMemory,
                         package: _package,
                         getter: (s, p) => new FormLink<ISpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))),
@@ -1823,13 +1846,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBirthsignGetter rhs)) return false;
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IBirthsignGetter rhs) return false;
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBirthsignGetter? obj)
         {
-            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BirthsignCommon)((IBirthsignGetter)this).CommonInstance()!).GetHashCode(this);

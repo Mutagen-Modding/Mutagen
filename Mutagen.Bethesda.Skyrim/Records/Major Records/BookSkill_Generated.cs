@@ -63,13 +63,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSkillGetter rhs)) return false;
-            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSkillGetter rhs) return false;
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSkillGetter? obj)
         {
-            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).GetHashCode(this);
@@ -455,11 +455,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IBookSkillGetter item,
-            IBookSkillGetter rhs)
+            IBookSkillGetter rhs,
+            BookSkill.TranslationMask? equalsMask = null)
         {
             return ((BookSkillCommon)((IBookSkillGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -775,22 +777,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IBookSkillGetter? lhs,
-            IBookSkillGetter? rhs)
+            IBookSkillGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs)) return false;
-            if (lhs.Skill != rhs.Skill) return false;
+            if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)BookSkill_FieldIndex.Skill) ?? true))
+            {
+                if (lhs.Skill != rhs.Skill) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IBookTeachTargetGetter? lhs,
-            IBookTeachTargetGetter? rhs)
+            IBookTeachTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IBookSkillGetter?)lhs,
-                rhs: rhs as IBookSkillGetter);
+                rhs: rhs as IBookSkillGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IBookSkillGetter item)
@@ -1127,13 +1135,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IBookSkillGetter rhs)) return false;
-            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IBookSkillGetter rhs) return false;
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IBookSkillGetter? obj)
         {
-            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((BookSkillCommon)((IBookSkillGetter)this).CommonInstance()!).GetHashCode(this);

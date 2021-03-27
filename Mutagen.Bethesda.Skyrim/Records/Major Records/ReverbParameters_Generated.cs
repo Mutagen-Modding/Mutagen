@@ -95,22 +95,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IReverbParametersGetter rhs)) return false;
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IReverbParametersGetter? obj)
-        {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -774,6 +758,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IReverbParametersGetter rhs) return false;
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IReverbParametersGetter? obj)
+        {
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -927,11 +931,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IReverbParametersGetter item,
-            IReverbParametersGetter rhs)
+            IReverbParametersGetter rhs,
+            ReverbParameters.TranslationMask? equalsMask = null)
         {
             return ((ReverbParametersCommon)((IReverbParametersGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1397,43 +1403,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IReverbParametersGetter? lhs,
-            IReverbParametersGetter? rhs)
+            IReverbParametersGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (lhs.DecayMilliseconds != rhs.DecayMilliseconds) return false;
-            if (lhs.HfReferenceHertz != rhs.HfReferenceHertz) return false;
-            if (lhs.RoomFilter != rhs.RoomFilter) return false;
-            if (lhs.RoomHfFilter != rhs.RoomHfFilter) return false;
-            if (lhs.Reflections != rhs.Reflections) return false;
-            if (lhs.ReverbAmp != rhs.ReverbAmp) return false;
-            if (!lhs.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio)) return false;
-            if (lhs.ReflectDelayMS != rhs.ReflectDelayMS) return false;
-            if (lhs.ReverbDelayMS != rhs.ReverbDelayMS) return false;
-            if (lhs.DiffusionPercent != rhs.DiffusionPercent) return false;
-            if (lhs.DensityPercent != rhs.DensityPercent) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayMilliseconds) ?? true))
+            {
+                if (lhs.DecayMilliseconds != rhs.DecayMilliseconds) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.HfReferenceHertz) ?? true))
+            {
+                if (lhs.HfReferenceHertz != rhs.HfReferenceHertz) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomFilter) ?? true))
+            {
+                if (lhs.RoomFilter != rhs.RoomFilter) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.RoomHfFilter) ?? true))
+            {
+                if (lhs.RoomHfFilter != rhs.RoomHfFilter) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Reflections) ?? true))
+            {
+                if (lhs.Reflections != rhs.Reflections) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbAmp) ?? true))
+            {
+                if (lhs.ReverbAmp != rhs.ReverbAmp) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DecayHfRatio) ?? true))
+            {
+                if (!lhs.DecayHfRatio.EqualsWithin(rhs.DecayHfRatio)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReflectDelayMS) ?? true))
+            {
+                if (lhs.ReflectDelayMS != rhs.ReflectDelayMS) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.ReverbDelayMS) ?? true))
+            {
+                if (lhs.ReverbDelayMS != rhs.ReverbDelayMS) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DiffusionPercent) ?? true))
+            {
+                if (lhs.DiffusionPercent != rhs.DiffusionPercent) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DensityPercent) ?? true))
+            {
+                if (lhs.DensityPercent != rhs.DensityPercent) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ReverbParameters_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IReverbParametersGetter?)lhs,
-                rhs: rhs as IReverbParametersGetter);
+                rhs: rhs as IReverbParametersGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IReverbParametersGetter?)lhs,
-                rhs: rhs as IReverbParametersGetter);
+                rhs: rhs as IReverbParametersGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IReverbParametersGetter item)
@@ -1490,7 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new ReverbParameters(formKey, default(SkyrimRelease));
+            var newRec = new ReverbParameters(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1501,7 +1551,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IReverbParameters)item,
+                item: (IReverbParametersGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1512,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IReverbParameters)item,
+                item: (IReverbParametersGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2117,13 +2167,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IReverbParametersGetter rhs)) return false;
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IReverbParametersGetter rhs) return false;
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IReverbParametersGetter? obj)
         {
-            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ReverbParametersCommon)((IReverbParametersGetter)this).CommonInstance()!).GetHashCode(this);

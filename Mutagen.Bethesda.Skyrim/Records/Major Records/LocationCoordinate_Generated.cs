@@ -40,7 +40,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Location
-        public FormLink<IComplexLocationGetter> Location { get; set; } = new FormLink<IComplexLocationGetter>();
+        private IFormLink<IComplexLocationGetter> _Location = new FormLink<IComplexLocationGetter>();
+        public IFormLink<IComplexLocationGetter> Location
+        {
+            get => _Location;
+            set => _Location = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IComplexLocationGetter> ILocationCoordinateGetter.Location => this.Location;
         #endregion
         #region Coordinates
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,13 +80,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCoordinateGetter rhs)) return false;
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCoordinateGetter rhs) return false;
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCoordinateGetter? obj)
         {
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);
@@ -532,7 +539,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILocationCoordinateGetter,
         ILoquiObjectSetter<ILocationCoordinate>
     {
-        new FormLink<IComplexLocationGetter> Location { get; set; }
+        new IFormLink<IComplexLocationGetter> Location { get; }
         new ExtendedList<P2Int16> Coordinates { get; }
     }
 
@@ -549,7 +556,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocationCoordinate_Registration.Instance;
-        FormLink<IComplexLocationGetter> Location { get; }
+        IFormLinkGetter<IComplexLocationGetter> Location { get; }
         IReadOnlyList<P2Int16> Coordinates { get; }
 
     }
@@ -601,11 +608,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ILocationCoordinateGetter item,
-            ILocationCoordinateGetter rhs)
+            ILocationCoordinateGetter rhs,
+            LocationCoordinate.TranslationMask? equalsMask = null)
         {
             return ((LocationCoordinateCommon)((ILocationCoordinateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -807,14 +816,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ILocationCoordinate item)
         {
             ClearPartial();
-            item.Location = FormLink<IComplexLocationGetter>.Null;
+            item.Location.Clear();
             item.Coordinates.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(ILocationCoordinate obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Location = obj.Location.Relink(mapping);
+            obj.Location.Relink(mapping);
         }
         
         #endregion
@@ -938,12 +947,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationCoordinateGetter? lhs,
-            ILocationCoordinateGetter? rhs)
+            ILocationCoordinateGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Location.Equals(rhs.Location)) return false;
-            if (!lhs.Coordinates.SequenceEqualNullable(rhs.Coordinates)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
+            {
+                if (!lhs.Location.Equals(rhs.Location)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
+            {
+                if (!lhs.Coordinates.SequenceEqualNullable(rhs.Coordinates)) return false;
+            }
             return true;
         }
         
@@ -987,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Location) ?? true))
             {
-                item.Location = new FormLink<IComplexLocationGetter>(rhs.Location.FormKey);
+                item.Location.SetTo(rhs.Location.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)LocationCoordinate_FieldIndex.Coordinates) ?? true))
             {
@@ -1148,9 +1164,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinate item,
             MutagenFrame frame)
         {
-            item.Location = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Location.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     frame: frame,
@@ -1227,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
         public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;
@@ -1293,13 +1310,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationCoordinateGetter rhs)) return false;
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationCoordinateGetter rhs) return false;
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationCoordinateGetter? obj)
         {
-            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationCoordinateCommon)((ILocationCoordinateGetter)this).CommonInstance()!).GetHashCode(this);

@@ -64,13 +64,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorkbenchDataGetter rhs)) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorkbenchDataGetter rhs) return false;
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorkbenchDataGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -516,11 +516,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorkbenchDataGetter item,
-            IWorkbenchDataGetter rhs)
+            IWorkbenchDataGetter rhs,
+            WorkbenchData.TranslationMask? equalsMask = null)
         {
             return ((WorkbenchDataCommon)((IWorkbenchDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -840,12 +842,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorkbenchDataGetter? lhs,
-            IWorkbenchDataGetter? rhs)
+            IWorkbenchDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.BenchType != rhs.BenchType) return false;
-            if (lhs.UsesSkill != rhs.UsesSkill) return false;
+            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.BenchType) ?? true))
+            {
+                if (lhs.BenchType != rhs.BenchType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorkbenchData_FieldIndex.UsesSkill) ?? true))
+            {
+                if (lhs.UsesSkill != rhs.UsesSkill) return false;
+            }
             return true;
         }
         
@@ -1181,13 +1190,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorkbenchDataGetter rhs)) return false;
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorkbenchDataGetter rhs) return false;
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorkbenchDataGetter? obj)
         {
-            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorkbenchDataCommon)((IWorkbenchDataGetter)this).CommonInstance()!).GetHashCode(this);

@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ComparisonValue
-        public FormLink<IGlobalGetter> ComparisonValue { get; set; } = new FormLink<IGlobalGetter>();
+        private IFormLink<IGlobalGetter> _ComparisonValue = new FormLink<IGlobalGetter>();
+        public IFormLink<IGlobalGetter> ComparisonValue
+        {
+            get => _ComparisonValue;
+            set => _ComparisonValue = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IGlobalGetter> IConditionGlobalGetter.ComparisonValue => this.ComparisonValue;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGlobalGetter rhs)) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGlobalGetter rhs) return false;
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);
@@ -448,7 +455,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkContainer,
         ILoquiObjectSetter<IConditionGlobal>
     {
-        new FormLink<IGlobalGetter> ComparisonValue { get; set; }
+        new IFormLink<IGlobalGetter> ComparisonValue { get; }
         new ConditionData Data { get; set; }
     }
 
@@ -459,7 +466,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<IConditionGlobalGetter>
     {
         static new ILoquiRegistration Registration => ConditionGlobal_Registration.Instance;
-        FormLink<IGlobalGetter> ComparisonValue { get; }
+        IFormLinkGetter<IGlobalGetter> ComparisonValue { get; }
         IConditionDataGetter Data { get; }
 
     }
@@ -511,11 +518,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IConditionGlobalGetter item,
-            IConditionGlobalGetter rhs)
+            IConditionGlobalGetter rhs,
+            ConditionGlobal.TranslationMask? equalsMask = null)
         {
             return ((ConditionGlobalCommon)((IConditionGlobalGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -696,7 +705,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IConditionGlobal item)
         {
             ClearPartial();
-            item.ComparisonValue = FormLink<IGlobalGetter>.Null;
+            item.ComparisonValue.Clear();
             item.Data.Clear();
             base.Clear(item);
         }
@@ -710,7 +719,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IConditionGlobal obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.ComparisonValue = obj.ComparisonValue.Relink(mapping);
+            obj.ComparisonValue.Relink(mapping);
             obj.Data.RemapLinks(mapping);
         }
         
@@ -855,23 +864,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IConditionGlobalGetter? lhs,
-            IConditionGlobalGetter? rhs)
+            IConditionGlobalGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs)) return false;
-            if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
+            {
+                if (!lhs.ComparisonValue.Equals(rhs.ComparisonValue)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IConditionGetter? lhs,
-            IConditionGetter? rhs)
+            IConditionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IConditionGlobalGetter?)lhs,
-                rhs: rhs as IConditionGlobalGetter);
+                rhs: rhs as IConditionGlobalGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IConditionGlobalGetter item)
@@ -937,7 +955,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
-                item.ComparisonValue = new FormLink<IGlobalGetter>(rhs.ComparisonValue.FormKey);
+                item.ComparisonValue.SetTo(rhs.ComparisonValue.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {
@@ -1158,9 +1176,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.ComparisonValue.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);
@@ -1226,7 +1245,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<IGlobalGetter> ComparisonValue => new FormLink<IGlobalGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         #region Data
         public IConditionDataGetter Data => GetDataCustom(location: 0x8);
         protected int DataEndingPos;
@@ -1301,13 +1320,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IConditionGlobalGetter rhs)) return false;
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IConditionGlobalGetter rhs) return false;
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IConditionGlobalGetter? obj)
         {
-            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ConditionGlobalCommon)((IConditionGlobalGetter)this).CommonInstance()!).GetHashCode(this);

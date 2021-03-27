@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Faction
-        public FormLink<IFactionGetter> Faction { get; set; } = new FormLink<IFactionGetter>();
+        private IFormLink<IFactionGetter> _Faction = new FormLink<IFactionGetter>();
+        public IFormLink<IFactionGetter> Faction
+        {
+            get => _Faction;
+            set => _Faction = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFactionGetter> IFactionOwnerGetter.Faction => this.Faction;
         #endregion
         #region RequiredRank
         public Int32 RequiredRank { get; set; } = default;
@@ -64,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionOwnerGetter rhs)) return false;
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFactionOwnerGetter rhs) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionOwnerGetter? obj)
         {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);
@@ -437,7 +444,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IFactionOwner>,
         IOwnerTarget
     {
-        new FormLink<IFactionGetter> Faction { get; set; }
+        new IFormLink<IFactionGetter> Faction { get; }
         new Int32 RequiredRank { get; set; }
     }
 
@@ -448,7 +455,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IFactionOwnerGetter>
     {
         static new ILoquiRegistration Registration => FactionOwner_Registration.Instance;
-        FormLink<IFactionGetter> Faction { get; }
+        IFormLinkGetter<IFactionGetter> Faction { get; }
         Int32 RequiredRank { get; }
 
     }
@@ -500,11 +507,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IFactionOwnerGetter item,
-            IFactionOwnerGetter rhs)
+            IFactionOwnerGetter rhs,
+            FactionOwner.TranslationMask? equalsMask = null)
         {
             return ((FactionOwnerCommon)((IFactionOwnerGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -681,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IFactionOwner item)
         {
             ClearPartial();
-            item.Faction = FormLink<IFactionGetter>.Null;
+            item.Faction.Clear();
             item.RequiredRank = default;
             base.Clear(item);
         }
@@ -695,7 +704,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IFactionOwner obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Faction = obj.Faction.Relink(mapping);
+            obj.Faction.Relink(mapping);
         }
         
         #endregion
@@ -827,23 +836,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFactionOwnerGetter? lhs,
-            IFactionOwnerGetter? rhs)
+            IFactionOwnerGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs)) return false;
-            if (!lhs.Faction.Equals(rhs.Faction)) return false;
-            if (lhs.RequiredRank != rhs.RequiredRank) return false;
+            if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
+            {
+                if (!lhs.Faction.Equals(rhs.Faction)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
+            {
+                if (lhs.RequiredRank != rhs.RequiredRank) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IOwnerTargetGetter? lhs,
-            IOwnerTargetGetter? rhs)
+            IOwnerTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IFactionOwnerGetter?)lhs,
-                rhs: rhs as IFactionOwnerGetter);
+                rhs: rhs as IFactionOwnerGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IFactionOwnerGetter item)
@@ -902,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.Faction) ?? true))
             {
-                item.Faction = new FormLink<IFactionGetter>(rhs.Faction.FormKey);
+                item.Faction.SetTo(rhs.Faction.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)FactionOwner_FieldIndex.RequiredRank) ?? true))
             {
@@ -1064,9 +1082,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionOwner item,
             MutagenFrame frame)
         {
-            item.Faction = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Faction.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             item.RequiredRank = frame.ReadInt32();
         }
 
@@ -1115,7 +1134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IFactionGetter> Faction => new FormLink<IFactionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 RequiredRank => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1177,13 +1196,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFactionOwnerGetter rhs)) return false;
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFactionOwnerGetter rhs) return false;
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFactionOwnerGetter? obj)
         {
-            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((FactionOwnerCommon)((IFactionOwnerGetter)this).CommonInstance()!).GetHashCode(this);

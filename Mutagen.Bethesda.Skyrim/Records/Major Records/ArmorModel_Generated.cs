@@ -87,13 +87,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorModelGetter rhs)) return false;
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IArmorModelGetter rhs) return false;
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorModelGetter? obj)
         {
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);
@@ -560,11 +560,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IArmorModelGetter item,
-            IArmorModelGetter rhs)
+            IArmorModelGetter rhs,
+            ArmorModel.TranslationMask? equalsMask = null)
         {
             return ((ArmorModelCommon)((IArmorModelGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -903,12 +905,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArmorModelGetter? lhs,
-            IArmorModelGetter? rhs)
+            IArmorModelGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            if ((crystal?.GetShouldTranslate((int)ArmorModel_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ArmorModel_FieldIndex.Icons) ?? true))
+            {
+                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+            }
             return true;
         }
         
@@ -1355,13 +1364,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorModelGetter rhs)) return false;
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IArmorModelGetter rhs) return false;
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorModelGetter? obj)
         {
-            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorModelCommon)((IArmorModelGetter)this).CommonInstance()!).GetHashCode(this);

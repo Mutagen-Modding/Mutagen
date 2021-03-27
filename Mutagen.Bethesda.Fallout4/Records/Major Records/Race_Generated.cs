@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region AnimationSound
-        public FormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; set; } = new FormLinkNullable<IAnimationSoundTagSetGetter>();
+        private IFormLinkNullable<IAnimationSoundTagSetGetter> _AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>();
+        public IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound
+        {
+            get => _AnimationSound;
+            set => _AnimationSound = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IAnimationSoundTagSetGetter> IRaceGetter.AnimationSound => this.AnimationSound;
         #endregion
         #region Name
         public String? Name { get; set; }
@@ -66,20 +73,27 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region ActorEffect
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IASpellGetter>>? _ActorEffect;
-        public ExtendedList<IFormLink<IASpellGetter>>? ActorEffect
+        private ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? _ActorEffect;
+        public ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect
         {
             get => this._ActorEffect;
             set => this._ActorEffect = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IASpellGetter>>? IRaceGetter.ActorEffect => _ActorEffect;
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? IRaceGetter.ActorEffect => _ActorEffect;
         #endregion
 
         #endregion
         #region Skin
-        public FormLinkNullable<IArmorGetter> Skin { get; set; } = new FormLinkNullable<IArmorGetter>();
+        private IFormLinkNullable<IArmorGetter> _Skin = new FormLinkNullable<IArmorGetter>();
+        public IFormLinkNullable<IArmorGetter> Skin
+        {
+            get => _Skin;
+            set => _Skin = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IArmorGetter> IRaceGetter.Skin => this.Skin;
         #endregion
         #region BipedBodyTemplate
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -94,20 +108,20 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _Keywords;
-        public ExtendedList<IFormLink<IKeywordGetter>>? Keywords
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
             set => this._Keywords = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IRaceGetter.Keywords => _Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IRaceGetter.Keywords => _Keywords;
         #endregion
 
         #region Aspects
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #endregion
         #region Properties
@@ -123,15 +137,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region AttachParentSlots
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IKeywordGetter>>? _AttachParentSlots;
-        public ExtendedList<IFormLink<IKeywordGetter>>? AttachParentSlots
+        private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _AttachParentSlots;
+        public ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots
         {
             get => this._AttachParentSlots;
             set => this._AttachParentSlots = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IKeywordGetter>>? IRaceGetter.AttachParentSlots => _AttachParentSlots;
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IRaceGetter.AttachParentSlots => _AttachParentSlots;
         #endregion
 
         #endregion
@@ -233,22 +247,64 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte ExplodableDecalCount { get; set; } = default;
         #endregion
         #region SeverableExplosion
-        public FormLink<IExplosionGetter> SeverableExplosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _SeverableExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> SeverableExplosion
+        {
+            get => _SeverableExplosion;
+            set => _SeverableExplosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IRaceGetter.SeverableExplosion => this.SeverableExplosion;
         #endregion
         #region SeverableDebris
-        public FormLink<IDebrisGetter> SeverableDebris { get; set; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _SeverableDebris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> SeverableDebris
+        {
+            get => _SeverableDebris;
+            set => _SeverableDebris = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IRaceGetter.SeverableDebris => this.SeverableDebris;
         #endregion
         #region SeverableImpactDataSet
-        public FormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> SeverableImpactDataSet
+        {
+            get => _SeverableImpactDataSet;
+            set => _SeverableImpactDataSet = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.SeverableImpactDataSet => this.SeverableImpactDataSet;
         #endregion
         #region ExplodableExplosion
-        public FormLink<IExplosionGetter> ExplodableExplosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _ExplodableExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> ExplodableExplosion
+        {
+            get => _ExplodableExplosion;
+            set => _ExplodableExplosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableExplosion => this.ExplodableExplosion;
         #endregion
         #region ExplodableDebris
-        public FormLink<IDebrisGetter> ExplodableDebris { get; set; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _ExplodableDebris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> ExplodableDebris
+        {
+            get => _ExplodableDebris;
+            set => _ExplodableDebris = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IRaceGetter.ExplodableDebris => this.ExplodableDebris;
         #endregion
         #region ExplodableImpactDataSet
-        public FormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet
+        {
+            get => _ExplodableImpactDataSet;
+            set => _ExplodableImpactDataSet = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.ExplodableImpactDataSet => this.ExplodableImpactDataSet;
         #endregion
         #region OnCrippleDebrisCount
         public Byte OnCrippleDebrisCount { get; set; } = default;
@@ -257,16 +313,44 @@ namespace Mutagen.Bethesda.Fallout4
         public Byte OnCrippleDecalCount { get; set; } = default;
         #endregion
         #region OnCrippleExplosion
-        public FormLink<IExplosionGetter> OnCrippleExplosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _OnCrippleExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> OnCrippleExplosion
+        {
+            get => _OnCrippleExplosion;
+            set => _OnCrippleExplosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IRaceGetter.OnCrippleExplosion => this.OnCrippleExplosion;
         #endregion
         #region OnCrippleDebris
-        public FormLink<IDebrisGetter> OnCrippleDebris { get; set; } = new FormLink<IDebrisGetter>();
+        private IFormLink<IDebrisGetter> _OnCrippleDebris = new FormLink<IDebrisGetter>();
+        public IFormLink<IDebrisGetter> OnCrippleDebris
+        {
+            get => _OnCrippleDebris;
+            set => _OnCrippleDebris = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDebrisGetter> IRaceGetter.OnCrippleDebris => this.OnCrippleDebris;
         #endregion
         #region OnCrippleImpactDataSet
-        public FormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; set; } = new FormLink<IImpactDataSetGetter>();
+        private IFormLink<IImpactDataSetGetter> _OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>();
+        public IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet
+        {
+            get => _OnCrippleImpactDataSet;
+            set => _OnCrippleImpactDataSet = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IImpactDataSetGetter> IRaceGetter.OnCrippleImpactDataSet => this.OnCrippleImpactDataSet;
         #endregion
         #region ExplodableSubsegmentExplosion
-        public FormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; set; } = new FormLink<IExplosionGetter>();
+        private IFormLink<IExplosionGetter> _ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>();
+        public IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion
+        {
+            get => _ExplodableSubsegmentExplosion;
+            set => _ExplodableSubsegmentExplosion = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IExplosionGetter> IRaceGetter.ExplodableSubsegmentExplosion => this.ExplodableSubsegmentExplosion;
         #endregion
         #region DATADataTypeState
         public Race.DATADataType DATADataTypeState { get; set; } = default;
@@ -282,22 +366,6 @@ namespace Mutagen.Bethesda.Fallout4
                 item: this,
                 name: name);
         }
-
-        #endregion
-
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IRaceGetter rhs)) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IRaceGetter? obj)
-        {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
 
         #endregion
 
@@ -2151,6 +2219,26 @@ namespace Mutagen.Bethesda.Fallout4
         public enum DATADataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRaceGetter rhs) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IRaceGetter? obj)
+        {
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -2217,15 +2305,15 @@ namespace Mutagen.Bethesda.Fallout4
         IRaceGetter,
         IRelatable
     {
-        new FormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; set; }
+        new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
         new String? Name { get; set; }
         new TranslatedString Description { get; set; }
-        new ExtendedList<IFormLink<IASpellGetter>>? ActorEffect { get; set; }
-        new FormLinkNullable<IArmorGetter> Skin { get; set; }
+        new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
+        new IFormLinkNullable<IArmorGetter> Skin { get; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? Keywords { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Properties? Properties { get; set; }
-        new ExtendedList<IFormLink<IKeywordGetter>>? AttachParentSlots { get; set; }
+        new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
         new IGenderedItem<Single> Height { get; set; }
         new IGenderedItem<Single> DefaultWeight { get; set; }
         new Race.Flag Flags { get; set; }
@@ -2251,18 +2339,18 @@ namespace Mutagen.Bethesda.Fallout4
         new Single ExplodableDebrisScale { get; set; }
         new Byte ExplodableDebrisCount { get; set; }
         new Byte ExplodableDecalCount { get; set; }
-        new FormLink<IExplosionGetter> SeverableExplosion { get; set; }
-        new FormLink<IDebrisGetter> SeverableDebris { get; set; }
-        new FormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; set; }
-        new FormLink<IExplosionGetter> ExplodableExplosion { get; set; }
-        new FormLink<IDebrisGetter> ExplodableDebris { get; set; }
-        new FormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; set; }
+        new IFormLink<IExplosionGetter> SeverableExplosion { get; }
+        new IFormLink<IDebrisGetter> SeverableDebris { get; }
+        new IFormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; }
+        new IFormLink<IExplosionGetter> ExplodableExplosion { get; }
+        new IFormLink<IDebrisGetter> ExplodableDebris { get; }
+        new IFormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
         new Byte OnCrippleDebrisCount { get; set; }
         new Byte OnCrippleDecalCount { get; set; }
-        new FormLink<IExplosionGetter> OnCrippleExplosion { get; set; }
-        new FormLink<IDebrisGetter> OnCrippleDebris { get; set; }
-        new FormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; set; }
-        new FormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; set; }
+        new IFormLink<IExplosionGetter> OnCrippleExplosion { get; }
+        new IFormLink<IDebrisGetter> OnCrippleDebris { get; }
+        new IFormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
+        new IFormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
         new Race.DATADataType DATADataTypeState { get; set; }
         #region Mutagen
         new Race.MajorFlag MajorFlags { get; set; }
@@ -2291,15 +2379,15 @@ namespace Mutagen.Bethesda.Fallout4
         IRelatableGetter
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
-        FormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
         String? Name { get; }
         ITranslatedStringGetter Description { get; }
-        IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; }
-        FormLinkNullable<IArmorGetter> Skin { get; }
+        IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
+        IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IBipedBodyTemplateGetter? BipedBodyTemplate { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         IPropertiesGetter? Properties { get; }
-        IReadOnlyList<IFormLink<IKeywordGetter>>? AttachParentSlots { get; }
+        IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IGenderedItemGetter<Single> Height { get; }
         IGenderedItemGetter<Single> DefaultWeight { get; }
         Race.Flag Flags { get; }
@@ -2325,18 +2413,18 @@ namespace Mutagen.Bethesda.Fallout4
         Single ExplodableDebrisScale { get; }
         Byte ExplodableDebrisCount { get; }
         Byte ExplodableDecalCount { get; }
-        FormLink<IExplosionGetter> SeverableExplosion { get; }
-        FormLink<IDebrisGetter> SeverableDebris { get; }
-        FormLink<IImpactDataSetGetter> SeverableImpactDataSet { get; }
-        FormLink<IExplosionGetter> ExplodableExplosion { get; }
-        FormLink<IDebrisGetter> ExplodableDebris { get; }
-        FormLink<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
+        IFormLinkGetter<IExplosionGetter> SeverableExplosion { get; }
+        IFormLinkGetter<IDebrisGetter> SeverableDebris { get; }
+        IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet { get; }
+        IFormLinkGetter<IExplosionGetter> ExplodableExplosion { get; }
+        IFormLinkGetter<IDebrisGetter> ExplodableDebris { get; }
+        IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet { get; }
         Byte OnCrippleDebrisCount { get; }
         Byte OnCrippleDecalCount { get; }
-        FormLink<IExplosionGetter> OnCrippleExplosion { get; }
-        FormLink<IDebrisGetter> OnCrippleDebris { get; }
-        FormLink<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
-        FormLink<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
+        IFormLinkGetter<IExplosionGetter> OnCrippleExplosion { get; }
+        IFormLinkGetter<IDebrisGetter> OnCrippleDebris { get; }
+        IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet { get; }
+        IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion { get; }
         Race.DATADataType DATADataTypeState { get; }
 
         #region Mutagen
@@ -2392,11 +2480,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IRaceGetter item,
-            IRaceGetter rhs)
+            IRaceGetter rhs,
+            Race.TranslationMask? equalsMask = null)
         {
             return ((RaceCommon)((IRaceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -2639,11 +2729,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(IRaceInternal item)
         {
             ClearPartial();
-            item.AnimationSound = FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+            item.AnimationSound.Clear();
             item.Name = default;
             item.Description.Clear();
             item.ActorEffect = null;
-            item.Skin = FormLinkNullable<IArmorGetter>.Null;
+            item.Skin.Clear();
             item.BipedBodyTemplate = null;
             item.Keywords = null;
             item.Properties = null;
@@ -2675,18 +2765,18 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.ExplodableDebrisScale = default;
             item.ExplodableDebrisCount = default;
             item.ExplodableDecalCount = default;
-            item.SeverableExplosion = FormLink<IExplosionGetter>.Null;
-            item.SeverableDebris = FormLink<IDebrisGetter>.Null;
-            item.SeverableImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
-            item.ExplodableExplosion = FormLink<IExplosionGetter>.Null;
-            item.ExplodableDebris = FormLink<IDebrisGetter>.Null;
-            item.ExplodableImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
+            item.SeverableExplosion.Clear();
+            item.SeverableDebris.Clear();
+            item.SeverableImpactDataSet.Clear();
+            item.ExplodableExplosion.Clear();
+            item.ExplodableDebris.Clear();
+            item.ExplodableImpactDataSet.Clear();
             item.OnCrippleDebrisCount = default;
             item.OnCrippleDecalCount = default;
-            item.OnCrippleExplosion = FormLink<IExplosionGetter>.Null;
-            item.OnCrippleDebris = FormLink<IDebrisGetter>.Null;
-            item.OnCrippleImpactDataSet = FormLink<IImpactDataSetGetter>.Null;
-            item.ExplodableSubsegmentExplosion = FormLink<IExplosionGetter>.Null;
+            item.OnCrippleExplosion.Clear();
+            item.OnCrippleDebris.Clear();
+            item.OnCrippleImpactDataSet.Clear();
+            item.ExplodableSubsegmentExplosion.Clear();
             item.DATADataTypeState = default;
             base.Clear(item);
         }
@@ -2705,21 +2795,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(IRace obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.AnimationSound = obj.AnimationSound.Relink(mapping);
+            obj.AnimationSound.Relink(mapping);
             obj.ActorEffect?.RemapLinks(mapping);
-            obj.Skin = obj.Skin.Relink(mapping);
+            obj.Skin.Relink(mapping);
             obj.Keywords?.RemapLinks(mapping);
             obj.AttachParentSlots?.RemapLinks(mapping);
-            obj.SeverableExplosion = obj.SeverableExplosion.Relink(mapping);
-            obj.SeverableDebris = obj.SeverableDebris.Relink(mapping);
-            obj.SeverableImpactDataSet = obj.SeverableImpactDataSet.Relink(mapping);
-            obj.ExplodableExplosion = obj.ExplodableExplosion.Relink(mapping);
-            obj.ExplodableDebris = obj.ExplodableDebris.Relink(mapping);
-            obj.ExplodableImpactDataSet = obj.ExplodableImpactDataSet.Relink(mapping);
-            obj.OnCrippleExplosion = obj.OnCrippleExplosion.Relink(mapping);
-            obj.OnCrippleDebris = obj.OnCrippleDebris.Relink(mapping);
-            obj.OnCrippleImpactDataSet = obj.OnCrippleImpactDataSet.Relink(mapping);
-            obj.ExplodableSubsegmentExplosion = obj.ExplodableSubsegmentExplosion.Relink(mapping);
+            obj.SeverableExplosion.Relink(mapping);
+            obj.SeverableDebris.Relink(mapping);
+            obj.SeverableImpactDataSet.Relink(mapping);
+            obj.ExplodableExplosion.Relink(mapping);
+            obj.ExplodableDebris.Relink(mapping);
+            obj.ExplodableImpactDataSet.Relink(mapping);
+            obj.OnCrippleExplosion.Relink(mapping);
+            obj.OnCrippleDebris.Relink(mapping);
+            obj.OnCrippleImpactDataSet.Relink(mapping);
+            obj.ExplodableSubsegmentExplosion.Relink(mapping);
         }
         
         #endregion
@@ -3186,77 +3276,223 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IRaceGetter? lhs,
-            IRaceGetter? rhs)
+            IRaceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs)) return false;
-            if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
-            if (!string.Equals(lhs.Name, rhs.Name)) return false;
-            if (!object.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
-            if (!lhs.Skin.Equals(rhs.Skin)) return false;
-            if (!object.Equals(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate)) return false;
-            if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
-            if (!object.Equals(lhs.Properties, rhs.Properties)) return false;
-            if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
-            if (!Equals(lhs.Height, rhs.Height)) return false;
-            if (!Equals(lhs.DefaultWeight, rhs.DefaultWeight)) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
-            if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
-            if (lhs.Size != rhs.Size) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
-            if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
-            if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
-            if (lhs.BearddBipedObject != rhs.BearddBipedObject) return false;
-            if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
-            if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
-            if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
-            if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
-            if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
-            if (lhs.Flags2 != rhs.Flags2) return false;
-            if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
-            if (lhs.PipboyBipedObject != rhs.PipboyBipedObject) return false;
-            if (lhs.XPValue != rhs.XPValue) return false;
-            if (!lhs.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale)) return false;
-            if (lhs.SeverableDebrisCount != rhs.SeverableDebrisCount) return false;
-            if (lhs.SeverableDecalCount != rhs.SeverableDecalCount) return false;
-            if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
-            if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
-            if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
-            if (!lhs.SeverableExplosion.Equals(rhs.SeverableExplosion)) return false;
-            if (!lhs.SeverableDebris.Equals(rhs.SeverableDebris)) return false;
-            if (!lhs.SeverableImpactDataSet.Equals(rhs.SeverableImpactDataSet)) return false;
-            if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
-            if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
-            if (!lhs.ExplodableImpactDataSet.Equals(rhs.ExplodableImpactDataSet)) return false;
-            if (lhs.OnCrippleDebrisCount != rhs.OnCrippleDebrisCount) return false;
-            if (lhs.OnCrippleDecalCount != rhs.OnCrippleDecalCount) return false;
-            if (!lhs.OnCrippleExplosion.Equals(rhs.OnCrippleExplosion)) return false;
-            if (!lhs.OnCrippleDebris.Equals(rhs.OnCrippleDebris)) return false;
-            if (!lhs.OnCrippleImpactDataSet.Equals(rhs.OnCrippleImpactDataSet)) return false;
-            if (!lhs.ExplodableSubsegmentExplosion.Equals(rhs.ExplodableSubsegmentExplosion)) return false;
-            if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AnimationSound) ?? true))
+            {
+                if (!lhs.AnimationSound.Equals(rhs.AnimationSound)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Description) ?? true))
+            {
+                if (!object.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ActorEffect) ?? true))
+            {
+                if (!lhs.ActorEffect.SequenceEqualNullable(rhs.ActorEffect)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
+            {
+                if (!lhs.Skin.Equals(rhs.Skin)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedBodyTemplate) ?? true))
+            {
+                if (!object.Equals(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
+            {
+                if (!lhs.Keywords.SequenceEqualNullable(rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
+            {
+                if (!object.Equals(lhs.Properties, rhs.Properties)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
+            {
+                if (!lhs.AttachParentSlots.SequenceEqualNullable(rhs.AttachParentSlots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Height) ?? true))
+            {
+                if (!Equals(lhs.Height, rhs.Height)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DefaultWeight) ?? true))
+            {
+                if (!Equals(lhs.DefaultWeight, rhs.DefaultWeight)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AccelerationRate) ?? true))
+            {
+                if (!lhs.AccelerationRate.EqualsWithin(rhs.AccelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DecelerationRate) ?? true))
+            {
+                if (!lhs.DecelerationRate.EqualsWithin(rhs.DecelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Size) ?? true))
+            {
+                if (lhs.Size != rhs.Size) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown.Span, rhs.Unknown.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.InjuredHealthPercent) ?? true))
+            {
+                if (!lhs.InjuredHealthPercent.EqualsWithin(rhs.InjuredHealthPercent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ShieldBipedObject) ?? true))
+            {
+                if (lhs.ShieldBipedObject != rhs.ShieldBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BearddBipedObject) ?? true))
+            {
+                if (lhs.BearddBipedObject != rhs.BearddBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyBipedObject) ?? true))
+            {
+                if (lhs.BodyBipedObject != rhs.BodyBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AimAngleTolerance) ?? true))
+            {
+                if (!lhs.AimAngleTolerance.EqualsWithin(rhs.AimAngleTolerance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FlightRadius) ?? true))
+            {
+                if (!lhs.FlightRadius.EqualsWithin(rhs.FlightRadius)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularAccelerationRate) ?? true))
+            {
+                if (!lhs.AngularAccelerationRate.EqualsWithin(rhs.AngularAccelerationRate)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AngularTolerance) ?? true))
+            {
+                if (!lhs.AngularTolerance.EqualsWithin(rhs.AngularTolerance)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Flags2) ?? true))
+            {
+                if (lhs.Flags2 != rhs.Flags2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown2) ?? true))
+            {
+                if (!MemoryExtensions.SequenceEqual(lhs.Unknown2.Span, rhs.Unknown2.Span)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.PipboyBipedObject) ?? true))
+            {
+                if (lhs.PipboyBipedObject != rhs.PipboyBipedObject) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.XPValue) ?? true))
+            {
+                if (lhs.XPValue != rhs.XPValue) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisScale) ?? true))
+            {
+                if (!lhs.SeverableDebrisScale.EqualsWithin(rhs.SeverableDebrisScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebrisCount) ?? true))
+            {
+                if (lhs.SeverableDebrisCount != rhs.SeverableDebrisCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDecalCount) ?? true))
+            {
+                if (lhs.SeverableDecalCount != rhs.SeverableDecalCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisScale) ?? true))
+            {
+                if (!lhs.ExplodableDebrisScale.EqualsWithin(rhs.ExplodableDebrisScale)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebrisCount) ?? true))
+            {
+                if (lhs.ExplodableDebrisCount != rhs.ExplodableDebrisCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDecalCount) ?? true))
+            {
+                if (lhs.ExplodableDecalCount != rhs.ExplodableDecalCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableExplosion) ?? true))
+            {
+                if (!lhs.SeverableExplosion.Equals(rhs.SeverableExplosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebris) ?? true))
+            {
+                if (!lhs.SeverableDebris.Equals(rhs.SeverableDebris)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SeverableImpactDataSet) ?? true))
+            {
+                if (!lhs.SeverableImpactDataSet.Equals(rhs.SeverableImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableExplosion) ?? true))
+            {
+                if (!lhs.ExplodableExplosion.Equals(rhs.ExplodableExplosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebris) ?? true))
+            {
+                if (!lhs.ExplodableDebris.Equals(rhs.ExplodableDebris)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableImpactDataSet) ?? true))
+            {
+                if (!lhs.ExplodableImpactDataSet.Equals(rhs.ExplodableImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
+            {
+                if (lhs.OnCrippleDebrisCount != rhs.OnCrippleDebrisCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDecalCount) ?? true))
+            {
+                if (lhs.OnCrippleDecalCount != rhs.OnCrippleDecalCount) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleExplosion) ?? true))
+            {
+                if (!lhs.OnCrippleExplosion.Equals(rhs.OnCrippleExplosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebris) ?? true))
+            {
+                if (!lhs.OnCrippleDebris.Equals(rhs.OnCrippleDebris)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleImpactDataSet) ?? true))
+            {
+                if (!lhs.OnCrippleImpactDataSet.Equals(rhs.OnCrippleImpactDataSet)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.ExplodableSubsegmentExplosion) ?? true))
+            {
+                if (!lhs.ExplodableSubsegmentExplosion.Equals(rhs.ExplodableSubsegmentExplosion)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
+            {
+                if (lhs.DATADataTypeState != rhs.DATADataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IFallout4MajorRecordGetter? lhs,
-            IFallout4MajorRecordGetter? rhs)
+            IFallout4MajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter);
+                rhs: rhs as IRaceGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IRaceGetter?)lhs,
-                rhs: rhs as IRaceGetter);
+                rhs: rhs as IRaceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IRaceGetter item)
@@ -3406,7 +3642,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRace)item,
+                item: (IRaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -3417,7 +3653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IRace)item,
+                item: (IRaceGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -3462,7 +3698,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.AnimationSound) ?? true))
             {
-                item.AnimationSound = new FormLinkNullable<IAnimationSoundTagSetGetter>(rhs.AnimationSound.FormKeyNullable);
+                item.AnimationSound.SetTo(rhs.AnimationSound.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
@@ -3481,8 +3717,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.ActorEffect = 
                             rhs.ActorEffect
-                            .Select(r => (IFormLink<IASpellGetter>)new FormLink<IASpellGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IASpellGetter>>();
+                            .Select(r => (IFormLinkGetter<ISpellRecordGetter>)new FormLink<ISpellRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     }
                     else
                     {
@@ -3501,7 +3737,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.Skin) ?? true))
             {
-                item.Skin = new FormLinkNullable<IArmorGetter>(rhs.Skin.FormKeyNullable);
+                item.Skin.SetTo(rhs.Skin.FormKeyNullable);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.BipedBodyTemplate) ?? true))
             {
@@ -3538,8 +3774,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.Keywords = 
                             rhs.Keywords
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -3591,8 +3827,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.AttachParentSlots = 
                             rhs.AttachParentSlots
-                            .Select(r => (IFormLink<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IKeywordGetter>>();
+                            .Select(r => (IFormLinkGetter<IKeywordGetter>)new FormLink<IKeywordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     }
                     else
                     {
@@ -3709,27 +3945,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableExplosion) ?? true))
             {
-                item.SeverableExplosion = new FormLink<IExplosionGetter>(rhs.SeverableExplosion.FormKey);
+                item.SeverableExplosion.SetTo(rhs.SeverableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableDebris) ?? true))
             {
-                item.SeverableDebris = new FormLink<IDebrisGetter>(rhs.SeverableDebris.FormKey);
+                item.SeverableDebris.SetTo(rhs.SeverableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.SeverableImpactDataSet) ?? true))
             {
-                item.SeverableImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.SeverableImpactDataSet.FormKey);
+                item.SeverableImpactDataSet.SetTo(rhs.SeverableImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableExplosion) ?? true))
             {
-                item.ExplodableExplosion = new FormLink<IExplosionGetter>(rhs.ExplodableExplosion.FormKey);
+                item.ExplodableExplosion.SetTo(rhs.ExplodableExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableDebris) ?? true))
             {
-                item.ExplodableDebris = new FormLink<IDebrisGetter>(rhs.ExplodableDebris.FormKey);
+                item.ExplodableDebris.SetTo(rhs.ExplodableDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableImpactDataSet) ?? true))
             {
-                item.ExplodableImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.ExplodableImpactDataSet.FormKey);
+                item.ExplodableImpactDataSet.SetTo(rhs.ExplodableImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebrisCount) ?? true))
             {
@@ -3741,19 +3977,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleExplosion) ?? true))
             {
-                item.OnCrippleExplosion = new FormLink<IExplosionGetter>(rhs.OnCrippleExplosion.FormKey);
+                item.OnCrippleExplosion.SetTo(rhs.OnCrippleExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleDebris) ?? true))
             {
-                item.OnCrippleDebris = new FormLink<IDebrisGetter>(rhs.OnCrippleDebris.FormKey);
+                item.OnCrippleDebris.SetTo(rhs.OnCrippleDebris.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.OnCrippleImpactDataSet) ?? true))
             {
-                item.OnCrippleImpactDataSet = new FormLink<IImpactDataSetGetter>(rhs.OnCrippleImpactDataSet.FormKey);
+                item.OnCrippleImpactDataSet.SetTo(rhs.OnCrippleImpactDataSet.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.ExplodableSubsegmentExplosion) ?? true))
             {
-                item.ExplodableSubsegmentExplosion = new FormLink<IExplosionGetter>(rhs.ExplodableSubsegmentExplosion.FormKey);
+                item.ExplodableSubsegmentExplosion.SetTo(rhs.ExplodableSubsegmentExplosion.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)Race_FieldIndex.DATADataTypeState) ?? true))
             {
@@ -3940,14 +4176,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                 subRecordPerItem: true,
-                transl: (MutagenWriter subWriter, IFormLink<IASpellGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3964,13 +4200,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
                 counterLength: 4,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -3983,11 +4219,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AttachParentSlots,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.APPR),
-                transl: (MutagenWriter subWriter, IFormLink<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -4196,9 +4432,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.STCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationSound = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.AnimationSound.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Race_FieldIndex.AnimationSound;
                 }
                 case RecordTypeInts.FULL:
@@ -4222,21 +4459,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IASpellGetter>>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IASpellGetter>>();
+                        .CastExtendedList<IFormLinkGetter<ISpellRecordGetter>>();
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skin = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
-                        defaultVal: FormKey.Null);
+                    item.Skin.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BOD2:
@@ -4248,13 +4486,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Race_FieldIndex.Keywords;
                 }
                 case RecordTypeInts.PRPS:
@@ -4266,10 +4504,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttachParentSlots = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IKeywordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IKeywordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Race_FieldIndex.AttachParentSlots;
                 }
                 case RecordTypeInts.DATA:
@@ -4305,38 +4543,48 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.ExplodableDebrisScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ExplodableDebrisCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
-                    item.SeverableExplosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.SeverableDebris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.SeverableImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ExplodableExplosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ExplodableDebris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ExplodableImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.SeverableExplosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.SeverableDebris.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.SeverableImpactDataSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ExplodableExplosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ExplodableDebris.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ExplodableImpactDataSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
                     item.OnCrippleDecalCount = dataFrame.ReadUInt8();
-                    item.OnCrippleExplosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.OnCrippleDebris = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.OnCrippleImpactDataSet = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
-                    item.ExplodableSubsegmentExplosion = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
-                        defaultVal: FormKey.Null);
+                    item.OnCrippleExplosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.OnCrippleDebris.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.OnCrippleImpactDataSet.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    item.ExplodableSubsegmentExplosion.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
                     return (int)Race_FieldIndex.ExplodableSubsegmentExplosion;
                 }
                 default:
@@ -4397,7 +4645,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region AnimationSound
         private int? _AnimationSoundLocation;
-        public FormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
+        public IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound => _AnimationSoundLocation.HasValue ? new FormLinkNullable<IAnimationSoundTagSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _AnimationSoundLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IAnimationSoundTagSetGetter>.Null;
         #endregion
         #region Name
         private int? _NameLocation;
@@ -4411,24 +4659,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private int? _DescriptionLocation;
         public ITranslatedStringGetter Description => _DescriptionLocation.HasValue ? StringBinaryTranslation.Instance.Parse(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants), StringsSource.DL, _package.MetaData.StringsLookup) : TranslatedString.Empty;
         #endregion
-        public IReadOnlyList<IFormLink<IASpellGetter>>? ActorEffect { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; private set; }
         #region Skin
         private int? _SkinLocation;
-        public FormLinkNullable<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
+        public IFormLinkNullableGetter<IArmorGetter> Skin => _SkinLocation.HasValue ? new FormLinkNullable<IArmorGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _SkinLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IArmorGetter>.Null;
         #endregion
         #region BipedBodyTemplate
         private RangeInt32? _BipedBodyTemplateLocation;
         public IBipedBodyTemplateGetter? BipedBodyTemplate => _BipedBodyTemplateLocation.HasValue ? BipedBodyTemplateBinaryOverlay.BipedBodyTemplateFactory(new OverlayStream(_data.Slice(_BipedBodyTemplateLocation!.Value.Min), _package), _package) : default;
         #endregion
         #region Keywords
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? Keywords { get; private set; }
-        IReadOnlyList<IFormLink<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; private set; }
+        IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;
         #endregion
         #region Properties
         private RangeInt32? _PropertiesLocation;
         public IPropertiesGetter? Properties => _PropertiesLocation.HasValue ? PropertiesBinaryOverlay.PropertiesFactory(new OverlayStream(_data.Slice(_PropertiesLocation!.Value.Min), _package), _package) : default;
         #endregion
-        public IReadOnlyList<IFormLink<IKeywordGetter>>? AttachParentSlots { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; private set; }
         private int? _DATALocation;
         public Race.DATADataType DATADataTypeState { get; private set; }
         #region Height
@@ -4579,32 +4827,32 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region SeverableExplosion
         private int _SeverableExplosionLocation => _DATALocation!.Value + 0xAE;
         private bool _SeverableExplosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> SeverableExplosion => _SeverableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region SeverableDebris
         private int _SeverableDebrisLocation => _DATALocation!.Value + 0xB2;
         private bool _SeverableDebris_IsSet => _DATALocation.HasValue;
-        public FormLink<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> SeverableDebris => _SeverableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region SeverableImpactDataSet
         private int _SeverableImpactDataSetLocation => _DATALocation!.Value + 0xB6;
         private bool _SeverableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public FormLink<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> SeverableImpactDataSet => _SeverableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_SeverableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableExplosion
         private int _ExplodableExplosionLocation => _DATALocation!.Value + 0xBA;
         private bool _ExplodableExplosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableExplosion => _ExplodableExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region ExplodableDebris
         private int _ExplodableDebrisLocation => _DATALocation!.Value + 0xBE;
         private bool _ExplodableDebris_IsSet => _DATALocation.HasValue;
-        public FormLink<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> ExplodableDebris => _ExplodableDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region ExplodableImpactDataSet
         private int _ExplodableImpactDataSetLocation => _DATALocation!.Value + 0xC2;
         private bool _ExplodableImpactDataSet_IsSet => _DATALocation.HasValue;
-        public FormLink<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> ExplodableImpactDataSet => _ExplodableImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region OnCrippleDebrisCount
         private int _OnCrippleDebrisCountLocation => _DATALocation!.Value + 0xC6;
@@ -4619,22 +4867,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region OnCrippleExplosion
         private int _OnCrippleExplosionLocation => _DATALocation!.Value + 0xC8;
         private bool _OnCrippleExplosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> OnCrippleExplosion => _OnCrippleExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         #region OnCrippleDebris
         private int _OnCrippleDebrisLocation => _DATALocation!.Value + 0xCC;
         private bool _OnCrippleDebris_IsSet => _DATALocation.HasValue;
-        public FormLink<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
+        public IFormLinkGetter<IDebrisGetter> OnCrippleDebris => _OnCrippleDebris_IsSet ? new FormLink<IDebrisGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleDebrisLocation, 0x4)))) : FormLink<IDebrisGetter>.Null;
         #endregion
         #region OnCrippleImpactDataSet
         private int _OnCrippleImpactDataSetLocation => _DATALocation!.Value + 0xD0;
         private bool _OnCrippleImpactDataSet_IsSet => _DATALocation.HasValue;
-        public FormLink<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
+        public IFormLinkGetter<IImpactDataSetGetter> OnCrippleImpactDataSet => _OnCrippleImpactDataSet_IsSet ? new FormLink<IImpactDataSetGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_OnCrippleImpactDataSetLocation, 0x4)))) : FormLink<IImpactDataSetGetter>.Null;
         #endregion
         #region ExplodableSubsegmentExplosion
         private int _ExplodableSubsegmentExplosionLocation => _DATALocation!.Value + 0xD4;
         private bool _ExplodableSubsegmentExplosion_IsSet => _DATALocation.HasValue;
-        public FormLink<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
+        public IFormLinkGetter<IExplosionGetter> ExplodableSubsegmentExplosion => _ExplodableSubsegmentExplosion_IsSet ? new FormLink<IExplosionGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(_ExplodableSubsegmentExplosionLocation, 0x4)))) : FormLink<IExplosionGetter>.Null;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -4720,14 +4968,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.SPLO:
                 case RecordTypeInts.SPCT:
                 {
-                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLink<IASpellGetter>>(
+                    this.ActorEffect = BinaryOverlayList.FactoryByCountPerItem<IFormLinkGetter<ISpellRecordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
                         countLength: 4,
                         countType: RecordTypes.SPCT,
                         subrecordType: RecordTypes.SPLO,
-                        getter: (s, p) => new FormLink<IASpellGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+                        getter: (s, p) => new FormLink<ISpellRecordGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
                     return (int)Race_FieldIndex.ActorEffect;
                 }
                 case RecordTypeInts.WNAM:
@@ -4743,7 +4991,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.KWDA:
                 case RecordTypeInts.KSIZ:
                 {
-                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLink<IKeywordGetter>>(
+                    this.Keywords = BinaryOverlayList.FactoryByCount<IFormLinkGetter<IKeywordGetter>>(
                         stream: stream,
                         package: _package,
                         itemLength: 0x4,
@@ -4762,7 +5010,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     var subMeta = stream.ReadSubrecord();
                     var subLen = subMeta.ContentLength;
-                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLink<IKeywordGetter>>(
+                    this.AttachParentSlots = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IKeywordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -4801,13 +5049,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IRaceGetter rhs)) return false;
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IRaceGetter rhs) return false;
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IRaceGetter? obj)
         {
-            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((RaceCommon)((IRaceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((RaceCommon)((IRaceGetter)this).CommonInstance()!).GetHashCode(this);

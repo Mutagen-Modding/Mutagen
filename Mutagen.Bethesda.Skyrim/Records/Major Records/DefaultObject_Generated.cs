@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public RecordType Use { get; set; } = RecordType.Null;
         #endregion
         #region Object
-        public FormLink<ISkyrimMajorRecordGetter> Object { get; set; } = new FormLink<ISkyrimMajorRecordGetter>();
+        private IFormLink<ISkyrimMajorRecordGetter> _Object = new FormLink<ISkyrimMajorRecordGetter>();
+        public IFormLink<ISkyrimMajorRecordGetter> Object
+        {
+            get => _Object;
+            set => _Object = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<ISkyrimMajorRecordGetter> IDefaultObjectGetter.Object => this.Object;
         #endregion
 
         #region To String
@@ -62,13 +69,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDefaultObjectGetter rhs)) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDefaultObjectGetter rhs) return false;
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);
@@ -449,7 +456,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IDefaultObject>
     {
         new RecordType Use { get; set; }
-        new FormLink<ISkyrimMajorRecordGetter> Object { get; set; }
+        new IFormLink<ISkyrimMajorRecordGetter> Object { get; }
     }
 
     public partial interface IDefaultObjectGetter :
@@ -466,7 +473,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DefaultObject_Registration.Instance;
         RecordType Use { get; }
-        FormLink<ISkyrimMajorRecordGetter> Object { get; }
+        IFormLinkGetter<ISkyrimMajorRecordGetter> Object { get; }
 
     }
 
@@ -517,11 +524,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IDefaultObjectGetter item,
-            IDefaultObjectGetter rhs)
+            IDefaultObjectGetter rhs,
+            DefaultObject.TranslationMask? equalsMask = null)
         {
             return ((DefaultObjectCommon)((IDefaultObjectGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -724,13 +733,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Use = RecordType.Null;
-            item.Object = FormLink<ISkyrimMajorRecordGetter>.Null;
+            item.Object.Clear();
         }
         
         #region Mutagen
         public void RemapLinks(IDefaultObject obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Object = obj.Object.Relink(mapping);
+            obj.Object.Relink(mapping);
         }
         
         #endregion
@@ -837,12 +846,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IDefaultObjectGetter? lhs,
-            IDefaultObjectGetter? rhs)
+            IDefaultObjectGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Use != rhs.Use) return false;
-            if (!lhs.Object.Equals(rhs.Object)) return false;
+            if ((crystal?.GetShouldTranslate((int)DefaultObject_FieldIndex.Use) ?? true))
+            {
+                if (lhs.Use != rhs.Use) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
+            {
+                if (!lhs.Object.Equals(rhs.Object)) return false;
+            }
             return true;
         }
         
@@ -890,7 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)DefaultObject_FieldIndex.Object) ?? true))
             {
-                item.Object = new FormLink<ISkyrimMajorRecordGetter>(rhs.Object.FormKey);
+                item.Object.SetTo(rhs.Object.FormKey);
             }
         }
         
@@ -1028,9 +1044,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Use = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame);
-            item.Object = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Object.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1098,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public RecordType Use => new RecordType(BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x0, 0x4)));
-        public FormLink<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
+        public IFormLinkGetter<ISkyrimMajorRecordGetter> Object => new FormLink<ISkyrimMajorRecordGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1159,13 +1176,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IDefaultObjectGetter rhs)) return false;
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IDefaultObjectGetter rhs) return false;
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IDefaultObjectGetter? obj)
         {
-            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((DefaultObjectCommon)((IDefaultObjectGetter)this).CommonInstance()!).GetHashCode(this);

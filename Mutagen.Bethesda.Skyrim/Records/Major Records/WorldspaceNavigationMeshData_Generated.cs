@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Parent
-        public FormLink<IWorldspaceGetter> Parent { get; set; } = new FormLink<IWorldspaceGetter>();
+        private IFormLink<IWorldspaceGetter> _Parent = new FormLink<IWorldspaceGetter>();
+        public IFormLink<IWorldspaceGetter> Parent
+        {
+            get => _Parent;
+            set => _Parent = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IWorldspaceGetter> IWorldspaceNavigationMeshDataGetter.Parent => this.Parent;
         #endregion
         #region Coordinates
         public P2Int16 Coordinates { get; set; } = default;
@@ -64,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);
@@ -461,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IWorldspaceNavigationMeshData>,
         IWorldspaceNavigationMeshDataGetter
     {
-        new FormLink<IWorldspaceGetter> Parent { get; set; }
+        new IFormLink<IWorldspaceGetter> Parent { get; }
         new P2Int16 Coordinates { get; set; }
     }
 
@@ -472,7 +479,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<IWorldspaceNavigationMeshDataGetter>
     {
         static new ILoquiRegistration Registration => WorldspaceNavigationMeshData_Registration.Instance;
-        FormLink<IWorldspaceGetter> Parent { get; }
+        IFormLinkGetter<IWorldspaceGetter> Parent { get; }
         P2Int16 Coordinates { get; }
 
     }
@@ -524,11 +531,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWorldspaceNavigationMeshDataGetter item,
-            IWorldspaceNavigationMeshDataGetter rhs)
+            IWorldspaceNavigationMeshDataGetter rhs,
+            WorldspaceNavigationMeshData.TranslationMask? equalsMask = null)
         {
             return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -717,7 +726,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(IWorldspaceNavigationMeshData item)
         {
             ClearPartial();
-            item.Parent = FormLink<IWorldspaceGetter>.Null;
+            item.Parent.Clear();
             item.Coordinates = default;
             base.Clear(item);
         }
@@ -731,7 +740,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(IWorldspaceNavigationMeshData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Parent = obj.Parent.Relink(mapping);
+            obj.Parent.Relink(mapping);
         }
         
         #endregion
@@ -887,23 +896,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWorldspaceNavigationMeshDataGetter? lhs,
-            IWorldspaceNavigationMeshDataGetter? rhs)
+            IWorldspaceNavigationMeshDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs)) return false;
-            if (!lhs.Parent.Equals(rhs.Parent)) return false;
-            if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
+            if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
+            {
+                if (!lhs.Parent.Equals(rhs.Parent)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
+            {
+                if (!lhs.Coordinates.Equals(rhs.Coordinates)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IANavigationMeshDataGetter? lhs,
-            IANavigationMeshDataGetter? rhs)
+            IANavigationMeshDataGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IWorldspaceNavigationMeshDataGetter?)lhs,
-                rhs: rhs as IWorldspaceNavigationMeshDataGetter);
+                rhs: rhs as IWorldspaceNavigationMeshDataGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IWorldspaceNavigationMeshDataGetter item)
@@ -962,7 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Parent) ?? true))
             {
-                item.Parent = new FormLink<IWorldspaceGetter>(rhs.Parent.FormKey);
+                item.Parent.SetTo(rhs.Parent.FormKey);
             }
             if ((copyMask?.GetShouldTranslate((int)WorldspaceNavigationMeshData_FieldIndex.Coordinates) ?? true))
             {
@@ -1233,13 +1251,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWorldspaceNavigationMeshDataGetter rhs)) return false;
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWorldspaceNavigationMeshDataGetter rhs) return false;
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWorldspaceNavigationMeshDataGetter? obj)
         {
-            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WorldspaceNavigationMeshDataCommon)((IWorldspaceNavigationMeshDataGetter)this).CommonInstance()!).GetHashCode(this);

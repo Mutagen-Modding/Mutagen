@@ -970,13 +970,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimModGetter rhs)) return false;
-            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkyrimModGetter rhs) return false;
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimModGetter? obj)
         {
-            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetHashCode(this);
@@ -5973,7 +5973,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         IEnumerable<TMajor> IMajorRecordEnumerable.EnumerateMajorRecords<TMajor>(bool throwIfUnknown) => this.EnumerateMajorRecords<TMajor>(throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
-        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
+        IEnumerable<IMajorRecordCommon> IMajorRecordEnumerable.EnumerateMajorRecords(Type? type, bool throwIfUnknown) => this.EnumerateMajorRecords(type: type, throwIfUnknown: throwIfUnknown);
         [DebuggerStepThrough]
         void IMajorRecordEnumerable.Remove(FormKey formKey) => this.Remove(formKey);
         [DebuggerStepThrough]
@@ -6498,11 +6498,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ISkyrimModGetter item,
-            ISkyrimModGetter rhs)
+            ISkyrimModGetter rhs,
+            SkyrimMod.TranslationMask? equalsMask = null)
         {
             return ((SkyrimModCommon)((ISkyrimModGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -6696,10 +6698,10 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(
             this ISkyrimMod obj,
-            Type type,
+            Type? type,
             bool throwIfUnknown = true)
         {
-            return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(
+            return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumeratePotentiallyTypedMajorRecords(
                 obj: obj,
                 type: type,
                 throwIfUnknown: throwIfUnknown)
@@ -7415,6 +7417,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 yield return (item as IMajorRecordCommon)!;
             }
+        }
+        
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            ISkyrimMod obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
         }
         
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
@@ -8517,17 +8528,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         type: type,
                         keys: keys);
                     break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    obj.Cells.Remove(
-                        type: type,
-                        keys: keys);
-                    obj.Worldspaces.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -8696,9 +8696,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Remove(obj, keys, typeof(ILeveledNpcGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(INpcGetter), throwIfUnknown: throwIfUnknown);
                     break;
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                     Remove(obj, keys, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ISpellGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IEmittance":
@@ -9436,124 +9437,467 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ISkyrimModGetter? lhs,
-            ISkyrimModGetter? rhs)
+            ISkyrimModGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
-            if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
-            if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
-            if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
-            if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
-            if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
-            if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
-            if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
-            if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
-            if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
-            if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
-            if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
-            if (!object.Equals(lhs.Races, rhs.Races)) return false;
-            if (!object.Equals(lhs.SoundMarkers, rhs.SoundMarkers)) return false;
-            if (!object.Equals(lhs.AcousticSpaces, rhs.AcousticSpaces)) return false;
-            if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
-            if (!object.Equals(lhs.LandscapeTextures, rhs.LandscapeTextures)) return false;
-            if (!object.Equals(lhs.ObjectEffects, rhs.ObjectEffects)) return false;
-            if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
-            if (!object.Equals(lhs.Scrolls, rhs.Scrolls)) return false;
-            if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
-            if (!object.Equals(lhs.TalkingActivators, rhs.TalkingActivators)) return false;
-            if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
-            if (!object.Equals(lhs.Books, rhs.Books)) return false;
-            if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
-            if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
-            if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
-            if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
-            if (!object.Equals(lhs.MiscItems, rhs.MiscItems)) return false;
-            if (!object.Equals(lhs.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
-            if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
-            if (!object.Equals(lhs.MoveableStatics, rhs.MoveableStatics)) return false;
-            if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
-            if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
-            if (!object.Equals(lhs.Florae, rhs.Florae)) return false;
-            if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
-            if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
-            if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
-            if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
-            if (!object.Equals(lhs.LeveledNpcs, rhs.LeveledNpcs)) return false;
-            if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
-            if (!object.Equals(lhs.Ingestibles, rhs.Ingestibles)) return false;
-            if (!object.Equals(lhs.IdleMarkers, rhs.IdleMarkers)) return false;
-            if (!object.Equals(lhs.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
-            if (!object.Equals(lhs.Projectiles, rhs.Projectiles)) return false;
-            if (!object.Equals(lhs.Hazards, rhs.Hazards)) return false;
-            if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
-            if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
-            if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
-            if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
-            if (!object.Equals(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
-            if (!object.Equals(lhs.VisualEffects, rhs.VisualEffects)) return false;
-            if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
-            if (!object.Equals(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
-            if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
-            if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
-            if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
-            if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
-            if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
-            if (!object.Equals(lhs.Packages, rhs.Packages)) return false;
-            if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
-            if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
-            if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
-            if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
-            if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
-            if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
-            if (!object.Equals(lhs.Explosions, rhs.Explosions)) return false;
-            if (!object.Equals(lhs.Debris, rhs.Debris)) return false;
-            if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
-            if (!object.Equals(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
-            if (!object.Equals(lhs.FormLists, rhs.FormLists)) return false;
-            if (!object.Equals(lhs.Perks, rhs.Perks)) return false;
-            if (!object.Equals(lhs.BodyParts, rhs.BodyParts)) return false;
-            if (!object.Equals(lhs.AddonNodes, rhs.AddonNodes)) return false;
-            if (!object.Equals(lhs.ActorValueInformation, rhs.ActorValueInformation)) return false;
-            if (!object.Equals(lhs.CameraShots, rhs.CameraShots)) return false;
-            if (!object.Equals(lhs.CameraPaths, rhs.CameraPaths)) return false;
-            if (!object.Equals(lhs.VoiceTypes, rhs.VoiceTypes)) return false;
-            if (!object.Equals(lhs.MaterialTypes, rhs.MaterialTypes)) return false;
-            if (!object.Equals(lhs.Impacts, rhs.Impacts)) return false;
-            if (!object.Equals(lhs.ImpactDataSets, rhs.ImpactDataSets)) return false;
-            if (!object.Equals(lhs.ArmorAddons, rhs.ArmorAddons)) return false;
-            if (!object.Equals(lhs.EncounterZones, rhs.EncounterZones)) return false;
-            if (!object.Equals(lhs.Locations, rhs.Locations)) return false;
-            if (!object.Equals(lhs.Messages, rhs.Messages)) return false;
-            if (!object.Equals(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
-            if (!object.Equals(lhs.LightingTemplates, rhs.LightingTemplates)) return false;
-            if (!object.Equals(lhs.MusicTypes, rhs.MusicTypes)) return false;
-            if (!object.Equals(lhs.Footsteps, rhs.Footsteps)) return false;
-            if (!object.Equals(lhs.FootstepSets, rhs.FootstepSets)) return false;
-            if (!object.Equals(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
-            if (!object.Equals(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
-            if (!object.Equals(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
-            if (!object.Equals(lhs.DialogBranches, rhs.DialogBranches)) return false;
-            if (!object.Equals(lhs.MusicTracks, rhs.MusicTracks)) return false;
-            if (!object.Equals(lhs.DialogViews, rhs.DialogViews)) return false;
-            if (!object.Equals(lhs.WordsOfPower, rhs.WordsOfPower)) return false;
-            if (!object.Equals(lhs.Shouts, rhs.Shouts)) return false;
-            if (!object.Equals(lhs.EquipTypes, rhs.EquipTypes)) return false;
-            if (!object.Equals(lhs.Relationships, rhs.Relationships)) return false;
-            if (!object.Equals(lhs.Scenes, rhs.Scenes)) return false;
-            if (!object.Equals(lhs.AssociationTypes, rhs.AssociationTypes)) return false;
-            if (!object.Equals(lhs.Outfits, rhs.Outfits)) return false;
-            if (!object.Equals(lhs.ArtObjects, rhs.ArtObjects)) return false;
-            if (!object.Equals(lhs.MaterialObjects, rhs.MaterialObjects)) return false;
-            if (!object.Equals(lhs.MovementTypes, rhs.MovementTypes)) return false;
-            if (!object.Equals(lhs.SoundDescriptors, rhs.SoundDescriptors)) return false;
-            if (!object.Equals(lhs.DualCastData, rhs.DualCastData)) return false;
-            if (!object.Equals(lhs.SoundCategories, rhs.SoundCategories)) return false;
-            if (!object.Equals(lhs.SoundOutputModels, rhs.SoundOutputModels)) return false;
-            if (!object.Equals(lhs.CollisionLayers, rhs.CollisionLayers)) return false;
-            if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
-            if (!object.Equals(lhs.ReverbParameters, rhs.ReverbParameters)) return false;
-            if (!object.Equals(lhs.VolumetricLightings, rhs.VolumetricLightings)) return false;
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ModHeader) ?? true))
+            {
+                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.GameSettings) ?? true))
+            {
+                if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keywords) ?? true))
+            {
+                if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LocationReferenceTypes) ?? true))
+            {
+                if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Actions) ?? true))
+            {
+                if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TextureSets) ?? true))
+            {
+                if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Globals) ?? true))
+            {
+                if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Classes) ?? true))
+            {
+                if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Factions) ?? true))
+            {
+                if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.HeadParts) ?? true))
+            {
+                if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hairs) ?? true))
+            {
+                if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Eyes) ?? true))
+            {
+                if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Races) ?? true))
+            {
+                if (!object.Equals(lhs.Races, rhs.Races)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundMarkers) ?? true))
+            {
+                if (!object.Equals(lhs.SoundMarkers, rhs.SoundMarkers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AcousticSpaces) ?? true))
+            {
+                if (!object.Equals(lhs.AcousticSpaces, rhs.AcousticSpaces)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MagicEffects) ?? true))
+            {
+                if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LandscapeTextures) ?? true))
+            {
+                if (!object.Equals(lhs.LandscapeTextures, rhs.LandscapeTextures)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ObjectEffects) ?? true))
+            {
+                if (!object.Equals(lhs.ObjectEffects, rhs.ObjectEffects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Spells) ?? true))
+            {
+                if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scrolls) ?? true))
+            {
+                if (!object.Equals(lhs.Scrolls, rhs.Scrolls)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Activators) ?? true))
+            {
+                if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.TalkingActivators) ?? true))
+            {
+                if (!object.Equals(lhs.TalkingActivators, rhs.TalkingActivators)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Armors) ?? true))
+            {
+                if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Books) ?? true))
+            {
+                if (!object.Equals(lhs.Books, rhs.Books)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Containers) ?? true))
+            {
+                if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Doors) ?? true))
+            {
+                if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingredients) ?? true))
+            {
+                if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Lights) ?? true))
+            {
+                if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MiscItems) ?? true))
+            {
+                if (!object.Equals(lhs.MiscItems, rhs.MiscItems)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AlchemicalApparatuses) ?? true))
+            {
+                if (!object.Equals(lhs.AlchemicalApparatuses, rhs.AlchemicalApparatuses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Statics) ?? true))
+            {
+                if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MoveableStatics) ?? true))
+            {
+                if (!object.Equals(lhs.MoveableStatics, rhs.MoveableStatics)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Grasses) ?? true))
+            {
+                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Trees) ?? true))
+            {
+                if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Florae) ?? true))
+            {
+                if (!object.Equals(lhs.Florae, rhs.Florae)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Furniture) ?? true))
+            {
+                if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weapons) ?? true))
+            {
+                if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ammunitions) ?? true))
+            {
+                if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Npcs) ?? true))
+            {
+                if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledNpcs) ?? true))
+            {
+                if (!object.Equals(lhs.LeveledNpcs, rhs.LeveledNpcs)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Keys) ?? true))
+            {
+                if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Ingestibles) ?? true))
+            {
+                if (!object.Equals(lhs.Ingestibles, rhs.Ingestibles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleMarkers) ?? true))
+            {
+                if (!object.Equals(lhs.IdleMarkers, rhs.IdleMarkers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ConstructibleObjects) ?? true))
+            {
+                if (!object.Equals(lhs.ConstructibleObjects, rhs.ConstructibleObjects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Projectiles) ?? true))
+            {
+                if (!object.Equals(lhs.Projectiles, rhs.Projectiles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Hazards) ?? true))
+            {
+                if (!object.Equals(lhs.Hazards, rhs.Hazards)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoulGems) ?? true))
+            {
+                if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledItems) ?? true))
+            {
+                if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Weathers) ?? true))
+            {
+                if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Climates) ?? true))
+            {
+                if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ShaderParticleGeometries) ?? true))
+            {
+                if (!object.Equals(lhs.ShaderParticleGeometries, rhs.ShaderParticleGeometries)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VisualEffects) ?? true))
+            {
+                if (!object.Equals(lhs.VisualEffects, rhs.VisualEffects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Regions) ?? true))
+            {
+                if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.NavigationMeshInfoMaps) ?? true))
+            {
+                if (!object.Equals(lhs.NavigationMeshInfoMaps, rhs.NavigationMeshInfoMaps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Cells) ?? true))
+            {
+                if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Worldspaces) ?? true))
+            {
+                if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogTopics) ?? true))
+            {
+                if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Quests) ?? true))
+            {
+                if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.IdleAnimations) ?? true))
+            {
+                if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Packages) ?? true))
+            {
+                if (!object.Equals(lhs.Packages, rhs.Packages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CombatStyles) ?? true))
+            {
+                if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LoadScreens) ?? true))
+            {
+                if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LeveledSpells) ?? true))
+            {
+                if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AnimatedObjects) ?? true))
+            {
+                if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Waters) ?? true))
+            {
+                if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EffectShaders) ?? true))
+            {
+                if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Explosions) ?? true))
+            {
+                if (!object.Equals(lhs.Explosions, rhs.Explosions)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Debris) ?? true))
+            {
+                if (!object.Equals(lhs.Debris, rhs.Debris)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImageSpaces) ?? true))
+            {
+                if (!object.Equals(lhs.ImageSpaces, rhs.ImageSpaces)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImageSpaceAdapters) ?? true))
+            {
+                if (!object.Equals(lhs.ImageSpaceAdapters, rhs.ImageSpaceAdapters)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FormLists) ?? true))
+            {
+                if (!object.Equals(lhs.FormLists, rhs.FormLists)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Perks) ?? true))
+            {
+                if (!object.Equals(lhs.Perks, rhs.Perks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.BodyParts) ?? true))
+            {
+                if (!object.Equals(lhs.BodyParts, rhs.BodyParts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AddonNodes) ?? true))
+            {
+                if (!object.Equals(lhs.AddonNodes, rhs.AddonNodes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ActorValueInformation) ?? true))
+            {
+                if (!object.Equals(lhs.ActorValueInformation, rhs.ActorValueInformation)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraShots) ?? true))
+            {
+                if (!object.Equals(lhs.CameraShots, rhs.CameraShots)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CameraPaths) ?? true))
+            {
+                if (!object.Equals(lhs.CameraPaths, rhs.CameraPaths)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VoiceTypes) ?? true))
+            {
+                if (!object.Equals(lhs.VoiceTypes, rhs.VoiceTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialTypes) ?? true))
+            {
+                if (!object.Equals(lhs.MaterialTypes, rhs.MaterialTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Impacts) ?? true))
+            {
+                if (!object.Equals(lhs.Impacts, rhs.Impacts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ImpactDataSets) ?? true))
+            {
+                if (!object.Equals(lhs.ImpactDataSets, rhs.ImpactDataSets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArmorAddons) ?? true))
+            {
+                if (!object.Equals(lhs.ArmorAddons, rhs.ArmorAddons)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EncounterZones) ?? true))
+            {
+                if (!object.Equals(lhs.EncounterZones, rhs.EncounterZones)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Locations) ?? true))
+            {
+                if (!object.Equals(lhs.Locations, rhs.Locations)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Messages) ?? true))
+            {
+                if (!object.Equals(lhs.Messages, rhs.Messages)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DefaultObjectManagers) ?? true))
+            {
+                if (!object.Equals(lhs.DefaultObjectManagers, rhs.DefaultObjectManagers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.LightingTemplates) ?? true))
+            {
+                if (!object.Equals(lhs.LightingTemplates, rhs.LightingTemplates)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTypes) ?? true))
+            {
+                if (!object.Equals(lhs.MusicTypes, rhs.MusicTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Footsteps) ?? true))
+            {
+                if (!object.Equals(lhs.Footsteps, rhs.Footsteps)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.FootstepSets) ?? true))
+            {
+                if (!object.Equals(lhs.FootstepSets, rhs.FootstepSets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerBranchNodes) ?? true))
+            {
+                if (!object.Equals(lhs.StoryManagerBranchNodes, rhs.StoryManagerBranchNodes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerQuestNodes) ?? true))
+            {
+                if (!object.Equals(lhs.StoryManagerQuestNodes, rhs.StoryManagerQuestNodes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.StoryManagerEventNodes) ?? true))
+            {
+                if (!object.Equals(lhs.StoryManagerEventNodes, rhs.StoryManagerEventNodes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogBranches) ?? true))
+            {
+                if (!object.Equals(lhs.DialogBranches, rhs.DialogBranches)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MusicTracks) ?? true))
+            {
+                if (!object.Equals(lhs.MusicTracks, rhs.MusicTracks)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DialogViews) ?? true))
+            {
+                if (!object.Equals(lhs.DialogViews, rhs.DialogViews)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.WordsOfPower) ?? true))
+            {
+                if (!object.Equals(lhs.WordsOfPower, rhs.WordsOfPower)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Shouts) ?? true))
+            {
+                if (!object.Equals(lhs.Shouts, rhs.Shouts)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.EquipTypes) ?? true))
+            {
+                if (!object.Equals(lhs.EquipTypes, rhs.EquipTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Relationships) ?? true))
+            {
+                if (!object.Equals(lhs.Relationships, rhs.Relationships)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Scenes) ?? true))
+            {
+                if (!object.Equals(lhs.Scenes, rhs.Scenes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.AssociationTypes) ?? true))
+            {
+                if (!object.Equals(lhs.AssociationTypes, rhs.AssociationTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Outfits) ?? true))
+            {
+                if (!object.Equals(lhs.Outfits, rhs.Outfits)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ArtObjects) ?? true))
+            {
+                if (!object.Equals(lhs.ArtObjects, rhs.ArtObjects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MaterialObjects) ?? true))
+            {
+                if (!object.Equals(lhs.MaterialObjects, rhs.MaterialObjects)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.MovementTypes) ?? true))
+            {
+                if (!object.Equals(lhs.MovementTypes, rhs.MovementTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundDescriptors) ?? true))
+            {
+                if (!object.Equals(lhs.SoundDescriptors, rhs.SoundDescriptors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.DualCastData) ?? true))
+            {
+                if (!object.Equals(lhs.DualCastData, rhs.DualCastData)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundCategories) ?? true))
+            {
+                if (!object.Equals(lhs.SoundCategories, rhs.SoundCategories)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.SoundOutputModels) ?? true))
+            {
+                if (!object.Equals(lhs.SoundOutputModels, rhs.SoundOutputModels)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.CollisionLayers) ?? true))
+            {
+                if (!object.Equals(lhs.CollisionLayers, rhs.CollisionLayers)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.Colors) ?? true))
+            {
+                if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.ReverbParameters) ?? true))
+            {
+                if (!object.Equals(lhs.ReverbParameters, rhs.ReverbParameters)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)SkyrimMod_FieldIndex.VolumetricLightings) ?? true))
+            {
+                if (!object.Equals(lhs.VolumetricLightings, rhs.VolumetricLightings)) return false;
+            }
             return true;
         }
         
@@ -11692,6 +12036,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
         
+        public IEnumerable<IMajorRecordCommonGetter> EnumeratePotentiallyTypedMajorRecords(
+            ISkyrimModGetter obj,
+            Type? type,
+            bool throwIfUnknown)
+        {
+            if (type == null) return EnumerateMajorRecords(obj);
+            return EnumerateMajorRecords(obj, type, throwIfUnknown);
+        }
+        
         public IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(
             ISkyrimModGetter obj,
             Type type,
@@ -12791,19 +13144,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         yield return item;
                     }
                     yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in obj.Worldspaces.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -13651,10 +13991,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
+                case "ISpellRecord":
                 {
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -13664,9 +14008,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawnGetter":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(ILeveledSpellGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IShoutGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -16448,35 +16796,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         }
                     }
                     yield break;
-                case "APlaced":
-                case "IAPlacedGetter":
-                case "IAPlaced":
-                case "IAPlacedInternal":
-                    foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
-                        linkCache: linkCache,
-                        type: type,
-                        throwIfUnknown: throwIfUnknown,
-                        modKey: obj.ModKey,
-                        parent: null))
-                    {
-                        yield return item;
-                    }
-                    foreach (var groupItem in obj.Worldspaces)
-                    {
-                        foreach (var item in WorldspaceCommon.Instance.EnumerateMajorRecordContexts(
-                            groupItem,
-                            linkCache: linkCache,
-                            type: type,
-                            throwIfUnknown: throwIfUnknown,
-                            modKey: obj.ModKey,
-                            parent: null,
-                            getOrAddAsOverride: (m, r) => m.Worldspaces.GetOrAddAsOverride(linkCache.Resolve<IWorldspaceGetter>(r.FormKey)),
-                            duplicateInto: (m, r, e) => m.Worldspaces.DuplicateInAsNewRecord(linkCache.Resolve<IWorldspaceGetter>(r.FormKey), e)))
-                        {
-                            yield return item;
-                        }
-                    }
-                    yield break;
                 case "APlacedTrap":
                 case "IAPlacedTrapGetter":
                 case "IAPlacedTrap":
@@ -17308,13 +17627,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
-                case "ISpellSpawn":
-                case "ISpellSpawnGetter":
+                case "ISpellRecord":
+                case "ISpellRecordGetter":
                 {
                     foreach (var item in EnumerateMajorRecordContexts(
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILeveledSpellGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IShoutGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -23148,7 +23475,8 @@ namespace Mutagen.Bethesda.Skyrim
             var stringsWriter = param.StringsWriter ?? (EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.SkyrimRelease.ToGameRelease(), modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null);
             var bundle = new WritingBundle(item.SkyrimRelease.ToGameRelease())
             {
-                StringsWriter = stringsWriter
+                StringsWriter = stringsWriter,
+                CleanNulls = param.CleanNulls
             };
             using var memStream = new MemoryTributary();
             using (var writer = new MutagenWriter(
@@ -24518,13 +24846,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ISkyrimModGetter rhs)) return false;
-            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ISkyrimModGetter rhs) return false;
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ISkyrimModGetter? obj)
         {
-            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((SkyrimModCommon)((ISkyrimModGetter)this).CommonInstance()!).GetHashCode(this);

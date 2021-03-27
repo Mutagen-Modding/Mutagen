@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Oblivion
 {
     #region Class
     public partial class Armor :
-        AClothing,
+        OblivionMajorRecord,
         IArmorInternal,
         IEquatable<IArmorGetter>,
         ILoquiObjectSetter<Armor>
@@ -42,6 +42,111 @@ namespace Mutagen.Bethesda.Oblivion
         partial void CustomCtor();
         #endregion
 
+        #region Name
+        public String? Name { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IArmorGetter.Name => this.Name;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequired.Name
+        {
+            get => this.Name ?? string.Empty;
+            set => this.Name = value;
+        }
+        #endregion
+        #endregion
+        #region Script
+        private IFormLinkNullable<IScriptGetter> _Script = new FormLinkNullable<IScriptGetter>();
+        public IFormLinkNullable<IScriptGetter> Script
+        {
+            get => _Script;
+            set => _Script = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IScriptGetter> IArmorGetter.Script => this.Script;
+        #endregion
+        #region Enchantment
+        private IFormLinkNullable<IEnchantmentGetter> _Enchantment = new FormLinkNullable<IEnchantmentGetter>();
+        public IFormLinkNullable<IEnchantmentGetter> Enchantment
+        {
+            get => _Enchantment;
+            set => _Enchantment = value.AsNullable();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkNullableGetter<IEnchantmentGetter> IArmorGetter.Enchantment => this.Enchantment;
+        #endregion
+        #region EnchantmentPoints
+        public UInt16? EnchantmentPoints { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        UInt16? IArmorGetter.EnchantmentPoints => this.EnchantmentPoints;
+        #endregion
+        #region ClothingFlags
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private ClothingFlags? _ClothingFlags;
+        public ClothingFlags? ClothingFlags
+        {
+            get => _ClothingFlags;
+            set => _ClothingFlags = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IClothingFlagsGetter? IArmorGetter.ClothingFlags => this.ClothingFlags;
+        #endregion
+        #region MaleBipedModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _MaleBipedModel;
+        public Model? MaleBipedModel
+        {
+            get => _MaleBipedModel;
+            set => _MaleBipedModel = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArmorGetter.MaleBipedModel => this.MaleBipedModel;
+        #endregion
+        #region MaleWorldModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _MaleWorldModel;
+        public Model? MaleWorldModel
+        {
+            get => _MaleWorldModel;
+            set => _MaleWorldModel = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArmorGetter.MaleWorldModel => this.MaleWorldModel;
+        #endregion
+        #region MaleIcon
+        public String? MaleIcon { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IArmorGetter.MaleIcon => this.MaleIcon;
+        #endregion
+        #region FemaleBipedModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _FemaleBipedModel;
+        public Model? FemaleBipedModel
+        {
+            get => _FemaleBipedModel;
+            set => _FemaleBipedModel = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArmorGetter.FemaleBipedModel => this.FemaleBipedModel;
+        #endregion
+        #region FemaleWorldModel
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        private Model? _FemaleWorldModel;
+        public Model? FemaleWorldModel
+        {
+            get => _FemaleWorldModel;
+            set => _FemaleWorldModel = value;
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IModelGetter? IArmorGetter.FemaleWorldModel => this.FemaleWorldModel;
+        #endregion
+        #region FemaleIcon
+        public String? FemaleIcon { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IArmorGetter.FemaleIcon => this.FemaleIcon;
+        #endregion
         #region Data
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ArmorData? _Data;
@@ -67,25 +172,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IArmorGetter rhs)) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IArmorGetter? obj)
-        {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
-            AClothing.Mask<TItem>,
+            OblivionMajorRecord.Mask<TItem>,
             IEquatable<Mask<TItem>>,
             IMask<TItem>
         {
@@ -93,6 +182,17 @@ namespace Mutagen.Bethesda.Oblivion
             public Mask(TItem initialValue)
             : base(initialValue)
             {
+                this.Name = initialValue;
+                this.Script = initialValue;
+                this.Enchantment = initialValue;
+                this.EnchantmentPoints = initialValue;
+                this.ClothingFlags = new MaskItem<TItem, ClothingFlags.Mask<TItem>?>(initialValue, new ClothingFlags.Mask<TItem>(initialValue));
+                this.MaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.MaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.MaleIcon = initialValue;
+                this.FemaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.FemaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(initialValue, new Model.Mask<TItem>(initialValue));
+                this.FemaleIcon = initialValue;
                 this.Data = new MaskItem<TItem, ArmorData.Mask<TItem>?>(initialValue, new ArmorData.Mask<TItem>(initialValue));
             }
 
@@ -119,19 +219,19 @@ namespace Mutagen.Bethesda.Oblivion
                 FormKey: FormKey,
                 VersionControl: VersionControl,
                 EditorID: EditorID,
-                OblivionMajorRecordFlags: OblivionMajorRecordFlags,
-                Name: Name,
-                Script: Script,
-                Enchantment: Enchantment,
-                EnchantmentPoints: EnchantmentPoints,
-                ClothingFlags: ClothingFlags,
-                MaleBipedModel: MaleBipedModel,
-                MaleWorldModel: MaleWorldModel,
-                MaleIcon: MaleIcon,
-                FemaleBipedModel: FemaleBipedModel,
-                FemaleWorldModel: FemaleWorldModel,
-                FemaleIcon: FemaleIcon)
+                OblivionMajorRecordFlags: OblivionMajorRecordFlags)
             {
+                this.Name = Name;
+                this.Script = Script;
+                this.Enchantment = Enchantment;
+                this.EnchantmentPoints = EnchantmentPoints;
+                this.ClothingFlags = new MaskItem<TItem, ClothingFlags.Mask<TItem>?>(ClothingFlags, new ClothingFlags.Mask<TItem>(ClothingFlags));
+                this.MaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(MaleBipedModel, new Model.Mask<TItem>(MaleBipedModel));
+                this.MaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(MaleWorldModel, new Model.Mask<TItem>(MaleWorldModel));
+                this.MaleIcon = MaleIcon;
+                this.FemaleBipedModel = new MaskItem<TItem, Model.Mask<TItem>?>(FemaleBipedModel, new Model.Mask<TItem>(FemaleBipedModel));
+                this.FemaleWorldModel = new MaskItem<TItem, Model.Mask<TItem>?>(FemaleWorldModel, new Model.Mask<TItem>(FemaleWorldModel));
+                this.FemaleIcon = FemaleIcon;
                 this.Data = new MaskItem<TItem, ArmorData.Mask<TItem>?>(Data, new ArmorData.Mask<TItem>(Data));
             }
 
@@ -144,6 +244,17 @@ namespace Mutagen.Bethesda.Oblivion
             #endregion
 
             #region Members
+            public TItem Name;
+            public TItem Script;
+            public TItem Enchantment;
+            public TItem EnchantmentPoints;
+            public MaskItem<TItem, ClothingFlags.Mask<TItem>?>? ClothingFlags { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? MaleBipedModel { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? MaleWorldModel { get; set; }
+            public TItem MaleIcon;
+            public MaskItem<TItem, Model.Mask<TItem>?>? FemaleBipedModel { get; set; }
+            public MaskItem<TItem, Model.Mask<TItem>?>? FemaleWorldModel { get; set; }
+            public TItem FemaleIcon;
             public MaskItem<TItem, ArmorData.Mask<TItem>?>? Data { get; set; }
             #endregion
 
@@ -158,12 +269,34 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return false;
                 if (!base.Equals(rhs)) return false;
+                if (!object.Equals(this.Name, rhs.Name)) return false;
+                if (!object.Equals(this.Script, rhs.Script)) return false;
+                if (!object.Equals(this.Enchantment, rhs.Enchantment)) return false;
+                if (!object.Equals(this.EnchantmentPoints, rhs.EnchantmentPoints)) return false;
+                if (!object.Equals(this.ClothingFlags, rhs.ClothingFlags)) return false;
+                if (!object.Equals(this.MaleBipedModel, rhs.MaleBipedModel)) return false;
+                if (!object.Equals(this.MaleWorldModel, rhs.MaleWorldModel)) return false;
+                if (!object.Equals(this.MaleIcon, rhs.MaleIcon)) return false;
+                if (!object.Equals(this.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+                if (!object.Equals(this.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+                if (!object.Equals(this.FemaleIcon, rhs.FemaleIcon)) return false;
                 if (!object.Equals(this.Data, rhs.Data)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Name);
+                hash.Add(this.Script);
+                hash.Add(this.Enchantment);
+                hash.Add(this.EnchantmentPoints);
+                hash.Add(this.ClothingFlags);
+                hash.Add(this.MaleBipedModel);
+                hash.Add(this.MaleWorldModel);
+                hash.Add(this.MaleIcon);
+                hash.Add(this.FemaleBipedModel);
+                hash.Add(this.FemaleWorldModel);
+                hash.Add(this.FemaleIcon);
                 hash.Add(this.Data);
                 hash.Add(base.GetHashCode());
                 return hash.ToHashCode();
@@ -175,6 +308,37 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool All(Func<TItem, bool> eval)
             {
                 if (!base.All(eval)) return false;
+                if (!eval(this.Name)) return false;
+                if (!eval(this.Script)) return false;
+                if (!eval(this.Enchantment)) return false;
+                if (!eval(this.EnchantmentPoints)) return false;
+                if (ClothingFlags != null)
+                {
+                    if (!eval(this.ClothingFlags.Overall)) return false;
+                    if (this.ClothingFlags.Specific != null && !this.ClothingFlags.Specific.All(eval)) return false;
+                }
+                if (MaleBipedModel != null)
+                {
+                    if (!eval(this.MaleBipedModel.Overall)) return false;
+                    if (this.MaleBipedModel.Specific != null && !this.MaleBipedModel.Specific.All(eval)) return false;
+                }
+                if (MaleWorldModel != null)
+                {
+                    if (!eval(this.MaleWorldModel.Overall)) return false;
+                    if (this.MaleWorldModel.Specific != null && !this.MaleWorldModel.Specific.All(eval)) return false;
+                }
+                if (!eval(this.MaleIcon)) return false;
+                if (FemaleBipedModel != null)
+                {
+                    if (!eval(this.FemaleBipedModel.Overall)) return false;
+                    if (this.FemaleBipedModel.Specific != null && !this.FemaleBipedModel.Specific.All(eval)) return false;
+                }
+                if (FemaleWorldModel != null)
+                {
+                    if (!eval(this.FemaleWorldModel.Overall)) return false;
+                    if (this.FemaleWorldModel.Specific != null && !this.FemaleWorldModel.Specific.All(eval)) return false;
+                }
+                if (!eval(this.FemaleIcon)) return false;
                 if (Data != null)
                 {
                     if (!eval(this.Data.Overall)) return false;
@@ -188,6 +352,37 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool Any(Func<TItem, bool> eval)
             {
                 if (base.Any(eval)) return true;
+                if (eval(this.Name)) return true;
+                if (eval(this.Script)) return true;
+                if (eval(this.Enchantment)) return true;
+                if (eval(this.EnchantmentPoints)) return true;
+                if (ClothingFlags != null)
+                {
+                    if (eval(this.ClothingFlags.Overall)) return true;
+                    if (this.ClothingFlags.Specific != null && this.ClothingFlags.Specific.Any(eval)) return true;
+                }
+                if (MaleBipedModel != null)
+                {
+                    if (eval(this.MaleBipedModel.Overall)) return true;
+                    if (this.MaleBipedModel.Specific != null && this.MaleBipedModel.Specific.Any(eval)) return true;
+                }
+                if (MaleWorldModel != null)
+                {
+                    if (eval(this.MaleWorldModel.Overall)) return true;
+                    if (this.MaleWorldModel.Specific != null && this.MaleWorldModel.Specific.Any(eval)) return true;
+                }
+                if (eval(this.MaleIcon)) return true;
+                if (FemaleBipedModel != null)
+                {
+                    if (eval(this.FemaleBipedModel.Overall)) return true;
+                    if (this.FemaleBipedModel.Specific != null && this.FemaleBipedModel.Specific.Any(eval)) return true;
+                }
+                if (FemaleWorldModel != null)
+                {
+                    if (eval(this.FemaleWorldModel.Overall)) return true;
+                    if (this.FemaleWorldModel.Specific != null && this.FemaleWorldModel.Specific.Any(eval)) return true;
+                }
+                if (eval(this.FemaleIcon)) return true;
                 if (Data != null)
                 {
                     if (eval(this.Data.Overall)) return true;
@@ -208,6 +403,17 @@ namespace Mutagen.Bethesda.Oblivion
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
                 base.Translate_InternalFill(obj, eval);
+                obj.Name = eval(this.Name);
+                obj.Script = eval(this.Script);
+                obj.Enchantment = eval(this.Enchantment);
+                obj.EnchantmentPoints = eval(this.EnchantmentPoints);
+                obj.ClothingFlags = this.ClothingFlags == null ? null : new MaskItem<R, ClothingFlags.Mask<R>?>(eval(this.ClothingFlags.Overall), this.ClothingFlags.Specific?.Translate(eval));
+                obj.MaleBipedModel = this.MaleBipedModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.MaleBipedModel.Overall), this.MaleBipedModel.Specific?.Translate(eval));
+                obj.MaleWorldModel = this.MaleWorldModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.MaleWorldModel.Overall), this.MaleWorldModel.Specific?.Translate(eval));
+                obj.MaleIcon = eval(this.MaleIcon);
+                obj.FemaleBipedModel = this.FemaleBipedModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.FemaleBipedModel.Overall), this.FemaleBipedModel.Specific?.Translate(eval));
+                obj.FemaleWorldModel = this.FemaleWorldModel == null ? null : new MaskItem<R, Model.Mask<R>?>(eval(this.FemaleWorldModel.Overall), this.FemaleWorldModel.Specific?.Translate(eval));
+                obj.FemaleIcon = eval(this.FemaleIcon);
                 obj.Data = this.Data == null ? null : new MaskItem<R, ArmorData.Mask<R>?>(eval(this.Data.Overall), this.Data.Specific?.Translate(eval));
             }
             #endregion
@@ -231,6 +437,50 @@ namespace Mutagen.Bethesda.Oblivion
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Name ?? true)
+                    {
+                        fg.AppendItem(Name, "Name");
+                    }
+                    if (printMask?.Script ?? true)
+                    {
+                        fg.AppendItem(Script, "Script");
+                    }
+                    if (printMask?.Enchantment ?? true)
+                    {
+                        fg.AppendItem(Enchantment, "Enchantment");
+                    }
+                    if (printMask?.EnchantmentPoints ?? true)
+                    {
+                        fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                    }
+                    if (printMask?.ClothingFlags?.Overall ?? true)
+                    {
+                        ClothingFlags?.ToString(fg);
+                    }
+                    if (printMask?.MaleBipedModel?.Overall ?? true)
+                    {
+                        MaleBipedModel?.ToString(fg);
+                    }
+                    if (printMask?.MaleWorldModel?.Overall ?? true)
+                    {
+                        MaleWorldModel?.ToString(fg);
+                    }
+                    if (printMask?.MaleIcon ?? true)
+                    {
+                        fg.AppendItem(MaleIcon, "MaleIcon");
+                    }
+                    if (printMask?.FemaleBipedModel?.Overall ?? true)
+                    {
+                        FemaleBipedModel?.ToString(fg);
+                    }
+                    if (printMask?.FemaleWorldModel?.Overall ?? true)
+                    {
+                        FemaleWorldModel?.ToString(fg);
+                    }
+                    if (printMask?.FemaleIcon ?? true)
+                    {
+                        fg.AppendItem(FemaleIcon, "FemaleIcon");
+                    }
                     if (printMask?.Data?.Overall ?? true)
                     {
                         Data?.ToString(fg);
@@ -243,10 +493,21 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         public new class ErrorMask :
-            AClothing.ErrorMask,
+            OblivionMajorRecord.ErrorMask,
             IErrorMask<ErrorMask>
         {
             #region Members
+            public Exception? Name;
+            public Exception? Script;
+            public Exception? Enchantment;
+            public Exception? EnchantmentPoints;
+            public MaskItem<Exception?, ClothingFlags.ErrorMask?>? ClothingFlags;
+            public MaskItem<Exception?, Model.ErrorMask?>? MaleBipedModel;
+            public MaskItem<Exception?, Model.ErrorMask?>? MaleWorldModel;
+            public Exception? MaleIcon;
+            public MaskItem<Exception?, Model.ErrorMask?>? FemaleBipedModel;
+            public MaskItem<Exception?, Model.ErrorMask?>? FemaleWorldModel;
+            public Exception? FemaleIcon;
             public MaskItem<Exception?, ArmorData.ErrorMask?>? Data;
             #endregion
 
@@ -256,6 +517,28 @@ namespace Mutagen.Bethesda.Oblivion
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.Name:
+                        return Name;
+                    case Armor_FieldIndex.Script:
+                        return Script;
+                    case Armor_FieldIndex.Enchantment:
+                        return Enchantment;
+                    case Armor_FieldIndex.EnchantmentPoints:
+                        return EnchantmentPoints;
+                    case Armor_FieldIndex.ClothingFlags:
+                        return ClothingFlags;
+                    case Armor_FieldIndex.MaleBipedModel:
+                        return MaleBipedModel;
+                    case Armor_FieldIndex.MaleWorldModel:
+                        return MaleWorldModel;
+                    case Armor_FieldIndex.MaleIcon:
+                        return MaleIcon;
+                    case Armor_FieldIndex.FemaleBipedModel:
+                        return FemaleBipedModel;
+                    case Armor_FieldIndex.FemaleWorldModel:
+                        return FemaleWorldModel;
+                    case Armor_FieldIndex.FemaleIcon:
+                        return FemaleIcon;
                     case Armor_FieldIndex.Data:
                         return Data;
                     default:
@@ -268,6 +551,39 @@ namespace Mutagen.Bethesda.Oblivion
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.Name:
+                        this.Name = ex;
+                        break;
+                    case Armor_FieldIndex.Script:
+                        this.Script = ex;
+                        break;
+                    case Armor_FieldIndex.Enchantment:
+                        this.Enchantment = ex;
+                        break;
+                    case Armor_FieldIndex.EnchantmentPoints:
+                        this.EnchantmentPoints = ex;
+                        break;
+                    case Armor_FieldIndex.ClothingFlags:
+                        this.ClothingFlags = new MaskItem<Exception?, ClothingFlags.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.MaleBipedModel:
+                        this.MaleBipedModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.MaleWorldModel:
+                        this.MaleWorldModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.MaleIcon:
+                        this.MaleIcon = ex;
+                        break;
+                    case Armor_FieldIndex.FemaleBipedModel:
+                        this.FemaleBipedModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.FemaleWorldModel:
+                        this.FemaleWorldModel = new MaskItem<Exception?, Model.ErrorMask?>(ex, null);
+                        break;
+                    case Armor_FieldIndex.FemaleIcon:
+                        this.FemaleIcon = ex;
+                        break;
                     case Armor_FieldIndex.Data:
                         this.Data = new MaskItem<Exception?, ArmorData.ErrorMask?>(ex, null);
                         break;
@@ -282,6 +598,39 @@ namespace Mutagen.Bethesda.Oblivion
                 Armor_FieldIndex enu = (Armor_FieldIndex)index;
                 switch (enu)
                 {
+                    case Armor_FieldIndex.Name:
+                        this.Name = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Script:
+                        this.Script = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.Enchantment:
+                        this.Enchantment = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.EnchantmentPoints:
+                        this.EnchantmentPoints = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.ClothingFlags:
+                        this.ClothingFlags = (MaskItem<Exception?, ClothingFlags.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.MaleBipedModel:
+                        this.MaleBipedModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.MaleWorldModel:
+                        this.MaleWorldModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.MaleIcon:
+                        this.MaleIcon = (Exception?)obj;
+                        break;
+                    case Armor_FieldIndex.FemaleBipedModel:
+                        this.FemaleBipedModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.FemaleWorldModel:
+                        this.FemaleWorldModel = (MaskItem<Exception?, Model.ErrorMask?>?)obj;
+                        break;
+                    case Armor_FieldIndex.FemaleIcon:
+                        this.FemaleIcon = (Exception?)obj;
+                        break;
                     case Armor_FieldIndex.Data:
                         this.Data = (MaskItem<Exception?, ArmorData.ErrorMask?>?)obj;
                         break;
@@ -294,6 +643,17 @@ namespace Mutagen.Bethesda.Oblivion
             public override bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Name != null) return true;
+                if (Script != null) return true;
+                if (Enchantment != null) return true;
+                if (EnchantmentPoints != null) return true;
+                if (ClothingFlags != null) return true;
+                if (MaleBipedModel != null) return true;
+                if (MaleWorldModel != null) return true;
+                if (MaleIcon != null) return true;
+                if (FemaleBipedModel != null) return true;
+                if (FemaleWorldModel != null) return true;
+                if (FemaleIcon != null) return true;
                 if (Data != null) return true;
                 return false;
             }
@@ -330,6 +690,17 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void ToString_FillInternal(FileGeneration fg)
             {
                 base.ToString_FillInternal(fg);
+                fg.AppendItem(Name, "Name");
+                fg.AppendItem(Script, "Script");
+                fg.AppendItem(Enchantment, "Enchantment");
+                fg.AppendItem(EnchantmentPoints, "EnchantmentPoints");
+                ClothingFlags?.ToString(fg);
+                MaleBipedModel?.ToString(fg);
+                MaleWorldModel?.ToString(fg);
+                fg.AppendItem(MaleIcon, "MaleIcon");
+                FemaleBipedModel?.ToString(fg);
+                FemaleWorldModel?.ToString(fg);
+                fg.AppendItem(FemaleIcon, "FemaleIcon");
                 Data?.ToString(fg);
             }
             #endregion
@@ -339,6 +710,17 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Name = this.Name.Combine(rhs.Name);
+                ret.Script = this.Script.Combine(rhs.Script);
+                ret.Enchantment = this.Enchantment.Combine(rhs.Enchantment);
+                ret.EnchantmentPoints = this.EnchantmentPoints.Combine(rhs.EnchantmentPoints);
+                ret.ClothingFlags = this.ClothingFlags.Combine(rhs.ClothingFlags, (l, r) => l.Combine(r));
+                ret.MaleBipedModel = this.MaleBipedModel.Combine(rhs.MaleBipedModel, (l, r) => l.Combine(r));
+                ret.MaleWorldModel = this.MaleWorldModel.Combine(rhs.MaleWorldModel, (l, r) => l.Combine(r));
+                ret.MaleIcon = this.MaleIcon.Combine(rhs.MaleIcon);
+                ret.FemaleBipedModel = this.FemaleBipedModel.Combine(rhs.FemaleBipedModel, (l, r) => l.Combine(r));
+                ret.FemaleWorldModel = this.FemaleWorldModel.Combine(rhs.FemaleWorldModel, (l, r) => l.Combine(r));
+                ret.FemaleIcon = this.FemaleIcon.Combine(rhs.FemaleIcon);
                 ret.Data = this.Data.Combine(rhs.Data, (l, r) => l.Combine(r));
                 return ret;
             }
@@ -358,10 +740,21 @@ namespace Mutagen.Bethesda.Oblivion
 
         }
         public new class TranslationMask :
-            AClothing.TranslationMask,
+            OblivionMajorRecord.TranslationMask,
             ITranslationMask
         {
             #region Members
+            public bool Name;
+            public bool Script;
+            public bool Enchantment;
+            public bool EnchantmentPoints;
+            public ClothingFlags.TranslationMask? ClothingFlags;
+            public Model.TranslationMask? MaleBipedModel;
+            public Model.TranslationMask? MaleWorldModel;
+            public bool MaleIcon;
+            public Model.TranslationMask? FemaleBipedModel;
+            public Model.TranslationMask? FemaleWorldModel;
+            public bool FemaleIcon;
             public ArmorData.TranslationMask? Data;
             #endregion
 
@@ -371,6 +764,12 @@ namespace Mutagen.Bethesda.Oblivion
                 bool onOverall = true)
                 : base(defaultOn, onOverall)
             {
+                this.Name = defaultOn;
+                this.Script = defaultOn;
+                this.Enchantment = defaultOn;
+                this.EnchantmentPoints = defaultOn;
+                this.MaleIcon = defaultOn;
+                this.FemaleIcon = defaultOn;
             }
 
             #endregion
@@ -378,6 +777,17 @@ namespace Mutagen.Bethesda.Oblivion
             protected override void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
                 base.GetCrystal(ret);
+                ret.Add((Name, null));
+                ret.Add((Script, null));
+                ret.Add((Enchantment, null));
+                ret.Add((EnchantmentPoints, null));
+                ret.Add((ClothingFlags != null ? ClothingFlags.OnOverall : DefaultOn, ClothingFlags?.GetCrystal()));
+                ret.Add((MaleBipedModel != null ? MaleBipedModel.OnOverall : DefaultOn, MaleBipedModel?.GetCrystal()));
+                ret.Add((MaleWorldModel != null ? MaleWorldModel.OnOverall : DefaultOn, MaleWorldModel?.GetCrystal()));
+                ret.Add((MaleIcon, null));
+                ret.Add((FemaleBipedModel != null ? FemaleBipedModel.OnOverall : DefaultOn, FemaleBipedModel?.GetCrystal()));
+                ret.Add((FemaleWorldModel != null ? FemaleWorldModel.OnOverall : DefaultOn, FemaleWorldModel?.GetCrystal()));
+                ret.Add((FemaleIcon, null));
                 ret.Add((Data != null ? Data.OnOverall : DefaultOn, Data?.GetCrystal()));
             }
 
@@ -391,6 +801,8 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Armor_Registration.TriggeringRecordType;
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
+        public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ArmorSetterCommon.Instance.RemapLinks(this, mapping);
         public Armor(FormKey formKey)
         {
             this.FormKey = formKey;
@@ -415,6 +827,26 @@ namespace Mutagen.Bethesda.Oblivion
         {
             this.EditorID = editorID;
         }
+
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArmorGetter rhs) return false;
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IArmorGetter? obj)
+        {
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
 
         #endregion
 
@@ -473,31 +905,57 @@ namespace Mutagen.Bethesda.Oblivion
 
     #region Interface
     public partial interface IArmor :
-        IAClothingInternal,
         IArmorGetter,
+        IFormLinkContainer,
+        IItem,
         ILoquiObjectSetter<IArmorInternal>,
         INamed,
-        INamedRequired
+        INamedRequired,
+        IOblivionMajorRecordInternal
     {
+        new String? Name { get; set; }
+        new IFormLinkNullable<IScriptGetter> Script { get; }
+        new IFormLinkNullable<IEnchantmentGetter> Enchantment { get; }
+        new UInt16? EnchantmentPoints { get; set; }
+        new ClothingFlags? ClothingFlags { get; set; }
+        new Model? MaleBipedModel { get; set; }
+        new Model? MaleWorldModel { get; set; }
+        new String? MaleIcon { get; set; }
+        new Model? FemaleBipedModel { get; set; }
+        new Model? FemaleWorldModel { get; set; }
+        new String? FemaleIcon { get; set; }
         new ArmorData? Data { get; set; }
     }
 
     public partial interface IArmorInternal :
-        IAClothingInternal,
+        IOblivionMajorRecordInternal,
         IArmor,
         IArmorGetter
     {
     }
 
     public partial interface IArmorGetter :
-        IAClothingGetter,
+        IOblivionMajorRecordGetter,
         IBinaryItem,
+        IFormLinkContainerGetter,
+        IItemGetter,
         ILoquiObject<IArmorGetter>,
         IMapsToGetter<IArmorGetter>,
         INamedGetter,
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Armor_Registration.Instance;
+        String? Name { get; }
+        IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        IFormLinkNullableGetter<IEnchantmentGetter> Enchantment { get; }
+        UInt16? EnchantmentPoints { get; }
+        IClothingFlagsGetter? ClothingFlags { get; }
+        IModelGetter? MaleBipedModel { get; }
+        IModelGetter? MaleWorldModel { get; }
+        String? MaleIcon { get; }
+        IModelGetter? FemaleBipedModel { get; }
+        IModelGetter? FemaleWorldModel { get; }
+        String? FemaleIcon { get; }
         IArmorDataGetter? Data { get; }
 
     }
@@ -549,11 +1007,13 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static bool Equals(
             this IArmorGetter item,
-            IArmorGetter rhs)
+            IArmorGetter rhs,
+            Armor.TranslationMask? equalsMask = null)
         {
             return ((ArmorCommon)((IArmorGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -689,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public const string GUID = "484e38f3-afde-4661-9c39-a8bc1e92eb99";
 
-        public const ushort AdditionalFieldCount = 1;
+        public const ushort AdditionalFieldCount = 12;
 
         public const ushort FieldCount = 17;
 
@@ -718,6 +1178,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly Type? GenericRegistrationType = null;
 
         public static readonly RecordType TriggeringRecordType = RecordTypes.ARMO;
+        public static RecordTypeConverter MaleWorldModelConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD2")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODB"),
+                new RecordType("MO2B")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO2T")));
+        public static RecordTypeConverter FemaleBipedModelConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD3")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODB"),
+                new RecordType("MO3B")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO3T")));
+        public static RecordTypeConverter FemaleWorldModelConverter = new RecordTypeConverter(
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODL"),
+                new RecordType("MOD4")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODB"),
+                new RecordType("MO4B")),
+            new KeyValuePair<RecordType, RecordType>(
+                new RecordType("MODT"),
+                new RecordType("MO4T")));
         public static readonly Type BinaryWriteTranslation = typeof(ArmorBinaryWriteTranslation);
         #region Interface
         ProtocolKey ILoquiRegistration.ProtocolKey => ProtocolKey;
@@ -751,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     #endregion
 
     #region Common
-    public partial class ArmorSetterCommon : AClothingSetterCommon
+    public partial class ArmorSetterCommon : OblivionMajorRecordSetterCommon
     {
         public new static readonly ArmorSetterCommon Instance = new ArmorSetterCommon();
 
@@ -760,18 +1250,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void Clear(IArmorInternal item)
         {
             ClearPartial();
+            item.Name = default;
+            item.Script.Clear();
+            item.Enchantment.Clear();
+            item.EnchantmentPoints = default;
+            item.ClothingFlags = null;
+            item.MaleBipedModel = null;
+            item.MaleWorldModel = null;
+            item.MaleIcon = default;
+            item.FemaleBipedModel = null;
+            item.FemaleWorldModel = null;
+            item.FemaleIcon = default;
             item.Data = null;
             base.Clear(item);
-        }
-        
-        public override void Clear(IAClothingInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
-        }
-        
-        public override void Clear(IAItemInternal item)
-        {
-            Clear(item: (IArmorInternal)item);
         }
         
         public override void Clear(IOblivionMajorRecordInternal item)
@@ -788,6 +1279,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public void RemapLinks(IArmor obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
+            obj.Script.Relink(mapping);
+            obj.Enchantment.Relink(mapping);
         }
         
         #endregion
@@ -804,28 +1297,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter,
                 fillStructs: ArmorBinaryCreateTranslation.FillBinaryStructs,
                 fillTyped: ArmorBinaryCreateTranslation.FillBinaryRecordTypes);
-        }
-        
-        public override void CopyInFromBinary(
-            IAClothingInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Armor)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
-        }
-        
-        public override void CopyInFromBinary(
-            IAItemInternal item,
-            MutagenFrame frame,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            CopyInFromBinary(
-                item: (Armor)item,
-                frame: frame,
-                recordTypeConverter: recordTypeConverter);
         }
         
         public override void CopyInFromBinary(
@@ -853,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorCommon : AClothingCommon
+    public partial class ArmorCommon : OblivionMajorRecordCommon
     {
         public new static readonly ArmorCommon Instance = new ArmorCommon();
 
@@ -878,6 +1349,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Name = string.Equals(item.Name, rhs.Name);
+            ret.Script = item.Script.Equals(rhs.Script);
+            ret.Enchantment = item.Enchantment.Equals(rhs.Enchantment);
+            ret.EnchantmentPoints = item.EnchantmentPoints == rhs.EnchantmentPoints;
+            ret.ClothingFlags = EqualsMaskHelper.EqualsHelper(
+                item.ClothingFlags,
+                rhs.ClothingFlags,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.MaleBipedModel = EqualsMaskHelper.EqualsHelper(
+                item.MaleBipedModel,
+                rhs.MaleBipedModel,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.MaleWorldModel = EqualsMaskHelper.EqualsHelper(
+                item.MaleWorldModel,
+                rhs.MaleWorldModel,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.MaleIcon = string.Equals(item.MaleIcon, rhs.MaleIcon);
+            ret.FemaleBipedModel = EqualsMaskHelper.EqualsHelper(
+                item.FemaleBipedModel,
+                rhs.FemaleBipedModel,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FemaleWorldModel = EqualsMaskHelper.EqualsHelper(
+                item.FemaleWorldModel,
+                rhs.FemaleWorldModel,
+                (loqLhs, loqRhs, incl) => loqLhs.GetEqualsMask(loqRhs, incl),
+                include);
+            ret.FemaleIcon = string.Equals(item.FemaleIcon, rhs.FemaleIcon);
             ret.Data = EqualsMaskHelper.EqualsHelper(
                 item.Data,
                 rhs.Data,
@@ -930,10 +1432,63 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FileGeneration fg,
             Armor.Mask<bool>? printMask = null)
         {
-            AClothingCommon.ToStringFields(
+            OblivionMajorRecordCommon.ToStringFields(
                 item: item,
                 fg: fg,
                 printMask: printMask);
+            if ((printMask?.Name ?? true)
+                && item.Name.TryGet(out var NameItem))
+            {
+                fg.AppendItem(NameItem, "Name");
+            }
+            if (printMask?.Script ?? true)
+            {
+                fg.AppendItem(item.Script.FormKeyNullable, "Script");
+            }
+            if (printMask?.Enchantment ?? true)
+            {
+                fg.AppendItem(item.Enchantment.FormKeyNullable, "Enchantment");
+            }
+            if ((printMask?.EnchantmentPoints ?? true)
+                && item.EnchantmentPoints.TryGet(out var EnchantmentPointsItem))
+            {
+                fg.AppendItem(EnchantmentPointsItem, "EnchantmentPoints");
+            }
+            if ((printMask?.ClothingFlags?.Overall ?? true)
+                && item.ClothingFlags.TryGet(out var ClothingFlagsItem))
+            {
+                ClothingFlagsItem?.ToString(fg, "ClothingFlags");
+            }
+            if ((printMask?.MaleBipedModel?.Overall ?? true)
+                && item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
+            {
+                MaleBipedModelItem?.ToString(fg, "MaleBipedModel");
+            }
+            if ((printMask?.MaleWorldModel?.Overall ?? true)
+                && item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
+            {
+                MaleWorldModelItem?.ToString(fg, "MaleWorldModel");
+            }
+            if ((printMask?.MaleIcon ?? true)
+                && item.MaleIcon.TryGet(out var MaleIconItem))
+            {
+                fg.AppendItem(MaleIconItem, "MaleIcon");
+            }
+            if ((printMask?.FemaleBipedModel?.Overall ?? true)
+                && item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
+            {
+                FemaleBipedModelItem?.ToString(fg, "FemaleBipedModel");
+            }
+            if ((printMask?.FemaleWorldModel?.Overall ?? true)
+                && item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
+            {
+                FemaleWorldModelItem?.ToString(fg, "FemaleWorldModel");
+            }
+            if ((printMask?.FemaleIcon ?? true)
+                && item.FemaleIcon.TryGet(out var FemaleIconItem))
+            {
+                fg.AppendItem(FemaleIconItem, "FemaleIcon");
+            }
             if ((printMask?.Data?.Overall ?? true)
                 && item.Data.TryGet(out var DataItem))
             {
@@ -941,67 +1496,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
         
-        public static Armor_FieldIndex ConvertFieldIndex(AClothing_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AClothing_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.VersionControl:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.OblivionMajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.Name:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.Script:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.Enchantment:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.EnchantmentPoints:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.ClothingFlags:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.MaleBipedModel:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.MaleWorldModel:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.MaleIcon:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.FemaleBipedModel:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.FemaleWorldModel:
-                    return (Armor_FieldIndex)((int)index);
-                case AClothing_FieldIndex.FemaleIcon:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Armor_FieldIndex ConvertFieldIndex(AItem_FieldIndex index)
-        {
-            switch (index)
-            {
-                case AItem_FieldIndex.MajorRecordFlagsRaw:
-                    return (Armor_FieldIndex)((int)index);
-                case AItem_FieldIndex.FormKey:
-                    return (Armor_FieldIndex)((int)index);
-                case AItem_FieldIndex.VersionControl:
-                    return (Armor_FieldIndex)((int)index);
-                case AItem_FieldIndex.EditorID:
-                    return (Armor_FieldIndex)((int)index);
-                case AItem_FieldIndex.OblivionMajorRecordFlags:
-                    return (Armor_FieldIndex)((int)index);
-                default:
-                    throw new ArgumentException($"Index is out of range: {index.ToStringFast_Enum_Only()}");
-            }
-        }
-        
-        public static new Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
+        public static Armor_FieldIndex ConvertFieldIndex(OblivionMajorRecord_FieldIndex index)
         {
             switch (index)
             {
@@ -1040,70 +1535,132 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IArmorGetter? lhs,
-            IArmorGetter? rhs)
+            IArmorGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IAClothingGetter)lhs, (IAClothingGetter)rhs)) return false;
-            if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            {
+                if (!string.Equals(lhs.Name, rhs.Name)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Script) ?? true))
+            {
+                if (!lhs.Script.Equals(rhs.Script)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Enchantment) ?? true))
+            {
+                if (!lhs.Enchantment.Equals(rhs.Enchantment)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                if (lhs.EnchantmentPoints != rhs.EnchantmentPoints) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ClothingFlags) ?? true))
+            {
+                if (!object.Equals(lhs.ClothingFlags, rhs.ClothingFlags)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleBipedModel) ?? true))
+            {
+                if (!object.Equals(lhs.MaleBipedModel, rhs.MaleBipedModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleWorldModel) ?? true))
+            {
+                if (!object.Equals(lhs.MaleWorldModel, rhs.MaleWorldModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleIcon) ?? true))
+            {
+                if (!string.Equals(lhs.MaleIcon, rhs.MaleIcon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleBipedModel) ?? true))
+            {
+                if (!object.Equals(lhs.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleWorldModel) ?? true))
+            {
+                if (!object.Equals(lhs.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleIcon) ?? true))
+            {
+                if (!string.Equals(lhs.FemaleIcon, rhs.FemaleIcon)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Data) ?? true))
+            {
+                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
-            IAClothingGetter? lhs,
-            IAClothingGetter? rhs)
-        {
-            return Equals(
-                lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
-        }
-        
-        public override bool Equals(
-            IAItemGetter? lhs,
-            IAItemGetter? rhs)
-        {
-            return Equals(
-                lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
-        }
-        
-        public override bool Equals(
             IOblivionMajorRecordGetter? lhs,
-            IOblivionMajorRecordGetter? rhs)
+            IOblivionMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
+                rhs: rhs as IArmorGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IArmorGetter?)lhs,
-                rhs: rhs as IArmorGetter);
+                rhs: rhs as IArmorGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IArmorGetter item)
         {
             var hash = new HashCode();
+            if (item.Name.TryGet(out var Nameitem))
+            {
+                hash.Add(Nameitem);
+            }
+            hash.Add(item.Script);
+            hash.Add(item.Enchantment);
+            if (item.EnchantmentPoints.TryGet(out var EnchantmentPointsitem))
+            {
+                hash.Add(EnchantmentPointsitem);
+            }
+            if (item.ClothingFlags.TryGet(out var ClothingFlagsitem))
+            {
+                hash.Add(ClothingFlagsitem);
+            }
+            if (item.MaleBipedModel.TryGet(out var MaleBipedModelitem))
+            {
+                hash.Add(MaleBipedModelitem);
+            }
+            if (item.MaleWorldModel.TryGet(out var MaleWorldModelitem))
+            {
+                hash.Add(MaleWorldModelitem);
+            }
+            if (item.MaleIcon.TryGet(out var MaleIconitem))
+            {
+                hash.Add(MaleIconitem);
+            }
+            if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelitem))
+            {
+                hash.Add(FemaleBipedModelitem);
+            }
+            if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelitem))
+            {
+                hash.Add(FemaleWorldModelitem);
+            }
+            if (item.FemaleIcon.TryGet(out var FemaleIconitem))
+            {
+                hash.Add(FemaleIconitem);
+            }
             if (item.Data.TryGet(out var Dataitem))
             {
                 hash.Add(Dataitem);
             }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
-        }
-        
-        public override int GetHashCode(IAClothingGetter item)
-        {
-            return GetHashCode(item: (IArmorGetter)item);
-        }
-        
-        public override int GetHashCode(IAItemGetter item)
-        {
-            return GetHashCode(item: (IArmorGetter)item);
         }
         
         public override int GetHashCode(IOblivionMajorRecordGetter item)
@@ -1131,6 +1688,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             {
                 yield return item;
             }
+            if (obj.Script.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.Script);
+            }
+            if (obj.Enchantment.FormKeyNullable.HasValue)
+            {
+                yield return FormLinkInformation.Factory(obj.Enchantment);
+            }
             yield break;
         }
         
@@ -1145,35 +1710,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             return newRec;
         }
         
-        public override AClothing Duplicate(
-            IAClothingGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IArmor)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
-        public override AItem Duplicate(
-            IAItemGetter item,
-            FormKey formKey,
-            TranslationCrystal? copyMask)
-        {
-            return this.Duplicate(
-                item: (IArmor)item,
-                formKey: formKey,
-                copyMask: copyMask);
-        }
-        
         public override OblivionMajorRecord Duplicate(
             IOblivionMajorRecordGetter item,
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArmor)item,
+                item: (IArmorGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1184,7 +1727,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IArmor)item,
+                item: (IArmorGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1194,7 +1737,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         
     }
-    public partial class ArmorSetterTranslationCommon : AClothingSetterTranslationCommon
+    public partial class ArmorSetterTranslationCommon : OblivionMajorRecordSetterTranslationCommon
     {
         public new static readonly ArmorSetterTranslationCommon Instance = new ArmorSetterTranslationCommon();
 
@@ -1222,11 +1765,165 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             bool deepCopy)
         {
             base.DeepCopyIn(
-                (IAClothing)item,
-                (IAClothingGetter)rhs,
+                (IOblivionMajorRecord)item,
+                (IOblivionMajorRecordGetter)rhs,
                 errorMask,
                 copyMask,
                 deepCopy: deepCopy);
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
+            {
+                item.Name = rhs.Name;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Script) ?? true))
+            {
+                item.Script.SetTo(rhs.Script.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Enchantment) ?? true))
+            {
+                item.Enchantment.SetTo(rhs.Enchantment.FormKeyNullable);
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.EnchantmentPoints) ?? true))
+            {
+                item.EnchantmentPoints = rhs.EnchantmentPoints;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.ClothingFlags) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.ClothingFlags);
+                try
+                {
+                    if(rhs.ClothingFlags.TryGet(out var rhsClothingFlags))
+                    {
+                        item.ClothingFlags = rhsClothingFlags.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.ClothingFlags));
+                    }
+                    else
+                    {
+                        item.ClothingFlags = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.MaleBipedModel) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.MaleBipedModel);
+                try
+                {
+                    if(rhs.MaleBipedModel.TryGet(out var rhsMaleBipedModel))
+                    {
+                        item.MaleBipedModel = rhsMaleBipedModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.MaleBipedModel));
+                    }
+                    else
+                    {
+                        item.MaleBipedModel = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.MaleWorldModel) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.MaleWorldModel);
+                try
+                {
+                    if(rhs.MaleWorldModel.TryGet(out var rhsMaleWorldModel))
+                    {
+                        item.MaleWorldModel = rhsMaleWorldModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.MaleWorldModel));
+                    }
+                    else
+                    {
+                        item.MaleWorldModel = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.MaleIcon) ?? true))
+            {
+                item.MaleIcon = rhs.MaleIcon;
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.FemaleBipedModel) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.FemaleBipedModel);
+                try
+                {
+                    if(rhs.FemaleBipedModel.TryGet(out var rhsFemaleBipedModel))
+                    {
+                        item.FemaleBipedModel = rhsFemaleBipedModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.FemaleBipedModel));
+                    }
+                    else
+                    {
+                        item.FemaleBipedModel = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.FemaleWorldModel) ?? true))
+            {
+                errorMask?.PushIndex((int)Armor_FieldIndex.FemaleWorldModel);
+                try
+                {
+                    if(rhs.FemaleWorldModel.TryGet(out var rhsFemaleWorldModel))
+                    {
+                        item.FemaleWorldModel = rhsFemaleWorldModel.DeepCopy(
+                            errorMask: errorMask,
+                            copyMask?.GetSubCrystal((int)Armor_FieldIndex.FemaleWorldModel));
+                    }
+                    else
+                    {
+                        item.FemaleWorldModel = default;
+                    }
+                }
+                catch (Exception ex)
+                when (errorMask != null)
+                {
+                    errorMask.ReportException(ex);
+                }
+                finally
+                {
+                    errorMask?.PopIndex();
+                }
+            }
+            if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.FemaleIcon) ?? true))
+            {
+                item.FemaleIcon = rhs.FemaleIcon;
+            }
             if ((copyMask?.GetShouldTranslate((int)Armor_FieldIndex.Data) ?? true))
             {
                 errorMask?.PushIndex((int)Armor_FieldIndex.Data);
@@ -1253,66 +1950,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     errorMask?.PopIndex();
                 }
             }
-        }
-        
-        public override void DeepCopyIn(
-            IAClothingInternal item,
-            IAClothingGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IArmorInternal)item,
-                rhs: (IArmorGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAClothing item,
-            IAClothingGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IArmor)item,
-                rhs: (IArmorGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItemInternal item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IArmorInternal)item,
-                rhs: (IArmorGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
-        }
-        
-        public override void DeepCopyIn(
-            IAItem item,
-            IAItemGetter rhs,
-            ErrorMaskBuilder? errorMask,
-            TranslationCrystal? copyMask,
-            bool deepCopy)
-        {
-            this.DeepCopyIn(
-                item: (IArmor)item,
-                rhs: (IArmorGetter)rhs,
-                errorMask: errorMask,
-                copyMask: copyMask,
-                deepCopy: deepCopy);
         }
         
         public override void DeepCopyIn(
@@ -1456,7 +2093,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ArmorBinaryWriteTranslation :
-        AClothingBinaryWriteTranslation,
+        OblivionMajorRecordBinaryWriteTranslation,
         IBinaryWriteTranslator
     {
         public new readonly static ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
@@ -1466,10 +2103,72 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            AClothingBinaryWriteTranslation.WriteRecordTypes(
+            MajorRecordBinaryWriteTranslation.WriteRecordTypes(
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Name,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
+                binaryType: StringBinaryType.NullTerminate);
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Script,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
+            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.Enchantment,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
+            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.EnchantmentPoints,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
+            if (item.ClothingFlags.TryGet(out var ClothingFlagsItem))
+            {
+                ((ClothingFlagsBinaryWriteTranslation)((IBinaryItem)ClothingFlagsItem).BinaryWriteTranslator).Write(
+                    item: ClothingFlagsItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.MaleBipedModel.TryGet(out var MaleBipedModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)MaleBipedModelItem).BinaryWriteTranslator).Write(
+                    item: MaleBipedModelItem,
+                    writer: writer,
+                    recordTypeConverter: recordTypeConverter);
+            }
+            if (item.MaleWorldModel.TryGet(out var MaleWorldModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)MaleWorldModelItem).BinaryWriteTranslator).Write(
+                    item: MaleWorldModelItem,
+                    writer: writer,
+                    recordTypeConverter: Armor_Registration.MaleWorldModelConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.MaleIcon,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
+                binaryType: StringBinaryType.NullTerminate);
+            if (item.FemaleBipedModel.TryGet(out var FemaleBipedModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleBipedModelItem).BinaryWriteTranslator).Write(
+                    item: FemaleBipedModelItem,
+                    writer: writer,
+                    recordTypeConverter: Armor_Registration.FemaleBipedModelConverter);
+            }
+            if (item.FemaleWorldModel.TryGet(out var FemaleWorldModelItem))
+            {
+                ((ModelBinaryWriteTranslation)((IBinaryItem)FemaleWorldModelItem).BinaryWriteTranslator).Write(
+                    item: FemaleWorldModelItem,
+                    writer: writer,
+                    recordTypeConverter: Armor_Registration.FemaleWorldModelConverter);
+            }
+            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                writer: writer,
+                item: item.FemaleIcon,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ICO2),
+                binaryType: StringBinaryType.NullTerminate);
             if (item.Data.TryGet(out var DataItem))
             {
                 ((ArmorDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
@@ -1521,28 +2220,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         public override void Write(
             MutagenWriter writer,
-            IAClothingGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IArmorGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
-            IAItemGetter item,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            Write(
-                item: (IArmorGetter)item,
-                writer: writer,
-                recordTypeConverter: recordTypeConverter);
-        }
-
-        public override void Write(
-            MutagenWriter writer,
             IOblivionMajorRecordGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -1565,7 +2242,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     }
 
-    public partial class ArmorBinaryCreateTranslation : AClothingBinaryCreateTranslation
+    public partial class ArmorBinaryCreateTranslation : OblivionMajorRecordBinaryCreateTranslation
     {
         public new readonly static ArmorBinaryCreateTranslation Instance = new ArmorBinaryCreateTranslation();
 
@@ -1574,7 +2251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorInternal item,
             MutagenFrame frame)
         {
-            AClothingBinaryCreateTranslation.FillBinaryStructs(
+            OblivionMajorRecordBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
         }
@@ -1590,13 +2267,94 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             nextRecordType = recordTypeConverter.ConvertToStandard(nextRecordType);
             switch (nextRecordType.TypeInt)
             {
+                case RecordTypeInts.FULL:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Armor_FieldIndex.Name;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Script.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    return (int)Armor_FieldIndex.Script;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.Enchantment.SetTo(
+                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                            frame: frame,
+                            defaultVal: FormKey.Null));
+                    return (int)Armor_FieldIndex.Enchantment;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.EnchantmentPoints = frame.ReadUInt16();
+                    return (int)Armor_FieldIndex.EnchantmentPoints;
+                }
+                case RecordTypeInts.BMDT:
+                {
+                    item.ClothingFlags = Mutagen.Bethesda.Oblivion.ClothingFlags.CreateFromBinary(frame: frame);
+                    return (int)Armor_FieldIndex.ClothingFlags;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    item.MaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: recordTypeConverter);
+                    return (int)Armor_FieldIndex.MaleBipedModel;
+                }
+                case RecordTypeInts.MOD2:
+                {
+                    item.MaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: Armor_Registration.MaleWorldModelConverter);
+                    return (int)Armor_FieldIndex.MaleWorldModel;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.MaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Armor_FieldIndex.MaleIcon;
+                }
+                case RecordTypeInts.MOD3:
+                {
+                    item.FemaleBipedModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: Armor_Registration.FemaleBipedModelConverter);
+                    return (int)Armor_FieldIndex.FemaleBipedModel;
+                }
+                case RecordTypeInts.MOD4:
+                {
+                    item.FemaleWorldModel = Mutagen.Bethesda.Oblivion.Model.CreateFromBinary(
+                        frame: frame,
+                        recordTypeConverter: Armor_Registration.FemaleWorldModelConverter);
+                    return (int)Armor_FieldIndex.FemaleWorldModel;
+                }
+                case RecordTypeInts.ICO2:
+                {
+                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    item.FemaleIcon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        frame: frame.SpawnWithLength(contentLength),
+                        stringBinaryType: StringBinaryType.NullTerminate);
+                    return (int)Armor_FieldIndex.FemaleIcon;
+                }
                 case RecordTypeInts.DATA:
                 {
                     item.Data = Mutagen.Bethesda.Oblivion.ArmorData.CreateFromBinary(frame: frame);
                     return (int)Armor_FieldIndex.Data;
                 }
                 default:
-                    return AClothingBinaryCreateTranslation.FillBinaryRecordTypes(
+                    return OblivionMajorRecordBinaryCreateTranslation.FillBinaryRecordTypes(
                         item: item,
                         frame: frame,
                         recordParseCount: recordParseCount,
@@ -1621,7 +2379,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ArmorBinaryOverlay :
-        AClothingBinaryOverlay,
+        OblivionMajorRecordBinaryOverlay,
         IArmorGetter
     {
         #region Common Routing
@@ -1637,6 +2395,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
+        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ArmorCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ArmorBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1649,6 +2408,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        #region Name
+        private int? _NameLocation;
+        public String? Name => _NameLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _NameLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        string INamedRequiredGetter.Name => this.Name ?? string.Empty;
+        #endregion
+        #endregion
+        #region Script
+        private int? _ScriptLocation;
+        public IFormLinkNullableGetter<IScriptGetter> Script => _ScriptLocation.HasValue ? new FormLinkNullable<IScriptGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _ScriptLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IScriptGetter>.Null;
+        #endregion
+        #region Enchantment
+        private int? _EnchantmentLocation;
+        public IFormLinkNullableGetter<IEnchantmentGetter> Enchantment => _EnchantmentLocation.HasValue ? new FormLinkNullable<IEnchantmentGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentLocation.Value, _package.MetaData.Constants)))) : FormLinkNullable<IEnchantmentGetter>.Null;
+        #endregion
+        #region EnchantmentPoints
+        private int? _EnchantmentPointsLocation;
+        public UInt16? EnchantmentPoints => _EnchantmentPointsLocation.HasValue ? BinaryPrimitives.ReadUInt16LittleEndian(HeaderTranslation.ExtractSubrecordMemory(_data, _EnchantmentPointsLocation.Value, _package.MetaData.Constants)) : default(UInt16?);
+        #endregion
+        #region ClothingFlags
+        private RangeInt32? _ClothingFlagsLocation;
+        public IClothingFlagsGetter? ClothingFlags => _ClothingFlagsLocation.HasValue ? ClothingFlagsBinaryOverlay.ClothingFlagsFactory(new OverlayStream(_data.Slice(_ClothingFlagsLocation!.Value.Min), _package), _package) : default;
+        #endregion
+        public IModelGetter? MaleBipedModel { get; private set; }
+        public IModelGetter? MaleWorldModel { get; private set; }
+        #region MaleIcon
+        private int? _MaleIconLocation;
+        public String? MaleIcon => _MaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _MaleIconLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
+        public IModelGetter? FemaleBipedModel { get; private set; }
+        public IModelGetter? FemaleWorldModel { get; private set; }
+        #region FemaleIcon
+        private int? _FemaleIconLocation;
+        public String? FemaleIcon => _FemaleIconLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _FemaleIconLocation.Value, _package.MetaData.Constants)) : default(string?);
+        #endregion
         #region Data
         private RangeInt32? _DataLocation;
         public IArmorDataGetter? Data => _DataLocation.HasValue ? ArmorDataBinaryOverlay.ArmorDataFactory(new OverlayStream(_data.Slice(_DataLocation!.Value.Min), _package), _package) : default;
@@ -1719,6 +2514,73 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             type = recordTypeConverter.ConvertToStandard(type);
             switch (type.TypeInt)
             {
+                case RecordTypeInts.FULL:
+                {
+                    _NameLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Name;
+                }
+                case RecordTypeInts.SCRI:
+                {
+                    _ScriptLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Script;
+                }
+                case RecordTypeInts.ENAM:
+                {
+                    _EnchantmentLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.Enchantment;
+                }
+                case RecordTypeInts.ANAM:
+                {
+                    _EnchantmentPointsLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.EnchantmentPoints;
+                }
+                case RecordTypeInts.BMDT:
+                {
+                    _ClothingFlagsLocation = new RangeInt32((stream.Position - offset), finalPos);
+                    return (int)Armor_FieldIndex.ClothingFlags;
+                }
+                case RecordTypeInts.MODL:
+                {
+                    this.MaleBipedModel = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: recordTypeConverter);
+                    return (int)Armor_FieldIndex.MaleBipedModel;
+                }
+                case RecordTypeInts.MOD2:
+                {
+                    this.MaleWorldModel = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: Armor_Registration.MaleWorldModelConverter);
+                    return (int)Armor_FieldIndex.MaleWorldModel;
+                }
+                case RecordTypeInts.ICON:
+                {
+                    _MaleIconLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.MaleIcon;
+                }
+                case RecordTypeInts.MOD3:
+                {
+                    this.FemaleBipedModel = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: Armor_Registration.FemaleBipedModelConverter);
+                    return (int)Armor_FieldIndex.FemaleBipedModel;
+                }
+                case RecordTypeInts.MOD4:
+                {
+                    this.FemaleWorldModel = ModelBinaryOverlay.ModelFactory(
+                        stream: stream,
+                        package: _package,
+                        recordTypeConverter: Armor_Registration.FemaleWorldModelConverter);
+                    return (int)Armor_FieldIndex.FemaleWorldModel;
+                }
+                case RecordTypeInts.ICO2:
+                {
+                    _FemaleIconLocation = (stream.Position - offset);
+                    return (int)Armor_FieldIndex.FemaleIcon;
+                }
                 case RecordTypeInts.DATA:
                 {
                     _DataLocation = new RangeInt32((stream.Position - offset), finalPos);
@@ -1750,13 +2612,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IArmorGetter rhs)) return false;
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IArmorGetter rhs) return false;
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IArmorGetter? obj)
         {
-            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ArmorCommon)((IArmorGetter)this).CommonInstance()!).GetHashCode(this);

@@ -120,22 +120,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IClimateGetter rhs)) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IClimateGetter? obj)
-        {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -855,6 +839,26 @@ namespace Mutagen.Bethesda.Skyrim
         public enum TNAMDataType
         {
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IClimateGetter rhs) return false;
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IClimateGetter? obj)
+        {
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -1010,11 +1014,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IClimateGetter item,
-            IClimateGetter rhs)
+            IClimateGetter rhs,
+            Climate.TranslationMask? equalsMask = null)
         {
             return ((ClimateCommon)((IClimateGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1500,42 +1506,83 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IClimateGetter? lhs,
-            IClimateGetter? rhs)
+            IClimateGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
-            if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
-            if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
-            if (!object.Equals(lhs.Model, rhs.Model)) return false;
-            if (lhs.SunriseBeginRaw != rhs.SunriseBeginRaw) return false;
-            if (lhs.SunriseEndRaw != rhs.SunriseEndRaw) return false;
-            if (lhs.SunsetBeginRaw != rhs.SunsetBeginRaw) return false;
-            if (lhs.SunsetEndRaw != rhs.SunsetEndRaw) return false;
-            if (lhs.Volatility != rhs.Volatility) return false;
-            if (lhs.Moons != rhs.Moons) return false;
-            if (lhs.PhaseLength != rhs.PhaseLength) return false;
-            if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.WeatherTypes) ?? true))
+            {
+                if (!lhs.WeatherTypes.SequenceEqualNullable(rhs.WeatherTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunTexture) ?? true))
+            {
+                if (!string.Equals(lhs.SunTexture, rhs.SunTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunGlareTexture) ?? true))
+            {
+                if (!string.Equals(lhs.SunGlareTexture, rhs.SunGlareTexture)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Model) ?? true))
+            {
+                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunriseBeginRaw) ?? true))
+            {
+                if (lhs.SunriseBeginRaw != rhs.SunriseBeginRaw) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunriseEndRaw) ?? true))
+            {
+                if (lhs.SunriseEndRaw != rhs.SunriseEndRaw) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunsetBeginRaw) ?? true))
+            {
+                if (lhs.SunsetBeginRaw != rhs.SunsetBeginRaw) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.SunsetEndRaw) ?? true))
+            {
+                if (lhs.SunsetEndRaw != rhs.SunsetEndRaw) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Volatility) ?? true))
+            {
+                if (lhs.Volatility != rhs.Volatility) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.Moons) ?? true))
+            {
+                if (lhs.Moons != rhs.Moons) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.PhaseLength) ?? true))
+            {
+                if (lhs.PhaseLength != rhs.PhaseLength) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Climate_FieldIndex.TNAMDataTypeState) ?? true))
+            {
+                if (lhs.TNAMDataTypeState != rhs.TNAMDataTypeState) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
-                rhs: rhs as IClimateGetter);
+                rhs: rhs as IClimateGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IClimateGetter?)lhs,
-                rhs: rhs as IClimateGetter);
+                rhs: rhs as IClimateGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IClimateGetter item)
@@ -1614,7 +1661,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormKey formKey,
             TranslationCrystal? copyMask)
         {
-            var newRec = new Climate(formKey, default(SkyrimRelease));
+            var newRec = new Climate(formKey, item.FormVersion);
             newRec.DeepCopyIn(item, default(ErrorMaskBuilder?), copyMask);
             return newRec;
         }
@@ -1625,7 +1672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IClimate)item,
+                item: (IClimateGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1636,7 +1683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IClimate)item,
+                item: (IClimateGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -2365,13 +2412,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IClimateGetter rhs)) return false;
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IClimateGetter rhs) return false;
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IClimateGetter? obj)
         {
-            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ClimateCommon)((IClimateGetter)this).CommonInstance()!).GetHashCode(this);

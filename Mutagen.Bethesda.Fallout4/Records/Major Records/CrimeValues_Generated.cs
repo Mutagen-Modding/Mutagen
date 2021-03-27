@@ -89,13 +89,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICrimeValuesGetter rhs)) return false;
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICrimeValuesGetter rhs) return false;
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICrimeValuesGetter? obj)
         {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).GetHashCode(this);
@@ -817,11 +817,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ICrimeValuesGetter item,
-            ICrimeValuesGetter rhs)
+            ICrimeValuesGetter rhs,
+            CrimeValues.TranslationMask? equalsMask = null)
         {
             return ((CrimeValuesCommon)((ICrimeValuesGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1203,21 +1205,55 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ICrimeValuesGetter? lhs,
-            ICrimeValuesGetter? rhs)
+            ICrimeValuesGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (lhs.Arrest != rhs.Arrest) return false;
-            if (lhs.AttackOnSight != rhs.AttackOnSight) return false;
-            if (lhs.Murder != rhs.Murder) return false;
-            if (lhs.Assault != rhs.Assault) return false;
-            if (lhs.Trespass != rhs.Trespass) return false;
-            if (lhs.Pickpocket != rhs.Pickpocket) return false;
-            if (lhs.Unknown != rhs.Unknown) return false;
-            if (!lhs.StealMult.EqualsWithin(rhs.StealMult)) return false;
-            if (lhs.Escape != rhs.Escape) return false;
-            if (lhs.WerewolfUnused != rhs.WerewolfUnused) return false;
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Arrest) ?? true))
+            {
+                if (lhs.Arrest != rhs.Arrest) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.AttackOnSight) ?? true))
+            {
+                if (lhs.AttackOnSight != rhs.AttackOnSight) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Murder) ?? true))
+            {
+                if (lhs.Murder != rhs.Murder) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Assault) ?? true))
+            {
+                if (lhs.Assault != rhs.Assault) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Trespass) ?? true))
+            {
+                if (lhs.Trespass != rhs.Trespass) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Pickpocket) ?? true))
+            {
+                if (lhs.Pickpocket != rhs.Pickpocket) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Unknown) ?? true))
+            {
+                if (lhs.Unknown != rhs.Unknown) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.StealMult) ?? true))
+            {
+                if (!lhs.StealMult.EqualsWithin(rhs.StealMult)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.Escape) ?? true))
+            {
+                if (lhs.Escape != rhs.Escape) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)CrimeValues_FieldIndex.WerewolfUnused) ?? true))
+            {
+                if (lhs.WerewolfUnused != rhs.WerewolfUnused) return false;
+            }
             return true;
         }
         
@@ -1630,13 +1666,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ICrimeValuesGetter rhs)) return false;
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ICrimeValuesGetter rhs) return false;
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ICrimeValuesGetter? obj)
         {
-            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((CrimeValuesCommon)((ICrimeValuesGetter)this).CommonInstance()!).GetHashCode(this);

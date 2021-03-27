@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="us-ascii"?>
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="Npc" baseClass="ANpc" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
+  <Object name="Npc" baseClass="OblivionMajorRecord" objType="Record" recordType="NPC_" GUID="96396343-a32a-4165-b745-e038c5e06eeb" ID="84">
     <Fields>
       <String name="Name" recordType="FULL" />
       <RefDirect name="Model" refName="Model" />
@@ -8,10 +8,14 @@
       <List name="Factions">
         <RefDirect refName="RankPlacement" />
       </List>
-      <FormLink name="DeathItem" refName="AItem" recordType="INAM" />
+      <FormLink name="DeathItem" recordType="INAM" >
+        <Interface>IItem</Interface>
+      </FormLink>
       <FormLink name="Race" refName="Race" recordType="RNAM" />
       <List name="Spells">
-        <FormLink refName="ASpell" recordType="SPLO" />
+        <FormLink recordType="SPLO" >
+          <Interface>ISpellRecord</Interface>
+        </FormLink>
       </List>
       <FormLink name="Script" refName="Script" recordType="SCRI" />
       <List name="Items">
@@ -39,6 +43,8 @@
       <ByteArray name="FNAM" recordType="FNAM" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
+    <LinkInterface>INpcSpawn</LinkInterface>
+    <LinkInterface>INpcRecord</LinkInterface>
   </Object>
   <Object name="NpcConfiguration" objType="Subrecord" recordType="ACBS" GUID="01742ef6-ce08-4574-bb21-c03ac0e59d3a" ID="198">
     <Fields>
@@ -106,7 +112,9 @@
   </Object>
   <Object name="ItemEntry" objType="Subrecord" recordType="CNTO" GUID="c4622b63-e996-4d1d-b707-e75cba9c197d" ID="86">
     <Fields>
-      <FormLink name="Item" refName="AItem" />
+      <FormLink name="Item">
+        <Interface>IItem</Interface>
+      </FormLink>
       <Int32 name="Count" nullable="True" />
     </Fields>
   </Object>

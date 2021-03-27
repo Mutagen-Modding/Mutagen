@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Reference
-        public FormLink<IDialogTopicGetter> Reference { get; set; } = new FormLink<IDialogTopicGetter>();
+        private IFormLink<IDialogTopicGetter> _Reference = new FormLink<IDialogTopicGetter>();
+        public IFormLink<IDialogTopicGetter> Reference
+        {
+            get => _Reference;
+            set => _Reference = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IDialogTopicGetter> ITopicReferenceGetter.Reference => this.Reference;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITopicReferenceGetter rhs)) return false;
-            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITopicReferenceGetter rhs) return false;
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITopicReferenceGetter? obj)
         {
-            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -400,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ITopicReference>,
         ITopicReferenceGetter
     {
-        new FormLink<IDialogTopicGetter> Reference { get; set; }
+        new IFormLink<IDialogTopicGetter> Reference { get; }
     }
 
     public partial interface ITopicReferenceGetter :
@@ -410,7 +417,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObject<ITopicReferenceGetter>
     {
         static new ILoquiRegistration Registration => TopicReference_Registration.Instance;
-        FormLink<IDialogTopicGetter> Reference { get; }
+        IFormLinkGetter<IDialogTopicGetter> Reference { get; }
 
     }
 
@@ -461,11 +468,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this ITopicReferenceGetter item,
-            ITopicReferenceGetter rhs)
+            ITopicReferenceGetter rhs,
+            TopicReference.TranslationMask? equalsMask = null)
         {
             return ((TopicReferenceCommon)((ITopicReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -642,7 +651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void Clear(ITopicReference item)
         {
             ClearPartial();
-            item.Reference = FormLink<IDialogTopicGetter>.Null;
+            item.Reference.Clear();
             base.Clear(item);
         }
         
@@ -655,7 +664,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public void RemapLinks(ITopicReference obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Reference = obj.Reference.Relink(mapping);
+            obj.Reference.Relink(mapping);
         }
         
         #endregion
@@ -782,22 +791,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ITopicReferenceGetter? lhs,
-            ITopicReferenceGetter? rhs)
+            ITopicReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs)) return false;
-            if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
+            {
+                if (!lhs.Reference.Equals(rhs.Reference)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IATopicReferenceGetter? lhs,
-            IATopicReferenceGetter? rhs)
+            IATopicReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ITopicReferenceGetter?)lhs,
-                rhs: rhs as ITopicReferenceGetter);
+                rhs: rhs as ITopicReferenceGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ITopicReferenceGetter item)
@@ -855,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)TopicReference_FieldIndex.Reference) ?? true))
             {
-                item.Reference = new FormLink<IDialogTopicGetter>(rhs.Reference.FormKey);
+                item.Reference.SetTo(rhs.Reference.FormKey);
             }
         }
         
@@ -1012,9 +1027,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReference item,
             MutagenFrame frame)
         {
-            item.Reference = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Reference.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1062,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IDialogTopicGetter> Reference => new FormLink<IDialogTopicGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1123,13 +1139,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ITopicReferenceGetter rhs)) return false;
-            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ITopicReferenceGetter rhs) return false;
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ITopicReferenceGetter? obj)
         {
-            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((TopicReferenceCommon)((ITopicReferenceGetter)this).CommonInstance()!).GetHashCode(this);

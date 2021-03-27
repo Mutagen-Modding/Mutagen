@@ -42,7 +42,14 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Link
-        public FormLink<IObjectIdGetter> Link { get; set; } = new FormLink<IObjectIdGetter>();
+        private IFormLink<IObjectIdGetter> _Link = new FormLink<IObjectIdGetter>();
+        public IFormLink<IObjectIdGetter> Link
+        {
+            get => _Link;
+            set => _Link = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IObjectIdGetter> ILocationObjectIdGetter.Link => this.Link;
         #endregion
 
         #region To String
@@ -61,13 +68,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectIdGetter rhs)) return false;
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectIdGetter rhs) return false;
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectIdGetter? obj)
         {
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).GetHashCode(this);
@@ -399,7 +406,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILocationObjectIdGetter,
         ILoquiObjectSetter<ILocationObjectId>
     {
-        new FormLink<IObjectIdGetter> Link { get; set; }
+        new IFormLink<IObjectIdGetter> Link { get; }
     }
 
     public partial interface ILocationObjectIdGetter :
@@ -409,7 +416,7 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiObject<ILocationObjectIdGetter>
     {
         static new ILoquiRegistration Registration => LocationObjectId_Registration.Instance;
-        FormLink<IObjectIdGetter> Link { get; }
+        IFormLinkGetter<IObjectIdGetter> Link { get; }
 
     }
 
@@ -460,11 +467,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this ILocationObjectIdGetter item,
-            ILocationObjectIdGetter rhs)
+            ILocationObjectIdGetter rhs,
+            LocationObjectId.TranslationMask? equalsMask = null)
         {
             return ((LocationObjectIdCommon)((ILocationObjectIdGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -640,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void Clear(ILocationObjectId item)
         {
             ClearPartial();
-            item.Link = FormLink<IObjectIdGetter>.Null;
+            item.Link.Clear();
             base.Clear(item);
         }
         
@@ -653,7 +662,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public void RemapLinks(ILocationObjectId obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
             base.RemapLinks(obj, mapping);
-            obj.Link = obj.Link.Relink(mapping);
+            obj.Link.Relink(mapping);
         }
         
         #endregion
@@ -780,22 +789,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             ILocationObjectIdGetter? lhs,
-            ILocationObjectIdGetter? rhs)
+            ILocationObjectIdGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs)) return false;
-            if (!lhs.Link.Equals(rhs.Link)) return false;
+            if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)LocationObjectId_FieldIndex.Link) ?? true))
+            {
+                if (!lhs.Link.Equals(rhs.Link)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             IALocationTargetGetter? lhs,
-            IALocationTargetGetter? rhs)
+            IALocationTargetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (ILocationObjectIdGetter?)lhs,
-                rhs: rhs as ILocationObjectIdGetter);
+                rhs: rhs as ILocationObjectIdGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(ILocationObjectIdGetter item)
@@ -853,7 +868,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 deepCopy: deepCopy);
             if ((copyMask?.GetShouldTranslate((int)LocationObjectId_FieldIndex.Link) ?? true))
             {
-                item.Link = new FormLink<IObjectIdGetter>(rhs.Link.FormKey);
+                item.Link.SetTo(rhs.Link.FormKey);
             }
         }
         
@@ -1010,9 +1025,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectId item,
             MutagenFrame frame)
         {
-            item.Link = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Link.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
         }
 
     }
@@ -1060,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public FormLink<IObjectIdGetter> Link => new FormLink<IObjectIdGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IObjectIdGetter> Link => new FormLink<IObjectIdGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -1121,13 +1137,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is ILocationObjectIdGetter rhs)) return false;
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not ILocationObjectIdGetter rhs) return false;
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(ILocationObjectIdGetter? obj)
         {
-            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((LocationObjectIdCommon)((ILocationObjectIdGetter)this).CommonInstance()!).GetHashCode(this);

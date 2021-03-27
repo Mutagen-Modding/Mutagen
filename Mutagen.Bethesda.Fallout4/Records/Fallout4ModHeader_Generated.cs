@@ -109,15 +109,15 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region OverriddenForms
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? _OverriddenForms;
-        public ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms
+        private ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? _OverriddenForms;
+        public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms
         {
             get => this._OverriddenForms;
             set => this._OverriddenForms = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? IFallout4ModHeaderGetter.OverriddenForms => _OverriddenForms;
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? IFallout4ModHeaderGetter.OverriddenForms => _OverriddenForms;
         #endregion
 
         #endregion
@@ -179,13 +179,13 @@ namespace Mutagen.Bethesda.Fallout4
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModHeaderGetter rhs)) return false;
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModHeaderGetter rhs) return false;
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModHeaderGetter? obj)
         {
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).GetHashCode(this);
@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Author { get; set; }
         new String? Description { get; set; }
         new ExtendedList<MasterReference> MasterReferences { get; }
-        new ExtendedList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; set; }
+        new ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; set; }
         new MemorySlice<Byte>? Screenshot { get; set; }
         new ExtendedList<TransientType> TransientTypes { get; }
         new MemorySlice<Byte>? INTV { get; set; }
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Fallout4
         String? Author { get; }
         String? Description { get; }
         IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; }
-        IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; }
+        IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; }
         ReadOnlyMemorySlice<Byte>? Screenshot { get; }
         IReadOnlyList<ITransientTypeGetter> TransientTypes { get; }
         ReadOnlyMemorySlice<Byte>? INTV { get; }
@@ -1285,11 +1285,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static bool Equals(
             this IFallout4ModHeaderGetter item,
-            IFallout4ModHeaderGetter rhs)
+            IFallout4ModHeaderGetter rhs,
+            Fallout4ModHeader.TranslationMask? equalsMask = null)
         {
             return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1768,26 +1770,75 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IFallout4ModHeaderGetter? lhs,
-            IFallout4ModHeaderGetter? rhs)
+            IFallout4ModHeaderGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Flags != rhs.Flags) return false;
-            if (lhs.FormID != rhs.FormID) return false;
-            if (lhs.Version != rhs.Version) return false;
-            if (lhs.FormVersion != rhs.FormVersion) return false;
-            if (lhs.Version2 != rhs.Version2) return false;
-            if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
-            if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
-            if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
-            if (!string.Equals(lhs.Author, rhs.Author)) return false;
-            if (!string.Equals(lhs.Description, rhs.Description)) return false;
-            if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
-            if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
-            if (!MemorySliceExt.Equal(lhs.Screenshot, rhs.Screenshot)) return false;
-            if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
-            if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
-            if (lhs.INCC != rhs.INCC) return false;
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Flags) ?? true))
+            {
+                if (lhs.Flags != rhs.Flags) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.FormID) ?? true))
+            {
+                if (lhs.FormID != rhs.FormID) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Version) ?? true))
+            {
+                if (lhs.Version != rhs.Version) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.FormVersion) ?? true))
+            {
+                if (lhs.FormVersion != rhs.FormVersion) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Version2) ?? true))
+            {
+                if (lhs.Version2 != rhs.Version2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Stats) ?? true))
+            {
+                if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TypeOffsets) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.TypeOffsets, rhs.TypeOffsets)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Deleted) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Deleted, rhs.Deleted)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Author) ?? true))
+            {
+                if (!string.Equals(lhs.Author, rhs.Author)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Description) ?? true))
+            {
+                if (!string.Equals(lhs.Description, rhs.Description)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.MasterReferences) ?? true))
+            {
+                if (!lhs.MasterReferences.SequenceEqualNullable(rhs.MasterReferences)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.OverriddenForms) ?? true))
+            {
+                if (!lhs.OverriddenForms.SequenceEqualNullable(rhs.OverriddenForms)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.Screenshot) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.Screenshot, rhs.Screenshot)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.TransientTypes) ?? true))
+            {
+                if (!lhs.TransientTypes.SequenceEqualNullable(rhs.TransientTypes)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INTV) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.INTV, rhs.INTV)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)Fallout4ModHeader_FieldIndex.INCC) ?? true))
+            {
+                if (lhs.INCC != rhs.INCC) return false;
+            }
             return true;
         }
         
@@ -1979,8 +2030,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         item.OverriddenForms = 
                             rhs.OverriddenForms
-                            .Select(r => (IFormLink<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey))
-                            .ToExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
+                            .Select(r => (IFormLinkGetter<IFallout4MajorRecordGetter>)new FormLink<IFallout4MajorRecordGetter>(r.FormKey))
+                            .ToExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     }
                     else
                     {
@@ -2197,12 +2248,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
-                transl: (MutagenWriter subWriter, IFormLink<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -2342,10 +2393,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IFallout4MajorRecordGetter>>.Instance.Parse(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
-                        .CastExtendedList<IFormLink<IFallout4MajorRecordGetter>>();
+                        .CastExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
                 }
                 case RecordTypeInts.SCRN:
@@ -2477,7 +2528,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public String? Description => _DescriptionLocation.HasValue ? BinaryStringUtility.ProcessWholeToZString(HeaderTranslation.ExtractSubrecordMemory(_data, _DescriptionLocation.Value, _package.MetaData.Constants)) : default(string?);
         #endregion
         public IReadOnlyList<IMasterReferenceGetter> MasterReferences { get; private set; } = ListExt.Empty<MasterReferenceBinaryOverlay>();
-        public IReadOnlyList<IFormLink<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
+        public IReadOnlyList<IFormLinkGetter<IFallout4MajorRecordGetter>>? OverriddenForms { get; private set; }
         #region Screenshot
         private int? _ScreenshotLocation;
         public ReadOnlyMemorySlice<Byte>? Screenshot => _ScreenshotLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ScreenshotLocation.Value, _package.MetaData.Constants) : default(ReadOnlyMemorySlice<byte>?);
@@ -2602,7 +2653,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         subLen = subMeta.ContentLength;
                     }
-                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLink<IFallout4MajorRecordGetter>>(
+                    this.OverriddenForms = BinaryOverlayList.FactoryByStartIndex<IFormLinkGetter<IFallout4MajorRecordGetter>>(
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 4,
@@ -2659,13 +2710,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IFallout4ModHeaderGetter rhs)) return false;
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IFallout4ModHeaderGetter rhs) return false;
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IFallout4ModHeaderGetter? obj)
         {
-            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)this).CommonInstance()!).GetHashCode(this);

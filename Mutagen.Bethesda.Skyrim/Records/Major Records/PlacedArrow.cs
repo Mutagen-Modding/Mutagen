@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -6,7 +6,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedArrowBinaryOverlay
         {
-            public FormLink<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
+            public IFormLinkGetter<IProjectileGetter> Projectile { get; internal set; } = FormLink<IProjectileGetter>.Null;
         }
     }
 }

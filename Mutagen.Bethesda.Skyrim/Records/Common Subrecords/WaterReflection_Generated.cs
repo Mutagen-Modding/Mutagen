@@ -43,7 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         public WaterReflection.VersioningBreaks Versioning { get; set; } = default;
         #endregion
         #region Water
-        public FormLink<IPlacedObjectGetter> Water { get; set; } = new FormLink<IPlacedObjectGetter>();
+        private IFormLink<IPlacedObjectGetter> _Water = new FormLink<IPlacedObjectGetter>();
+        public IFormLink<IPlacedObjectGetter> Water
+        {
+            get => _Water;
+            set => _Water = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IPlacedObjectGetter> IWaterReflectionGetter.Water => this.Water;
         #endregion
         #region Type
         public WaterReflection.Flag Type { get; set; } = default;
@@ -65,13 +72,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterReflectionGetter rhs)) return false;
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterReflectionGetter rhs) return false;
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterReflectionGetter? obj)
         {
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).GetHashCode(this);
@@ -486,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWaterReflectionGetter
     {
         new WaterReflection.VersioningBreaks Versioning { get; set; }
-        new FormLink<IPlacedObjectGetter> Water { get; set; }
+        new IFormLink<IPlacedObjectGetter> Water { get; }
         new WaterReflection.Flag Type { get; set; }
     }
 
@@ -504,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => WaterReflection_Registration.Instance;
         WaterReflection.VersioningBreaks Versioning { get; }
-        FormLink<IPlacedObjectGetter> Water { get; }
+        IFormLinkGetter<IPlacedObjectGetter> Water { get; }
         WaterReflection.Flag Type { get; }
 
     }
@@ -556,11 +563,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IWaterReflectionGetter item,
-            IWaterReflectionGetter rhs)
+            IWaterReflectionGetter rhs,
+            WaterReflection.TranslationMask? equalsMask = null)
         {
             return ((WaterReflectionCommon)((IWaterReflectionGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -765,14 +774,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Versioning = default;
-            item.Water = FormLink<IPlacedObjectGetter>.Null;
+            item.Water.Clear();
             item.Type = default;
         }
         
         #region Mutagen
         public void RemapLinks(IWaterReflection obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
-            obj.Water = obj.Water.Relink(mapping);
+            obj.Water.Relink(mapping);
         }
         
         #endregion
@@ -887,13 +896,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IWaterReflectionGetter? lhs,
-            IWaterReflectionGetter? rhs)
+            IWaterReflectionGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Versioning != rhs.Versioning) return false;
-            if (!lhs.Water.Equals(rhs.Water)) return false;
-            if (lhs.Type != rhs.Type) return false;
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Versioning) ?? true))
+            {
+                if (lhs.Versioning != rhs.Versioning) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
+            {
+                if (!lhs.Water.Equals(rhs.Water)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
+            {
+                if (lhs.Type != rhs.Type) return false;
+            }
             return true;
         }
         
@@ -942,7 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Water) ?? true))
             {
-                item.Water = new FormLink<IPlacedObjectGetter>(rhs.Water.FormKey);
+                item.Water.SetTo(rhs.Water.FormKey);
             }
             if (rhs.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0)) return;
             if ((copyMask?.GetShouldTranslate((int)WaterReflection_FieldIndex.Type) ?? true))
@@ -1094,9 +1113,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterReflection item,
             MutagenFrame frame)
         {
-            item.Water = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                frame: frame,
-                defaultVal: FormKey.Null);
+            item.Water.SetTo(
+                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    frame: frame,
+                    defaultVal: FormKey.Null));
             if (frame.Complete)
             {
                 item.Versioning |= WaterReflection.VersioningBreaks.Break0;
@@ -1170,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WaterReflection.VersioningBreaks Versioning { get; private set; }
-        public FormLink<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
+        public IFormLinkGetter<IPlacedObjectGetter> Water => new FormLink<IPlacedObjectGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public WaterReflection.Flag Type => (WaterReflection.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x4, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
@@ -1236,13 +1256,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IWaterReflectionGetter rhs)) return false;
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IWaterReflectionGetter rhs) return false;
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IWaterReflectionGetter? obj)
         {
-            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((WaterReflectionCommon)((IWaterReflectionGetter)this).CommonInstance()!).GetHashCode(this);

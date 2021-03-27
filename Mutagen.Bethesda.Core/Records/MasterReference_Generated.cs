@@ -61,13 +61,13 @@ namespace Mutagen.Bethesda
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMasterReferenceGetter rhs)) return false;
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMasterReferenceGetter rhs) return false;
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMasterReferenceGetter? obj)
         {
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).GetHashCode(this);
@@ -513,11 +513,13 @@ namespace Mutagen.Bethesda
 
         public static bool Equals(
             this IMasterReferenceGetter item,
-            IMasterReferenceGetter rhs)
+            IMasterReferenceGetter rhs,
+            MasterReference.TranslationMask? equalsMask = null)
         {
             return ((MasterReferenceCommon)((IMasterReferenceGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -834,12 +836,19 @@ namespace Mutagen.Bethesda.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IMasterReferenceGetter? lhs,
-            IMasterReferenceGetter? rhs)
+            IMasterReferenceGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (lhs.Master != rhs.Master) return false;
-            if (lhs.FileSize != rhs.FileSize) return false;
+            if ((crystal?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
+            {
+                if (lhs.Master != rhs.Master) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)MasterReference_FieldIndex.FileSize) ?? true))
+            {
+                if (lhs.FileSize != rhs.FileSize) return false;
+            }
             return true;
         }
         
@@ -1218,13 +1227,13 @@ namespace Mutagen.Bethesda.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IMasterReferenceGetter rhs)) return false;
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not IMasterReferenceGetter rhs) return false;
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IMasterReferenceGetter? obj)
         {
-            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((MasterReferenceCommon)((IMasterReferenceGetter)this).CommonInstance()!).GetHashCode(this);

@@ -92,22 +92,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        #region Equals and Hash
-        public override bool Equals(object? obj)
-        {
-            if (!(obj is IANavigationMeshGetter rhs)) return false;
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
-        }
-
-        public bool Equals(IANavigationMeshGetter? obj)
-        {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
-        }
-
-        public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
-
-        #endregion
-
         #region Mask
         public new class Mask<TItem> :
             SkyrimMajorRecord.Mask<TItem>,
@@ -494,6 +478,26 @@ namespace Mutagen.Bethesda.Skyrim
             get => (MajorFlag)this.MajorRecordFlagsRaw;
             set => this.MajorRecordFlagsRaw = (int)value;
         }
+        #region Equals and Hash
+        public override bool Equals(object? obj)
+        {
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IANavigationMeshGetter rhs) return false;
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
+        }
+
+        public bool Equals(IANavigationMeshGetter? obj)
+        {
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
+        }
+
+        public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);
+
+        #endregion
+
         #endregion
 
         #region Binary Translation
@@ -618,11 +622,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this IANavigationMeshGetter item,
-            IANavigationMeshGetter rhs)
+            IANavigationMeshGetter rhs,
+            ANavigationMesh.TranslationMask? equalsMask = null)
         {
             return ((ANavigationMeshCommon)((IANavigationMeshGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -1015,33 +1021,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             IANavigationMeshGetter? lhs,
-            IANavigationMeshGetter? rhs)
+            IANavigationMeshGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs)) return false;
-            if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
-            if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
+            if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
+            if ((crystal?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.ONAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.ONAM, rhs.ONAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.PNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.PNAM, rhs.PNAM)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ANavigationMesh_FieldIndex.NNAM) ?? true))
+            {
+                if (!MemorySliceExt.Equal(lhs.NNAM, rhs.NNAM)) return false;
+            }
             return true;
         }
         
         public override bool Equals(
             ISkyrimMajorRecordGetter? lhs,
-            ISkyrimMajorRecordGetter? rhs)
+            ISkyrimMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IANavigationMeshGetter?)lhs,
-                rhs: rhs as IANavigationMeshGetter);
+                rhs: rhs as IANavigationMeshGetter,
+                crystal: crystal);
         }
         
         public override bool Equals(
             IMajorRecordGetter? lhs,
-            IMajorRecordGetter? rhs)
+            IMajorRecordGetter? rhs,
+            TranslationCrystal? crystal)
         {
             return Equals(
                 lhs: (IANavigationMeshGetter?)lhs,
-                rhs: rhs as IANavigationMeshGetter);
+                rhs: rhs as IANavigationMeshGetter,
+                crystal: crystal);
         }
         
         public virtual int GetHashCode(IANavigationMeshGetter item)
@@ -1106,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IANavigationMesh)item,
+                item: (IANavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1117,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             TranslationCrystal? copyMask)
         {
             return this.Duplicate(
-                item: (IANavigationMesh)item,
+                item: (IANavigationMeshGetter)item,
                 formKey: formKey,
                 copyMask: copyMask);
         }
@@ -1678,13 +1698,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is IANavigationMeshGetter rhs)) return false;
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is IFormLinkGetter formLink)
+            {
+                return formLink.Equals(this);
+            }
+            if (obj is not IANavigationMeshGetter rhs) return false;
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(IANavigationMeshGetter? obj)
         {
-            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((ANavigationMeshCommon)((IANavigationMeshGetter)this).CommonInstance()!).GetHashCode(this);

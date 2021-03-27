@@ -40,17 +40,17 @@ namespace Mutagen.Bethesda.Skyrim
                     case LocationTargetRadius.LocationType.NearReference:
                         return new LocationTarget()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = new FormLink<ILocationTargetableGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                         };
                     case LocationTargetRadius.LocationType.InCell:
                         return new LocationCell()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = new FormLink<ICellGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                         };
                     case LocationTargetRadius.LocationType.ObjectID:
                         return new LocationObjectId()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = new FormLink<IObjectIdGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                         };
                     case LocationTargetRadius.LocationType.ObjectType:
                         return new LocationObjectType()
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                     case LocationTargetRadius.LocationType.LinkedReference:
                         return new LocationKeyword()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = new FormLink<IKeywordGetter>(FormKeyBinaryTranslation.Instance.Parse(frame))
                         };
                     default:
                         return new LocationFallback()

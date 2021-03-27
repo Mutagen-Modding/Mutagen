@@ -41,15 +41,15 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Navmeshes
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<IFormLink<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLink<IANavigationMeshGetter>>();
-        public ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes
+        private ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> _Navmeshes = new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>>();
+        public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
             protected set => this._Navmeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> INavmeshSetGetter.Navmeshes => _Navmeshes;
         #endregion
 
         #endregion
@@ -70,13 +70,13 @@ namespace Mutagen.Bethesda.Skyrim
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshSetGetter rhs)) return false;
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshSetGetter rhs) return false;
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);
@@ -495,7 +495,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<INavmeshSet>,
         INavmeshSetGetter
     {
-        new ExtendedList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
+        new ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
     }
 
     public partial interface INavmeshSetGetter :
@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => NavmeshSet_Registration.Instance;
-        IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes { get; }
+        IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes { get; }
 
     }
 
@@ -562,11 +562,13 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static bool Equals(
             this INavmeshSetGetter item,
-            INavmeshSetGetter rhs)
+            INavmeshSetGetter rhs,
+            NavmeshSet.TranslationMask? equalsMask = null)
         {
             return ((NavmeshSetCommon)((INavmeshSetGetter)item).CommonInstance()!).Equals(
                 lhs: item,
-                rhs: rhs);
+                rhs: rhs,
+                crystal: equalsMask?.GetCrystal());
         }
 
         public static void DeepCopyIn(
@@ -892,11 +894,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public virtual bool Equals(
             INavmeshSetGetter? lhs,
-            INavmeshSetGetter? rhs)
+            INavmeshSetGetter? rhs,
+            TranslationCrystal? crystal)
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if (!lhs.Navmeshes.SequenceEqualNullable(rhs.Navmeshes)) return false;
+            if ((crystal?.GetShouldTranslate((int)NavmeshSet_FieldIndex.Navmeshes) ?? true))
+            {
+                if (!lhs.Navmeshes.SequenceEqualNullable(rhs.Navmeshes)) return false;
+            }
             return true;
         }
         
@@ -947,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Navmeshes.SetTo(
                         rhs.Navmeshes
-                        .Select(r => (IFormLink<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
+                        .Select(r => (IFormLinkGetter<IANavigationMeshGetter>)new FormLink<IANavigationMeshGetter>(r.FormKey)));
                 }
                 catch (Exception ex)
                 when (errorMask != null)
@@ -1055,11 +1061,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshSetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Navmeshes,
                 countLengthLength: 4,
-                transl: (MutagenWriter subWriter, IFormLink<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
+                transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
                     Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
@@ -1099,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Navmeshes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLink<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -1170,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #region Navmeshes
-        public IReadOnlyList<IFormLink<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLink<IANavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
+        public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data, _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));
         protected int NavmeshesEndingPos;
         #endregion
         partial void CustomFactoryEnd(
@@ -1234,13 +1240,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
-            if (!(obj is INavmeshSetGetter rhs)) return false;
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs);
+            if (obj is not INavmeshSetGetter rhs) return false;
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, rhs, crystal: null);
         }
 
         public bool Equals(INavmeshSetGetter? obj)
         {
-            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj);
+            return ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).Equals(this, obj, crystal: null);
         }
 
         public override int GetHashCode() => ((NavmeshSetCommon)((INavmeshSetGetter)this).CommonInstance()!).GetHashCode(this);

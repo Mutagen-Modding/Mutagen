@@ -16,6 +16,7 @@
     <IsPackable>true</IsPackable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Oblivion.xml</DocumentationFile>
@@ -47,8 +48,11 @@
     <Compile Include="Enums\SoulLevel.cs" />
     <Compile Include="Enums\Specialization.cs" />
     <Compile Include="Enums\Weekday.cs" />
+    <Compile Include="Extensions\GameSettingGroupMixIn.cs" />
+    <Compile Include="Extensions\GlobalGroupMixIn.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IModeled.cs" />
+    <Compile Include="IsExternalInit.cs" />
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -311,9 +315,6 @@
     <Compile Include="Records\Common Subrecords\EnableParent_Generated.cs">
       <DependentUpon>EnableParent.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\LeveledEntry_Generated.cs">
-      <DependentUpon>LeveledEntry.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\Location_Generated.cs">
       <DependentUpon>Location.xml</DependentUpon>
     </Compile>
@@ -325,12 +326,6 @@
     </Compile>
     <Compile Include="Records\Common Subrecords\WeatherType_Generated.cs">
       <DependentUpon>WeatherType.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\AClothing_Generated.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ClothingFlags_Generated.cs">
-      <DependentUpon>AClothing.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Activator_Generated.cs">
       <DependentUpon>Activator.xml</DependentUpon>
@@ -350,9 +345,6 @@
     <Compile Include="Records\Major Records\AIPackageData_Generated.cs">
       <DependentUpon>AIPackage.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\AItem_Generated.cs">
-      <DependentUpon>AItem.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\AlchemicalApparatus_Generated.cs">
       <DependentUpon>AlchemicalApparatus.xml</DependentUpon>
     </Compile>
@@ -368,20 +360,11 @@
     <Compile Include="Records\Major Records\AnimatedObject_Generated.cs">
       <DependentUpon>AnimatedObject.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Major Records\ANpc_Generated.cs">
-      <DependentUpon>ANpc.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ANpcSpawn_Generated.cs">
-      <DependentUpon>ANpcSpawn.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Major Records\Armor_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\ArmorData_Generated.cs">
       <DependentUpon>Armor.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Major Records\ASpell_Generated.cs">
-      <DependentUpon>ASpell.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\Birthsign_Generated.cs">
       <DependentUpon>Birthsign.xml</DependentUpon>
@@ -887,14 +870,31 @@
     </Compile>
     <Compile Include="Records\TypeSolidifier_Generated.cs" />
     <Compile Include="Records\LinkCacheMixIns_Generated.cs" />
+    <Compile Include="Records\Major Records\LeveledCreatureEntry_Generated.cs">
+      <DependentUpon>LeveledCreature.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledItemEntry_Generated.cs">
+      <DependentUpon>LeveledItem.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpellEntry_Generated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
+    <Compile Include="Interfaces\IItem_Generated.cs" />
+    <Compile Include="Interfaces\INpcSpawn_Generated.cs" />
+    <Compile Include="Interfaces\INpcRecord_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\ClothingFlags_Generated.cs">
+      <DependentUpon>ClothingFlags.xml</DependentUpon>
+    </Compile>
+    <Compile Include="ImplicitsMixIn_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.8.2" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.8.0" />
+    <PackageReference Include="Loqui" Version="2.12.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.12.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
