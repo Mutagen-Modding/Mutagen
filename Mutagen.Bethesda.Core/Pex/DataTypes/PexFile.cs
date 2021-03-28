@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Noggog;
 
 namespace Mutagen.Bethesda.Pex
@@ -134,6 +135,31 @@ namespace Mutagen.Bethesda.Pex
             {
                 pexObject.Write(bw);
             }
+        }
+
+        public static PexFile CreateFromFile(string file, GameCategory gameCategory)
+        {
+            if (!File.Exists(file))
+                throw new ArgumentException($"Input file does not exist {file}!", nameof(file));
+
+            using var fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return CreateFromStream(fs, gameCategory);
+        }
+
+        public static PexFile CreateFromStream(Stream stream, GameCategory gameCategory)
+        {
+            using var br = new PexReader(stream, Encoding.UTF8, gameCategory.IsBigEndian());
+
+            //https://en.uesp.net/wiki/Skyrim_Mod:Compiled_Script_File_Format
+            var pexFile = new PexFile(br, gameCategory);
+
+            if (stream.Position != stream.Length)
+                throw new InvalidDataException("Finished reading but end of the stream was not reached! " +
+                                              $"Current position: {stream.Position} " +
+                                              $"Stream length: {stream.Length} " +
+                                              $"Missing: {stream.Length - stream.Position}");
+
+            return pexFile;
         }
     }
 }

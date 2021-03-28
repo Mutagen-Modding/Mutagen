@@ -298,9 +298,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pex" />
-  </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.core&quot;" />
   </Target>

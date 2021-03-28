@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             var path = Path.Combine("Pex", "files", file);
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path, gameCategory);
+            var pex = PexFile.CreateFromFile(path, gameCategory);
             Assert.NotNull(pex);
         }
 
@@ -49,13 +49,13 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             var inputFile = Path.Combine("Pex", "files", file);
             Assert.True(File.Exists(inputFile));
 
-            var inputPex = PexParser.ParsePexFile(inputFile, gameCategory);
+            var inputPex = PexFile.CreateFromFile(inputFile, gameCategory);
 
             var outputFile = Path.Combine("output", file);
             inputPex.WritePexFile(outputFile, gameCategory);
             Assert.True(File.Exists(outputFile));
 
-            var outputPex = PexParser.ParsePexFile(outputFile, gameCategory);
+            var outputPex = PexFile.CreateFromFile(outputFile, gameCategory);
             Assert.NotNull(outputPex);
             
             var inputFi = new FileInfo(inputFile);
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             var path = Path.Combine("Pex", "files", "Art.pex");
             Assert.True(File.Exists(path));
 
-            var pex = PexParser.ParsePexFile(path, GameCategory.Skyrim);
+            var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
             
             Assert.Equal(0xFA57C0DE, pex.Magic);
             Assert.Equal(3, pex.MajorVersion);
