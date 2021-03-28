@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Condition" objType="Subrecord" abstract="true" recordType="CTDA" GUID="e67606af-82a9-40d0-9f15-f145c4745cad" ID="54">
+    <Fields>
+      <Enum name="CompareOperator" enumName="CompareOperator" binary="NoGeneration" />
+      <Enum name="Flags" enumName="Condition.Flag" binary="Custom" byteLength="1" />
+      <ByteArray name="Unknown1" byteLength="3" nullable="False" />
+    </Fields>
+  </Object>
+  <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="976e8455-ce40-407a-9975-19ef9de54cf9" ID="55">
+    <Fields>
+      <FormLink name="ComparisonValue" refName="Global" />
+      <RefDirect name="Data" refName="ConditionData" generateClassMembers="false" />
+    </Fields>
+  </Object>
+  <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="c5e87d5b-ed3a-4949-948d-5b697649eec8" ID="56">
+    <Fields>
+      <Float name="ComparisonValue" />
+      <RefDirect name="Data" refName="ConditionData" generateClassMembers="false" />
+    </Fields>
+  </Object>
+  <Object name="ConditionData" objType="Subrecord" GUID="b9a06bdf-0dbe-4421-ad2a-30482a9a0b08" ID="57">
+    <Fields>
+      <Enum name="Function" enumName="Condition.FunctionType" byteLength="2" />
+      <UInt16 name="Unknown2" />
+      <CustomLogic name="ParameterParsing" />
+      <FormLink name="ParameterOneRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
+      <Int32 name="ParameterOneNumber" binary="NoGeneration" />
+      <String name="ParameterOneString" binary="NoGeneration" nullable="True" />
+      <FormLink name="ParameterTwoRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
+      <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
+      <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
+      <Enum name="RunOnType" binary="NoGeneration" enumName="Condition.RunOnType" byteLength="4" />
+      <Int32 name="Unknown4" binary="NoGeneration" />
+      <Int32 name="ParameterThreeNumber" binary="NoGeneration" />
+    </Fields>
+  </Object>
+</Loqui>

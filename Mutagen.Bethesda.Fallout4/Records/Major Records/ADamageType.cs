@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter recordTypeConverter)
         {
             var majorMeta = frame.GetMajorRecordFrame();
-            if (majorMeta.FormVersion == 78)
+            if (majorMeta.FormVersion >= 78)
             {
                 return DamageType.CreateFromBinary(frame, recordTypeConverter); 
             }
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Fallout4
                 RecordTypeConverter recordTypeConverter)
             {
                 var majorFrame = package.MetaData.Constants.MajorRecordFrame(stream.RemainingMemory);
-                if (majorFrame.FormVersion == 78)
+                if (majorFrame.FormVersion >= 78)
                 {
                     return DamageTypeBinaryOverlay.DamageTypeFactory(stream, package, recordTypeConverter);
                 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Debris" recordType="DEBR" objType="Record" baseClass="Fallout4MajorRecord" GUID="bfd9ff53-a114-428f-b3c3-9a63a3a7348b" ID="89">
+  </Object>
+</Loqui>

@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public abstract partial class Fallout4MajorRecord :
         MajorRecord,
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda.Fallout4
 
     #region Interface
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecord :
         IFallout4MajorRecordGetter,
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [ActionRecord, ActorValueInformation, AttractionRule, Component, ADamageType, GameSetting, Global, Keyword, LocationReferenceType, MiscItem, SoundDescriptor, TextureSet, Transform]
+    /// Implemented by: [ActionRecord, ActorValueInformation, AnimationSoundTagSet, Armor, AttractionRule, Cell, Class, ColorRecord, Component, ADamageType, Debris, Door, Explosion, Faction, FormList, GameSetting, Global, HeadPart, ImpactDataSet, Keyword, LeveledSpell, LocationReferenceType, MaterialSwap, MiscItem, Outfit, PlacedObject, Race, SoundDescriptor, TextureSet, Transform]
     /// </summary>
     public partial interface IFallout4MajorRecordGetter :
         IMajorRecordGetter,

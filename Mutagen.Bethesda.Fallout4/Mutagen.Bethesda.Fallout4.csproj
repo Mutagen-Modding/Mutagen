@@ -25,12 +25,30 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Enums\BipedObject.cs" />
+    <Compile Include="Enums\CombatReaction.cs" />
+    <Compile Include="Enums\CompareOperator.cs" />
     <Compile Include="Enums\GroupTypeEnum.cs" />
+    <Compile Include="Enums\Size.cs" />
+    <Compile Include="Enums\TargetObjectType.cs" />
+    <Compile Include="Interfaces\IModeled.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Records\Common Subrecords\Condition.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionFloat.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionGlobal.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\Decal.cs">
       <DependentUpon>Decal.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Group.cs">
       <DependentUpon>Group.xml</DependentUpon>
@@ -40,6 +58,9 @@
     </Compile>
     <Compile Include="Records\Major Records\ADamageType.cs">
       <DependentUpon>DamageType.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\GameSetting.cs">
       <DependentUpon>GameSetting.xml</DependentUpon>
@@ -77,8 +98,17 @@
     <Compile Include="Records\Major Records\GlobalShort.cs">
       <DependentUpon>Global.xml</DependentUpon>
     </Compile>
+    <Compile Include="Records\Major Records\HeadPart.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Major Records\Keyword.cs">
       <DependentUpon>Keyword.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Part.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race.cs">
+      <DependentUpon>Race.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Major Records\TextureSet.cs">
       <DependentUpon>TextureSet.xml</DependentUpon>
@@ -201,6 +231,124 @@
       <DependentUpon>DamageType.xml</DependentUpon>
     </Compile>
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Records\Common Subrecords\BipedBodyTemplate_Generated.cs">
+      <DependentUpon>BipedBodyTemplate.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Condition_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionGlobal_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionFloat_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ConditionData_Generated.cs">
+      <DependentUpon>Condition.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTargetRadius_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\ALocationTarget_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationTarget_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationCell_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationObjectId_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationObjectType_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationKeyword_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\LocationFallback_Generated.cs">
+      <DependentUpon>LocationTargetRadius.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\SimpleModel_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Model_Generated.cs">
+      <DependentUpon>Model.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Properties_Generated.cs">
+      <DependentUpon>Properties.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Common Subrecords\Relation_Generated.cs">
+      <DependentUpon>Relation.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\AnimationSoundTagSet_Generated.cs">
+      <DependentUpon>AnimationSoundTagSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Armor_Generated.cs">
+      <DependentUpon>Armor.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Cell_Generated.cs">
+      <DependentUpon>Cell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Class_Generated.cs">
+      <DependentUpon>Class.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ColorRecord_Generated.cs">
+      <DependentUpon>ColorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Debris_Generated.cs">
+      <DependentUpon>Debris.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Door_Generated.cs">
+      <DependentUpon>Door.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Explosion_Generated.cs">
+      <DependentUpon>Explosion.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Faction_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\CrimeValues_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\VendorValues_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Rank_Generated.cs">
+      <DependentUpon>Faction.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\FormList_Generated.cs">
+      <DependentUpon>FormList.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\HeadPart_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Part_Generated.cs">
+      <DependentUpon>HeadPart.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\ImpactDataSet_Generated.cs">
+      <DependentUpon>ImpactDataSet.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\LeveledSpell_Generated.cs">
+      <DependentUpon>LeveledSpell.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\MaterialSwap_Generated.cs">
+      <DependentUpon>MaterialSwap.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Outfit_Generated.cs">
+      <DependentUpon>Outfit.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\PlacedObject_Generated.cs">
+      <DependentUpon>PlacedObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Records\Major Records\Race_Generated.cs">
+      <DependentUpon>Race.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\ILocationTargetable_Generated.cs" />
+    <Compile Include="Interfaces\IOwner_Generated.cs" />
+    <Compile Include="Interfaces\IRelatable_Generated.cs" />
+    <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

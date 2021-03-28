@@ -8,7 +8,7 @@ using Mutagen.Bethesda;
 namespace Mutagen.Bethesda.Fallout4
 {
     /// <summary>
-    /// Implemented by: [TextureSet]
+    /// Implemented by: [Door, Faction, TextureSet]
     /// </summary>
     public partial interface IObjectId :
         IFallout4MajorRecordInternal,
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     }
 
     /// <summary>
-    /// Implemented by: [TextureSet]
+    /// Implemented by: [Door, Faction, TextureSet]
     /// </summary>
     public partial interface IObjectIdGetter : IFallout4MajorRecordGetter
     {
