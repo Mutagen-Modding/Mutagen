@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
     [Flags]
     public enum PropertyFlags : byte

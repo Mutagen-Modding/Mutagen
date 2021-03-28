@@ -1,4 +1,4 @@
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
     public enum DebugFunctionType : byte
     {

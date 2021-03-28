@@ -2,11 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Mutagen.Bethesda.Core.Pex.Extensions;
-using Mutagen.Bethesda.Core.Pex.Interfaces;
 using Noggog;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
     public class PexFile : IPexFile
     {

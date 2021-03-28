@@ -1,8 +1,9 @@
-﻿using System;
+using Mutagen.Bethesda.Pex;
+using System;
 using System.IO;
 using System.Text;
 using Xunit;
-using Mutagen.Bethesda.Core.Pex.Extensions;
+
 namespace Mutagen.Bethesda.UnitTests.Pex
 {
     public class BinaryExtensionsTests

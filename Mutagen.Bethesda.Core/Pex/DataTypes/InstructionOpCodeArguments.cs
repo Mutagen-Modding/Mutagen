@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Mutagen.Bethesda.Core.Pex.Enums;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
     public static class InstructionOpCodeArguments
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Mutagen.Bethesda.Core.Pex.Interfaces
+namespace Mutagen.Bethesda.Pex
 {
     public interface IUserFlag : IBinaryObject
     {

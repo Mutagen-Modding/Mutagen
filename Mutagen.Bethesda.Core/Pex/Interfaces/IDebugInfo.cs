@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Core.Pex.Enums;
 
-namespace Mutagen.Bethesda.Core.Pex.Interfaces
+namespace Mutagen.Bethesda.Pex
 {
     public interface IDebugInfo : IBinaryObject
     {

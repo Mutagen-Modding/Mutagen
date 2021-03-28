@@ -1,10 +1,8 @@
 using System;
 using System.IO;
 using System.Text;
-using Mutagen.Bethesda.Core.Pex.DataTypes;
-using Mutagen.Bethesda.Core.Pex.Interfaces;
 
-namespace Mutagen.Bethesda.Core.Pex
+namespace Mutagen.Bethesda.Pex
 {
     public static class PexParser
     {

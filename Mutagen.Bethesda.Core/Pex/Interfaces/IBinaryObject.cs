@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace Mutagen.Bethesda.Core.Pex.Interfaces
+namespace Mutagen.Bethesda.Pex
 {
     public interface IBinaryObject
     {

@@ -1,8 +1,7 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
-using Mutagen.Bethesda.Core.Pex.Extensions;
 
-namespace Mutagen.Bethesda.Core.Pex
+namespace Mutagen.Bethesda.Pex
 {
     internal class PexWriter : BinaryWriter
     {

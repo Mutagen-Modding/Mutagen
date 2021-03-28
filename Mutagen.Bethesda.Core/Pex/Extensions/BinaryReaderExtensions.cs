@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Buffers.Binary;
 using System.IO;
 
-namespace Mutagen.Bethesda.Core.Pex.Extensions
+namespace Mutagen.Bethesda.Pex
 {
     internal static class BinaryReaderExtensions
     {

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using Mutagen.Bethesda.Core.Pex;
-using Mutagen.Bethesda.Core.Pex.Extensions;
-
+using Mutagen.Bethesda.Pex;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Pex

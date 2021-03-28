@@ -1,4 +1,5 @@
-﻿namespace Mutagen.Bethesda.Core.Pex
+
+namespace Mutagen.Bethesda.Pex
 {
     internal static class PexUtils
     {

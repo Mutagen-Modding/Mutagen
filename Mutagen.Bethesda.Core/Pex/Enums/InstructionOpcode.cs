@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "IdentifierTypo")]

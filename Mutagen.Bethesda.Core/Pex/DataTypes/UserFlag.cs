@@ -1,7 +1,6 @@
 using System.IO;
-using Mutagen.Bethesda.Core.Pex.Interfaces;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
     public class UserFlag : IUserFlag
     {
