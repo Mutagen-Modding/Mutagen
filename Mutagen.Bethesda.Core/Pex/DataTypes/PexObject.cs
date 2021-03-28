@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Enums;
-using Mutagen.Bethesda.Core.Pex.Exceptions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
@@ -88,7 +87,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
 
             var newPos = br.BaseStream.Position;
             if (newPos != currentPos + size)
-                throw new PexParsingException("Current position in Stream does not match expected position: " +
+                throw new InvalidDataException("Current position in Stream does not match expected position: " +
                                               $"Current: {newPos} Expected: {currentPos + size}");
         }
 
@@ -559,7 +558,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
                 switch (current)
                 {
                     case '*' when argument.VariableType != VariableType.Integer || !argument.IntValue.HasValue:
-                        throw new PexParsingException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
+                        throw new InvalidDataException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
                     case '*':
                     {
                         for (var i = 0; i < argument.IntValue.Value; i++)
@@ -576,7 +575,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
                      * interpreted as an unsigned integer.
                      */
                     case 'u' when argument.VariableType != VariableType.Integer:
-                        throw new PexParsingException($"Argument is unsigned integer but Variable Type is not integer: {argument.VariableType}");
+                        throw new InvalidDataException($"Argument is unsigned integer but Variable Type is not integer: {argument.VariableType}");
                 }
             }
         }

@@ -1,8 +1,7 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using Mutagen.Bethesda.Core.Pex.DataTypes;
-using Mutagen.Bethesda.Core.Pex.Exceptions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
 namespace Mutagen.Bethesda.Core.Pex
@@ -16,7 +15,7 @@ namespace Mutagen.Bethesda.Core.Pex
         /// <param name="gameCategory">Game Category of the pex file.</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException">The file does not exist.</exception>
-        /// <exception cref="PexParsingException">Exception while parsing the file.</exception>
+        /// <exception cref="InvalidDataException">Exception while parsing the file.</exception>
         public static IPexFile ParsePexFile(string file, GameCategory gameCategory)
         {
             if (!File.Exists(file))
@@ -29,7 +28,7 @@ namespace Mutagen.Bethesda.Core.Pex
             var pexFile = new PexFile(br, gameCategory);
 
             if (fs.Position != fs.Length)
-                throw new PexParsingException("Finished reading but end of the stream was not reached! " +
+                throw new InvalidDataException("Finished reading but end of the stream was not reached! " +
                                               $"Current position: {fs.Position} " +
                                               $"Stream length: {fs.Length} " +
                                               $"Missing: {fs.Length - fs.Position}");

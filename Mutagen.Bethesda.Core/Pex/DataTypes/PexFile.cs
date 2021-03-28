@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using Mutagen.Bethesda.Core.Pex.Exceptions;
 using Mutagen.Bethesda.Core.Pex.Extensions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 using Noggog;
@@ -52,7 +51,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         {
             if(_strings.TryGetValue(index, out var value))
                 return value;
-            throw new PexParsingException($"Unable to find string in table at index {index}");
+            throw new InvalidDataException($"Unable to find string in table at index {index}");
         }
 
         internal ushort GetIndexFromString(string? value)
@@ -75,7 +74,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         {
             Magic = br.ReadUInt32();
             if (Magic != PexMagic)
-                throw new PexParsingException($"File does not have fast code! Magic does not match {PexMagic:x8} is {Magic:x8}");
+                throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {Magic:x8}");
             
             MajorVersion = br.ReadByte();
             MinorVersion = br.ReadByte();

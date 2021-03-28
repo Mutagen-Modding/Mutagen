@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
@@ -14,6 +14,7 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         private readonly PexFile _pexFile;
         
         public UserFlag(PexFile pexFile) { _pexFile = pexFile; }
+
         public UserFlag(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
         
         public void Read(BinaryReader br)
