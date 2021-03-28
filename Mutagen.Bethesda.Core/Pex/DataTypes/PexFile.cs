@@ -29,10 +29,10 @@ namespace Mutagen.Bethesda.Pex
         
         public IDebugInfo? DebugInfo { get; set; }
 
-        public List<IPexObject> Objects { get; set; } = new();
+        public ExtendedList<IPexObject> Objects { get; set; } = new();
 
         private Dictionary<ushort, string> _strings = new();
-        private List<IUserFlag> _userFlags = new();
+        private ExtendedList<IUserFlag> _userFlags = new();
         
         public PexFile(GameCategory gameCategory)
         {

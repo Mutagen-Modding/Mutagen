@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -11,12 +12,12 @@ namespace Mutagen.Bethesda.Pex
         public string? ParentClassName { get; set; }
         public string? DocString { get; set; }
         public bool IsConst { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
+        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
         public string? AutoStateName { get; set; }
-        public List<IPexObjectStructInfo> StructInfos { get; set; } = new();
-        public List<IPexObjectVariable> Variables { get; set; } = new();
-        public List<IPexObjectProperty> Properties { get; set; } = new();
-        public List<IPexObjectState> States { get; set; } = new();
+        public ExtendedList<IPexObjectStructInfo> StructInfos { get; set; } = new();
+        public ExtendedList<IPexObjectVariable> Variables { get; set; } = new();
+        public ExtendedList<IPexObjectProperty> Properties { get; set; } = new();
+        public ExtendedList<IPexObjectState> States { get; set; } = new();
         
         private readonly GameCategory _gameCategory;
         private readonly PexFile _pexFile;
@@ -47,7 +48,7 @@ namespace Mutagen.Bethesda.Pex
             if (_gameCategory == GameCategory.Fallout4)
                 IsConst = br.ReadBoolean();
             
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
             AutoStateName = _pexFile.GetStringFromIndex(br.ReadUInt16());
 
             if (_gameCategory == GameCategory.Fallout4)
@@ -148,7 +149,7 @@ namespace Mutagen.Bethesda.Pex
     public class PexObjectStructInfo : IPexObjectStructInfo
     {
         public string? Name { get; set; }
-        public List<IPexObjectStructInfoMember> Members { get; set; } = new();
+        public ExtendedList<IPexObjectStructInfoMember> Members { get; set; } = new();
 
         private readonly PexFile _pexFile;
         
@@ -182,7 +183,7 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? Name { get; set; }
         public string? TypeName { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
+        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
         public IPexObjectVariableData? Value { get; set; }
         public bool IsConst { get; set; }
         public string? DocString { get; set; }
@@ -195,7 +196,7 @@ namespace Mutagen.Bethesda.Pex
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
             TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
             Value = new PexObjectVariableData(br, _pexFile);
             IsConst = br.ReadBoolean();
             DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -216,7 +217,7 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? Name { get; set; }
         public string? TypeName { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
+        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
         public IPexObjectVariableData? VariableData { get; set; }
         
         private readonly PexFile _pexFile;
@@ -227,7 +228,7 @@ namespace Mutagen.Bethesda.Pex
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
             TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
 
             VariableData = new PexObjectVariableData(br, _pexFile);
         }
@@ -311,7 +312,7 @@ namespace Mutagen.Bethesda.Pex
         public string? Name{ get; set; }
         public string? TypeName { get; set; }
         public string? DocString { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
+        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
         public PropertyFlags Flags { get; set; }
         public string? AutoVarName{ get; set; }
         public IPexObjectFunction? ReadHandler { get; set; }
@@ -326,7 +327,7 @@ namespace Mutagen.Bethesda.Pex
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
             TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
             DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
 
             var flags = br.ReadByte();
             Flags = (PropertyFlags) flags;
@@ -378,7 +379,7 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? Name { get; set; }
 
-        public List<IPexObjectNamedFunction> Functions { get; set; } = new();
+        public ExtendedList<IPexObjectNamedFunction> Functions { get; set; } = new();
 
         private readonly PexFile _pexFile;
         public PexObjectState(PexFile pexFile) { _pexFile = pexFile; }
@@ -434,11 +435,11 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? ReturnTypeName { get; set; }
         public string? DocString { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
+        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
         public FunctionFlags Flags { get; set; }
-        public List<IPexObjectFunctionVariable> Parameters { get; set; } = new();
-        public List<IPexObjectFunctionVariable> Locals { get; set; } = new();
-        public List<IPexObjectFunctionInstruction> Instructions { get; set; } = new();
+        public ExtendedList<IPexObjectFunctionVariable> Parameters { get; set; } = new();
+        public ExtendedList<IPexObjectFunctionVariable> Locals { get; set; } = new();
+        public ExtendedList<IPexObjectFunctionInstruction> Instructions { get; set; } = new();
 
         private readonly PexFile _pexFile;
         public PexObjectFunction(PexFile pexFile) { _pexFile = pexFile; }
@@ -448,7 +449,7 @@ namespace Mutagen.Bethesda.Pex
         {
             ReturnTypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
             DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
             Flags = (FunctionFlags) br.ReadByte();
 
             var parameters = br.ReadUInt16();
@@ -525,7 +526,7 @@ namespace Mutagen.Bethesda.Pex
     public class PexObjectFunctionInstruction : IPexObjectFunctionInstruction
     {
         public InstructionOpcode OpCode { get; set; } = InstructionOpcode.NOP;
-        public List<IPexObjectVariableData> Arguments { get; set; } = new();
+        public ExtendedList<IPexObjectVariableData> Arguments { get; set; } = new();
         
         private readonly PexFile _pexFile;
         public PexObjectFunctionInstruction(PexFile pexFile) { _pexFile = pexFile; }

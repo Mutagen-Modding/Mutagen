@@ -1,3 +1,4 @@
+using Noggog;
 using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Pex
@@ -13,6 +14,6 @@ namespace Mutagen.Bethesda.Pex
     
     public interface IHasUserFlags
     {
-        public List<IUserFlag> UserFlags { get; set; }
+        public ExtendedList<IUserFlag> UserFlags { get; set; }
     }
 }

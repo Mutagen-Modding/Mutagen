@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -23,6 +24,6 @@ namespace Mutagen.Bethesda.Pex
 
         public IDebugInfo? DebugInfo { get; set; }
 
-        public List<IPexObject> Objects { get; set; }
+        public ExtendedList<IPexObject> Objects { get; set; }
     }
 }

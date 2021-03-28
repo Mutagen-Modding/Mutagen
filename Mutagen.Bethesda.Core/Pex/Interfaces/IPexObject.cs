@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -9,16 +10,16 @@ namespace Mutagen.Bethesda.Pex
         public string? DocString { get; set; }
         public bool IsConst { get; set; }
         public string? AutoStateName { get; set; }
-        public List<IPexObjectStructInfo> StructInfos { get; set; }
-        public List<IPexObjectVariable> Variables { get; set; }
-        public List<IPexObjectProperty> Properties { get; set; }
-        public List<IPexObjectState> States { get; set; }
+        public ExtendedList<IPexObjectStructInfo> StructInfos { get; set; }
+        public ExtendedList<IPexObjectVariable> Variables { get; set; }
+        public ExtendedList<IPexObjectProperty> Properties { get; set; }
+        public ExtendedList<IPexObjectState> States { get; set; }
     }
 
     public interface IPexObjectStructInfo : IBinaryObject
     {
         public string? Name { get; set; }
-        public List<IPexObjectStructInfoMember> Members { get; set; }
+        public ExtendedList<IPexObjectStructInfoMember> Members { get; set; }
     }
 
     public interface IPexObjectStructInfoMember : IBinaryObject, IHasUserFlags
@@ -61,7 +62,7 @@ namespace Mutagen.Bethesda.Pex
     public interface IPexObjectState : IBinaryObject
     {
         public string? Name { get; set; }
-        public List<IPexObjectNamedFunction> Functions { get; set; }
+        public ExtendedList<IPexObjectNamedFunction> Functions { get; set; }
     }
 
     public interface IPexObjectNamedFunction : IBinaryObject
@@ -76,9 +77,9 @@ namespace Mutagen.Bethesda.Pex
         public string? DocString { get; set; }
         public FunctionFlags Flags { get; set; }
         
-        public List<IPexObjectFunctionVariable> Parameters { get; set; }
-        public List<IPexObjectFunctionVariable> Locals { get; set; }
-        public List<IPexObjectFunctionInstruction> Instructions { get; set; }
+        public ExtendedList<IPexObjectFunctionVariable> Parameters { get; set; }
+        public ExtendedList<IPexObjectFunctionVariable> Locals { get; set; }
+        public ExtendedList<IPexObjectFunctionInstruction> Instructions { get; set; }
     }
 
     public interface IPexObjectFunctionVariable : IBinaryObject
@@ -91,6 +92,6 @@ namespace Mutagen.Bethesda.Pex
     {
         public InstructionOpcode OpCode { get; set; }
         
-        public List<IPexObjectVariableData> Arguments { get; set; }
+        public ExtendedList<IPexObjectVariableData> Arguments { get; set; }
     }
 }

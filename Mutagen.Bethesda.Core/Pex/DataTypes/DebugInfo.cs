@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -12,11 +13,11 @@ namespace Mutagen.Bethesda.Pex
         public bool HasDebugInfo { get; set; }
         public DateTime ModificationTime { get; set; }
 
-        public List<IDebugFunction> Functions { get; set; } = new();
+        public ExtendedList<IDebugFunction> Functions { get; set; } = new();
 
-        public List<IDebugPropertyGroup> PropertyGroups { get; set; } = new();
+        public ExtendedList<IDebugPropertyGroup> PropertyGroups { get; set; } = new();
 
-        public List<IDebugStructOrder> StructOrders { get; set; } = new();
+        public ExtendedList<IDebugStructOrder> StructOrders { get; set; } = new();
 
         private readonly PexFile _pexFile;
         
@@ -104,7 +105,7 @@ namespace Mutagen.Bethesda.Pex
         
         public DebugFunctionType FunctionType { get; set; }
         
-        public List<ushort> Instructions { get; set; } = new();
+        public ExtendedList<ushort> Instructions { get; set; } = new();
 
         private readonly PexFile _pexFile;
         
@@ -153,7 +154,7 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? ObjectName { get; set; }
         public string? GroupName{ get; set; }
-        public List<string> PropertyNames { get; set; } = new();
+        public ExtendedList<string> PropertyNames { get; set; } = new();
 
         private readonly PexFile _pexFile;
 
@@ -193,7 +194,7 @@ namespace Mutagen.Bethesda.Pex
     {
         public string? ObjectName { get; set; }
         public string? OrderName { get; set; }
-        public List<string> Names { get; set; } = new();
+        public ExtendedList<string> Names { get; set; } = new();
 
         private readonly PexFile _pexFile;
         

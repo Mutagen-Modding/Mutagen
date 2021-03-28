@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -9,11 +10,11 @@ namespace Mutagen.Bethesda.Pex
         
         public DateTime ModificationTime { get; set; }
         
-        public List<IDebugFunction> Functions { get; set; }
+        public ExtendedList<IDebugFunction> Functions { get; set; }
         
-        public List<IDebugPropertyGroup> PropertyGroups { get; set; }
+        public ExtendedList<IDebugPropertyGroup> PropertyGroups { get; set; }
         
-        public List<IDebugStructOrder> StructOrders { get; set; }
+        public ExtendedList<IDebugStructOrder> StructOrders { get; set; }
     }
 
     public interface IDebugFunction : IBinaryObject
@@ -24,20 +25,20 @@ namespace Mutagen.Bethesda.Pex
         
         public DebugFunctionType FunctionType { get; set; }
         
-        public List<ushort> Instructions { get; set; }
+        public ExtendedList<ushort> Instructions { get; set; }
     }
 
     public interface IDebugPropertyGroup : IBinaryObject
     {
         public string? ObjectName { get; set; }
         public string? GroupName { get; set; }
-        public List<string> PropertyNames { get; set; }
+        public ExtendedList<string> PropertyNames { get; set; }
     }
 
     public interface IDebugStructOrder : IBinaryObject
     {
         public string? ObjectName { get; set; }
         public string? OrderName { get; set; }
-        public List<string> Names { get; set; }
+        public ExtendedList<string> Names { get; set; }
     }
 }
