@@ -1,15 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Enums;
 using Mutagen.Bethesda.Core.Pex.Extensions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
 {
-    [PublicAPI]
     public class DebugInfo : IDebugInfo
     {
         private readonly GameCategory _gameCategory;
@@ -99,7 +97,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class DebugFunction : IDebugFunction
     {
         public string? ObjectName { get; set; }
@@ -155,7 +152,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class DebugPropertyGroup : IDebugPropertyGroup
     {
         public string? ObjectName { get; set; }
@@ -196,7 +192,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class DebugStructOrder : IDebugStructOrder
     {
         public string? ObjectName { get; set; }

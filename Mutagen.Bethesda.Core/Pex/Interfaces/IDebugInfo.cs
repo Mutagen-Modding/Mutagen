@@ -1,11 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Enums;
 
 namespace Mutagen.Bethesda.Core.Pex.Interfaces
 {
-    [PublicAPI]
     public interface IDebugInfo : IBinaryObject
     {
         public bool HasDebugInfo { get; set; }
@@ -19,7 +17,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public List<IDebugStructOrder> StructOrders { get; set; }
     }
 
-    [PublicAPI]
     public interface IDebugFunction : IBinaryObject
     {
         public string? ObjectName { get; set; }
@@ -31,7 +28,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public List<ushort> Instructions { get; set; }
     }
 
-    [PublicAPI]
     public interface IDebugPropertyGroup : IBinaryObject
     {
         public string? ObjectName { get; set; }
@@ -39,7 +35,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public List<string> PropertyNames { get; set; }
     }
 
-    [PublicAPI]
     public interface IDebugStructOrder : IBinaryObject
     {
         public string? ObjectName { get; set; }

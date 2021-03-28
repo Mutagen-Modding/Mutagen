@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 
 namespace Mutagen.Bethesda.Core.Pex.Interfaces
 {
-    [PublicAPI]
     public interface IPexFile : IBinaryObject
     {
         public uint Magic { get; set; }

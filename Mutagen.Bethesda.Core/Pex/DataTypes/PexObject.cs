@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Enums;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
 {
-    [PublicAPI]
     public class PexObject : IPexObject
     {
         public string? Name { get; set; }
@@ -149,7 +147,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectStructInfo : IPexObjectStructInfo
     {
         public string? Name { get; set; }
@@ -183,7 +180,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectStructInfoMember : IPexObjectStructInfoMember
     {
         public string? Name { get; set; }
@@ -218,7 +214,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
     
-    [PublicAPI]
     public class PexObjectVariable : IPexObjectVariable
     {
         public string? Name { get; set; }
@@ -249,7 +244,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectVariableData : IPexObjectVariableData
     {
         public VariableType VariableType { get; set; } = VariableType.Null;
@@ -314,7 +308,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectProperty : IPexObjectProperty
     {
         public string? Name{ get; set; }
@@ -383,7 +376,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectState : IPexObjectState
     {
         public string? Name { get; set; }
@@ -417,7 +409,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectNamedFunction : IPexObjectNamedFunction
     {
         public string? FunctionName { get; set; }
@@ -441,7 +432,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectFunction : IPexObjectFunction
     {
         public string? ReturnTypeName { get; set; }
@@ -512,7 +502,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectFunctionVariable : IPexObjectFunctionVariable
     {
         public string? Name { get; set; }
@@ -535,7 +524,6 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
     public class PexObjectFunctionInstruction : IPexObjectFunctionInstruction
     {
         public InstructionOpcode OpCode { get; set; } = InstructionOpcode.NOP;

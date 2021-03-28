@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Extensions;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 using Noggog;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
 {
-    [PublicAPI]
     public class PexFile : IPexFile
     {
         private readonly GameCategory _gameCategory;

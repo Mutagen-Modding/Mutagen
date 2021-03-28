@@ -1,10 +1,8 @@
 using System.IO;
-using JetBrains.Annotations;
 using Mutagen.Bethesda.Core.Pex.Interfaces;
 
 namespace Mutagen.Bethesda.Core.Pex.DataTypes
 {
-    [PublicAPI]
     public class UserFlag : IUserFlag
     {
         public string? Name { get; set; }

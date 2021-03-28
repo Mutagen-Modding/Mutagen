@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.Collections.Generic;
 using Mutagen.Bethesda.Core.Pex.Enums;
 
 namespace Mutagen.Bethesda.Core.Pex.Interfaces
 {
-    [PublicAPI]
     public interface IPexObject : IBinaryObject, IHasUserFlags
     {
         public string? Name { get; set; }
@@ -18,14 +16,12 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public List<IPexObjectState> States { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectStructInfo : IBinaryObject
     {
         public string? Name { get; set; }
         public List<IPexObjectStructInfoMember> Members { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectStructInfoMember : IBinaryObject, IHasUserFlags
     {
         public string? Name { get; set; }
@@ -35,7 +31,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public string? DocString { get; set; }
     }
     
-    [PublicAPI]
     public interface IPexObjectVariable : IBinaryObject, IHasUserFlags
     {
         public string? Name { get; set; }
@@ -43,7 +38,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public IPexObjectVariableData? VariableData { get; set; }
     }
     
-    [PublicAPI]
     public interface IPexObjectVariableData : IBinaryObject
     {
         public VariableType VariableType { get; set; }
@@ -54,7 +48,6 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public bool? BoolValue { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectProperty : IBinaryObject, IHasUserFlags
     {
         public string? Name { get; set; }
@@ -66,21 +59,18 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public IPexObjectFunction? WriteHandler { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectState : IBinaryObject
     {
         public string? Name { get; set; }
         public List<IPexObjectNamedFunction> Functions { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectNamedFunction : IBinaryObject
     {
         public string? FunctionName { get; set; }
         public IPexObjectFunction? Function { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectFunction : IBinaryObject, IHasUserFlags
     {
         public string? ReturnTypeName { get; set; }
@@ -92,14 +82,12 @@ namespace Mutagen.Bethesda.Core.Pex.Interfaces
         public List<IPexObjectFunctionInstruction> Instructions { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectFunctionVariable : IBinaryObject
     {
         public string? Name { get; set; }
         public string? TypeName { get; set; }
     }
 
-    [PublicAPI]
     public interface IPexObjectFunctionInstruction : IBinaryObject
     {
         public InstructionOpcode OpCode { get; set; }
