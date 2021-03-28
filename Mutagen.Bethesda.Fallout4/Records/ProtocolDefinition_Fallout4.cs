@@ -47,8 +47,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.ConditionGlobal_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.ConditionFloat_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.ConditionData_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.FunctionConditionData_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.GetEventData_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.LocationTargetRadius_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.ALocationTarget_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Fallout4.Internals.LocationTarget_Registration.Instance);

@@ -26,10 +26,7 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
-    /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
-    /// </summary>
-    public abstract partial class ConditionData :
+    public partial class ConditionData :
         IConditionData,
         IEquatable<IConditionDataGetter>,
         ILoquiObjectSetter<ConditionData>
@@ -42,10 +39,61 @@ namespace Mutagen.Bethesda.Fallout4
         partial void CustomCtor();
         #endregion
 
+        #region Function
+        public Condition.FunctionType Function { get; set; } = default;
+        #endregion
+        #region Unknown2
+        public UInt16 Unknown2 { get; set; } = default;
+        #endregion
+        #region ParameterOneRecord
+        private IFormLink<IFallout4MajorRecordGetter> _ParameterOneRecord = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord
+        {
+            get => _ParameterOneRecord;
+            set => _ParameterOneRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterOneRecord => this.ParameterOneRecord;
+        #endregion
+        #region ParameterOneNumber
+        public Int32 ParameterOneNumber { get; set; } = default;
+        #endregion
+        #region ParameterOneString
+        public String? ParameterOneString { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IConditionDataGetter.ParameterOneString => this.ParameterOneString;
+        #endregion
+        #region ParameterTwoRecord
+        private IFormLink<IFallout4MajorRecordGetter> _ParameterTwoRecord = new FormLink<IFallout4MajorRecordGetter>();
+        public IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord
+        {
+            get => _ParameterTwoRecord;
+            set => _ParameterTwoRecord = value.AsSetter();
+        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IFormLinkGetter<IFallout4MajorRecordGetter> IConditionDataGetter.ParameterTwoRecord => this.ParameterTwoRecord;
+        #endregion
+        #region ParameterTwoNumber
+        public Int32 ParameterTwoNumber { get; set; } = default;
+        #endregion
+        #region ParameterTwoString
+        public String? ParameterTwoString { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        String? IConditionDataGetter.ParameterTwoString => this.ParameterTwoString;
+        #endregion
+        #region RunOnType
+        public Condition.RunOnType RunOnType { get; set; } = default;
+        #endregion
+        #region Unknown4
+        public Int32 Unknown4 { get; set; } = default;
+        #endregion
+        #region ParameterThreeNumber
+        public Int32 ParameterThreeNumber { get; set; } = default;
+        #endregion
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {
@@ -80,8 +128,44 @@ namespace Mutagen.Bethesda.Fallout4
             #region Ctors
             public Mask(TItem initialValue)
             {
+                this.Function = initialValue;
+                this.Unknown2 = initialValue;
+                this.ParameterOneRecord = initialValue;
+                this.ParameterOneNumber = initialValue;
+                this.ParameterOneString = initialValue;
+                this.ParameterTwoRecord = initialValue;
+                this.ParameterTwoNumber = initialValue;
+                this.ParameterTwoString = initialValue;
+                this.RunOnType = initialValue;
+                this.Unknown4 = initialValue;
+                this.ParameterThreeNumber = initialValue;
             }
 
+            public Mask(
+                TItem Function,
+                TItem Unknown2,
+                TItem ParameterOneRecord,
+                TItem ParameterOneNumber,
+                TItem ParameterOneString,
+                TItem ParameterTwoRecord,
+                TItem ParameterTwoNumber,
+                TItem ParameterTwoString,
+                TItem RunOnType,
+                TItem Unknown4,
+                TItem ParameterThreeNumber)
+            {
+                this.Function = Function;
+                this.Unknown2 = Unknown2;
+                this.ParameterOneRecord = ParameterOneRecord;
+                this.ParameterOneNumber = ParameterOneNumber;
+                this.ParameterOneString = ParameterOneString;
+                this.ParameterTwoRecord = ParameterTwoRecord;
+                this.ParameterTwoNumber = ParameterTwoNumber;
+                this.ParameterTwoString = ParameterTwoString;
+                this.RunOnType = RunOnType;
+                this.Unknown4 = Unknown4;
+                this.ParameterThreeNumber = ParameterThreeNumber;
+            }
 
             #pragma warning disable CS8618
             protected Mask()
@@ -89,6 +173,20 @@ namespace Mutagen.Bethesda.Fallout4
             }
             #pragma warning restore CS8618
 
+            #endregion
+
+            #region Members
+            public TItem Function;
+            public TItem Unknown2;
+            public TItem ParameterOneRecord;
+            public TItem ParameterOneNumber;
+            public TItem ParameterOneString;
+            public TItem ParameterTwoRecord;
+            public TItem ParameterTwoNumber;
+            public TItem ParameterTwoString;
+            public TItem RunOnType;
+            public TItem Unknown4;
+            public TItem ParameterThreeNumber;
             #endregion
 
             #region Equals
@@ -101,26 +199,70 @@ namespace Mutagen.Bethesda.Fallout4
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
+                if (!object.Equals(this.Function, rhs.Function)) return false;
+                if (!object.Equals(this.Unknown2, rhs.Unknown2)) return false;
+                if (!object.Equals(this.ParameterOneRecord, rhs.ParameterOneRecord)) return false;
+                if (!object.Equals(this.ParameterOneNumber, rhs.ParameterOneNumber)) return false;
+                if (!object.Equals(this.ParameterOneString, rhs.ParameterOneString)) return false;
+                if (!object.Equals(this.ParameterTwoRecord, rhs.ParameterTwoRecord)) return false;
+                if (!object.Equals(this.ParameterTwoNumber, rhs.ParameterTwoNumber)) return false;
+                if (!object.Equals(this.ParameterTwoString, rhs.ParameterTwoString)) return false;
+                if (!object.Equals(this.RunOnType, rhs.RunOnType)) return false;
+                if (!object.Equals(this.Unknown4, rhs.Unknown4)) return false;
+                if (!object.Equals(this.ParameterThreeNumber, rhs.ParameterThreeNumber)) return false;
                 return true;
             }
             public override int GetHashCode()
             {
                 var hash = new HashCode();
+                hash.Add(this.Function);
+                hash.Add(this.Unknown2);
+                hash.Add(this.ParameterOneRecord);
+                hash.Add(this.ParameterOneNumber);
+                hash.Add(this.ParameterOneString);
+                hash.Add(this.ParameterTwoRecord);
+                hash.Add(this.ParameterTwoNumber);
+                hash.Add(this.ParameterTwoString);
+                hash.Add(this.RunOnType);
+                hash.Add(this.Unknown4);
+                hash.Add(this.ParameterThreeNumber);
                 return hash.ToHashCode();
             }
 
             #endregion
 
             #region All
-            public virtual bool All(Func<TItem, bool> eval)
+            public bool All(Func<TItem, bool> eval)
             {
+                if (!eval(this.Function)) return false;
+                if (!eval(this.Unknown2)) return false;
+                if (!eval(this.ParameterOneRecord)) return false;
+                if (!eval(this.ParameterOneNumber)) return false;
+                if (!eval(this.ParameterOneString)) return false;
+                if (!eval(this.ParameterTwoRecord)) return false;
+                if (!eval(this.ParameterTwoNumber)) return false;
+                if (!eval(this.ParameterTwoString)) return false;
+                if (!eval(this.RunOnType)) return false;
+                if (!eval(this.Unknown4)) return false;
+                if (!eval(this.ParameterThreeNumber)) return false;
                 return true;
             }
             #endregion
 
             #region Any
-            public virtual bool Any(Func<TItem, bool> eval)
+            public bool Any(Func<TItem, bool> eval)
             {
+                if (eval(this.Function)) return true;
+                if (eval(this.Unknown2)) return true;
+                if (eval(this.ParameterOneRecord)) return true;
+                if (eval(this.ParameterOneNumber)) return true;
+                if (eval(this.ParameterOneString)) return true;
+                if (eval(this.ParameterTwoRecord)) return true;
+                if (eval(this.ParameterTwoNumber)) return true;
+                if (eval(this.ParameterTwoString)) return true;
+                if (eval(this.RunOnType)) return true;
+                if (eval(this.Unknown4)) return true;
+                if (eval(this.ParameterThreeNumber)) return true;
                 return false;
             }
             #endregion
@@ -135,6 +277,17 @@ namespace Mutagen.Bethesda.Fallout4
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
+                obj.Function = eval(this.Function);
+                obj.Unknown2 = eval(this.Unknown2);
+                obj.ParameterOneRecord = eval(this.ParameterOneRecord);
+                obj.ParameterOneNumber = eval(this.ParameterOneNumber);
+                obj.ParameterOneString = eval(this.ParameterOneString);
+                obj.ParameterTwoRecord = eval(this.ParameterTwoRecord);
+                obj.ParameterTwoNumber = eval(this.ParameterTwoNumber);
+                obj.ParameterTwoString = eval(this.ParameterTwoString);
+                obj.RunOnType = eval(this.RunOnType);
+                obj.Unknown4 = eval(this.Unknown4);
+                obj.ParameterThreeNumber = eval(this.ParameterThreeNumber);
             }
             #endregion
 
@@ -157,6 +310,50 @@ namespace Mutagen.Bethesda.Fallout4
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
+                    if (printMask?.Function ?? true)
+                    {
+                        fg.AppendItem(Function, "Function");
+                    }
+                    if (printMask?.Unknown2 ?? true)
+                    {
+                        fg.AppendItem(Unknown2, "Unknown2");
+                    }
+                    if (printMask?.ParameterOneRecord ?? true)
+                    {
+                        fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
+                    }
+                    if (printMask?.ParameterOneNumber ?? true)
+                    {
+                        fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
+                    }
+                    if (printMask?.ParameterOneString ?? true)
+                    {
+                        fg.AppendItem(ParameterOneString, "ParameterOneString");
+                    }
+                    if (printMask?.ParameterTwoRecord ?? true)
+                    {
+                        fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
+                    }
+                    if (printMask?.ParameterTwoNumber ?? true)
+                    {
+                        fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
+                    }
+                    if (printMask?.ParameterTwoString ?? true)
+                    {
+                        fg.AppendItem(ParameterTwoString, "ParameterTwoString");
+                    }
+                    if (printMask?.RunOnType ?? true)
+                    {
+                        fg.AppendItem(RunOnType, "RunOnType");
+                    }
+                    if (printMask?.Unknown4 ?? true)
+                    {
+                        fg.AppendItem(Unknown4, "Unknown4");
+                    }
+                    if (printMask?.ParameterThreeNumber ?? true)
+                    {
+                        fg.AppendItem(ParameterThreeNumber, "ParameterThreeNumber");
+                    }
                 }
                 fg.AppendLine("]");
             }
@@ -182,42 +379,152 @@ namespace Mutagen.Bethesda.Fallout4
                     return _warnings;
                 }
             }
+            public Exception? Function;
+            public Exception? Unknown2;
+            public Exception? ParameterOneRecord;
+            public Exception? ParameterOneNumber;
+            public Exception? ParameterOneString;
+            public Exception? ParameterTwoRecord;
+            public Exception? ParameterTwoNumber;
+            public Exception? ParameterTwoString;
+            public Exception? RunOnType;
+            public Exception? Unknown4;
+            public Exception? ParameterThreeNumber;
             #endregion
 
             #region IErrorMask
-            public virtual object? GetNthMask(int index)
+            public object? GetNthMask(int index)
             {
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.Function:
+                        return Function;
+                    case ConditionData_FieldIndex.Unknown2:
+                        return Unknown2;
+                    case ConditionData_FieldIndex.ParameterOneRecord:
+                        return ParameterOneRecord;
+                    case ConditionData_FieldIndex.ParameterOneNumber:
+                        return ParameterOneNumber;
+                    case ConditionData_FieldIndex.ParameterOneString:
+                        return ParameterOneString;
+                    case ConditionData_FieldIndex.ParameterTwoRecord:
+                        return ParameterTwoRecord;
+                    case ConditionData_FieldIndex.ParameterTwoNumber:
+                        return ParameterTwoNumber;
+                    case ConditionData_FieldIndex.ParameterTwoString:
+                        return ParameterTwoString;
+                    case ConditionData_FieldIndex.RunOnType:
+                        return RunOnType;
+                    case ConditionData_FieldIndex.Unknown4:
+                        return Unknown4;
+                    case ConditionData_FieldIndex.ParameterThreeNumber:
+                        return ParameterThreeNumber;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthException(int index, Exception ex)
+            public void SetNthException(int index, Exception ex)
             {
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.Function:
+                        this.Function = ex;
+                        break;
+                    case ConditionData_FieldIndex.Unknown2:
+                        this.Unknown2 = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneRecord:
+                        this.ParameterOneRecord = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneNumber:
+                        this.ParameterOneNumber = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneString:
+                        this.ParameterOneString = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoRecord:
+                        this.ParameterTwoRecord = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoNumber:
+                        this.ParameterTwoNumber = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoString:
+                        this.ParameterTwoString = ex;
+                        break;
+                    case ConditionData_FieldIndex.RunOnType:
+                        this.RunOnType = ex;
+                        break;
+                    case ConditionData_FieldIndex.Unknown4:
+                        this.Unknown4 = ex;
+                        break;
+                    case ConditionData_FieldIndex.ParameterThreeNumber:
+                        this.ParameterThreeNumber = ex;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual void SetNthMask(int index, object obj)
+            public void SetNthMask(int index, object obj)
             {
                 ConditionData_FieldIndex enu = (ConditionData_FieldIndex)index;
                 switch (enu)
                 {
+                    case ConditionData_FieldIndex.Function:
+                        this.Function = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.Unknown2:
+                        this.Unknown2 = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneRecord:
+                        this.ParameterOneRecord = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneNumber:
+                        this.ParameterOneNumber = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterOneString:
+                        this.ParameterOneString = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoRecord:
+                        this.ParameterTwoRecord = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoNumber:
+                        this.ParameterTwoNumber = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterTwoString:
+                        this.ParameterTwoString = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.RunOnType:
+                        this.RunOnType = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.Unknown4:
+                        this.Unknown4 = (Exception?)obj;
+                        break;
+                    case ConditionData_FieldIndex.ParameterThreeNumber:
+                        this.ParameterThreeNumber = (Exception?)obj;
+                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
             }
 
-            public virtual bool IsInError()
+            public bool IsInError()
             {
                 if (Overall != null) return true;
+                if (Function != null) return true;
+                if (Unknown2 != null) return true;
+                if (ParameterOneRecord != null) return true;
+                if (ParameterOneNumber != null) return true;
+                if (ParameterOneString != null) return true;
+                if (ParameterTwoRecord != null) return true;
+                if (ParameterTwoNumber != null) return true;
+                if (ParameterTwoString != null) return true;
+                if (RunOnType != null) return true;
+                if (Unknown4 != null) return true;
+                if (ParameterThreeNumber != null) return true;
                 return false;
             }
             #endregion
@@ -230,7 +537,7 @@ namespace Mutagen.Bethesda.Fallout4
                 return fg.ToString();
             }
 
-            public virtual void ToString(FileGeneration fg, string? name = null)
+            public void ToString(FileGeneration fg, string? name = null)
             {
                 fg.AppendLine($"{(name ?? "ErrorMask")} =>");
                 fg.AppendLine("[");
@@ -250,8 +557,19 @@ namespace Mutagen.Bethesda.Fallout4
                 }
                 fg.AppendLine("]");
             }
-            protected virtual void ToString_FillInternal(FileGeneration fg)
+            protected void ToString_FillInternal(FileGeneration fg)
             {
+                fg.AppendItem(Function, "Function");
+                fg.AppendItem(Unknown2, "Unknown2");
+                fg.AppendItem(ParameterOneRecord, "ParameterOneRecord");
+                fg.AppendItem(ParameterOneNumber, "ParameterOneNumber");
+                fg.AppendItem(ParameterOneString, "ParameterOneString");
+                fg.AppendItem(ParameterTwoRecord, "ParameterTwoRecord");
+                fg.AppendItem(ParameterTwoNumber, "ParameterTwoNumber");
+                fg.AppendItem(ParameterTwoString, "ParameterTwoString");
+                fg.AppendItem(RunOnType, "RunOnType");
+                fg.AppendItem(Unknown4, "Unknown4");
+                fg.AppendItem(ParameterThreeNumber, "ParameterThreeNumber");
             }
             #endregion
 
@@ -260,6 +578,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
+                ret.Function = this.Function.Combine(rhs.Function);
+                ret.Unknown2 = this.Unknown2.Combine(rhs.Unknown2);
+                ret.ParameterOneRecord = this.ParameterOneRecord.Combine(rhs.ParameterOneRecord);
+                ret.ParameterOneNumber = this.ParameterOneNumber.Combine(rhs.ParameterOneNumber);
+                ret.ParameterOneString = this.ParameterOneString.Combine(rhs.ParameterOneString);
+                ret.ParameterTwoRecord = this.ParameterTwoRecord.Combine(rhs.ParameterTwoRecord);
+                ret.ParameterTwoNumber = this.ParameterTwoNumber.Combine(rhs.ParameterTwoNumber);
+                ret.ParameterTwoString = this.ParameterTwoString.Combine(rhs.ParameterTwoString);
+                ret.RunOnType = this.RunOnType.Combine(rhs.RunOnType);
+                ret.Unknown4 = this.Unknown4.Combine(rhs.Unknown4);
+                ret.ParameterThreeNumber = this.ParameterThreeNumber.Combine(rhs.ParameterThreeNumber);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -283,6 +612,17 @@ namespace Mutagen.Bethesda.Fallout4
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
+            public bool Function;
+            public bool Unknown2;
+            public bool ParameterOneRecord;
+            public bool ParameterOneNumber;
+            public bool ParameterOneString;
+            public bool ParameterTwoRecord;
+            public bool ParameterTwoNumber;
+            public bool ParameterTwoString;
+            public bool RunOnType;
+            public bool Unknown4;
+            public bool ParameterThreeNumber;
             #endregion
 
             #region Ctors
@@ -292,6 +632,17 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
+                this.Function = defaultOn;
+                this.Unknown2 = defaultOn;
+                this.ParameterOneRecord = defaultOn;
+                this.ParameterOneNumber = defaultOn;
+                this.ParameterOneString = defaultOn;
+                this.ParameterTwoRecord = defaultOn;
+                this.ParameterTwoNumber = defaultOn;
+                this.ParameterTwoString = defaultOn;
+                this.RunOnType = defaultOn;
+                this.Unknown4 = defaultOn;
+                this.ParameterThreeNumber = defaultOn;
             }
 
             #endregion
@@ -305,8 +656,19 @@ namespace Mutagen.Bethesda.Fallout4
                 return _crystal;
             }
 
-            protected virtual void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
+            protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
+                ret.Add((Function, null));
+                ret.Add((Unknown2, null));
+                ret.Add((ParameterOneRecord, null));
+                ret.Add((ParameterOneNumber, null));
+                ret.Add((ParameterOneString, null));
+                ret.Add((ParameterTwoRecord, null));
+                ret.Add((ParameterTwoNumber, null));
+                ret.Add((ParameterTwoString, null));
+                ret.Add((RunOnType, null));
+                ret.Add((Unknown4, null));
+                ret.Add((ParameterThreeNumber, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -318,13 +680,13 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
-        public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
         #region Binary Translation
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => ConditionDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ConditionDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -335,6 +697,30 @@ namespace Mutagen.Bethesda.Fallout4
                 item: this,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
+        }
+        #region Binary Create
+        public static ConditionData CreateFromBinary(
+            MutagenFrame frame,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new ConditionData();
+            ((ConditionDataSetterCommon)((IConditionDataGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                item: ret,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
+            return ret;
+        }
+
+        #endregion
+
+        public static bool TryCreateFromBinary(
+            MutagenFrame frame,
+            out ConditionData item,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var startPos = frame.Position;
+            item = CreateFromBinary(frame, recordTypeConverter);
+            return startPos != frame.Position;
         }
         #endregion
 
@@ -347,26 +733,31 @@ namespace Mutagen.Bethesda.Fallout4
 
         internal static ConditionData GetNew()
         {
-            throw new ArgumentException("New called on an abstract class.");
+            return new ConditionData();
         }
 
     }
     #endregion
 
     #region Interface
-    /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
-    /// </summary>
     public partial interface IConditionData :
         IConditionDataGetter,
         IFormLinkContainer,
         ILoquiObjectSetter<IConditionData>
     {
+        new Condition.FunctionType Function { get; set; }
+        new UInt16 Unknown2 { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
+        new Int32 ParameterOneNumber { get; set; }
+        new String? ParameterOneString { get; set; }
+        new IFormLink<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
+        new Int32 ParameterTwoNumber { get; set; }
+        new String? ParameterTwoString { get; set; }
+        new Condition.RunOnType RunOnType { get; set; }
+        new Int32 Unknown4 { get; set; }
+        new Int32 ParameterThreeNumber { get; set; }
     }
 
-    /// <summary>
-    /// Implemented by: [FunctionConditionData, GetEventData]
-    /// </summary>
     public partial interface IConditionDataGetter :
         ILoquiObject,
         IBinaryItem,
@@ -380,6 +771,17 @@ namespace Mutagen.Bethesda.Fallout4
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ConditionData_Registration.Instance;
+        Condition.FunctionType Function { get; }
+        UInt16 Unknown2 { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> ParameterOneRecord { get; }
+        Int32 ParameterOneNumber { get; }
+        String? ParameterOneString { get; }
+        IFormLinkGetter<IFallout4MajorRecordGetter> ParameterTwoRecord { get; }
+        Int32 ParameterTwoNumber { get; }
+        String? ParameterTwoString { get; }
+        Condition.RunOnType RunOnType { get; }
+        Int32 Unknown4 { get; }
+        Int32 ParameterThreeNumber { get; }
 
     }
 
@@ -549,6 +951,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     #region Field Index
     public enum ConditionData_FieldIndex
     {
+        Function = 0,
+        Unknown2 = 1,
+        ParameterOneRecord = 2,
+        ParameterOneNumber = 3,
+        ParameterOneString = 4,
+        ParameterTwoRecord = 5,
+        ParameterTwoNumber = 6,
+        ParameterTwoString = 7,
+        RunOnType = 8,
+        Unknown4 = 9,
+        ParameterThreeNumber = 10,
     }
     #endregion
 
@@ -566,9 +979,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "b9a06bdf-0dbe-4421-ad2a-30482a9a0b08";
 
-        public const ushort AdditionalFieldCount = 0;
+        public const ushort AdditionalFieldCount = 11;
 
-        public const ushort FieldCount = 0;
+        public const ushort FieldCount = 11;
 
         public static readonly Type MaskType = typeof(ConditionData.Mask<>);
 
@@ -633,14 +1046,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         partial void ClearPartial();
         
-        public virtual void Clear(IConditionData item)
+        public void Clear(IConditionData item)
         {
             ClearPartial();
+            item.Function = default;
+            item.Unknown2 = default;
+            item.ParameterOneRecord.Clear();
+            item.ParameterOneNumber = default;
+            item.ParameterOneString = default;
+            item.ParameterTwoRecord.Clear();
+            item.ParameterTwoNumber = default;
+            item.ParameterTwoString = default;
+            item.RunOnType = default;
+            item.Unknown4 = default;
+            item.ParameterThreeNumber = default;
         }
         
         #region Mutagen
         public void RemapLinks(IConditionData obj, IReadOnlyDictionary<FormKey, FormKey> mapping)
         {
+            obj.ParameterOneRecord.Relink(mapping);
+            obj.ParameterTwoRecord.Relink(mapping);
         }
         
         #endregion
@@ -651,6 +1077,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            UtilityTranslation.SubrecordParse(
+                record: item,
+                frame: frame,
+                recordTypeConverter: recordTypeConverter,
+                fillStructs: ConditionDataBinaryCreateTranslation.FillBinaryStructs);
         }
         
         #endregion
@@ -681,6 +1112,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
+            ret.Function = item.Function == rhs.Function;
+            ret.Unknown2 = item.Unknown2 == rhs.Unknown2;
+            ret.ParameterOneRecord = item.ParameterOneRecord.Equals(rhs.ParameterOneRecord);
+            ret.ParameterOneNumber = item.ParameterOneNumber == rhs.ParameterOneNumber;
+            ret.ParameterOneString = string.Equals(item.ParameterOneString, rhs.ParameterOneString);
+            ret.ParameterTwoRecord = item.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord);
+            ret.ParameterTwoNumber = item.ParameterTwoNumber == rhs.ParameterTwoNumber;
+            ret.ParameterTwoString = string.Equals(item.ParameterTwoString, rhs.ParameterTwoString);
+            ret.RunOnType = item.RunOnType == rhs.RunOnType;
+            ret.Unknown4 = item.Unknown4 == rhs.Unknown4;
+            ret.ParameterThreeNumber = item.ParameterThreeNumber == rhs.ParameterThreeNumber;
         }
         
         public string ToString(
@@ -727,6 +1169,52 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             FileGeneration fg,
             ConditionData.Mask<bool>? printMask = null)
         {
+            if (printMask?.Function ?? true)
+            {
+                fg.AppendItem(item.Function, "Function");
+            }
+            if (printMask?.Unknown2 ?? true)
+            {
+                fg.AppendItem(item.Unknown2, "Unknown2");
+            }
+            if (printMask?.ParameterOneRecord ?? true)
+            {
+                fg.AppendItem(item.ParameterOneRecord.FormKey, "ParameterOneRecord");
+            }
+            if (printMask?.ParameterOneNumber ?? true)
+            {
+                fg.AppendItem(item.ParameterOneNumber, "ParameterOneNumber");
+            }
+            if ((printMask?.ParameterOneString ?? true)
+                && item.ParameterOneString.TryGet(out var ParameterOneStringItem))
+            {
+                fg.AppendItem(ParameterOneStringItem, "ParameterOneString");
+            }
+            if (printMask?.ParameterTwoRecord ?? true)
+            {
+                fg.AppendItem(item.ParameterTwoRecord.FormKey, "ParameterTwoRecord");
+            }
+            if (printMask?.ParameterTwoNumber ?? true)
+            {
+                fg.AppendItem(item.ParameterTwoNumber, "ParameterTwoNumber");
+            }
+            if ((printMask?.ParameterTwoString ?? true)
+                && item.ParameterTwoString.TryGet(out var ParameterTwoStringItem))
+            {
+                fg.AppendItem(ParameterTwoStringItem, "ParameterTwoString");
+            }
+            if (printMask?.RunOnType ?? true)
+            {
+                fg.AppendItem(item.RunOnType, "RunOnType");
+            }
+            if (printMask?.Unknown4 ?? true)
+            {
+                fg.AppendItem(item.Unknown4, "Unknown4");
+            }
+            if (printMask?.ParameterThreeNumber ?? true)
+            {
+                fg.AppendItem(item.ParameterThreeNumber, "ParameterThreeNumber");
+            }
         }
         
         #region Equals and Hash
@@ -737,19 +1225,80 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.Function) ?? true))
+            {
+                if (lhs.Function != rhs.Function) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                if (lhs.Unknown2 != rhs.Unknown2) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneRecord) ?? true))
+            {
+                if (!lhs.ParameterOneRecord.Equals(rhs.ParameterOneRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneNumber) ?? true))
+            {
+                if (lhs.ParameterOneNumber != rhs.ParameterOneNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterOneString, rhs.ParameterOneString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoRecord) ?? true))
+            {
+                if (!lhs.ParameterTwoRecord.Equals(rhs.ParameterTwoRecord)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoNumber) ?? true))
+            {
+                if (lhs.ParameterTwoNumber != rhs.ParameterTwoNumber) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoString) ?? true))
+            {
+                if (!string.Equals(lhs.ParameterTwoString, rhs.ParameterTwoString)) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnType) ?? true))
+            {
+                if (lhs.RunOnType != rhs.RunOnType) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown4) ?? true))
+            {
+                if (lhs.Unknown4 != rhs.Unknown4) return false;
+            }
+            if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterThreeNumber) ?? true))
+            {
+                if (lhs.ParameterThreeNumber != rhs.ParameterThreeNumber) return false;
+            }
             return true;
         }
         
         public virtual int GetHashCode(IConditionDataGetter item)
         {
             var hash = new HashCode();
+            hash.Add(item.Function);
+            hash.Add(item.Unknown2);
+            hash.Add(item.ParameterOneRecord);
+            hash.Add(item.ParameterOneNumber);
+            if (item.ParameterOneString.TryGet(out var ParameterOneStringitem))
+            {
+                hash.Add(ParameterOneStringitem);
+            }
+            hash.Add(item.ParameterTwoRecord);
+            hash.Add(item.ParameterTwoNumber);
+            if (item.ParameterTwoString.TryGet(out var ParameterTwoStringitem))
+            {
+                hash.Add(ParameterTwoStringitem);
+            }
+            hash.Add(item.RunOnType);
+            hash.Add(item.Unknown4);
+            hash.Add(item.ParameterThreeNumber);
             return hash.ToHashCode();
         }
         
         #endregion
         
         
-        public virtual object GetNew()
+        public object GetNew()
         {
             return ConditionData.GetNew();
         }
@@ -757,6 +1306,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Mutagen
         public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionDataGetter obj)
         {
+            yield return FormLinkInformation.Factory(obj.ParameterOneRecord);
+            yield return FormLinkInformation.Factory(obj.ParameterTwoRecord);
             yield break;
         }
         
@@ -768,13 +1319,57 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public static readonly ConditionDataSetterTranslationCommon Instance = new ConditionDataSetterTranslationCommon();
 
         #region DeepCopyIn
-        public virtual void DeepCopyIn(
+        public void DeepCopyIn(
             IConditionData item,
             IConditionDataGetter rhs,
             ErrorMaskBuilder? errorMask,
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Function) ?? true))
+            {
+                item.Function = rhs.Function;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown2) ?? true))
+            {
+                item.Unknown2 = rhs.Unknown2;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneRecord) ?? true))
+            {
+                item.ParameterOneRecord.SetTo(rhs.ParameterOneRecord.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneNumber) ?? true))
+            {
+                item.ParameterOneNumber = rhs.ParameterOneNumber;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterOneString) ?? true))
+            {
+                item.ParameterOneString = rhs.ParameterOneString;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoRecord) ?? true))
+            {
+                item.ParameterTwoRecord.SetTo(rhs.ParameterTwoRecord.FormKey);
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoNumber) ?? true))
+            {
+                item.ParameterTwoNumber = rhs.ParameterTwoNumber;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterTwoString) ?? true))
+            {
+                item.ParameterTwoString = rhs.ParameterTwoString;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnType) ?? true))
+            {
+                item.RunOnType = rhs.RunOnType;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.Unknown4) ?? true))
+            {
+                item.Unknown4 = rhs.Unknown4;
+            }
+            if ((copyMask?.GetShouldTranslate((int)ConditionData_FieldIndex.ParameterThreeNumber) ?? true))
+            {
+                item.ParameterThreeNumber = rhs.ParameterThreeNumber;
+            }
         }
         
         #endregion
@@ -839,14 +1434,14 @@ namespace Mutagen.Bethesda.Fallout4
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
         public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => ConditionDataCommon.Instance;
+        protected object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterInstance()
+        protected object CommonSetterInstance()
         {
             return ConditionDataSetterCommon.Instance;
         }
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => ConditionDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ConditionDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IConditionDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -867,14 +1462,44 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
-        public virtual void Write(
+        static partial void WriteBinaryParameterParsingCustom(
+            MutagenWriter writer,
+            IConditionDataGetter item);
+
+        public static void WriteBinaryParameterParsing(
+            MutagenWriter writer,
+            IConditionDataGetter item)
+        {
+            WriteBinaryParameterParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static void WriteEmbedded(
+            IConditionDataGetter item,
+            MutagenWriter writer)
+        {
+            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.FunctionType>.Instance.Write(
+                writer,
+                item.Function,
+                length: 2);
+            writer.Write(item.Unknown2);
+            ConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
+                writer: writer,
+                item: item);
+        }
+
+        public void Write(
             MutagenWriter writer,
             IConditionDataGetter item,
             RecordTypeConverter? recordTypeConverter = null)
         {
+            WriteEmbedded(
+                item: item,
+                writer: writer);
         }
 
-        public virtual void Write(
+        public void Write(
             MutagenWriter writer,
             object item,
             RecordTypeConverter? recordTypeConverter = null)
@@ -890,6 +1515,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     public partial class ConditionDataBinaryCreateTranslation
     {
         public readonly static ConditionDataBinaryCreateTranslation Instance = new ConditionDataBinaryCreateTranslation();
+
+        public static void FillBinaryStructs(
+            IConditionData item,
+            MutagenFrame frame)
+        {
+            item.Function = EnumBinaryTranslation<Condition.FunctionType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Unknown2 = frame.ReadUInt16();
+            ConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
+                frame: frame,
+                item: item);
+        }
+
+        static partial void FillBinaryParameterParsingCustom(
+            MutagenFrame frame,
+            IConditionData item);
 
     }
 
@@ -926,9 +1566,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         ILoquiRegistration ILoquiObject.Registration => ConditionData_Registration.Instance;
         public static ConditionData_Registration Registration => ConditionData_Registration.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonInstance() => ConditionDataCommon.Instance;
+        protected object CommonInstance() => ConditionDataCommon.Instance;
         [DebuggerStepThrough]
-        protected virtual object CommonSetterTranslationInstance() => ConditionDataSetterTranslationCommon.Instance;
+        protected object CommonSetterTranslationInstance() => ConditionDataSetterTranslationCommon.Instance;
         [DebuggerStepThrough]
         object IConditionDataGetter.CommonInstance() => this.CommonInstance();
         [DebuggerStepThrough]
@@ -940,9 +1580,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        protected virtual object BinaryWriteTranslator => ConditionDataBinaryWriteTranslation.Instance;
+        protected object BinaryWriteTranslator => ConditionDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         object IBinaryItem.BinaryWriteTranslator => this.BinaryWriteTranslator;
         void IBinaryItem.WriteToBinary(
@@ -955,6 +1595,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
+        public Condition.FunctionType Function => (Condition.FunctionType)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
+        public UInt16 Unknown2 => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x2, 0x2));
+        #region ParameterParsing
+        partial void ParameterParsingCustomParse(
+            OverlayStream stream,
+            int offset);
+        protected int ParameterParsingEndingPos;
+        #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,
@@ -971,10 +1619,37 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             this.CustomCtor();
         }
 
+        public static ConditionDataBinaryOverlay ConditionDataFactory(
+            OverlayStream stream,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            var ret = new ConditionDataBinaryOverlay(
+                bytes: stream.RemainingMemory,
+                package: package);
+            int offset = stream.Position;
+            stream.Position += 0x4;
+            ret.CustomFactoryEnd(
+                stream: stream,
+                finalPos: stream.Length,
+                offset: offset);
+            return ret;
+        }
+
+        public static ConditionDataBinaryOverlay ConditionDataFactory(
+            ReadOnlyMemorySlice<byte> slice,
+            BinaryOverlayFactoryPackage package,
+            RecordTypeConverter? recordTypeConverter = null)
+        {
+            return ConditionDataFactory(
+                stream: new OverlayStream(slice, package),
+                package: package,
+                recordTypeConverter: recordTypeConverter);
+        }
 
         #region To String
 
-        public virtual void ToString(
+        public void ToString(
             FileGeneration fg,
             string? name = null)
         {

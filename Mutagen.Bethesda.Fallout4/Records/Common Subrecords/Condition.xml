@@ -10,22 +10,18 @@
   <Object name="ConditionGlobal" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="976e8455-ce40-407a-9975-19ef9de54cf9" ID="55">
     <Fields>
       <FormLink name="ComparisonValue" refName="Global" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" />
+      <RefDirect name="Data" refName="ConditionData" generateClassMembers="false" />
     </Fields>
   </Object>
   <Object name="ConditionFloat" objType="Subrecord" baseClass="Condition" recordType="CTDA" customBinaryEnd="Normal" GUID="c5e87d5b-ed3a-4949-948d-5b697649eec8" ID="56">
     <Fields>
       <Float name="ComparisonValue" />
-      <RefDirect name="Data" binary="Custom" refName="ConditionData" generateClassMembers="false" />
+      <RefDirect name="Data" refName="ConditionData" generateClassMembers="false" />
     </Fields>
   </Object>
-  <Object name="ConditionData" objType="Subrecord" abstract="true" GUID="b9a06bdf-0dbe-4421-ad2a-30482a9a0b08" ID="57">
+  <Object name="ConditionData" objType="Subrecord" GUID="b9a06bdf-0dbe-4421-ad2a-30482a9a0b08" ID="57">
     <Fields>
-    </Fields>
-  </Object>
-  <Object name="FunctionConditionData" objType="Subrecord" baseClass="ConditionData" GUID="8f65d1cc-2f6d-4290-a594-48d35a4ab3c7" ID="58">
-    <Fields>
-      <UInt16 name="Function" />
+      <Enum name="Function" enumName="Condition.FunctionType" byteLength="2" />
       <UInt16 name="Unknown2" />
       <CustomLogic name="ParameterParsing" />
       <FormLink name="ParameterOneRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
@@ -34,23 +30,9 @@
       <FormLink name="ParameterTwoRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
       <Int32 name="ParameterTwoNumber" binary="NoGeneration" />
       <String name="ParameterTwoString" binary="NoGeneration" nullable="True" />
-      <FormLink name="ParameterThreeRecord" refName="Fallout4MajorRecord" binary="NoGeneration" />
-      <Int32 name="ParameterThreeNumber" binary="NoGeneration" />
-      <String name="ParameterThreeString" binary="NoGeneration" nullable="True" />      
+      <Enum name="RunOnType" binary="NoGeneration" enumName="Condition.RunOnType" byteLength="4" />
       <Int32 name="Unknown4" binary="NoGeneration" />
-      <Int32 name="Unknown5" binary="NoGeneration" default="-1" />
-    </Fields>
-  </Object>
-  <Object name="GetEventData" objType="Subrecord" baseClass="ConditionData" GUID="3a5ab9c8-8cb0-41d6-9001-3eaf81d18742" ID="59">
-    <Fields>
-      <UInt16 name="Unknown2" />
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventFunction" />
-      <!-- ToDo change to enum -->
-      <UInt16 name="EventMember" />
-      <Enum name="RunOnType" enumName="Condition.RunOnType" byteLength="4" />
-      <FormLink name="Reference" refName="Fallout4MajorRecord" />
-      <Int32 name="ParameterThreeNumber" default="-1" />
+      <Int32 name="ParameterThreeNumber" binary="NoGeneration" />
     </Fields>
   </Object>
 </Loqui>

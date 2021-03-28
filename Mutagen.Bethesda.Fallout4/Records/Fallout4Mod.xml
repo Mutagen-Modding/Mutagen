@@ -15,7 +15,7 @@
       <Group name="Classes" refName="Class" />
       <Group name="Factions" refName="Faction" />
       <Group name="HeadParts" refName="HeadPart" />
-      <Group name="Races" refName="Race" />
+      <!--<Group name="Races" refName="Race" />-->
     </Fields>
   </Object>
 </Loqui>

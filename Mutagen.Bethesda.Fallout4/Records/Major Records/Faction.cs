@@ -33,35 +33,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     namespace Internals
     {
-        public partial class FactionBinaryCreateTranslation
-        {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IFactionInternal item)
-            {
-                if (!frame.TryReadSubrecordFrame(RecordTypes.CITC, out var countMeta)
-                    || countMeta.Content.Length != 4)
-                {
-                    throw new ArgumentException();
-                }
-                var count = BinaryPrimitives.ReadInt32LittleEndian(countMeta.Content);
-                item.Conditions = new ExtendedList<Condition>();
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame, count);
-            }
-        }
-
-        public partial class FactionBinaryWriteTranslation
-        {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IFactionGetter item)
-            {
-                var conditions = item.Conditions;
-                if (conditions == null) return;
-                using (HeaderExport.Subrecord(writer, RecordTypes.CITC))
-                {
-                    writer.Write(conditions.Count);
-                }
-                ConditionBinaryWriteTranslation.WriteConditionsList(conditions, writer);
-            }
-        }
-
         public partial class FactionBinaryOverlay
         {
             public IReadOnlyList<IConditionGetter>? Conditions { get; private set; }

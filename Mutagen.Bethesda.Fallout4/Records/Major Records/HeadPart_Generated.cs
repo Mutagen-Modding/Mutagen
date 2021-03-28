@@ -2158,19 +2158,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static HeadPartBinaryWriteTranslation Instance = new HeadPartBinaryWriteTranslation();
 
-        static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IHeadPartGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IHeadPartGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IHeadPartGetter item,
             MutagenWriter writer,
@@ -2235,9 +2222,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.ValidRaces,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            HeadPartBinaryWriteTranslation.WriteBinaryConditions(
+            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
-                item: item);
+                items: item.Conditions,
+                transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
+                {
+                    var Item = subItem;
+                    ((ConditionBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                        item: Item,
+                        writer: subWriter,
+                        recordTypeConverter: conv);
+                });
         }
 
         public void Write(
@@ -2405,9 +2400,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 case RecordTypeInts.CTDA:
                 {
-                    HeadPartBinaryCreateTranslation.FillBinaryConditionsCustom(
-                        frame: frame.SpawnWithLength(frame.MetaData.Constants.SubConstants.HeaderLength + contentLength),
-                        item: item);
+                    item.Conditions.SetTo(
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                            frame: frame,
+                            triggeringRecord: Condition_Registration.TriggeringRecordTypes,
+                            recordTypeConverter: recordTypeConverter,
+                            transl: Condition.TryCreateFromBinary));
                     return (int)HeadPart_FieldIndex.Conditions;
                 }
                 default:
@@ -2419,10 +2417,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         contentLength: contentLength);
             }
         }
-
-        static partial void FillBinaryConditionsCustom(
-            MutagenFrame frame,
-            IHeadPartInternal item);
 
     }
 

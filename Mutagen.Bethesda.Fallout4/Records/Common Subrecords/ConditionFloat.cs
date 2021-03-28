@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Fallout4
     public partial class ConditionFloat
     {
         #region Data
-        public ConditionData Data { get; set; } = new FunctionConditionData();
+        public ConditionData Data { get; set; } = new ConditionData();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IConditionDataGetter IConditionFloatGetter.Data => Data;
         #endregion

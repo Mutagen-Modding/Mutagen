@@ -43,22 +43,6 @@ namespace Mutagen.Bethesda.Fallout4
 
     namespace Internals
     {
-        public partial class HeadPartBinaryCreateTranslation
-        {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IHeadPartInternal item)
-            {
-                ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
-            }
-        }
-
-        public partial class HeadPartBinaryWriteTranslation
-        {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IHeadPartGetter item)
-            {
-                ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
-            }
-        }
-
         public partial class HeadPartBinaryOverlay
         {
             public IReadOnlyList<IConditionGetter> Conditions { get; private set; } = ListExt.Empty<IConditionGetter>();

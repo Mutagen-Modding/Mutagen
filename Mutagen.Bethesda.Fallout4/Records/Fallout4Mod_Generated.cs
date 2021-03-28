@@ -50,7 +50,6 @@ namespace Mutagen.Bethesda.Fallout4
             _Classes_Object = new Group<Class>(this);
             _Factions_Object = new Group<Faction>(this);
             _HeadParts_Object = new Group<HeadPart>(this);
-            _Races_Object = new Group<Race>(this);
             CustomCtor();
         }
         partial void CustomCtor();
@@ -147,13 +146,6 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IGroupGetter<IHeadPartGetter> IFallout4ModGetter.HeadParts => _HeadParts_Object;
         #endregion
-        #region Races
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private Group<Race> _Races_Object;
-        public Group<Race> Races => _Races_Object;
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IGroupGetter<IRaceGetter> IFallout4ModGetter.Races => _Races_Object;
-        #endregion
 
         #region To String
 
@@ -205,7 +197,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
                 this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(initialValue, new Group.Mask<TItem>(initialValue));
             }
 
             public Mask(
@@ -221,8 +212,7 @@ namespace Mutagen.Bethesda.Fallout4
                 TItem DamageTypes,
                 TItem Classes,
                 TItem Factions,
-                TItem HeadParts,
-                TItem Races)
+                TItem HeadParts)
             {
                 this.ModHeader = new MaskItem<TItem, Fallout4ModHeader.Mask<TItem>?>(ModHeader, new Fallout4ModHeader.Mask<TItem>(ModHeader));
                 this.GameSettings = new MaskItem<TItem, Group.Mask<TItem>?>(GameSettings, new Group.Mask<TItem>(GameSettings));
@@ -237,7 +227,6 @@ namespace Mutagen.Bethesda.Fallout4
                 this.Classes = new MaskItem<TItem, Group.Mask<TItem>?>(Classes, new Group.Mask<TItem>(Classes));
                 this.Factions = new MaskItem<TItem, Group.Mask<TItem>?>(Factions, new Group.Mask<TItem>(Factions));
                 this.HeadParts = new MaskItem<TItem, Group.Mask<TItem>?>(HeadParts, new Group.Mask<TItem>(HeadParts));
-                this.Races = new MaskItem<TItem, Group.Mask<TItem>?>(Races, new Group.Mask<TItem>(Races));
             }
 
             #pragma warning disable CS8618
@@ -262,7 +251,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<TItem, Group.Mask<TItem>?>? Classes { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? Factions { get; set; }
             public MaskItem<TItem, Group.Mask<TItem>?>? HeadParts { get; set; }
-            public MaskItem<TItem, Group.Mask<TItem>?>? Races { get; set; }
             #endregion
 
             #region Equals
@@ -288,7 +276,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (!object.Equals(this.Classes, rhs.Classes)) return false;
                 if (!object.Equals(this.Factions, rhs.Factions)) return false;
                 if (!object.Equals(this.HeadParts, rhs.HeadParts)) return false;
-                if (!object.Equals(this.Races, rhs.Races)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -307,7 +294,6 @@ namespace Mutagen.Bethesda.Fallout4
                 hash.Add(this.Classes);
                 hash.Add(this.Factions);
                 hash.Add(this.HeadParts);
-                hash.Add(this.Races);
                 return hash.ToHashCode();
             }
 
@@ -381,11 +367,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (!eval(this.HeadParts.Overall)) return false;
                     if (this.HeadParts.Specific != null && !this.HeadParts.Specific.All(eval)) return false;
                 }
-                if (Races != null)
-                {
-                    if (!eval(this.Races.Overall)) return false;
-                    if (this.Races.Specific != null && !this.Races.Specific.All(eval)) return false;
-                }
                 return true;
             }
             #endregion
@@ -458,11 +439,6 @@ namespace Mutagen.Bethesda.Fallout4
                     if (eval(this.HeadParts.Overall)) return true;
                     if (this.HeadParts.Specific != null && this.HeadParts.Specific.Any(eval)) return true;
                 }
-                if (Races != null)
-                {
-                    if (eval(this.Races.Overall)) return true;
-                    if (this.Races.Specific != null && this.Races.Specific.Any(eval)) return true;
-                }
                 return false;
             }
             #endregion
@@ -490,7 +466,6 @@ namespace Mutagen.Bethesda.Fallout4
                 obj.Classes = this.Classes == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Classes.Overall), this.Classes.Specific?.Translate(eval));
                 obj.Factions = this.Factions == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Factions.Overall), this.Factions.Specific?.Translate(eval));
                 obj.HeadParts = this.HeadParts == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.HeadParts.Overall), this.HeadParts.Specific?.Translate(eval));
-                obj.Races = this.Races == null ? null : new MaskItem<R, Group.Mask<R>?>(eval(this.Races.Overall), this.Races.Specific?.Translate(eval));
             }
             #endregion
 
@@ -565,10 +540,6 @@ namespace Mutagen.Bethesda.Fallout4
                     {
                         HeadParts?.ToString(fg);
                     }
-                    if (printMask?.Races?.Overall ?? true)
-                    {
-                        Races?.ToString(fg);
-                    }
                 }
                 fg.AppendLine("]");
             }
@@ -607,7 +578,6 @@ namespace Mutagen.Bethesda.Fallout4
             public MaskItem<Exception?, Group.ErrorMask<Class.ErrorMask>?>? Classes;
             public MaskItem<Exception?, Group.ErrorMask<Faction.ErrorMask>?>? Factions;
             public MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>? HeadParts;
-            public MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>? Races;
             #endregion
 
             #region IErrorMask
@@ -642,8 +612,6 @@ namespace Mutagen.Bethesda.Fallout4
                         return Factions;
                     case Fallout4Mod_FieldIndex.HeadParts:
                         return HeadParts;
-                    case Fallout4Mod_FieldIndex.Races:
-                        return Races;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -692,9 +660,6 @@ namespace Mutagen.Bethesda.Fallout4
                         break;
                     case Fallout4Mod_FieldIndex.HeadParts:
                         this.HeadParts = new MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>(ex, null);
-                        break;
-                    case Fallout4Mod_FieldIndex.Races:
-                        this.Races = new MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>(ex, null);
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -745,9 +710,6 @@ namespace Mutagen.Bethesda.Fallout4
                     case Fallout4Mod_FieldIndex.HeadParts:
                         this.HeadParts = (MaskItem<Exception?, Group.ErrorMask<HeadPart.ErrorMask>?>?)obj;
                         break;
-                    case Fallout4Mod_FieldIndex.Races:
-                        this.Races = (MaskItem<Exception?, Group.ErrorMask<Race.ErrorMask>?>?)obj;
-                        break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -769,7 +731,6 @@ namespace Mutagen.Bethesda.Fallout4
                 if (Classes != null) return true;
                 if (Factions != null) return true;
                 if (HeadParts != null) return true;
-                if (Races != null) return true;
                 return false;
             }
             #endregion
@@ -817,7 +778,6 @@ namespace Mutagen.Bethesda.Fallout4
                 Classes?.ToString(fg);
                 Factions?.ToString(fg);
                 HeadParts?.ToString(fg);
-                Races?.ToString(fg);
             }
             #endregion
 
@@ -839,7 +799,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Classes = this.Classes.Combine(rhs.Classes, (l, r) => l.Combine(r));
                 ret.Factions = this.Factions.Combine(rhs.Factions, (l, r) => l.Combine(r));
                 ret.HeadParts = this.HeadParts.Combine(rhs.HeadParts, (l, r) => l.Combine(r));
-                ret.Races = this.Races.Combine(rhs.Races, (l, r) => l.Combine(r));
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -876,7 +835,6 @@ namespace Mutagen.Bethesda.Fallout4
             public Group.TranslationMask<Class.TranslationMask>? Classes;
             public Group.TranslationMask<Faction.TranslationMask>? Factions;
             public Group.TranslationMask<HeadPart.TranslationMask>? HeadParts;
-            public Group.TranslationMask<Race.TranslationMask>? Races;
             #endregion
 
             #region Ctors
@@ -914,7 +872,6 @@ namespace Mutagen.Bethesda.Fallout4
                 ret.Add((Classes != null ? Classes.OnOverall : DefaultOn, Classes?.GetCrystal()));
                 ret.Add((Factions != null ? Factions.OnOverall : DefaultOn, Factions?.GetCrystal()));
                 ret.Add((HeadParts != null ? HeadParts.OnOverall : DefaultOn, HeadParts?.GetCrystal()));
-                ret.Add((Races != null ? Races.OnOverall : DefaultOn, Races?.GetCrystal()));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -967,7 +924,6 @@ namespace Mutagen.Bethesda.Fallout4
             _Classes_Object = new Group<Class>(this);
             _Factions_Object = new Group<Faction>(this);
             _HeadParts_Object = new Group<HeadPart>(this);
-            _Races_Object = new Group<Race>(this);
             CustomCtor();
         }
         public void AddRecords(
@@ -1022,10 +978,6 @@ namespace Mutagen.Bethesda.Fallout4
             {
                 this.HeadParts.RecordCache.Set(rhsMod.HeadParts.RecordCache.Items);
             }
-            if (mask?.Races ?? true)
-            {
-                this.Races.RecordCache.Set(rhsMod.Races.RecordCache.Items);
-            }
         }
 
         public override void SyncRecordCount()
@@ -1048,7 +1000,6 @@ namespace Mutagen.Bethesda.Fallout4
             count += Classes.RecordCache.Count > 0 ? 1 : default(uint);
             count += Factions.RecordCache.Count > 0 ? 1 : default(uint);
             count += HeadParts.RecordCache.Count > 0 ? 1 : default(uint);
-            count += Races.RecordCache.Count > 0 ? 1 : default(uint);
             GetCustomRecordCount((customCount) => count += customCount);
             return count;
         }
@@ -1286,7 +1237,6 @@ namespace Mutagen.Bethesda.Fallout4
         new Group<Class> Classes { get; }
         new Group<Faction> Factions { get; }
         new Group<HeadPart> HeadParts { get; }
-        new Group<Race> Races { get; }
     }
 
     public partial interface IFallout4ModGetter :
@@ -1318,7 +1268,6 @@ namespace Mutagen.Bethesda.Fallout4
         IGroupGetter<IClassGetter> Classes { get; }
         IGroupGetter<IFactionGetter> Factions { get; }
         IGroupGetter<IHeadPartGetter> HeadParts { get; }
-        IGroupGetter<IRaceGetter> Races { get; }
 
     }
 
@@ -1853,7 +1802,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         Classes = 10,
         Factions = 11,
         HeadParts = 12,
-        Races = 13,
     }
     #endregion
 
@@ -1871,9 +1819,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public const string GUID = "9cae6baa-1084-4862-ae0a-07c79b9f2a3a";
 
-        public const ushort AdditionalFieldCount = 14;
+        public const ushort AdditionalFieldCount = 13;
 
-        public const ushort FieldCount = 14;
+        public const ushort FieldCount = 13;
 
         public static readonly Type MaskType = typeof(Fallout4Mod.Mask<>);
 
@@ -1954,7 +1902,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Classes.Clear();
             item.Factions.Clear();
             item.HeadParts.Clear();
-            item.Races.Clear();
         }
         
         #region Mutagen
@@ -1973,7 +1920,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Classes.RemapLinks(mapping);
             obj.Factions.RemapLinks(mapping);
             obj.HeadParts.RemapLinks(mapping);
-            obj.Races.RemapLinks(mapping);
         }
         
         public IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(IFallout4Mod obj)
@@ -2020,7 +1966,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             obj.Classes.Remove(keys);
             obj.Factions.Remove(keys);
             obj.HeadParts.Remove(keys);
-            obj.Races.Remove(keys);
         }
         
         public void Remove(
@@ -2138,14 +2083,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         type: type,
                         keys: keys);
                     break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    obj.Races.Remove(
-                        type: type,
-                        keys: keys);
-                    break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                     Remove(obj, keys, typeof(IActionRecordGetter), throwIfUnknown: throwIfUnknown);
@@ -2162,7 +2099,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IRelatable":
                 case "IRelatableGetter":
                     Remove(obj, keys, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown);
-                    Remove(obj, keys, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown);
                     break;
                 case "IKeywordLinkedReference":
                 case "IKeywordLinkedReferenceGetter":
@@ -2242,7 +2178,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ret.Classes = MaskItemExt.Factory(item.Classes.GetEqualsMask(rhs.Classes, include), include);
             ret.Factions = MaskItemExt.Factory(item.Factions.GetEqualsMask(rhs.Factions, include), include);
             ret.HeadParts = MaskItemExt.Factory(item.HeadParts.GetEqualsMask(rhs.HeadParts, include), include);
-            ret.Races = MaskItemExt.Factory(item.Races.GetEqualsMask(rhs.Races, include), include);
         }
         
         public string ToString(
@@ -2341,10 +2276,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 item.HeadParts?.ToString(fg, "HeadParts");
             }
-            if (printMask?.Races?.Overall ?? true)
-            {
-                item.Races?.ToString(fg, "Races");
-            }
         }
         
         #region Equals and Hash
@@ -2407,10 +2338,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             {
                 if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Races) ?? true))
-            {
-                if (!object.Equals(lhs.Races, rhs.Races)) return false;
-            }
             return true;
         }
         
@@ -2430,7 +2357,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             hash.Add(item.Classes);
             hash.Add(item.Factions);
             hash.Add(item.HeadParts);
-            hash.Add(item.Races);
             return hash.ToHashCode();
         }
         
@@ -2508,11 +2434,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case "IHeadPart":
                 case "IHeadPartInternal":
                     return obj.HeadParts.RecordCache;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    return obj.Races.RecordCache;
                 default:
                     throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
             }
@@ -2533,7 +2454,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 mod: item,
                 modHeader: item.ModHeader.DeepCopy(),
                 modKey: modKey);
-            Stream[] outputStreams = new Stream[13];
+            Stream[] outputStreams = new Stream[12];
             List<Action> toDo = new List<Action>();
             toDo.Add(() => WriteGroupParallel(item.GameSettings, writer.MetaData.MasterReferences!, 0, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Keywords, writer.MetaData.MasterReferences!, 1, outputStreams, param.StringsWriter));
@@ -2547,7 +2468,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Classes, writer.MetaData.MasterReferences!, 9, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter));
-            toDo.Add(() => WriteGroupParallel(item.Races, writer.MetaData.MasterReferences!, 12, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
             UtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
@@ -2685,13 +2605,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     yield return item;
                 }
             }
-            if (obj.Races is IFormLinkContainerGetter RaceslinkCont)
-            {
-                foreach (var item in RaceslinkCont.ContainedFormLinks)
-                {
-                    yield return item;
-                }
-            }
             yield break;
         }
         
@@ -2742,10 +2655,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 yield return item;
             }
             foreach (var item in obj.HeadParts.EnumerateMajorRecords())
-            {
-                yield return item;
-            }
-            foreach (var item in obj.Races.EnumerateMajorRecords())
             {
                 yield return item;
             }
@@ -2894,15 +2803,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         yield return item;
                     }
                     yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in obj.Races.EnumerateMajorRecords(type, throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    yield break;
                 case "IIdleRelation":
                 {
                     if (!Fallout4Mod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -2969,19 +2869,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     {
                         yield return item;
                     }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
                     yield break;
                 }
                 case "IRelatableGetter":
                 {
                     foreach (var item in EnumerateMajorRecords(obj, typeof(IFactionGetter), throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecords(obj, typeof(IRaceGetter), throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
                     }
@@ -3132,14 +3024,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     record: item,
                     group: (m) => m.HeadParts,
                     groupGetter: (m) => m.HeadParts);
-            }
-            foreach (var item in obj.Races)
-            {
-                yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Race, IRaceGetter>(
-                    modKey: obj.ModKey,
-                    record: item,
-                    group: (m) => m.Races,
-                    groupGetter: (m) => m.Races);
             }
         }
         
@@ -3330,19 +3214,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                             groupGetter: (m) => m.HeadParts);
                     }
                     yield break;
-                case "Race":
-                case "IRaceGetter":
-                case "IRace":
-                case "IRaceInternal":
-                    foreach (var item in obj.Races)
-                    {
-                        yield return new GroupModContext<IFallout4Mod, IFallout4ModGetter, Race, IRaceGetter>(
-                            modKey: obj.ModKey,
-                            record: item,
-                            group: (m) => m.Races,
-                            groupGetter: (m) => m.Races);
-                    }
-                    yield break;
                 case "IIdleRelation":
                 case "IIdleRelationGetter":
                 {
@@ -3397,14 +3268,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(IFactionGetter),
-                        throwIfUnknown: throwIfUnknown))
-                    {
-                        yield return item;
-                    }
-                    foreach (var item in EnumerateMajorRecordContexts(
-                        obj,
-                        linkCache: linkCache,
-                        type: typeof(IRaceGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;
@@ -3724,26 +3587,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Races) ?? true))
-            {
-                errorMask?.PushIndex((int)Fallout4Mod_FieldIndex.Races);
-                try
-                {
-                    item.Races.DeepCopyIn(
-                        rhs: rhs.Races,
-                        errorMask: errorMask,
-                        copyMask: copyMask?.GetSubCrystal((int)Fallout4Mod_FieldIndex.Races));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
-            }
         }
         
         #endregion
@@ -3846,7 +3689,6 @@ namespace Mutagen.Bethesda.Fallout4
         public bool Classes;
         public bool Factions;
         public bool HeadParts;
-        public bool Races;
         public GroupMask()
         {
         }
@@ -3864,7 +3706,6 @@ namespace Mutagen.Bethesda.Fallout4
             Classes = defaultValue;
             Factions = defaultValue;
             HeadParts = defaultValue;
-            Races = defaultValue;
         }
     }
 
@@ -4016,17 +3857,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     ((GroupBinaryWriteTranslation)((IBinaryItem)HeadPartsItem).BinaryWriteTranslator).Write<IHeadPartGetter>(
                         item: HeadPartsItem,
-                        writer: writer,
-                        recordTypeConverter: recordTypeConverter);
-                }
-            }
-            if (importMask?.Races ?? true)
-            {
-                var RacesItem = item.Races;
-                if (RacesItem.RecordCache.Count > 0)
-                {
-                    ((GroupBinaryWriteTranslation)((IBinaryItem)RacesItem).BinaryWriteTranslator).Write<IRaceGetter>(
-                        item: RacesItem,
                         writer: writer,
                         recordTypeConverter: recordTypeConverter);
                 }
@@ -4265,20 +4095,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
                 }
-                case RecordTypeInts.RACE:
-                {
-                    if (importMask?.Races ?? true)
-                    {
-                        item.Races.CopyInFromBinary(
-                            frame: frame,
-                            recordTypeConverter: null);
-                    }
-                    else
-                    {
-                        frame.Position += contentLength;
-                    }
-                    return (int)Fallout4Mod_FieldIndex.Races;
-                }
                 default:
                     frame.Position += contentLength;
                     return default(int?);
@@ -4493,11 +4309,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
         #endregion
-        #region Races
-        private RangeInt64? _RacesLocation;
-        private IGroupGetter<IRaceGetter>? _Races => _RacesLocation.HasValue ? GroupBinaryOverlay<IRaceGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _RacesLocation!.Value.Min, _RacesLocation!.Value.Max), _package), _package) : default;
-        public IGroupGetter<IRaceGetter> Races => _Races ?? new Group<Race>(this);
-        #endregion
         protected Fallout4ModBinaryOverlay(
             IMutagenReadStream stream,
             ModKey modKey,
@@ -4658,11 +4469,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     _HeadPartsLocation = new RangeInt64((stream.Position - offset), finalPos);
                     return (int)Fallout4Mod_FieldIndex.HeadParts;
-                }
-                case RecordTypeInts.RACE:
-                {
-                    _RacesLocation = new RangeInt64((stream.Position - offset), finalPos);
-                    return (int)Fallout4Mod_FieldIndex.Races;
                 }
                 default:
                     return default(int?);

@@ -923,9 +923,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Race</returns>
-        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListing<IFallout4ModGetter>> listings)
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListing<IFallout4ModGetter>> listings)
         {
-            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }
@@ -935,9 +935,9 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="mods">Mods to query</param>
         /// <returns>A typed object to do further queries on Race</returns>
-        public static TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IFallout4ModGetter> mods)
+        public static TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter> Race(this IEnumerable<IFallout4ModGetter> mods)
         {
-            return new TopLevelTypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(
+            return new TypedLoadOrderAccess<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => mods.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
                 (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<IFallout4Mod, IFallout4ModGetter, IRace, IRaceGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
         }

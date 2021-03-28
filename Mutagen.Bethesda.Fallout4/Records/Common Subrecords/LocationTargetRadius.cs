@@ -62,17 +62,17 @@ namespace Mutagen.Bethesda.Fallout4
                     case LocationTargetRadius.LocationType.NearReference:
                         return new LocationTarget()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<ILocationTargetableGetter>()
                         };
                     case LocationTargetRadius.LocationType.InCell:
                         return new LocationCell()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<ICellGetter>()
                         };
                     case LocationTargetRadius.LocationType.ObjectID:
                         return new LocationObjectId()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<IObjectIdGetter>()
                         };
                     case LocationTargetRadius.LocationType.ObjectType:
                         return new LocationObjectType()
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Fallout4
                     case LocationTargetRadius.LocationType.LinkedReference:
                         return new LocationKeyword()
                         {
-                            Link = FormKeyBinaryTranslation.Instance.Parse(frame)
+                            Link = FormKeyBinaryTranslation.Instance.Parse(frame).AsLink<IKeywordGetter>()
                         };
                     default:
                         return new LocationFallback()

@@ -17,7 +17,7 @@
       <FormLink name="MerchantContainer" recordType="VENC" refName="PlacedObject" />
       <RefDirect name="VendorValues" refName="VendorValues" />
       <RefDirect name="VendorLocation" refName="LocationTargetRadius" recordType="PLVD" />
-      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binary="Custom" />
+      <RefList name="Conditions" refName="Condition" counterRecType="CITC" binaryOverlay="Custom" />
     </Fields>
     <LinkInterface>IOwner</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>

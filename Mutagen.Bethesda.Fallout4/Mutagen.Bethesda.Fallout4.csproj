@@ -38,9 +38,6 @@
     <Compile Include="Records\Common Subrecords\Condition.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Common Subrecords\ConditionData.cs">
-      <DependentUpon>Condition.xml</DependentUpon>
-    </Compile>
     <Compile Include="Records\Common Subrecords\ConditionFloat.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
@@ -247,12 +244,6 @@
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\ConditionData_Generated.cs">
-      <DependentUpon>Condition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\FunctionConditionData_Generated.cs">
-      <DependentUpon>Condition.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Records\Common Subrecords\GetEventData_Generated.cs">
       <DependentUpon>Condition.xml</DependentUpon>
     </Compile>
     <Compile Include="Records\Common Subrecords\LocationTargetRadius_Generated.cs">
