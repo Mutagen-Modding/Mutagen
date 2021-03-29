@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="PexFile" GUID="6cbf970c-2533-422d-b90a-6b7b74817e63" ID="5">
     <Fields>
-      <UInt32 name="Magic" />
       <UInt8 name="MajorVersion" />
       <UInt8 name="MinorVersion" />
       <UInt16 name="GameId" />

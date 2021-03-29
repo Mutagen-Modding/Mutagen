@@ -34,9 +34,6 @@ namespace Mutagen.Bethesda.Pex
         partial void CustomCtor();
         #endregion
 
-        #region Magic
-        public UInt32 Magic { get; set; } = default;
-        #endregion
         #region MajorVersion
         public Byte MajorVersion { get; set; } = default;
         #endregion
@@ -121,7 +118,6 @@ namespace Mutagen.Bethesda.Pex
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.Magic = initialValue;
                 this.MajorVersion = initialValue;
                 this.MinorVersion = initialValue;
                 this.GameId = initialValue;
@@ -134,7 +130,6 @@ namespace Mutagen.Bethesda.Pex
             }
 
             public Mask(
-                TItem Magic,
                 TItem MajorVersion,
                 TItem MinorVersion,
                 TItem GameId,
@@ -145,7 +140,6 @@ namespace Mutagen.Bethesda.Pex
                 TItem DebugInfo,
                 TItem Objects)
             {
-                this.Magic = Magic;
                 this.MajorVersion = MajorVersion;
                 this.MinorVersion = MinorVersion;
                 this.GameId = GameId;
@@ -166,7 +160,6 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region Members
-            public TItem Magic;
             public TItem MajorVersion;
             public TItem MinorVersion;
             public TItem GameId;
@@ -188,7 +181,6 @@ namespace Mutagen.Bethesda.Pex
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.Magic, rhs.Magic)) return false;
                 if (!object.Equals(this.MajorVersion, rhs.MajorVersion)) return false;
                 if (!object.Equals(this.MinorVersion, rhs.MinorVersion)) return false;
                 if (!object.Equals(this.GameId, rhs.GameId)) return false;
@@ -203,7 +195,6 @@ namespace Mutagen.Bethesda.Pex
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.Magic);
                 hash.Add(this.MajorVersion);
                 hash.Add(this.MinorVersion);
                 hash.Add(this.GameId);
@@ -221,7 +212,6 @@ namespace Mutagen.Bethesda.Pex
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.Magic)) return false;
                 if (!eval(this.MajorVersion)) return false;
                 if (!eval(this.MinorVersion)) return false;
                 if (!eval(this.GameId)) return false;
@@ -253,7 +243,6 @@ namespace Mutagen.Bethesda.Pex
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.Magic)) return true;
                 if (eval(this.MajorVersion)) return true;
                 if (eval(this.MinorVersion)) return true;
                 if (eval(this.GameId)) return true;
@@ -292,7 +281,6 @@ namespace Mutagen.Bethesda.Pex
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.Magic = eval(this.Magic);
                 obj.MajorVersion = eval(this.MajorVersion);
                 obj.MinorVersion = eval(this.MinorVersion);
                 obj.GameId = eval(this.GameId);
@@ -338,10 +326,6 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.Magic ?? true)
-                    {
-                        fg.AppendItem(Magic, "Magic");
-                    }
                     if (printMask?.MajorVersion ?? true)
                     {
                         fg.AppendItem(MajorVersion, "MajorVersion");
@@ -422,7 +406,6 @@ namespace Mutagen.Bethesda.Pex
                     return _warnings;
                 }
             }
-            public Exception? Magic;
             public Exception? MajorVersion;
             public Exception? MinorVersion;
             public Exception? GameId;
@@ -440,8 +423,6 @@ namespace Mutagen.Bethesda.Pex
                 PexFile_FieldIndex enu = (PexFile_FieldIndex)index;
                 switch (enu)
                 {
-                    case PexFile_FieldIndex.Magic:
-                        return Magic;
                     case PexFile_FieldIndex.MajorVersion:
                         return MajorVersion;
                     case PexFile_FieldIndex.MinorVersion:
@@ -470,9 +451,6 @@ namespace Mutagen.Bethesda.Pex
                 PexFile_FieldIndex enu = (PexFile_FieldIndex)index;
                 switch (enu)
                 {
-                    case PexFile_FieldIndex.Magic:
-                        this.Magic = ex;
-                        break;
                     case PexFile_FieldIndex.MajorVersion:
                         this.MajorVersion = ex;
                         break;
@@ -510,9 +488,6 @@ namespace Mutagen.Bethesda.Pex
                 PexFile_FieldIndex enu = (PexFile_FieldIndex)index;
                 switch (enu)
                 {
-                    case PexFile_FieldIndex.Magic:
-                        this.Magic = (Exception?)obj;
-                        break;
                     case PexFile_FieldIndex.MajorVersion:
                         this.MajorVersion = (Exception?)obj;
                         break;
@@ -548,7 +523,6 @@ namespace Mutagen.Bethesda.Pex
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (Magic != null) return true;
                 if (MajorVersion != null) return true;
                 if (MinorVersion != null) return true;
                 if (GameId != null) return true;
@@ -592,7 +566,6 @@ namespace Mutagen.Bethesda.Pex
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(Magic, "Magic");
                 fg.AppendItem(MajorVersion, "MajorVersion");
                 fg.AppendItem(MinorVersion, "MinorVersion");
                 fg.AppendItem(GameId, "GameId");
@@ -631,7 +604,6 @@ namespace Mutagen.Bethesda.Pex
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.Magic = this.Magic.Combine(rhs.Magic);
                 ret.MajorVersion = this.MajorVersion.Combine(rhs.MajorVersion);
                 ret.MinorVersion = this.MinorVersion.Combine(rhs.MinorVersion);
                 ret.GameId = this.GameId.Combine(rhs.GameId);
@@ -664,7 +636,6 @@ namespace Mutagen.Bethesda.Pex
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool Magic;
             public bool MajorVersion;
             public bool MinorVersion;
             public bool GameId;
@@ -683,7 +654,6 @@ namespace Mutagen.Bethesda.Pex
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.Magic = defaultOn;
                 this.MajorVersion = defaultOn;
                 this.MinorVersion = defaultOn;
                 this.GameId = defaultOn;
@@ -706,7 +676,6 @@ namespace Mutagen.Bethesda.Pex
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((Magic, null));
                 ret.Add((MajorVersion, null));
                 ret.Add((MinorVersion, null));
                 ret.Add((GameId, null));
@@ -746,7 +715,6 @@ namespace Mutagen.Bethesda.Pex
         ILoquiObjectSetter<IPexFile>,
         IPexFileGetter
     {
-        new UInt32 Magic { get; set; }
         new Byte MajorVersion { get; set; }
         new Byte MinorVersion { get; set; }
         new UInt16 GameId { get; set; }
@@ -769,7 +737,6 @@ namespace Mutagen.Bethesda.Pex
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => PexFile_Registration.Instance;
-        UInt32 Magic { get; }
         Byte MajorVersion { get; }
         Byte MinorVersion { get; }
         UInt16 GameId { get; }
@@ -934,16 +901,15 @@ namespace Mutagen.Bethesda.Pex.Internals
     #region Field Index
     public enum PexFile_FieldIndex
     {
-        Magic = 0,
-        MajorVersion = 1,
-        MinorVersion = 2,
-        GameId = 3,
-        CompilationTime = 4,
-        SourceFileName = 5,
-        Username = 6,
-        MachineName = 7,
-        DebugInfo = 8,
-        Objects = 9,
+        MajorVersion = 0,
+        MinorVersion = 1,
+        GameId = 2,
+        CompilationTime = 3,
+        SourceFileName = 4,
+        Username = 5,
+        MachineName = 6,
+        DebugInfo = 7,
+        Objects = 8,
     }
     #endregion
 
@@ -961,9 +927,9 @@ namespace Mutagen.Bethesda.Pex.Internals
 
         public const string GUID = "6cbf970c-2533-422d-b90a-6b7b74817e63";
 
-        public const ushort AdditionalFieldCount = 10;
+        public const ushort AdditionalFieldCount = 9;
 
-        public const ushort FieldCount = 10;
+        public const ushort FieldCount = 9;
 
         public static readonly Type MaskType = typeof(PexFile.Mask<>);
 
@@ -1030,7 +996,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         public void Clear(IPexFile item)
         {
             ClearPartial();
-            item.Magic = default;
             item.MajorVersion = default;
             item.MinorVersion = default;
             item.GameId = default;
@@ -1068,7 +1033,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.Magic = item.Magic == rhs.Magic;
             ret.MajorVersion = item.MajorVersion == rhs.MajorVersion;
             ret.MinorVersion = item.MinorVersion == rhs.MinorVersion;
             ret.GameId = item.GameId == rhs.GameId;
@@ -1131,10 +1095,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             FileGeneration fg,
             PexFile.Mask<bool>? printMask = null)
         {
-            if (printMask?.Magic ?? true)
-            {
-                fg.AppendItem(item.Magic, "Magic");
-            }
             if (printMask?.MajorVersion ?? true)
             {
                 fg.AppendItem(item.MajorVersion, "MajorVersion");
@@ -1196,10 +1156,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.Magic) ?? true))
-            {
-                if (lhs.Magic != rhs.Magic) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.MajorVersion) ?? true))
             {
                 if (lhs.MajorVersion != rhs.MajorVersion) return false;
@@ -1242,7 +1198,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IPexFileGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.Magic);
             hash.Add(item.MajorVersion);
             hash.Add(item.MinorVersion);
             hash.Add(item.GameId);
@@ -1279,10 +1234,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)PexFile_FieldIndex.Magic) ?? true))
-            {
-                item.Magic = rhs.Magic;
-            }
             if ((copyMask?.GetShouldTranslate((int)PexFile_FieldIndex.MajorVersion) ?? true))
             {
                 item.MajorVersion = rhs.MajorVersion;

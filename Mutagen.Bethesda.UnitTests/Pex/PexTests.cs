@@ -78,7 +78,6 @@ namespace Mutagen.Bethesda.UnitTests.Pex
 
             var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
 
-            Assert.Equal(0xFA57C0DE, pex.Magic);
             Assert.Equal(3, pex.MajorVersion);
             Assert.Equal(2, pex.MinorVersion);
             Assert.Equal(1, pex.GameId);

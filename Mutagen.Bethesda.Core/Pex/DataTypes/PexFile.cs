@@ -48,9 +48,9 @@ namespace Mutagen.Bethesda.Pex
         
         public void Read(BinaryReader br)
         {
-            Magic = br.ReadUInt32();
-            if (Magic != PexMagic)
-                throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {Magic:x8}");
+            var magic = br.ReadUInt32();
+            if (magic != PexMagic)
+                throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {magic:x8}");
             
             MajorVersion = br.ReadByte();
             MinorVersion = br.ReadByte();
