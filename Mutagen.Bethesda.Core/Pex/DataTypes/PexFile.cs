@@ -7,32 +7,11 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public class PexFile : IPexFile
+    public partial class PexFile
     {
         private readonly GameCategory _gameCategory;
-        
-        public uint Magic { get; set; }
-        
-        public byte MajorVersion { get; set; }
-        
-        public byte MinorVersion { get; set; }
-        
-        public ushort GameId { get; set; }
-        
-        public DateTime CompilationTime { get; set; }
-
-        public string SourceFileName { get; set; } = string.Empty;
-        
-        public string Username { get; set; } = string.Empty;
-        
-        public string MachineName { get; set; } = string.Empty;
-        
-        public IDebugInfo? DebugInfo { get; set; }
-
-        public ExtendedList<IPexObject> Objects { get; set; } = new();
-
         private Dictionary<ushort, string> _strings = new();
-        private ExtendedList<IUserFlag> _userFlags = new();
+        private ExtendedList<UserFlag> _userFlags = new();
         
         public PexFile(GameCategory gameCategory)
         {
@@ -58,7 +37,7 @@ namespace Mutagen.Bethesda.Pex
             return pair.Key;
         }
         
-        internal IEnumerable<IUserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
+        internal IEnumerable<UserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
 
         internal uint GetUserFlags(IEnumerable<IUserFlag> userFlags)
         {

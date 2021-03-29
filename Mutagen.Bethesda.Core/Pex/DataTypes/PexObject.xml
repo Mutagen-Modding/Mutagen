@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PexObject" GUID="fbbe966b-4956-4867-be4d-fbd4181e2417" ID="6">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" nullable="True" />
+      <String name="ParentClassName" nullable="True" />
+      <String name="DocString" nullable="True" />
+      <Bool name="IsConst" />
+      <RefList name="UserFlags" refName="UserFlag" />
+      <String name="AutoStateName" />
+      <RefList name="StructInfos" refName="PexObjectStructInfo" />
+      <RefList name="Variables" refName="PexObjectVariable" />
+      <RefList name="Properties" refName="PexObjectProperty" />
+      <RefList name="States" refName="PexObjectState" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectStructInfo" GUID="827d7e5e-aa8c-4366-9dde-abb2e9ef886d" ID="7">
+    <Fields>
+      <String name="Name" nullable="True" />
+      <RefList name="Members" refName="PexObjectStructInfoMember" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectStructInfoMember" GUID="e238f493-6319-4996-a331-0bc3d93cd6ab" ID="8">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" nullable="True" />
+      <String name="TypeName" nullable="True" />
+      <RefDirect name="Value" nullable="True" refName="PexObjectVariableData" />
+      <Bool name="IsConst" />
+      <String name="DocString" nullable="True" />
+      <RefList name="UserFlags" refName="UserFlag" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectVariable" GUID="dcbe94f2-dda2-47b9-9057-e30c6c8fac8c" ID="9">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" nullable="True" />
+      <String name="TypeName" nullable="True" />
+      <RefList name="UserFlags" refName="UserFlag" />
+      <RefDirect name="VariableData" nullable="True" refName="PexObjectVariableData" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectVariableData" GUID="5abe0b17-91a4-4c71-ae9b-f733317a4a31" ID="10">
+    <Fields>
+      <Enum name="VariableType" enumName="VariableType" />
+      <String name="StringValue" nullable="True" />
+      <Int32 name="IntValue" nullable="True" />
+      <Float name="FloatValue" nullable="True" />
+      <Bool name="BoolValue" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectProperty" GUID="0dfa3f68-af0f-47a9-afbb-2d5d6b4bb994" ID="11">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" nullable="True" />
+      <String name="TypeName" nullable="True" />
+      <String name="DocString" nullable="True" />
+      <Enum name="Flags" enumName="PropertyFlags" />
+      <String name="AutoVarName" nullable="True" />
+      <RefDirect name="ReadHandler" nullable="True" refName="PexObjectFunction" />
+      <RefDirect name="WriteHandler" nullable="True" refName="PexObjectFunction" />
+      <RefList name="UserFlags" refName="UserFlag" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectState" GUID="8840a495-0e1d-41d4-9397-a81a14b0b040" ID="12">
+    <Fields>
+      <String name="Name" nullable="True" />
+      <RefList name="Functions" refName="PexObjectNamedFunction" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectNamedFunction" GUID="6d5e808d-a83c-475c-a7ae-c1c4d3aeff6a" ID="13">
+    <Fields>
+      <String name="FunctionName" nullable="True" />
+      <RefDirect name="Function" refName="PexObjectFunction" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectFunction" GUID="5d7ba301-e8be-4d47-a00e-87a0c49ce82b" ID="14">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="ReturnTypeName" nullable="True" />
+      <String name="DocString" nullable="True" />
+      <Enum name="Flags" enumName="FunctionFlags" />
+      <RefList name="Parameters" refName="PexObjectFunctionVariable" />
+      <RefList name="Locals" refName="PexObjectFunctionVariable" />
+      <RefList name="Instructions" refName="PexObjectFunctionInstruction" />
+      <RefList name="UserFlags" refName="UserFlag" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectFunctionVariable" GUID="eadd25a2-cd64-4da0-95d0-9fdf432ee9aa" ID="15">
+    <Fields>
+      <String name="Name" nullable="True" />
+      <String name="TypeName" nullable="True" />
+    </Fields>
+  </Object>
+  <Object name="PexObjectFunctionInstruction" GUID="c72c53ef-3e02-4cdb-81c0-81f8ad2d19b4" ID="16">
+    <Fields>
+      <Enum name="OpCode" enumName="InstructionOpcode" />
+      <RefList name="Arguments" refName="PexObjectVariableData" />
+    </Fields>
+  </Object>
+</Loqui>

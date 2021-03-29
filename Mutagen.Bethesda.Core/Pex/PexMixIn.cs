@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Pex
         /// <param name="pexFile">The pex file to write.</param>
         /// <param name="outputPath">Output path.</param>
         /// <param name="gameCategory">Game Category of the pex file.</param>
-        public static void WritePexFile(this IPexFile pexFile, string outputPath, GameCategory gameCategory)
+        public static void WritePexFile(this PexFile pexFile, string outputPath, GameCategory gameCategory)
         {
             var dirName = Path.GetDirectoryName(outputPath);
             Directory.CreateDirectory(dirName ?? string.Empty);

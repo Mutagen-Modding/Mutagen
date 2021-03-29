@@ -6,20 +6,14 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public class DebugInfo : IDebugInfo
+    public partial interface IDebugInfo : IBinaryObject
+    {
+    }
+
+    public partial class DebugInfo
     {
         private readonly GameCategory _gameCategory;
-        
-        public bool HasDebugInfo { get; set; }
-        public DateTime ModificationTime { get; set; }
-
-        public ExtendedList<IDebugFunction> Functions { get; set; } = new();
-
-        public ExtendedList<IDebugPropertyGroup> PropertyGroups { get; set; } = new();
-
-        public ExtendedList<IDebugStructOrder> StructOrders { get; set; } = new();
-
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         
         public DebugInfo(GameCategory gameCategory, PexFile pexFile)
         {
@@ -95,20 +89,10 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class DebugFunction : IDebugFunction
+    public partial class DebugFunction
     {
-        public string? ObjectName { get; set; }
-        
-        public string? StateName { get; set; }
-        
-        public string? FunctionName { get; set; }
-        
-        public DebugFunctionType FunctionType { get; set; }
-        
-        public ExtendedList<ushort> Instructions { get; set; } = new();
+        private readonly PexFile _pexFile = null!;
 
-        private readonly PexFile _pexFile;
-        
         public DebugFunction(PexFile pexFile)
         {
             _pexFile = pexFile;
@@ -150,13 +134,9 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class DebugPropertyGroup : IDebugPropertyGroup
+    public partial class DebugPropertyGroup
     {
-        public string? ObjectName { get; set; }
-        public string? GroupName{ get; set; }
-        public ExtendedList<string> PropertyNames { get; set; } = new();
-
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
 
         public DebugPropertyGroup(PexFile pexFile)
         {
@@ -190,14 +170,10 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class DebugStructOrder : IDebugStructOrder
+    public partial class DebugStructOrder
     {
-        public string? ObjectName { get; set; }
-        public string? OrderName { get; set; }
-        public ExtendedList<string> Names { get; set; } = new();
+        private readonly PexFile _pexFile = null!;
 
-        private readonly PexFile _pexFile;
-        
         public DebugStructOrder(PexFile pexFile)
         {
             _pexFile = pexFile;

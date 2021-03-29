@@ -6,48 +6,39 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public class PexObject : IPexObject
+    public partial class PexObject
     {
-        public string? Name { get; set; }
-        public string? ParentClassName { get; set; }
-        public string? DocString { get; set; }
-        public bool IsConst { get; set; }
-        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
-        public string? AutoStateName { get; set; }
-        public ExtendedList<IPexObjectStructInfo> StructInfos { get; set; } = new();
-        public ExtendedList<IPexObjectVariable> Variables { get; set; } = new();
-        public ExtendedList<IPexObjectProperty> Properties { get; set; } = new();
-        public ExtendedList<IPexObjectState> States { get; set; } = new();
-        
+        IReadOnlyList<IUserFlagGetter> IHasUserFlagsGetter.UserFlags => UserFlags;
+
         private readonly GameCategory _gameCategory;
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         
         public PexObject(GameCategory gameCategory, PexFile pexFile)
         {
             _gameCategory = gameCategory;
             _pexFile = pexFile;
         }
-        
+
         public PexObject(BinaryReader br, GameCategory gameCategory, PexFile pexFile)
             : this(gameCategory, pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            
+
             /*
              * This is the size of the entire object in bytes not some count variable for a loop. This also includes
              * the size of itself thus the - sizeof(uint)
              */
             var size = br.ReadUInt32() - sizeof(uint);
             var currentPos = br.BaseStream.Position;
-            
+
             ParentClassName = _pexFile.GetStringFromIndex(br.ReadUInt16());
             DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            
+
             if (_gameCategory == GameCategory.Fallout4)
                 IsConst = br.ReadBoolean();
-            
+
             UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
             AutoStateName = _pexFile.GetStringFromIndex(br.ReadUInt16());
 
@@ -60,7 +51,7 @@ namespace Mutagen.Bethesda.Pex
                     StructInfos.Add(structInfo);
                 }
             }
-            
+
             var variables = br.ReadUInt16();
             for (var i = 0; i < variables; i++)
             {
@@ -98,64 +89,62 @@ namespace Mutagen.Bethesda.Pex
 
             bw.Write(_pexFile.GetIndexFromString(ParentClassName));
             bw.Write(_pexFile.GetIndexFromString(DocString));
-            
-            if (_gameCategory == GameCategory.Fallout4) {
+
+            if (_gameCategory == GameCategory.Fallout4)
+            {
                 // ReSharper disable RedundantCast
-                bw.Write(IsConst ? (byte) 1 : (byte) 0);
+                bw.Write(IsConst ? (byte)1 : (byte)0);
                 // ReSharper restore RedundantCast
             }
-            
+
             bw.Write(_pexFile.GetUserFlags(UserFlags));
             bw.Write(_pexFile.GetIndexFromString(AutoStateName));
 
             if (_gameCategory == GameCategory.Fallout4)
             {
-                bw.Write((ushort) StructInfos.Count);
+                bw.Write((ushort)StructInfos.Count);
                 foreach (var structInfo in StructInfos)
                 {
                     structInfo.Write(bw);
                 }
             }
-            
-            bw.Write((ushort) Variables.Count);
+
+            bw.Write((ushort)Variables.Count);
             foreach (var objectVariable in Variables)
             {
                 objectVariable.Write(bw);
             }
-            
-            bw.Write((ushort) Properties.Count);
+
+            bw.Write((ushort)Properties.Count);
             foreach (var objectProperty in Properties)
             {
                 objectProperty.Write(bw);
             }
-            
-            bw.Write((ushort) States.Count);
+
+            bw.Write((ushort)States.Count);
             foreach (var objectState in States)
             {
                 objectState.Write(bw);
             }
-            
+
             //calculate object size, go back, change it and return to the current position
             var newPos = bw.BaseStream.Position;
             bw.BaseStream.Position = currentPos;
 
             var objectSize = newPos - currentPos;
-            bw.Write((uint) objectSize);
+            bw.Write((uint)objectSize);
 
             bw.BaseStream.Position = newPos;
         }
     }
 
-    public class PexObjectStructInfo : IPexObjectStructInfo
+    public partial class PexObjectStructInfo
     {
-        public string? Name { get; set; }
-        public ExtendedList<IPexObjectStructInfoMember> Members { get; set; } = new();
+        private readonly PexFile _pexFile = null!;
 
-        private readonly PexFile _pexFile;
-        
         public PexObjectStructInfo(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectStructInfo(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -171,7 +160,7 @@ namespace Mutagen.Bethesda.Pex
         public void Write(BinaryWriter bw)
         {
             bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write((ushort) Members.Count);
+            bw.Write((ushort)Members.Count);
             foreach (var infoMember in Members)
             {
                 infoMember.Write(bw);
@@ -179,19 +168,14 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectStructInfoMember : IPexObjectStructInfoMember
+    public partial class PexObjectStructInfoMember
     {
-        public string? Name { get; set; }
-        public string? TypeName { get; set; }
-        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
-        public IPexObjectVariableData? Value { get; set; }
-        public bool IsConst { get; set; }
-        public string? DocString { get; set; }
-        
-        private readonly PexFile _pexFile;
+        IReadOnlyList<IUserFlagGetter> IHasUserFlagsGetter.UserFlags => UserFlags;
+
+        private readonly PexFile _pexFile = null!;
         public PexObjectStructInfoMember(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectStructInfoMember(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -213,17 +197,14 @@ namespace Mutagen.Bethesda.Pex
         }
     }
     
-    public class PexObjectVariable : IPexObjectVariable
+    public partial class PexObjectVariable
     {
-        public string? Name { get; set; }
-        public string? TypeName { get; set; }
-        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
-        public IPexObjectVariableData? VariableData { get; set; }
-        
-        private readonly PexFile _pexFile;
+        IReadOnlyList<IUserFlagGetter> IHasUserFlagsGetter.UserFlags => UserFlags;
+
+        private readonly PexFile _pexFile = null!;
         public PexObjectVariable(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectVariable(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -238,26 +219,20 @@ namespace Mutagen.Bethesda.Pex
             bw.Write(_pexFile.GetIndexFromString(Name));
             bw.Write(_pexFile.GetIndexFromString(TypeName));
             bw.Write(_pexFile.GetUserFlags(UserFlags));
-            
+
             VariableData?.Write(bw);
         }
     }
 
-    public class PexObjectVariableData : IPexObjectVariableData
+    public partial class PexObjectVariableData
     {
-        public VariableType VariableType { get; set; } = VariableType.Null;
-        public string? StringValue { get; set; }
-        public int? IntValue { get; set; }
-        public float? FloatValue { get; set; }
-        public bool? BoolValue { get; set; }
-        
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectVariableData(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectVariableData(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
-            VariableType = (VariableType) br.ReadByte();
+            VariableType = (VariableType)br.ReadByte();
             switch (VariableType)
             {
                 case VariableType.Null:
@@ -283,7 +258,7 @@ namespace Mutagen.Bethesda.Pex
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write((byte) VariableType);
+            bw.Write((byte)VariableType);
             switch (VariableType)
             {
                 case VariableType.Null:
@@ -307,21 +282,14 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectProperty : IPexObjectProperty
+    public partial class PexObjectProperty
     {
-        public string? Name{ get; set; }
-        public string? TypeName { get; set; }
-        public string? DocString { get; set; }
-        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
-        public PropertyFlags Flags { get; set; }
-        public string? AutoVarName{ get; set; }
-        public IPexObjectFunction? ReadHandler { get; set; }
-        public IPexObjectFunction? WriteHandler { get; set; }
+        IReadOnlyList<IUserFlagGetter> IHasUserFlagsGetter.UserFlags => UserFlags;
 
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectProperty(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectProperty(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -330,8 +298,8 @@ namespace Mutagen.Bethesda.Pex
             UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
 
             var flags = br.ReadByte();
-            Flags = (PropertyFlags) flags;
-            
+            Flags = (PropertyFlags)flags;
+
             if ((flags & 4) != 0)
             {
                 AutoVarName = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -355,9 +323,9 @@ namespace Mutagen.Bethesda.Pex
             bw.Write(_pexFile.GetIndexFromString(DocString));
             bw.Write(_pexFile.GetUserFlags(UserFlags));
 
-            var flags = (byte) Flags;
+            var flags = (byte)Flags;
             bw.Write(flags);
-            
+
             if ((flags & 4) != 0)
             {
                 bw.Write(_pexFile.GetIndexFromString(AutoVarName));
@@ -375,16 +343,12 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectState : IPexObjectState
+    public partial class PexObjectState
     {
-        public string? Name { get; set; }
-
-        public ExtendedList<IPexObjectNamedFunction> Functions { get; set; } = new();
-
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectState(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectState(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -400,7 +364,7 @@ namespace Mutagen.Bethesda.Pex
         public void Write(BinaryWriter bw)
         {
             bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write((ushort) Functions.Count);
+            bw.Write((ushort)Functions.Count);
             foreach (var namedFunction in Functions)
             {
                 namedFunction.Write(bw);
@@ -408,16 +372,12 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectNamedFunction : IPexObjectNamedFunction
+    public partial class PexObjectNamedFunction
     {
-        public string? FunctionName { get; set; }
-        
-        public IPexObjectFunction? Function { get; set; }
-
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectNamedFunction(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectNamedFunction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             FunctionName = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -431,26 +391,20 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectFunction : IPexObjectFunction
+    public partial class PexObjectFunction
     {
-        public string? ReturnTypeName { get; set; }
-        public string? DocString { get; set; }
-        public ExtendedList<IUserFlag> UserFlags { get; set; } = new();
-        public FunctionFlags Flags { get; set; }
-        public ExtendedList<IPexObjectFunctionVariable> Parameters { get; set; } = new();
-        public ExtendedList<IPexObjectFunctionVariable> Locals { get; set; } = new();
-        public ExtendedList<IPexObjectFunctionInstruction> Instructions { get; set; } = new();
+        IReadOnlyList<IUserFlagGetter> IHasUserFlagsGetter.UserFlags => UserFlags;
 
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectFunction(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectFunction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             ReturnTypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
             DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
             UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToExtendedList();
-            Flags = (FunctionFlags) br.ReadByte();
+            Flags = (FunctionFlags)br.ReadByte();
 
             var parameters = br.ReadUInt16();
             for (var i = 0; i < parameters; i++)
@@ -458,14 +412,14 @@ namespace Mutagen.Bethesda.Pex
                 var parameter = new PexObjectFunctionVariable(br, _pexFile);
                 Parameters.Add(parameter);
             }
-            
+
             var locals = br.ReadUInt16();
             for (var i = 0; i < locals; i++)
             {
                 var local = new PexObjectFunctionVariable(br, _pexFile);
                 Locals.Add(local);
             }
-            
+
             var instructions = br.ReadUInt16();
             for (var i = 0; i < instructions; i++)
             {
@@ -479,21 +433,21 @@ namespace Mutagen.Bethesda.Pex
             bw.Write(_pexFile.GetIndexFromString(ReturnTypeName));
             bw.Write(_pexFile.GetIndexFromString(DocString));
             bw.Write(_pexFile.GetUserFlags(UserFlags));
-            bw.Write((byte) Flags);
-            
-            bw.Write((ushort) Parameters.Count);
+            bw.Write((byte)Flags);
+
+            bw.Write((ushort)Parameters.Count);
             foreach (var parameter in Parameters)
             {
                 parameter.Write(bw);
             }
-            
-            bw.Write((ushort) Locals.Count);
+
+            bw.Write((ushort)Locals.Count);
             foreach (var local in Locals)
             {
                 local.Write(bw);
             }
-            
-            bw.Write((ushort) Instructions.Count);
+
+            bw.Write((ushort)Instructions.Count);
             foreach (var instruction in Instructions)
             {
                 instruction.Write(bw);
@@ -501,15 +455,12 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectFunctionVariable : IPexObjectFunctionVariable
+    public partial class PexObjectFunctionVariable
     {
-        public string? Name { get; set; }
-        public string? TypeName{ get; set; }
-
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectFunctionVariable(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectFunctionVariable(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
+
         public void Read(BinaryReader br)
         {
             Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
@@ -523,19 +474,16 @@ namespace Mutagen.Bethesda.Pex
         }
     }
 
-    public class PexObjectFunctionInstruction : IPexObjectFunctionInstruction
+    public partial class PexObjectFunctionInstruction
     {
-        public InstructionOpcode OpCode { get; set; } = InstructionOpcode.NOP;
-        public ExtendedList<IPexObjectVariableData> Arguments { get; set; } = new();
-        
-        private readonly PexFile _pexFile;
+        private readonly PexFile _pexFile = null!;
         public PexObjectFunctionInstruction(PexFile pexFile) { _pexFile = pexFile; }
         public PexObjectFunctionInstruction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
 
         public void Read(BinaryReader br)
         {
-            OpCode = (InstructionOpcode) br.ReadByte();
-            
+            OpCode = (InstructionOpcode)br.ReadByte();
+
             var arguments = InstructionOpCodeArguments.GetArguments(OpCode);
             foreach (var current in arguments)
             {
@@ -547,15 +495,15 @@ namespace Mutagen.Bethesda.Pex
                     case '*' when argument.VariableType != VariableType.Integer || !argument.IntValue.HasValue:
                         throw new InvalidDataException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
                     case '*':
-                    {
-                        for (var i = 0; i < argument.IntValue.Value; i++)
                         {
-                            var anotherArgument = new PexObjectVariableData(br, _pexFile);
-                            Arguments.Add(anotherArgument);
-                        }
+                            for (var i = 0; i < argument.IntValue.Value; i++)
+                            {
+                                var anotherArgument = new PexObjectVariableData(br, _pexFile);
+                                Arguments.Add(anotherArgument);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     //TODO: figure out what do to with this
                     /*
                      * u apparently means unsigned integer and indicates that the integer value we get should be
@@ -569,7 +517,7 @@ namespace Mutagen.Bethesda.Pex
 
         public void Write(BinaryWriter bw)
         {
-            bw.Write((byte) OpCode);
+            bw.Write((byte)OpCode);
 
             foreach (var argument in Arguments)
             {

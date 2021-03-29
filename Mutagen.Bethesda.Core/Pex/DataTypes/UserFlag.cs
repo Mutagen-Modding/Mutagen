@@ -2,13 +2,16 @@ using System.IO;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public class UserFlag : IUserFlag
+    public partial interface IUserFlagGetter
     {
-        public string? Name { get; set; }
-        public byte FlagIndex { get; set; }
-        public uint FlagMask => (uint) 1 << FlagIndex;
+        uint FlagMask { get; }
+    }
 
-        private readonly PexFile _pexFile;
+    public partial class UserFlag
+    {
+        public uint FlagMask => (uint)1 << FlagIndex;
+
+        private readonly PexFile _pexFile = null!;
         
         public UserFlag(PexFile pexFile) { _pexFile = pexFile; }
 
