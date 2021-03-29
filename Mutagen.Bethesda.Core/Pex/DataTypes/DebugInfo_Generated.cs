@@ -34,9 +34,6 @@ namespace Mutagen.Bethesda.Pex
         partial void CustomCtor();
         #endregion
 
-        #region HasDebugInfo
-        public Boolean HasDebugInfo { get; set; } = default;
-        #endregion
         #region ModificationTime
         public DateTime ModificationTime { get; set; } = default;
         #endregion
@@ -120,7 +117,6 @@ namespace Mutagen.Bethesda.Pex
             #region Ctors
             public Mask(TItem initialValue)
             {
-                this.HasDebugInfo = initialValue;
                 this.ModificationTime = initialValue;
                 this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>());
                 this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>());
@@ -128,13 +124,11 @@ namespace Mutagen.Bethesda.Pex
             }
 
             public Mask(
-                TItem HasDebugInfo,
                 TItem ModificationTime,
                 TItem Functions,
                 TItem PropertyGroups,
                 TItem StructOrders)
             {
-                this.HasDebugInfo = HasDebugInfo;
                 this.ModificationTime = ModificationTime;
                 this.Functions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>(Functions, Enumerable.Empty<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>());
                 this.PropertyGroups = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>(PropertyGroups, Enumerable.Empty<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>());
@@ -150,7 +144,6 @@ namespace Mutagen.Bethesda.Pex
             #endregion
 
             #region Members
-            public TItem HasDebugInfo;
             public TItem ModificationTime;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugFunction.Mask<TItem>?>>?>? Functions;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, DebugPropertyGroup.Mask<TItem>?>>?>? PropertyGroups;
@@ -167,7 +160,6 @@ namespace Mutagen.Bethesda.Pex
             public bool Equals(Mask<TItem>? rhs)
             {
                 if (rhs == null) return false;
-                if (!object.Equals(this.HasDebugInfo, rhs.HasDebugInfo)) return false;
                 if (!object.Equals(this.ModificationTime, rhs.ModificationTime)) return false;
                 if (!object.Equals(this.Functions, rhs.Functions)) return false;
                 if (!object.Equals(this.PropertyGroups, rhs.PropertyGroups)) return false;
@@ -177,7 +169,6 @@ namespace Mutagen.Bethesda.Pex
             public override int GetHashCode()
             {
                 var hash = new HashCode();
-                hash.Add(this.HasDebugInfo);
                 hash.Add(this.ModificationTime);
                 hash.Add(this.Functions);
                 hash.Add(this.PropertyGroups);
@@ -190,7 +181,6 @@ namespace Mutagen.Bethesda.Pex
             #region All
             public bool All(Func<TItem, bool> eval)
             {
-                if (!eval(this.HasDebugInfo)) return false;
                 if (!eval(this.ModificationTime)) return false;
                 if (this.Functions != null)
                 {
@@ -235,7 +225,6 @@ namespace Mutagen.Bethesda.Pex
             #region Any
             public bool Any(Func<TItem, bool> eval)
             {
-                if (eval(this.HasDebugInfo)) return true;
                 if (eval(this.ModificationTime)) return true;
                 if (this.Functions != null)
                 {
@@ -287,7 +276,6 @@ namespace Mutagen.Bethesda.Pex
 
             protected void Translate_InternalFill<R>(Mask<R> obj, Func<TItem, R> eval)
             {
-                obj.HasDebugInfo = eval(this.HasDebugInfo);
                 obj.ModificationTime = eval(this.ModificationTime);
                 if (Functions != null)
                 {
@@ -356,10 +344,6 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendLine("[");
                 using (new DepthWrapper(fg))
                 {
-                    if (printMask?.HasDebugInfo ?? true)
-                    {
-                        fg.AppendItem(HasDebugInfo, "HasDebugInfo");
-                    }
                     if (printMask?.ModificationTime ?? true)
                     {
                         fg.AppendItem(ModificationTime, "ModificationTime");
@@ -458,7 +442,6 @@ namespace Mutagen.Bethesda.Pex
                     return _warnings;
                 }
             }
-            public Exception? HasDebugInfo;
             public Exception? ModificationTime;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>? Functions;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>? PropertyGroups;
@@ -471,8 +454,6 @@ namespace Mutagen.Bethesda.Pex
                 DebugInfo_FieldIndex enu = (DebugInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case DebugInfo_FieldIndex.HasDebugInfo:
-                        return HasDebugInfo;
                     case DebugInfo_FieldIndex.ModificationTime:
                         return ModificationTime;
                     case DebugInfo_FieldIndex.Functions:
@@ -491,9 +472,6 @@ namespace Mutagen.Bethesda.Pex
                 DebugInfo_FieldIndex enu = (DebugInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case DebugInfo_FieldIndex.HasDebugInfo:
-                        this.HasDebugInfo = ex;
-                        break;
                     case DebugInfo_FieldIndex.ModificationTime:
                         this.ModificationTime = ex;
                         break;
@@ -516,9 +494,6 @@ namespace Mutagen.Bethesda.Pex
                 DebugInfo_FieldIndex enu = (DebugInfo_FieldIndex)index;
                 switch (enu)
                 {
-                    case DebugInfo_FieldIndex.HasDebugInfo:
-                        this.HasDebugInfo = (Exception?)obj;
-                        break;
                     case DebugInfo_FieldIndex.ModificationTime:
                         this.ModificationTime = (Exception?)obj;
                         break;
@@ -539,7 +514,6 @@ namespace Mutagen.Bethesda.Pex
             public bool IsInError()
             {
                 if (Overall != null) return true;
-                if (HasDebugInfo != null) return true;
                 if (ModificationTime != null) return true;
                 if (Functions != null) return true;
                 if (PropertyGroups != null) return true;
@@ -578,7 +552,6 @@ namespace Mutagen.Bethesda.Pex
             }
             protected void ToString_FillInternal(FileGeneration fg)
             {
-                fg.AppendItem(HasDebugInfo, "HasDebugInfo");
                 fg.AppendItem(ModificationTime, "ModificationTime");
                 if (Functions.TryGet(out var FunctionsItem))
                 {
@@ -654,7 +627,6 @@ namespace Mutagen.Bethesda.Pex
             {
                 if (rhs == null) return this;
                 var ret = new ErrorMask();
-                ret.HasDebugInfo = this.HasDebugInfo.Combine(rhs.HasDebugInfo);
                 ret.ModificationTime = this.ModificationTime.Combine(rhs.ModificationTime);
                 ret.Functions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugFunction.ErrorMask?>>?>(ExceptionExt.Combine(this.Functions?.Overall, rhs.Functions?.Overall), ExceptionExt.Combine(this.Functions?.Specific, rhs.Functions?.Specific));
                 ret.PropertyGroups = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, DebugPropertyGroup.ErrorMask?>>?>(ExceptionExt.Combine(this.PropertyGroups?.Overall, rhs.PropertyGroups?.Overall), ExceptionExt.Combine(this.PropertyGroups?.Specific, rhs.PropertyGroups?.Specific));
@@ -682,7 +654,6 @@ namespace Mutagen.Bethesda.Pex
             private TranslationCrystal? _crystal;
             public readonly bool DefaultOn;
             public bool OnOverall;
-            public bool HasDebugInfo;
             public bool ModificationTime;
             public DebugFunction.TranslationMask? Functions;
             public DebugPropertyGroup.TranslationMask? PropertyGroups;
@@ -696,7 +667,6 @@ namespace Mutagen.Bethesda.Pex
             {
                 this.DefaultOn = defaultOn;
                 this.OnOverall = onOverall;
-                this.HasDebugInfo = defaultOn;
                 this.ModificationTime = defaultOn;
             }
 
@@ -713,7 +683,6 @@ namespace Mutagen.Bethesda.Pex
 
             protected void GetCrystal(List<(bool On, TranslationCrystal? SubCrystal)> ret)
             {
-                ret.Add((HasDebugInfo, null));
                 ret.Add((ModificationTime, null));
                 ret.Add((Functions == null ? DefaultOn : !Functions.GetCrystal().CopyNothing, Functions?.GetCrystal()));
                 ret.Add((PropertyGroups == null ? DefaultOn : !PropertyGroups.GetCrystal().CopyNothing, PropertyGroups?.GetCrystal()));
@@ -748,7 +717,6 @@ namespace Mutagen.Bethesda.Pex
         IDebugInfoGetter,
         ILoquiObjectSetter<IDebugInfo>
     {
-        new Boolean HasDebugInfo { get; set; }
         new DateTime ModificationTime { get; set; }
         new ExtendedList<DebugFunction> Functions { get; }
         new ExtendedList<DebugPropertyGroup> PropertyGroups { get; }
@@ -766,7 +734,6 @@ namespace Mutagen.Bethesda.Pex
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DebugInfo_Registration.Instance;
-        Boolean HasDebugInfo { get; }
         DateTime ModificationTime { get; }
         IReadOnlyList<IDebugFunctionGetter> Functions { get; }
         IReadOnlyList<IDebugPropertyGroupGetter> PropertyGroups { get; }
@@ -926,11 +893,10 @@ namespace Mutagen.Bethesda.Pex.Internals
     #region Field Index
     public enum DebugInfo_FieldIndex
     {
-        HasDebugInfo = 0,
-        ModificationTime = 1,
-        Functions = 2,
-        PropertyGroups = 3,
-        StructOrders = 4,
+        ModificationTime = 0,
+        Functions = 1,
+        PropertyGroups = 2,
+        StructOrders = 3,
     }
     #endregion
 
@@ -948,9 +914,9 @@ namespace Mutagen.Bethesda.Pex.Internals
 
         public const string GUID = "8adc2f6d-0800-4851-b0bf-f6d812a4d25b";
 
-        public const ushort AdditionalFieldCount = 5;
+        public const ushort AdditionalFieldCount = 4;
 
-        public const ushort FieldCount = 5;
+        public const ushort FieldCount = 4;
 
         public static readonly Type MaskType = typeof(DebugInfo.Mask<>);
 
@@ -1017,7 +983,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         public void Clear(IDebugInfo item)
         {
             ClearPartial();
-            item.HasDebugInfo = default;
             item.ModificationTime = default;
             item.Functions.Clear();
             item.PropertyGroups.Clear();
@@ -1050,7 +1015,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             EqualsMaskHelper.Include include = EqualsMaskHelper.Include.All)
         {
             if (rhs == null) return;
-            ret.HasDebugInfo = item.HasDebugInfo == rhs.HasDebugInfo;
             ret.ModificationTime = item.ModificationTime == rhs.ModificationTime;
             ret.Functions = item.Functions.CollectionEqualsHelper(
                 rhs.Functions,
@@ -1110,10 +1074,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             FileGeneration fg,
             DebugInfo.Mask<bool>? printMask = null)
         {
-            if (printMask?.HasDebugInfo ?? true)
-            {
-                fg.AppendItem(item.HasDebugInfo, "HasDebugInfo");
-            }
             if (printMask?.ModificationTime ?? true)
             {
                 fg.AppendItem(item.ModificationTime, "ModificationTime");
@@ -1182,10 +1142,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         {
             if (lhs == null && rhs == null) return false;
             if (lhs == null || rhs == null) return false;
-            if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.HasDebugInfo) ?? true))
-            {
-                if (lhs.HasDebugInfo != rhs.HasDebugInfo) return false;
-            }
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.ModificationTime) ?? true))
             {
                 if (lhs.ModificationTime != rhs.ModificationTime) return false;
@@ -1208,7 +1164,6 @@ namespace Mutagen.Bethesda.Pex.Internals
         public virtual int GetHashCode(IDebugInfoGetter item)
         {
             var hash = new HashCode();
-            hash.Add(item.HasDebugInfo);
             hash.Add(item.ModificationTime);
             hash.Add(item.Functions);
             hash.Add(item.PropertyGroups);
@@ -1237,10 +1192,6 @@ namespace Mutagen.Bethesda.Pex.Internals
             TranslationCrystal? copyMask,
             bool deepCopy)
         {
-            if ((copyMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.HasDebugInfo) ?? true))
-            {
-                item.HasDebugInfo = rhs.HasDebugInfo;
-            }
             if ((copyMask?.GetShouldTranslate((int)DebugInfo_FieldIndex.ModificationTime) ?? true))
             {
                 item.ModificationTime = rhs.ModificationTime;

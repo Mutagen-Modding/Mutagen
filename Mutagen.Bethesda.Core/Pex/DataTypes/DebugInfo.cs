@@ -26,10 +26,6 @@ namespace Mutagen.Bethesda.Pex
         
         public void Read(BinaryReader br)
         {
-            var hasDebugInfo = br.ReadByte();
-            HasDebugInfo = hasDebugInfo == 1;
-            if (!HasDebugInfo) return;
-
             ModificationTime = br.ReadUInt64().ToDateTime();
             
             var functionCount = br.ReadUInt16();
@@ -59,11 +55,6 @@ namespace Mutagen.Bethesda.Pex
 
         public void Write(BinaryWriter bw)
         {
-            // ReSharper disable RedundantCast
-            bw.Write(HasDebugInfo ? (byte) 1 : (byte) 0);
-            // ReSharper restore RedundantCast
-            if (!HasDebugInfo) return;
-            
             bw.Write(ModificationTime.ToUInt64());
             
             bw.Write((ushort) Functions.Count);

@@ -67,7 +67,10 @@ namespace Mutagen.Bethesda.Pex
                 _strings.Add((ushort) i, br.ReadString());
             }
             
-            DebugInfo = new DebugInfo(br, _gameCategory, this);
+            if (br.ReadByte() == 1)
+            {
+                DebugInfo = new DebugInfo(br, _gameCategory, this);
+            }
             
             var userFlagCount = br.ReadUInt16();
             for (var i = 0; i < userFlagCount; i++)
@@ -101,7 +104,15 @@ namespace Mutagen.Bethesda.Pex
                 bw.Write(pair.Value);
             }
             
-            DebugInfo?.Write(bw);
+            if (DebugInfo == null)
+            {
+                bw.Write((byte)0);
+            }
+            else
+            {
+                bw.Write((byte)1);
+                DebugInfo.Write(bw);
+            }
             
             bw.Write((ushort) _userFlags.Count);
             foreach (var userFlag in _userFlags)

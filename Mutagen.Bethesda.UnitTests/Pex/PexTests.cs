@@ -91,8 +91,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             Assert.NotNull(debugInfo);
 
             {
-                Assert.True(debugInfo!.HasDebugInfo);
-                Assert.Equal(4, debugInfo.Functions.Count);
+                Assert.Equal(4, debugInfo!.Functions.Count);
             }
 
             var objects = pex.Objects;

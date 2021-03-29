@@ -2,7 +2,6 @@
 <Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
   <Object name="DebugInfo" GUID="8adc2f6d-0800-4851-b0bf-f6d812a4d25b" ID="1">
     <Fields>
-      <Bool name="HasDebugInfo" />
       <DateTime name="ModificationTime" />
       <RefList name="Functions" refName="DebugFunction" />
       <RefList name="PropertyGroups" refName="DebugPropertyGroup" />
