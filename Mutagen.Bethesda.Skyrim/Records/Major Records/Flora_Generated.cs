@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IFloraGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region ObjectBounds
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
@@ -1035,6 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBounded,
         IObjectBoundedOptional,
         IRegionTarget,
+        IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
@@ -1071,6 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
         IRegionTargetGetter,
+        IScriptedGetter,
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Flora_Registration.Instance;

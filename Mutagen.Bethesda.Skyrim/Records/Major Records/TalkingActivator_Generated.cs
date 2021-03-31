@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? ITalkingActivatorGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region ObjectBounds
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
@@ -959,6 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IObjectBounded,
         IObjectBoundedOptional,
+        IScripted,
         ISkyrimMajorRecordInternal,
         ITalkingActivatorGetter,
         ITranslatedNamed,
@@ -999,6 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter,
         IObjectBoundedGetter,
         IObjectBoundedOptionalGetter,
+        IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {
