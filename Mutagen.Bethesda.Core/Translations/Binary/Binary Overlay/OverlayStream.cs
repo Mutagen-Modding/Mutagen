@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +24,8 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public int Length => _readStream.Length;
+
+        public bool IsLittleEndian => _readStream.IsLittleEndian;
 
         public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingBundle constants)
         {

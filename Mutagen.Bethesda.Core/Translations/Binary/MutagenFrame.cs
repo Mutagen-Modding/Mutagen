@@ -76,6 +76,8 @@ namespace Mutagen.Bethesda.Binary
 
         public bool IsPersistantBacking => Reader.IsPersistantBacking;
 
+        public bool IsLittleEndian => Reader.IsLittleEndian;
+
         /// <summary>
         /// Constructs new frame around current reader position until its completion
         /// </summary>

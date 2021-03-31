@@ -18,6 +18,8 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public ParsingBundle MetaData { get; }
 
+        public bool IsLittleEndian => _readStream.IsLittleEndian;
+
         public MutagenInterfaceReadStream(
             IBinaryReadStream stream,
             ParsingBundle metaData,
