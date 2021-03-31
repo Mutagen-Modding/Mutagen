@@ -55,6 +55,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IAPlacedTrapGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region EncounterZone
         private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
@@ -1407,6 +1411,7 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         IPlaced,
         IPlacedThing,
+        IScripted,
         ISkyrimMajorRecordInternal
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1450,7 +1455,8 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
         IPlacedGetter,
-        IPlacedThingGetter
+        IPlacedThingGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

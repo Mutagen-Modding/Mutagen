@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IPlacedObjectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Base
         private IFormLinkNullable<ISkyrimMajorRecordGetter> _Base = new FormLinkNullable<ISkyrimMajorRecordGetter>();
@@ -3169,6 +3173,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlacedObjectGetter,
         IPlacedSimple,
         IPlacedThing,
+        IScripted,
         ISkyrimMajorRecordInternal
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -3249,7 +3254,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedObjectGetter>,
         IPlacedGetter,
         IPlacedSimpleGetter,
-        IPlacedThingGetter
+        IPlacedThingGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

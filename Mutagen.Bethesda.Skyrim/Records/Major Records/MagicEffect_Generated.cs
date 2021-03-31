@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IMagicEffectGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Name
         public TranslatedString? Name { get; set; }
@@ -2381,6 +2385,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMagicEffectGetter,
         INamed,
         INamedRequired,
+        IScripted,
         ISkyrimMajorRecordInternal,
         ITranslatedNamed,
         ITranslatedNamedRequired
@@ -2449,6 +2454,7 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IMagicEffectGetter>,
         INamedGetter,
         INamedRequiredGetter,
+        IScriptedGetter,
         ITranslatedNamedGetter,
         ITranslatedNamedRequiredGetter
     {

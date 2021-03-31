@@ -52,6 +52,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IPlacedNpcGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region Base
         private IFormLinkNullable<INpcGetter> _Base = new FormLinkNullable<INpcGetter>();
@@ -1673,6 +1677,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPlaced,
         IPlacedNpcGetter,
         IPlacedSimple,
+        IScripted,
         ISkyrimMajorRecordInternal
     {
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
@@ -1727,7 +1732,8 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<IPlacedNpcGetter>,
         IOwnerGetter,
         IPlacedGetter,
-        IPlacedSimpleGetter
+        IPlacedSimpleGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }

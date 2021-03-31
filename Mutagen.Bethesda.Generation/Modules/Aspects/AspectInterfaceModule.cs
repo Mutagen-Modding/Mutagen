@@ -21,6 +21,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             Definitions.Add(new KeywordAspect());
             Definitions.Add(new NamedAspect());
             Definitions.Add(new ObjectBoundedAspect());
+            Definitions.Add(new RefAspect("IScripted", "VirtualMachineAdapter", "VirtualMachineAdapter"));
             Definitions.Add(new RefAspect("IModeled", "Model", "Model"));
             Definitions.Add(new RefAspect("IHasIcons", "Icons", "Icons"));
             Definitions.Add(new FieldsAspect("IWeightValue",
