@@ -125,5 +125,28 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             pex2.DebugInfo!.Functions.Should().HaveCount(pex.DebugInfo!.Functions.Count);
             pex2.DebugInfo!.Functions[^1].FunctionName.Should().Be(functionToAdd.FunctionName);
         }
+
+        [Fact]
+        public void UserFlagSync()
+        {
+            var path = Path.Combine("Pex", "files", "Art.pex");
+            Assert.True(File.Exists(path));
+
+            var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
+            var flagToAdd = new UserFlag()
+            {
+                FlagIndex = 15,
+                Name = "Random"
+            };
+            pex.Objects.First().UserFlags.Add(flagToAdd);
+
+            using var tempFolder = Utility.GetTempFolder(nameof(PexTests));
+            var outPath = Path.Combine(tempFolder.Dir.Path, Path.GetTempFileName());
+            pex.WritePexFile(outPath, GameCategory.Skyrim);
+
+            var pex2 = PexFile.CreateFromFile(outPath, GameCategory.Skyrim);
+            pex2.DebugInfo.Should().NotBeNull();
+            pex2.Objects[0].UserFlags.Should().Contain(flagToAdd);
+        }
     }
 }
