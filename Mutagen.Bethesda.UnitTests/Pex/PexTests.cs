@@ -57,17 +57,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             Assert.True(File.Exists(outputFile));
 
             var outputPex = PexFile.CreateFromFile(outputFile, gameCategory);
-            Assert.NotNull(outputPex);
-
-            var inputFi = new FileInfo(inputFile);
-            var outputFi = new FileInfo(outputFile);
-
-            Assert.Equal(inputFi.Length, outputFi.Length);
-
-            var inputHash = SHA256.HashData(File.ReadAllBytes(inputFile));
-            var outputHash = SHA256.HashData(File.ReadAllBytes(outputFile));
-
-            Assert.Equal(inputHash, outputHash);
+            inputPex.Equals(outputPex).Should().BeTrue();
         }
 
         [Fact]
