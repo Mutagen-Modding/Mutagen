@@ -10,84 +10,61 @@ namespace Mutagen.Bethesda.Pex
     public partial class PexFile
     {
         private readonly GameCategory _gameCategory;
-        private Dictionary<ushort, string> _strings = new();
-        private ExtendedList<UserFlag> _userFlags = new();
-        
+
         public PexFile(GameCategory gameCategory)
         {
             _gameCategory = gameCategory;
         }
 
-        public PexFile(BinaryReader br, GameCategory gameCategory) : this(gameCategory)
-        {
-            Read(br);
-        }
-
-        internal string GetStringFromIndex(ushort index)
-        {
-            if(_strings.TryGetValue(index, out var value))
-                return value;
-            throw new InvalidDataException($"Unable to find string in table at index {index}");
-        }
-
-        internal ushort GetIndexFromString(string? value)
-        {
-            if (value == null) return ushort.MaxValue;
-            var pair = _strings.First(x => x.Value.Equals(value));
-            return pair.Key;
-        }
-        
-        internal IEnumerable<UserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
-
-        internal uint GetUserFlags(IEnumerable<IUserFlag> userFlags)
-        {
-            return userFlags.Aggregate<IUserFlag, uint>(0, (current, userFlag) => current | userFlag.FlagMask);
-        }
-        
         private const uint PexMagic = 0xFA57C0DE;
-        
-        public void Read(BinaryReader br)
+
+        private static void Read(PexFile file, BinaryReader br)
         {
             var magic = br.ReadUInt32();
             if (magic != PexMagic)
                 throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {magic:x8}");
-            
-            MajorVersion = br.ReadByte();
-            MinorVersion = br.ReadByte();
-            GameId = br.ReadUInt16();
-            CompilationTime = br.ReadUInt64().ToDateTime();
-            SourceFileName = br.ReadString();
-            Username = br.ReadString();
-            MachineName = br.ReadString();
+
+            file.MajorVersion = br.ReadByte();
+            file.MinorVersion = br.ReadByte();
+            file.GameId = br.ReadUInt16();
+            file.CompilationTime = br.ReadUInt64().ToDateTime();
+            file.SourceFileName = br.ReadString();
+            file.Username = br.ReadString();
+            file.MachineName = br.ReadString();
 
             var stringsCount = br.ReadUInt16();
-            
+
+            var bundle = new PexParseMeta(
+                file._gameCategory,
+                br,
+                new Dictionary<ushort, string>());
             for (var i = 0; i < stringsCount; i++)
             {
-                _strings.Add((ushort) i, br.ReadString());
+                bundle.Strings.Add((ushort)i, br.ReadString());
             }
-            
-            if (br.ReadByte() == 1)
+
+            var hasDebugInfo = bundle.Reader.ReadByte() == 1;
+            if (hasDebugInfo)
             {
-                DebugInfo = new DebugInfo(br, _gameCategory, this);
+                file.DebugInfo = Mutagen.Bethesda.Pex.DebugInfo.Create(bundle);
             }
-            
+
             var userFlagCount = br.ReadUInt16();
             for (var i = 0; i < userFlagCount; i++)
             {
-                var userFlag = new UserFlag(br, this);
-                _userFlags.Add(userFlag);
+                var str = bundle.ReadString();
+                file.UserFlags[br.ReadByte()] = str;
             }
 
             var objectCount = br.ReadUInt16();
             for (var i = 0; i < objectCount; i++)
             {
-                var pexObject = new PexObject(br, _gameCategory, this);
-                Objects.Add(pexObject);
+                var pexObject = PexObject.Create(bundle);
+                file.Objects.Add(pexObject);
             }
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(BinaryWriter bw)
         {
             bw.Write(PexMagic);
             bw.Write(MajorVersion);
@@ -97,33 +74,48 @@ namespace Mutagen.Bethesda.Pex
             bw.Write(SourceFileName);
             bw.Write(Username);
             bw.Write(MachineName);
-            
-            bw.Write((ushort) _strings.Count);
-            foreach (var pair in _strings)
+
+            var memoryTrib = new MemoryTributary();
+            var bw2 = new PexWriter(memoryTrib, Encoding.UTF8, this._gameCategory.IsBigEndian());
+            var writeMeta = new PexWriteMeta(_gameCategory, bw2);
+            WriteContent(writeMeta);
+
+            bw.Write((ushort)writeMeta.Strings.Count);
+            foreach (var pair in writeMeta.Strings
+                .OrderBy(x => x.Value))
             {
-                bw.Write(pair.Value);
+                bw.Write(pair.Key);
             }
-            
+
+            memoryTrib.Position = 0;
+            memoryTrib.CopyTo(bw.BaseStream);
+        }
+
+        private void WriteContent(PexWriteMeta write)
+        {
             if (DebugInfo == null)
             {
-                bw.Write((byte)0);
+                write.Writer.Write((byte)0);
             }
             else
             {
-                bw.Write((byte)1);
-                DebugInfo.Write(bw);
-            }
-            
-            bw.Write((ushort) _userFlags.Count);
-            foreach (var userFlag in _userFlags)
-            {
-                userFlag.Write(bw);
+                write.Writer.Write((byte)1);
+                DebugInfo.Write(write);
             }
 
-            bw.Write((ushort) Objects.Count);
+            write.Writer.Write((ushort)UserFlags.NotNull().Count());
+            for (byte i = 0; i < 32; i++)
+            {
+                var str = UserFlags[i];
+                if (str == null) continue;
+                write.WriteString(str);
+                write.Writer.Write(i);
+            }
+
+            write.Writer.Write((ushort)Objects.Count);
             foreach (var pexObject in Objects)
             {
-                pexObject.Write(bw);
+                pexObject.Write(write);
             }
         }
 
@@ -141,7 +133,8 @@ namespace Mutagen.Bethesda.Pex
             using var br = new PexReader(stream, Encoding.UTF8, gameCategory.IsBigEndian());
 
             //https://en.uesp.net/wiki/Skyrim_Mod:Compiled_Script_File_Format
-            var pexFile = new PexFile(br, gameCategory);
+            var pexFile = new PexFile(gameCategory);
+            Read(pexFile, br);
 
             if (stream.Position != stream.Length)
                 throw new InvalidDataException("Finished reading but end of the stream was not reached! " +

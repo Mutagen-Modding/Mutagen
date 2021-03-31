@@ -7,7 +7,7 @@
       <String name="ParentClassName" nullable="True" />
       <String name="DocString" nullable="True" />
       <Bool name="IsConst" />
-      <RefList name="UserFlags" refName="UserFlag" />
+      <UInt32 name="RawUserFlags" />
       <String name="AutoStateName" />
       <RefList name="StructInfos" refName="PexObjectStructInfo" />
       <RefList name="Variables" refName="PexObjectVariable" />
@@ -29,7 +29,7 @@
       <RefDirect name="Value" nullable="True" refName="PexObjectVariableData" />
       <Bool name="IsConst" />
       <String name="DocString" nullable="True" />
-      <RefList name="UserFlags" refName="UserFlag" />
+      <UInt32 name="RawUserFlags" />
     </Fields>
   </Object>
   <Object name="PexObjectVariable" GUID="dcbe94f2-dda2-47b9-9057-e30c6c8fac8c" ID="9">
@@ -37,7 +37,7 @@
     <Fields>
       <String name="Name" nullable="True" />
       <String name="TypeName" nullable="True" />
-      <RefList name="UserFlags" refName="UserFlag" />
+      <UInt32 name="RawUserFlags" />
       <RefDirect name="VariableData" nullable="True" refName="PexObjectVariableData" />
     </Fields>
   </Object>
@@ -60,7 +60,7 @@
       <String name="AutoVarName" nullable="True" />
       <RefDirect name="ReadHandler" nullable="True" refName="PexObjectFunction" />
       <RefDirect name="WriteHandler" nullable="True" refName="PexObjectFunction" />
-      <RefList name="UserFlags" refName="UserFlag" />
+      <UInt32 name="RawUserFlags" />
     </Fields>
   </Object>
   <Object name="PexObjectState" GUID="8840a495-0e1d-41d4-9397-a81a14b0b040" ID="12">
@@ -84,7 +84,7 @@
       <RefList name="Parameters" refName="PexObjectFunctionVariable" />
       <RefList name="Locals" refName="PexObjectFunctionVariable" />
       <RefList name="Instructions" refName="PexObjectFunctionInstruction" />
-      <RefList name="UserFlags" refName="UserFlag" />
+      <UInt32 name="RawUserFlags" />
     </Fields>
   </Object>
   <Object name="PexObjectFunctionVariable" GUID="eadd25a2-cd64-4da0-95d0-9fdf432ee9aa" ID="15">

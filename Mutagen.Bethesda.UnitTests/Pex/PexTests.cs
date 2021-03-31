@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             Assert.True(File.Exists(path));
 
             var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
-            var functionToAdd = new DebugFunction(pex)
+            var functionToAdd = new DebugFunction()
             {
                 FunctionName = "HelloWorld",
                 FunctionType = DebugFunctionType.Method,
@@ -133,12 +133,9 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             Assert.True(File.Exists(path));
 
             var pex = PexFile.CreateFromFile(path, GameCategory.Skyrim);
-            var flagToAdd = new UserFlag()
-            {
-                FlagIndex = 15,
-                Name = "Random"
-            };
-            pex.Objects.First().UserFlags.Add(flagToAdd);
+            var flagToAdd = new UserFlag("Random", 15);
+            pex.UserFlags[flagToAdd.Index] = flagToAdd.Name;
+            pex.Objects.First().SetFlag(pex, flagToAdd, true);
 
             using var tempFolder = Utility.GetTempFolder(nameof(PexTests));
             var outPath = Path.Combine(tempFolder.Dir.Path, Path.GetTempFileName());
@@ -146,7 +143,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
 
             var pex2 = PexFile.CreateFromFile(outPath, GameCategory.Skyrim);
             pex2.DebugInfo.Should().NotBeNull();
-            pex2.Objects[0].UserFlags.Should().Contain(flagToAdd);
+            pex2.Objects[0].HasFlag(pex2, flagToAdd).Should().BeTrue();
         }
     }
 }

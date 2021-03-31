@@ -1,32 +1,11 @@
-using System.IO;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public partial interface IUserFlagGetter
-    {
-        uint FlagMask { get; }
-    }
-
-    public partial class UserFlag
-    {
-        public uint FlagMask => (uint)1 << FlagIndex;
-
-        private readonly PexFile _pexFile = null!;
-        
-        public UserFlag(PexFile pexFile) { _pexFile = pexFile; }
-
-        public UserFlag(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
-        {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            FlagIndex = br.ReadByte();
-        }
-
-        public void Write(BinaryWriter bw)
-        {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write(FlagIndex);
-        }
-    }
+    public record NullableUserFlag(string? Name, byte Index);
+    public record UserFlag(string Name, byte Index);
 }

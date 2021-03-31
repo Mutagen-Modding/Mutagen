@@ -89,19 +89,8 @@ namespace Mutagen.Bethesda.Pex
         #endregion
 
         #endregion
-        #region UserFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<UserFlag> _UserFlags = new ExtendedList<UserFlag>();
-        public ExtendedList<UserFlag> UserFlags
-        {
-            get => this._UserFlags;
-            protected set => this._UserFlags = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IUserFlagGetter> IPexObjectFunctionGetter.UserFlags => _UserFlags;
-        #endregion
-
+        #region RawUserFlags
+        public UInt32 RawUserFlags { get; set; } = default;
         #endregion
 
         #region To String
@@ -147,7 +136,7 @@ namespace Mutagen.Bethesda.Pex
                 this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
                 this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
                 this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>());
-                this.UserFlags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>());
+                this.RawUserFlags = initialValue;
             }
 
             public Mask(
@@ -157,7 +146,7 @@ namespace Mutagen.Bethesda.Pex
                 TItem Parameters,
                 TItem Locals,
                 TItem Instructions,
-                TItem UserFlags)
+                TItem RawUserFlags)
             {
                 this.ReturnTypeName = ReturnTypeName;
                 this.DocString = DocString;
@@ -165,7 +154,7 @@ namespace Mutagen.Bethesda.Pex
                 this.Parameters = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Parameters, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
                 this.Locals = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>(Locals, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>());
                 this.Instructions = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>(Instructions, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>());
-                this.UserFlags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>(UserFlags, Enumerable.Empty<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>());
+                this.RawUserFlags = RawUserFlags;
             }
 
             #pragma warning disable CS8618
@@ -183,7 +172,7 @@ namespace Mutagen.Bethesda.Pex
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>? Parameters;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionVariable.Mask<TItem>?>>?>? Locals;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectFunctionInstruction.Mask<TItem>?>>?>? Instructions;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>? UserFlags;
+            public TItem RawUserFlags;
             #endregion
 
             #region Equals
@@ -202,7 +191,7 @@ namespace Mutagen.Bethesda.Pex
                 if (!object.Equals(this.Parameters, rhs.Parameters)) return false;
                 if (!object.Equals(this.Locals, rhs.Locals)) return false;
                 if (!object.Equals(this.Instructions, rhs.Instructions)) return false;
-                if (!object.Equals(this.UserFlags, rhs.UserFlags)) return false;
+                if (!object.Equals(this.RawUserFlags, rhs.RawUserFlags)) return false;
                 return true;
             }
             public override int GetHashCode()
@@ -214,7 +203,7 @@ namespace Mutagen.Bethesda.Pex
                 hash.Add(this.Parameters);
                 hash.Add(this.Locals);
                 hash.Add(this.Instructions);
-                hash.Add(this.UserFlags);
+                hash.Add(this.RawUserFlags);
                 return hash.ToHashCode();
             }
 
@@ -262,18 +251,7 @@ namespace Mutagen.Bethesda.Pex
                         }
                     }
                 }
-                if (this.UserFlags != null)
-                {
-                    if (!eval(this.UserFlags.Overall)) return false;
-                    if (this.UserFlags.Specific != null)
-                    {
-                        foreach (var item in this.UserFlags.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.RawUserFlags)) return false;
                 return true;
             }
             #endregion
@@ -320,18 +298,7 @@ namespace Mutagen.Bethesda.Pex
                         }
                     }
                 }
-                if (this.UserFlags != null)
-                {
-                    if (eval(this.UserFlags.Overall)) return true;
-                    if (this.UserFlags.Specific != null)
-                    {
-                        foreach (var item in this.UserFlags.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (eval(this.RawUserFlags)) return true;
                 return false;
             }
             #endregion
@@ -394,21 +361,7 @@ namespace Mutagen.Bethesda.Pex
                         }
                     }
                 }
-                if (UserFlags != null)
-                {
-                    obj.UserFlags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UserFlag.Mask<R>?>>?>(eval(this.UserFlags.Overall), Enumerable.Empty<MaskItemIndexed<R, UserFlag.Mask<R>?>>());
-                    if (UserFlags.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, UserFlag.Mask<R>?>>();
-                        obj.UserFlags.Specific = l;
-                        foreach (var item in UserFlags.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, UserFlag.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, UserFlag.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.RawUserFlags = eval(this.RawUserFlags);
             }
             #endregion
 
@@ -512,28 +465,9 @@ namespace Mutagen.Bethesda.Pex
                         }
                         fg.AppendLine("]");
                     }
-                    if ((printMask?.UserFlags?.Overall ?? true)
-                        && UserFlags.TryGet(out var UserFlagsItem))
+                    if (printMask?.RawUserFlags ?? true)
                     {
-                        fg.AppendLine("UserFlags =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(UserFlagsItem.Overall);
-                            if (UserFlagsItem.Specific != null)
-                            {
-                                foreach (var subItem in UserFlagsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        fg.AppendItem(RawUserFlags, "RawUserFlags");
                     }
                 }
                 fg.AppendLine("]");
@@ -566,7 +500,7 @@ namespace Mutagen.Bethesda.Pex
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>? Parameters;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>? Locals;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>? Instructions;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>? UserFlags;
+            public Exception? RawUserFlags;
             #endregion
 
             #region IErrorMask
@@ -587,8 +521,8 @@ namespace Mutagen.Bethesda.Pex
                         return Locals;
                     case PexObjectFunction_FieldIndex.Instructions:
                         return Instructions;
-                    case PexObjectFunction_FieldIndex.UserFlags:
-                        return UserFlags;
+                    case PexObjectFunction_FieldIndex.RawUserFlags:
+                        return RawUserFlags;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
                 }
@@ -617,8 +551,8 @@ namespace Mutagen.Bethesda.Pex
                     case PexObjectFunction_FieldIndex.Instructions:
                         this.Instructions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>(ex, null);
                         break;
-                    case PexObjectFunction_FieldIndex.UserFlags:
-                        this.UserFlags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>(ex, null);
+                    case PexObjectFunction_FieldIndex.RawUserFlags:
+                        this.RawUserFlags = ex;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -648,8 +582,8 @@ namespace Mutagen.Bethesda.Pex
                     case PexObjectFunction_FieldIndex.Instructions:
                         this.Instructions = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>)obj;
                         break;
-                    case PexObjectFunction_FieldIndex.UserFlags:
-                        this.UserFlags = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>)obj;
+                    case PexObjectFunction_FieldIndex.RawUserFlags:
+                        this.RawUserFlags = (Exception?)obj;
                         break;
                     default:
                         throw new ArgumentException($"Index is out of range: {index}");
@@ -665,7 +599,7 @@ namespace Mutagen.Bethesda.Pex
                 if (Parameters != null) return true;
                 if (Locals != null) return true;
                 if (Instructions != null) return true;
-                if (UserFlags != null) return true;
+                if (RawUserFlags != null) return true;
                 return false;
             }
             #endregion
@@ -769,28 +703,7 @@ namespace Mutagen.Bethesda.Pex
                     }
                     fg.AppendLine("]");
                 }
-                if (UserFlags.TryGet(out var UserFlagsItem))
-                {
-                    fg.AppendLine("UserFlags =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(UserFlagsItem.Overall);
-                        if (UserFlagsItem.Specific != null)
-                        {
-                            foreach (var subItem in UserFlagsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                fg.AppendItem(RawUserFlags, "RawUserFlags");
             }
             #endregion
 
@@ -805,7 +718,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.Parameters = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Parameters?.Overall, rhs.Parameters?.Overall), ExceptionExt.Combine(this.Parameters?.Specific, rhs.Parameters?.Specific));
                 ret.Locals = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Locals?.Overall, rhs.Locals?.Overall), ExceptionExt.Combine(this.Locals?.Specific, rhs.Locals?.Specific));
                 ret.Instructions = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectFunctionInstruction.ErrorMask?>>?>(ExceptionExt.Combine(this.Instructions?.Overall, rhs.Instructions?.Overall), ExceptionExt.Combine(this.Instructions?.Specific, rhs.Instructions?.Specific));
-                ret.UserFlags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>(ExceptionExt.Combine(this.UserFlags?.Overall, rhs.UserFlags?.Overall), ExceptionExt.Combine(this.UserFlags?.Specific, rhs.UserFlags?.Specific));
+                ret.RawUserFlags = this.RawUserFlags.Combine(rhs.RawUserFlags);
                 return ret;
             }
             public static ErrorMask? Combine(ErrorMask? lhs, ErrorMask? rhs)
@@ -835,7 +748,7 @@ namespace Mutagen.Bethesda.Pex
             public PexObjectFunctionVariable.TranslationMask? Parameters;
             public PexObjectFunctionVariable.TranslationMask? Locals;
             public PexObjectFunctionInstruction.TranslationMask? Instructions;
-            public UserFlag.TranslationMask? UserFlags;
+            public bool RawUserFlags;
             #endregion
 
             #region Ctors
@@ -848,6 +761,7 @@ namespace Mutagen.Bethesda.Pex
                 this.ReturnTypeName = defaultOn;
                 this.DocString = defaultOn;
                 this.Flags = defaultOn;
+                this.RawUserFlags = defaultOn;
             }
 
             #endregion
@@ -869,7 +783,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.Add((Parameters == null ? DefaultOn : !Parameters.GetCrystal().CopyNothing, Parameters?.GetCrystal()));
                 ret.Add((Locals == null ? DefaultOn : !Locals.GetCrystal().CopyNothing, Locals?.GetCrystal()));
                 ret.Add((Instructions == null ? DefaultOn : !Instructions.GetCrystal().CopyNothing, Instructions?.GetCrystal()));
-                ret.Add((UserFlags == null ? DefaultOn : !UserFlags.GetCrystal().CopyNothing, UserFlags?.GetCrystal()));
+                ret.Add((RawUserFlags, null));
             }
 
             public static implicit operator TranslationMask(bool defaultOn)
@@ -907,7 +821,7 @@ namespace Mutagen.Bethesda.Pex
         new ExtendedList<PexObjectFunctionVariable> Parameters { get; }
         new ExtendedList<PexObjectFunctionVariable> Locals { get; }
         new ExtendedList<PexObjectFunctionInstruction> Instructions { get; }
-        new ExtendedList<UserFlag> UserFlags { get; }
+        new UInt32 RawUserFlags { get; set; }
     }
 
     public partial interface IPexObjectFunctionGetter :
@@ -928,7 +842,7 @@ namespace Mutagen.Bethesda.Pex
         IReadOnlyList<IPexObjectFunctionVariableGetter> Parameters { get; }
         IReadOnlyList<IPexObjectFunctionVariableGetter> Locals { get; }
         IReadOnlyList<IPexObjectFunctionInstructionGetter> Instructions { get; }
-        IReadOnlyList<IUserFlagGetter> UserFlags { get; }
+        UInt32 RawUserFlags { get; }
 
     }
 
@@ -1090,7 +1004,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         Parameters = 3,
         Locals = 4,
         Instructions = 5,
-        UserFlags = 6,
+        RawUserFlags = 6,
     }
     #endregion
 
@@ -1183,7 +1097,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             item.Parameters.Clear();
             item.Locals.Clear();
             item.Instructions.Clear();
-            item.UserFlags.Clear();
+            item.RawUserFlags = default;
         }
         
     }
@@ -1227,10 +1141,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 rhs.Instructions,
                 (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
                 include);
-            ret.UserFlags = item.UserFlags.CollectionEqualsHelper(
-                rhs.UserFlags,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.RawUserFlags = item.RawUserFlags == rhs.RawUserFlags;
         }
         
         public string ToString(
@@ -1345,23 +1256,9 @@ namespace Mutagen.Bethesda.Pex.Internals
                 }
                 fg.AppendLine("]");
             }
-            if (printMask?.UserFlags?.Overall ?? true)
+            if (printMask?.RawUserFlags ?? true)
             {
-                fg.AppendLine("UserFlags =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.UserFlags)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                fg.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
         }
         
@@ -1397,9 +1294,9 @@ namespace Mutagen.Bethesda.Pex.Internals
             {
                 if (!lhs.Instructions.SequenceEqualNullable(rhs.Instructions)) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.UserFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.RawUserFlags) ?? true))
             {
-                if (!lhs.UserFlags.SequenceEqualNullable(rhs.UserFlags)) return false;
+                if (lhs.RawUserFlags != rhs.RawUserFlags) return false;
             }
             return true;
         }
@@ -1419,7 +1316,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             hash.Add(item.Parameters);
             hash.Add(item.Locals);
             hash.Add(item.Instructions);
-            hash.Add(item.UserFlags);
+            hash.Add(item.RawUserFlags);
             return hash.ToHashCode();
         }
         
@@ -1528,29 +1425,9 @@ namespace Mutagen.Bethesda.Pex.Internals
                     errorMask?.PopIndex();
                 }
             }
-            if ((copyMask?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.UserFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PexObjectFunction_FieldIndex.RawUserFlags) ?? true))
             {
-                errorMask?.PushIndex((int)PexObjectFunction_FieldIndex.UserFlags);
-                try
-                {
-                    item.UserFlags.SetTo(
-                        rhs.UserFlags
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RawUserFlags = rhs.RawUserFlags;
             }
         }
         

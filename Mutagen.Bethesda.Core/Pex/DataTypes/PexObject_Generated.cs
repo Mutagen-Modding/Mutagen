@@ -52,19 +52,8 @@ namespace Mutagen.Bethesda.Pex
         #region IsConst
         public Boolean IsConst { get; set; } = default;
         #endregion
-        #region UserFlags
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private ExtendedList<UserFlag> _UserFlags = new ExtendedList<UserFlag>();
-        public ExtendedList<UserFlag> UserFlags
-        {
-            get => this._UserFlags;
-            protected set => this._UserFlags = value;
-        }
-        #region Interface Members
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        IReadOnlyList<IUserFlagGetter> IPexObjectGetter.UserFlags => _UserFlags;
-        #endregion
-
+        #region RawUserFlags
+        public UInt32 RawUserFlags { get; set; } = default;
         #endregion
         #region AutoStateName
         public String AutoStateName { get; set; } = string.Empty;
@@ -167,7 +156,7 @@ namespace Mutagen.Bethesda.Pex
                 this.ParentClassName = initialValue;
                 this.DocString = initialValue;
                 this.IsConst = initialValue;
-                this.UserFlags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>());
+                this.RawUserFlags = initialValue;
                 this.AutoStateName = initialValue;
                 this.StructInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectStructInfo.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectStructInfo.Mask<TItem>?>>());
                 this.Variables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectVariable.Mask<TItem>?>>?>(initialValue, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectVariable.Mask<TItem>?>>());
@@ -180,7 +169,7 @@ namespace Mutagen.Bethesda.Pex
                 TItem ParentClassName,
                 TItem DocString,
                 TItem IsConst,
-                TItem UserFlags,
+                TItem RawUserFlags,
                 TItem AutoStateName,
                 TItem StructInfos,
                 TItem Variables,
@@ -191,7 +180,7 @@ namespace Mutagen.Bethesda.Pex
                 this.ParentClassName = ParentClassName;
                 this.DocString = DocString;
                 this.IsConst = IsConst;
-                this.UserFlags = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>(UserFlags, Enumerable.Empty<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>());
+                this.RawUserFlags = RawUserFlags;
                 this.AutoStateName = AutoStateName;
                 this.StructInfos = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectStructInfo.Mask<TItem>?>>?>(StructInfos, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectStructInfo.Mask<TItem>?>>());
                 this.Variables = new MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectVariable.Mask<TItem>?>>?>(Variables, Enumerable.Empty<MaskItemIndexed<TItem, PexObjectVariable.Mask<TItem>?>>());
@@ -212,7 +201,7 @@ namespace Mutagen.Bethesda.Pex
             public TItem ParentClassName;
             public TItem DocString;
             public TItem IsConst;
-            public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, UserFlag.Mask<TItem>?>>?>? UserFlags;
+            public TItem RawUserFlags;
             public TItem AutoStateName;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectStructInfo.Mask<TItem>?>>?>? StructInfos;
             public MaskItem<TItem, IEnumerable<MaskItemIndexed<TItem, PexObjectVariable.Mask<TItem>?>>?>? Variables;
@@ -234,7 +223,7 @@ namespace Mutagen.Bethesda.Pex
                 if (!object.Equals(this.ParentClassName, rhs.ParentClassName)) return false;
                 if (!object.Equals(this.DocString, rhs.DocString)) return false;
                 if (!object.Equals(this.IsConst, rhs.IsConst)) return false;
-                if (!object.Equals(this.UserFlags, rhs.UserFlags)) return false;
+                if (!object.Equals(this.RawUserFlags, rhs.RawUserFlags)) return false;
                 if (!object.Equals(this.AutoStateName, rhs.AutoStateName)) return false;
                 if (!object.Equals(this.StructInfos, rhs.StructInfos)) return false;
                 if (!object.Equals(this.Variables, rhs.Variables)) return false;
@@ -249,7 +238,7 @@ namespace Mutagen.Bethesda.Pex
                 hash.Add(this.ParentClassName);
                 hash.Add(this.DocString);
                 hash.Add(this.IsConst);
-                hash.Add(this.UserFlags);
+                hash.Add(this.RawUserFlags);
                 hash.Add(this.AutoStateName);
                 hash.Add(this.StructInfos);
                 hash.Add(this.Variables);
@@ -267,18 +256,7 @@ namespace Mutagen.Bethesda.Pex
                 if (!eval(this.ParentClassName)) return false;
                 if (!eval(this.DocString)) return false;
                 if (!eval(this.IsConst)) return false;
-                if (this.UserFlags != null)
-                {
-                    if (!eval(this.UserFlags.Overall)) return false;
-                    if (this.UserFlags.Specific != null)
-                    {
-                        foreach (var item in this.UserFlags.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (!eval(this.RawUserFlags)) return false;
                 if (!eval(this.AutoStateName)) return false;
                 if (this.StructInfos != null)
                 {
@@ -339,18 +317,7 @@ namespace Mutagen.Bethesda.Pex
                 if (eval(this.ParentClassName)) return true;
                 if (eval(this.DocString)) return true;
                 if (eval(this.IsConst)) return true;
-                if (this.UserFlags != null)
-                {
-                    if (eval(this.UserFlags.Overall)) return true;
-                    if (this.UserFlags.Specific != null)
-                    {
-                        foreach (var item in this.UserFlags.Specific)
-                        {
-                            if (!eval(item.Overall)) return false;
-                            if (item.Specific != null && !item.Specific.All(eval)) return false;
-                        }
-                    }
-                }
+                if (eval(this.RawUserFlags)) return true;
                 if (eval(this.AutoStateName)) return true;
                 if (this.StructInfos != null)
                 {
@@ -418,21 +385,7 @@ namespace Mutagen.Bethesda.Pex
                 obj.ParentClassName = eval(this.ParentClassName);
                 obj.DocString = eval(this.DocString);
                 obj.IsConst = eval(this.IsConst);
-                if (UserFlags != null)
-                {
-                    obj.UserFlags = new MaskItem<R, IEnumerable<MaskItemIndexed<R, UserFlag.Mask<R>?>>?>(eval(this.UserFlags.Overall), Enumerable.Empty<MaskItemIndexed<R, UserFlag.Mask<R>?>>());
-                    if (UserFlags.Specific != null)
-                    {
-                        var l = new List<MaskItemIndexed<R, UserFlag.Mask<R>?>>();
-                        obj.UserFlags.Specific = l;
-                        foreach (var item in UserFlags.Specific.WithIndex())
-                        {
-                            MaskItemIndexed<R, UserFlag.Mask<R>?>? mask = item.Item == null ? null : new MaskItemIndexed<R, UserFlag.Mask<R>?>(item.Item.Index, eval(item.Item.Overall), item.Item.Specific?.Translate(eval));
-                            if (mask == null) continue;
-                            l.Add(mask);
-                        }
-                    }
-                }
+                obj.RawUserFlags = eval(this.RawUserFlags);
                 obj.AutoStateName = eval(this.AutoStateName);
                 if (StructInfos != null)
                 {
@@ -532,28 +485,9 @@ namespace Mutagen.Bethesda.Pex
                     {
                         fg.AppendItem(IsConst, "IsConst");
                     }
-                    if ((printMask?.UserFlags?.Overall ?? true)
-                        && UserFlags.TryGet(out var UserFlagsItem))
+                    if (printMask?.RawUserFlags ?? true)
                     {
-                        fg.AppendLine("UserFlags =>");
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            fg.AppendItem(UserFlagsItem.Overall);
-                            if (UserFlagsItem.Specific != null)
-                            {
-                                foreach (var subItem in UserFlagsItem.Specific)
-                                {
-                                    fg.AppendLine("[");
-                                    using (new DepthWrapper(fg))
-                                    {
-                                        subItem?.ToString(fg);
-                                    }
-                                    fg.AppendLine("]");
-                                }
-                            }
-                        }
-                        fg.AppendLine("]");
+                        fg.AppendItem(RawUserFlags, "RawUserFlags");
                     }
                     if (printMask?.AutoStateName ?? true)
                     {
@@ -680,7 +614,7 @@ namespace Mutagen.Bethesda.Pex
             public Exception? ParentClassName;
             public Exception? DocString;
             public Exception? IsConst;
-            public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>? UserFlags;
+            public Exception? RawUserFlags;
             public Exception? AutoStateName;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>? StructInfos;
             public MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>? Variables;
@@ -702,8 +636,8 @@ namespace Mutagen.Bethesda.Pex
                         return DocString;
                     case PexObject_FieldIndex.IsConst:
                         return IsConst;
-                    case PexObject_FieldIndex.UserFlags:
-                        return UserFlags;
+                    case PexObject_FieldIndex.RawUserFlags:
+                        return RawUserFlags;
                     case PexObject_FieldIndex.AutoStateName:
                         return AutoStateName;
                     case PexObject_FieldIndex.StructInfos:
@@ -736,8 +670,8 @@ namespace Mutagen.Bethesda.Pex
                     case PexObject_FieldIndex.IsConst:
                         this.IsConst = ex;
                         break;
-                    case PexObject_FieldIndex.UserFlags:
-                        this.UserFlags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>(ex, null);
+                    case PexObject_FieldIndex.RawUserFlags:
+                        this.RawUserFlags = ex;
                         break;
                     case PexObject_FieldIndex.AutoStateName:
                         this.AutoStateName = ex;
@@ -776,8 +710,8 @@ namespace Mutagen.Bethesda.Pex
                     case PexObject_FieldIndex.IsConst:
                         this.IsConst = (Exception?)obj;
                         break;
-                    case PexObject_FieldIndex.UserFlags:
-                        this.UserFlags = (MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>)obj;
+                    case PexObject_FieldIndex.RawUserFlags:
+                        this.RawUserFlags = (Exception?)obj;
                         break;
                     case PexObject_FieldIndex.AutoStateName:
                         this.AutoStateName = (Exception?)obj;
@@ -806,7 +740,7 @@ namespace Mutagen.Bethesda.Pex
                 if (ParentClassName != null) return true;
                 if (DocString != null) return true;
                 if (IsConst != null) return true;
-                if (UserFlags != null) return true;
+                if (RawUserFlags != null) return true;
                 if (AutoStateName != null) return true;
                 if (StructInfos != null) return true;
                 if (Variables != null) return true;
@@ -850,28 +784,7 @@ namespace Mutagen.Bethesda.Pex
                 fg.AppendItem(ParentClassName, "ParentClassName");
                 fg.AppendItem(DocString, "DocString");
                 fg.AppendItem(IsConst, "IsConst");
-                if (UserFlags.TryGet(out var UserFlagsItem))
-                {
-                    fg.AppendLine("UserFlags =>");
-                    fg.AppendLine("[");
-                    using (new DepthWrapper(fg))
-                    {
-                        fg.AppendItem(UserFlagsItem.Overall);
-                        if (UserFlagsItem.Specific != null)
-                        {
-                            foreach (var subItem in UserFlagsItem.Specific)
-                            {
-                                fg.AppendLine("[");
-                                using (new DepthWrapper(fg))
-                                {
-                                    subItem?.ToString(fg);
-                                }
-                                fg.AppendLine("]");
-                            }
-                        }
-                    }
-                    fg.AppendLine("]");
-                }
+                fg.AppendItem(RawUserFlags, "RawUserFlags");
                 fg.AppendItem(AutoStateName, "AutoStateName");
                 if (StructInfos.TryGet(out var StructInfosItem))
                 {
@@ -973,7 +886,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.ParentClassName = this.ParentClassName.Combine(rhs.ParentClassName);
                 ret.DocString = this.DocString.Combine(rhs.DocString);
                 ret.IsConst = this.IsConst.Combine(rhs.IsConst);
-                ret.UserFlags = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, UserFlag.ErrorMask?>>?>(ExceptionExt.Combine(this.UserFlags?.Overall, rhs.UserFlags?.Overall), ExceptionExt.Combine(this.UserFlags?.Specific, rhs.UserFlags?.Specific));
+                ret.RawUserFlags = this.RawUserFlags.Combine(rhs.RawUserFlags);
                 ret.AutoStateName = this.AutoStateName.Combine(rhs.AutoStateName);
                 ret.StructInfos = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectStructInfo.ErrorMask?>>?>(ExceptionExt.Combine(this.StructInfos?.Overall, rhs.StructInfos?.Overall), ExceptionExt.Combine(this.StructInfos?.Specific, rhs.StructInfos?.Specific));
                 ret.Variables = new MaskItem<Exception?, IEnumerable<MaskItem<Exception?, PexObjectVariable.ErrorMask?>>?>(ExceptionExt.Combine(this.Variables?.Overall, rhs.Variables?.Overall), ExceptionExt.Combine(this.Variables?.Specific, rhs.Variables?.Specific));
@@ -1006,7 +919,7 @@ namespace Mutagen.Bethesda.Pex
             public bool ParentClassName;
             public bool DocString;
             public bool IsConst;
-            public UserFlag.TranslationMask? UserFlags;
+            public bool RawUserFlags;
             public bool AutoStateName;
             public PexObjectStructInfo.TranslationMask? StructInfos;
             public PexObjectVariable.TranslationMask? Variables;
@@ -1025,6 +938,7 @@ namespace Mutagen.Bethesda.Pex
                 this.ParentClassName = defaultOn;
                 this.DocString = defaultOn;
                 this.IsConst = defaultOn;
+                this.RawUserFlags = defaultOn;
                 this.AutoStateName = defaultOn;
             }
 
@@ -1045,7 +959,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.Add((ParentClassName, null));
                 ret.Add((DocString, null));
                 ret.Add((IsConst, null));
-                ret.Add((UserFlags == null ? DefaultOn : !UserFlags.GetCrystal().CopyNothing, UserFlags?.GetCrystal()));
+                ret.Add((RawUserFlags, null));
                 ret.Add((AutoStateName, null));
                 ret.Add((StructInfos == null ? DefaultOn : !StructInfos.GetCrystal().CopyNothing, StructInfos?.GetCrystal()));
                 ret.Add((Variables == null ? DefaultOn : !Variables.GetCrystal().CopyNothing, Variables?.GetCrystal()));
@@ -1086,7 +1000,7 @@ namespace Mutagen.Bethesda.Pex
         new String? ParentClassName { get; set; }
         new String? DocString { get; set; }
         new Boolean IsConst { get; set; }
-        new ExtendedList<UserFlag> UserFlags { get; }
+        new UInt32 RawUserFlags { get; set; }
         new String AutoStateName { get; set; }
         new ExtendedList<PexObjectStructInfo> StructInfos { get; }
         new ExtendedList<PexObjectVariable> Variables { get; }
@@ -1110,7 +1024,7 @@ namespace Mutagen.Bethesda.Pex
         String? ParentClassName { get; }
         String? DocString { get; }
         Boolean IsConst { get; }
-        IReadOnlyList<IUserFlagGetter> UserFlags { get; }
+        UInt32 RawUserFlags { get; }
         String AutoStateName { get; }
         IReadOnlyList<IPexObjectStructInfoGetter> StructInfos { get; }
         IReadOnlyList<IPexObjectVariableGetter> Variables { get; }
@@ -1275,7 +1189,7 @@ namespace Mutagen.Bethesda.Pex.Internals
         ParentClassName = 1,
         DocString = 2,
         IsConst = 3,
-        UserFlags = 4,
+        RawUserFlags = 4,
         AutoStateName = 5,
         StructInfos = 6,
         Variables = 7,
@@ -1371,7 +1285,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             item.ParentClassName = default;
             item.DocString = default;
             item.IsConst = default;
-            item.UserFlags.Clear();
+            item.RawUserFlags = default;
             item.AutoStateName = string.Empty;
             item.StructInfos.Clear();
             item.Variables.Clear();
@@ -1409,10 +1323,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             ret.ParentClassName = string.Equals(item.ParentClassName, rhs.ParentClassName);
             ret.DocString = string.Equals(item.DocString, rhs.DocString);
             ret.IsConst = item.IsConst == rhs.IsConst;
-            ret.UserFlags = item.UserFlags.CollectionEqualsHelper(
-                rhs.UserFlags,
-                (loqLhs, loqRhs) => loqLhs.GetEqualsMask(loqRhs, include),
-                include);
+            ret.RawUserFlags = item.RawUserFlags == rhs.RawUserFlags;
             ret.AutoStateName = string.Equals(item.AutoStateName, rhs.AutoStateName);
             ret.StructInfos = item.StructInfos.CollectionEqualsHelper(
                 rhs.StructInfos,
@@ -1495,23 +1406,9 @@ namespace Mutagen.Bethesda.Pex.Internals
             {
                 fg.AppendItem(item.IsConst, "IsConst");
             }
-            if (printMask?.UserFlags?.Overall ?? true)
+            if (printMask?.RawUserFlags ?? true)
             {
-                fg.AppendLine("UserFlags =>");
-                fg.AppendLine("[");
-                using (new DepthWrapper(fg))
-                {
-                    foreach (var subItem in item.UserFlags)
-                    {
-                        fg.AppendLine("[");
-                        using (new DepthWrapper(fg))
-                        {
-                            subItem?.ToString(fg, "Item");
-                        }
-                        fg.AppendLine("]");
-                    }
-                }
-                fg.AppendLine("]");
+                fg.AppendItem(item.RawUserFlags, "RawUserFlags");
             }
             if (printMask?.AutoStateName ?? true)
             {
@@ -1615,9 +1512,9 @@ namespace Mutagen.Bethesda.Pex.Internals
             {
                 if (lhs.IsConst != rhs.IsConst) return false;
             }
-            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.UserFlags) ?? true))
+            if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.RawUserFlags) ?? true))
             {
-                if (!lhs.UserFlags.SequenceEqualNullable(rhs.UserFlags)) return false;
+                if (lhs.RawUserFlags != rhs.RawUserFlags) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObject_FieldIndex.AutoStateName) ?? true))
             {
@@ -1658,7 +1555,7 @@ namespace Mutagen.Bethesda.Pex.Internals
                 hash.Add(DocStringitem);
             }
             hash.Add(item.IsConst);
-            hash.Add(item.UserFlags);
+            hash.Add(item.RawUserFlags);
             hash.Add(item.AutoStateName);
             hash.Add(item.StructInfos);
             hash.Add(item.Variables);
@@ -1704,29 +1601,9 @@ namespace Mutagen.Bethesda.Pex.Internals
             {
                 item.IsConst = rhs.IsConst;
             }
-            if ((copyMask?.GetShouldTranslate((int)PexObject_FieldIndex.UserFlags) ?? true))
+            if ((copyMask?.GetShouldTranslate((int)PexObject_FieldIndex.RawUserFlags) ?? true))
             {
-                errorMask?.PushIndex((int)PexObject_FieldIndex.UserFlags);
-                try
-                {
-                    item.UserFlags.SetTo(
-                        rhs.UserFlags
-                        .Select(r =>
-                        {
-                            return r.DeepCopy(
-                                errorMask: errorMask,
-                                default(TranslationCrystal));
-                        }));
-                }
-                catch (Exception ex)
-                when (errorMask != null)
-                {
-                    errorMask.ReportException(ex);
-                }
-                finally
-                {
-                    errorMask?.PopIndex();
-                }
+                item.RawUserFlags = rhs.RawUserFlags;
             }
             if ((copyMask?.GetShouldTranslate((int)PexObject_FieldIndex.AutoStateName) ?? true))
             {

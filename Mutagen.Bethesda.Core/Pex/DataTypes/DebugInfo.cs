@@ -6,73 +6,67 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Pex
 {
-    public partial interface IDebugInfo : IBinaryObject
-    {
-    }
-
     public partial class DebugInfo
     {
         private readonly GameCategory _gameCategory;
-        private readonly PexFile _pexFile = null!;
-        
-        public DebugInfo(GameCategory gameCategory, PexFile pexFile)
+
+        public DebugInfo(GameCategory gameCategory)
         {
             _gameCategory = gameCategory;
-            _pexFile = pexFile;
         }
-        
-        public DebugInfo(BinaryReader br, GameCategory gameCategory, PexFile pexFile)
-            : this(gameCategory, pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+
+        internal static DebugInfo Create(PexParseMeta parse)
         {
-            ModificationTime = br.ReadUInt64().ToDateTime();
-            
-            var functionCount = br.ReadUInt16();
+            var ret = new DebugInfo(parse.Category);
+
+            ret.ModificationTime = parse.Reader.ReadUInt64().ToDateTime();
+
+            var functionCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < functionCount; i++)
             {
-                var function = new DebugFunction(br, _pexFile);
-                Functions.Add(function);
+                var function = DebugFunction.Create(parse);
+                ret.Functions.Add(function);
             }
 
             //F04 only
-            if (_gameCategory != GameCategory.Fallout4) return;
-            
-            var propertyGroupsCount = br.ReadUInt16();
+            if (ret._gameCategory != GameCategory.Fallout4) return ret;
+
+            var propertyGroupsCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < propertyGroupsCount; i++)
             {
-                var propertyGroup = new DebugPropertyGroup(br, _pexFile);
-                PropertyGroups.Add(propertyGroup);
+                var propertyGroup = DebugPropertyGroup.Create(parse);
+                ret.PropertyGroups.Add(propertyGroup);
             }
-            
-            var structOrderCount = br.ReadUInt16();
+
+            var structOrderCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < structOrderCount; i++)
             {
-                var structOrder = new DebugStructOrder(br, _pexFile);
-                StructOrders.Add(structOrder);
+                var structOrder = DebugStructOrder.Create(parse);
+                ret.StructOrders.Add(structOrder);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta bw)
         {
-            bw.Write(ModificationTime.ToUInt64());
-            
-            bw.Write((ushort) Functions.Count);
+            bw.Writer.Write(ModificationTime.ToUInt64());
+
+            bw.Writer.Write((ushort)Functions.Count);
             foreach (var debugFunction in Functions)
             {
                 debugFunction.Write(bw);
             }
-            
+
             //F04 only
             if (_gameCategory != GameCategory.Fallout4) return;
-            
-            bw.Write((ushort) PropertyGroups.Count);
+
+            bw.Writer.Write((ushort)PropertyGroups.Count);
             foreach (var propertyGroup in PropertyGroups)
             {
                 propertyGroup.Write(bw);
             }
-            
-            bw.Write((ushort) StructOrders.Count);
+
+            bw.Writer.Write((ushort)StructOrders.Count);
             foreach (var structOrder in StructOrders)
             {
                 structOrder.Write(bw);
@@ -82,117 +76,93 @@ namespace Mutagen.Bethesda.Pex
 
     public partial class DebugFunction
     {
-        private readonly PexFile _pexFile = null!;
+        internal static DebugFunction Create(PexParseMeta parse)
+        {
+            var ret = new DebugFunction();
+            ret.ObjectName = parse.ReadString();
+            ret.StateName = parse.ReadString();
+            ret.FunctionName = parse.ReadString();
 
-        public DebugFunction(PexFile pexFile)
-        {
-            _pexFile = pexFile;
-        }
+            ret.FunctionType = (DebugFunctionType)parse.Reader.ReadByte();
 
-        public DebugFunction(BinaryReader br, PexFile pexFile) : this(pexFile)
-        {
-            Read(br);
-        }
-        
-        public void Read(BinaryReader br)
-        {
-            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            StateName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            FunctionName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            
-            FunctionType = (DebugFunctionType) br.ReadByte();
-            
-            var instructionCount = br.ReadUInt16();
+            var instructionCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < instructionCount; i++)
             {
-                var lineNumber = br.ReadUInt16();
-                Instructions.Add(lineNumber);
+                var lineNumber = parse.Reader.ReadUInt16();
+                ret.Instructions.Add(lineNumber);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta meta)
         {
-            bw.Write(_pexFile.GetIndexFromString(ObjectName));
-            bw.Write(_pexFile.GetIndexFromString(StateName));
-            bw.Write(_pexFile.GetIndexFromString(FunctionName));
-            bw.Write((byte) FunctionType);
-            
-            bw.Write((ushort) Instructions.Count);
+            meta.WriteString(ObjectName);
+            meta.WriteString(StateName);
+            meta.WriteString(FunctionName);
+            meta.Writer.Write((byte)FunctionType);
+
+            meta.Writer.Write((ushort)Instructions.Count);
             foreach (var lineNumber in Instructions)
             {
-                bw.Write(lineNumber);
+                meta.Writer.Write(lineNumber);
             }
         }
     }
 
     public partial class DebugPropertyGroup
     {
-        private readonly PexFile _pexFile = null!;
-
-        public DebugPropertyGroup(PexFile pexFile)
+        internal static DebugPropertyGroup Create(PexParseMeta parse)
         {
-            _pexFile = pexFile;
-        }
-        
-        public DebugPropertyGroup(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
-        {
-            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            GroupName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new DebugPropertyGroup();
+            ret.ObjectName = parse.ReadString();
+            ret.GroupName = parse.ReadString();
 
-            var count = br.ReadUInt16();
+            var count = parse.Reader.ReadUInt16();
             for (var i = 0; i < count; i++)
             {
-                PropertyNames.Add(_pexFile.GetStringFromIndex(br.ReadUInt16()));
+                ret.PropertyNames.Add(parse.ReadString());
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta meta)
         {
-            bw.Write(_pexFile.GetIndexFromString(ObjectName));
-            bw.Write(_pexFile.GetIndexFromString(GroupName));
-            bw.Write((ushort) PropertyNames.Count);
-            
+            meta.WriteString(ObjectName);
+            meta.WriteString(GroupName);
+            meta.Writer.Write((ushort)PropertyNames.Count);
+
             foreach (var name in PropertyNames)
             {
-                bw.Write(_pexFile.GetIndexFromString(name));
+                meta.WriteString(name);
             }
         }
     }
 
     public partial class DebugStructOrder
     {
-        private readonly PexFile _pexFile = null!;
-
-        public DebugStructOrder(PexFile pexFile)
+        internal static DebugStructOrder Create(PexParseMeta parse)
         {
-            _pexFile = pexFile;
-        }
-        
-        public DebugStructOrder(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
-        {
-            ObjectName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            OrderName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new DebugStructOrder();
+            ret.ObjectName = parse.ReadString();
+            ret.OrderName = parse.ReadString();
 
-            var count = br.ReadUInt16();
+            var count = parse.Reader.ReadUInt16();
             for (var i = 0; i < count; i++)
             {
-                Names.Add(_pexFile.GetStringFromIndex(br.ReadUInt16()));
+                ret.Names.Add(parse.ReadString());
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta meta)
         {
-            bw.Write(_pexFile.GetIndexFromString(ObjectName));
-            bw.Write(_pexFile.GetIndexFromString(OrderName));
-            bw.Write((ushort) Names.Count);
-            
+            meta.WriteString(ObjectName);
+            meta.WriteString(OrderName);
+            meta.Writer.Write((ushort)Names.Count);
+
             foreach (var name in Names)
             {
-                bw.Write(_pexFile.GetIndexFromString(name));
+                meta.WriteString(name);
             }
         }
     }

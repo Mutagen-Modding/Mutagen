@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="us-ascii"?>
-<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
-  <Object name="UserFlag" GUID="0a3dee72-03b5-4908-bfd1-711612505d6c" ID="17">
-    <Fields>
-      <String name="Name" nullable="True" />
-      <UInt8 name="FlagIndex" />
-    </Fields>
-  </Object>
-</Loqui>

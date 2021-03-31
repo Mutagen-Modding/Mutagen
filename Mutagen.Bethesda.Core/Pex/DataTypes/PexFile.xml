@@ -11,6 +11,9 @@
       <String name="MachineName" />
       <RefDirect name="DebugInfo" nullable="True" refName="DebugInfo" />
       <RefList name="Objects" refName="PexObject" />
+      <Array name="UserFlags" fixedSize="32" >
+        <String nullable="True" />
+      </Array>
     </Fields>
   </Object>
 </Loqui>

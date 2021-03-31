@@ -25,7 +25,6 @@ namespace Loqui
             LoquiRegistration.Register(Mutagen.Bethesda.Pex.Internals.PexObjectFunction_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Pex.Internals.PexObjectFunctionVariable_Registration.Instance);
             LoquiRegistration.Register(Mutagen.Bethesda.Pex.Internals.PexObjectFunctionInstruction_Registration.Instance);
-            LoquiRegistration.Register(Mutagen.Bethesda.Pex.Internals.UserFlag_Registration.Instance);
         }
     }
 }
