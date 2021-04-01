@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFactionGetter.Name => this.Name;
@@ -762,6 +765,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IOwner
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag? Flags { get; set; }
@@ -787,7 +793,12 @@ namespace Mutagen.Bethesda.Oblivion
         IOwnerGetter
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag? Flags { get; }
         Single? CrimeGoldMultiplier { get; }

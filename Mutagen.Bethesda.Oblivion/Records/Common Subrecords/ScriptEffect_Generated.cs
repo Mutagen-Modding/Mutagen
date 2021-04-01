@@ -52,6 +52,9 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectDataGetter? IScriptEffectGetter.Data => this.Data;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IScriptEffectGetter.Name => this.Name;
@@ -479,6 +482,9 @@ namespace Mutagen.Bethesda.Oblivion
         IScriptEffectGetter
     {
         new ScriptEffectData? Data { get; set; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
     }
 
@@ -498,7 +504,12 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScriptEffect_Registration.Instance;
         IScriptEffectDataGetter? Data { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
 
     }
 

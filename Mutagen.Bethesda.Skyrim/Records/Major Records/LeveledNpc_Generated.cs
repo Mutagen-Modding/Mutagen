@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ILeveledNpcGetter.ObjectBounds => ObjectBounds;
@@ -92,6 +95,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -758,11 +764,17 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptional,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledNpc.Flag Flags { get; set; }
         new IFormLinkNullable<IGlobalGetter> Global { get; }
         new ExtendedList<LeveledNpcEntry>? Entries { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
     }
 
@@ -785,12 +797,22 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => LeveledNpc_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         Byte ChanceNone { get; }
         LeveledNpc.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }
         IReadOnlyList<ILeveledNpcEntryGetter>? Entries { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
 
     }
 

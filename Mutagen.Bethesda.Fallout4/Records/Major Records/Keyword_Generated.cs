@@ -69,6 +69,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IKeywordGetter.Name => this.Name;
@@ -670,6 +673,9 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
         new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
     }
@@ -699,7 +705,12 @@ namespace Mutagen.Bethesda.Fallout4
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
         IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         String? DisplayName { get; }
 
     }

@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IPotionGetter.Name => this.Name;
@@ -60,6 +63,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -780,7 +786,13 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IPotionGetter
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new String? Icon { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
@@ -808,8 +820,18 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Potion_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         String? Icon { get; }
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         Single? Weight { get; }

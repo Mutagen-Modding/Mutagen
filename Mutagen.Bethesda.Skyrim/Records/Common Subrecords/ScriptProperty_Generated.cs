@@ -43,6 +43,19 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
@@ -455,6 +468,19 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IScriptPropertyGetter
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// </summary>
         new String Name { get; set; }
         new ScriptProperty.Flag Flags { get; set; }
     }
@@ -476,7 +502,22 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScriptProperty_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// Aspects: INamed
+        /// </summary>
         String Name { get; }
+        #endregion
         ScriptProperty.Flag Flags { get; }
 
     }

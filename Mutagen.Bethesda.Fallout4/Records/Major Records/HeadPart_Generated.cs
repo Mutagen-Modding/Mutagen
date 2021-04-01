@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IHeadPartGetter.Name => this.Name;
@@ -60,6 +63,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -1056,7 +1062,13 @@ namespace Mutagen.Bethesda.Fallout4
         INamed,
         INamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new HeadPart.Flag Flags { get; set; }
         new HeadPart.TypeEnum? Type { get; set; }
@@ -1090,8 +1102,18 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => HeadPart_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         HeadPart.Flag Flags { get; }
         HeadPart.TypeEnum? Type { get; }
         IReadOnlyList<IFormLinkGetter<IHeadPartGetter>> ExtraParts { get; }

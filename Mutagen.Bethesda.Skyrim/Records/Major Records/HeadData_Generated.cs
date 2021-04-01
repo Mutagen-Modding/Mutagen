@@ -134,6 +134,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -1108,6 +1111,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
         new IFormLinkNullable<ITextureSetGetter> DefaultFaceTexture { get; }
         new ExtendedList<TintAssets> TintMasks { get; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
     }
 
@@ -1132,7 +1138,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<ITextureSetGetter>> FaceDetails { get; }
         IFormLinkNullableGetter<ITextureSetGetter> DefaultFaceTexture { get; }
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
 
     }
 

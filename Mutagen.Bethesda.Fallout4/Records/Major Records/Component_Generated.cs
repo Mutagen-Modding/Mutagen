@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IComponentGetter.ObjectBounds => ObjectBounds;
@@ -60,6 +63,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IComponentGetter.Name => this.Name;
@@ -674,7 +680,13 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBounded,
         IObjectBoundedOptional
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> CraftingSound { get; }
         new Int32? AutoCalcValue { get; set; }
@@ -701,8 +713,18 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => Component_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         IFormLinkNullableGetter<ISoundDescriptorGetter> CraftingSound { get; }
         Int32? AutoCalcValue { get; }
         IFormLinkNullableGetter<IMiscItemGetter> ScrapItem { get; }

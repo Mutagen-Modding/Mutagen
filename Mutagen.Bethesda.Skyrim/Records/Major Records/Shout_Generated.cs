@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IShoutGetter.Name => this.Name;
@@ -695,6 +698,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new IFormLinkNullable<IStaticGetter> MenuDisplayObject { get; }
         new TranslatedString? Description { get; set; }
@@ -726,7 +732,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Shout_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         IFormLinkNullableGetter<IStaticGetter> MenuDisplayObject { get; }
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IShoutWordGetter> WordsOfPower { get; }

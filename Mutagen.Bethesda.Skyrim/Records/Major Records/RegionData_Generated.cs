@@ -57,6 +57,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         public Icons? Icons
         {
             get => _Icons;
@@ -467,6 +470,9 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataGetter
     {
         new RegionDataHeader? Header { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         new Icons? Icons { get; set; }
     }
 
@@ -488,7 +494,12 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => RegionData_Registration.Instance;
         IRegionDataHeaderGetter? Header { get; }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         IIconsGetter? Icons { get; }
+        #endregion
 
     }
 

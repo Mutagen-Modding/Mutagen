@@ -48,6 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -1414,6 +1417,9 @@ namespace Mutagen.Bethesda.Skyrim
         IScripted,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
         new Ownership? Ownership { get; set; }
@@ -1459,7 +1465,12 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptedGetter
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         IOwnershipGetter? Ownership { get; }
         Single? HeadTrackingWeight { get; }

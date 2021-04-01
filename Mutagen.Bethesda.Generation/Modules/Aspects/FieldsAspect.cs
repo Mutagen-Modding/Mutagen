@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
     {
         public (string FieldName, string TypeName)[] Fields;
 
-        public FieldsAspect(string interfaceType, params (string FieldName, string TypeName)[] fields) 
+        public FieldsAspect(string interfaceType, params (string FieldName, string TypeName)[] fields)
             : base(interfaceType, null!)
         {
             Fields = fields;
@@ -21,6 +21,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             {
                 (LoquiInterfaceDefinitionType.IGetter, $"{interfaceType}Getter"),
                 (LoquiInterfaceDefinitionType.ISetter, interfaceType),
+            };
+            IdentifyFields = (o) =>
+            {
+                return from f in Fields
+                       join field in o.IterateFields(includeBaseClass: true)
+                         on f.FieldName equals field.Name
+                       where field.TypeName(getter: true) != f.TypeName
+                       select field;
             };
         }
 

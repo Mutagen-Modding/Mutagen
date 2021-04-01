@@ -268,6 +268,9 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? ILocationGetter.Name => this.Name;
@@ -303,6 +306,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
@@ -2756,7 +2762,13 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; set; }
         new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
         new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
         new IFormLinkNullable<IMusicTypeGetter> Music { get; }
@@ -2804,8 +2816,18 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IPlacedGetter>>? LocationCellMarkerReference { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? ActorCellEnablePoint { get; }
         IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
         IFormLinkNullableGetter<ILocationGetter> ParentLocation { get; }
         IFormLinkNullableGetter<IMusicTypeGetter> Music { get; }
         IFormLinkNullableGetter<IFactionGetter> UnreportedCrimeFaction { get; }

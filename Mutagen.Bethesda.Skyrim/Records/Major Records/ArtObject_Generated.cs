@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IArtObjectGetter.ObjectBounds => ObjectBounds;
@@ -62,6 +65,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -573,7 +579,13 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptional,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new ArtObject.TypeEnum? Type { get; set; }
     }
@@ -596,8 +608,18 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => ArtObject_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         ArtObject.TypeEnum? Type { get; }
 
     }

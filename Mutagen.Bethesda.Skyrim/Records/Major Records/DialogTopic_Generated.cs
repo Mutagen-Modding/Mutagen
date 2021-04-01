@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IDialogTopicGetter.Name => this.Name;
@@ -981,6 +984,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new Single Priority { get; set; }
         new IFormLinkNullable<IDialogBranchGetter> Branch { get; }
@@ -1016,7 +1022,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         Single Priority { get; }
         IFormLinkNullableGetter<IDialogBranchGetter> Branch { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }

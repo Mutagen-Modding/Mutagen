@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -519,6 +522,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new String? UnloadEvent { get; set; }
     }
@@ -539,7 +545,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter
     {
         static new ILoquiRegistration Registration => AnimatedObject_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         String? UnloadEvent { get; }
 
     }

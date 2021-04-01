@@ -44,6 +44,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IColorRecordGetter.Name => this.Name;
@@ -560,6 +563,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new Color Color { get; set; }
         new Boolean Playable { get; set; }
@@ -583,7 +589,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => ColorRecord_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         Color Color { get; }
         Boolean Playable { get; }
 

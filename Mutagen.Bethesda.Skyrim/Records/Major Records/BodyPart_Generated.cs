@@ -40,6 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
         #region Aspects
@@ -1487,6 +1490,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
         new String PartNode { get; set; }
@@ -1537,7 +1543,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => BodyPart_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter Name { get; }
+        #endregion
         String? PoseMatching { get; }
         String PartNode { get; }
         String VatsTarget { get; }

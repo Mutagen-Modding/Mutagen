@@ -53,6 +53,9 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> IQuestGetter.Script => this.Script;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IQuestGetter.Name => this.Name;
@@ -930,6 +933,9 @@ namespace Mutagen.Bethesda.Oblivion
         IQuestGetter
     {
         new IFormLinkNullable<IScriptGetter> Script { get; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new QuestData? Data { get; set; }
@@ -956,7 +962,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         String? Icon { get; }
         IQuestDataGetter? Data { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }

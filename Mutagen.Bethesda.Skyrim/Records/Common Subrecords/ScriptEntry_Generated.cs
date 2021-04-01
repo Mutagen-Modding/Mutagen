@@ -41,6 +41,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
@@ -567,6 +570,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IScriptEntryGetter
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
         new ExtendedList<ScriptProperty> Properties { get; }
@@ -586,7 +592,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScriptEntry_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String Name { get; }
+        #endregion
         ScriptEntry.Flag Flags { get; }
         IReadOnlyList<IScriptPropertyGetter> Properties { get; }
 

@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? ISoundCategoryGetter.Name => this.Name;
@@ -637,6 +640,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new SoundCategory.Flag? Flags { get; set; }
         new IFormLinkNullable<ISoundCategoryGetter> Parent { get; }
@@ -663,7 +669,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => SoundCategory_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         SoundCategory.Flag? Flags { get; }
         IFormLinkNullableGetter<ISoundCategoryGetter> Parent { get; }
         Single? StaticVolumeMultiplier { get; }

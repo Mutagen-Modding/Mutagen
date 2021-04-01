@@ -63,5 +63,26 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 }
             }
         }
+
+        public override async Task PostLoad(ObjectGeneration obj) {
+            Dictionary<TypeGeneration,HashSet<string>>? fieldsToAspects = null;
+            foreach (var def in Definitions)
+                if (def.Test(obj) && def.IdentifyFields is not null)
+                    foreach (var f in def.IdentifyFields(obj))
+                    {
+                        if (!(fieldsToAspects ??= new()).TryGetValue(f, out var list))
+                            fieldsToAspects[f] = list = new();
+                        list.Add(def.Name);
+                    }
+
+            if (fieldsToAspects is null) return;
+            foreach (var f in fieldsToAspects)
+            {
+                var k = f.Key;
+                var l = f.Value;
+                var aspectComment = "Aspects: " + string.Join(", ", l.OrderBy(x => x));
+                (k.Comments ??= new(null!)).Summary.AppendLine(aspectComment);
+            }
+        }
     }
 }

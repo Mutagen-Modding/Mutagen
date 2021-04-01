@@ -69,6 +69,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAttractionRuleGetter> IActionRecordGetter.AttractionRule => this.AttractionRule;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActionRecordGetter.Name => this.Name;
@@ -616,6 +619,9 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Notes { get; set; }
         new ActionRecord.TypeEnum? Type { get; set; }
         new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
     }
 
@@ -641,7 +647,12 @@ namespace Mutagen.Bethesda.Fallout4
         String? Notes { get; }
         ActionRecord.TypeEnum? Type { get; }
         IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
 
     }
 

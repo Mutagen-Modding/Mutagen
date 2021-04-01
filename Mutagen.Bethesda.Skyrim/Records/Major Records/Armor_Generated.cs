@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -58,6 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IArmorGetter.ObjectBounds => ObjectBounds;
@@ -75,6 +81,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IArmorGetter.Name => this.Name;
@@ -216,6 +225,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
@@ -1515,8 +1527,17 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired,
         IWeightValue
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new IFormLinkNullable<IEffectRecordGetter> ObjectEffect { get; }
         new UInt16? EnchantmentAmount { get; set; }
@@ -1530,6 +1551,9 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IImpactDataSetGetter> BashImpactDataSet { get; }
         new IFormLinkNullable<IMaterialTypeGetter> AlternateBlockMaterial { get; }
         new IFormLinkNullable<IRaceGetter> Race { get; }
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new TranslatedString? Description { get; set; }
         new ExtendedList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; }
@@ -1573,9 +1597,24 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValueGetter
     {
         static new ILoquiRegistration Registration => Armor_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         IFormLinkNullableGetter<IEffectRecordGetter> ObjectEffect { get; }
         UInt16? EnchantmentAmount { get; }
         IGenderedItemGetter<IArmorModelGetter?>? WorldModel { get; }
@@ -1588,7 +1627,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IImpactDataSetGetter> BashImpactDataSet { get; }
         IFormLinkNullableGetter<IMaterialTypeGetter> AlternateBlockMaterial { get; }
         IFormLinkNullableGetter<IRaceGetter> Race { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeyworded
+        /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
         ITranslatedStringGetter? Description { get; }
         IReadOnlyList<IFormLinkGetter<IArmorAddonGetter>> Armature { get; }
         UInt32 Value { get; }

@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -911,6 +914,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new CameraShot.ActionType Action { get; set; }
         new CameraShot.LocationType Location { get; set; }
@@ -943,7 +949,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter
     {
         static new ILoquiRegistration Registration => CameraShot_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         CameraShot.ActionType Action { get; }
         CameraShot.LocationType Location { get; }
         CameraShot.TargetType Target { get; }

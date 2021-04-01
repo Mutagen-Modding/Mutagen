@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMagicEffectGetter.Name => this.Name;
@@ -70,6 +73,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -739,9 +745,15 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new String? Description { get; set; }
         new String? Icon { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new MagicEffectData? Data { get; set; }
         new ExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; set; }
@@ -765,10 +777,20 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MagicEffect_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         String? Description { get; }
         String? Icon { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IMagicEffectDataGetter? Data { get; }
         IReadOnlyList<IEDIDLinkGetter<IMagicEffectGetter>>? CounterEffects { get; }
 

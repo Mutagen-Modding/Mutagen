@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -1680,6 +1683,9 @@ namespace Mutagen.Bethesda.Skyrim
         IScripted,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<INpcGetter> Base { get; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
@@ -1736,7 +1742,12 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedNpc_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IFormLinkNullableGetter<INpcGetter> Base { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         ReadOnlyMemorySlice<Byte>? RagdollData { get; }

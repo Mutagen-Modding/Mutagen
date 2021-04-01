@@ -38,6 +38,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     fg.AppendLine($"I{loquiName}Getter? {interfaceName}Getter.{memberName} => this.{memberName};");
                 })
             };
+            IdentifyFields = (o) => o.Fields
+                .Where(x => x.Name == MemberName)
+                .OfType<LoquiType>()
+                .Where(x => x.TargetObjectGeneration.Name == LoquiName);
         }
 
         public bool ApplicabilityTest(ObjectGeneration o)

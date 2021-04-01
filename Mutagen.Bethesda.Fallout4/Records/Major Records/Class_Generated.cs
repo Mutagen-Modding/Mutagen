@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IClassGetter.Name => this.Name;
@@ -677,6 +680,9 @@ namespace Mutagen.Bethesda.Fallout4
         INamed,
         INamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new String Description { get; set; }
         new String? Icon { get; set; }
@@ -702,7 +708,12 @@ namespace Mutagen.Bethesda.Fallout4
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         String Description { get; }
         String? Icon { get; }
         IPropertiesGetter? Properties { get; }

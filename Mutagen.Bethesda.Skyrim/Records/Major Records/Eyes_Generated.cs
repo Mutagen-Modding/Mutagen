@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IEyesGetter.Name => this.Name;
         #region Aspects
@@ -551,6 +554,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new TranslatedString Name { get; set; }
         new String Icon { get; set; }
         new Eyes.Flag Flags { get; set; }
@@ -576,7 +582,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Eyes_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         ITranslatedStringGetter Name { get; }
+        #endregion
         String Icon { get; }
         Eyes.Flag Flags { get; }
 

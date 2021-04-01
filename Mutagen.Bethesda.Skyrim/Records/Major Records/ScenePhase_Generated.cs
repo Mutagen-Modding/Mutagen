@@ -41,6 +41,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IScenePhaseGetter.Name => this.Name;
@@ -792,6 +795,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IScenePhaseGetter
     {
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new ExtendedList<Condition> StartConditions { get; }
         new ExtendedList<Condition> CompletionConditions { get; }
@@ -815,7 +821,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScenePhase_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         IReadOnlyList<IConditionGetter> StartConditions { get; }
         IReadOnlyList<IConditionGetter> CompletionConditions { get; }
         IScenePhaseUnusedDataGetter? Unused { get; }

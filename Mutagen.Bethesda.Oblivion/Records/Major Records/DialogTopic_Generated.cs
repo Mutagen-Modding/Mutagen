@@ -57,6 +57,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IDialogTopicGetter.Name => this.Name;
@@ -793,6 +796,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal
     {
         new ExtendedList<IFormLinkGetter<IQuestGetter>> Quests { get; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
         new Int32 Timestamp { get; set; }
@@ -818,7 +824,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         static new ILoquiRegistration Registration => DialogTopic_Registration.Instance;
         IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         DialogType? DialogType { get; }
         Int32 Timestamp { get; }
         IReadOnlyList<IDialogItemGetter> Items { get; }

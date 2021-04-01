@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -68,6 +71,9 @@ namespace Mutagen.Bethesda.Oblivion
         IFormLinkNullableGetter<IScriptGetter> ILightGetter.Script => this.Script;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILightGetter.Name => this.Name;
@@ -701,8 +707,14 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new LightData? Data { get; set; }
@@ -729,9 +741,19 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Light_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamed
+        /// </summary>
         String? Name { get; }
+        #endregion
         String? Icon { get; }
         ILightDataGetter? Data { get; }
         Single? Fade { get; }
