@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
     {

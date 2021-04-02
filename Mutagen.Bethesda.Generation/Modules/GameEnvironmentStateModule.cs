@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Binary;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     public class GameEnvironmentStateModule : GenerationModule
     {
@@ -16,7 +17,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task PreLoad(ObjectGeneration obj)
         {
-            if (obj.GetObjectType() == Binary.ObjectType.Mod)
+            if (obj.GetObjectType() == ObjectType.Mod)
             {
                 mods.Add(obj);
             }

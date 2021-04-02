@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Plugin;
+using Mutagen.Bethesda.Generation.Modules;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 using System;
 using System.IO;
 using System.Linq;

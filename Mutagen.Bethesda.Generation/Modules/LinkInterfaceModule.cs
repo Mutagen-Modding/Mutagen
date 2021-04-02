@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     public class LinkInterfaceModule : GenerationModule
     {

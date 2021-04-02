@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class CorrectnessModule : GenerationModule
     {

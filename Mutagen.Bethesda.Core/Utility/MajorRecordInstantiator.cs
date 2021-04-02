@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda
 {    
     /// <summary>
     /// A static class encapsulating the job of creating a new Major Record in a generic context

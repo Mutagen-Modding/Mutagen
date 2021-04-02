@@ -7,11 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Net.WebSockets;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     {

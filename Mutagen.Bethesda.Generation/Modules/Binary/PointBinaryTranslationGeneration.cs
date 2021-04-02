@@ -7,7 +7,7 @@ using System.Xml.Linq;
 using Loqui.Generation;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class PointBinaryTranslationGeneration<T> : PrimitiveBinaryTranslationGeneration<T>
     {

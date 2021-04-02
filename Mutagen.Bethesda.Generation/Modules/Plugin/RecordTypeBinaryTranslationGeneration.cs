@@ -5,10 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class RecordTypeBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RecordType>
     {

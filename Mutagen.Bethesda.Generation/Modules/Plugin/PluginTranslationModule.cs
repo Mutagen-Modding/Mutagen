@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Strings;
 using Noggog;
@@ -12,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Plugin
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class PluginTranslationModule : BinaryTranslationModule
     {

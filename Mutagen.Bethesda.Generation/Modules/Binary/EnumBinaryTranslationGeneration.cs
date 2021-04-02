@@ -7,10 +7,9 @@ using System.Linq;
 using System.Text;
 using Noggog;
 using System.Threading.Tasks;
-using Mutagen.Bethesda.Internals;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     {

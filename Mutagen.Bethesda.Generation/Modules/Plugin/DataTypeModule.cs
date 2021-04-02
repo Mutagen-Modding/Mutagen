@@ -1,12 +1,13 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class DataTypeModule : GenerationModule
     {

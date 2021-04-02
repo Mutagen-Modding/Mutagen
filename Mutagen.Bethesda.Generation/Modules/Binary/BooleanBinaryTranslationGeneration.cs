@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
-using Microsoft.VisualBasic.CompilerServices;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<bool>
     {

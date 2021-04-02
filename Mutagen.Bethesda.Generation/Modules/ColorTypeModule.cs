@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     public class ColorTypeModule : GenerationModule
     {

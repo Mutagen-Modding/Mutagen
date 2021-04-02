@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class ByteBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<byte>
     {

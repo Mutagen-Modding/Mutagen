@@ -10,7 +10,7 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     public class RecordTypeConverterModule : GenerationModule
     {

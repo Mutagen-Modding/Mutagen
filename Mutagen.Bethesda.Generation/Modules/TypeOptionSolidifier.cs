@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Noggog;
+using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     /// <summary>
     /// One of the harder parts to offer via natural intellisense is informing all the viable options
@@ -25,7 +26,7 @@ namespace Mutagen.Bethesda.Generation
             bool generate = false;
             FileGeneration fg = new FileGeneration();
 
-            var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == Binary.ObjectType.Mod);
+            var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
             fg.AppendLine("using System.Collections.Generic;");
             fg.AppendLine("using Mutagen.Bethesda.Internals;");

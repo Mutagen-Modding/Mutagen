@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules;
 
 namespace Mutagen.Bethesda.Generation
 {

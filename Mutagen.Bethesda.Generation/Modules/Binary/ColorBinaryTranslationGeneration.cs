@@ -5,7 +5,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Color>
     {

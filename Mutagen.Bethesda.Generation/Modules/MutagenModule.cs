@@ -9,8 +9,10 @@ using System.Xml.Linq;
 using Noggog;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Generation.Modules.Binary;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules
 {
     public class MutagenModule : GenerationModule
     {

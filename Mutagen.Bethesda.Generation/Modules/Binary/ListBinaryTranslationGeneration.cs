@@ -8,10 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Mutagen.Bethesda.Internals;
-using System.Buffers.Binary;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public enum ListBinaryType
     {
