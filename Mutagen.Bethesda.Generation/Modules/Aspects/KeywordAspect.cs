@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 ret.Add((LoquiInterfaceDefinitionType.ISetter, nameof(IKeywordCommon)));
                 return ret;
             };
+            IdentifyFields = null!;
         }
 
         public static bool ApplicabilityTest(ObjectGeneration o)

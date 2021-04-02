@@ -136,12 +136,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     }
                 })
             };
-            IdentifyFields = (o) =>
-            {
-                return o.IterateFields(includeBaseClass: true)
-                .Where(x => x.Name == "Name")
-                .OfType<StringType>();
-            };
         }
 
         public static bool ApplicabilityTest(ObjectGeneration o)

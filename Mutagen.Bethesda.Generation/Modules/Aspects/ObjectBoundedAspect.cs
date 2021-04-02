@@ -49,10 +49,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     fg.AppendLine("IObjectBoundsGetter? IObjectBoundedOptionalGetter.ObjectBounds => this.ObjectBounds;");
                 })
             };
-            IdentifyFields = (o) => o.Fields
-                .Where(x => x.Name == "ObjectBounds")
-                .OfType<LoquiType>()
-                .Where(x => x.TargetObjectGeneration.Name == "ObjectBounds");
         }
 
         public static bool ApplicabilityTest(ObjectGeneration o)

@@ -23,13 +23,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 (LoquiInterfaceDefinitionType.ISetter, interfaceType),
             };
             IdentifyFields = (o) =>
-            {
-                return from f in Fields
-                       join field in o.IterateFields(includeBaseClass: true)
-                         on f.FieldName equals field.Name
-                       where field.TypeName(getter: true) != f.TypeName
-                       select field;
-            };
+                from f in Fields
+                join field in o.IterateFields(includeBaseClass: true)
+                    on f.FieldName equals field.Name
+                where field.TypeName(getter: true) != f.TypeName
+                select field;
         }
 
         public bool ApplicabilityTest(ObjectGeneration o)

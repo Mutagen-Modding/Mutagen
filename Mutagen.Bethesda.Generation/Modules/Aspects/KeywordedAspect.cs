@@ -29,10 +29,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 })
             };
-            IdentifyFields = (o) => o.Fields
-                .Where(x => x.Name == "Keywords")
-                .OfType<ContainerType>()
-                .Where(x => x.SubTypeGeneration.GetType() == typeof(FormLinkType));
         }
 
         private static bool ApplicabilityTest(ObjectGeneration o)
