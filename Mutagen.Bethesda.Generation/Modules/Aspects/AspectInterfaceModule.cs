@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
     public class AspectInterfaceModule : GenerationModule
     {
-        public List<AspectInterfaceDefinition> Definitions = new List<AspectInterfaceDefinition>();
+        public List<AspectInterfaceDefinition> Definitions = new();
         public static readonly Dictionary<ProtocolKey, Dictionary<AspectInterfaceDefinition, List<ObjectGeneration>>> ObjectMappings = new();
 
         public AspectInterfaceModule()
@@ -32,13 +32,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         public override async Task LoadWrapup(ObjectGeneration obj)
         {
             await obj.GetObjectData().WiringComplete.Task;
+            var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
             foreach (var def in Definitions)
             {
-                if (!def.Test(obj)) continue;
-                if (def.Interfaces != null)
-                {
-                    def.Interfaces(obj).ForEach(x => obj.Interfaces.Add(x.Type, x.Interface));
-                }
+                if (!def.Test(obj, allFields)) continue;
+                def.Interfaces(obj).ForEach(x => obj.Interfaces.Add(x.Type, x.Interface));
                 lock (ObjectMappings)
                 {
                     ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).Add(obj);
@@ -46,7 +44,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             }
         }
 
-        public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration typeGeneration, FileGeneration fg, LoquiInterfaceType type)
+        public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, FileGeneration fg, LoquiInterfaceType type)
         {
             using (new RegionWrapper(fg, "Aspects")
             {
@@ -54,12 +52,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 SkipIfOnlyOneLine = true,
             })
             {
-                foreach (var def in Definitions)
+                var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
+                foreach (var def in Definitions.OfType<AspectFieldInterfaceDefinition>())
                 {
-                    if (!def.Test(obj)) continue;
+                    if (!def.Test(obj, allFields)) continue;
                     def.FieldActions
-                        .Where(x => x.Type == type && typeGeneration.Name == x.Name)
-                        .ForEach(x => x.Actions(obj, fg));
+                        .Where(x => x.Type == type && tg.Name == x.Name)
+                        .ForEach(x => x.Actions(obj, tg, fg));
                 }
             }
         }
@@ -69,17 +68,18 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             Dictionary<LoquiInterfaceDefinitionType, HashSet<string>>? aspects = null;
             Dictionary<string, (TypeGeneration type, Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects)>? fieldsToAspects = null;
 
+            var allFields = obj.IterateFields(includeBaseClass: true).ToDictionary(x => x.Name);
+
             foreach (var def in Definitions)
-                if (def.Interfaces is not null)
-                    if (def.Test(obj))
-                    {
-                        var interfaces = def.Interfaces(obj);
-                        if (def.IdentifyFields is not null)
-                            foreach (var f in def.IdentifyFields(obj))
-                                RecordAspects((fieldsToAspects ??= new()).GetOrAdd(f.Name, () => new(f, new())).aspects, interfaces);
-                        else
-                            RecordAspects(aspects ??= new(), interfaces);
-                    }
+                if (def.Test(obj, allFields))
+                {
+                    var interfaces = def.Interfaces(obj);
+                    if (def is AspectFieldInterfaceDefinition fieldDef)
+                        foreach (var f in fieldDef.IdentifyFields(obj))
+                            RecordAspects((fieldsToAspects ??= new()).GetOrAdd(f.Name, () => new(f, new())).aspects, interfaces);
+                    else
+                        RecordAspects(aspects ??= new(), interfaces);
+                }
 
             if (aspects is not null)
                 AddAspectComment(aspects, obj.Comments ??= new());
@@ -89,23 +89,23 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     AddAspectComment(typeAspects, type.Comments ??= new());
         }
 
-        private static void RecordAspects(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, IEnumerable<(LoquiInterfaceDefinitionType Type, string Interface)> interfaces)
+        private static void RecordAspects(Dictionary<LoquiInterfaceDefinitionType, HashSet<string>> aspects, IEnumerable<AspectInterfaceData> interfaces)
         {
-            foreach (var (type, interfaceName) in interfaces)
+            foreach (var (type, _, escapedInterfaceName) in interfaces)
                 switch (type)
                 {
                     case LoquiInterfaceDefinitionType.Direct:
                     case LoquiInterfaceDefinitionType.IGetter:
-                        aspects.GetOrAdd(type).Add(interfaceName);
+                        aspects.GetOrAdd(type).Add(escapedInterfaceName);
                         break;
                     case LoquiInterfaceDefinitionType.ISetter:
-                        aspects.GetOrAdd(type).Add(interfaceName);
-                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(interfaceName);
+                        aspects.GetOrAdd(type).Add(escapedInterfaceName);
+                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterfaceName);
                         break;
                     case LoquiInterfaceDefinitionType.Dual:
-                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(interfaceName);
-                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.ISetter).Add(interfaceName);
-                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.IGetter).Add(interfaceName);
+                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.Direct).Add(escapedInterfaceName);
+                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.ISetter).Add(escapedInterfaceName);
+                        aspects.GetOrAdd(LoquiInterfaceDefinitionType.IGetter).Add(escapedInterfaceName);
                         break;
                     default:
                         break;
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 });
                 if (!summary.Empty)
                     summary.AppendLine("<br />");
-                summary.AppendLine("Aspects: " + string.Join(", ", item.Value.OrderBy(x => x).Select(x => x.Replace("<", "&lt;").Replace(">", "&gt;"))));
+                summary.AppendLine("Aspects: " + string.Join(", ", item.Value.OrderBy(x => x)));
             }
         }
     }

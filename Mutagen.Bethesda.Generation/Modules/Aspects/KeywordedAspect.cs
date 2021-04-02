@@ -1,3 +1,4 @@
+using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
@@ -7,34 +8,38 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
-    public class KeywordedAspect : AspectInterfaceDefinition
+    public class KeywordedAspect : AspectFieldInterfaceDefinition
     {
         public KeywordedAspect()
-            : base("IKeyworded", ApplicabilityTest)
+            : base("IKeyworded")
         {
-            Interfaces = (o) => new List<(LoquiInterfaceDefinitionType Type, string Interface)>()
+            FieldActions = new()
             {
-                (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
-                (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
-            };
-            FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, Loqui.FileGeneration> Actions)>()
-            {
-                (LoquiInterfaceType.Direct, "Keywords", (o, fg) =>
+                (LoquiInterfaceType.Direct, "Keywords", (o, tg, fg) =>
                 {
                     fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? IKeywordedGetter<IKeywordGetter>.Keywords => this.Keywords;");
                     fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 }),
-                (LoquiInterfaceType.IGetter, "Keywords", (o, fg) =>
+                (LoquiInterfaceType.IGetter, "Keywords", (o, tg, fg) =>
                 {
                     fg.AppendLine("IReadOnlyList<IFormLinkGetter<IKeywordCommonGetter>>? IKeywordedGetter.Keywords => this.Keywords;");
                 })
             };
         }
 
-        private static bool ApplicabilityTest(ObjectGeneration o)
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
+            .TryGetValue("Keywords", out var field)
+            && field is ContainerType cont
+            && typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
+
+        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
         {
-            if (o.Fields.FirstOrDefault(x => x.Name == "Keywords") is not ContainerType cont) return false;
-            return typeof(FormLinkType).Equals(cont.SubTypeGeneration.GetType());
+            return new List<AspectInterfaceData>()
+            {
+                (LoquiInterfaceDefinitionType.IGetter, $"IKeywordedGetter<IKeywordGetter>"),
+                (LoquiInterfaceDefinitionType.ISetter, $"IKeyworded<IKeywordGetter>"),
+            };
         }
+
     }
 }
