@@ -433,6 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionMap :
+        IHasIcons,
         ILoquiObjectSetter<IRegionMap>,
         INamed,
         INamedRequired,
@@ -450,6 +451,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionMapGetter :
         IRegionDataGetter,
         IBinaryItem,
+        IHasIconsGetter,
         ILoquiObject<IRegionMapGetter>,
         INamedGetter,
         INamedRequiredGetter,

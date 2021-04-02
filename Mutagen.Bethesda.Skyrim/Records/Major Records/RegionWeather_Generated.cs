@@ -492,6 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionWeather :
         IFormLinkContainer,
+        IHasIcons,
         ILoquiObjectSetter<IRegionWeather>,
         IRegionData,
         IRegionWeatherGetter
@@ -503,6 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasIconsGetter,
         ILoquiObject<IRegionWeatherGetter>
     {
         static new ILoquiRegistration Registration => RegionWeather_Registration.Instance;

@@ -492,6 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionObjects :
         IFormLinkContainer,
+        IHasIcons,
         ILoquiObjectSetter<IRegionObjects>,
         IRegionData,
         IRegionObjectsGetter
@@ -503,6 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasIconsGetter,
         ILoquiObject<IRegionObjectsGetter>
     {
         static new ILoquiRegistration Registration => RegionObjects_Registration.Instance;
