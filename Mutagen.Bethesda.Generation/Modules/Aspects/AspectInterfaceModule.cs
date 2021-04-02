@@ -69,11 +69,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             foreach (var def in Definitions)
                 if (def.Test(obj) && def.IdentifyFields is not null)
                     foreach (var f in def.IdentifyFields(obj))
-                    {
-                        if (!(fieldsToAspects ??= new()).TryGetValue(f, out var list))
-                            fieldsToAspects[f] = list = new();
-                        list.Add(def.Name);
-                    }
+                        (fieldsToAspects ??= new()).GetOrAdd(f).Add(def.Name);
 
             if (fieldsToAspects is null) return;
             foreach (var f in fieldsToAspects)
