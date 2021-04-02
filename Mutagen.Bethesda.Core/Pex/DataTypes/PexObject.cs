@@ -18,13 +18,13 @@ namespace Mutagen.Bethesda.Pex
              * the size of itself thus the - sizeof(uint)
              */
             var size = parse.Reader.ReadUInt32() - sizeof(uint);
-            var currentPos = parse.Reader.BaseStream.Position;
+            var currentPos = parse.Reader.Position;
 
             ret.ParentClassName = parse.ReadString();
             ret.DocString = parse.ReadString();
 
             if (parse.Category == GameCategory.Fallout4)
-                ret.IsConst = parse.Reader.ReadBoolean();
+                ret.IsConst = parse.Reader.ReadBool();
 
             ret.RawUserFlags = parse.Reader.ReadUInt32();
             ret.AutoStateName = parse.ReadString();
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Pex
                 ret.States.Add(state);
             }
 
-            var newPos = parse.Reader.BaseStream.Position;
+            var newPos = parse.Reader.Position;
             if (newPos != currentPos + size)
                 throw new InvalidDataException("Current position in Stream does not match expected position: " +
                                               $"Current: {newPos} Expected: {currentPos + size}");
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Pex
             ret.TypeName = parse.ReadString();
             ret.RawUserFlags = parse.Reader.ReadUInt32();
             ret.Value = PexObjectVariableData.Create(parse);
-            ret.IsConst = parse.Reader.ReadBoolean();
+            ret.IsConst = parse.Reader.ReadBool();
             ret.DocString = parse.ReadString();
             return ret;
         }
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Pex
         internal static PexObjectVariableData Create(PexParseMeta parse)
         {
             var ret = new PexObjectVariableData();
-            ret.VariableType = (VariableType)parse.Reader.ReadByte();
+            ret.VariableType = (VariableType)parse.Reader.ReadUInt8();
             switch (ret.VariableType)
             {
                 case VariableType.Null:
@@ -218,11 +218,11 @@ namespace Mutagen.Bethesda.Pex
                     ret.IntValue = parse.Reader.ReadInt32();
                     break;
                 case VariableType.Float:
-                    ret.FloatValue = parse.Reader.ReadSingle();
+                    ret.FloatValue = parse.Reader.ReadFloat();
                     break;
                 case VariableType.Bool:
                     //TODO: use ReadByte instead?
-                    ret.BoolValue = parse.Reader.ReadBoolean();
+                    ret.BoolValue = parse.Reader.ReadBool();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -266,7 +266,7 @@ namespace Mutagen.Bethesda.Pex
             ret.DocString = parse.ReadString();
             ret.RawUserFlags = parse.Reader.ReadUInt32();
 
-            var flags = parse.Reader.ReadByte();
+            var flags = parse.Reader.ReadUInt8();
             ret.Flags = (PropertyFlags)flags;
 
             if ((flags & 4) != 0)
@@ -365,7 +365,7 @@ namespace Mutagen.Bethesda.Pex
             ret.ReturnTypeName = parse.ReadString();
             ret.DocString = parse.ReadString();
             ret.RawUserFlags = parse.Reader.ReadUInt32();
-            ret.Flags = (FunctionFlags)parse.Reader.ReadByte();
+            ret.Flags = (FunctionFlags)parse.Reader.ReadUInt8();
 
             var parameters = parse.Reader.ReadUInt16();
             for (var i = 0; i < parameters; i++)
@@ -439,7 +439,7 @@ namespace Mutagen.Bethesda.Pex
         internal static PexObjectFunctionInstruction Create(PexParseMeta parse)
         {
             var ret = new PexObjectFunctionInstruction();
-            ret.OpCode = (InstructionOpcode)parse.Reader.ReadByte();
+            ret.OpCode = (InstructionOpcode)parse.Reader.ReadUInt8();
 
             var arguments = InstructionOpCodeArguments.GetArguments(ret.OpCode);
             foreach (var current in arguments)

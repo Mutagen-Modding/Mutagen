@@ -164,14 +164,12 @@
     <Compile Include="Pex\Enums\InstructionOpcode.cs" />
     <Compile Include="Pex\Enums\PropertyFlags.cs" />
     <Compile Include="Pex\Enums\VariableType.cs" />
-    <Compile Include="Pex\Extensions\BinaryReaderExtensions.cs" />
     <Compile Include="Pex\Extensions\BinaryWriterExtensions.cs" />
     <Compile Include="Pex\Extensions\NumericExtensions.cs" />
     <Compile Include="Pex\Interfaces\IBinaryObject.cs" />
     <Compile Include="Pex\Interfaces\IHasUserFlag.cs" />
     <Compile Include="Pex\PexMixIn.cs" />
     <Compile Include="Pex\PexParseMeta.cs" />
-    <Compile Include="Pex\PexReader.cs" />
     <Compile Include="Pex\PexUtils.cs" />
     <Compile Include="Pex\PexWriteMeta.cs" />
     <Compile Include="Pex\PexWriter.cs" />

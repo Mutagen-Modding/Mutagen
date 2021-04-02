@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Pex
             ret.StateName = parse.ReadString();
             ret.FunctionName = parse.ReadString();
 
-            ret.FunctionType = (DebugFunctionType)parse.Reader.ReadByte();
+            ret.FunctionType = (DebugFunctionType)parse.Reader.ReadUInt8();
 
             var instructionCount = parse.Reader.ReadUInt16();
             for (var i = 0; i < instructionCount; i++)

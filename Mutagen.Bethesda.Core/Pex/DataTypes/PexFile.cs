@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Noggog;
+using Mutagen.Bethesda.Binary;
 
 namespace Mutagen.Bethesda.Pex
 {
@@ -18,19 +19,19 @@ namespace Mutagen.Bethesda.Pex
 
         private const uint PexMagic = 0xFA57C0DE;
 
-        private static void Read(PexFile file, BinaryReader br)
+        private static void Read(PexFile file, IBinaryReadStream br)
         {
             var magic = br.ReadUInt32();
             if (magic != PexMagic)
                 throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {magic:x8}");
 
-            file.MajorVersion = br.ReadByte();
-            file.MinorVersion = br.ReadByte();
+            file.MajorVersion = br.ReadUInt8();
+            file.MinorVersion = br.ReadUInt8();
             file.GameId = br.ReadUInt16();
             file.CompilationTime = br.ReadUInt64().ToDateTime();
-            file.SourceFileName = br.ReadString();
-            file.Username = br.ReadString();
-            file.MachineName = br.ReadString();
+            file.SourceFileName = br.ReadPrependedString(2);
+            file.Username = br.ReadPrependedString(2);
+            file.MachineName = br.ReadPrependedString(2);
 
             var stringsCount = br.ReadUInt16();
 
@@ -40,10 +41,10 @@ namespace Mutagen.Bethesda.Pex
                 new Dictionary<ushort, string>());
             for (var i = 0; i < stringsCount; i++)
             {
-                bundle.Strings.Add((ushort)i, br.ReadString());
+                bundle.Strings.Add((ushort)i, br.ReadPrependedString(2));
             }
 
-            var hasDebugInfo = bundle.Reader.ReadByte() == 1;
+            var hasDebugInfo = bundle.Reader.ReadUInt8() == 1;
             if (hasDebugInfo)
             {
                 file.DebugInfo = Mutagen.Bethesda.Pex.DebugInfo.Create(bundle);
@@ -53,7 +54,7 @@ namespace Mutagen.Bethesda.Pex
             for (var i = 0; i < userFlagCount; i++)
             {
                 var str = bundle.ReadString();
-                file.UserFlags[br.ReadByte()] = str;
+                file.UserFlags[br.ReadUInt8()] = str;
             }
 
             var objectCount = br.ReadUInt16();
@@ -130,7 +131,7 @@ namespace Mutagen.Bethesda.Pex
 
         public static PexFile CreateFromStream(Stream stream, GameCategory gameCategory)
         {
-            using var br = new PexReader(stream, Encoding.UTF8, gameCategory.IsBigEndian());
+            using var br = new BinaryReadStream(stream, isLittleEndian: !gameCategory.IsBigEndian());
 
             //https://en.uesp.net/wiki/Skyrim_Mod:Compiled_Script_File_Format
             var pexFile = new PexFile(gameCategory);

@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ namespace Mutagen.Bethesda.Pex
 {
     internal record PexParseMeta(
         GameCategory Category,
-        BinaryReader Reader,
+        IBinaryReadStream Reader,
         Dictionary<ushort, string> Strings)
     {
         public string ReadString()
