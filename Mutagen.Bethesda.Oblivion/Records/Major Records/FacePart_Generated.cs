@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
         Race.FaceIndex? Index { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

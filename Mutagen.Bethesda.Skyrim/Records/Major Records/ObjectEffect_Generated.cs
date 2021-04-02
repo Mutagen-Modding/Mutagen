@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1008,11 +1008,11 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new UInt32 EnchantmentCost { get; set; }
@@ -1052,13 +1052,13 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => ObjectEffect_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion

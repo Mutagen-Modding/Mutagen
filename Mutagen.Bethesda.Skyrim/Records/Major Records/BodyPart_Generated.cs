@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IBodyPartGetter.Name => this.Name;
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString Name { get; set; }
         new String? PoseMatching { get; set; }
@@ -1545,7 +1545,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => BodyPart_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter Name { get; }
         #endregion

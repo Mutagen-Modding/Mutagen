@@ -47,9 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -449,9 +447,7 @@ namespace Mutagen.Bethesda.Oblivion
         ISpellRecord
     {
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
     }
@@ -478,9 +474,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Spell_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

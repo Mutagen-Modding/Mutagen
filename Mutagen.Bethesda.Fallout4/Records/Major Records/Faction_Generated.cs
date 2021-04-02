@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1304,7 +1304,7 @@ namespace Mutagen.Bethesda.Fallout4
         IRelatable
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
@@ -1346,7 +1346,7 @@ namespace Mutagen.Bethesda.Fallout4
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

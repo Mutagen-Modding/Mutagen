@@ -511,7 +511,7 @@ namespace Mutagen.Bethesda.Skyrim
         IDestructionStageDataGetter? Data { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

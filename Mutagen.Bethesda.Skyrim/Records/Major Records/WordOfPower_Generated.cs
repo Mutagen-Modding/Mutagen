@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -533,7 +533,7 @@ namespace Mutagen.Bethesda.Skyrim
         IWordOfPowerGetter
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Translation { get; set; }
@@ -559,7 +559,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => WordOfPower_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion

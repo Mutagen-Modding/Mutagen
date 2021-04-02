@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -607,7 +607,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IFormLinkNullable<ISoundDescriptorGetter> AmbientSound { get; }
@@ -634,7 +634,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => AcousticSpace_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion

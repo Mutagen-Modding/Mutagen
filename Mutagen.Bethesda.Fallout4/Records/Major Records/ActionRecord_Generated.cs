@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -620,7 +620,7 @@ namespace Mutagen.Bethesda.Fallout4
         new ActionRecord.TypeEnum? Type { get; set; }
         new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
     }
@@ -649,7 +649,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

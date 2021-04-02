@@ -269,7 +269,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -2763,11 +2763,11 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<LocationCellEnablePoint>? ActorCellEnablePoint { get; set; }
         new ExtendedList<LocationCellEnablePoint>? LocationCellEnablePoint { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new IFormLinkNullable<ILocationGetter> ParentLocation { get; }
@@ -2818,13 +2818,13 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ILocationCellEnablePointGetter>? LocationCellEnablePoint { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion

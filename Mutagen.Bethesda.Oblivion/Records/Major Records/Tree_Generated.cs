@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Tree_Registration.Instance;
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

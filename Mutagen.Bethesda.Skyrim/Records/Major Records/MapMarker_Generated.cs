@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -516,7 +516,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new MapMarker.Flag Flags { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new MapMarker.MarkerType Type { get; set; }
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         MapMarker.Flag Flags { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion

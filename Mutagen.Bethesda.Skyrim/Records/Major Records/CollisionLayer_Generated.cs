@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
@@ -716,7 +716,7 @@ namespace Mutagen.Bethesda.Skyrim
         new Color DebugColor { get; set; }
         new CollisionLayer.Flag Flags { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
         new ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; set; }
@@ -744,7 +744,7 @@ namespace Mutagen.Bethesda.Skyrim
         CollisionLayer.Flag Flags { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequiredGetter
         /// </summary>
         String Name { get; }
         #endregion

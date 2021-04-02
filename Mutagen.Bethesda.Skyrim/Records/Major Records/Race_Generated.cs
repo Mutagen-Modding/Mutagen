@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -4010,7 +4010,7 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
@@ -4018,7 +4018,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<IArmorGetter> Skin { get; }
         new BodyTemplate? BodyTemplate { get; set; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new SkillBoost SkillBoost0 { get; set; }
@@ -4128,7 +4128,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
@@ -4138,7 +4138,7 @@ namespace Mutagen.Bethesda.Skyrim
         IBodyTemplateGetter? BodyTemplate { get; }
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion

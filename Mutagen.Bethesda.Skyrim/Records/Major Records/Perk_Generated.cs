@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new PerkAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
@@ -1150,14 +1150,14 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
         ITranslatedStringGetter Description { get; }
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion

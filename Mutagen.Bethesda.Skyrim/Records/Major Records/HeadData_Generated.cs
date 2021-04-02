@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<ITintAssetsGetter> TintMasks { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -2313,7 +2313,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new TranslatedString Description { get; set; }
@@ -2321,7 +2321,7 @@ namespace Mutagen.Bethesda.Fallout4
         new IFormLinkNullable<IArmorGetter> Skin { get; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Properties? Properties { get; set; }
@@ -2394,7 +2394,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion
@@ -2404,7 +2404,7 @@ namespace Mutagen.Bethesda.Fallout4
         IBipedBodyTemplateGetter? BipedBodyTemplate { get; }
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion

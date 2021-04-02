@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -1325,15 +1325,15 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         /// <summary>
@@ -1388,37 +1388,37 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Ingredient_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion

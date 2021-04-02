@@ -3266,7 +3266,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
         #region VirtualMachineAdapter
         /// <summary>
-        /// Aspects: IScripted
+        /// Aspects: IScriptedGetter
         /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
         #endregion

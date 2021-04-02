@@ -496,7 +496,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataHeaderGetter? Header { get; }
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion

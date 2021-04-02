@@ -498,7 +498,7 @@ namespace Mutagen.Bethesda.Skyrim
         BodyData.PartIndex? Index { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

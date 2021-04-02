@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -734,7 +734,7 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
         /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
@@ -771,7 +771,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
         /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
         #endregion
@@ -780,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

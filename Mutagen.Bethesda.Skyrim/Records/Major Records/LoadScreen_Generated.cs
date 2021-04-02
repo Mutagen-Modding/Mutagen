@@ -895,7 +895,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion

@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new Color? HavokDisplayColor { get; set; }
@@ -690,7 +690,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMaterialTypeGetter> Parent { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

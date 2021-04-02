@@ -29,6 +29,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial class Keyword :
         Fallout4MajorRecord,
         IEquatable<IKeywordGetter>,
@@ -70,7 +73,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -657,6 +660,9 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial interface IKeyword :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -674,7 +680,7 @@ namespace Mutagen.Bethesda.Fallout4
         new Keyword.TypeEnum? Type { get; set; }
         new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
@@ -687,6 +693,9 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
+    /// <summary>
+    /// Aspects: IKeywordCommonGetter
+    /// </summary>
     public partial interface IKeywordGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
@@ -707,7 +716,7 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion

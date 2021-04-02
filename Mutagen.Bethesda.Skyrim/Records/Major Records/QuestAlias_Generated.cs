@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -1840,7 +1840,7 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
@@ -1855,7 +1855,7 @@ namespace Mutagen.Bethesda.Skyrim
         new FindMatchingRefFromEvent? FindMatchingRefFromEvent { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
@@ -1890,7 +1890,7 @@ namespace Mutagen.Bethesda.Skyrim
         QuestAlias.TypeEnum Type { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion
@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IConditionGetter> Conditions { get; }
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion

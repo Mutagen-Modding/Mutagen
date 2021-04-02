@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Oblivion
         static ILoquiRegistration Registration => BodyData_Registration.Instance;
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

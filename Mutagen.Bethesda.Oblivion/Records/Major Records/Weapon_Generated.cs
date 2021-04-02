@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -708,7 +708,7 @@ namespace Mutagen.Bethesda.Oblivion
         IWeaponGetter
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         /// <summary>
@@ -743,13 +743,13 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Weapon_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

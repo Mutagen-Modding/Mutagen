@@ -44,14 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -481,14 +474,7 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired
     {
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new APackageData.Flag? Flags { get; set; }
@@ -514,14 +500,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => APackageData_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

@@ -631,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => BodyPartData_Registration.Instance;
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

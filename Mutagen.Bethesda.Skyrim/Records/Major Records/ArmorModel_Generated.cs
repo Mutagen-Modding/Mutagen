@@ -522,13 +522,13 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ArmorModel_Registration.Instance;
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion

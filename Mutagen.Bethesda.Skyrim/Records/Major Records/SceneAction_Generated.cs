@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new SceneAction.TypeEnum Type { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new Int32? ActorID { get; set; }
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim
         SceneAction.TypeEnum Type { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

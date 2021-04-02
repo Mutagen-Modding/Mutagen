@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
@@ -1749,7 +1749,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPhonemeGetter
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
         new Single IY { get; set; }
@@ -1812,7 +1812,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => Phoneme_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequiredGetter
         /// </summary>
         String Name { get; }
         #endregion

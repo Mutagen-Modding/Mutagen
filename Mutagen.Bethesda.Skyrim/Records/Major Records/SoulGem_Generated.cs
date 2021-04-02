@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ObjectBounds? _ObjectBounds;
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedOptional
         /// </summary>
         public ObjectBounds? ObjectBounds
         {
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -167,7 +167,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
@@ -1116,11 +1116,11 @@ namespace Mutagen.Bethesda.Skyrim
         IWeightValue
     {
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedOptional
         /// </summary>
         new ObjectBounds? ObjectBounds { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
         /// </summary>
         new TranslatedString? Name { get; set; }
         /// <summary>
@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim
         new IFormLinkNullable<ISoundDescriptorGetter> PickUpSound { get; }
         new IFormLinkNullable<ISoundDescriptorGetter> PutDownSound { get; }
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
         /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new UInt32 Value { get; set; }
@@ -1178,25 +1178,25 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => SoulGem_Registration.Instance;
         #region ObjectBounds
         /// <summary>
-        /// Aspects: IObjectBounded
+        /// Aspects: IObjectBoundedOptionalGetter
         /// </summary>
         IObjectBoundsGetter? ObjectBounds { get; }
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
         /// </summary>
         ITranslatedStringGetter? Name { get; }
         #endregion
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
         #region Icons
         /// <summary>
-        /// Aspects: IHasIcons
+        /// Aspects: IHasIconsGetter
         /// </summary>
         IIconsGetter? Icons { get; }
         #endregion
@@ -1205,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<ISoundDescriptorGetter> PutDownSound { get; }
         #region Keywords
         /// <summary>
-        /// Aspects: IKeyworded
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
         /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
         #endregion

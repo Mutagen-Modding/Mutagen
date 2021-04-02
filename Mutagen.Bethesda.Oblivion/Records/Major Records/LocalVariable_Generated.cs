@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new LocalVariableData? Data { get; set; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
     }
@@ -499,7 +499,7 @@ namespace Mutagen.Bethesda.Oblivion
         ILocalVariableDataGetter? Data { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

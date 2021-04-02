@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -797,7 +797,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new ExtendedList<IFormLinkGetter<IQuestGetter>> Quests { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new DialogType? DialogType { get; set; }
@@ -826,7 +826,7 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IFormLinkGetter<IQuestGetter>> Quests { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

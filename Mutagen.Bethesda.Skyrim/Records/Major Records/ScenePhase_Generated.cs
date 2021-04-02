@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -796,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScenePhaseGetter
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new ExtendedList<Condition> StartConditions { get; }
@@ -823,7 +823,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ScenePhase_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

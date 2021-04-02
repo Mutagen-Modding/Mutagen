@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim
         String? SunGlareTexture { get; }
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion

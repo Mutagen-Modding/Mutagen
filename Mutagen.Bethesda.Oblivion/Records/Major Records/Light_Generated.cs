@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -713,7 +713,7 @@ namespace Mutagen.Bethesda.Oblivion
         new Model? Model { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamed, INamedRequired
         /// </summary>
         new String? Name { get; set; }
         new String? Icon { get; set; }
@@ -743,14 +743,14 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Light_Registration.Instance;
         #region Model
         /// <summary>
-        /// Aspects: IModeled
+        /// Aspects: IModeledGetter
         /// </summary>
         IModelGetter? Model { get; }
         #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedGetter, INamedRequiredGetter
         /// </summary>
         String? Name { get; }
         #endregion

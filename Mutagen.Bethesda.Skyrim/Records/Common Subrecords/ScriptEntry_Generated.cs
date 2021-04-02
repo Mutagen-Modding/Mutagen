@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
@@ -571,7 +571,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptEntryGetter
     {
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
         new ScriptEntry.Flag Flags { get; set; }
@@ -594,7 +594,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ScriptEntry_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
+        /// Aspects: INamedRequiredGetter
         /// </summary>
         String Name { get; }
         #endregion

@@ -44,17 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
@@ -469,17 +459,7 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptPropertyGetter
     {
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamedRequired
         /// </summary>
         new String Name { get; set; }
         new ScriptProperty.Flag Flags { get; set; }
@@ -504,17 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => ScriptProperty_Registration.Instance;
         #region Name
         /// <summary>
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
-        /// Aspects: INamed
+        /// Aspects: INamedRequiredGetter
         /// </summary>
         String Name { get; }
         #endregion
