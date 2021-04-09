@@ -391,14 +391,21 @@ namespace Mutagen.Bethesda
             {
                 Parallel.ForEach(loList, (listing, state, modIndex) =>
                 {
-                    var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
-                    if (!File.Exists(modPath.Path))
+                    try
                     {
-                        results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
-                        return;
+                        var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
+                        if (!File.Exists(modPath.Path))
+                        {
+                            results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
+                            return;
+                        }
+                        var mod = factory(modPath);
+                        results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
                     }
-                    var mod = factory(modPath);
-                    results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
+                    catch (Exception ex)
+                    {
+                        RecordException.Factory(ex, listing.ModKey);
+                    }
                 });
                 return new LoadOrder<IModListing<TMod>>(results
                     .OrderBy(i => i.ModIndex)
