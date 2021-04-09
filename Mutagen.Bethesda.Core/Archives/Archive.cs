@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda
     public interface IArchiveReader
     {
         bool TryGetFolder(string path, [MaybeNullWhen(false)] out IArchiveFolder folder);
+        IEnumerable<IArchiveFile> Files { get; }
     }
 
     public static class Archive
