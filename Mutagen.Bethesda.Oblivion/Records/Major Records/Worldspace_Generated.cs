@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IWorldspaceGetter.Name => this.Name;
@@ -1100,6 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion
         IPlaceInternal,
         IWorldspaceGetter
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new IFormLinkNullable<IWorldspaceGetter> Parent { get; }
         new IFormLinkNullable<IClimateGetter> Climate { get; }
@@ -1135,7 +1141,12 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         IFormLinkNullableGetter<IWorldspaceGetter> Parent { get; }
         IFormLinkNullableGetter<IClimateGetter> Climate { get; }
         IFormLinkNullableGetter<IWaterGetter> Water { get; }

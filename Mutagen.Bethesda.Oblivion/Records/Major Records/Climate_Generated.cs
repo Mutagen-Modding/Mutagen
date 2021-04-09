@@ -69,6 +69,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -699,6 +702,9 @@ namespace Mutagen.Bethesda.Oblivion
         new ExtendedList<WeatherType>? Weathers { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new ClimateData? Data { get; set; }
     }
@@ -722,7 +728,12 @@ namespace Mutagen.Bethesda.Oblivion
         IReadOnlyList<IWeatherTypeGetter>? Weathers { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IClimateDataGetter? Data { get; }
 
     }

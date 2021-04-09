@@ -55,6 +55,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -907,6 +910,9 @@ namespace Mutagen.Bethesda.Oblivion
     {
         new String? TextureLowerLayer { get; set; }
         new String? TextureUpperLayer { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<WeatherColors>? Colors { get; set; }
         new FogDistance? FogDistance { get; set; }
@@ -933,7 +939,12 @@ namespace Mutagen.Bethesda.Oblivion
         static new ILoquiRegistration Registration => Weather_Registration.Instance;
         String? TextureLowerLayer { get; }
         String? TextureUpperLayer { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IReadOnlyList<IWeatherColorsGetter>? Colors { get; }
         IFogDistanceGetter? FogDistance { get; }
         IHDRDataGetter? HDRData { get; }

@@ -44,6 +44,9 @@ namespace Mutagen.Bethesda.Skyrim
         public SceneAction.TypeEnum Type { get; set; } = default;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ISceneActionGetter.Name => this.Name;
@@ -1066,6 +1069,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISceneActionGetter
     {
         new SceneAction.TypeEnum Type { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new Int32? ActorID { get; set; }
         new MemorySlice<Byte>? LNAM { get; set; }
@@ -1100,7 +1106,12 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => SceneAction_Registration.Instance;
         SceneAction.TypeEnum Type { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         Int32? ActorID { get; }
         ReadOnlyMemorySlice<Byte>? LNAM { get; }
         UInt32? Index { get; }

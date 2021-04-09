@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ILeveledItemGetter.ObjectBounds => ObjectBounds;
@@ -709,6 +712,9 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitTarget,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new Byte ChanceNone { get; set; }
         new LeveledItem.Flag Flags { get; set; }
@@ -736,7 +742,12 @@ namespace Mutagen.Bethesda.Skyrim
         IOutfitTargetGetter
     {
         static new ILoquiRegistration Registration => LeveledItem_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         Byte ChanceNone { get; }
         LeveledItem.Flag Flags { get; }
         IFormLinkNullableGetter<IGlobalGetter> Global { get; }

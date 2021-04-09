@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -3176,6 +3179,9 @@ namespace Mutagen.Bethesda.Skyrim
         IScripted,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<ISkyrimMajorRecordGetter> Base { get; }
         new P3Float? BoundHalfExtents { get; set; }
@@ -3258,7 +3264,12 @@ namespace Mutagen.Bethesda.Skyrim
         IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedObject_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IFormLinkNullableGetter<ISkyrimMajorRecordGetter> Base { get; }
         P3Float? BoundHalfExtents { get; }
         IPlacedPrimitiveGetter? Primitive { get; }

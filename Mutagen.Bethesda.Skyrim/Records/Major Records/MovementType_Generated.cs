@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMovementTypeGetter.Name => this.Name;
@@ -910,6 +913,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new Single LeftWalk { get; set; }
         new Single LeftRun { get; set; }
@@ -942,7 +948,12 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => MovementType_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         Single LeftWalk { get; }
         Single LeftRun { get; }
         Single RightWalk { get; }

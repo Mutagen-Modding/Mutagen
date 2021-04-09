@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString Name { get; set; } = string.Empty;
         ITranslatedStringGetter IClassGetter.Name => this.Name;
         #region Aspects
@@ -1049,6 +1052,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamedRequired, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString Name { get; set; }
         new String Description { get; set; }
         new String? Icon { get; set; }
@@ -1081,7 +1087,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Class_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter Name { get; }
+        #endregion
         String Description { get; }
         String? Icon { get; }
         Int32 Unknown { get; }

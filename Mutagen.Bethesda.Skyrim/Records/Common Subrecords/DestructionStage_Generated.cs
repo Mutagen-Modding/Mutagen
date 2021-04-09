@@ -54,6 +54,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -485,6 +488,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled
     {
         new DestructionStageData? Data { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
     }
 
@@ -503,7 +509,12 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => DestructionStage_Registration.Instance;
         IDestructionStageDataGetter? Data { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
 
     }
 

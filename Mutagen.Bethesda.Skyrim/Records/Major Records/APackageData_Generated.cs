@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IAPackageDataGetter.Name => this.Name;
@@ -470,6 +473,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamed,
         INamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new APackageData.Flag? Flags { get; set; }
     }
@@ -492,7 +498,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => APackageData_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         APackageData.Flag? Flags { get; }
 
     }

@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -510,6 +513,9 @@ namespace Mutagen.Bethesda.Oblivion
         IModeled,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new GrassData? Data { get; set; }
     }
@@ -529,7 +535,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Grass_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IGrassDataGetter? Data { get; }
 
     }

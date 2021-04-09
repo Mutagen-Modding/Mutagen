@@ -57,6 +57,9 @@ namespace Mutagen.Bethesda.Skyrim
         public CollisionLayer.Flag Flags { get; set; } = default;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
         #region CollidesWith
@@ -712,6 +715,9 @@ namespace Mutagen.Bethesda.Skyrim
         new UInt32 Index { get; set; }
         new Color DebugColor { get; set; }
         new CollisionLayer.Flag Flags { get; set; }
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         new String Name { get; set; }
         new ExtendedList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; set; }
     }
@@ -736,7 +742,12 @@ namespace Mutagen.Bethesda.Skyrim
         UInt32 Index { get; }
         Color DebugColor { get; }
         CollisionLayer.Flag Flags { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
         String Name { get; }
+        #endregion
         IReadOnlyList<IFormLinkGetter<ICollisionLayerGetter>>? CollidesWith { get; }
 
     }

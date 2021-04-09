@@ -54,6 +54,9 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkAdapterGetter? IPerkGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IPerkGetter.Name => this.Name;
@@ -93,6 +96,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         public Icons? Icons
         {
             get => _Icons;
@@ -1097,8 +1103,14 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         new PerkAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new TranslatedString Description { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         new Icons? Icons { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new Boolean Trait { get; set; }
@@ -1136,9 +1148,19 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Perk_Registration.Instance;
         IPerkAdapterGetter? VirtualMachineAdapter { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         ITranslatedStringGetter Description { get; }
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
         IIconsGetter? Icons { get; }
+        #endregion
         IReadOnlyList<IConditionGetter> Conditions { get; }
         Boolean Trait { get; }
         Byte Level { get; }

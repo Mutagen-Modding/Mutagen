@@ -68,6 +68,9 @@ namespace Mutagen.Bethesda.Skyrim
         IWorldspaceMaxHeightGetter? IWorldspaceGetter.MaxHeight => this.MaxHeight;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IWorldspaceGetter.Name => this.Name;
@@ -1834,6 +1837,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new ExtendedList<WorldspaceGridReference> LargeReferences { get; }
         new WorldspaceMaxHeight? MaxHeight { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new P2Int16? FixedDimensionsCenterCell { get; set; }
         new IFormLinkNullable<ILightingTemplateGetter> InteriorLighting { get; }
@@ -1892,7 +1898,12 @@ namespace Mutagen.Bethesda.Skyrim
         static new ILoquiRegistration Registration => Worldspace_Registration.Instance;
         IReadOnlyList<IWorldspaceGridReferenceGetter> LargeReferences { get; }
         IWorldspaceMaxHeightGetter? MaxHeight { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         P2Int16? FixedDimensionsCenterCell { get; }
         IFormLinkNullableGetter<ILightingTemplateGetter> InteriorLighting { get; }
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }

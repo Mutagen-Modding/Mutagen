@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IDualCastDataGetter.ObjectBounds => ObjectBounds;
@@ -745,6 +748,9 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptional,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IFormLink<IProjectileGetter> Projectile { get; }
         new IFormLink<IExplosionGetter> Explosion { get; }
@@ -772,7 +778,12 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectBoundedOptionalGetter
     {
         static new ILoquiRegistration Registration => DualCastData_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
         IFormLinkGetter<IExplosionGetter> Explosion { get; }
         IFormLinkGetter<IEffectShaderGetter> EffectShader { get; }

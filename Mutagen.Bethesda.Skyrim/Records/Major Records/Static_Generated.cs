@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IStaticGetter.ObjectBounds => ObjectBounds;
@@ -62,6 +65,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -780,7 +786,13 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal,
         IStaticGetter
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new Single MaxAngle { get; set; }
         new IFormLink<IMaterialObjectGetter> Material { get; }
@@ -814,8 +826,18 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionTargetGetter
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         Single MaxAngle { get; }
         IFormLinkGetter<IMaterialObjectGetter> Material { get; }
         Static.Flag Flags { get; }

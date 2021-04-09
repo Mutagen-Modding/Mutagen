@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
-    public class RefAspect : AspectInterfaceDefinition
+    public class RefAspect : AspectFieldInterfaceDefinition
     {
         public string InterfaceName;
         public string MemberName;
@@ -17,22 +17,15 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             string interfaceName,
             string memberName,
             string loquiName)
-            : base(interfaceName, null!)
+            : base(interfaceName)
         {
             InterfaceName = interfaceName;
             MemberName = memberName;
             LoquiName = loquiName;
-            Test = ApplicabilityTest;
-            Interfaces = (o) =>
+
+            FieldActions = new()
             {
-                var ret = new List<(LoquiInterfaceDefinitionType Type, string Interface)>();
-                ret.Add((LoquiInterfaceDefinitionType.IGetter, $"{interfaceName}Getter"));
-                ret.Add((LoquiInterfaceDefinitionType.ISetter, interfaceName));
-                return ret;
-            };
-            FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, Loqui.FileGeneration> Actions)>()
-            {
-                (LoquiInterfaceType.Direct, memberName, (o, fg) =>
+                (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
                 {
                     fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
                     fg.AppendLine($"I{loquiName}Getter? {interfaceName}Getter.{memberName} => this.{memberName};");
@@ -40,10 +33,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             };
         }
 
-        public bool ApplicabilityTest(ObjectGeneration o)
-        {
-            if (o.Fields.FirstOrDefault(x => x.Name == MemberName) is not LoquiType loqui) return false;
-            return loqui.TargetObjectGeneration.Name == LoquiName;
-        }
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
+            .TryGetValue(MemberName, out var field)
+            && field is LoquiType loqui
+            && loqui.TargetObjectGeneration.Name == LoquiName;
     }
 }

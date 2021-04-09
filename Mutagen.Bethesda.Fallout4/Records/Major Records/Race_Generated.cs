@@ -53,6 +53,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> IRaceGetter.AnimationSound => this.AnimationSound;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRaceGetter.Name => this.Name;
@@ -109,6 +112,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
@@ -2306,11 +2312,17 @@ namespace Mutagen.Bethesda.Fallout4
         IRelatable
     {
         new IFormLinkNullable<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; set; }
         new IFormLinkNullable<IArmorGetter> Skin { get; }
         new BipedBodyTemplate? BipedBodyTemplate { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Properties? Properties { get; set; }
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; set; }
@@ -2380,12 +2392,22 @@ namespace Mutagen.Bethesda.Fallout4
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
         IFormLinkNullableGetter<IAnimationSoundTagSetGetter> AnimationSound { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         ITranslatedStringGetter Description { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>>? ActorEffect { get; }
         IFormLinkNullableGetter<IArmorGetter> Skin { get; }
         IBipedBodyTemplateGetter? BipedBodyTemplate { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
         IPropertiesGetter? Properties { get; }
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? AttachParentSlots { get; }
         IGenderedItemGetter<Single> Height { get; }

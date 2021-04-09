@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IActivatorGetter.Name => this.Name;
@@ -60,6 +63,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -588,7 +594,13 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new IFormLinkNullable<IScriptGetter> Script { get; }
         new IFormLinkNullable<ISoundGetter> Sound { get; }
@@ -612,8 +624,18 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Activator_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IFormLinkNullableGetter<IScriptGetter> Script { get; }
         IFormLinkNullableGetter<ISoundGetter> Sound { get; }
 

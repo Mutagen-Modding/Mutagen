@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -58,6 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ITalkingActivatorGetter.ObjectBounds => ObjectBounds;
@@ -75,6 +81,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? ITalkingActivatorGetter.Name => this.Name;
@@ -110,6 +119,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -136,6 +148,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
@@ -969,11 +984,26 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new Destructible? Destructible { get; set; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new Int32? PNAM { get; set; }
         new IFormLinkNullable<ISoundMarkerGetter> LoopingSound { get; }
@@ -1009,12 +1039,37 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => TalkingActivator_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IDestructibleGetter? Destructible { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
         Int32? PNAM { get; }
         IFormLinkNullableGetter<ISoundMarkerGetter> LoopingSound { get; }
         Int16? FNAM { get; }

@@ -530,6 +530,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionSounds :
         IFormLinkContainer,
+        IHasIcons,
         ILoquiObjectSetter<IRegionSounds>,
         IRegionData,
         IRegionSoundsGetter
@@ -542,6 +543,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasIconsGetter,
         ILoquiObject<IRegionSoundsGetter>
     {
         static new ILoquiRegistration Registration => RegionSounds_Registration.Instance;

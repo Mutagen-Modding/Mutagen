@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IBirthsignGetter.Name => this.Name;
@@ -642,6 +645,9 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new String? Icon { get; set; }
         new String? Description { get; set; }
@@ -665,7 +671,12 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Birthsign_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         String? Icon { get; }
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; }

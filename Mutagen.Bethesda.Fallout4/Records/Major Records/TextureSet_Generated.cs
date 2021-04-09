@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ITextureSetGetter.ObjectBounds => ObjectBounds;
@@ -854,6 +857,9 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectId,
         ITextureSetGetter
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new String? Diffuse { get; set; }
         new String? NormalOrGloss { get; set; }
@@ -885,7 +891,12 @@ namespace Mutagen.Bethesda.Fallout4
         IObjectIdGetter
     {
         static new ILoquiRegistration Registration => TextureSet_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         String? Diffuse { get; }
         String? NormalOrGloss { get; }
         String? Glow { get; }

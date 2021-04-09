@@ -69,6 +69,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -925,6 +928,9 @@ namespace Mutagen.Bethesda.Skyrim
         new ExtendedList<WeatherType>? WeatherTypes { get; set; }
         new String? SunTexture { get; set; }
         new String? SunGlareTexture { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new Byte SunriseBeginRaw { get; set; }
         new Byte SunriseEndRaw { get; set; }
@@ -955,7 +961,12 @@ namespace Mutagen.Bethesda.Skyrim
         IReadOnlyList<IWeatherTypeGetter>? WeatherTypes { get; }
         String? SunTexture { get; }
         String? SunGlareTexture { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         Byte SunriseBeginRaw { get; }
         Byte SunriseEndRaw { get; }
         Byte SunsetBeginRaw { get; }

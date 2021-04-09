@@ -37,6 +37,8 @@ namespace Mutagen.Bethesda
     {
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordKey">FormKey of the Keyword record to look for</param>
@@ -58,6 +60,8 @@ namespace Mutagen.Bethesda
         /// <br />
         /// It is possible that the record contains the keyword, but it could not be found
         /// by the cache.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordKey">FormKey of the Keyword record to look for</param>
@@ -81,6 +85,8 @@ namespace Mutagen.Bethesda
 
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordLink">FormLink of the Keyword record to look for</param>
@@ -102,6 +108,8 @@ namespace Mutagen.Bethesda
         /// <br />
         /// It is possible that the record contains the keyword, but it could not be found
         /// by the cache.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keywordLink">FormLink of the Keyword record to look for</param>
@@ -125,6 +133,8 @@ namespace Mutagen.Bethesda
 
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by FormKey.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="keyword">Keyword record to look for</param>
@@ -140,6 +150,8 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by EditorID.
         /// Also looks up that keyword in the given cache.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="editorID">EditorID of the Keyword to look for</param>
@@ -180,6 +192,8 @@ namespace Mutagen.Bethesda
 
         /// <summary>
         /// Checks if a Keyworded record contains a specific Keyword, by EditorID.
+        /// <br />
+        /// Aspects: IKeywordedGetter&lt;IKeywordCommonGetter&gt;
         /// </summary>
         /// <param name="keyworded">Keyworded record to check</param>
         /// <param name="editorID">EditorID of the Keyword to look for</param>

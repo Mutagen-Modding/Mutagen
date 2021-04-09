@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter IIdleMarkerGetter.ObjectBounds => ObjectBounds;
@@ -86,6 +89,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -727,10 +733,16 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectId,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new IdleMarker.Flag? Flags { get; set; }
         new Single? IdleTimer { get; set; }
         new ExtendedList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         #region Mutagen
         new IdleMarker.MajorFlag MajorFlags { get; set; }
@@ -757,11 +769,21 @@ namespace Mutagen.Bethesda.Skyrim
         IObjectIdGetter
     {
         static new ILoquiRegistration Registration => IdleMarker_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         IdleMarker.Flag? Flags { get; }
         Single? IdleTimer { get; }
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? Animations { get; }
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
 
         #region Mutagen
         IdleMarker.MajorFlag MajorFlags { get; }

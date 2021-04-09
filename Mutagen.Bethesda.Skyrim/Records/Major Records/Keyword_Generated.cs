@@ -29,6 +29,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Skyrim
 {
     #region Class
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial class Keyword :
         SkyrimMajorRecord,
         IEquatable<IKeywordGetter>,
@@ -461,6 +464,9 @@ namespace Mutagen.Bethesda.Skyrim
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial interface IKeyword :
         IKeywordCommon,
         IKeywordGetter,
@@ -478,6 +484,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
     }
 
+    /// <summary>
+    /// Aspects: IKeywordCommonGetter
+    /// </summary>
     public partial interface IKeywordGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,

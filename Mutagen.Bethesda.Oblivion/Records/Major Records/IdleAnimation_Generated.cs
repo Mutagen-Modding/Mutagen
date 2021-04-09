@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -732,6 +735,9 @@ namespace Mutagen.Bethesda.Oblivion
         IModeled,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<Condition> Conditions { get; }
         new IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; set; }
@@ -754,7 +760,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModeledGetter
     {
         static new ILoquiRegistration Registration => IdleAnimation_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IdleAnimation.AnimationGroupSectionEnum? AnimationGroupSection { get; }
         IReadOnlyList<IFormLinkGetter<IIdleAnimationGetter>>? RelatedIdleAnimations { get; }

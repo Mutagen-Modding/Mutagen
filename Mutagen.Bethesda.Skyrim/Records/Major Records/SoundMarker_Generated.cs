@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         public ObjectBounds ObjectBounds { get; set; } = new ObjectBounds();
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IObjectBoundsGetter ISoundMarkerGetter.ObjectBounds => ObjectBounds;
@@ -607,6 +610,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISound,
         ISoundMarkerGetter
     {
+        /// <summary>
+        /// Aspects: IObjectBounded, IObjectBoundedOptional
+        /// </summary>
         new ObjectBounds ObjectBounds { get; set; }
         new MemorySlice<Byte>? FNAM { get; set; }
         new MemorySlice<Byte>? SNDD { get; set; }
@@ -632,7 +638,12 @@ namespace Mutagen.Bethesda.Skyrim
         ISoundGetter
     {
         static new ILoquiRegistration Registration => SoundMarker_Registration.Instance;
+        #region ObjectBounds
+        /// <summary>
+        /// Aspects: IObjectBoundedGetter, IObjectBoundedOptionalGetter
+        /// </summary>
         IObjectBoundsGetter ObjectBounds { get; }
+        #endregion
         ReadOnlyMemorySlice<Byte>? FNAM { get; }
         ReadOnlyMemorySlice<Byte>? SNDD { get; }
         IFormLinkNullableGetter<ISoundDescriptorGetter> SoundDescriptor { get; }

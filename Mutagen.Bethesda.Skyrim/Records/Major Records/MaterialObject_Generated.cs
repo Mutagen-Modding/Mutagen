@@ -46,6 +46,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -963,6 +966,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new SliceList<byte> DNAMs { get; }
         new Single FalloffScale { get; set; }
@@ -993,7 +999,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter
     {
         static new ILoquiRegistration Registration => MaterialObject_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IReadOnlyList<ReadOnlyMemorySlice<Byte>> DNAMs { get; }
         Single FalloffScale { get; }
         Single FalloffBias { get; }

@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -464,6 +467,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IStaticGetter
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
     }
 
@@ -482,7 +488,12 @@ namespace Mutagen.Bethesda.Oblivion
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Static_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
 
     }
 

@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICellGetter.Name => this.Name;
@@ -1547,6 +1550,9 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired,
         IPlaceInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new Cell.Flag? Flags { get; set; }
         new P2Int? Grid { get; set; }
@@ -1588,7 +1594,12 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Cell_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         Cell.Flag? Flags { get; }
         P2Int? Grid { get; }
         ICellLightingGetter? Lighting { get; }

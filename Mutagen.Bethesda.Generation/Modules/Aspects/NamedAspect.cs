@@ -8,40 +8,16 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
-    public class NamedAspect : AspectInterfaceDefinition
+    public class NamedAspect : AspectFieldInterfaceDefinition
     {
-        public NamedAspect() 
-            : base("INamed", ApplicabilityTest)
+        public NamedAspect()
+            : base("INamed")
         {
-            Interfaces = (o) =>
+            FieldActions = new()
             {
-                var nameField = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == "Name") as Mutagen.Bethesda.Generation.StringType;
-                var list = new List<(LoquiInterfaceDefinitionType Type, string Interface)>();
-                list.Add((LoquiInterfaceDefinitionType.IGetter, nameof(INamedRequiredGetter)));
-                list.Add((LoquiInterfaceDefinitionType.ISetter, nameof(INamedRequired)));
-                if (nameField.Nullable)
+                (LoquiInterfaceType.Direct, "Name", (o, tg, fg) =>
                 {
-                    list.Add((LoquiInterfaceDefinitionType.IGetter, nameof(INamedGetter)));
-                    list.Add((LoquiInterfaceDefinitionType.ISetter, nameof(INamed)));
-                }
-                if (nameField.Translated.HasValue)
-                {
-                    list.Add((LoquiInterfaceDefinitionType.IGetter, nameof(ITranslatedNamedRequiredGetter)));
-                    list.Add((LoquiInterfaceDefinitionType.ISetter, nameof(ITranslatedNamedRequired)));
-                    if (nameField.Nullable)
-                    {
-                        list.Add((LoquiInterfaceDefinitionType.IGetter, nameof(ITranslatedNamedGetter)));
-                        list.Add((LoquiInterfaceDefinitionType.ISetter, nameof(ITranslatedNamed)));
-                    }
-                }
-                return list;
-            };
-
-            FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, Loqui.FileGeneration> Actions)>()
-            {
-                (LoquiInterfaceType.Direct, "Name", (o, fg) =>
-                {
-                    var nameField = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == "Name") as Mutagen.Bethesda.Generation.StringType;
+                    if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                     var isTransl = nameField.Translated.HasValue;
 
                     if (isTransl)
@@ -113,9 +89,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                         }
                     }
                 }),
-                (LoquiInterfaceType.IGetter, "Name", (o, fg) =>
+                (LoquiInterfaceType.IGetter, "Name", (o, tg, fg) =>
                 {
-                    var nameField = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == "Name") as Mutagen.Bethesda.Generation.StringType;
+                    if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                     var isTransl = nameField.Translated.HasValue;
                     if (isTransl)
                     {
@@ -138,9 +114,27 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             };
         }
 
-        public static bool ApplicabilityTest(ObjectGeneration o)
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
+            .TryGetValue("Name", out var field)
+            && field is StringType;
+
+        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
         {
-            return o.TestTrueForAnyInClassChain(o2 => o2.Fields.FirstOrDefault(x => x.Name == "Name") is Mutagen.Bethesda.Generation.StringType);
+            var nameField = obj.IterateFields(includeBaseClass: true).OfType<StringType>().Single(x => x.Name == "Name");
+
+            var list = new List<AspectInterfaceData>();
+            AddInterfaces(list, nameof(INamedRequired), nameof(INamedRequiredGetter));
+
+            if (nameField.Nullable)
+                AddInterfaces(list, nameof(INamed), nameof(INamedGetter));
+
+            if (nameField.Translated.HasValue)
+            {
+                AddInterfaces(list, nameof(ITranslatedNamedRequired), nameof(ITranslatedNamedRequiredGetter));
+                if (nameField.Nullable)
+                    AddInterfaces(list, nameof(ITranslatedNamed), nameof(ITranslatedNamedGetter));
+            }
+            return list;
         }
     }
 }

@@ -505,7 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedTrapInternal>,
-        IPlacedTrapGetter
+        IPlacedTrapGetter,
+        IScripted
     {
         new IFormLink<IProjectileGetter> Projectile { get; }
     }
@@ -522,7 +523,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedTrapGetter>,
-        IMapsToGetter<IPlacedTrapGetter>
+        IMapsToGetter<IPlacedTrapGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedTrap_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }

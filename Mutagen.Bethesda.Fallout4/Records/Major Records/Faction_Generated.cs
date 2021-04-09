@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IFactionGetter.Name => this.Name;
@@ -1300,6 +1303,9 @@ namespace Mutagen.Bethesda.Fallout4
         IOwner,
         IRelatable
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new ExtendedList<Relation> Relations { get; }
         new Faction.FactionFlag Flags { get; set; }
@@ -1338,7 +1344,12 @@ namespace Mutagen.Bethesda.Fallout4
         IRelatableGetter
     {
         static new ILoquiRegistration Registration => Faction_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         IReadOnlyList<IRelationGetter> Relations { get; }
         Faction.FactionFlag Flags { get; }
         IFormLinkNullableGetter<IPlacedObjectGetter> ExteriorJailMarker { get; }

@@ -42,6 +42,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IRegionMapGetter.Name => this.Name;
@@ -430,6 +433,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionMap :
+        IHasIcons,
         ILoquiObjectSetter<IRegionMap>,
         INamed,
         INamedRequired,
@@ -438,12 +442,16 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamed,
         ITranslatedNamedRequired
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
     }
 
     public partial interface IRegionMapGetter :
         IRegionDataGetter,
         IBinaryItem,
+        IHasIconsGetter,
         ILoquiObject<IRegionMapGetter>,
         INamedGetter,
         INamedRequiredGetter,
@@ -451,7 +459,12 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequiredGetter
     {
         static new ILoquiRegistration Registration => RegionMap_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
 
     }
 
