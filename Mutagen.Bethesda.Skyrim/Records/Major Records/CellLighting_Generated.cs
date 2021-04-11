@@ -2089,68 +2089,68 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellLightingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientColor);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalColor);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogNearColor);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogNear);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogFar);
             writer.Write(item.DirectionalRotationXY);
             writer.Write(item.DirectionalRotationZ);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalFade);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogClipDistance);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogPower);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalXPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalXMinus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalYPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalYMinus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalZPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientDirectionalZMinus);
             if (!item.Versioning.HasFlag(CellLighting.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AmbientSpecular);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AmbientScale);
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FogFarColor);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FogMax);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LightFadeBegin);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LightFadeEnd);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CellLighting.Inherit>.Instance.Write(
@@ -2200,13 +2200,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FogNearColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FogFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogNear = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogFar = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.DirectionalRotationXY = frame.ReadInt32();
             item.DirectionalRotationZ = frame.ReadInt32();
-            item.DirectionalFade = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FogClipDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FogPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DirectionalFade = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogClipDistance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogPower = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.AmbientDirectionalXPlus = frame.ReadColor(ColorBinaryType.Alpha);
             item.AmbientDirectionalXMinus = frame.ReadColor(ColorBinaryType.Alpha);
             item.AmbientDirectionalYPlus = frame.ReadColor(ColorBinaryType.Alpha);
@@ -2219,11 +2219,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return;
             }
             item.AmbientSpecular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.AmbientScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AmbientScale = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.FogFarColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.LightFadeBegin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.LightFadeEnd = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogMax = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LightFadeBegin = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LightFadeEnd = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Inherits = EnumBinaryTranslation<CellLighting.Inherit>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

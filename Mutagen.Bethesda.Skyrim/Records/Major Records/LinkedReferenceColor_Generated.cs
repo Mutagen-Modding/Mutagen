@@ -1003,10 +1003,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferenceColorGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Start);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.End);
         }

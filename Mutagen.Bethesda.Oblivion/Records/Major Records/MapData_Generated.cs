@@ -1051,13 +1051,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UsableDimensions);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesNWCell);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesSECell);
         }
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapData item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(reader: frame);
-            item.CellCoordinatesNWCell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.CellCoordinatesSECell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.UsableDimensions = P2IntBinaryTranslation.Instance.Parse(reader: frame);
+            item.CellCoordinatesNWCell = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.CellCoordinatesSECell = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

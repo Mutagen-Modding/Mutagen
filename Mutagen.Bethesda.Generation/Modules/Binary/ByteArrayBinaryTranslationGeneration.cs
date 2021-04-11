@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
+                $"{this.NamespacePrefix}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 {
                     FG = fg,
                     TypeGen = typeGen,
-                    TranslatorLine = $"{this.Namespace}ByteArrayBinaryTranslation.Instance",
+                    TranslatorLine = $"{this.NamespacePrefix}ByteArrayBinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             }
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}ByteArrayBinaryTranslation.Instance.Parse",
+                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}ByteArrayBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add(nodeAccessor.Access);

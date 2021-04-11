@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             writer.Write(item.TriangleBeforeDoor);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Door);
         }
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.TriangleBeforeDoor = frame.ReadInt16();
             item.Unknown = frame.ReadInt32();
-            item.Door.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Door.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

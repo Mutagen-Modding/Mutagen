@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReferenceGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
         }
@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReference item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

@@ -1092,16 +1092,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAlphaGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunrise);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Day);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunset);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Night);
         }
@@ -1137,10 +1137,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAlpha item,
             MutagenFrame frame)
         {
-            item.Sunrise = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Day = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Sunset = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Night = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Sunrise = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Day = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Sunset = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Night = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

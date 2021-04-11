@@ -1068,10 +1068,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LocationReference);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Radius);
         }
@@ -1114,8 +1114,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.LocationReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Radius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Radius = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

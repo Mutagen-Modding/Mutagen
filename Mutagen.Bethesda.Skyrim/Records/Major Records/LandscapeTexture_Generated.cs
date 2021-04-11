@@ -1739,11 +1739,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaterialType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.HavokFriction);
                 writer.Write(item.HavokRestitution);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.Write(
+            ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureSpecularExponent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -1761,7 +1761,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Grasses,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
@@ -1868,13 +1868,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MaterialType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
                 case RecordTypeInts.HNAM:

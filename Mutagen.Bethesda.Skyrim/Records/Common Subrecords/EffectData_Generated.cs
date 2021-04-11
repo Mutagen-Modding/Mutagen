@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Magnitude);
             writer.Write(item.Area);
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEffectData item,
             MutagenFrame frame)
         {
-            item.Magnitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Magnitude = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Area = frame.ReadInt32();
             item.Duration = frame.ReadInt32();
         }

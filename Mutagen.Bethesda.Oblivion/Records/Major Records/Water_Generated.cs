@@ -1652,12 +1652,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Texture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Opacity,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
@@ -1666,12 +1666,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MaterialID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -1779,7 +1779,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Texture = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Texture = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Water_FieldIndex.Texture;
@@ -1799,7 +1799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialID = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.MaterialID = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Water_FieldIndex.MaterialID;
@@ -1807,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Water_FieldIndex.Sound;
                 }
                 case RecordTypeInts.DATA:

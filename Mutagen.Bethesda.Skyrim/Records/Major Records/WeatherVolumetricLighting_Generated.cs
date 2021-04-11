@@ -1140,16 +1140,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherVolumetricLightingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunrise);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Day);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunset);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Night);
         }
@@ -1191,10 +1191,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherVolumetricLighting item,
             MutagenFrame frame)
         {
-            item.Sunrise.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Day.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Sunset.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Night.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Sunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Day.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Sunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Night.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Speed);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Write(
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 4);
             writer.Write(item.Value);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weight);
             writer.Write(item.Damage);
@@ -1202,10 +1202,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionData item,
             MutagenFrame frame)
         {
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Speed = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 

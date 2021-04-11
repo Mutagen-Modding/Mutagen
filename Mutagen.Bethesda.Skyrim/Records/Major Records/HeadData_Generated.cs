@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.RacePresets,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM));
@@ -2103,7 +2103,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.AvailableHairColors,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM));
@@ -2113,12 +2113,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.FaceDetails,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM));
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultFaceTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DFTM));
@@ -2240,7 +2240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:

@@ -1413,10 +1413,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EffectArt);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Shader);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<VisualEffect.Flag>.Instance.Write(
@@ -1519,8 +1519,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.EffectArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Shader.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Shader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     return (int)VisualEffect_FieldIndex.Flags;
                 }

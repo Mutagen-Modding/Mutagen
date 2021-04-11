@@ -1204,16 +1204,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FovOffset);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FadeOffset);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EndDistanceCap);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ShadowDepthBias);
             if (!item.Versioning.HasFlag(LightData.VersioningBreaks.Break0))
@@ -1259,10 +1259,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightData item,
             MutagenFrame frame)
         {
-            item.FovOffset = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FadeOffset = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EndDistanceCap = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ShadowDepthBias = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FovOffset = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FadeOffset = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EndDistanceCap = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ShadowDepthBias = FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= LightData.VersioningBreaks.Break0;

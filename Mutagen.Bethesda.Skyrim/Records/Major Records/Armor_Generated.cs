@@ -3097,17 +3097,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectEffect,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EITM));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt16BinaryTranslation.Instance.WriteNullable(
+            UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnchantmentAmount,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EAMT));
@@ -3136,32 +3136,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PickUpSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RagdollConstraintTemplate,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BMCT),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EquipmentType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ETYP));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BashImpactDataSet,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BIDS));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AlternateBlockMaterial,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BAMT));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Race,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -3173,11 +3173,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
@@ -3188,7 +3188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Armature,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IArmorAddonGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.MODL));
@@ -3196,7 +3196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Value);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Weight);
             }
@@ -3206,7 +3206,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 integerType: FloatIntegerType.UInt,
                 multiplier: 0.01,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TemplateArmor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
@@ -3314,7 +3314,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -3323,7 +3323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ObjectEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
@@ -3364,19 +3364,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PickUpSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PutDownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.BMCT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RagdollConstraintTemplate = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.RagdollConstraintTemplate = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Armor_FieldIndex.RagdollConstraintTemplate;
@@ -3384,25 +3384,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EquipmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BashImpactDataSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.BashImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.BashImpactDataSet;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.AlternateBlockMaterial.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Race.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Race.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.Race;
                 }
                 case RecordTypeInts.KWDA:
@@ -3421,7 +3421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -3441,7 +3441,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Value = dataFrame.ReadUInt32();
-                    item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Weight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)Armor_FieldIndex.Weight;
                 }
                 case RecordTypeInts.DNAM:
@@ -3456,7 +3456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TemplateArmor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.TemplateArmor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Armor_FieldIndex.TemplateArmor;
                 }
                 default:

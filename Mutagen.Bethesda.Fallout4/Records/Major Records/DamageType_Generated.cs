@@ -1459,7 +1459,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IDamageTypeTargetGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });

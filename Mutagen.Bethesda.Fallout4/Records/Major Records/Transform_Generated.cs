@@ -1503,21 +1503,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Position);
-                Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Rotation);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Scale);
                 if (!item.DATADataTypeState.HasFlag(Transform.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.ZoomMin);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.ZoomMax);
                 }
@@ -1617,16 +1617,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Scale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Rotation = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Scale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Transform.DATADataType.Break0;
                         return (int)Transform_FieldIndex.Scale;
                     }
-                    item.ZoomMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ZoomMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ZoomMin = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ZoomMax = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)Transform_FieldIndex.ZoomMax;
                 }
                 default:

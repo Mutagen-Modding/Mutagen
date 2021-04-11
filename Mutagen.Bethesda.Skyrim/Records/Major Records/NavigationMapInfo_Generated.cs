@@ -1965,11 +1965,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfoGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavigationMesh);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Point);
             writer.Write(item.PreferredMergesFlag);
@@ -1979,7 +1979,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -1989,7 +1989,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -2009,7 +2009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.Unknown2);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ParentWorldspace);
             NavigationMapInfoBinaryWriteTranslation.WriteBinaryParentParseLogic(
@@ -2054,9 +2054,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfo item,
             MutagenFrame frame)
         {
-            item.NavigationMesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.NavigationMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
@@ -2078,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ParentWorldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);

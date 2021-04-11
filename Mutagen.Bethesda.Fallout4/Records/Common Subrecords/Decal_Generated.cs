@@ -1444,25 +1444,25 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IDecalGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MinWidth);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaxWidth);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MinHeight);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaxHeight);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Depth);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Shininess);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ParallaxScale);
             writer.Write(item.ParallaxPasses);
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Flags,
                 length: 1);
             writer.Write(item.AlphaThreshold);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Color);
         }
@@ -1513,13 +1513,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IDecal item,
             MutagenFrame frame)
         {
-            item.MinWidth = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MaxWidth = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MinHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MaxHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Depth = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Shininess = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParallaxScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MinWidth = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MaxWidth = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MinHeight = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MaxHeight = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Depth = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Shininess = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParallaxScale = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.ParallaxPasses = frame.ReadUInt8();
             item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.AlphaThreshold = frame.ReadUInt16();

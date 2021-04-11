@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerItemGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Item);
             writer.Write(item.Count);
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Count = frame.ReadInt32();
         }
 

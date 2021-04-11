@@ -2232,20 +2232,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.AnimationType,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Speed);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reach);
             WeaponDataBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
                 item: item);
             writer.Write(item.Unused2);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SightFOV);
             writer.Write(item.Unknown);
@@ -2256,10 +2256,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 length: 1);
             writer.Write(item.NumProjectiles);
             writer.Write(item.EmbeddedWeaponAV);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RangeMin);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RangeMax);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WeaponData.OnHitType>.Instance.Write(
@@ -2269,20 +2269,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WeaponDataBinaryWriteTranslation.WriteBinaryFlags2(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AnimationAttackMult);
             writer.Write(item.Unknown2);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RumbleLeftMotorStrength);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RumbleRightMotorStrength);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RumbleDuration);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown3);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
@@ -2295,7 +2295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Resist,
                 length: 4);
             writer.Write(item.Unknown5);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Stagger);
         }
@@ -2338,37 +2338,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.AnimationType = EnumBinaryTranslation<WeaponAnimationType>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Speed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Reach = FloatBinaryTranslation.Instance.Parse(reader: frame);
             WeaponDataBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
             item.Unused2 = frame.ReadInt16();
-            item.SightFOV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SightFOV = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unknown = frame.ReadInt32();
             item.BaseVATStoHitChance = frame.ReadUInt8();
             item.AttackAnimation = EnumBinaryTranslation<WeaponData.AttackAnimationType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.NumProjectiles = frame.ReadUInt8();
             item.EmbeddedWeaponAV = frame.ReadUInt8();
-            item.RangeMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RangeMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RangeMin = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RangeMax = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.OnHit = EnumBinaryTranslation<WeaponData.OnHitType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             WeaponDataBinaryCreateTranslation.FillBinaryFlags2Custom(
                 frame: frame,
                 item: item);
-            item.AnimationAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AnimationAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unknown2 = frame.ReadInt32();
-            item.RumbleLeftMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RumbleRightMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RumbleDuration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(12));
+            item.RumbleLeftMotorStrength = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RumbleRightMotorStrength = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RumbleDuration = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown3 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(12));
             if (frame.Complete) return;
             item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown4 = frame.ReadInt64();
             item.Resist = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown5 = frame.ReadInt32();
-            item.Stagger = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Stagger = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
         static partial void FillBinaryFlagsCustom(

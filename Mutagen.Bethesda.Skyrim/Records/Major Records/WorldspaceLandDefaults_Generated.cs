@@ -1002,10 +1002,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceLandDefaultsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DefaultLandHeight);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DefaultWaterHeight);
         }
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceLandDefaults item,
             MutagenFrame frame)
         {
-            item.DefaultLandHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DefaultWaterHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DefaultLandHeight = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DefaultWaterHeight = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

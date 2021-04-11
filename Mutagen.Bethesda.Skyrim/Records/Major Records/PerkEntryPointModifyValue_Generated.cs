@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Value,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EPFD));
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EPFD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Value = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PerkEntryPointModifyValue_FieldIndex.Value;
                 }
                 default:

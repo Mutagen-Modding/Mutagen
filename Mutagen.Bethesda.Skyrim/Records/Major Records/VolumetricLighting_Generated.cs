@@ -1844,51 +1844,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Intensity,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CustomColorContribution,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorR,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorG,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ColorB,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityContribution,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensitySize,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityWindSpeed,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.JNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DensityFallingSpeed,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PhaseFunctionContribution,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PhaseFunctionScattering,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SamplingRepartitionRangeFactor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
@@ -1986,73 +1986,73 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Intensity = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Intensity = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.Intensity;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CustomColorContribution = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CustomColorContribution = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.CustomColorContribution;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorR = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ColorR = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.ColorR;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorG = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ColorG = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.ColorG;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ColorB = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ColorB = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.ColorB;
                 }
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DensityContribution = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DensityContribution = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.DensityContribution;
                 }
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DensitySize = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DensitySize = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.DensitySize;
                 }
                 case RecordTypeInts.JNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DensityWindSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DensityWindSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.DensityWindSpeed;
                 }
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DensityFallingSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DensityFallingSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.DensityFallingSpeed;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PhaseFunctionContribution = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.PhaseFunctionContribution = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.PhaseFunctionContribution;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PhaseFunctionScattering = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.PhaseFunctionScattering = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.PhaseFunctionScattering;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SamplingRepartitionRangeFactor = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SamplingRepartitionRangeFactor = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)VolumetricLighting_FieldIndex.SamplingRepartitionRangeFactor;
                 }
                 default:

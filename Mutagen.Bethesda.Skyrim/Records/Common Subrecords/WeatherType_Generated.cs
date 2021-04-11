@@ -1068,11 +1068,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherTypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weather);
             writer.Write(item.Chance);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Global);
         }
@@ -1108,9 +1108,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherType item,
             MutagenFrame frame)
         {
-            item.Weather.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Weather.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Chance = frame.ReadInt32();
-            item.Global.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

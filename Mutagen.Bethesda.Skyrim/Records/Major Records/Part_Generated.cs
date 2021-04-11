@@ -1026,7 +1026,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.PartType,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.FileName = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Part_FieldIndex.FileName;

@@ -1004,10 +1004,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacementGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Rotation);
         }
@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacement item,
             MutagenFrame frame)
         {
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Rotation = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

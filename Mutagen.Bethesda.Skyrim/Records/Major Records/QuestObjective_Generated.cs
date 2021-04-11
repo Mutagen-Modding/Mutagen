@@ -1247,7 +1247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.UInt16BinaryTranslation.Instance.Write(
+            UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QOBJ));
@@ -1256,7 +1256,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DisplayText,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayText = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.DisplayText = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);

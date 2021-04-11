@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Data,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));

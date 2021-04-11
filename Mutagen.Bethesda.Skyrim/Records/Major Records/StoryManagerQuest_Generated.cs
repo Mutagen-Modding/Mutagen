@@ -1103,15 +1103,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HoursUntilReset,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
@@ -1168,21 +1168,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.Quest) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)StoryManagerQuest_FieldIndex.Quest;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.FNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)StoryManagerQuest_FieldIndex.FNAM;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)StoryManagerQuest_FieldIndex.HoursUntilReset) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HoursUntilReset = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
+                    item.HoursUntilReset = FloatBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         multiplier: 24f);
                     return (int)StoryManagerQuest_FieldIndex.HoursUntilReset;

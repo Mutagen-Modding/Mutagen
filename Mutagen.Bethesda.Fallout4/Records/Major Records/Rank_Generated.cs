@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Number,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -1108,13 +1108,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 femaleMarker: RecordTypes.FNAM,
                 transl: (MutagenWriter subWriter, ITranslatedStringGetter? subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+                    StringBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
                         item: subItem,
                         binaryType: StringBinaryType.NullTerminate,
                         source: StringsSource.Normal);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InsigniaUnused,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         skipMarker: false,
                         transl: (MutagenFrame r, out TranslatedString genSubItem) =>
                         {
-                            return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                            return StringBinaryTranslation.Instance.Parse(
                                 r,
                                 item: out genSubItem,
                                 parseWhole: false,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.InsigniaUnused) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InsigniaUnused = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.InsigniaUnused = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Rank_FieldIndex.InsigniaUnused;

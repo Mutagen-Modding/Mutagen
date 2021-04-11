@@ -1034,11 +1034,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Number,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Head,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.HEAD));
@@ -1101,7 +1101,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadPartReference_FieldIndex.Head) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Head.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Head.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadPartReference_FieldIndex.Head;
                 }
                 default:

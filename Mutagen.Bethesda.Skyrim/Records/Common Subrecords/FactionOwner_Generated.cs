@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionOwnerGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction);
             writer.Write(item.RequiredRank);
@@ -1088,7 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionOwner item,
             MutagenFrame frame)
         {
-            item.Faction.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.RequiredRank = frame.ReadInt32();
         }
 

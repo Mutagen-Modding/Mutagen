@@ -1617,11 +1617,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Magicka);
             writer.Write(item.Stamina);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FarAwayModelDistance);
             writer.Write(item.GearedUpWeapons);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
         }
@@ -1675,9 +1675,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
             item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FarAwayModelDistance = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused2 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

@@ -2165,17 +2165,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Impact.OrientationType>.Instance.Write(
                     writer,
                     item.Orientation,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AngleThreshold);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.PlacementRadius);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundLevel>.Instance.Write(
@@ -2199,23 +2199,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TextureSet,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SecondaryTextureSet,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound2,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Hazard,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
@@ -2321,10 +2321,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Duration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Duration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.Orientation = EnumBinaryTranslation<Impact.OrientationType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.AngleThreshold = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.PlacementRadius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AngleThreshold = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.PlacementRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Flags = EnumBinaryTranslation<Impact.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Result = EnumBinaryTranslation<Impact.ResultType>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
@@ -2339,31 +2339,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.TextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Impact_FieldIndex.TextureSet;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SecondaryTextureSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SecondaryTextureSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Impact_FieldIndex.SecondaryTextureSet;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound1.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Sound1.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Impact_FieldIndex.Sound1;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound2.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Sound2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Impact_FieldIndex.Sound2;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Hazard.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Hazard.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Impact_FieldIndex.Hazard;
                 }
                 default:

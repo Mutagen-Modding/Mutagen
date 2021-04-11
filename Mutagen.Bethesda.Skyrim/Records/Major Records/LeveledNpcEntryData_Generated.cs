@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             writer.Write(item.Level);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
             writer.Write(item.Count);
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Level = frame.ReadInt16();
             item.Unknown = frame.ReadInt16();
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Count = frame.ReadInt16();
             item.Unknown2 = frame.ReadInt16();
         }

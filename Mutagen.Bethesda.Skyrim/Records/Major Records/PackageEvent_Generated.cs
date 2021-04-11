@@ -1516,27 +1516,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Idle,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCDA,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCTX,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.QNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
@@ -1595,42 +1595,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.Idle) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Idle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PackageEvent_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCHR) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCHR = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SCHR = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCDA:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCDA) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCDA = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SCDA = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCDA;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.SCTX) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCTX = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SCTX = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.QNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageEvent_FieldIndex.TNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageEvent_FieldIndex.TNAM;
                 }
                 case RecordTypeInts.PDTO:

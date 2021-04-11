@@ -2291,44 +2291,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.CSGD)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OffensiveMult);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DefensiveMult);
                 if (!item.CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break0))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.GroupOffensiveMult);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EquipmentScoreMultMelee);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EquipmentScoreMultMagic);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EquipmentScoreMultRanged);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EquipmentScoreMultShout);
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.EquipmentScoreMultUnarmed);
                     if (!item.CSGDDataTypeState.HasFlag(CombatStyle.CSGDDataType.Break1))
                     {
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.EquipmentScoreMultStaff);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.AvoidThreatChance);
                     }
                 }
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CSMD,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSMD));
@@ -2346,7 +2346,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LongRangeStrafeMult,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSLR));
@@ -2457,32 +2457,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.OffensiveMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.DefensiveMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.OffensiveMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.DefensiveMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break0;
                         return (int)CombatStyle_FieldIndex.DefensiveMult;
                     }
-                    item.GroupOffensiveMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EquipmentScoreMultMelee = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EquipmentScoreMultMagic = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EquipmentScoreMultRanged = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EquipmentScoreMultShout = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EquipmentScoreMultUnarmed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.GroupOffensiveMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultMelee = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultMagic = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultRanged = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultShout = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultUnarmed = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.CSGDDataTypeState |= CombatStyle.CSGDDataType.Break1;
                         return (int)CombatStyle_FieldIndex.EquipmentScoreMultUnarmed;
                     }
-                    item.EquipmentScoreMultStaff = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AvoidThreatChance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EquipmentScoreMultStaff = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AvoidThreatChance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)CombatStyle_FieldIndex.AvoidThreatChance;
                 }
                 case RecordTypeInts.CSMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CSMD = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CSMD = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)CombatStyle_FieldIndex.CSMD;
                 }
                 case RecordTypeInts.CSME:
@@ -2498,7 +2498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CSLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LongRangeStrafeMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.LongRangeStrafeMult = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)CombatStyle_FieldIndex.LongRangeStrafeMult;
                 }
                 case RecordTypeInts.CSFL:

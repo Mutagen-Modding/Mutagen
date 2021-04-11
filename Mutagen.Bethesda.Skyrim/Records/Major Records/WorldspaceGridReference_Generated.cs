@@ -1135,7 +1135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReferenceGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GridPosition);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IWorldspaceReferenceGetter>.Instance.Write(
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReference item,
             MutagenFrame frame)
         {
-            item.GridPosition = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.GridPosition = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
             item.References.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
                     amount: frame.ReadInt32(),

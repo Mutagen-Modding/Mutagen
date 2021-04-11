@@ -2234,15 +2234,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Category,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AlternateSoundFor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -2251,11 +2251,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.SoundFiles,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                 transl: StringBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OutputModel,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.String,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
@@ -2384,19 +2384,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoundDescriptor_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Category.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Category.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundDescriptor_FieldIndex.Category;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateSoundFor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.AlternateSoundFor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
                 }
                 case RecordTypeInts.ANAM:
@@ -2411,13 +2411,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OutputModel.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.OutputModel.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundDescriptor_FieldIndex.OutputModel;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.String = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.String = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SoundDescriptor_FieldIndex.String;

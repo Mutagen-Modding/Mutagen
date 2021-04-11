@@ -1001,11 +1001,11 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ModKeyBinaryTranslation.Instance.Write(
+            ModKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Master,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MAST));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt64BinaryTranslation.Instance.Write(
+            UInt64BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileSize,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Master = Mutagen.Bethesda.Records.Binary.Translations.ModKeyBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Master = ModKeyBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MasterReference_FieldIndex.Master;
                 }
                 case RecordTypeInts.DATA:

@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
@@ -1593,11 +1593,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Template,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
@@ -1717,13 +1717,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LeveledCreature_FieldIndex.Script;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Template.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LeveledCreature_FieldIndex.Template;
                 }
                 default:

@@ -1214,11 +1214,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPointGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Point);
             writer.Write(item.NumConnections);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused);
         }
@@ -1254,9 +1254,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPoint item,
             MutagenFrame frame)
         {
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.NumConnections = frame.ReadUInt8();
-            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

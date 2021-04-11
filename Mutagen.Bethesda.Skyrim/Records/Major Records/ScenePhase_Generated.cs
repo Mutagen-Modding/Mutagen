@@ -1615,7 +1615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { }
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
@@ -1641,7 +1641,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EditorWidth,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ScenePhase_FieldIndex.Name;

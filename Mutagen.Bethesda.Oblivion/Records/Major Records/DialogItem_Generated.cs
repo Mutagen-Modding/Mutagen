@@ -2323,11 +2323,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QSTI));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousTopic,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
@@ -2336,7 +2336,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Topics,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.NAME));
@@ -2368,7 +2368,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Choices,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT));
@@ -2378,7 +2378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.LinkFrom,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogTopicGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF));
@@ -2487,13 +2487,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.QSTI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogItem_FieldIndex.Quest;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousTopic.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PreviousTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogItem_FieldIndex.PreviousTopic;
                 }
                 case RecordTypeInts.NAME:

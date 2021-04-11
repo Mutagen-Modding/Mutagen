@@ -1603,24 +1603,24 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CraftingSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CUSD));
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AutoCalcValue,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ScrapItem,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ModScrapScalar,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
@@ -1723,7 +1723,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Component_FieldIndex.Name;
@@ -1731,7 +1731,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.CUSD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CraftingSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.CraftingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Component_FieldIndex.CraftingSound;
                 }
                 case RecordTypeInts.DATA:
@@ -1743,13 +1743,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ScrapItem.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ScrapItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Component_FieldIndex.ScrapItem;
                 }
                 case RecordTypeInts.GNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ModScrapScalar.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ModScrapScalar.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Component_FieldIndex.ModScrapScalar;
                 }
                 default:

@@ -995,10 +995,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IColorFrameGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Time);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Color,
                 binaryType: ColorBinaryType.AlphaFloat);
@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IColorFrame item,
             MutagenFrame frame)
         {
-            item.Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Time = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.AlphaFloat);
         }
 

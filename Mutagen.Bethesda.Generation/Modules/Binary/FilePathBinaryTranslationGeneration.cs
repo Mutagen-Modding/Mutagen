@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 {
                     FG = fg,
                     TypeGen = typeGen,
-                    TranslatorLine = $"{this.Namespace}FilePathBinaryTranslation.Instance",
+                    TranslatorLine = $"{this.NamespacePrefix}FilePathBinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = translationMaskAccessor,
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (inline) throw new NotImplementedException();
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.Namespace}FilePathBinaryTranslation.Instance.Parse",
+                $"{retAccessor}{Loqui.Generation.Utility.Await(asyncMode)}{this.NamespacePrefix}FilePathBinaryTranslation.Instance.Parse",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(asyncMode)))
             {
                 args.Add(nodeAccessor.Access);

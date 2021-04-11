@@ -1049,10 +1049,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcOwnerGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Npc);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Global);
         }
@@ -1099,8 +1099,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcOwner item,
             MutagenFrame frame)
         {
-            item.Npc.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Global.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Npc.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

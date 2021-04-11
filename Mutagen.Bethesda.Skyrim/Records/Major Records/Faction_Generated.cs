@@ -2659,7 +2659,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -2681,27 +2681,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ExteriorJailMarker,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.JAIL));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FollowerWaitMarker,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WAIT));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.StolenGoodsContainer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.STOL));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PlayerInventoryContainer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PLCN));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SharedCrimeFactionList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CRGR));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.JailOutfit,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.JOUT));
@@ -2723,11 +2723,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VendorBuySellList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VEND));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MerchantContainer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VENC));
@@ -2855,7 +2855,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2880,37 +2880,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.JAIL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ExteriorJailMarker.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExteriorJailMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.ExteriorJailMarker;
                 }
                 case RecordTypeInts.WAIT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FollowerWaitMarker.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.FollowerWaitMarker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.FollowerWaitMarker;
                 }
                 case RecordTypeInts.STOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.StolenGoodsContainer.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.StolenGoodsContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.StolenGoodsContainer;
                 }
                 case RecordTypeInts.PLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PlayerInventoryContainer.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PlayerInventoryContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.PlayerInventoryContainer;
                 }
                 case RecordTypeInts.CRGR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SharedCrimeFactionList.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SharedCrimeFactionList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.SharedCrimeFactionList;
                 }
                 case RecordTypeInts.JOUT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.JailOutfit.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.JailOutfit.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.JailOutfit;
                 }
                 case RecordTypeInts.CRVA:
@@ -2934,13 +2934,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VEND:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VendorBuySellList.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.VendorBuySellList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.VendorBuySellList;
                 }
                 case RecordTypeInts.VENC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MerchantContainer.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MerchantContainer.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Faction_FieldIndex.MerchantContainer;
                 }
                 case RecordTypeInts.VENV:

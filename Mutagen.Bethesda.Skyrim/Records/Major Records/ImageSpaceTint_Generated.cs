@@ -1003,10 +1003,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTintGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Amount);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Color,
                 binaryType: ColorBinaryType.NoAlphaFloat);
@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTint item,
             MutagenFrame frame)
         {
-            item.Amount = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Amount = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
         }
 

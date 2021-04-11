@@ -1082,13 +1082,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWatersGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterDaytime);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterNighttime);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RelatedWaterUnderwater);
         }
@@ -1130,9 +1130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             MutagenFrame frame)
         {
-            item.RelatedWaterDaytime.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.RelatedWaterNighttime.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.RelatedWaterUnderwater.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RelatedWaterDaytime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RelatedWaterNighttime.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RelatedWaterUnderwater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

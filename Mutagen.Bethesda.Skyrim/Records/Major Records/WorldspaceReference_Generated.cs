@@ -1010,10 +1010,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceReferenceGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
         }
@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceReference item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Position = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

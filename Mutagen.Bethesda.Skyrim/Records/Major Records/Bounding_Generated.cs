@@ -1239,25 +1239,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBoundingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Width);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Height);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RotationQ1);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RotationQ2);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RotationQ3);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RotationQ4);
         }
@@ -1293,13 +1293,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBounding item,
             MutagenFrame frame)
         {
-            item.Width = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Height = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ1 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ2 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ3 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ4 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Width = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Height = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RotationQ1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RotationQ2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RotationQ3 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RotationQ4 = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

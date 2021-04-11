@@ -1291,25 +1291,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EnchantEffect);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CastingSound);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BoltSound);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HitSound);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AreaSound);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ConstantEffectEnchantmentFactor);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ConstantEffectBarterFactor);
         }
@@ -1345,13 +1345,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubData item,
             MutagenFrame frame)
         {
-            item.EnchantEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.CastingSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.BoltSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.HitSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.AreaSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.ConstantEffectEnchantmentFactor = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ConstantEffectBarterFactor = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EnchantEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.CastingSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.BoltSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.HitSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.AreaSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ConstantEffectEnchantmentFactor = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ConstantEffectBarterFactor = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

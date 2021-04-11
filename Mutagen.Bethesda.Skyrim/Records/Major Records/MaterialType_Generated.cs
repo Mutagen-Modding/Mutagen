@@ -1552,21 +1552,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Parent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HavokDisplayColor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: ColorBinaryType.NoAlphaFloat);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Buoyancy,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
@@ -1575,7 +1575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HavokImpactDataSet,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM));
@@ -1673,13 +1673,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MaterialType_FieldIndex.Parent;
                 }
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MaterialType_FieldIndex.Name;
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Buoyancy = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Buoyancy = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MaterialType_FieldIndex.Buoyancy;
                 }
                 case RecordTypeInts.FNAM:
@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.HNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HavokImpactDataSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.HavokImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MaterialType_FieldIndex.HavokImpactDataSet;
                 }
                 default:

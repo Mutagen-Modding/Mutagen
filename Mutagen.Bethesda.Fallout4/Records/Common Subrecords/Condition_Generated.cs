@@ -1054,7 +1054,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryWriteTranslation.WriteBinaryFlags(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown1);
         }
@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
-            item.Unknown1 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unknown1 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
         static partial void FillBinaryFlagsCustom(

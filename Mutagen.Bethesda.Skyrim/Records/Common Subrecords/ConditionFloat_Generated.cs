@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
             ConditionFloatBinaryWriteTranslation.WriteBinaryData(
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ComparisonValue = FloatBinaryTranslation.Instance.Parse(reader: frame);
             ConditionFloatBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);

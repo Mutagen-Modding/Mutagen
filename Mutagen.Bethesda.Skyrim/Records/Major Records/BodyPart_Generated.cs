@@ -2649,35 +2649,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BPTN),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PoseMatching,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PartNode,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNN),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.VatsTarget,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNT),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IkStartNode,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BPNI),
                 binaryType: StringBinaryType.NullTerminate);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.BPND)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DamageMult);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BodyPart.Flag>.Instance.Write(
@@ -2696,58 +2696,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.ToHitChance);
                 writer.Write(item.ExplodableExplosionChance);
                 writer.Write(item.ExplodableDebrisCount);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebris);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableExplosion);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TrackingMaxAngle);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebrisScale);
                 writer.Write(item.SeverableDebrisCount);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebris);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableExplosion);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebrisScale);
-                Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.GorePositioning);
-                Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.GoreRotation);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableImpactData);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableImpactData);
                 writer.Write(item.SeverableDecalCount);
                 writer.Write(item.ExplodableDecalCount);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LimbReplacementScale);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LimbReplacementModel,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GoreTargetBone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Name) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2815,7 +2815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PoseMatching = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.PoseMatching = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.PoseMatching;
@@ -2823,7 +2823,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BPNN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PartNode = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.PartNode = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.PartNode;
@@ -2831,7 +2831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BPNT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VatsTarget = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.VatsTarget = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.VatsTarget;
@@ -2839,7 +2839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BPNI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IkStartNode = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.IkStartNode = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.IkStartNode;
@@ -2848,7 +2848,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.DamageMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.DamageMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.Flags = EnumBinaryTranslation<BodyPart.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Type = EnumBinaryTranslation<BodyPart.PartType>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.HealthPercent = dataFrame.ReadUInt8();
@@ -2856,28 +2856,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ToHitChance = dataFrame.ReadUInt8();
                     item.ExplodableExplosionChance = dataFrame.ReadUInt8();
                     item.ExplodableDebrisCount = dataFrame.ReadUInt16();
-                    item.ExplodableDebris.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ExplodableExplosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.TrackingMaxAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ExplodableDebrisScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.TrackingMaxAngle = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ExplodableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.SeverableDebrisCount = dataFrame.ReadInt32();
-                    item.SeverableDebris.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.SeverableExplosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.SeverableDebrisScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.GorePositioning = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.GoreRotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.SeverableImpactData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ExplodableImpactData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.GorePositioning = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.GoreRotation = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SeverableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadUInt16();
-                    item.LimbReplacementScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LimbReplacementScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)BodyPart_FieldIndex.LimbReplacementScale;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LimbReplacementModel = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.LimbReplacementModel = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.LimbReplacementModel;
@@ -2885,7 +2885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GoreTargetBone = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.GoreTargetBone = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.GoreTargetBone;
@@ -2893,7 +2893,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFilesHashes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TextureFilesHashes = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)BodyPart_FieldIndex.TextureFilesHashes;
                 }
                 default:

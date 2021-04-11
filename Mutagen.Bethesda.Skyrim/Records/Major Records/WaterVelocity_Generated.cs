@@ -1108,14 +1108,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterVelocityGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Offset);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Angle);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
         }
@@ -1157,10 +1157,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterVelocity item,
             MutagenFrame frame)
         {
-            item.Offset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Offset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unknown = frame.ReadInt32();
-            item.Angle = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(20));
+            item.Angle = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown2 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(20));
         }
 
     }

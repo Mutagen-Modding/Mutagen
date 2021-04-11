@@ -1044,11 +1044,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ScriptName,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FragmentName,
                 binaryType: StringBinaryType.PrependLengthUShort);
@@ -1086,10 +1086,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt8();
-            item.ScriptName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+            item.ScriptName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.FragmentName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+            item.FragmentName = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }

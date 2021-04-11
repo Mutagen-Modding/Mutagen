@@ -1465,38 +1465,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DamageMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Chance);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Spell);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AttackData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackAngle);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StrikeAngle);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Stagger);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackType);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Knockdown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RecoveryTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.StaminaMult);
         }
@@ -1538,17 +1538,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackData item,
             MutagenFrame frame)
         {
-            item.DamageMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Chance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Spell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.DamageMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Chance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<AttackData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.AttackAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.StrikeAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Stagger = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Knockdown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RecoveryTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.StaminaMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.StrikeAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Stagger = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Knockdown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RecoveryTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.StaminaMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

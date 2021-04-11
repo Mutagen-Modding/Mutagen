@@ -1477,11 +1477,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: MetadataSummaryItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SourceCode,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX),
@@ -1575,13 +1575,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCDA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CompiledScript = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CompiledScript = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScriptFields_FieldIndex.CompiledScript;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourceCode = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.SourceCode = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.Plain);
                     return (int)ScriptFields_FieldIndex.SourceCode;

@@ -1586,7 +1586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NavMeshVersion,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NVER));
@@ -1608,7 +1608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NVSI,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NVSI));
@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NVSI = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.NVSI = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:

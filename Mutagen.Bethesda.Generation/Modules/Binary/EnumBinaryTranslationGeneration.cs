@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
             using (var args = new ArgsWrapper(fg,
-                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(nullable ? "Nullable" : null)}"))
+                $"{NamespacePrefix}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(nullable ? "Nullable" : null)}"))
             {
                 args.Add(writerAccessor.Access);
                 if (eType.NullableFallbackInt == null)
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             else
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
+                    $"{retAccessor}{this.NamespacePrefix}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
                 {
                     args.Add($"reader: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
                     if (asyncMode == AsyncMode.Off)

@@ -2966,7 +2966,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -2986,7 +2986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Type,
                     length: 4);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.WriteNullable(
+            RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Event,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
@@ -2995,12 +2995,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.TextDisplayGlobals,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IGlobalGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL));
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObjectWindowFilter,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FLTR),
@@ -3047,7 +3047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
@@ -3152,7 +3152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -3172,7 +3172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Event = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Event = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.QTGL:
@@ -3187,7 +3187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FLTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectWindowFilter = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.ObjectWindowFilter = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Quest_FieldIndex.ObjectWindowFilter;
@@ -3247,7 +3247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);

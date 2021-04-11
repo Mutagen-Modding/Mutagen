@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Percentage);
-                Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+                StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ModelFilename,
                     binaryType: StringBinaryType.NullTerminate);
@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         length: 1);
                 }
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.TextureFileHashes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFileHashes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TextureFileHashes = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DebrisModel_FieldIndex.TextureFileHashes;
                 }
                 default:

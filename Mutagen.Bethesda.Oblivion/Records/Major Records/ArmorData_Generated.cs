@@ -1120,7 +1120,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             writer.Write(item.Value);
             writer.Write(item.Health);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weight);
         }
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             item.Value = frame.ReadUInt32();
             item.Health = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
         static partial void FillBinaryArmorValueCustom(

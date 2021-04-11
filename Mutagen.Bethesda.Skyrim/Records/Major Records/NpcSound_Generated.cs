@@ -1034,11 +1034,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Sound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDI));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SoundChance,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDC));
@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSound_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcSound_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:

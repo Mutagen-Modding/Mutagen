@@ -1214,7 +1214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Music,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RDMO));
@@ -1292,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:

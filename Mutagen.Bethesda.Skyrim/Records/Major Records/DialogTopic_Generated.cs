@@ -2544,22 +2544,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Priority,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 multiplier: 50f);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
@@ -2578,7 +2578,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Subtype,
                     length: 2);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SubtypeName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -2682,7 +2682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2691,7 +2691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
+                    item.Priority = FloatBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         multiplier: 50f);
                     return (int)DialogTopic_FieldIndex.Priority;
@@ -2699,13 +2699,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Branch.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
@@ -2720,7 +2720,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:

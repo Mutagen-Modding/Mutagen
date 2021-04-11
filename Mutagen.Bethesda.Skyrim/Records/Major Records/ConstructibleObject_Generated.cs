@@ -1753,15 +1753,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CreatedObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WorkbenchKeyword,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt16BinaryTranslation.Instance.WriteNullable(
+            UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CreatedObjectCount,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1));
@@ -1883,13 +1883,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CreatedObject.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.CreatedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ConstructibleObject_FieldIndex.CreatedObject;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WorkbenchKeyword.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.WorkbenchKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ConstructibleObject_FieldIndex.WorkbenchKeyword;
                 }
                 case RecordTypeInts.NAM1:

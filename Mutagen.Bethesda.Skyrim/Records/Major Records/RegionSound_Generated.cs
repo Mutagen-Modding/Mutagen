@@ -1060,14 +1060,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionSoundGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<RegionSound.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Chance);
         }
@@ -1103,9 +1103,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionSound item,
             MutagenFrame frame)
         {
-            item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Chance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Chance = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

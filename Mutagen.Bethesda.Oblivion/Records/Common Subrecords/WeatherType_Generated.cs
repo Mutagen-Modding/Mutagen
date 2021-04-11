@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherTypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weather);
             writer.Write(item.Chance);
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeatherType item,
             MutagenFrame frame)
         {
-            item.Weather.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Weather.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Chance = frame.ReadInt32();
         }
 

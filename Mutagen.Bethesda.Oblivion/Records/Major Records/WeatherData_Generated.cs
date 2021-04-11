@@ -1557,7 +1557,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Classification,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LightningColor,
                 binaryType: ColorBinaryType.NoAlpha);

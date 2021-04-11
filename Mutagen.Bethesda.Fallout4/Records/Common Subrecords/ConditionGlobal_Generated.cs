@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
             var DataItem = item.Data;
@@ -1167,7 +1167,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ComparisonValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
         }
 

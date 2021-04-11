@@ -1060,7 +1060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Mesh);
             writer.Write(item.TriangleIndex);
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
-            item.Mesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Mesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.TriangleIndex = frame.ReadInt16();
         }
 

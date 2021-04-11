@@ -1345,31 +1345,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceHdrGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyeAdaptSpeed);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomBlurRadius);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomThreshold);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomScale);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ReceiveBloomThreshold);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.White);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SunlightScale);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SkyScale);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyeAdaptStrength);
         }
@@ -1411,15 +1411,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceHdr item,
             MutagenFrame frame)
         {
-            item.EyeAdaptSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BloomBlurRadius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BloomThreshold = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BloomScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ReceiveBloomThreshold = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.White = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.SunlightScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.SkyScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EyeAdaptStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EyeAdaptSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BloomBlurRadius = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BloomThreshold = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BloomScale = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ReceiveBloomThreshold = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.White = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SunlightScale = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SkyScale = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EyeAdaptStrength = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

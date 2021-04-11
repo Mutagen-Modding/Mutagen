@@ -1051,13 +1051,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAnimationChangeThresholdsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Directional);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MovementSpeed);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RotationSpeed);
         }
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAnimationChangeThresholds item,
             MutagenFrame frame)
         {
-            item.Directional = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MovementSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Directional = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MovementSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RotationSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction);
             writer.Write(item.Modifier);
@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Faction.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
         }
 

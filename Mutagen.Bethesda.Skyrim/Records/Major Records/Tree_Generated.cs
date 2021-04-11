@@ -2195,11 +2195,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Ingredient,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PFIG));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HarvestSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -2210,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -2218,19 +2218,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.CNAM)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TrunkFlexibility);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.BranchFlexibility);
-                Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LeafAmplitude);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LeafFrequency);
             }
@@ -2345,13 +2345,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PFIG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Ingredient.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Ingredient.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Tree_FieldIndex.Ingredient;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HarvestSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.HarvestSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Tree_FieldIndex.HarvestSound;
                 }
                 case RecordTypeInts.PFPC:
@@ -2362,7 +2362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2372,11 +2372,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.TrunkFlexibility = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BranchFlexibility = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(32));
-                    item.LeafAmplitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.LeafFrequency = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TrunkFlexibility = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BranchFlexibility = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Unknown = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(32));
+                    item.LeafAmplitude = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LeafFrequency = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)Tree_FieldIndex.LeafFrequency;
                 }
                 default:

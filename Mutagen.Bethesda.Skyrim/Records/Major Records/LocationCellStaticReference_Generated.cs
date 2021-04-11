@@ -1126,16 +1126,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellStaticReferenceGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LocationRefType);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Marker);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Grid,
                 swapCoords: true);
@@ -1172,10 +1172,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellStaticReference item,
             MutagenFrame frame)
         {
-            item.LocationRefType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Marker.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Location.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Grid = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(
+            item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Marker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Grid = P2Int16BinaryTranslation.Instance.Parse(
                 reader: frame,
                 swapCoords: true);
         }

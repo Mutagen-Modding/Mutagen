@@ -1070,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterReflectionGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Water);
             if (!item.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0))
@@ -1119,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterReflection item,
             MutagenFrame frame)
         {
-            item.Water.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= WaterReflection.VersioningBreaks.Break0;

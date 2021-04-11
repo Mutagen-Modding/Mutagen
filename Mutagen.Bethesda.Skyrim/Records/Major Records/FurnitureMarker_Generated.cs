@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: DisabledEntryPointsItem,
                     writer: writer);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MarkerKeyword);
             if (item.EntryPoints.TryGet(out var EntryPointsItem))
@@ -1255,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.Complete) return;
             item.DisabledEntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
             if (frame.Complete) return;
-            item.MarkerKeyword.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.MarkerKeyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete) return;
             item.EntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);
         }

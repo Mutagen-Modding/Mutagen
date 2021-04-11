@@ -1063,7 +1063,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.Write(
+            UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));

@@ -1081,12 +1081,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferencesGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.KeywordOrReference);
             if (!item.Versioning.HasFlag(LinkedReferences.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Reference);
             }
@@ -1129,13 +1129,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferences item,
             MutagenFrame frame)
         {
-            item.KeywordOrReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.KeywordOrReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= LinkedReferences.VersioningBreaks.Break0;
                 return;
             }
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

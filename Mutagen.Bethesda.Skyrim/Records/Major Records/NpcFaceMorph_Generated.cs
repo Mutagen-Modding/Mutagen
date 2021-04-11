@@ -1835,61 +1835,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcFaceMorphGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NoseLongVsShort);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NoseUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JawUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JawNarrowVsWide);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.JawForwardVsBack);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CheeksUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CheeksForwardVsBack);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyesUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyesInVsOut);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BrowsUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BrowsInVsOut);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BrowsForwardVsBack);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LipsUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LipsInVsOut);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ChinNarrowVsWide);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ChinUpVsDown);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ChinUnderbiteVsOverbite);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyesForwardVsBack);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
         }
@@ -1931,25 +1931,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcFaceMorph item,
             MutagenFrame frame)
         {
-            item.NoseLongVsShort = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.NoseUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.JawUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.JawNarrowVsWide = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.JawForwardVsBack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.CheeksUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.CheeksForwardVsBack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EyesUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EyesInVsOut = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BrowsUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BrowsInVsOut = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BrowsForwardVsBack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.LipsUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.LipsInVsOut = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ChinNarrowVsWide = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ChinUpVsDown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ChinUnderbiteVsOverbite = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EyesForwardVsBack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.NoseLongVsShort = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.NoseUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.JawUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.JawNarrowVsWide = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.JawForwardVsBack = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.CheeksUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.CheeksForwardVsBack = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EyesUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EyesInVsOut = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BrowsUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BrowsInVsOut = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BrowsForwardVsBack = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LipsUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LipsInVsOut = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ChinNarrowVsWide = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ChinUpVsDown = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ChinUnderbiteVsOverbite = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EyesForwardVsBack = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1427,11 +1427,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IEquipTypeGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.WriteNullable(
+            BooleanBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseAllParents,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
@@ -1540,7 +1540,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseAllParents = Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.Parse(
+                    item.UseAllParents = BooleanBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)EquipType_FieldIndex.UseAllParents;

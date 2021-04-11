@@ -1015,10 +1015,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActivateParentGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Delay);
         }
@@ -1060,8 +1060,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActivateParent item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Delay = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Delay = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

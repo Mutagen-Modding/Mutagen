@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         {
             BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
+                $"{this.NamespacePrefix}ByteArrayBinaryTranslation.Instance.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 if (zero.Static)

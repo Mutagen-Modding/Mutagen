@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshNodeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavMesh);
             writer.Write(item.NodeIndex);
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshNode item,
             MutagenFrame frame)
         {
-            item.NavMesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.NavMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.NodeIndex = frame.ReadUInt32();
         }
 

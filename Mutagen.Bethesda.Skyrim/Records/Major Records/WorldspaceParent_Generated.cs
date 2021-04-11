@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Worldspace,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)WorldspaceParent_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.PNAM:

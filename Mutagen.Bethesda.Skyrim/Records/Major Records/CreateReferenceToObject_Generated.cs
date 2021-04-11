@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCO));
@@ -1244,7 +1244,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
                 case RecordTypeInts.ALCA:

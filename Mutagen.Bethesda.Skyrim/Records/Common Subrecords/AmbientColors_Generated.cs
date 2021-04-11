@@ -1349,30 +1349,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAmbientColorsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalXPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalXMinus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalYPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalYMinus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalZPlus);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalZMinus);
             if (!item.Versioning.HasFlag(AmbientColors.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Specular);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Scale);
             }
@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return;
             }
             item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Scale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Scale = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 var data = typeGen.GetFieldData();
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}BooleanBinaryTranslation.Instance.WriteAsMarker"))
+                    $"{this.NamespacePrefix}BooleanBinaryTranslation.Instance.WriteAsMarker"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");

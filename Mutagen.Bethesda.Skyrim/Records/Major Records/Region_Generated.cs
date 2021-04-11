@@ -2097,11 +2097,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapColor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RCLR));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Worldspace,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
@@ -2219,7 +2219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:

@@ -994,10 +994,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Rotation);
         }
@@ -1033,8 +1033,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocation item,
             MutagenFrame frame)
         {
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Rotation = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

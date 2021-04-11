@@ -1024,10 +1024,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImpactDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Material);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Impact);
         }
@@ -1069,8 +1069,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImpactData item,
             MutagenFrame frame)
         {
-            item.Material.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Impact.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Impact.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data,
                 binaryType: StringBinaryType.PrependLengthUShort);
@@ -1041,7 +1041,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Data = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+            item.Data = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }

@@ -947,7 +947,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorphGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data);
         }
@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorph item,
             MutagenFrame frame)
         {
-            item.Data = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(32));
+            item.Data = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(32));
         }
 
     }

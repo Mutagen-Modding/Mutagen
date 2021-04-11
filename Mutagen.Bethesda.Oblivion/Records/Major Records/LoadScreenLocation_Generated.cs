@@ -1073,13 +1073,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Direct);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Indirect);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.GridPoint);
         }
@@ -1121,9 +1121,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             MutagenFrame frame)
         {
-            item.Direct.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Indirect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.GridPoint = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Direct.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Indirect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.GridPoint = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

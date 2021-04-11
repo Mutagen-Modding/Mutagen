@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMappingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Write(
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Points.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Parse(
                     reader: frame,

@@ -2281,34 +2281,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             if (!item.Versioning.HasFlag(WaterData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.WindVelocity);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.WindDirection);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.WaveAmplitude);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.WaveFrequency);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SunPower);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ReflectivityAmount);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FresnelAmount);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ScrollXSpeed);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ScrollYSpeed);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FogDistanceNearPlane);
                 WaterDataBinaryWriteTranslation.WriteBinaryBloodCustomLogic(
@@ -2316,16 +2316,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item);
                 if (!item.Versioning.HasFlag(WaterData.VersioningBreaks.Break1))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.FogDistanceFarPlane);
-                    Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                    ColorBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.ShallowColor);
-                    Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                    ColorBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.DeepColor);
-                    Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                    ColorBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.ReflectionColor);
                     writer.Write(item.TextureBlend);
@@ -2335,22 +2335,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         item: item);
                     if (!item.Versioning.HasFlag(WaterData.VersioningBreaks.Break2))
                     {
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RainSimulatorForce);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RainSimulatorVelocity);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RainSimulatorFalloff);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RainSimulatorDampner);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RainSimulatorStartingSize);
-                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.DisplacementSimulatorForce);
                         WaterDataBinaryWriteTranslation.WriteBinaryOddExtraBytes(
@@ -2358,16 +2358,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             item: item);
                         if (!item.Versioning.HasFlag(WaterData.VersioningBreaks.Break3))
                         {
-                            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.DisplacementSimulatorVelocity);
-                            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.DisplacementSimulatorFalloff);
-                            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.DisplacementSimulatorDampner);
-                            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.DisplacementSimulatorStartingSize);
                             writer.Write(item.Damage);
@@ -2419,16 +2419,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= WaterData.VersioningBreaks.Break0;
                 return;
             }
-            item.WindVelocity = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.WindDirection = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.WaveAmplitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.WaveFrequency = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.SunPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ReflectivityAmount = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FresnelAmount = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ScrollXSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ScrollYSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FogDistanceNearPlane = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.WindVelocity = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.WindDirection = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.WaveAmplitude = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.WaveFrequency = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SunPower = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ReflectivityAmount = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FresnelAmount = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ScrollXSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ScrollYSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogDistanceNearPlane = FloatBinaryTranslation.Instance.Parse(reader: frame);
             WaterDataBinaryCreateTranslation.FillBinaryBloodCustomLogicCustom(
                 frame: frame,
                 item: item);
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= WaterData.VersioningBreaks.Break1;
                 return;
             }
-            item.FogDistanceFarPlane = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FogDistanceFarPlane = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.ShallowColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.DeepColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.ReflectionColor = frame.ReadColor(ColorBinaryType.Alpha);
@@ -2451,12 +2451,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= WaterData.VersioningBreaks.Break2;
                 return;
             }
-            item.RainSimulatorForce = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RainSimulatorVelocity = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RainSimulatorFalloff = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RainSimulatorDampner = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RainSimulatorStartingSize = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DisplacementSimulatorForce = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RainSimulatorForce = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RainSimulatorVelocity = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RainSimulatorFalloff = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RainSimulatorDampner = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RainSimulatorStartingSize = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorForce = FloatBinaryTranslation.Instance.Parse(reader: frame);
             WaterDataBinaryCreateTranslation.FillBinaryOddExtraBytesCustom(
                 frame: frame,
                 item: item);
@@ -2465,10 +2465,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= WaterData.VersioningBreaks.Break3;
                 return;
             }
-            item.DisplacementSimulatorVelocity = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DisplacementSimulatorFalloff = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DisplacementSimulatorDampner = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DisplacementSimulatorStartingSize = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorVelocity = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorFalloff = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorDampner = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DisplacementSimulatorStartingSize = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 

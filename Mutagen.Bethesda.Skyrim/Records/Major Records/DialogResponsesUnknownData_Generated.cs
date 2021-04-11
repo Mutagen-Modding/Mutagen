@@ -1097,15 +1097,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SCHR,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.QNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.WriteAsMarker(
+            BooleanBinaryTranslation.Instance.WriteAsMarker(
                 writer: writer,
                 item: item.NEXT,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NEXT));
@@ -1161,14 +1161,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.SCHR) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCHR = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.SCHR = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogResponsesUnknownData_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)DialogResponsesUnknownData_FieldIndex.QNAM) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.QNAM.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.QNAM.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponsesUnknownData_FieldIndex.QNAM;
                 }
                 case RecordTypeInts.NEXT:

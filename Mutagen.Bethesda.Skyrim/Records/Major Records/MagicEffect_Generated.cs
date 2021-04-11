@@ -4344,13 +4344,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MenuDisplayObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MDOB));
@@ -4362,7 +4362,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -4372,7 +4372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.BaseCost);
                 MagicEffectBinaryWriteTranslation.WriteBinaryAssociatedItem(
@@ -4388,39 +4388,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     length: 4);
                 writer.Write(item.CounterEffectCount);
                 writer.Write(item.Unknown1);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CastingLight);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TaperWeight);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.HitShader);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EnchantShader);
                 writer.Write(item.MinimumSkillLevel);
                 writer.Write(item.SpellmakingArea);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpellmakingCastingTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TaperCurve);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.TaperDuration);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SecondActorValueWeight);
                 MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
                     writer: writer,
                     item: item);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Projectile);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Explosion);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CastType>.Instance.Write(
@@ -4435,50 +4435,50 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.SecondActorValue,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CastingArt);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.HitEffectArt);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ImpactData);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SkillUsageMultiplier);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DualCastArt);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DualCastScale);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EnchantArt);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown2);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown3);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EquipAbility);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ImageSpaceModifier);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.PerkToApply);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundLevel>.Instance.Write(
                     writer,
                     item.CastingSoundLevel,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ScriptEffectAIScore);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ScriptEffectAIDelayTime);
             }
@@ -4487,7 +4487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.CounterEffects,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IMagicEffectGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE));
@@ -4504,7 +4504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
@@ -4612,7 +4612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -4621,7 +4621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MDOB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MenuDisplayObject.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MenuDisplayObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)MagicEffect_FieldIndex.MenuDisplayObject;
                 }
                 case RecordTypeInts.KWDA:
@@ -4642,7 +4642,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<MagicEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.BaseCost = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BaseCost = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustom(
                         frame: dataFrame,
                         item: item);
@@ -4650,39 +4650,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ResistValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.CounterEffectCount = dataFrame.ReadUInt16();
                     item.Unknown1 = dataFrame.ReadUInt16();
-                    item.CastingLight.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.TaperWeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.HitShader.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.EnchantShader.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.CastingLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.TaperWeight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.HitShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EnchantShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.MinimumSkillLevel = dataFrame.ReadUInt32();
                     item.SpellmakingArea = dataFrame.ReadUInt32();
-                    item.SpellmakingCastingTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TaperCurve = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TaperDuration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.SecondActorValueWeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SpellmakingCastingTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TaperCurve = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TaperDuration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SecondActorValueWeight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
-                    item.Projectile.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Explosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.SecondActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.CastingArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.HitEffectArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ImpactData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.SkillUsageMultiplier = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.DualCastArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.DualCastScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EnchantArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown2.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Unknown3.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.EquipAbility.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ImageSpaceModifier.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.PerkToApply.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.CastingArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.HitEffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SkillUsageMultiplier = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.DualCastArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.DualCastScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EnchantArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Unknown2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Unknown3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EquipAbility.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PerkToApply.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.ScriptEffectAIScore = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ScriptEffectAIDelayTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIScore = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIDelayTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:
@@ -4707,7 +4707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Description = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);

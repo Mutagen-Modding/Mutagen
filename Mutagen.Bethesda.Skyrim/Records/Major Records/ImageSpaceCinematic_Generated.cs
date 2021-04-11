@@ -1051,13 +1051,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceCinematicGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Saturation);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Brightness);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Contrast);
         }
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceCinematic item,
             MutagenFrame frame)
         {
-            item.Saturation = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Brightness = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Contrast = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Saturation = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Brightness = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Contrast = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

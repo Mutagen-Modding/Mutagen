@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLinkGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavMesh);
             writer.Write(item.NavMeshTriangleIndex);
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLink item,
             MutagenFrame frame)
         {
-            item.NavMesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.NavMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.NavMeshTriangleIndex = frame.ReadInt16();
             item.Unused = frame.ReadInt16();
         }

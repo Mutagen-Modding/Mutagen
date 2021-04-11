@@ -1762,7 +1762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.Write(
+            ByteBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
@@ -1771,7 +1771,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Global,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLG));
@@ -1906,7 +1906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Global.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LeveledNpc_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:

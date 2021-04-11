@@ -1326,10 +1326,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 1);
             writer.Write(item.SelfDamagePerSecond);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Explosion);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Debris);
             writer.Write(item.DebrisCount);
@@ -1377,8 +1377,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.ModelDamageStage = frame.ReadUInt8();
             item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.SelfDamagePerSecond = frame.ReadInt32();
-            item.Explosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Debris.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Debris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.DebrisCount = frame.ReadInt32();
         }
 

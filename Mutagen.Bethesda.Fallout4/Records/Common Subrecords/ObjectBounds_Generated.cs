@@ -1002,10 +1002,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IObjectBoundsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.First);
-            Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Second);
         }
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IObjectBounds item,
             MutagenFrame frame)
         {
-            item.First = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.Second = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.First = P3Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Second = P3Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

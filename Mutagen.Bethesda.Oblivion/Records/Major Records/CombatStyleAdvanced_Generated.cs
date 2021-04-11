@@ -1933,67 +1933,67 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvancedGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeFatigueModMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeFatigueModBase);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EncumbSpeedModBase);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EncumbSpeedModMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeWhileUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeNotUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeBackWhileUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeBackNotUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeForwardWhileUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeForwardNotUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BlockSkillModifierMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BlockSkillModifierBase);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BlockWhileUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BlockNotUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackSkillModifierMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackSkillModifierBase);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackWhileUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackNotUnderAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackDuringBlockMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PowerAttackFatigueModBase);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PowerAttackFatigueModMult);
         }
@@ -2035,27 +2035,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleAdvanced item,
             MutagenFrame frame)
         {
-            item.DodgeFatigueModMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeFatigueModBase = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EncumbSpeedModBase = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EncumbSpeedModMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeWhileUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeNotUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeBackWhileUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeBackNotUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeForwardWhileUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DodgeForwardNotUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BlockSkillModifierMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BlockSkillModifierBase = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BlockWhileUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BlockNotUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackSkillModifierMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackSkillModifierBase = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackWhileUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackNotUnderAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.AttackDuringBlockMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.PowerAttackFatigueModBase = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.PowerAttackFatigueModMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeFatigueModMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeFatigueModBase = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EncumbSpeedModBase = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EncumbSpeedModMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeWhileUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeNotUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeBackWhileUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeBackNotUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeForwardWhileUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DodgeForwardNotUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BlockSkillModifierMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BlockSkillModifierBase = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BlockWhileUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BlockNotUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackSkillModifierMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackSkillModifierBase = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackWhileUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackNotUnderAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackDuringBlockMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.PowerAttackFatigueModBase = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.PowerAttackFatigueModMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

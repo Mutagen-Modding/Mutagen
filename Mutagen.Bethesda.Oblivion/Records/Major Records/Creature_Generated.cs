@@ -3498,7 +3498,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -3526,7 +3526,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Spells,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO));
@@ -3536,7 +3536,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.Models,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NIFZ),
                 transl: StringBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NIFT,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NIFT));
@@ -3558,11 +3558,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DeathItem,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Script,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRI));
@@ -3578,7 +3578,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.AIPackages,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IAIPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.PKID));
@@ -3595,37 +3595,37 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AttackReach,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TurningSpeed,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BaseScale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FootWeight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BloodSpray,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BloodDecal,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InheritsSoundFrom,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSCR));
@@ -3734,7 +3734,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Creature_FieldIndex.Name;
@@ -3773,7 +3773,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
-                                return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                                return StringBinaryTranslation.Instance.Parse(
                                     r,
                                     item: out listSubItem,
                                     parseWhole: false,
@@ -3785,7 +3785,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NIFT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NIFT = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.NIFT = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Creature_FieldIndex.NIFT;
                 }
                 case RecordTypeInts.ACBS:
@@ -3806,13 +3806,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DeathItem.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.DeathItem.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Creature_FieldIndex.DeathItem;
                 }
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Creature_FieldIndex.Script;
                 }
                 case RecordTypeInts.AIDT:
@@ -3837,7 +3837,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
-                                return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                                return StringBinaryTranslation.Instance.Parse(
                                     r,
                                     item: out listSubItem,
                                     parseWhole: false,
@@ -3860,31 +3860,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatStyle.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.CombatStyle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Creature_FieldIndex.CombatStyle;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TurningSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TurningSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Creature_FieldIndex.TurningSpeed;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.BaseScale = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Creature_FieldIndex.BaseScale;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FootWeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FootWeight = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Creature_FieldIndex.FootWeight;
                 }
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BloodSpray = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.BloodSpray = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Creature_FieldIndex.BloodSpray;
@@ -3892,7 +3892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BloodDecal = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.BloodDecal = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Creature_FieldIndex.BloodDecal;
@@ -3900,7 +3900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CSCR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundFrom.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.InheritsSoundFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Creature_FieldIndex.InheritsSoundFrom;
                 }
                 case RecordTypeInts.CSDT:

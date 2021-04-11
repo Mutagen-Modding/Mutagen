@@ -1382,17 +1382,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Color,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.Write(
+            BooleanBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Playable,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM),
@@ -1491,7 +1491,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Playable = Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.Parse(
+                    item.Playable = BooleanBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         byteLength: 4);
                     return (int)ColorRecord_FieldIndex.Playable;

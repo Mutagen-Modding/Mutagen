@@ -2649,7 +2649,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
@@ -2660,11 +2660,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TPIC));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousDialog,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
@@ -2678,12 +2678,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.LinkTo,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IDialogGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT));
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ResponseData,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
@@ -2720,21 +2720,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Prompt,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Speaker,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WalkAwayTopic,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TWAT));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AudioOutputOverride,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
@@ -2837,7 +2837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DATA = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogResponses_FieldIndex.DATA;
                 }
                 case RecordTypeInts.ENAM:
@@ -2848,13 +2848,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.TPIC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.Topic;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousDialog.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.PreviousDialog.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.PreviousDialog;
                 }
                 case RecordTypeInts.CNAM:
@@ -2875,7 +2875,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ResponseData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ResponseData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.ResponseData;
                 }
                 case RecordTypeInts.TRDT:
@@ -2913,7 +2913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Prompt = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Prompt = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
@@ -2922,19 +2922,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Speaker.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Speaker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.Speaker;
                 }
                 case RecordTypeInts.TWAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WalkAwayTopic.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.WalkAwayTopic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.WalkAwayTopic;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AudioOutputOverride.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.AudioOutputOverride.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponses_FieldIndex.AudioOutputOverride;
                 }
                 default:

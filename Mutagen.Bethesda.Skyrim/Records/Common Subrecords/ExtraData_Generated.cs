@@ -1053,7 +1053,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ExtraDataBinaryWriteTranslation.WriteBinaryOwner(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ItemCondition);
         }
@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ExtraDataBinaryCreateTranslation.FillBinaryOwnerCustom(
                 frame: frame,
                 item: item);
-            item.ItemCondition = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ItemCondition = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
         static partial void FillBinaryOwnerCustom(

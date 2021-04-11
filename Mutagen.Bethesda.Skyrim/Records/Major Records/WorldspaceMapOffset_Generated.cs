@@ -1002,10 +1002,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapOffsetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Scale);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CellOffset);
         }
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapOffset item,
             MutagenFrame frame)
         {
-            item.Scale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.CellOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Scale = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.CellOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -11487,7 +11487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
@@ -11497,7 +11497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.RadialBlurFlags,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.P2FloatBinaryTranslation.Instance.Write(
+                P2FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RadialBlurCenter);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
@@ -12267,12 +12267,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Duration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Duration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
                     item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.RadialBlurCenter = Mutagen.Bethesda.Records.Binary.Translations.P2FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RadialBlurCenter = P2FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);

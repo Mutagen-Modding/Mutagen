@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });

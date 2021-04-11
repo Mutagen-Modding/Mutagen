@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}{(listOfRecords ? "PerItem" : null)}"))
+                $"{this.NamespacePrefix}ListBinaryTranslation<{typeName}>.Instance.Write{suffix}{(listOfRecords ? "PerItem" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"items: {GetWriteAccessor(itemAccessor)}");
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             WrapSet(fg, itemAccessor, list, (wrapFg) =>
             {
                 using (var args = new ArgsWrapper(wrapFg,
-                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
+                    $"{(isAsync ? "(" : null)}{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}List{(isAsync ? "Async" : null)}BinaryTranslation<{list.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>.Instance.Parse{(recordPerItem ? "PerItem" : null)}",
                     suffixLine: $"{Loqui.Generation.Utility.ConfigAwait(isAsync)}{(isAsync ? ")" : null)}")
                 {
                     SemiColon = false,

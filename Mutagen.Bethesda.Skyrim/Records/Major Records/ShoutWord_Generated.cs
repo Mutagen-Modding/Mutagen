@@ -1073,13 +1073,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShoutWordGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Word);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Spell);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RecoveryTime);
         }
@@ -1121,9 +1121,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShoutWord item,
             MutagenFrame frame)
         {
-            item.Word.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Spell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.RecoveryTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Word.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RecoveryTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             bool notNull = gender.ItemNullable && !gender.SubTypeGeneration.IsNullable;
             using (var args = new ArgsWrapper(fg,
-                $"{itemAccessor} = {this.Namespace}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
+                $"{itemAccessor} = {this.NamespacePrefix}GenderedItemBinaryTranslation.Parse{(gender.MarkerPerGender ? "MarkerPerItem" : null)}<{gender.SubTypeGeneration.TypeName(getter: false, needsCovariance: true)}>"))
             {
                 args.AddPassArg($"frame");
                 if (gender.MaleMarker.HasValue)

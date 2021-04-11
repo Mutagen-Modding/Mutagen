@@ -1588,7 +1588,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));

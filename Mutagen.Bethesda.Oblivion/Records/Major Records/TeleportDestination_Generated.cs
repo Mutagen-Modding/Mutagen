@@ -1064,13 +1064,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Destination);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Rotation);
         }
@@ -1112,9 +1112,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             MutagenFrame frame)
         {
-            item.Destination.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Destination.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Rotation = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

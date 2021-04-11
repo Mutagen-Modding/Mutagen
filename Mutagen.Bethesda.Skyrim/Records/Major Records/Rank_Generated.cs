@@ -1097,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Number,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -1108,13 +1108,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 femaleMarker: RecordTypes.FNAM,
                 transl: (MutagenWriter subWriter, ITranslatedStringGetter? subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+                    StringBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
                         item: subItem,
                         binaryType: StringBinaryType.NullTerminate,
                         source: StringsSource.Normal);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Insignia,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         skipMarker: false,
                         transl: (MutagenFrame r, out TranslatedString genSubItem) =>
                         {
-                            return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                            return StringBinaryTranslation.Instance.Parse(
                                 r,
                                 item: out genSubItem,
                                 parseWhole: false,
@@ -1198,7 +1198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Insignia) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Insignia = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Insignia = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Rank_FieldIndex.Insignia;

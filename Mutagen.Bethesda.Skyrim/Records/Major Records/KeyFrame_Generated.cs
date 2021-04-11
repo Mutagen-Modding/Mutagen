@@ -994,10 +994,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IKeyFrameGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Time);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Value);
         }
@@ -1033,8 +1033,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IKeyFrame item,
             MutagenFrame frame)
         {
-            item.Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Time = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Value = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

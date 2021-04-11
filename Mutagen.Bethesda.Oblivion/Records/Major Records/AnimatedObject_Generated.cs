@@ -1341,7 +1341,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleAnimation,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleAnimation.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.IdleAnimation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }
                 default:

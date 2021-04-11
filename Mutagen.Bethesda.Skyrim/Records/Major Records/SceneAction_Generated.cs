@@ -2041,20 +2041,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Type,
                 length: 2,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ActorID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
@@ -2063,15 +2063,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.StartPhase,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EndPhase,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ENAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.TimerSeconds,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -2080,24 +2080,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Packages,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Topic,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HeadtrackActorID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.HTID));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingMax,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DMAX));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LoopingMin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DMIN));
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Emotion,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DEMO));
-            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EmotionValue,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DEVA));
@@ -2185,7 +2185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SceneAction_FieldIndex.Name;
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.LNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.INAM:
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
                         case 1:
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.TimerSeconds = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                            item.TimerSeconds = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                             return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
                         default:
                             throw new NotImplementedException();
@@ -2248,7 +2248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Topic.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Topic.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SceneAction_FieldIndex.Topic;
                 }
                 case RecordTypeInts.HTID:
@@ -2260,13 +2260,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DMAX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.LoopingMax = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.LoopingMin = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.DEMO:

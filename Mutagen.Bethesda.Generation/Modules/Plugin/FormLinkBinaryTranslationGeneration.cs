@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 case FormLinkType.FormIDTypeEnum.Normal:
                     using (var args = new ArgsWrapper(fg,
-                        $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                        $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                     {
                         args.Add(nodeAccessor.Access);
                         if (this.DoErrorMasks)
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add(subFg =>
                 {
                     using (var args2 = new FunctionWrapper(subFg,
-                        $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                        $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                     {
                         args2.Add("reader: frame");
                     }
@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (data.HasTrigger || !PreferDirectTranslation)
                     {
                         using (var args = new ArgsWrapper(fg,
-                            $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                            $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                         {
                             args.Add($"writer: {writerAccessor}");
                             args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
@@ -176,7 +176,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     break;
                 case FormLinkType.FormIDTypeEnum.EDIDChars:
                     using (var args = new ArgsWrapper(fg,
-                        $"{this.Namespace}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                        $"{this.NamespacePrefix}RecordTypeBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                     {
                         args.Add($"writer: {writerAccessor}");
                         args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");

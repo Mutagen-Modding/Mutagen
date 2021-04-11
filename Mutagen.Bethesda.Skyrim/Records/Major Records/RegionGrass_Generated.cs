@@ -1010,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGrassGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Grass);
             writer.Write(item.Unknown);
@@ -1047,7 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGrass item,
             MutagenFrame frame)
         {
-            item.Grass.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Grass.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
         }
 

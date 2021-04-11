@@ -984,7 +984,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectIdGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Link);
         }
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectId item,
             MutagenFrame frame)
         {
-            item.Link.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Link.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

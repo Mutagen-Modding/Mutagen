@@ -1134,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDGS),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IGrassGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });

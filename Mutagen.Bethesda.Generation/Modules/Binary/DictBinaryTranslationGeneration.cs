@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
+                    $"{this.NamespacePrefix}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"items: {itemAccessor}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 switch (binaryType)

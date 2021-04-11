@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReferenceSubtypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Subtype);
         }
@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReferenceSubtype item,
             MutagenFrame frame)
         {
-            item.Subtype = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
+            item.Subtype = RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

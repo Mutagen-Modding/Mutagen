@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, String subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+                    StringBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         binaryType: StringBinaryType.PrependLengthUShort);
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     reader: frame,
                     transl: (MutagenFrame r, out String listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                        return StringBinaryTranslation.Instance.Parse(
                             r,
                             item: out listSubItem,
                             parseWhole: false,

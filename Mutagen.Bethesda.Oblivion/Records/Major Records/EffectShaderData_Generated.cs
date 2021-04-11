@@ -3720,61 +3720,61 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.MembraneShaderZTestFunction,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectColor);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectAlphaFadeInTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectFullAlphaTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectAlphaFadeOutTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectPersistentAlphaRatio);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectAlphaPulseAmplitude);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectAlphaPulseFrequency);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectTextureAnimationSpeedU);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectTextureAnimationSpeedV);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectFallOff);
-            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectColor);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectAlphaFadeInTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectFullAlphaTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectAlphaFadeOutTime);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectPersistentAlphaRatio);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectAlphaPulseAmplitude);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectAlphaPulseFrequency);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FillTextureEffectFullAlphaRatio);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectFullAlphaRatio);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
@@ -3799,88 +3799,88 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.ParticleShaderDestBlendMode,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderParticleBirthRampUpTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderFullParticleBirthTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderParticleBirthRampDownTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderFullParticleBirthRatio);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderPersistentParticleBirthRatio);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderParticleLifetime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderParticleLifetimePlusMinus);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderInitialSpeedAlongNormal);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderAccelerationAlongNormal);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderInitialVelocity1);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderInitialVelocity2);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderInitialVelocity3);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderAcceleration1);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderAcceleration2);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderAcceleration3);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderScaleKey1);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderScaleKey2);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderScaleKey1Time);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ParticleShaderScaleKey2Time);
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1Color);
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey2Color);
-                Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
+                ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3Color);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1ColorAlpha);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey2ColorAlpha);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3ColorAlpha);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1ColorKeyTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey2ColorKeyTime);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3ColorKeyTime);
             }
@@ -3928,24 +3928,24 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MembraneShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.MembraneShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.FillTextureEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FillTextureEffectAlphaFadeInTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectFullAlphaTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectAlphaFadeOutTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectPersistentAlphaRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectAlphaPulseAmplitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectAlphaPulseFrequency = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectTextureAnimationSpeedU = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectTextureAnimationSpeedV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectFallOff = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectAlphaFadeInTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectFullAlphaTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectAlphaFadeOutTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectPersistentAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectAlphaPulseAmplitude = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectAlphaPulseFrequency = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectTextureAnimationSpeedU = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectTextureAnimationSpeedV = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectFallOff = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.EdgeEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.EdgeEffectAlphaFadeInTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectFullAlphaTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectAlphaFadeOutTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectPersistentAlphaRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectAlphaPulseAmplitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectAlphaPulseFrequency = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FillTextureEffectFullAlphaRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EdgeEffectFullAlphaRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectAlphaFadeInTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectFullAlphaTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectAlphaFadeOutTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectPersistentAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectAlphaPulseAmplitude = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FillTextureEffectFullAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.MembraneShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
             if (frame.Complete)
             {
@@ -3956,34 +3956,34 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ParticleShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.ParticleShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.ParticleShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ParticleShaderParticleBirthRampUpTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderFullParticleBirthTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderParticleBirthRampDownTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderFullParticleBirthRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderPersistentParticleBirthRatio = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderParticleLifetime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderParticleLifetimePlusMinus = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderInitialSpeedAlongNormal = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderAccelerationAlongNormal = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderInitialVelocity1 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderInitialVelocity2 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderInitialVelocity3 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderAcceleration1 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderAcceleration2 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderAcceleration3 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderScaleKey1 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderScaleKey2 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderScaleKey1Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ParticleShaderScaleKey2Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderParticleBirthRampUpTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderFullParticleBirthTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderParticleBirthRampDownTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderFullParticleBirthRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderPersistentParticleBirthRatio = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderParticleLifetime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderParticleLifetimePlusMinus = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialSpeedAlongNormal = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderAccelerationAlongNormal = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialVelocity1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialVelocity2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderInitialVelocity3 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderAcceleration1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderAcceleration2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderAcceleration3 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderScaleKey1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderScaleKey2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderScaleKey1Time = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ParticleShaderScaleKey2Time = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.ColorKey1Color = frame.ReadColor(ColorBinaryType.Alpha);
             item.ColorKey2Color = frame.ReadColor(ColorBinaryType.Alpha);
             item.ColorKey3Color = frame.ReadColor(ColorBinaryType.Alpha);
-            item.ColorKey1ColorAlpha = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorKey2ColorAlpha = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorKey3ColorAlpha = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorKey1ColorKeyTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorKey2ColorKeyTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorKey3ColorKeyTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey1ColorAlpha = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey2ColorAlpha = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey3ColorAlpha = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey1ColorKeyTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey2ColorKeyTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorKey3ColorKeyTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

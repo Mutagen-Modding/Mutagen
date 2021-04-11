@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MovementType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MTYP));
@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RaceMovementType_FieldIndex.MovementType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MovementType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MovementType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RaceMovementType_FieldIndex.MovementType;
                 }
                 case RecordTypeInts.SPED:

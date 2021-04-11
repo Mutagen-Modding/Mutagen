@@ -1059,13 +1059,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Max);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CellData);
         }
@@ -1107,9 +1107,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeight item,
             MutagenFrame frame)
         {
-            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.CellData = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame);
+            item.Min = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Max = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.CellData = ByteArrayBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1161,10 +1161,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Specialization,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UseValueFirst);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UseValueSecond);
         }
@@ -1209,8 +1209,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.UseValueFirst = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.UseValueSecond = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.UseValueFirst = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.UseValueSecond = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

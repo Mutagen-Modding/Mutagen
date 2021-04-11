@@ -1752,7 +1752,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimationCount(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleTimer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLT));
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTimer = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.IdleTimer = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:

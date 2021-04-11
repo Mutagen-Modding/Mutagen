@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.UInt16BinaryTranslation.Instance.Write(
+            UInt16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Stage,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));

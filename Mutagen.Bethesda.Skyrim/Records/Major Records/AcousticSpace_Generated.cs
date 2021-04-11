@@ -1475,15 +1475,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AmbientSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UseSoundFromRegion,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RDAT));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EnvironmentType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
@@ -1586,19 +1586,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AmbientSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.AmbientSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AcousticSpace_FieldIndex.AmbientSound;
                 }
                 case RecordTypeInts.RDAT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UseSoundFromRegion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.UseSoundFromRegion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AcousticSpace_FieldIndex.UseSoundFromRegion;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EnvironmentType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.EnvironmentType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AcousticSpace_FieldIndex.EnvironmentType;
                 }
                 default:

@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MagicEffect);
             writer.Write(item.Magnitude);
@@ -1262,7 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectData item,
             MutagenFrame frame)
         {
-            item.MagicEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
+            item.MagicEffect.SetTo(RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
             item.Magnitude = frame.ReadUInt32();
             item.Area = frame.ReadUInt32();
             item.Duration = frame.ReadUInt32();

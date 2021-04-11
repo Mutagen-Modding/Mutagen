@@ -1068,13 +1068,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellEnablePointGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Actor);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Ref);
-            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Grid,
                 swapCoords: true);
@@ -1111,9 +1111,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellEnablePoint item,
             MutagenFrame frame)
         {
-            item.Actor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Ref.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Grid = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(
+            item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Grid = P2Int16BinaryTranslation.Instance.Parse(
                 reader: frame,
                 swapCoords: true);
         }

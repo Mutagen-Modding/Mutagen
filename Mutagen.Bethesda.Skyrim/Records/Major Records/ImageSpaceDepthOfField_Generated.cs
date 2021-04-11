@@ -1280,13 +1280,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceDepthOfFieldGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Strength);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Distance);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Range);
             if (!item.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0))
@@ -1338,9 +1338,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceDepthOfField item,
             MutagenFrame frame)
         {
-            item.Strength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Distance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Range = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Strength = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Distance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Range = FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= ImageSpaceDepthOfField.VersioningBreaks.Break0;

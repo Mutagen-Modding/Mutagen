@@ -1043,13 +1043,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMountDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MountOffset);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DismountOffset);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MountCameraOffset);
         }
@@ -1085,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMountData item,
             MutagenFrame frame)
         {
-            item.MountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DismountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MountCameraOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MountOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DismountOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MountCameraOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

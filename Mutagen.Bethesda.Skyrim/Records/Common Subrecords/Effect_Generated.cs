@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.BaseEffect,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EFID));
@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Effect_FieldIndex.BaseEffect) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BaseEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.BaseEffect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Effect_FieldIndex.BaseEffect;
                 }
                 case RecordTypeInts.EFIT:

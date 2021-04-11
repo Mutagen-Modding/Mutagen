@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             writer.Write(item.Unknown);
             if (!item.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.StealMult);
                 if (!item.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break1))
@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Versioning |= CrimeValues.VersioningBreaks.Break0;
                 return;
             }
-            item.StealMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.StealMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CrimeValues.VersioningBreaks.Break1;

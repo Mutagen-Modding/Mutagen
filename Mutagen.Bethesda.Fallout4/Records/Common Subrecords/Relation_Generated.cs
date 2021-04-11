@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IRelationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target);
             writer.Write(item.Modifier);
@@ -1111,7 +1111,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Target.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
             item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }

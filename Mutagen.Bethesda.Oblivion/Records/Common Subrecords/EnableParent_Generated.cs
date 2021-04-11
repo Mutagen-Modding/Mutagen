@@ -1015,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParentGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EnableParent.Flag>.Instance.Write(
@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

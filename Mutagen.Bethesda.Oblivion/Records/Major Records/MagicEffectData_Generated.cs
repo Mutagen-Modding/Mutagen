@@ -1531,7 +1531,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BaseCost);
             writer.Write(item.Unused);
@@ -1544,13 +1544,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Resistance,
                 length: 4);
             writer.Write(item.CounterEffectCount);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Light);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ProjectileSpeed);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EffectShader);
             if (!item.Versioning.HasFlag(MagicEffectData.VersioningBreaks.Break0))
@@ -1602,14 +1602,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.BaseCost = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BaseCost = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unused = frame.ReadInt32();
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.CounterEffectCount = frame.ReadUInt32();
-            item.Light.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.ProjectileSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EffectShader.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.ProjectileSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.EffectShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= MagicEffectData.VersioningBreaks.Break0;

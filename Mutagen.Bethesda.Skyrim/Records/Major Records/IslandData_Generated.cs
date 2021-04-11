@@ -1320,10 +1320,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIslandDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Max);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Write(
@@ -1369,8 +1369,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIslandData item,
             MutagenFrame frame)
         {
-            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Min = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Max = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
                     amount: frame.ReadInt32(),

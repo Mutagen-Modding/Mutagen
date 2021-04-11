@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script);
             if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0))
@@ -1186,7 +1186,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer,
                     item.MagicSchool,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
+                RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VisualEffect);
                 if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1))
@@ -1236,14 +1236,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectData item,
             MutagenFrame frame)
         {
-            item.Script.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Script.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break0;
                 return;
             }
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.VisualEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
+            item.VisualEffect.SetTo(RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break1;

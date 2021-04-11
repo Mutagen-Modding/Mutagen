@@ -1351,30 +1351,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleMeleeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackStaggeredMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PowerAttackStaggeredMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PowerAttackBlockingMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BashMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BashRecoilMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BashAttackMult);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BashPowerAttackMult);
             if (!item.Versioning.HasFlag(CombatStyleMelee.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpecialAttackMult);
             }
@@ -1417,19 +1417,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleMelee item,
             MutagenFrame frame)
         {
-            item.AttackStaggeredMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.PowerAttackStaggeredMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.PowerAttackBlockingMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BashMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BashRecoilMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BashAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BashPowerAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackStaggeredMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.PowerAttackStaggeredMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.PowerAttackBlockingMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BashMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BashRecoilMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BashAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BashPowerAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleMelee.VersioningBreaks.Break0;
                 return;
             }
-            item.SpecialAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SpecialAttackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemEntryGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Item);
             writer.Write(item.Count);
@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IItemEntry item,
             MutagenFrame frame)
         {
-            item.Item.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Item.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete) return;
             item.Count = frame.ReadInt32();
         }

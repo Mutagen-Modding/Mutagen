@@ -4345,7 +4345,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -4355,7 +4355,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.WriteNullable(
+            P2IntBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Grid,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCLC));
@@ -4372,7 +4372,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XCLR),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IRegionGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -4381,27 +4381,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.MusicType,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCMT));
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterHeight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCLW));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCCM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCWT));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Owner,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XOWN));
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FactionRank,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XRNK));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GlobalVariable,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XGLB));
@@ -4513,7 +4513,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Cell_FieldIndex.Name;
@@ -4527,7 +4527,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XCLC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Grid = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Grid = P2IntBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
@@ -4554,25 +4554,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.WaterHeight = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XCCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.Climate;
                 }
                 case RecordTypeInts.XCWT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.Water;
                 }
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Owner.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
@@ -4584,7 +4584,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XGLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlobalVariable.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.GlobalVariable.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Cell_FieldIndex.GlobalVariable;
                 }
                 default:

@@ -1010,10 +1010,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDefaultObjectGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Use);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object);
         }
@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDefaultObject item,
             MutagenFrame frame)
         {
-            item.Use = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
-            item.Object.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Use = RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
+            item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

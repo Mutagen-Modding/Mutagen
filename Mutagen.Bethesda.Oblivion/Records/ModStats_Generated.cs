@@ -1051,7 +1051,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModStatsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version);
             writer.Write(item.NumRecords);
@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModStats item,
             MutagenFrame frame)
         {
-            item.Version = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Version = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.NumRecords = frame.ReadUInt32();
             item.NextFormID = frame.ReadUInt32();
         }

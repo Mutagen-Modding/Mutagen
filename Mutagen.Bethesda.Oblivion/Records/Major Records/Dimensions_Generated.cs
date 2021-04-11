@@ -1002,10 +1002,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDimensionsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Width);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Height);
         }
@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDimensions item,
             MutagenFrame frame)
         {
-            item.Width = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Height = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Width = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Height = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

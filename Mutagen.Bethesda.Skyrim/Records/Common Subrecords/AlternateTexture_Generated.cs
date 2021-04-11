@@ -1072,11 +1072,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlternateTextureGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Name,
                 binaryType: StringBinaryType.PrependLength);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NewTexture);
             writer.Write(item.Index);
@@ -1113,10 +1113,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlternateTexture item,
             MutagenFrame frame)
         {
-            item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+            item.Name = StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLength);
-            item.NewTexture.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.NewTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Index = frame.ReadInt32();
         }
 

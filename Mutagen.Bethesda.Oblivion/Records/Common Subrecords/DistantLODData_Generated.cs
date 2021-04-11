@@ -1051,13 +1051,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown0);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown1);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
         }
@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODData item,
             MutagenFrame frame)
         {
-            item.Unknown0 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Unknown1 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown0 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

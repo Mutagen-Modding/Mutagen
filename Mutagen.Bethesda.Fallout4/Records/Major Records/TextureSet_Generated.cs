@@ -1921,42 +1921,42 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Diffuse,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX00),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.NormalOrGloss,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX01),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Glow,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX03),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Height,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX04),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Environment,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX05),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Wrinkles,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX02),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Multilayer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX06),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SmoothSpec,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TX07),
@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Flags,
                 length: 2,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Material,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX00:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Diffuse = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Diffuse = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Diffuse;
@@ -2085,7 +2085,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX01:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NormalOrGloss = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.NormalOrGloss = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.NormalOrGloss;
@@ -2093,7 +2093,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX03:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Glow = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Glow = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Glow;
@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX04:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Height = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Height = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Height;
@@ -2109,7 +2109,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX05:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Environment = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Environment = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Environment;
@@ -2117,7 +2117,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX02:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Wrinkles = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Wrinkles = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Wrinkles;
@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX06:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Multilayer = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Multilayer = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Multilayer;
@@ -2133,7 +2133,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TX07:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SmoothSpec = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.SmoothSpec = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.SmoothSpec;
@@ -2152,7 +2152,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Material = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Material = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TextureSet_FieldIndex.Material;

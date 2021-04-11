@@ -1096,15 +1096,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AliasIndex,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFA));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Keyword,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.KNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.RefType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALRT));
@@ -1167,14 +1167,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.Keyword) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Keyword.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Keyword.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.Keyword;
                 }
                 case RecordTypeInts.ALRT:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LocationAliasReference_FieldIndex.RefType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.RefType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.RefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LocationAliasReference_FieldIndex.RefType;
                 }
                 default:

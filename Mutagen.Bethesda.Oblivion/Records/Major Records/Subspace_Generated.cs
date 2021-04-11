@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.WriteNullable(
+            P3FloatBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Point,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM));
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Subspace_FieldIndex.Point;
                 }
                 default:

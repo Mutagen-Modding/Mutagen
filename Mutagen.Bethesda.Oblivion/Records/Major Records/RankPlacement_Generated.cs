@@ -1072,11 +1072,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacementGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Faction);
             writer.Write(item.Rank);
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused);
         }
@@ -1118,9 +1118,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRankPlacement item,
             MutagenFrame frame)
         {
-            item.Faction.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Faction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Rank = frame.ReadUInt8();
-            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

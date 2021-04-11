@@ -995,7 +995,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer)
         {
             writer.Write(item.PointID);
-            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Point);
         }
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.PointID = frame.ReadInt32();
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

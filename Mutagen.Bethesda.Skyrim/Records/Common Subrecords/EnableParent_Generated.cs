@@ -1127,7 +1127,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEnableParentGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
             if (!item.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0))
@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown);
             }
@@ -1179,14 +1179,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;
                 return;
             }
             item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unknown = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

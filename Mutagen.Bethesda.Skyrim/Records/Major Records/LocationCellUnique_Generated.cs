@@ -1077,13 +1077,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellUniqueGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Actor);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Ref);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
         }
@@ -1119,9 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellUnique item,
             MutagenFrame frame)
         {
-            item.Actor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Ref.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Location.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Actor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Ref.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

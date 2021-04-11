@@ -1019,10 +1019,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPortalGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Origin);
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Destination);
         }
@@ -1058,8 +1058,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPortal item,
             MutagenFrame frame)
         {
-            item.Origin.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Destination.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Origin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Destination.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

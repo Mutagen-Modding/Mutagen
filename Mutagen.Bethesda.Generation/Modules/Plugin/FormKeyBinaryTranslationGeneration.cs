@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
             }
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                $"{retAccessor}{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor.Access);
                 if (this.DoErrorMasks)

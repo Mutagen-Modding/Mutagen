@@ -1819,10 +1819,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MaxAngle);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Material);
                 if (!item.DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0))
@@ -1831,7 +1831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer,
                         item.Flags,
                         length: 1);
-                    Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+                    ByteArrayBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Unused);
                 }
@@ -1950,15 +1950,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.MaxAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Material.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.MaxAngle = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
                         return (int)Static_FieldIndex.Material;
                     }
                     item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:

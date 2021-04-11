@@ -1302,10 +1302,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Speed);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reach);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Write(
@@ -1314,7 +1314,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 4);
             writer.Write(item.Value);
             writer.Write(item.Health);
-            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Weight);
             writer.Write(item.Damage);
@@ -1358,12 +1358,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Speed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Reach = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Value = frame.ReadUInt32();
             item.Health = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 

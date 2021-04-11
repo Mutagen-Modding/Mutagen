@@ -992,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InheritsSoundsFrom,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSCR));
@@ -1059,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InheritsSoundsFrom.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.InheritsSoundsFrom.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)NpcInheritSound_FieldIndex.InheritsSoundsFrom;
                 }
                 default:

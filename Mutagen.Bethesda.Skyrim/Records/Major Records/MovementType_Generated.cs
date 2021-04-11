@@ -1966,48 +1966,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
                 binaryType: StringBinaryType.NullTerminate);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.SPED)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LeftWalk);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.LeftRun);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RightWalk);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RightRun);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ForwardWalk);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ForwardRun);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.BackWalk);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.BackRun);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceWalk,
                     multiplier: 57.2958f);
-                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RotateInPlaceRun,
                     multiplier: 57.2958f);
                 if (!item.SPEDDataTypeState.HasFlag(MovementType.SPEDDataType.Break0))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.RotateWhileMovingRun,
                         multiplier: 57.2958f);
@@ -2114,7 +2114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
+                    item.Name = StringBinaryTranslation.Instance.Parse(
                         reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MovementType_FieldIndex.Name;
@@ -2123,18 +2123,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.LeftWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.LeftRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.RightWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.RightRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ForwardWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ForwardRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BackWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BackRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.RotateInPlaceWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
+                    item.LeftWalk = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LeftRun = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RightWalk = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RightRun = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ForwardWalk = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ForwardRun = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BackWalk = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BackRun = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RotateInPlaceWalk = FloatBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         multiplier: 57.2958f);
-                    item.RotateInPlaceRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
+                    item.RotateInPlaceRun = FloatBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         multiplier: 57.2958f);
                     if (dataFrame.Complete)
@@ -2142,7 +2142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.SPEDDataTypeState |= MovementType.SPEDDataType.Break0;
                         return (int)MovementType_FieldIndex.RotateInPlaceRun;
                     }
-                    item.RotateWhileMovingRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
+                    item.RotateWhileMovingRun = FloatBinaryTranslation.Instance.Parse(
                         reader: dataFrame,
                         multiplier: 57.2958f);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;

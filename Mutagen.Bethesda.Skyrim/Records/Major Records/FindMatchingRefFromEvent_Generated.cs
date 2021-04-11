@@ -1034,11 +1034,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.WriteNullable(
+            RecordTypeBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FromEvent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFE));
-            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EventData,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFD));
@@ -1094,14 +1094,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.FromEvent) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FromEvent = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FromEvent = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.FromEvent;
                 }
                 case RecordTypeInts.ALFD:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefFromEvent_FieldIndex.EventData) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EventData = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.EventData = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefFromEvent_FieldIndex.EventData;
                 }
                 default:

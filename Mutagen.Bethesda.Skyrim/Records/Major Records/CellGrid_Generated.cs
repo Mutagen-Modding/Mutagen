@@ -1002,7 +1002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGridGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Point);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CellGrid.Flag>.Instance.Write(
@@ -1048,7 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGrid item,
             MutagenFrame frame)
         {
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P2IntBinaryTranslation.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

@@ -1582,10 +1582,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Parent);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Child);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Relationship.RankType>.Instance.Write(
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AssociationType);
             }
@@ -1696,12 +1696,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Parent.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Child.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     item.Unknown = dataFrame.ReadUInt8();
                     item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.AssociationType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.AssociationType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:

@@ -1124,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Coordinates,
                 transl: (MutagenWriter subWriter, P2Int16 subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
+                    P2Int16BinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         swapCoords: true);
@@ -1170,13 +1170,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinate item,
             MutagenFrame frame)
         {
-            item.Location.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     reader: frame,
                     transl: (MutagenFrame r, out P2Int16 listSubItem) =>
                     {
-                        listSubItem = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(
+                        listSubItem = P2Int16BinaryTranslation.Instance.Parse(
                             r,
                             swapCoords: true);
                         return true;
