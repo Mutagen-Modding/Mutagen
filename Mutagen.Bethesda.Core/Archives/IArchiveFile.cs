@@ -1,3 +1,4 @@
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,5 +29,23 @@ namespace Mutagen.Bethesda.Archives
         /// Copies this entry to the given stream
         /// </summary>
         ValueTask CopyDataToAsync(Stream output);
+
+        /// <summary>
+        /// Retrieves the data and returns it as a new array of bytes
+        /// </summary>
+        /// <returns>New array of bytes containing data</returns>
+        byte[] GetBytes();
+
+        /// <summary>
+        /// Retrieves the data and returns it as a readonly span that may be part of a larger memory block
+        /// </summary>
+        /// <returns>span containing data that may be part of a larger memory block</returns>
+        ReadOnlySpan<byte> GetSpan();
+
+        /// <summary>
+        /// Retrieves the data and returns it as a readonly span that may be part of a larger memory block
+        /// </summary>
+        /// <returns>span containing data that may be part of a larger memory block</returns>
+        ReadOnlyMemorySlice<byte> GetMemorySlice();
     }
 }

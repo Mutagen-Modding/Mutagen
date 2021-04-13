@@ -197,5 +197,58 @@ namespace Mutagen.Bethesda.Archives.Bsa
                 return (Size: onDiskSize, OnDisk: onDiskSize, Original: originalSize);
             }
         }
+
+        public byte[] GetBytes()
+        {
+            using var rdr = BSA.GetStream();
+            rdr.BaseStream.Position = Offset;
+
+            (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
+            if (!_size.IsValueCreated)
+            {
+                _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
+            }
+
+            if (BSA.HeaderType == BsaVersionType.SSE)
+            {
+                if (Compressed && size.Size != size.OnDisk)
+                {
+                    using var r = LZ4Stream.Decode(rdr.BaseStream);
+                    var bytes = new byte[size.Original];
+                    var memStream = new MemoryStream(bytes);
+                    r.CopyToLimit(memStream, size.Original);
+                    return bytes;
+                }
+                else
+                {
+                    return rdr.ReadBytes(checked((int)size.OnDisk));
+                }
+            }
+            else
+            {
+                if (Compressed)
+                {
+                    using var z = new InflaterInputStream(rdr.BaseStream);
+                    var bytes = new byte[size.Original];
+                    var memStream = new MemoryStream(bytes);
+                    z.CopyToLimit(memStream, size.Original);
+                    return bytes;
+                }
+                else
+                {
+                    return rdr.ReadBytes(checked((int)size.OnDisk));
+                }
+            }
+        }
+
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
+        }
     }
 }

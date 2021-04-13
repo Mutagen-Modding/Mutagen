@@ -1,4 +1,5 @@
 using ICSharpCode.SharpZipLib.Zip.Compression;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -211,6 +212,24 @@ namespace Mutagen.Bethesda.Archives.Ba2
             }
         }
 
+        public byte[] GetBytes()
+        {
+            var ret = new byte[Size];
+            var memStream = new MemoryStream(ret);
+            CopyDataTo(memStream);
+            return ret;
+        }
+
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
+        }
+
         private void WriteHeader(BinaryWriter bw)
         {
             var ddsHeader = new DDS_HEADER();
@@ -418,6 +437,39 @@ namespace Mutagen.Bethesda.Archives.Ba2
                 inflater.Inflate(uncompressed);
                 await output.WriteAsync(uncompressed, 0, uncompressed.Length);
             }
+        }
+
+        public byte[] GetBytes()
+        {
+            using var fs = _bsa._streamFactory();
+            fs.Seek((long)_offset, SeekOrigin.Begin);
+            uint len = Compressed ? _size : _realSize;
+
+            var bytes = new byte[len];
+            fs.Read(bytes, 0, (int)len);
+
+            if (!Compressed)
+            {
+                return bytes;
+            }
+            else
+            {
+                var uncompressed = new byte[_realSize];
+                var inflater = new Inflater();
+                inflater.SetInput(bytes);
+                inflater.Inflate(uncompressed);
+                return uncompressed;
+            }
+        }
+
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
         }
     }
 }

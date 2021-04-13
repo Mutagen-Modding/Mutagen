@@ -110,10 +110,7 @@ namespace Mutagen.Bethesda.Strings
                                     {
                                         try
                                         {
-                                            byte[] bytes = new byte[item.Size];
-                                            using var stream = new MemoryStream(bytes);
-                                            item.CopyDataTo(stream);
-                                            return new StringsLookupOverlay(bytes, type);
+                                            return new StringsLookupOverlay(item.GetMemorySlice(), type);
                                         }
                                         catch (Exception ex)
                                         {
