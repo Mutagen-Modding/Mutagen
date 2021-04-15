@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Mutagen.Bethesda.UnitTests.Persistence
 {
     public class TextFileSharedFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests<TextFileSharedFormKeyAllocator>
     {

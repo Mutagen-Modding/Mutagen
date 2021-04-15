@@ -3,7 +3,7 @@ using System;
 using System.Data;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Mutagen.Bethesda.UnitTests.Persistence
 {
     public abstract class IFormKeyAllocator_Tests<TFormKeyAllocator>
         where TFormKeyAllocator : IFormKeyAllocator

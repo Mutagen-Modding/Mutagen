@@ -8,7 +8,7 @@ using System.Data;
 using System.Linq;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Mutagen.Bethesda.UnitTests.Persistence
 {
 
     public class SQLiteFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests<SQLiteFormKeyAllocator>

@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using Xunit;
 
-namespace Mutagen.Bethesda.UnitTests
+namespace Mutagen.Bethesda.UnitTests.Persistence
 {
     public abstract class ISharedFormKeyAllocator_Tests<TFormKeyAllocator> : IPersistentFormKeyAllocator_Tests<TFormKeyAllocator>
         where TFormKeyAllocator : BaseSharedFormKeyAllocator
