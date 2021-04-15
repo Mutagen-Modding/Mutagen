@@ -49,7 +49,8 @@ namespace Mutagen.Bethesda.Skyrim
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
-        public ScriptProperty.Flag Flags { get; set; } = default;
+        public readonly static ScriptProperty.Flag _Flags_Default = ScriptProperty.Flag.Edited;
+        public ScriptProperty.Flag Flags { get; set; } = _Flags_Default;
         #endregion
 
         #region To String
@@ -748,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Flags = default;
+            item.Flags = ScriptProperty._Flags_Default;
         }
         
         #region Mutagen
