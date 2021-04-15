@@ -1,8 +1,5 @@
-﻿using JetBrains.Annotations;
-
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
     public enum DebugFunctionType : byte
     {
         Method = 0,

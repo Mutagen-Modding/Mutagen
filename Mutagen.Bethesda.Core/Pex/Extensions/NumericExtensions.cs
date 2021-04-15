@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace Mutagen.Bethesda.Core.Pex.Extensions
+namespace Mutagen.Bethesda.Pex
 {
     internal static class NumericExtensions
     {

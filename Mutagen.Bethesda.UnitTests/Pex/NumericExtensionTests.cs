@@ -1,6 +1,6 @@
-﻿using System;
+using Mutagen.Bethesda.Pex;
+using System;
 using Xunit;
-using Mutagen.Bethesda.Core.Pex.Extensions;
 
 namespace Mutagen.Bethesda.UnitTests.Pex
 {

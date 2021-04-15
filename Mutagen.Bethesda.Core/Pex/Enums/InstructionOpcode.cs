@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     [SuppressMessage("ReSharper", "IdentifierTypo")]
     public enum InstructionOpcode

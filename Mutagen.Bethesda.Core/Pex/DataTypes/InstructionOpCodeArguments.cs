@@ -1,12 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using JetBrains.Annotations;
-using Mutagen.Bethesda.Core.Pex.Enums;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
     public static class InstructionOpCodeArguments
     {
         [SuppressMessage("ReSharper", "StringLiteralTypo")]

@@ -1,9 +1,7 @@
-﻿using System;
-using JetBrains.Annotations;
+using System;
 
-namespace Mutagen.Bethesda.Core.Pex.Enums
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
     [Flags]
     public enum FunctionFlags : byte
     {

@@ -1,115 +1,71 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
-using Mutagen.Bethesda.Core.Pex.Exceptions;
-using Mutagen.Bethesda.Core.Pex.Extensions;
-using Mutagen.Bethesda.Core.Pex.Interfaces;
+using System.Text;
 using Noggog;
+using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
-    public class PexFile : IPexFile
+    public partial class PexFile
     {
         private readonly GameCategory _gameCategory;
-        
-        public uint Magic { get; set; }
-        
-        public byte MajorVersion { get; set; }
-        
-        public byte MinorVersion { get; set; }
-        
-        public ushort GameId { get; set; }
-        
-        public DateTime CompilationTime { get; set; }
 
-        public string SourceFileName { get; set; } = string.Empty;
-        
-        public string Username { get; set; } = string.Empty;
-        
-        public string MachineName { get; set; } = string.Empty;
-        
-        public IDebugInfo? DebugInfo { get; set; }
-
-        public List<IPexObject> Objects { get; set; } = new();
-
-        private Dictionary<ushort, string> _strings = new();
-        private List<IUserFlag> _userFlags = new();
-        
         public PexFile(GameCategory gameCategory)
         {
             _gameCategory = gameCategory;
         }
 
-        public PexFile(BinaryReader br, GameCategory gameCategory) : this(gameCategory)
-        {
-            Read(br);
-        }
-
-        internal string GetStringFromIndex(ushort index)
-        {
-            if(_strings.TryGetValue(index, out var value))
-                return value;
-            throw new PexParsingException($"Unable to find string in table at index {index}");
-        }
-
-        internal ushort GetIndexFromString(string? value)
-        {
-            if (value == null) return ushort.MaxValue;
-            var pair = _strings.First(x => x.Value.Equals(value));
-            return pair.Key;
-        }
-        
-        internal IEnumerable<IUserFlag> GetUserFlags(uint userFlags) => _userFlags.Where(x => (userFlags & x.FlagMask) == 1);
-
-        internal uint GetUserFlags(IEnumerable<IUserFlag> userFlags)
-        {
-            return userFlags.Aggregate<IUserFlag, uint>(0, (current, userFlag) => current | userFlag.FlagMask);
-        }
-        
         private const uint PexMagic = 0xFA57C0DE;
-        
-        public void Read(BinaryReader br)
+
+        private static void Read(PexFile file, IBinaryReadStream br)
         {
-            Magic = br.ReadUInt32();
-            if (Magic != PexMagic)
-                throw new PexParsingException($"File does not have fast code! Magic does not match {PexMagic:x8} is {Magic:x8}");
-            
-            MajorVersion = br.ReadByte();
-            MinorVersion = br.ReadByte();
-            GameId = br.ReadUInt16();
-            CompilationTime = br.ReadUInt64().ToDateTime();
-            SourceFileName = br.ReadString();
-            Username = br.ReadString();
-            MachineName = br.ReadString();
+            var magic = br.ReadUInt32();
+            if (magic != PexMagic)
+                throw new InvalidDataException($"File does not have fast code! Magic does not match {PexMagic:x8} is {magic:x8}");
+
+            file.MajorVersion = br.ReadUInt8();
+            file.MinorVersion = br.ReadUInt8();
+            file.GameId = br.ReadUInt16();
+            file.CompilationTime = br.ReadUInt64().ToDateTime();
+            file.SourceFileName = br.ReadPrependedString(2);
+            file.Username = br.ReadPrependedString(2);
+            file.MachineName = br.ReadPrependedString(2);
 
             var stringsCount = br.ReadUInt16();
-            
+
+            var bundle = new PexParseMeta(
+                file._gameCategory,
+                br,
+                new Dictionary<ushort, string>());
             for (var i = 0; i < stringsCount; i++)
             {
-                _strings.Add((ushort) i, br.ReadString());
+                bundle.Strings.Add((ushort)i, br.ReadPrependedString(2));
             }
-            
-            DebugInfo = new DebugInfo(br, _gameCategory, this);
-            
+
+            var hasDebugInfo = bundle.Reader.ReadUInt8() == 1;
+            if (hasDebugInfo)
+            {
+                file.DebugInfo = Mutagen.Bethesda.Pex.DebugInfo.Create(bundle);
+            }
+
             var userFlagCount = br.ReadUInt16();
             for (var i = 0; i < userFlagCount; i++)
             {
-                var userFlag = new UserFlag(br, this);
-                _userFlags.Add(userFlag);
+                var str = bundle.ReadString();
+                file.UserFlags[br.ReadUInt8()] = str;
             }
 
             var objectCount = br.ReadUInt16();
             for (var i = 0; i < objectCount; i++)
             {
-                var pexObject = new PexObject(br, _gameCategory, this);
-                Objects.Add(pexObject);
+                var pexObject = PexObject.Create(bundle);
+                file.Objects.Add(pexObject);
             }
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(BinaryWriter bw)
         {
             bw.Write(PexMagic);
             bw.Write(MajorVersion);
@@ -119,26 +75,75 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
             bw.Write(SourceFileName);
             bw.Write(Username);
             bw.Write(MachineName);
-            
-            bw.Write((ushort) _strings.Count);
-            foreach (var pair in _strings)
+
+            var memoryTrib = new MemoryTributary();
+            var bw2 = new PexWriter(memoryTrib, Encoding.UTF8, this._gameCategory.IsBigEndian());
+            var writeMeta = new PexWriteMeta(_gameCategory, bw2);
+            WriteContent(writeMeta);
+
+            bw.Write((ushort)writeMeta.Strings.Count);
+            foreach (var pair in writeMeta.Strings
+                .OrderBy(x => x.Value))
             {
-                bw.Write(pair.Value);
-            }
-            
-            DebugInfo?.Write(bw);
-            
-            bw.Write((ushort) _userFlags.Count);
-            foreach (var userFlag in _userFlags)
-            {
-                userFlag.Write(bw);
+                bw.Write(pair.Key);
             }
 
-            bw.Write((ushort) Objects.Count);
+            memoryTrib.Position = 0;
+            memoryTrib.CopyTo(bw.BaseStream);
+        }
+
+        private void WriteContent(PexWriteMeta write)
+        {
+            if (DebugInfo == null)
+            {
+                write.Writer.Write((byte)0);
+            }
+            else
+            {
+                write.Writer.Write((byte)1);
+                DebugInfo.Write(write);
+            }
+
+            write.Writer.Write((ushort)UserFlags.NotNull().Count());
+            for (byte i = 0; i < 32; i++)
+            {
+                var str = UserFlags[i];
+                if (str == null) continue;
+                write.WriteString(str);
+                write.Writer.Write(i);
+            }
+
+            write.Writer.Write((ushort)Objects.Count);
             foreach (var pexObject in Objects)
             {
-                pexObject.Write(bw);
+                pexObject.Write(write);
             }
+        }
+
+        public static PexFile CreateFromFile(string file, GameCategory gameCategory)
+        {
+            if (!File.Exists(file))
+                throw new ArgumentException($"Input file does not exist {file}!", nameof(file));
+
+            using var fs = File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return CreateFromStream(fs, gameCategory);
+        }
+
+        public static PexFile CreateFromStream(Stream stream, GameCategory gameCategory)
+        {
+            using var br = new BinaryReadStream(stream, isLittleEndian: !gameCategory.IsBigEndian());
+
+            //https://en.uesp.net/wiki/Skyrim_Mod:Compiled_Script_File_Format
+            var pexFile = new PexFile(gameCategory);
+            Read(pexFile, br);
+
+            if (stream.Position != stream.Length)
+                throw new InvalidDataException("Finished reading but end of the stream was not reached! " +
+                                              $"Current position: {stream.Position} " +
+                                              $"Stream length: {stream.Length} " +
+                                              $"Missing: {stream.Length - stream.Position}");
+
+            return pexFile;
         }
     }
 }

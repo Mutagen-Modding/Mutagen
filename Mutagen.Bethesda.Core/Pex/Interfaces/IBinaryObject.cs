@@ -1,9 +1,7 @@
-﻿using System.IO;
-using JetBrains.Annotations;
+using System.IO;
 
-namespace Mutagen.Bethesda.Core.Pex.Interfaces
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
     public interface IBinaryObject
     {
         public void Read(BinaryReader br);

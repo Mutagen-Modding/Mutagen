@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Noggog;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Noggog
+namespace Mutagen.Bethesda.Binary
 {
     /// <summary>
     /// Static class with string-related utility functions
@@ -163,6 +164,32 @@ namespace Noggog
                     {
                         var length = BinaryPrimitives.ReadUInt32LittleEndian(span);
                         return ProcessWholeToZString(span.Slice(4, checked((int)length)));
+                    }
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
+        /// Read string of known length, which is prepended by bytes denoting its length.
+        /// Converts results to a string.
+        /// </summary>
+        /// <param name="stream">Stream to retrieve string from</param>
+        /// <param name="lengthLength">Amount of bytes containing length information</param>
+        /// <returns>String of length denoted by initial bytes</returns>
+        public static string ReadPrependedString(this IBinaryReadStream stream, byte lengthLength)
+        {
+            switch (lengthLength)
+            {
+                case 2:
+                    {
+                        var length = stream.ReadUInt16();
+                        return ToZString(stream.ReadSpan(length));
+                    }
+                case 4:
+                    {
+                        var length = checked((int)stream.ReadUInt32());
+                        return ToZString(stream.ReadSpan(length));
                     }
                 default:
                     throw new NotImplementedException();

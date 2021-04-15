@@ -1,22 +1,15 @@
-﻿using System;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Pex;
+using Noggog;
+using System;
 using System.IO;
 using System.Text;
 using Xunit;
-using Mutagen.Bethesda.Core.Pex.Extensions;
+
 namespace Mutagen.Bethesda.UnitTests.Pex
 {
     public class BinaryExtensionsTests
     {
-        [Theory]
-        [InlineData("Hello World")]
-        public void TestWStringLE(string expected)
-        {
-            var bytes = Encoding.UTF8.GetBytes(expected);
-            DoTest(bytes.Length + sizeof(uint), expected,
-                bw => bw.WriteWStringLE(expected),
-                br => br.ReadWStringLE());
-        }
-        
         [Theory]
         [InlineData("Hello World")]
         public void TestWStringBE(string expected)
@@ -24,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
             var bytes = Encoding.UTF8.GetBytes(expected);
             DoTest(bytes.Length + sizeof(uint), expected,
                 bw => bw.WriteWStringBE(expected),
-                br => br.ReadWStringBE());
+                br => br.ReadPrependedString(2));
         }
 
         [Theory]
@@ -34,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
         {
             DoTest(sizeof(ushort), expected, 
                 bw => bw.WriteUInt16BE(expected), 
-                br => br.ReadUInt16BE());
+                br => br.ReadUInt16());
         }
 
         [Theory]
@@ -44,7 +37,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
         {
             DoTest(sizeof(uint), expected, 
                 bw => bw.WriteUInt32BE(expected), 
-                br => br.ReadUInt32BE());
+                br => br.ReadUInt32());
         }
         
         [Theory]
@@ -54,7 +47,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
         {
             DoTest(sizeof(ulong), expected, 
                 bw => bw.WriteUInt64BE(expected), 
-                br => br.ReadUInt64BE());
+                br => br.ReadUInt64());
         }
         
         [Theory]
@@ -64,7 +57,7 @@ namespace Mutagen.Bethesda.UnitTests.Pex
         {
             DoTest(sizeof(int), expected, 
                 bw => bw.WriteInt32BE(expected), 
-                br => br.ReadInt32BE());
+                br => br.ReadInt32());
         }
         
         [Theory]
@@ -74,15 +67,15 @@ namespace Mutagen.Bethesda.UnitTests.Pex
         {
             DoTest(sizeof(float), expected, 
                 bw => bw.WriteSingleBE(expected), 
-                br => br.ReadSingleBE());
+                br => br.ReadFloat());
         }
         
         private static void DoTest<T>(int streamCapacity, T expected, Action<BinaryWriter> write,
-            Func<BinaryReader, T> read)
+            Func<IBinaryReadStream, T> read)
         {
             using var ms = new MemoryStream(streamCapacity);
             using var bw = new BinaryWriter(ms);
-            using var br = new BinaryReader(ms);
+            using var br = new BinaryReadStream(ms, isLittleEndian: false);
 
             write(bw);
             ms.Position = 0;

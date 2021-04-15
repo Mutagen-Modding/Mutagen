@@ -1,313 +1,254 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using JetBrains.Annotations;
-using Mutagen.Bethesda.Core.Pex.Enums;
-using Mutagen.Bethesda.Core.Pex.Exceptions;
-using Mutagen.Bethesda.Core.Pex.Interfaces;
+using Noggog;
 
-namespace Mutagen.Bethesda.Core.Pex.DataTypes
+namespace Mutagen.Bethesda.Pex
 {
-    [PublicAPI]
-    public class PexObject : IPexObject
+    public partial class PexObject
     {
-        public string? Name { get; set; }
-        public string? ParentClassName { get; set; }
-        public string? DocString { get; set; }
-        public bool IsConst { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
-        public string? AutoStateName { get; set; }
-        public List<IPexObjectStructInfo> StructInfos { get; set; } = new();
-        public List<IPexObjectVariable> Variables { get; set; } = new();
-        public List<IPexObjectProperty> Properties { get; set; } = new();
-        public List<IPexObjectState> States { get; set; } = new();
-        
-        private readonly GameCategory _gameCategory;
-        private readonly PexFile _pexFile;
-        
-        public PexObject(GameCategory gameCategory, PexFile pexFile)
+        internal static PexObject Create(PexParseMeta parse)
         {
-            _gameCategory = gameCategory;
-            _pexFile = pexFile;
-        }
-        
-        public PexObject(BinaryReader br, GameCategory gameCategory, PexFile pexFile)
-            : this(gameCategory, pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
-        {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            
+            var ret = new PexObject();
+            ret.Name = parse.ReadString();
+
             /*
              * This is the size of the entire object in bytes not some count variable for a loop. This also includes
              * the size of itself thus the - sizeof(uint)
              */
-            var size = br.ReadUInt32() - sizeof(uint);
-            var currentPos = br.BaseStream.Position;
-            
-            ParentClassName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            
-            if (_gameCategory == GameCategory.Fallout4)
-                IsConst = br.ReadBoolean();
-            
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
-            AutoStateName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var size = parse.Reader.ReadUInt32() - sizeof(uint);
+            var currentPos = parse.Reader.Position;
 
-            if (_gameCategory == GameCategory.Fallout4)
+            ret.ParentClassName = parse.ReadString();
+            ret.DocString = parse.ReadString();
+
+            if (parse.Category == GameCategory.Fallout4)
+                ret.IsConst = parse.Reader.ReadBoolean();
+
+            ret.RawUserFlags = parse.Reader.ReadUInt32();
+            ret.AutoStateName = parse.ReadString();
+
+            if (parse.Category == GameCategory.Fallout4)
             {
-                var infoCount = br.ReadUInt16();
+                var infoCount = parse.Reader.ReadUInt16();
                 for (var i = 0; i < infoCount; i++)
                 {
-                    var structInfo = new PexObjectStructInfo(br, _pexFile);
-                    StructInfos.Add(structInfo);
+                    var structInfo = PexObjectStructInfo.Create(parse);
+                    ret.StructInfos.Add(structInfo);
                 }
             }
-            
-            var variables = br.ReadUInt16();
+
+            var variables = parse.Reader.ReadUInt16();
             for (var i = 0; i < variables; i++)
             {
-                var variable = new PexObjectVariable(br, _pexFile);
-                Variables.Add(variable);
+                var variable = PexObjectVariable.Create(parse);
+                ret.Variables.Add(variable);
             }
 
-            var properties = br.ReadUInt16();
+            var properties = parse.Reader.ReadUInt16();
             for (var i = 0; i < properties; i++)
             {
-                var property = new PexObjectProperty(br, _pexFile);
-                Properties.Add(property);
+                var property = PexObjectProperty.Create(parse);
+                ret.Properties.Add(property);
             }
 
-            var states = br.ReadUInt16();
+            var states = parse.Reader.ReadUInt16();
             for (var i = 0; i < states; i++)
             {
-                var state = new PexObjectState(br, _pexFile);
-                States.Add(state);
+                var state = PexObjectState.Create(parse);
+                ret.States.Add(state);
             }
 
-            var newPos = br.BaseStream.Position;
+            var newPos = parse.Reader.Position;
             if (newPos != currentPos + size)
-                throw new PexParsingException("Current position in Stream does not match expected position: " +
+                throw new InvalidDataException("Current position in Stream does not match expected position: " +
                                               $"Current: {newPos} Expected: {currentPos + size}");
+
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
+            write.WriteString(Name);
 
             //needed for later changing
-            var currentPos = bw.BaseStream.Position;
-            bw.Write(sizeof(uint));
+            var currentPos = write.Writer.BaseStream.Position;
+            write.Writer.Write(sizeof(uint));
 
-            bw.Write(_pexFile.GetIndexFromString(ParentClassName));
-            bw.Write(_pexFile.GetIndexFromString(DocString));
-            
-            if (_gameCategory == GameCategory.Fallout4) {
-                // ReSharper disable RedundantCast
-                bw.Write(IsConst ? (byte) 1 : (byte) 0);
-                // ReSharper restore RedundantCast
-            }
-            
-            bw.Write(_pexFile.GetUserFlags(UserFlags));
-            bw.Write(_pexFile.GetIndexFromString(AutoStateName));
+            write.WriteString(ParentClassName);
+            write.WriteString(DocString);
 
-            if (_gameCategory == GameCategory.Fallout4)
+            if (write.Category == GameCategory.Fallout4)
             {
-                bw.Write((ushort) StructInfos.Count);
+                write.Writer.Write(IsConst ? (byte)1 : (byte)0);
+            }
+
+            write.Writer.Write(RawUserFlags);
+            write.WriteString(AutoStateName);
+
+            if (write.Category == GameCategory.Fallout4)
+            {
+                write.Writer.Write((ushort)StructInfos.Count);
                 foreach (var structInfo in StructInfos)
                 {
-                    structInfo.Write(bw);
+                    structInfo.Write(write);
                 }
             }
-            
-            bw.Write((ushort) Variables.Count);
+
+            write.Writer.Write((ushort)Variables.Count);
             foreach (var objectVariable in Variables)
             {
-                objectVariable.Write(bw);
+                objectVariable.Write(write);
             }
-            
-            bw.Write((ushort) Properties.Count);
+
+            write.Writer.Write((ushort)Properties.Count);
             foreach (var objectProperty in Properties)
             {
-                objectProperty.Write(bw);
+                objectProperty.Write(write);
             }
-            
-            bw.Write((ushort) States.Count);
+
+            write.Writer.Write((ushort)States.Count);
             foreach (var objectState in States)
             {
-                objectState.Write(bw);
+                objectState.Write(write);
             }
-            
+
             //calculate object size, go back, change it and return to the current position
-            var newPos = bw.BaseStream.Position;
-            bw.BaseStream.Position = currentPos;
+            var newPos = write.Writer.BaseStream.Position;
+            write.Writer.BaseStream.Position = currentPos;
 
             var objectSize = newPos - currentPos;
-            bw.Write((uint) objectSize);
+            write.Writer.Write((uint)objectSize);
 
-            bw.BaseStream.Position = newPos;
+            write.Writer.BaseStream.Position = newPos;
         }
     }
 
-    [PublicAPI]
-    public class PexObjectStructInfo : IPexObjectStructInfo
+    public partial class PexObjectStructInfo
     {
-        public string? Name { get; set; }
-        public List<IPexObjectStructInfoMember> Members { get; set; } = new();
-
-        private readonly PexFile _pexFile;
-        
-        public PexObjectStructInfo(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectStructInfo(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectStructInfo Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new PexObjectStructInfo();
+            ret.Name = parse.ReadString();
 
-            var count = br.ReadUInt16();
+            var count = parse.Reader.ReadUInt16();
             for (var i = 0; i < count; i++)
             {
-                var member = new PexObjectStructInfoMember(br, _pexFile);
-                Members.Add(member);
+                var member = PexObjectStructInfoMember.Create(parse);
+                ret.Members.Add(member);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write((ushort) Members.Count);
+            write.WriteString(Name);
+            write.Writer.Write((ushort)Members.Count);
             foreach (var infoMember in Members)
             {
-                infoMember.Write(bw);
+                infoMember.Write(write);
             }
         }
     }
 
-    [PublicAPI]
-    public class PexObjectStructInfoMember : IPexObjectStructInfoMember
+    public partial class PexObjectStructInfoMember
     {
-        public string? Name { get; set; }
-        public string? TypeName { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
-        public IPexObjectVariableData? Value { get; set; }
-        public bool IsConst { get; set; }
-        public string? DocString { get; set; }
-        
-        private readonly PexFile _pexFile;
-        public PexObjectStructInfoMember(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectStructInfoMember(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectStructInfoMember Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
-            Value = new PexObjectVariableData(br, _pexFile);
-            IsConst = br.ReadBoolean();
-            DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new PexObjectStructInfoMember();
+            ret.Name = parse.ReadString();
+            ret.TypeName = parse.ReadString();
+            ret.RawUserFlags = parse.Reader.ReadUInt32();
+            ret.Value = PexObjectVariableData.Create(parse);
+            ret.IsConst = parse.Reader.ReadBoolean();
+            ret.DocString = parse.ReadString();
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write(_pexFile.GetIndexFromString(TypeName));
-            bw.Write(_pexFile.GetUserFlags(UserFlags));
-            Value?.Write(bw);
-            bw.Write(IsConst);
-            bw.Write(_pexFile.GetIndexFromString(DocString));
+            write.WriteString(Name);
+            write.WriteString(TypeName);
+            write.Writer.Write(RawUserFlags);
+            Value?.Write(write);
+            write.Writer.Write(IsConst);
+            write.WriteString(DocString);
         }
     }
     
-    [PublicAPI]
-    public class PexObjectVariable : IPexObjectVariable
+    public partial class PexObjectVariable
     {
-        public string? Name { get; set; }
-        public string? TypeName { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
-        public IPexObjectVariableData? VariableData { get; set; }
-        
-        private readonly PexFile _pexFile;
-        public PexObjectVariable(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectVariable(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectVariable Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            var ret = new PexObjectVariable();
+            ret.Name = parse.ReadString();
+            ret.TypeName = parse.ReadString();
+            ret.RawUserFlags = parse.Reader.ReadUInt32();
 
-            VariableData = new PexObjectVariableData(br, _pexFile);
+            ret.VariableData = PexObjectVariableData.Create(parse);
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write(_pexFile.GetIndexFromString(TypeName));
-            bw.Write(_pexFile.GetUserFlags(UserFlags));
-            
-            VariableData?.Write(bw);
+            write.WriteString(Name);
+            write.WriteString(TypeName);
+            write.Writer.Write(RawUserFlags);
+
+            VariableData?.Write(write);
         }
     }
 
-    [PublicAPI]
-    public class PexObjectVariableData : IPexObjectVariableData
+    public partial class PexObjectVariableData
     {
-        public VariableType VariableType { get; set; } = VariableType.Null;
-        public string? StringValue { get; set; }
-        public int? IntValue { get; set; }
-        public float? FloatValue { get; set; }
-        public bool? BoolValue { get; set; }
-        
-        private readonly PexFile _pexFile;
-        public PexObjectVariableData(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectVariableData(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectVariableData Create(PexParseMeta parse)
         {
-            VariableType = (VariableType) br.ReadByte();
-            switch (VariableType)
+            var ret = new PexObjectVariableData();
+            ret.VariableType = (VariableType)parse.Reader.ReadUInt8();
+            switch (ret.VariableType)
             {
                 case VariableType.Null:
                     break;
                 case VariableType.Identifier:
                 case VariableType.String:
-                    StringValue = _pexFile.GetStringFromIndex(br.ReadUInt16());
+                    ret.StringValue = parse.ReadString();
                     break;
                 case VariableType.Integer:
-                    IntValue = br.ReadInt32();
+                    ret.IntValue = parse.Reader.ReadInt32();
                     break;
                 case VariableType.Float:
-                    FloatValue = br.ReadSingle();
+                    ret.FloatValue = parse.Reader.ReadFloat();
                     break;
                 case VariableType.Bool:
                     //TODO: use ReadByte instead?
-                    BoolValue = br.ReadBoolean();
+                    ret.BoolValue = parse.Reader.ReadBoolean();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write((byte) VariableType);
+            write.Writer.Write((byte)VariableType);
             switch (VariableType)
             {
                 case VariableType.Null:
                     break;
                 case VariableType.Identifier:
                 case VariableType.String:
-                    bw.Write(_pexFile.GetIndexFromString(StringValue));
+                    write.WriteString(StringValue);
                     break;
                 case VariableType.Integer:
-                    bw.Write(IntValue ?? int.MaxValue);
+                    write.Writer.Write(IntValue ?? int.MaxValue);
                     break;
                 case VariableType.Float:
-                    bw.Write(FloatValue ?? float.MaxValue);
+                    write.Writer.Write(FloatValue ?? float.MaxValue);
                     break;
                 case VariableType.Bool:
-                    bw.Write(BoolValue ?? false);
+                    write.Writer.Write(BoolValue ?? false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -315,279 +256,230 @@ namespace Mutagen.Bethesda.Core.Pex.DataTypes
         }
     }
 
-    [PublicAPI]
-    public class PexObjectProperty : IPexObjectProperty
+    public partial class PexObjectProperty
     {
-        public string? Name{ get; set; }
-        public string? TypeName { get; set; }
-        public string? DocString { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
-        public PropertyFlags Flags { get; set; }
-        public string? AutoVarName{ get; set; }
-        public IPexObjectFunction? ReadHandler { get; set; }
-        public IPexObjectFunction? WriteHandler { get; set; }
-
-        private readonly PexFile _pexFile;
-        public PexObjectProperty(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectProperty(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectProperty Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
+            var ret = new PexObjectProperty();
+            ret.Name = parse.ReadString();
+            ret.TypeName = parse.ReadString();
+            ret.DocString = parse.ReadString();
+            ret.RawUserFlags = parse.Reader.ReadUInt32();
 
-            var flags = br.ReadByte();
-            Flags = (PropertyFlags) flags;
-            
+            var flags = parse.Reader.ReadUInt8();
+            ret.Flags = (PropertyFlags)flags;
+
             if ((flags & 4) != 0)
             {
-                AutoVarName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+                ret.AutoVarName = parse.ReadString();
             }
 
             if ((flags & 5) == 1)
             {
-                ReadHandler = new PexObjectFunction(br, _pexFile);
+                ret.ReadHandler = PexObjectFunction.Create(parse);
             }
 
             if ((flags & 6) == 2)
             {
-                WriteHandler = new PexObjectFunction(br, _pexFile);
+                ret.WriteHandler = PexObjectFunction.Create(parse);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write(_pexFile.GetIndexFromString(TypeName));
-            bw.Write(_pexFile.GetIndexFromString(DocString));
-            bw.Write(_pexFile.GetUserFlags(UserFlags));
+            write.WriteString(Name);
+            write.WriteString(TypeName);
+            write.WriteString(DocString);
+            write.Writer.Write(RawUserFlags);
 
-            var flags = (byte) Flags;
-            bw.Write(flags);
-            
+            var flags = (byte)Flags;
+            write.Writer.Write(flags);
+
             if ((flags & 4) != 0)
             {
-                bw.Write(_pexFile.GetIndexFromString(AutoVarName));
+                write.WriteString(AutoVarName);
             }
 
             if ((flags & 5) == 1)
             {
-                ReadHandler?.Write(bw);
+                ReadHandler?.Write(write);
             }
 
             if ((flags & 6) == 2)
             {
-                WriteHandler?.Write(bw);
+                WriteHandler?.Write(write);
             }
         }
     }
 
-    [PublicAPI]
-    public class PexObjectState : IPexObjectState
+    public partial class PexObjectState
     {
-        public string? Name { get; set; }
-
-        public List<IPexObjectNamedFunction> Functions { get; set; } = new();
-
-        private readonly PexFile _pexFile;
-        public PexObjectState(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectState(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectState Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new PexObjectState();
+            ret.Name = parse.ReadString();
 
-            var functions = br.ReadUInt16();
+            var functions = parse.Reader.ReadUInt16();
             for (var i = 0; i < functions; i++)
             {
-                var namedFunction = new PexObjectNamedFunction(br, _pexFile);
-                Functions.Add(namedFunction);
+                var namedFunction = PexObjectNamedFunction.Create(parse);
+                ret.Functions.Add(namedFunction);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta writer)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write((ushort) Functions.Count);
+            writer.WriteString(Name);
+            writer.Writer.Write((ushort)Functions.Count);
             foreach (var namedFunction in Functions)
             {
-                namedFunction.Write(bw);
+                namedFunction.Write(writer);
             }
         }
     }
 
-    [PublicAPI]
-    public class PexObjectNamedFunction : IPexObjectNamedFunction
+    public partial class PexObjectNamedFunction
     {
-        public string? FunctionName { get; set; }
-        
-        public IPexObjectFunction? Function { get; set; }
-
-        private readonly PexFile _pexFile;
-        public PexObjectNamedFunction(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectNamedFunction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectNamedFunction Create(PexParseMeta parse)
         {
-            FunctionName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            Function = new PexObjectFunction(br, _pexFile);
+            var ret = new PexObjectNamedFunction();
+            ret.FunctionName = parse.ReadString();
+            ret.Function = PexObjectFunction.Create(parse);
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(FunctionName));
-            Function?.Write(bw);
+            write.WriteString(FunctionName);
+            Function?.Write(write);
         }
     }
 
-    [PublicAPI]
-    public class PexObjectFunction : IPexObjectFunction
+    public partial class PexObjectFunction
     {
-        public string? ReturnTypeName { get; set; }
-        public string? DocString { get; set; }
-        public List<IUserFlag> UserFlags { get; set; } = new();
-        public FunctionFlags Flags { get; set; }
-        public List<IPexObjectFunctionVariable> Parameters { get; set; } = new();
-        public List<IPexObjectFunctionVariable> Locals { get; set; } = new();
-        public List<IPexObjectFunctionInstruction> Instructions { get; set; } = new();
-
-        private readonly PexFile _pexFile;
-        public PexObjectFunction(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectFunction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectFunction Create(PexParseMeta parse)
         {
-            ReturnTypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            DocString = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            UserFlags = _pexFile.GetUserFlags(br.ReadUInt32()).ToList();
-            Flags = (FunctionFlags) br.ReadByte();
+            var ret = new PexObjectFunction();
+            ret.ReturnTypeName = parse.ReadString();
+            ret.DocString = parse.ReadString();
+            ret.RawUserFlags = parse.Reader.ReadUInt32();
+            ret.Flags = (FunctionFlags)parse.Reader.ReadUInt8();
 
-            var parameters = br.ReadUInt16();
+            var parameters = parse.Reader.ReadUInt16();
             for (var i = 0; i < parameters; i++)
             {
-                var parameter = new PexObjectFunctionVariable(br, _pexFile);
-                Parameters.Add(parameter);
+                var parameter = PexObjectFunctionVariable.Create(parse);
+                ret.Parameters.Add(parameter);
             }
-            
-            var locals = br.ReadUInt16();
+
+            var locals = parse.Reader.ReadUInt16();
             for (var i = 0; i < locals; i++)
             {
-                var local = new PexObjectFunctionVariable(br, _pexFile);
-                Locals.Add(local);
+                var local = PexObjectFunctionVariable.Create(parse);
+                ret.Locals.Add(local);
             }
-            
-            var instructions = br.ReadUInt16();
+
+            var instructions = parse.Reader.ReadUInt16();
             for (var i = 0; i < instructions; i++)
             {
-                var instruction = new PexObjectFunctionInstruction(br, _pexFile);
-                Instructions.Add(instruction);
+                var instruction = PexObjectFunctionInstruction.Create(parse);
+                ret.Instructions.Add(instruction);
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(ReturnTypeName));
-            bw.Write(_pexFile.GetIndexFromString(DocString));
-            bw.Write(_pexFile.GetUserFlags(UserFlags));
-            bw.Write((byte) Flags);
-            
-            bw.Write((ushort) Parameters.Count);
+            write.WriteString(ReturnTypeName);
+            write.WriteString(DocString);
+            write.Writer.Write(RawUserFlags);
+            write.Writer.Write((byte)Flags);
+
+            write.Writer.Write((ushort)Parameters.Count);
             foreach (var parameter in Parameters)
             {
-                parameter.Write(bw);
+                parameter.Write(write);
             }
-            
-            bw.Write((ushort) Locals.Count);
+
+            write.Writer.Write((ushort)Locals.Count);
             foreach (var local in Locals)
             {
-                local.Write(bw);
+                local.Write(write);
             }
-            
-            bw.Write((ushort) Instructions.Count);
+
+            write.Writer.Write((ushort)Instructions.Count);
             foreach (var instruction in Instructions)
             {
-                instruction.Write(bw);
+                instruction.Write(write);
             }
         }
     }
 
-    [PublicAPI]
-    public class PexObjectFunctionVariable : IPexObjectFunctionVariable
+    public partial class PexObjectFunctionVariable
     {
-        public string? Name { get; set; }
-        public string? TypeName{ get; set; }
-
-        private readonly PexFile _pexFile;
-        public PexObjectFunctionVariable(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectFunctionVariable(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-        
-        public void Read(BinaryReader br)
+        internal static PexObjectFunctionVariable Create(PexParseMeta parse)
         {
-            Name = _pexFile.GetStringFromIndex(br.ReadUInt16());
-            TypeName = _pexFile.GetStringFromIndex(br.ReadUInt16());
+            var ret = new PexObjectFunctionVariable();
+            ret.Name = parse.ReadString();
+            ret.TypeName = parse.ReadString();
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write(_pexFile.GetIndexFromString(Name));
-            bw.Write(_pexFile.GetIndexFromString(TypeName));
+            write.WriteString(Name);
+            write.WriteString(TypeName);
         }
     }
 
-    [PublicAPI]
-    public class PexObjectFunctionInstruction : IPexObjectFunctionInstruction
+    public partial class PexObjectFunctionInstruction
     {
-        public InstructionOpcode OpCode { get; set; } = InstructionOpcode.NOP;
-        public List<IPexObjectVariableData> Arguments { get; set; } = new();
-        
-        private readonly PexFile _pexFile;
-        public PexObjectFunctionInstruction(PexFile pexFile) { _pexFile = pexFile; }
-        public PexObjectFunctionInstruction(BinaryReader br, PexFile pexFile) : this(pexFile) { Read(br); }
-
-        public void Read(BinaryReader br)
+        internal static PexObjectFunctionInstruction Create(PexParseMeta parse)
         {
-            OpCode = (InstructionOpcode) br.ReadByte();
-            
-            var arguments = InstructionOpCodeArguments.GetArguments(OpCode);
+            var ret = new PexObjectFunctionInstruction();
+            ret.OpCode = (InstructionOpcode)parse.Reader.ReadUInt8();
+
+            var arguments = InstructionOpCodeArguments.GetArguments(ret.OpCode);
             foreach (var current in arguments)
             {
-                var argument = new PexObjectVariableData(br, _pexFile);
-                Arguments.Add(argument);
+                var argument = PexObjectVariableData.Create(parse);
+                ret.Arguments.Add(argument);
 
                 switch (current)
                 {
                     case '*' when argument.VariableType != VariableType.Integer || !argument.IntValue.HasValue:
-                        throw new PexParsingException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
+                        throw new InvalidDataException($"Variable-Length Arguments require an Integer Argument! Argument is {argument.VariableType}");
                     case '*':
-                    {
-                        for (var i = 0; i < argument.IntValue.Value; i++)
                         {
-                            var anotherArgument = new PexObjectVariableData(br, _pexFile);
-                            Arguments.Add(anotherArgument);
-                        }
+                            for (var i = 0; i < argument.IntValue.Value; i++)
+                            {
+                                var anotherArgument = PexObjectVariableData.Create(parse);
+                                ret.Arguments.Add(anotherArgument);
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                     //TODO: figure out what do to with this
                     /*
                      * u apparently means unsigned integer and indicates that the integer value we get should be
                      * interpreted as an unsigned integer.
                      */
                     case 'u' when argument.VariableType != VariableType.Integer:
-                        throw new PexParsingException($"Argument is unsigned integer but Variable Type is not integer: {argument.VariableType}");
+                        throw new InvalidDataException($"Argument is unsigned integer but Variable Type is not integer: {argument.VariableType}");
                 }
             }
+            return ret;
         }
 
-        public void Write(BinaryWriter bw)
+        internal void Write(PexWriteMeta write)
         {
-            bw.Write((byte) OpCode);
+            write.Writer.Write((byte)OpCode);
 
             foreach (var argument in Arguments)
             {
-                argument.Write(bw);
+                argument.Write(write);
             }
         }
     }
