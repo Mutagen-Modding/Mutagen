@@ -124,7 +124,7 @@
     <GameReleaseOptions>SkyrimLE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimSE</GameReleaseOptions>
     <GameReleaseOptions>SkyrimVR</GameReleaseOptions>
-    <GameReleaseOptions>SkyrimEnderalLE</GameReleaseOptions>
-    <GameReleaseOptions>SkyrimEnderalSE</GameReleaseOptions>
+    <GameReleaseOptions>EnderalLE</GameReleaseOptions>
+    <GameReleaseOptions>EnderalSE</GameReleaseOptions>
   </Object>
 </Loqui>

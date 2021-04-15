@@ -18,10 +18,10 @@ namespace Mutagen.Bethesda
         SkyrimSE = 2,
         [Description("Skyrim VR")]
         SkyrimVR = 3,
-        [Description("Skyrim Enderal LE")]
-        SkyrimEnderalLE = 5,
-        [Description("Skyrim Enderal SE")]
-        SkyrimEnderalSE = 6,
+        [Description("Enderal LE")]
+        EnderalLE = 5,
+        [Description("Enderal SE")]
+        EnderalSE = 6,
         [Description("Fallout 4")]
         Fallout4 = 4,
     }

@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda
                 GameRelease.SkyrimLE => GameCategory.Skyrim,
                 GameRelease.SkyrimSE => GameCategory.Skyrim,
                 GameRelease.SkyrimVR => GameCategory.Skyrim,
-                GameRelease.SkyrimEnderalLE => GameCategory.Skyrim,
-                GameRelease.SkyrimEnderalSE => GameCategory.Skyrim,
+                GameRelease.EnderalLE => GameCategory.Skyrim,
+                GameRelease.EnderalSE => GameCategory.Skyrim,
                 GameRelease.Fallout4 => GameCategory.Fallout4,
                 _ => throw new NotImplementedException(),
             };
@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda
             {
                 GameRelease.Oblivion => default,
                 GameRelease.SkyrimLE => 43,
-                GameRelease.SkyrimEnderalLE => 43,
+                GameRelease.EnderalLE => 43,
                 GameRelease.SkyrimSE => 44,
-                GameRelease.SkyrimEnderalSE => 44,
+                GameRelease.EnderalSE => 44,
                 GameRelease.SkyrimVR => 44,
                 GameRelease.Fallout4 => 131,
                 _ => throw new NotImplementedException(),
@@ -45,8 +45,8 @@ namespace Mutagen.Bethesda
                 case GameRelease.SkyrimLE:
                 case GameRelease.SkyrimSE:
                 case GameRelease.SkyrimVR:
-                case GameRelease.SkyrimEnderalLE:
-                case GameRelease.SkyrimEnderalSE:
+                case GameRelease.EnderalLE:
+                case GameRelease.EnderalSE:
                     return StringsLanguageFormat.FullName;
                 case GameRelease.Fallout4:
                     return StringsLanguageFormat.Iso;
