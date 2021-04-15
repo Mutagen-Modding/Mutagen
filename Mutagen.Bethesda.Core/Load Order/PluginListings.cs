@@ -181,8 +181,10 @@ namespace Mutagen.Bethesda
             {
                 GameRelease.Fallout4 => true,
                 GameRelease.SkyrimSE => true,
+                GameRelease.SkyrimEnderalSE => true,
                 GameRelease.SkyrimVR => true,
                 GameRelease.SkyrimLE => false,
+                GameRelease.SkyrimEnderalLE => false,
                 GameRelease.Oblivion => false,
                 _ => throw new NotImplementedException(),
             };

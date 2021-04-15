@@ -309,8 +309,10 @@ namespace Mutagen.Bethesda.Binary
                 case GameRelease.Oblivion:
                     return Oblivion;
                 case GameRelease.SkyrimLE:
+                case GameRelease.SkyrimEnderalLE:
                     return SkyrimLE;
                 case GameRelease.SkyrimSE:
+                case GameRelease.SkyrimEnderalSE:
                     return SkyrimSE;
                 case GameRelease.SkyrimVR:
                     return SkyrimVR;
