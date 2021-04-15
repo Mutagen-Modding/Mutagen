@@ -74,7 +74,11 @@ namespace Mutagen.Bethesda.Binary
         /// <inheritdoc/>
         public ParsingBundle MetaData => this.Reader.MetaData;
 
+        public bool IsLittleEndian => Reader.IsLittleEndian;
+
         public bool IsPersistantBacking => Reader.IsPersistantBacking;
+
+        public Stream BaseStream => Reader.BaseStream;
 
         /// <summary>
         /// Constructs new frame around current reader position until its completion
@@ -321,9 +325,9 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public bool ReadBool()
+        public bool ReadBoolean()
         {
-            return Reader.ReadBool();
+            return Reader.ReadBoolean();
         }
 
         /// <inheritdoc/>
@@ -387,12 +391,6 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public bool ReadBoolean()
-        {
-            return Reader.ReadUInt8() == 1;
-        }
-
-        /// <inheritdoc/>
         public string ReadStringUTF8(int amount)
         {
             return Reader.ReadStringUTF8(amount);
@@ -423,9 +421,9 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public bool GetBool(int offset)
+        public bool GetBoolean(int offset)
         {
-            return Reader.GetBool(offset);
+            return Reader.GetBoolean(offset);
         }
 
         /// <inheritdoc/>
@@ -495,9 +493,9 @@ namespace Mutagen.Bethesda.Binary
         }
 
         /// <inheritdoc/>
-        public bool GetBool()
+        public bool GetBoolean()
         {
-            return Reader.GetBool();
+            return Reader.GetBoolean();
         }
 
         /// <inheritdoc/>

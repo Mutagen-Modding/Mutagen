@@ -18,6 +18,8 @@ namespace Mutagen.Bethesda
         /// <inheritdoc />
         public ParsingBundle MetaData { get; }
 
+        public bool IsLittleEndian => _readStream.IsLittleEndian;
+
         public MutagenInterfaceReadStream(
             IBinaryReadStream stream,
             ParsingBundle metaData,
@@ -52,6 +54,8 @@ namespace Mutagen.Bethesda
 
         public bool IsPersistantBacking => _readStream.IsPersistantBacking;
 
+        public Stream BaseStream => _readStream.BaseStream;
+
         /// <inheritdoc />
         public void Dispose() => _readStream.Dispose();
 
@@ -62,10 +66,10 @@ namespace Mutagen.Bethesda
         public int Get(byte[] buffer, int targetOffset) => _readStream.Get(buffer, targetOffset);
 
         /// <inheritdoc />
-        public bool GetBool() => _readStream.GetBool();
+        public bool GetBoolean() => _readStream.GetBoolean();
 
         /// <inheritdoc />
-        public bool GetBool(int offset) => _readStream.GetBool(offset);
+        public bool GetBoolean(int offset) => _readStream.GetBoolean(offset);
 
         /// <inheritdoc />
         public byte[] GetBytes(int amount) => _readStream.GetBytes(amount);
@@ -165,7 +169,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <inheritdoc />
-        public bool ReadBool() => _readStream.ReadBool();
+        public bool ReadBoolean() => _readStream.ReadBoolean();
 
         /// <inheritdoc />
         public byte[] ReadBytes(int amount) => _readStream.ReadBytes(amount);
