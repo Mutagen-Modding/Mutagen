@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.UnitTests
     public abstract class IFormKeyAllocator_Tests<TFormKeyAllocator>
         where TFormKeyAllocator : IFormKeyAllocator
     {
-        protected abstract TFormKeyAllocator CreateFormKeyAllocator(IMod mod);
+        protected abstract TFormKeyAllocator CreateAllocator(IMod mod);
 
         protected void DisposeFormKeyAllocator(IFormKeyAllocator allocator)
         {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             var nextID = ((IMod)mod).NextFormID;
 
-            var allocator = CreateFormKeyAllocator(mod);
+            var allocator = CreateAllocator(mod);
 
             var formKey = allocator.GetNextFormKey();
             Assert.Equal(mod.ModKey, formKey.ModKey);
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             var nextID = ((IMod)mod).NextFormID;
 
-            var allocator = CreateFormKeyAllocator(mod);
+            var allocator = CreateAllocator(mod);
 
             var formKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            var allocator = CreateFormKeyAllocator(mod);
+            var allocator = CreateAllocator(mod);
 
             var formKey1 = allocator.GetNextFormKey();
             var formKey2 = allocator.GetNextFormKey();
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            var allocator = CreateFormKeyAllocator(mod);
+            var allocator = CreateAllocator(mod);
 
             var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
             var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void DuplicateAllocationThrows()
         {
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = CreateFormKeyAllocator(mod);
+            var allocator = CreateAllocator(mod);
 
             var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
 

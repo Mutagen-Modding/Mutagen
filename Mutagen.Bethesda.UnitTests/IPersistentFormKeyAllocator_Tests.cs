@@ -13,9 +13,20 @@ namespace Mutagen.Bethesda.UnitTests
 
     public class SQLiteFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests<SQLiteFormKeyAllocator>
     {
-        protected override SQLiteFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFile.Value.File.Path);
+        protected override string ConstructTypicalPath()
+        {
+            return tempFile.Value.File.Path;
+        }
 
-        protected override SQLiteFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName) => new(mod, tempFile.Value.File.Path, patcherName);
+        protected override SQLiteFormKeyAllocator CreateAllocator(IMod mod, string path)
+        {
+            return new(mod, path);
+        }
+
+        protected override SQLiteFormKeyAllocator CreateNamedAllocator(IMod mod, string path, string patcherName)
+        {
+            return new(mod, path, patcherName);
+        }
     }
 
     public abstract class IPersistentFormKeyAllocator_Tests<TFormKeyAllocator> : IFormKeyAllocator_Tests<TFormKeyAllocator>, IDisposable
@@ -33,12 +44,18 @@ namespace Mutagen.Bethesda.UnitTests
             tempFile = new(() => new TempFile(extraDirectoryPaths: Utility.TempFolderPath));
         }
 
+        protected override TFormKeyAllocator CreateAllocator(IMod mod) => CreateAllocator(mod, ConstructTypicalPath());
+
+        protected abstract TFormKeyAllocator CreateAllocator(IMod mod, string path);
+
+        protected abstract string ConstructTypicalPath();
+
         [Fact]
         public void CanCommit()
         {
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            using var allocator = CreateFormKeyAllocator(mod);
+            using var allocator = CreateAllocator(mod);
 
             allocator.Commit();
         }
@@ -48,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            using var allocator = CreateFormKeyAllocator(mod);
+            using var allocator = CreateAllocator(mod);
 
             allocator.Rollback();
         }
@@ -63,7 +80,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 expectedFormKey = allocator.GetNextFormKey();
 
@@ -74,7 +91,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 var formKey = allocator.GetNextFormKey();
 
@@ -90,7 +107,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
 
-            using var allocator = CreateFormKeyAllocator(mod);
+            using var allocator = CreateAllocator(mod);
 
             var expectedFormKey = allocator.GetNextFormKey();
 
@@ -111,7 +128,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 expectedFormKey = allocator.GetNextFormKey(null);
 
@@ -122,7 +139,7 @@ namespace Mutagen.Bethesda.UnitTests
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 var formKey = allocator.GetNextFormKey(null);
 
@@ -138,7 +155,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
 
-            using var allocator = CreateFormKeyAllocator(mod);
+            using var allocator = CreateAllocator(mod);
 
             var expectedFormKey = allocator.GetNextFormKey(null);
 
@@ -155,7 +172,7 @@ namespace Mutagen.Bethesda.UnitTests
             FormKey expectedFormKey;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -164,7 +181,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 var formKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -178,7 +195,7 @@ namespace Mutagen.Bethesda.UnitTests
             uint nextFormID = 123;
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
-            using var allocator = CreateFormKeyAllocator(mod);
+            using var allocator = CreateAllocator(mod);
 
             var expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -195,7 +212,7 @@ namespace Mutagen.Bethesda.UnitTests
             uint formID1, formID2;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 formID1 = formKey1.ID;
 
@@ -213,7 +230,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
@@ -237,7 +254,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             var mod = new OblivionMod(Utility.PluginModKey);
             {
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 void apply((int i, string s) x)
                 {
@@ -257,7 +274,7 @@ namespace Mutagen.Bethesda.UnitTests
             }
 
             {
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 void check((int i, string s) x)
                 {
@@ -282,7 +299,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             var mod = new OblivionMod(Utility.PluginModKey);
             {
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 void apply((int i, string s) x)
                 {
@@ -302,7 +319,7 @@ namespace Mutagen.Bethesda.UnitTests
             }
 
             {
-                using var allocator = CreateFormKeyAllocator(mod);
+                using var allocator = CreateAllocator(mod);
 
                 void check((int i, string s) x)
                 {

@@ -14,7 +14,9 @@ namespace Mutagen.Bethesda.UnitTests
 
         public static readonly string Patcher2 = "Patcher2";
 
-        protected abstract TFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName);
+        protected abstract TFormKeyAllocator CreateNamedAllocator(IMod mod, string path, string patcherName);
+
+        protected TFormKeyAllocator CreateNamedAllocator(IMod mod, string patcherName) => CreateNamedAllocator(mod, ConstructTypicalPath(), patcherName);
 
         [Fact]
         public void OutOfOrderAllocationReturnsSameIdentifiersShared()
@@ -22,7 +24,7 @@ namespace Mutagen.Bethesda.UnitTests
             uint formID1, formID2;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod, Patcher1);
+                using var allocator = CreateNamedAllocator(mod, Patcher1);
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 formID1 = formKey1.ID;
 
@@ -36,7 +38,7 @@ namespace Mutagen.Bethesda.UnitTests
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateFormKeyAllocator(mod, Patcher1);
+                using var allocator = CreateNamedAllocator(mod, Patcher1);
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
@@ -56,7 +58,7 @@ namespace Mutagen.Bethesda.UnitTests
             var mod = new OblivionMod(Utility.PluginModKey);
 
             {
-                using var allocator = CreateFormKeyAllocator(mod, Patcher1);
+                using var allocator = CreateNamedAllocator(mod, Patcher1);
 
                 void apply((int i, string s) x)
                 {
@@ -76,7 +78,7 @@ namespace Mutagen.Bethesda.UnitTests
             }
 
             {
-                using var allocator = CreateFormKeyAllocator(mod, Patcher1);
+                using var allocator = CreateNamedAllocator(mod, Patcher1);
 
                 void check((int i, string s) x)
                 {
@@ -98,7 +100,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             var mod = new OblivionMod(Utility.PluginModKey);
             {
-                using var allocator = CreateFormKeyAllocator(mod, Patcher1);
+                using var allocator = CreateNamedAllocator(mod, Patcher1);
 
                 allocator.GetNextFormKey(Utility.Edid1);
 
@@ -106,7 +108,7 @@ namespace Mutagen.Bethesda.UnitTests
             }
 
             {
-                using var allocator = CreateFormKeyAllocator(mod, Patcher2);
+                using var allocator = CreateNamedAllocator(mod, Patcher2);
 
                 var e = Assert.Throws<ConstraintException>(() => allocator.GetNextFormKey(Utility.Edid1));
             }

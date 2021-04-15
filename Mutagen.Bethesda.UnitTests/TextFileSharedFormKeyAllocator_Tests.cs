@@ -10,9 +10,14 @@ namespace Mutagen.Bethesda.UnitTests
     {
         private const string DefaultName = "default";
 
-        protected override TextFileSharedFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFolder.Value.Dir.Path, DefaultName);
+        protected override TextFileSharedFormKeyAllocator CreateAllocator(IMod mod, string path) => new(mod, path, DefaultName);
 
-        protected override TextFileSharedFormKeyAllocator CreateFormKeyAllocator(IMod mod, string patcherName) => new(mod, tempFolder.Value.Dir.Path, patcherName);
+        protected override TextFileSharedFormKeyAllocator CreateNamedAllocator(IMod mod, string path, string patcherName) => new(mod, path, patcherName);
+
+        protected override string ConstructTypicalPath()
+        {
+            return tempFolder.Value.Dir.Path;
+        }
 
         [Fact]
         public void StaticExport()

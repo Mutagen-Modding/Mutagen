@@ -9,7 +9,15 @@ namespace Mutagen.Bethesda.UnitTests
 {
     public class TextFileFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests<TextFileFormKeyAllocator>
     {
-        protected override TextFileFormKeyAllocator CreateFormKeyAllocator(IMod mod) => new(mod, tempFile.Value.File.Path);
+        protected override TextFileFormKeyAllocator CreateAllocator(IMod mod, string path)
+        {
+            return new(mod, path);
+        }
+
+        protected override string ConstructTypicalPath()
+        {
+            return tempFile.Value.File.Path;
+        }
 
         [Fact]
         public void StaticExport()
