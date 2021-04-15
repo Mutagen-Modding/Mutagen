@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Attempts to locate the path to a game's load order file
+        /// Attempts to locate the path to a game's load order file, and ensure existance
         /// </summary>
         /// <param name="game">Game to locate for</param>
         /// <param name="path">Path to load order file if it was located</param>
@@ -42,6 +42,21 @@ namespace Mutagen.Bethesda
         {
             path = new FilePath(GetListingsPath(game));
             return path.Exists;
+        }
+
+        /// <summary>
+        /// Attempts to locate the path to a game's load order file, and ensure existance
+        /// </summary>
+        /// <param name="game">Game to locate for</param>
+        /// <returns>Path to load order file if it was located</returns>
+        /// <exception cref="FileNotFoundException">If expected plugin file did not exist</exception>
+        public static FilePath GetListingsFile(GameRelease game)
+        {
+            if (TryGetListingsFile(game, out var path))
+            {
+                return path;
+            }
+            throw new FileNotFoundException($"Could not locate load order automatically.  Expected a file at: {path.Path}");
         }
 
         /// <summary>
