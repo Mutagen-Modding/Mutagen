@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Persistence;
 using System;
 using System.Collections.Concurrent;
 using System.Data;

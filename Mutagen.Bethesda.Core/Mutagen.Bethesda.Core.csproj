@@ -144,9 +144,9 @@
     <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Load Order\PluginListings.cs" />
-    <Compile Include="Persistance\IPersistentFormKeyAllocator.cs" />
-    <Compile Include="Persistance\ISharedFormKeyAllocator.cs" />
-    <Compile Include="Persistance\TextFileSharedFormKeyAllocator.cs" />
+    <Compile Include="Persistence\IPersistentFormKeyAllocator.cs" />
+    <Compile Include="Persistence\ISharedFormKeyAllocator.cs" />
+    <Compile Include="Persistence\TextFileSharedFormKeyAllocator.cs" />
     <Compile Include="Implicits\Implicits.cs" />
     <Compile Include="Pex\DataTypes\DebugInfo.cs">
       <DependentUpon>DebugInfo.xml</DependentUpon>
@@ -209,14 +209,14 @@
     <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
-    <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
+    <Compile Include="Persistence\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
-    <Compile Include="Persistance\SimpleFormKeyAllocator.cs" />
+    <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
     <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
-    <Compile Include="Persistance\IFormKeyAllocator.cs" />
+    <Compile Include="Persistence\IFormKeyAllocator.cs" />
     <Compile Include="Records\GenderedItem.cs" />
     <Compile Include="Records\AListGroup.cs" />
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />

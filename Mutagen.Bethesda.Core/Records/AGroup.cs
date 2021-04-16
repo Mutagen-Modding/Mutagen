@@ -1,8 +1,6 @@
 using Ionic.Zlib;
 using Loqui;
-using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;

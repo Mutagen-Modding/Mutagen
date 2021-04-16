@@ -5,7 +5,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Core.Persistance
+namespace Mutagen.Bethesda.Persistence
 {
     /// <summary>
     /// A FormKey allocator that utilizes a folder of text files to persist and sync.

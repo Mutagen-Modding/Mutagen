@@ -1,7 +1,7 @@
 using Noggog;
 using System.Diagnostics;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Persistence
 {
     [DebuggerDisplay("SharedFormKeyAllocator {Mod} {PatcherName}")]
     public abstract class BaseSharedFormKeyAllocator : BasePersistentFormKeyAllocator, ISharedFormKeyAllocator

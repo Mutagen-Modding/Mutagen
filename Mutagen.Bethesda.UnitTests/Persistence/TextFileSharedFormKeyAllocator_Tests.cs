@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Core.Persistance;
+using Mutagen.Bethesda.Persistence;
 using Mutagen.Bethesda.Oblivion;
 using System;
 using System.IO;

@@ -2,7 +2,7 @@ using Noggog;
 using System;
 using System.IO;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Persistence
 {
     public abstract class BasePersistentFormKeyAllocator : BaseFormKeyAllocator, IPersistentFormKeyAllocator
     {
