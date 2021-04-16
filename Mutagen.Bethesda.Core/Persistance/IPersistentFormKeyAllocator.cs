@@ -1,5 +1,6 @@
 using Noggog;
 using System;
+using System.IO;
 
 namespace Mutagen.Bethesda
 {
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda
 
         protected BasePersistentFormKeyAllocator(IMod mod, string saveLocation) : base(mod)
         {
-            this._saveLocation = saveLocation;
+            this._saveLocation = Path.GetFullPath(saveLocation);
         }
 
         /// <summary>

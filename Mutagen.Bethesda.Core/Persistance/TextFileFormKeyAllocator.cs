@@ -98,6 +98,7 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         private void Load()
         {
+            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
             if (!File.Exists(_saveLocation)) return;
             using var streamReader = new StreamReader(_saveLocation);
             while (true)

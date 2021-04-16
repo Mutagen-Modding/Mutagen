@@ -5,6 +5,7 @@ using Noggog.Utility;
 using System;
 using System.Collections.Concurrent;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Xunit;
 
@@ -334,6 +335,25 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
 
                 input.AsParallel().ForAll(check);
             }
+        }
+
+        [Fact]
+        public void NonExistentEndpointProperlyConstructs()
+        {
+            using var temp = Utility.GetTempFolder(this.GetType().Name, nameof(NonExistentEndpointProperlyConstructs));
+            var mod = new OblivionMod(Utility.PluginModKey);
+            using var allocator = CreateAllocator(mod, Path.Combine(temp.Dir.Path, "DoesntExist"));
+        }
+
+        [Fact]
+        public void NonExistentParentDirThrows()
+        {
+            using var temp = Utility.GetTempFolder(this.GetType().Name, nameof(NonExistentEndpointProperlyConstructs));
+            var mod = new OblivionMod(Utility.PluginModKey);
+            Assert.ThrowsAny<Exception>(() =>
+            {
+                CreateAllocator(mod, Path.Combine(temp.Dir.Path, "DoesntExist", "AlsoDoesntExist"));
+            });
         }
 
         protected virtual void Dispose(bool disposing)

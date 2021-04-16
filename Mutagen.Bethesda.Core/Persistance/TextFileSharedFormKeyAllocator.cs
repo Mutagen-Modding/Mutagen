@@ -30,6 +30,8 @@ namespace Mutagen.Bethesda.Core.Persistance
 
         private void Load()
         {
+            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
+            if (!Directory.Exists(_saveLocation)) return;
             foreach (var file in Directory.GetFiles(_saveLocation, "*.txt"))
                 ReadFile(file, Path.GetFileNameWithoutExtension(file));
         }
@@ -106,6 +108,10 @@ namespace Mutagen.Bethesda.Core.Persistance
         {
             lock (this._lock)
             {
+                if (!Directory.Exists(_saveLocation))
+                {
+                    Directory.CreateDirectory(_saveLocation);
+                }
                 var data = _cache
                     .Where(p => p.Value.patcherName == ActivePatcherName)
                     .Select(p => (p.Key, p.Value.formKey));

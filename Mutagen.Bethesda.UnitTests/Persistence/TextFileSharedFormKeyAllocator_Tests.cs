@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                     //Utility.Form2.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, DefaultName));
+            Assert.ThrowsAny<Exception>(() => new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, DefaultName));
         }
 
         [Fact]
