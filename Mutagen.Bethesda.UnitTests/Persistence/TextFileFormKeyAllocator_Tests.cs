@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
     {
         protected override TextFileFormKeyAllocator CreateAllocator(IMod mod, string path)
         {
-            return new(mod, path);
+            return new(mod, path, preload: true);
         }
 
         protected override string ConstructTypicalPath()
@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                 new string[]
                 {
                     Utility.Edid1,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                     Utility.Edid2,
-                    Utility.Form2.ToString(),
+                    Utility.Form2.ID.ToString(),
                 },
                 lines);
         }
@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                 new string[]
                 {
                     Utility.Edid1,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                     Utility.Edid2,
-                    Utility.Form2.ToString(),
+                    Utility.Form2.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
             using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path);
@@ -74,11 +74,11 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                 new string[]
                 {
                     Utility.Edid1,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                     Utility.Edid2,
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
         }
 
         [Fact]
@@ -91,12 +91,12 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                 new string[]
                 {
                     Utility.Edid1,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                     Utility.Edid2,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
         }
 
         [Fact]
@@ -109,12 +109,12 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                 new string[]
                 {
                     Utility.Edid1,
-                    Utility.Form1.ToString(),
+                    Utility.Form1.ID.ToString(),
                     Utility.Edid1,
-                    Utility.Form2.ToString(),
+                    Utility.Form2.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
         }
 
         [Fact]
@@ -129,32 +129,12 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                     new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path);
+            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path, preload: true);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);
             formID = allocator.GetNextFormKey(Utility.Edid2);
             Assert.Equal(formID, Utility.Form2);
-        }
-
-        [Fact]
-        public void FailOnForeignFormKey()
-        {
-            using var file = tempFile.Value;
-
-            var foreignForm = Utility.PluginModKey2.MakeFormKey(0x123456);
-
-            File.WriteAllLines(
-                file.File.Path,
-                new string[]
-                {
-                    Utility.Edid1,
-                    Utility.Form1.ToString(),
-                    Utility.Edid2,
-                    foreignForm.ToString(),
-                });
-            var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path));
         }
     }
 }

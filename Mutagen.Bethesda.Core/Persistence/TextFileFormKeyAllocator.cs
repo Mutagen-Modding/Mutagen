@@ -13,16 +13,61 @@ namespace Mutagen.Bethesda.Persistence
     public class TextFileFormKeyAllocator : BasePersistentFormKeyAllocator
     {
         private readonly object _lock = new();
-        private readonly Dictionary<string, FormKey> _cache = new();
         private readonly uint _initialNextFormID;
+        private Lazy<InternalState> _state;
+        private readonly bool _preload;
+        private readonly ModKey _modKey;
 
-        private readonly HashSet<uint> _formIDSet = new();
+        class InternalState
+        {
+            public readonly Dictionary<string, FormKey> Cache = new();
+            public readonly HashSet<uint> FormIDSet = new();
+        }
 
-        public TextFileFormKeyAllocator(IMod mod, string saveLocation) 
+        public TextFileFormKeyAllocator(IMod mod, string saveLocation, bool preload = false) 
             : base(mod, saveLocation)
         {
             _initialNextFormID = mod.NextFormID;
-            Load();
+            _modKey = mod.ModKey;
+            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
+            _preload = preload;
+            _state = GetLazyInternalState();
+        }
+
+        private Lazy<InternalState> GetLazyInternalState()
+        {
+            if (_preload)
+            {
+                return new Lazy<InternalState>(GetInternalState());
+            }
+            else
+            {
+                return new Lazy<InternalState>(() => GetInternalState());
+            }
+        }
+
+        private InternalState GetInternalState()
+        {
+            InternalState ret = new();
+            if (!File.Exists(_saveLocation)) return ret;
+            using var streamReader = new StreamReader(_saveLocation);
+            while (true)
+            {
+                var edidStr = streamReader.ReadLine();
+                var formIdStr = streamReader.ReadLine();
+                if (edidStr == null) break;
+                if (formIdStr == null)
+                {
+                    throw new ArgumentException("Unexpected odd number of lines.");
+                }
+                var formKey = new FormKey(_modKey, uint.Parse(formIdStr));
+                if (!ret.FormIDSet.Add(formKey.ID))
+                {
+                    throw new ArgumentException($"Duplicate formKey loaded from {_saveLocation}.");
+                }
+                ret.Cache.Add(edidStr, formKey);
+            }
+            return ret;
         }
 
         /// <summary>
@@ -42,7 +87,7 @@ namespace Mutagen.Bethesda.Persistence
                     if (candidateFormID > 0xFFFFFF)
                         throw new OverflowException();
 
-                    while (_formIDSet.Contains(candidateFormID))
+                    while (_state.Value.FormIDSet.Contains(candidateFormID))
                     {
                         candidateFormID++;
                         if (candidateFormID > 0xFFFFFF)
@@ -60,12 +105,12 @@ namespace Mutagen.Bethesda.Persistence
         {
             lock (this._lock)
             {
-                if (_cache.TryGetValue(editorID, out var id))
+                if (_state.Value.Cache.TryGetValue(editorID, out var id))
                     return id;
 
                 var formKey = GetNextFormKey();
 
-                _cache.Add(editorID, formKey);
+                _state.Value.Cache.Add(editorID, formKey);
 
                 return formKey;
             }
@@ -79,7 +124,7 @@ namespace Mutagen.Bethesda.Persistence
                 foreach (var pair in data)
                 {
                     streamWriter.WriteLine(pair.Key);
-                    streamWriter.WriteLine(pair.Value);
+                    streamWriter.WriteLine(pair.Value.ID);
                 }
             }
             if (File.Exists(saveLocation))
@@ -92,34 +137,8 @@ namespace Mutagen.Bethesda.Persistence
         {
             lock (this._lock)
             {
-                WriteToFile(_saveLocation, _cache);
-            }
-        }
-
-        private void Load()
-        {
-            if (!Directory.Exists(Path.GetDirectoryName(_saveLocation))) throw new DirectoryNotFoundException();
-            if (!File.Exists(_saveLocation)) return;
-            using var streamReader = new StreamReader(_saveLocation);
-            while (true)
-            {
-                var edidStr = streamReader.ReadLine();
-                var formKeyStr = streamReader.ReadLine();
-                if (edidStr == null) break;
-                if (formKeyStr == null)
-                {
-                    throw new ArgumentException("Unexpected odd number of lines.");
-                }
-                var formKey = FormKey.Factory(formKeyStr);
-                if (formKey.ModKey != Mod.ModKey)
-                {
-                    throw new ArgumentException($"Attempted to load a FormKey belonging to {formKey.ModKey} into the FormKey allocator for {Mod.ModKey}.");
-                }
-                if (!_formIDSet.Add(formKey.ID))
-                {
-                    throw new ArgumentException($"Duplicate formKey loaded from {_saveLocation}.");
-                }
-                _cache.Add(edidStr, formKey);
+                if (!_state.IsValueCreated) return;
+                WriteToFile(_saveLocation, _state.Value.Cache);
             }
         }
 
@@ -131,8 +150,7 @@ namespace Mutagen.Bethesda.Persistence
                 {
                     this.Mod.NextFormID = _initialNextFormID;
                 }
-                _cache.Clear();
-                Load();
+                _state = GetLazyInternalState();
             }
         }
     }
