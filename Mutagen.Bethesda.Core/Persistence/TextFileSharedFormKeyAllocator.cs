@@ -20,6 +20,7 @@ namespace Mutagen.Bethesda.Persistence
         private Lazy<InternalState> _state;
         private readonly bool _preload;
         private readonly ModKey _modKey;
+        public const string MarkerFileName = $"{nameof(TextFileSharedFormKeyAllocator)}.marker";
 
         class InternalState
         {
@@ -54,6 +55,10 @@ namespace Mutagen.Bethesda.Persistence
             var ret = new InternalState();
             if (Directory.Exists(_saveLocation))
             {
+                if (!File.Exists(Path.Combine(_saveLocation, MarkerFileName)))
+                {
+                    throw new InvalidDataException("Tried to load from a folder that did not have marker file");
+                }
                 foreach (var file in Directory.GetFiles(_saveLocation, "*.txt"))
                 {
                     ReadFile(file, Path.GetFileNameWithoutExtension(file), ret);
@@ -132,10 +137,7 @@ namespace Mutagen.Bethesda.Persistence
             lock (this._lock)
             {
                 if (!_state.IsValueCreated) return;
-                if (!Directory.Exists(_saveLocation))
-                {
-                    Directory.CreateDirectory(_saveLocation);
-                }
+                Initialize(_saveLocation);
                 var data = _state.Value.Cache
                     .Where(p => p.Value.patcherName == ActivePatcherName)
                     .Select(p => (p.Key, p.Value.formKey));
@@ -174,6 +176,25 @@ namespace Mutagen.Bethesda.Persistence
             else
             {
                 File.Move(tempFile, targetFile);
+            }
+        }
+
+        public static bool IsPathOfAllocatorType(string path)
+        {
+            if (!Directory.Exists(path)) return false;
+            return File.Exists(Path.Combine(path, MarkerFileName));
+        }
+
+        public static void Initialize(string path)
+        {
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            var markerPath = Path.Combine(path, MarkerFileName);
+            if (!File.Exists(markerPath))
+            {
+                File.WriteAllText(markerPath, null);
             }
         }
     }
