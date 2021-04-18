@@ -142,30 +142,37 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
-                if (frame.Reader.Complete) return;
-                if (!frame.TryGetGroup(out var groupMeta)) return;
-                if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
+                try
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
-                    obj.Unknown = frame.GetInt32(offset: 20);
-                    if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                    if (frame.Reader.Complete) return;
+                    if (!frame.TryGetGroup(out var groupMeta)) return;
+                    if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                     {
-                        throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                        obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
+                        obj.Unknown = frame.GetInt32(offset: 20);
+                        if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                        {
+                            throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                        }
                     }
-                }
-                else
-                {
-                    return;
-                }
-                frame.Reader.Position += groupMeta.HeaderLength;
-                obj.Responses.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponses>.Instance.Parse(
-                    frame: frame.SpawnWithLength(groupMeta.ContentLength),
-                    transl: (MutagenFrame r, RecordType header, out DialogResponses listItem) =>
+                    else
                     {
-                        return LoquiBinaryTranslation<DialogResponses>.Instance.Parse(
-                            frame: r,
-                            item: out listItem);
-                    }));
+                        return;
+                    }
+                    frame.Reader.Position += groupMeta.HeaderLength;
+                    obj.Responses.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponses>.Instance.Parse(
+                        frame: frame.SpawnWithLength(groupMeta.ContentLength),
+                        transl: (MutagenFrame r, RecordType header, out DialogResponses listItem) =>
+                        {
+                            return LoquiBinaryTranslation<DialogResponses>.Instance.Parse(
+                                frame: r,
+                                item: out listItem);
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
+                }
             }
 
             static partial void FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
@@ -198,26 +205,33 @@ namespace Mutagen.Bethesda.Skyrim
 
             static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
-                if (!obj.Responses.TryGet(out var resp)
-                    || resp.Count == 0)
+                try
                 {
-                    return;
+                    if (!obj.Responses.TryGet(out var resp)
+                        || resp.Count == 0)
+                    {
+                        return;
+                    }
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                    {
+                        FormKeyBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormKey);
+                        writer.Write((int)GroupTypeEnum.TopicChildren);
+                        writer.Write(obj.Timestamp);
+                        writer.Write(obj.Unknown);
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponsesGetter>.Instance.Write(
+                            writer: writer,
+                            items: resp,
+                            transl: (MutagenWriter subWriter, IDialogResponsesGetter subItem) =>
+                            {
+                                subItem.WriteToBinary(subWriter);
+                            });
+                    }
                 }
-                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                catch (Exception ex)
                 {
-                    FormKeyBinaryTranslation.Instance.Write(
-                        writer,
-                        obj.FormKey);
-                    writer.Write((int)GroupTypeEnum.TopicChildren);
-                    writer.Write(obj.Timestamp);
-                    writer.Write(obj.Unknown);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponsesGetter>.Instance.Write(
-                        writer: writer,
-                        items: resp,
-                        transl: (MutagenWriter subWriter, IDialogResponsesGetter subItem) =>
-                        {
-                            subItem.WriteToBinary(subWriter);
-                        });
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
         }
@@ -234,26 +248,33 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
-                if (stream.Complete) return;
-                var startPos = stream.Position;
-                if (!stream.TryGetGroup(out var groupMeta)) return;
-                if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
-                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
-                if (formKey != this.FormKey)
+                try
                 {
-                    throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    if (stream.Complete) return;
+                    var startPos = stream.Position;
+                    if (!stream.TryGetGroup(out var groupMeta)) return;
+                    if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
+                    this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                    var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+                    if (formKey != this.FormKey)
+                    {
+                        throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    }
+                    var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
+                    this.Responses = BinaryOverlayList.FactoryByArray<IDialogResponsesGetter>(
+                        contentSpan,
+                        _package,
+                        getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),
+                        locs: ParseRecordLocations(
+                            stream: new OverlayStream(contentSpan, _package),
+                            trigger: DialogResponses_Registration.TriggeringRecordType,
+                            constants: stream.MetaData.Constants.MajorConstants,
+                            skipHeader: false));
                 }
-                var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Responses = BinaryOverlayList.FactoryByArray<IDialogResponsesGetter>(
-                    contentSpan,
-                    _package,
-                    getter: (s, p) => DialogResponsesBinaryOverlay.DialogResponsesFactory(new OverlayStream(s, p), p),
-                    locs: ParseRecordLocations(
-                        stream: new OverlayStream(contentSpan, _package),
-                        trigger: DialogResponses_Registration.TriggeringRecordType,
-                        constants: stream.MetaData.Constants.MajorConstants,
-                        skipHeader: false));
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, this);
+                }
             }
         }
     }
