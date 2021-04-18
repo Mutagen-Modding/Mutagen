@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation
     {
         public const string AsyncOverrideKey = "AsyncOverride";
 
-        public string ModNickname;
+        public string TranslationTerm;
         public override bool DoErrorMasks => false;
         public override bool IsAsync(TypeGeneration gen, bool read)
         {
@@ -51,9 +51,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public LoquiBinaryTranslationGeneration(string modNickname)
+        public LoquiBinaryTranslationGeneration(string translationTerm)
         {
-            this.ModNickname = modNickname;
+            this.TranslationTerm = translationTerm;
         }
 
         public override async Task GenerateWrite(
@@ -171,7 +171,7 @@ namespace Mutagen.Bethesda.Generation
                 if (loqui.Singleton)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{ModNickname}"))
+                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");

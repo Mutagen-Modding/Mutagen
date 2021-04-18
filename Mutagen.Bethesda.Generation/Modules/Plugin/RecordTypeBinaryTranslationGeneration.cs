@@ -8,7 +8,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Plugin
 {
     public class RecordTypeBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RecordType>
     {

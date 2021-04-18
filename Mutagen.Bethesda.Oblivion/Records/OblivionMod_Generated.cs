@@ -3313,28 +3313,6 @@ namespace Mutagen.Bethesda.Oblivion
 
         #endregion
 
-        public static OblivionMod CreateFromBinary(
-            MutagenFrame frame,
-            ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            try
-            {
-                var ret = new OblivionMod(modKey: modKey);
-                frame.MetaData.ModKey = modKey;
-                ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                    item: ret,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, modKey);
-            }
-        }
-
         public static IOblivionModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey)
@@ -3362,6 +3340,28 @@ namespace Mutagen.Bethesda.Oblivion
                 stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Oblivion),
                 modKey: modKey,
                 shouldDispose: false);
+        }
+
+        public static OblivionMod CreateFromBinary(
+            MutagenFrame frame,
+            ModKey modKey,
+            GroupMask? importMask = null)
+        {
+            try
+            {
+                var ret = new OblivionMod(modKey: modKey);
+                frame.MetaData.ModKey = modKey;
+                ((OblivionModSetterCommon)((IOblivionModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                    item: ret,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, modKey);
+            }
         }
 
         #endregion

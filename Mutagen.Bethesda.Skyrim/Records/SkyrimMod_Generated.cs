@@ -6140,32 +6140,6 @@ namespace Mutagen.Bethesda.Skyrim
 
         #endregion
 
-        public static SkyrimMod CreateFromBinary(
-            MutagenFrame frame,
-            SkyrimRelease release,
-            ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            try
-            {
-                var ret = new SkyrimMod(
-                    modKey: modKey,
-                    release: release);
-                frame.MetaData.ModKey = modKey;
-                ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                    item: ret,
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, modKey);
-            }
-        }
-
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             SkyrimRelease release,
@@ -6205,6 +6179,32 @@ namespace Mutagen.Bethesda.Skyrim
                 modKey: modKey,
                 release: release,
                 shouldDispose: false);
+        }
+
+        public static SkyrimMod CreateFromBinary(
+            MutagenFrame frame,
+            SkyrimRelease release,
+            ModKey modKey,
+            GroupMask? importMask = null)
+        {
+            try
+            {
+                var ret = new SkyrimMod(
+                    modKey: modKey,
+                    release: release);
+                frame.MetaData.ModKey = modKey;
+                ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                    item: ret,
+                    release: release,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, modKey);
+            }
         }
 
         #endregion

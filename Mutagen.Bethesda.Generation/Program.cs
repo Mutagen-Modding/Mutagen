@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Plugin;
 using System;
 using System.IO;
 using System.Linq;
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
             gen.GenerationModules.Add(new MutagenModule());
-            gen.Add(new BinaryTranslationModule(gen));
+            gen.Add(new PluginTranslationModule(gen));
             gen.AddTypeAssociation<FormLinkType>("FormLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");

@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var objType = objGen.GetObjectData().ObjectType;
             if (objType.HasValue) return objType.Value;
-            throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
+            return ObjectType.Subrecord;
         }
 
         public static bool IsListGroup(this ObjectGeneration obj)

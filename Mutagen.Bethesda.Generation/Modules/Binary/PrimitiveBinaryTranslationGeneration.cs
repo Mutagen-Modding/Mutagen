@@ -223,6 +223,7 @@ namespace Mutagen.Bethesda.Generation
             string passedLengthAccessor,
             DataType dataType = null)
         {
+            passedLengthAccessor ??= "0x0";
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
             {

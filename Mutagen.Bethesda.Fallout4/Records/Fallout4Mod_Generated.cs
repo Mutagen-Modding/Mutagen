@@ -1176,28 +1176,6 @@ namespace Mutagen.Bethesda.Fallout4
 
         #endregion
 
-        public static Fallout4Mod CreateFromBinary(
-            MutagenFrame frame,
-            ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            try
-            {
-                var ret = new Fallout4Mod(modKey: modKey);
-                frame.MetaData.ModKey = modKey;
-                ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                    item: ret,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                throw RecordException.Enrich(ex, modKey);
-            }
-        }
-
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             ModKey modKey,
@@ -1231,6 +1209,28 @@ namespace Mutagen.Bethesda.Fallout4
                 stream: new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4),
                 modKey: modKey,
                 shouldDispose: false);
+        }
+
+        public static Fallout4Mod CreateFromBinary(
+            MutagenFrame frame,
+            ModKey modKey,
+            GroupMask? importMask = null)
+        {
+            try
+            {
+                var ret = new Fallout4Mod(modKey: modKey);
+                frame.MetaData.ModKey = modKey;
+                ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                    item: ret,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Enrich(ex, modKey);
+            }
         }
 
         #endregion

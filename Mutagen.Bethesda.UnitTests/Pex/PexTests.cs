@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using FluentAssertions;
 using Mutagen.Bethesda.Pex;
 using Xunit;
