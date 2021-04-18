@@ -32,18 +32,25 @@ namespace Mutagen.Bethesda
             Subrecord = record;
         }
 
-        public static SubrecordException Factory(Exception ex, RecordType record)
-        {
-            return new SubrecordException(record, formKey: null, modKey: null, edid: null, innerException: ex);
-        }
-
-        public static SubrecordException FactoryPassthroughExisting(Exception ex, RecordType record)
+        public static SubrecordException Enrich(Exception ex, RecordType record)
         {
             if (ex is SubrecordException sub)
             {
                 return sub;
             }
-            return Factory(ex, record);
+            return new SubrecordException(record, formKey: null, modKey: null, edid: null, innerException: ex);
+        }
+
+        [Obsolete("Use Create instead")]
+        public static SubrecordException Factory(Exception ex, RecordType record)
+        {
+            return Enrich(ex, record);
+        }
+
+        [Obsolete("Use Enrich instead")]
+        public static SubrecordException FactoryPassthroughExisting(Exception ex, RecordType record)
+        {
+            return Enrich(ex, record);
         }
 
         public override string ToString()

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "var ret = new SkyrimMod";
+            string testString = "throw RecordException.Factory(e, obj.ModKey)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

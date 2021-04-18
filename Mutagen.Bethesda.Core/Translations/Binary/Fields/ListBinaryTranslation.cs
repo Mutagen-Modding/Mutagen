@@ -738,7 +738,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -772,7 +772,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -850,7 +850,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -940,7 +940,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Factory(ex, counterType);
+                throw SubrecordException.Enrich(ex, counterType);
             }
             try
             {
@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -1031,7 +1031,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Factory(ex, counterType);
+                throw SubrecordException.Enrich(ex, counterType);
             }
             try
             {
@@ -1067,7 +1067,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, recordType);
+                throw SubrecordException.Enrich(ex, recordType);
             }
         }
 
@@ -1089,7 +1089,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Factory(ex, counterType);
+                throw SubrecordException.Enrich(ex, counterType);
             }
             foreach (var item in items)
             {

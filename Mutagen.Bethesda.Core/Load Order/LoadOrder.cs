@@ -404,7 +404,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        RecordException.Factory(ex, listing.ModKey);
+                        RecordException.Enrich(ex, listing.ModKey);
                     }
                 });
                 return new LoadOrder<IModListing<TMod>>(results

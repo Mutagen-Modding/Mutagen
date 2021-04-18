@@ -1081,7 +1081,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -1194,7 +1194,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.Fallout4
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this IFallout4ModGetter obj)
         {
-            return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
+            return ((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1515,7 +1515,7 @@ namespace Mutagen.Bethesda.Fallout4
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1529,13 +1529,13 @@ namespace Mutagen.Bethesda.Fallout4
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommonGetter)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this IFallout4Mod obj)
         {
-            return ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
+            return ((Fallout4ModSetterCommon)((IFallout4ModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1547,7 +1547,7 @@ namespace Mutagen.Bethesda.Fallout4
                 type: typeof(TMajor),
                 throwIfUnknown: true)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Fallout4
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Fallout4
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => m.AsType<IFallout4Mod, IFallout4ModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -1794,7 +1794,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -1822,7 +1822,7 @@ namespace Mutagen.Bethesda.Fallout4
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 

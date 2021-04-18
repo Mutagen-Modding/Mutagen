@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Factory(ex, key, edid: null);
+                        throw RecordException.Enrich(ex, key, edid: null);
                     }
                 }
             }
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Factory(ex, kv.Key, edid: null);
+                        throw RecordException.Enrich(ex, kv.Key, edid: null);
                     }
                     yield return item;
                 }

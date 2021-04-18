@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, major.FormKey, major.EditorID);
+                throw RecordException.Enrich(ex, major.FormKey, major.EditorID);
             }
         }
 
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, link.FormKey, edid: null);
+                throw RecordException.Enrich(ex, link.FormKey, edid: null);
             }
         }
 

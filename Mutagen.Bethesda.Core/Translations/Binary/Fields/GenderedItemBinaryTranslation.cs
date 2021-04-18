@@ -359,7 +359,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -374,7 +374,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 
@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -424,7 +424,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 
@@ -459,7 +459,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -481,7 +481,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 
@@ -510,7 +510,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -525,7 +525,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -585,7 +585,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 
@@ -623,7 +623,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, maleMarker);
+                throw SubrecordException.Enrich(ex, maleMarker);
             }
             try
             {
@@ -648,7 +648,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.FactoryPassthroughExisting(ex, femaleMarker);
+                throw SubrecordException.Enrich(ex, femaleMarker);
             }
         }
 

@@ -344,7 +344,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("catch (Exception ex)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("throw RecordException.Factory(ex, modKey);");
+                fg.AppendLine("throw RecordException.Enrich(ex, modKey);");
             }
         }
 
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("catch (Exception ex)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine("throw RecordException.Factory(ex, modKey);");
+                        fg.AppendLine("throw RecordException.Enrich(ex, modKey);");
                     }
                 }
                 fg.AppendLine();
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Generation
             fg.AppendLine("catch (Exception ex)");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("throw RecordException.Factory(ex, path.ModKey);");
+                fg.AppendLine("throw RecordException.Enrich(ex, path.ModKey);");
             }
         }
 
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("catch (Exception ex)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"throw RecordException.Factory(ex, item.FormKey, item.EditorID);");
+                        fg.AppendLine($"throw RecordException.Enrich(ex, item.FormKey, item.EditorID);");
                     }
                 }
             }

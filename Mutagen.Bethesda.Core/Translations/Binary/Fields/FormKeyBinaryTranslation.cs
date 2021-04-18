@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Factory(ex, header);
+                throw SubrecordException.Enrich(ex, header);
             }
         }
     }

@@ -6038,7 +6038,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -6077,7 +6077,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -6105,7 +6105,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -6134,7 +6134,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -6162,7 +6162,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 
@@ -6681,7 +6681,7 @@ namespace Mutagen.Bethesda.Skyrim
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommonGetter> EnumerateMajorRecords(this ISkyrimModGetter obj)
         {
-            return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
+            return ((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6695,7 +6695,7 @@ namespace Mutagen.Bethesda.Skyrim
                 type: typeof(TMajor),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6709,13 +6709,13 @@ namespace Mutagen.Bethesda.Skyrim
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommonGetter)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
         public static IEnumerable<IMajorRecordCommon> EnumerateMajorRecords(this ISkyrimMod obj)
         {
-            return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Factory(e, obj.ModKey));
+            return ((SkyrimModSetterCommon)((ISkyrimModGetter)obj).CommonSetterInstance()!).EnumerateMajorRecords(obj: obj).Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6727,7 +6727,7 @@ namespace Mutagen.Bethesda.Skyrim
                 type: typeof(TMajor),
                 throwIfUnknown: true)
                 .Select(m => (TMajor)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6741,7 +6741,7 @@ namespace Mutagen.Bethesda.Skyrim
                 type: type,
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => (IMajorRecordCommon)m)
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6908,7 +6908,7 @@ namespace Mutagen.Bethesda.Skyrim
                 type: typeof(TGetter),
                 throwIfUnknown: throwIfUnknown)
                 .Select(m => m.AsType<ISkyrimMod, ISkyrimModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TSetter, TGetter>())
-                .Catch(e => throw RecordException.Factory(e, obj.ModKey));
+                .Catch(e => throw RecordException.Enrich(e, obj.ModKey));
         }
 
         [DebuggerStepThrough]
@@ -6979,7 +6979,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, path.ModKey);
+                throw RecordException.Enrich(ex, path.ModKey);
             }
         }
 
@@ -7009,7 +7009,7 @@ namespace Mutagen.Bethesda.Skyrim
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, modKey);
+                throw RecordException.Enrich(ex, modKey);
             }
         }
 

@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Generation
         {
             if (await MajorRecordModule.HasMajorRecordsInTree(obj, includeBaseClass: false) == Case.No) return;
             var needsCatch = obj.GetObjectType() == ObjectType.Mod;
-            string catchLine = needsCatch ? ".Catch(e => throw RecordException.Factory(e, obj.ModKey))" : string.Empty;
+            string catchLine = needsCatch ? ".Catch(e => throw RecordException.Enrich(e, obj.ModKey))" : string.Empty;
             string enderSemi = needsCatch ? string.Empty : ";";
             fg.AppendLine("[DebuggerStepThrough]");
             using (var args = new FunctionWrapper(fg,
