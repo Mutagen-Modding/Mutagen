@@ -16,7 +16,9 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
 
         protected override string ConstructTypicalPath()
         {
-            return tempFolder.Value.Dir.Path;
+            var path = tempFolder.Value.Dir.Path;
+            File.WriteAllText(Path.Combine(path, TextFileSharedFormKeyAllocator.MarkerFileName), null);
+            return path;
         }
 
         [Fact]
@@ -56,6 +58,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                     Utility.Edid2,
                     Utility.Form2.ID.ToString(),
                 });
+            File.WriteAllText(Path.Combine(folder.Dir.Path, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             var mod = new OblivionMod(Utility.PluginModKey);
             var allocator = new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, Patcher1, preload: true);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
@@ -86,6 +89,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
         public void FailedImportDuplicateFormKey()
         {
             using var folder = tempFolder.Value;
+            File.WriteAllText(Path.Combine(folder.Dir.Path, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             File.WriteAllLines(
                 Path.Combine(folder.Dir.Path, Patcher1 + ".txt"),
                 new string[]
@@ -103,6 +107,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
         public void FailedImportDuplicateEditorID()
         {
             using var folder = tempFolder.Value;
+            File.WriteAllText(Path.Combine(folder.Dir.Path, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             File.WriteAllLines(
                 Path.Combine(folder.Dir.Path, Patcher1 + ".txt"),
                 new string[]
@@ -128,6 +133,7 @@ namespace Mutagen.Bethesda.UnitTests.Persistence
                     (Utility.Edid1, Utility.Form1),
                     (Utility.Edid2, Utility.Form2),
                 });
+            File.WriteAllText(Path.Combine(folder.Dir.Path, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             var mod = new OblivionMod(Utility.PluginModKey);
             using var allocator = new TextFileSharedFormKeyAllocator(mod, folder.Dir.Path, Patcher1);
             var formID = allocator.GetNextFormKey();
