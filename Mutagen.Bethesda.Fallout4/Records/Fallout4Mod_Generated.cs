@@ -1051,45 +1051,37 @@ namespace Mutagen.Bethesda.Fallout4
         #region Binary Translation
         #region Binary Create
         public static Fallout4Mod CreateFromBinary(
-            MutagenFrame frame,
-            ModKey modKey,
-            GroupMask? importMask = null)
-        {
-            var ret = new Fallout4Mod(modKey: modKey);
-            frame.MetaData.ModKey = modKey;
-            ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                item: ret,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame);
-            return ret;
-        }
-
-        public static Fallout4Mod CreateFromBinary(
             ModPath path,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+            try
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
                 {
-                    throw new ArgumentException("File stream was too short to parse flags");
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    return CreateFromBinary(
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
                 }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                return CreateFromBinary(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
             }
         }
 
@@ -1100,25 +1092,32 @@ namespace Mutagen.Bethesda.Fallout4
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+            try
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
                 {
-                    throw new ArgumentException("File stream was too short to parse flags");
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    return CreateFromBinary(
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
                 }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                return CreateFromBinary(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
             }
         }
 
@@ -1129,15 +1128,22 @@ namespace Mutagen.Bethesda.Fallout4
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+            try
             {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                return CreateFromBinary(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    return CreateFromBinary(
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
             }
         }
 
@@ -1149,19 +1155,48 @@ namespace Mutagen.Bethesda.Fallout4
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+            try
             {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                return CreateFromBinary(
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    return CreateFromBinary(
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
             }
         }
 
         #endregion
+
+        public static Fallout4Mod CreateFromBinary(
+            MutagenFrame frame,
+            ModKey modKey,
+            GroupMask? importMask = null)
+        {
+            try
+            {
+                var ret = new Fallout4Mod(modKey: modKey);
+                frame.MetaData.ModKey = modKey;
+                ((Fallout4ModSetterCommon)((IFallout4ModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                    item: ret,
+                    importMask: importMask,
+                    modKey: modKey,
+                    frame: frame);
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
+            }
+        }
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
@@ -1733,26 +1768,33 @@ namespace Mutagen.Bethesda.Fallout4
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+            try
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
                 {
-                    throw new ArgumentException("File stream was too short to parse flags");
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    CopyInFromBinary(
+                        item: item,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
                 }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(GameRelease.Fallout4, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                CopyInFromBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
             }
         }
 
@@ -1764,16 +1806,23 @@ namespace Mutagen.Bethesda.Fallout4
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+            try
             {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                CopyInFromBinary(
-                    item: item,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, GameRelease.Fallout4))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    CopyInFromBinary(
+                        item: item,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
             }
         }
 

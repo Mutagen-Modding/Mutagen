@@ -6005,131 +6005,166 @@ namespace Mutagen.Bethesda.Skyrim
         #region Binary Translation
         #region Binary Create
         public static SkyrimMod CreateFromBinary(
+            ModPath path,
+            SkyrimRelease release,
+            GroupMask? importMask = null,
+            StringsReadParameters? stringsParam = null,
+            bool parallel = true)
+        {
+            try
+            {
+                var gameRelease = release.ToGameRelease();
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+                {
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    return CreateFromBinary(
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
+            }
+        }
+
+        public static SkyrimMod CreateFromBinary(
+            ModPath path,
+            SkyrimRelease release,
+            ErrorMaskBuilder? errorMask,
+            GroupMask? importMask = null,
+            StringsReadParameters? stringsParam = null,
+            bool parallel = true)
+        {
+            try
+            {
+                var gameRelease = release.ToGameRelease();
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+                {
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    return CreateFromBinary(
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
+            }
+        }
+
+        public static SkyrimMod CreateFromBinary(
+            Stream stream,
+            ModKey modKey,
+            SkyrimRelease release,
+            RecordInfoCache infoCache,
+            GroupMask? importMask = null,
+            bool parallel = true)
+        {
+            try
+            {
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    return CreateFromBinary(
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
+            }
+        }
+
+        public static SkyrimMod CreateFromBinary(
+            Stream stream,
+            ModKey modKey,
+            SkyrimRelease release,
+            RecordInfoCache infoCache,
+            ErrorMaskBuilder? errorMask,
+            GroupMask? importMask = null,
+            bool parallel = true)
+        {
+            try
+            {
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    return CreateFromBinary(
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
+            }
+        }
+
+        #endregion
+
+        public static SkyrimMod CreateFromBinary(
             MutagenFrame frame,
             SkyrimRelease release,
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            var ret = new SkyrimMod(
-                modKey: modKey,
-                release: release);
-            frame.MetaData.ModKey = modKey;
-            ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
-                item: ret,
-                release: release,
-                importMask: importMask,
-                modKey: modKey,
-                frame: frame);
-            return ret;
-        }
-
-        public static SkyrimMod CreateFromBinary(
-            ModPath path,
-            SkyrimRelease release,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true)
-        {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            try
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
-                {
-                    throw new ArgumentException("File stream was too short to parse flags");
-                }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                return CreateFromBinary(
+                var ret = new SkyrimMod(
+                    modKey: modKey,
+                    release: release);
+                frame.MetaData.ModKey = modKey;
+                ((SkyrimModSetterCommon)((ISkyrimModGetter)ret).CommonSetterInstance()!).CopyInFromBinary(
+                    item: ret,
                     release: release,
                     importMask: importMask,
                     modKey: modKey,
                     frame: frame);
+                return ret;
             }
-        }
-
-        public static SkyrimMod CreateFromBinary(
-            ModPath path,
-            SkyrimRelease release,
-            ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            StringsReadParameters? stringsParam = null,
-            bool parallel = true)
-        {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            catch (Exception ex)
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
-                {
-                    throw new ArgumentException("File stream was too short to parse flags");
-                }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                return CreateFromBinary(
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+                throw RecordException.Factory(ex, modKey);
             }
         }
-
-        public static SkyrimMod CreateFromBinary(
-            Stream stream,
-            ModKey modKey,
-            SkyrimRelease release,
-            RecordInfoCache infoCache,
-            GroupMask? importMask = null,
-            bool parallel = true)
-        {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
-            {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                return CreateFromBinary(
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
-        public static SkyrimMod CreateFromBinary(
-            Stream stream,
-            ModKey modKey,
-            SkyrimRelease release,
-            RecordInfoCache infoCache,
-            ErrorMaskBuilder? errorMask,
-            GroupMask? importMask = null,
-            bool parallel = true)
-        {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
-            {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                return CreateFromBinary(
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
-            }
-        }
-
-        #endregion
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
@@ -6916,28 +6951,35 @@ namespace Mutagen.Bethesda.Skyrim
             StringsReadParameters? stringsParam = null,
             bool parallel = true)
         {
-            var gameRelease = release.ToGameRelease();
-            using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+            try
             {
-                var modKey = path.ModKey;
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
-                frame.MetaData.Parallel = parallel;
-                if (reader.Remaining < 12)
+                var gameRelease = release.ToGameRelease();
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
                 {
-                    throw new ArgumentException("File stream was too short to parse flags");
+                    var modKey = path.ModKey;
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, gameRelease));
+                    frame.MetaData.Parallel = parallel;
+                    if (reader.Remaining < 12)
+                    {
+                        throw new ArgumentException("File stream was too short to parse flags");
+                    }
+                    var flags = reader.GetInt32(offset: 8);
+                    if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
+                    {
+                        frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
+                    }
+                    CopyInFromBinary(
+                        item: item,
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
                 }
-                var flags = reader.GetInt32(offset: 8);
-                if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))
-                {
-                    frame.MetaData.StringsLookup = StringsFolderLookupOverlay.TypicalFactory(gameRelease, path.ModKey, Path.GetDirectoryName(path.Path)!, stringsParam);
-                }
-                CopyInFromBinary(
-                    item: item,
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, path.ModKey);
             }
         }
 
@@ -6950,17 +6992,24 @@ namespace Mutagen.Bethesda.Skyrim
             GroupMask? importMask = null,
             bool parallel = true)
         {
-            using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+            try
             {
-                var frame = new MutagenFrame(reader);
-                frame.MetaData.RecordInfoCache = infoCache;
-                frame.MetaData.Parallel = parallel;
-                CopyInFromBinary(
-                    item: item,
-                    release: release,
-                    importMask: importMask,
-                    modKey: modKey,
-                    frame: frame);
+                using (var reader = new MutagenBinaryReadStream(stream, modKey, release.ToGameRelease()))
+                {
+                    var frame = new MutagenFrame(reader);
+                    frame.MetaData.RecordInfoCache = infoCache;
+                    frame.MetaData.Parallel = parallel;
+                    CopyInFromBinary(
+                        item: item,
+                        release: release,
+                        importMask: importMask,
+                        modKey: modKey,
+                        frame: frame);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw RecordException.Factory(ex, modKey);
             }
         }
 

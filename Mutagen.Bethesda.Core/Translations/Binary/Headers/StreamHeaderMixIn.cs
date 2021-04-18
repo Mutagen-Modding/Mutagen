@@ -1,7 +1,5 @@
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {
@@ -191,7 +189,7 @@ namespace Mutagen.Bethesda.Binary
             }
             return ret;
         }
-        
+
         /// <summary>
         /// Retrieves a GroupHeader struct from the stream, progressing its position.
         /// </summary>

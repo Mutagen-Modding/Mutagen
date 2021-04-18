@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "urn ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs)";
+            string testString = "var ret = new SkyrimMod";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
