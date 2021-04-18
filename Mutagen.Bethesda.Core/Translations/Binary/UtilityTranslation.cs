@@ -113,7 +113,8 @@ namespace Mutagen.Bethesda
                 {
                     throw new SubrecordException(
                         subMeta.RecordType, 
-                        record.FormKey, 
+                        record.FormKey,
+                        majorRecordType: record.Registration.ClassType,
                         modKey: frame.Reader.MetaData.ModKey,
                         edid: record.EditorID,
                         innerException: ex);

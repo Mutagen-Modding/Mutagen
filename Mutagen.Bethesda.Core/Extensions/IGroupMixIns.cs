@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, source.FormKey, source.EditorID);
+                throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Enrich(ex, source.FormKey, source.EditorID);
+                throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
             }
         }
 

@@ -132,6 +132,7 @@ namespace Mutagen.Bethesda
         }
 
         public class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
+            where T : IMajorRecordCommonGetter
         {
             private readonly IReadOnlyDictionary<FormKey, int> _locs;
             private readonly ReadOnlyMemorySlice<byte> _data;
@@ -157,7 +158,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Enrich(ex, key, edid: null);
+                        throw RecordException.Enrich<T>(ex, key, edid: null);
                     }
                 }
             }
@@ -201,7 +202,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Enrich(ex, kv.Key, edid: null);
+                        throw RecordException.Enrich<T>(ex, kv.Key, edid: null);
                     }
                     yield return item;
                 }

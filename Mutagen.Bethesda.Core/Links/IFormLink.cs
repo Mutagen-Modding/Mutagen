@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Loqui;
 using Noggog;
 
 namespace Mutagen.Bethesda
@@ -226,7 +227,11 @@ namespace Mutagen.Bethesda
             {
                 return majorRecord;
             }
-            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
+            throw RecordException.Create<TScopedMajor>(
+                formKey: link.FormKeyNullable,
+                modKey: link.FormKeyNullable?.ModKey, 
+                edid: null, 
+                message: "Could not resolve record");
         }
 
         /// <summary>
@@ -248,7 +253,11 @@ namespace Mutagen.Bethesda
             {
                 return majorRecord;
             }
-            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
+            throw RecordException.Create<TMajor>(
+                formKey: link.FormKeyNullable,
+                modKey: link.FormKeyNullable?.ModKey,
+                edid: null,
+                message: "Could not resolve record");
         }
 
         /// <summary> 
@@ -266,7 +275,11 @@ namespace Mutagen.Bethesda
             {
                 return majorRecord;
             }
-            throw new RecordException(link.FormKeyNullable, link.FormKeyNullable?.ModKey, edid: null, "Could not resolve record");
+            throw RecordException.Create<TMajor>(
+                message: "Could not resolve record",
+                formKey: link.FormKeyNullable,
+                modKey: link.FormKeyNullable?.ModKey,
+                edid: null);
         }
         #endregion
 

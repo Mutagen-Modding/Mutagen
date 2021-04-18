@@ -2232,7 +2232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Enrich(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

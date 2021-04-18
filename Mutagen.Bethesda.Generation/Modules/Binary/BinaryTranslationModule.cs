@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("catch (Exception ex)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"throw RecordException.Enrich(ex, item.FormKey, item.EditorID);");
+                        fg.AppendLine($"throw RecordException.Enrich(ex, item);");
                     }
                 }
             }
