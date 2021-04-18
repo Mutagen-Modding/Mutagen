@@ -28,21 +28,44 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 typeof(ActorValueInformation),
             };
             dict[typeof(IDamageTypeTargetGetter)] = dict[typeof(IDamageTypeTarget)];
+            dict[typeof(IObjectId)] = new Type[]
+            {
+                typeof(Door),
+                typeof(Faction),
+                typeof(TextureSet),
+            };
+            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
+            dict[typeof(ILocationTargetable)] = new Type[]
+            {
+                typeof(Door),
+            };
+            dict[typeof(ILocationTargetableGetter)] = dict[typeof(ILocationTargetable)];
+            dict[typeof(IOwner)] = new Type[]
+            {
+                typeof(Faction),
+            };
+            dict[typeof(IOwnerGetter)] = dict[typeof(IOwner)];
+            dict[typeof(IRelatable)] = new Type[]
+            {
+                typeof(Faction),
+                typeof(Race),
+            };
+            dict[typeof(IRelatableGetter)] = dict[typeof(IRelatable)];
             dict[typeof(IKeywordLinkedReference)] = new Type[]
             {
                 typeof(Keyword),
             };
             dict[typeof(IKeywordLinkedReferenceGetter)] = dict[typeof(IKeywordLinkedReference)];
+            dict[typeof(ISpellRecord)] = new Type[]
+            {
+                typeof(LeveledSpell),
+            };
+            dict[typeof(ISpellRecordGetter)] = dict[typeof(ISpellRecord)];
             dict[typeof(ILocationRecord)] = new Type[]
             {
                 typeof(LocationReferenceType),
             };
             dict[typeof(ILocationRecordGetter)] = dict[typeof(ILocationRecord)];
-            dict[typeof(IObjectId)] = new Type[]
-            {
-                typeof(TextureSet),
-            };
-            dict[typeof(IObjectIdGetter)] = dict[typeof(IObjectId)];
             InterfaceToObjectTypes = dict;
         }
     }

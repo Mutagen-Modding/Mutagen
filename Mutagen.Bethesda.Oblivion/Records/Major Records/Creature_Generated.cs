@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ICreatureGetter.Name => this.Name;
@@ -60,6 +63,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -1852,7 +1858,13 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawn,
         IOblivionMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new ExtendedList<ItemEntry> Items { get; }
         new ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
@@ -1897,8 +1909,18 @@ namespace Mutagen.Bethesda.Oblivion
         INpcSpawnGetter
     {
         static new ILoquiRegistration Registration => Creature_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         IReadOnlyList<IItemEntryGetter> Items { get; }
         IReadOnlyList<IFormLinkGetter<ISpellRecordGetter>> Spells { get; }
         IReadOnlyList<String>? Models { get; }
@@ -3637,7 +3659,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

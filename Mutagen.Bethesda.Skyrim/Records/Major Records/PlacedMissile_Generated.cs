@@ -505,7 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedMissileInternal>,
-        IPlacedMissileGetter
+        IPlacedMissileGetter,
+        IScripted
     {
         new IFormLink<IProjectileGetter> Projectile { get; }
     }
@@ -522,7 +523,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedMissileGetter>,
-        IMapsToGetter<IPlacedMissileGetter>
+        IMapsToGetter<IPlacedMissileGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedMissile_Registration.Instance;
         IFormLinkGetter<IProjectileGetter> Projectile { get; }
@@ -1436,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

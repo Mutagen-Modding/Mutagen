@@ -8,53 +8,74 @@ namespace Mutagen.Bethesda
     {
         public RecordType Subrecord { get; internal set; }
 
-        public SubrecordException(RecordType record, FormKey? formKey, ModKey? modKey, string? edid)
-            : base(formKey, modKey, edid: edid)
+        public SubrecordException(RecordType subRecord, FormKey? formKey, Type? majorRecordType, ModKey? modKey, string? edid)
+            : base(formKey, majorRecordType, modKey, edid: edid)
         {
-            Subrecord = record;
+            Subrecord = subRecord;
         }
 
-        public SubrecordException(RecordType record, FormKey? formKey, ModKey? modKey, string? edid, string message) 
-            : base(formKey, modKey, edid: edid, message: message)
+        public SubrecordException(RecordType subRecord, FormKey? formKey, Type? majorRecordType, ModKey? modKey, string? edid, string message) 
+            : base(formKey, majorRecordType, modKey, edid: edid, message: message)
         {
-            Subrecord = record;
+            Subrecord = subRecord;
         }
 
-        public SubrecordException(RecordType record, FormKey? formKey, ModKey? modKey, string? edid, Exception innerException) 
-            : base(formKey, modKey, edid: edid, innerException)
+        public SubrecordException(RecordType subRecord, FormKey? formKey, Type? majorRecordType, ModKey? modKey, string? edid, Exception innerException) 
+            : base(formKey, majorRecordType, modKey, edid: edid, innerException)
         {
-            Subrecord = record;
+            Subrecord = subRecord;
         }
 
-        public SubrecordException(RecordType record, FormKey? formKey, ModKey? modKey, string? edid, string message, Exception innerException)
-            : base(formKey, modKey, edid: edid, message: message, innerException: innerException)
+        public SubrecordException(RecordType subRecord, FormKey? formKey, Type? majorRecordType, ModKey? modKey, string? edid, string message, Exception innerException)
+            : base(formKey, majorRecordType, modKey, edid: edid, message: message, innerException: innerException)
         {
-            Subrecord = record;
+            Subrecord = subRecord;
         }
 
-        public static SubrecordException Factory(Exception ex, RecordType record)
-        {
-            return new SubrecordException(record, formKey: null, modKey: null, edid: null, innerException: ex);
-        }
-
-        public static SubrecordException FactoryPassthroughExisting(Exception ex, RecordType record)
+        public static SubrecordException Enrich(Exception ex, RecordType subRecord)
         {
             if (ex is SubrecordException sub)
             {
                 return sub;
             }
-            return Factory(ex, record);
+            return new SubrecordException(subRecord, formKey: null, majorRecordType: null, modKey: null, edid: null, innerException: ex);
+        }
+
+        [Obsolete("Use Create instead")]
+        public static SubrecordException Factory(Exception ex, RecordType subRecord)
+        {
+            return Enrich(ex, subRecord);
+        }
+
+        [Obsolete("Use Enrich instead")]
+        public static SubrecordException FactoryPassthroughExisting(Exception ex, RecordType subRecord)
+        {
+            return Enrich(ex, subRecord);
         }
 
         public override string ToString()
         {
             if (EditorID == null)
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                if (RecordType == null)
+                {
+                    return $"{nameof(SubrecordException)} {ModKey} => {FormKey} => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                }
+                else
+                {
+                    return $"{nameof(SubrecordException)} {ModKey} => {FormKey}<{RecordType.Name}> => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                }
             }
             else
             {
-                return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                if (RecordType == null)
+                {
+                    return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                }
+                else
+                {
+                    return $"{nameof(SubrecordException)} {ModKey} => {EditorID} ({FormKey}<{RecordType.Name}>) => {Subrecord}: {this.Message} {this.InnerException}{this.StackTrace}";
+                }
             }
         }
     }

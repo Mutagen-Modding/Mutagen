@@ -492,6 +492,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IRegionGrasses :
         IFormLinkContainer,
+        IHasIcons,
         ILoquiObjectSetter<IRegionGrasses>,
         IRegionData,
         IRegionGrassesGetter
@@ -503,6 +504,7 @@ namespace Mutagen.Bethesda.Skyrim
         IRegionDataGetter,
         IBinaryItem,
         IFormLinkContainerGetter,
+        IHasIconsGetter,
         ILoquiObject<IRegionGrassesGetter>
     {
         static new ILoquiRegistration Registration => RegionGrasses_Registration.Instance;

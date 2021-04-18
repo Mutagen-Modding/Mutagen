@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Oblivion
         MapMarker.Flag? IMapMarkerGetter.Flags => this.Flags;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMapMarkerGetter.Name => this.Name;
@@ -574,6 +577,9 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired
     {
         new MapMarker.Flag? Flags { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new ExtendedList<MapMarker.Type>? Types { get; set; }
     }
@@ -593,7 +599,12 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MapMarker_Registration.Instance;
         MapMarker.Flag? Flags { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         IReadOnlyList<MapMarker.Type>? Types { get; }
 
     }

@@ -40,6 +40,9 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
         #region IY
@@ -1745,6 +1748,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IPhonemeGetter
     {
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         new String Name { get; set; }
         new Single IY { get; set; }
         new Single IH { get; set; }
@@ -1804,7 +1810,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => Phoneme_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
         String Name { get; }
+        #endregion
         Single IY { get; }
         Single IH { get; }
         Single EH { get; }

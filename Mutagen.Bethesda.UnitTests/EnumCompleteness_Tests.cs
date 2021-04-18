@@ -34,6 +34,7 @@ namespace Mutagen.Bethesda.UnitTests
         }
 
         [Fact]
+
         public void DefaultFormVersion()
         {
             foreach (var release in EnumExt.GetValues<GameRelease>())
@@ -61,6 +62,17 @@ namespace Mutagen.Bethesda.UnitTests
             foreach (var release in EnumExt.GetValues<GameRelease>())
             {
                 Ini.ToMyDocumentsString(release);
+            }
+        }
+        #endregion
+
+        #region ToIniName
+        [Fact]
+        public void ToIniName()
+        {
+            foreach (var release in EnumExt.GetValues<GameRelease>())
+            {
+                Ini.ToIniName(release);
             }
         }
         #endregion

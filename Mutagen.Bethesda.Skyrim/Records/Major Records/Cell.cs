@@ -45,48 +45,55 @@ namespace Mutagen.Bethesda.Skyrim
 
             private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
             {
-                if (frame.Reader.Complete) return;
-                if (!frame.TryGetGroup(out var groupMeta)) return;
-                var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
-                if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
+                try
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
-                    obj.UnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
-                    frame.Position += groupMeta.HeaderLength;
-                    if (formKey != obj.FormKey)
+                    if (frame.Reader.Complete) return;
+                    if (!frame.TryGetGroup(out var groupMeta)) return;
+                    var formKey = FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+                    if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                     {
-                        throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                        obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
+                        obj.UnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
+                        frame.Position += groupMeta.HeaderLength;
+                        if (formKey != obj.FormKey)
+                        {
+                            throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    var subFrame = frame.SpawnWithLength(groupMeta.ContentLength);
+                    while (!subFrame.Complete)
+                    {
+                        var persistGroupMeta = frame.GetGroup();
+                        if (!persistGroupMeta.IsGroup)
+                        {
+                            throw new ArgumentException();
+                        }
+                        GroupTypeEnum type = (GroupTypeEnum)persistGroupMeta.GroupType;
+                        var itemFrame = frame.SpawnWithLength(persistGroupMeta.TotalLength);
+                        switch (type)
+                        {
+                            case GroupTypeEnum.CellTemporaryChildren:
+                                ParseTemporary(
+                                    itemFrame,
+                                    obj);
+                                break;
+                            case GroupTypeEnum.CellPersistentChildren:
+                                ParseTypical(
+                                    itemFrame,
+                                    obj);
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    return;
-                }
-                var subFrame = frame.SpawnWithLength(groupMeta.ContentLength);
-                while (!subFrame.Complete)
-                {
-                    var persistGroupMeta = frame.GetGroup();
-                    if (!persistGroupMeta.IsGroup)
-                    {
-                        throw new ArgumentException();
-                    }
-                    GroupTypeEnum type = (GroupTypeEnum)persistGroupMeta.GroupType;
-                    var itemFrame = frame.SpawnWithLength(persistGroupMeta.TotalLength);
-                    switch (type)
-                    {
-                        case GroupTypeEnum.CellTemporaryChildren:
-                            ParseTemporary(
-                                itemFrame,
-                                obj);
-                            break;
-                        case GroupTypeEnum.CellPersistentChildren:
-                            ParseTypical(
-                                itemFrame,
-                                obj);
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
 
@@ -244,62 +251,69 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
             {
-                var navMeshes = obj.NavigationMeshes;
-                var landscape = obj.Landscape;
-                if ((obj.Persistent?.Count ?? 0) == 0
-                    && (obj.Temporary?.Count ?? 0) == 0
-                    && navMeshes.Count == 0
-                    && landscape == null) return;
-                using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                try
                 {
-                    FormKeyBinaryTranslation.Instance.Write(
-                        writer,
-                        obj.FormKey);
-                    writer.Write((int)GroupTypeEnum.CellChildren);
-                    writer.Write(obj.Timestamp);
-                    writer.Write(obj.UnknownGroupData);
-                    if (obj.Persistent?.Count > 0)
+                    var navMeshes = obj.NavigationMeshes;
+                    var landscape = obj.Landscape;
+                    if ((obj.Persistent?.Count ?? 0) == 0
+                        && (obj.Temporary?.Count ?? 0) == 0
+                        && navMeshes.Count == 0
+                        && landscape == null) return;
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                     {
-                        using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                        FormKeyBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormKey);
+                        writer.Write((int)GroupTypeEnum.CellChildren);
+                        writer.Write(obj.Timestamp);
+                        writer.Write(obj.UnknownGroupData);
+                        if (obj.Persistent?.Count > 0)
                         {
-                            FormKeyBinaryTranslation.Instance.Write(
-                                writer,
-                                obj.FormKey);
-                            writer.Write((int)GroupTypeEnum.CellPersistentChildren);
-                            writer.Write(obj.PersistentTimestamp);
-                            writer.Write(obj.PersistentUnknownGroupData);
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
-                                writer: writer,
-                                items: obj.Persistent,
-                                transl: WritePlaced);
-                        }
-                    }
-                    if (obj.Temporary?.Count > 0
-                        || navMeshes.Count > 0
-                        || landscape != null)
-                    {
-                        using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(
-                                writer,
-                                obj.FormKey);
-                            writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
-                            writer.Write(obj.TemporaryTimestamp);
-                            writer.Write(obj.TemporaryUnknownGroupData);
-                            landscape?.WriteToBinary(writer);
-                            foreach (var navMesh in navMeshes)
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
                             {
-                                navMesh.WriteToBinary(writer);
-                            }
-                            if (obj.Temporary != null)
-                            {
+                                FormKeyBinaryTranslation.Instance.Write(
+                                    writer,
+                                    obj.FormKey);
+                                writer.Write((int)GroupTypeEnum.CellPersistentChildren);
+                                writer.Write(obj.PersistentTimestamp);
+                                writer.Write(obj.PersistentUnknownGroupData);
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
-                                    items: obj.Temporary,
+                                    items: obj.Persistent,
                                     transl: WritePlaced);
                             }
                         }
+                        if (obj.Temporary?.Count > 0
+                            || navMeshes.Count > 0
+                            || landscape != null)
+                        {
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                            {
+                                FormKeyBinaryTranslation.Instance.Write(
+                                    writer,
+                                    obj.FormKey);
+                                writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
+                                writer.Write(obj.TemporaryTimestamp);
+                                writer.Write(obj.TemporaryUnknownGroupData);
+                                landscape?.WriteToBinary(writer);
+                                foreach (var navMesh in navMeshes)
+                                {
+                                    navMesh.WriteToBinary(writer);
+                                }
+                                if (obj.Temporary != null)
+                                {
+                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                        writer: writer,
+                                        items: obj.Temporary,
+                                        transl: WritePlaced);
+                                }
+                            }
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
 
@@ -399,10 +413,17 @@ namespace Mutagen.Bethesda.Skyrim
                     offset: offset,
                     recordTypeConverter: null,
                     fill: ret.FillRecordType);
-                ret.CustomEnd(
-                    stream: origStream,
-                    finalPos: stream.Length,
-                    offset: offset);
+                try
+                {
+                    ret.CustomEnd(
+                        stream: origStream,
+                        finalPos: stream.Length,
+                        offset: offset);
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, ret);
+                }
                 return ret;
             }
 

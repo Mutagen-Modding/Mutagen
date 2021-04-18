@@ -2,9 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using Noggog;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Sqlite
+namespace Mutagen.Bethesda.Persistence
 {
     record SQLiteFormKeyAllocatorFormIDRecord(string EditorID, uint FormID, uint PatcherID);
 
@@ -208,6 +209,27 @@ namespace Mutagen.Bethesda.Sqlite
                 _connection?.Dispose();
                 _connection = new SQLiteFormKeyAllocatorDbContext(_saveLocation);
                 _patcherID = GetOrAddPatcherID(ActivePatcherName);
+            }
+        }
+
+        public static bool IsPathOfAllocatorType(string path)
+        {
+            if (!File.Exists(path)) return false;
+            try
+            {
+                using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                byte[] header = new byte[16];
+
+                for (int i = 0; i < 16; i++)
+                {
+                    header[i] = (byte)stream.ReadByte();
+                }
+
+                return System.Text.Encoding.UTF8.GetString(header).Contains("SQLite format", StringComparison.OrdinalIgnoreCase);
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "urn ((MajorRecordCommon)((IMajorRecordGetter)this).CommonInstance()!).Equals(this, rhs)";
+            string testString = "throw RecordException.Factory(e, obj.ModKey)";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -23,13 +24,14 @@ namespace Mutagen.Bethesda.Generation
                 });
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Args = args;
 #if DEBUG
             AttachDebugInspector();
 #endif
-            GenerateRecords();
+            await GenerateRecords();
+            GeneratePex();
         }
  
         static bool ShouldRun(string key)
@@ -38,7 +40,7 @@ namespace Mutagen.Bethesda.Generation
             return Args.Contains(key, StringComparer.OrdinalIgnoreCase);
         }
 
-        static void GenerateRecords()
+        static async Task GenerateRecords()
         { 
             LoquiGenerator gen = new LoquiGenerator(typical: false)
             {
@@ -142,6 +144,33 @@ namespace Mutagen.Bethesda.Generation
                 proto.AddProjectToModify(
                     new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Fallout4.csproj")));
             }
+
+            await gen.Generate();
+        }
+
+        static void GeneratePex()
+        {
+            LoquiGenerator gen = new LoquiGenerator(typical: false)
+            {
+                NotifyingDefault = NotifyingType.None,
+                NullableDefault = false,
+                ToStringDefault = false,
+            };
+            gen.AddTypicalTypeAssociations();
+            gen.Add(gen.MaskModule);
+
+            var dir = new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Pex/DataTypes");
+            var pexProto = gen.AddProtocol(
+                new ProtocolGeneration(
+                    gen,
+                    new ProtocolKey("Pex"),
+                    dir)
+                {
+                    DefaultNamespace = "Mutagen.Bethesda.Pex",
+                    DoGeneration = ShouldRun("Pex")
+                });
+            var projFile = new FileInfo(Path.Combine(pexProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.Core.csproj"));
+            pexProto.AddProjectToModify(projFile);
 
             gen.Generate().Wait();
         }

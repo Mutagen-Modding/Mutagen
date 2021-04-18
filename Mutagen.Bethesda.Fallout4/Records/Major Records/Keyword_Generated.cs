@@ -29,6 +29,9 @@ using System.Text;
 namespace Mutagen.Bethesda.Fallout4
 {
     #region Class
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial class Keyword :
         Fallout4MajorRecord,
         IEquatable<IKeywordGetter>,
@@ -69,6 +72,9 @@ namespace Mutagen.Bethesda.Fallout4
         IFormLinkNullableGetter<IAttractionRuleGetter> IKeywordGetter.AttractionRule => this.AttractionRule;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IKeywordGetter.Name => this.Name;
@@ -654,6 +660,9 @@ namespace Mutagen.Bethesda.Fallout4
     #endregion
 
     #region Interface
+    /// <summary>
+    /// Aspects: IKeywordCommon
+    /// </summary>
     public partial interface IKeyword :
         IFallout4MajorRecordInternal,
         IFormLinkContainer,
@@ -670,6 +679,9 @@ namespace Mutagen.Bethesda.Fallout4
         new String? Notes { get; set; }
         new Keyword.TypeEnum? Type { get; set; }
         new IFormLinkNullable<IAttractionRuleGetter> AttractionRule { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new String? DisplayName { get; set; }
     }
@@ -681,6 +693,9 @@ namespace Mutagen.Bethesda.Fallout4
     {
     }
 
+    /// <summary>
+    /// Aspects: IKeywordCommonGetter
+    /// </summary>
     public partial interface IKeywordGetter :
         IFallout4MajorRecordGetter,
         IBinaryItem,
@@ -699,7 +714,12 @@ namespace Mutagen.Bethesda.Fallout4
         String? Notes { get; }
         Keyword.TypeEnum? Type { get; }
         IFormLinkNullableGetter<IAttractionRuleGetter> AttractionRule { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         String? DisplayName { get; }
 
     }
@@ -1602,7 +1622,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

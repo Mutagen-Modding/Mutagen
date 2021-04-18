@@ -9,21 +9,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
     public class KeywordAspect : AspectInterfaceDefinition
     {
-        public KeywordAspect()
-            : base("Keyword", ApplicabilityTest)
-        {
-            Interfaces = (o) =>
-            {
-                var ret = new List<(LoquiInterfaceDefinitionType Type, string Interface)>();
-                ret.Add((LoquiInterfaceDefinitionType.IGetter, nameof(IKeywordCommonGetter)));
-                ret.Add((LoquiInterfaceDefinitionType.ISetter, nameof(IKeywordCommon)));
-                return ret;
-            };
-        }
+        public KeywordAspect() : base("IKeywordCommon") { }
 
-        public static bool ApplicabilityTest(ObjectGeneration o)
-        {
-            return o.Name == "Keyword";
-        }
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => o.Name == "Keyword";
     }
 }

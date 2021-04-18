@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Door" recordType="DOOR" baseClass="Fallout4MajorRecord" objType="Record" GUID="a7b54091-ef8c-4eec-ac2e-f17b2ae6c1b3" ID="77">
+    <Fields>
+    </Fields>
+    <LinkInterface>IObjectId</LinkInterface>
+    <LinkInterface>ILocationTargetable</LinkInterface>
+  </Object>
+</Loqui>

@@ -355,6 +355,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IRegionLand :
+        IHasIcons,
         ILoquiObjectSetter<IRegionLand>,
         IRegionData,
         IRegionLandGetter
@@ -364,6 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IRegionLandGetter :
         IRegionDataGetter,
         IBinaryItem,
+        IHasIconsGetter,
         ILoquiObject<IRegionLandGetter>
     {
         static new ILoquiRegistration Registration => RegionLand_Registration.Instance;

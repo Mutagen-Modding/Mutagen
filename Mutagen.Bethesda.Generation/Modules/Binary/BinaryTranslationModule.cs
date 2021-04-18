@@ -9,6 +9,7 @@ using Noggog;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Core;
 using System.IO;
+using Loqui.Internal;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -319,22 +320,31 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromStreamIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            string gameReleaseStr;
-            if (obj.GetObjectData().GameReleaseOptions == null)
-            {
-                gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
-            }
-            else
-            {
-                gameReleaseStr = $"release.ToGameRelease()";
-            }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
+            fg.AppendLine("try");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                string gameReleaseStr;
+                if (obj.GetObjectData().GameReleaseOptions == null)
+                {
+                    gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
+                }
+                else
+                {
+                    gameReleaseStr = $"release.ToGameRelease()";
+                }
+                fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(stream, modKey, {gameReleaseStr}))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("var frame = new MutagenFrame(reader);");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = infoCache;");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                }
+            }
+            fg.AppendLine("catch (Exception ex)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("throw RecordException.Enrich(ex, modKey);");
             }
         }
 
@@ -366,6 +376,58 @@ namespace Mutagen.Bethesda.Generation
         public override async Task GenerateInClass(ObjectGeneration obj, FileGeneration fg)
         {
             await base.GenerateInClass(obj, fg);
+            
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public{obj.NewOverride()}static {await this.ObjectReturn(obj, maskReturn: false)} {CreateFromPrefix}{TranslationTerm}"))
+                {
+                    foreach (var (API, Public) in this.MainAPI.ReaderAPI.IterateAPI(obj,
+                        TranslationDirection.Reader,
+                        this.DoErrorMasks ? new APILine(ErrorMaskKey, "ErrorMaskBuilder? errorMask") : null,
+                        this.DoErrorMasks ? new APILine(TranslationMaskKey, $"{nameof(TranslationCrystal)}? translationMask", (o, i) => this.TranslationMaskParameter) : null))
+                    {
+                        args.Add(API.Result);
+                    }
+                }
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("try");
+                    using (new BraceWrapper(fg))
+                    {
+                        await GenerateNewSnippet(obj, fg);
+                        using (var args = new ArgsWrapper(fg,
+                            $"{Loqui.Generation.Utility.Await(await AsyncImport(obj))}{obj.CommonClassInstance("ret", LoquiInterfaceType.ISetter, CommonGenerics.Class)}.{CopyInFromPrefix}{TranslationTerm}"))
+                        {
+                            args.Add("item: ret");
+                            foreach (var arg in this.MainAPI.PassArgs(obj, TranslationDirection.Reader))
+                            {
+                                args.Add(arg);
+                            }
+                            foreach (var arg in this.MainAPI.InternalPassArgs(obj, TranslationDirection.Reader))
+                            {
+                                args.Add(arg);
+                            }
+                            if (this.DoErrorMasks)
+                            {
+                                args.AddPassArg("errorMask");
+                            }
+                            if (this.TranslationMaskParameter)
+                            {
+                                args.AddPassArg("translationMask");
+                            }
+                        }
+                        fg.AppendLine("return ret;");
+                    }
+                    fg.AppendLine("catch (Exception ex)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine("throw RecordException.Enrich(ex, modKey);");
+                    }
+                }
+                fg.AppendLine();
+            }
+
             if (!obj.Abstract && obj.GetObjectType() != ObjectType.Mod)
             {
                 using (var args = new FunctionWrapper(fg,
@@ -1377,45 +1439,54 @@ namespace Mutagen.Bethesda.Generation
 
         private void ConvertFromPathIn(ObjectGeneration obj, FileGeneration fg, InternalTranslation internalToDo)
         {
-            string gameReleaseStr;
-            if (obj.GetObjectData().GameReleaseOptions == null)
-            {
-                gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
-            }
-            else
-            {
-                fg.AppendLine($"var gameRelease = release.ToGameRelease();");
-                gameReleaseStr = $"gameRelease";
-            }
-            fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+            fg.AppendLine("try");
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("var modKey = path.ModKey;");
-                fg.AppendLine("var frame = new MutagenFrame(reader);");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
-                fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
-                if (obj.GetObjectData().UsesStringFiles)
+                string gameReleaseStr;
+                if (obj.GetObjectData().GameReleaseOptions == null)
                 {
-                    fg.AppendLine("if (reader.Remaining < 12)");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
-                    }
-                    fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
-                    fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
-                    using (new BraceWrapper(fg))
-                    {
-                        fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
-                    }
+                    gameReleaseStr = $"{nameof(GameRelease)}.{obj.GetObjectData().GameCategory}";
                 }
-                internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                else
+                {
+                    fg.AppendLine($"var gameRelease = release.ToGameRelease();");
+                    gameReleaseStr = $"gameRelease";
+                }
+                fg.AppendLine($"using (var reader = new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                using (new BraceWrapper(fg))
+                {
+                    fg.AppendLine("var modKey = path.ModKey;");
+                    fg.AppendLine("var frame = new MutagenFrame(reader);");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
+                    if (obj.GetObjectData().UsesStringFiles)
+                    {
+                        fg.AppendLine("if (reader.Remaining < 12)");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"throw new ArgumentException(\"File stream was too short to parse flags\");");
+                        }
+                        fg.AppendLine($"var flags = reader.GetInt32(offset: 8);");
+                        fg.AppendLine($"if (EnumExt.HasFlag(flags, (int)ModHeaderCommonFlag.Localized))");
+                        using (new BraceWrapper(fg))
+                        {
+                            fg.AppendLine($"frame.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.StringsLookup)} = StringsFolderLookupOverlay.TypicalFactory({gameReleaseStr}, path.{nameof(ModPath.ModKey)}, Path.GetDirectoryName(path.{nameof(ModPath.Path)})!, stringsParam);");
+                        }
+                    }
+                    internalToDo(this.MainAPI.PublicMembers(obj, TranslationDirection.Reader).ToArray());
+                }
+            }
+            fg.AppendLine("catch (Exception ex)");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine("throw RecordException.Enrich(ex, path.ModKey);");
             }
         }
 
         protected override bool GenerateMainCreate(ObjectGeneration obj)
         {
             var data = obj.GetObjectData();
-            return !data.CustomBinary;
+            return !data.CustomBinary && obj.GetObjectType() != ObjectType.Mod;
         }
 
         protected override async Task GenerateNewSnippet(ObjectGeneration obj, FileGeneration fg)
@@ -1752,7 +1823,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("catch (Exception ex)");
                     using (new BraceWrapper(fg))
                     {
-                        fg.AppendLine($"throw RecordException.Factory(ex, item.FormKey, item.EditorID);");
+                        fg.AppendLine($"throw RecordException.Enrich(ex, item);");
                     }
                 }
             }
@@ -2136,7 +2207,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ClassWrapper(fg, $"{BinaryOverlayClass(obj)}"))
             {
                 args.Partial = true;
-                var block = obj.GetObjectType() == ObjectType.Mod 
+                var block = obj.GetObjectType() == ObjectType.Mod
                     || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
                 args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (block ? null : nameof(BinaryOverlay));
                 if (obj.GetObjectType() == ObjectType.Mod)

@@ -12,6 +12,10 @@
       <Group name="TextureSets" refName="TextureSet" />
       <Group name="Globals" refName="Global" />
       <Group name="DamageTypes" refName="ADamageType" />
+      <Group name="Classes" refName="Class" />
+      <Group name="Factions" refName="Faction" />
+      <Group name="HeadParts" refName="HeadPart" />
+      <!--<Group name="Races" refName="Race" />-->
     </Fields>
   </Object>
 </Loqui>

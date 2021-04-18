@@ -48,6 +48,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region VirtualMachineAdapter
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private VirtualMachineAdapter? _VirtualMachineAdapter;
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         public VirtualMachineAdapter? VirtualMachineAdapter
         {
             get => _VirtualMachineAdapter;
@@ -55,6 +58,10 @@ namespace Mutagen.Bethesda.Skyrim
         }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         IVirtualMachineAdapterGetter? IAPlacedTrapGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #region Aspects
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        IVirtualMachineAdapterGetter? IScriptedGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
+        #endregion
         #endregion
         #region EncounterZone
         private IFormLinkNullable<IEncounterZoneGetter> _EncounterZone = new FormLinkNullable<IEncounterZoneGetter>();
@@ -1407,8 +1414,12 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IAPlacedTrapInternal>,
         IPlaced,
         IPlacedThing,
+        IScripted,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IScripted
+        /// </summary>
         new VirtualMachineAdapter? VirtualMachineAdapter { get; set; }
         new IFormLinkNullable<IEncounterZoneGetter> EncounterZone { get; }
         new Ownership? Ownership { get; set; }
@@ -1450,10 +1461,16 @@ namespace Mutagen.Bethesda.Skyrim
         ILinkedReferenceGetter,
         ILoquiObject<IAPlacedTrapGetter>,
         IPlacedGetter,
-        IPlacedThingGetter
+        IPlacedThingGetter,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => APlacedTrap_Registration.Instance;
+        #region VirtualMachineAdapter
+        /// <summary>
+        /// Aspects: IScriptedGetter
+        /// </summary>
         IVirtualMachineAdapterGetter? VirtualMachineAdapter { get; }
+        #endregion
         IFormLinkNullableGetter<IEncounterZoneGetter> EncounterZone { get; }
         IOwnershipGetter? Ownership { get; }
         Single? HeadTrackingWeight { get; }
@@ -3038,7 +3055,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                throw RecordException.Enrich(ex, item);
             }
         }
 

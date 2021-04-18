@@ -5,11 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Loqui;
-using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -20,29 +16,36 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
-                if (frame.Reader.Complete) return;
-                if (!frame.TryGetGroup(out var groupMeta)) return;
-                if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
+                try
                 {
-                    obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
-                    if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                    if (frame.Reader.Complete) return;
+                    if (!frame.TryGetGroup(out var groupMeta)) return;
+                    if (groupMeta.GroupType == (int)GroupTypeEnum.TopicChildren)
                     {
-                        throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                        obj.Timestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
+                        if (FormKey.Factory(frame.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)) != obj.FormKey)
+                        {
+                            throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                        }
                     }
-                }
-                else
-                {
-                    return;
-                }
-                frame.Reader.Position += groupMeta.HeaderLength;
-                obj.Items.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Parse(
-                    frame: frame.SpawnWithLength(groupMeta.ContentLength),
-                    transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
+                    else
                     {
-                        return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
-                            frame: r,
-                            item: out listItem);
-                    }));
+                        return;
+                    }
+                    frame.Reader.Position += groupMeta.HeaderLength;
+                    obj.Items.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Parse(
+                        frame: frame.SpawnWithLength(groupMeta.ContentLength),
+                        transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
+                        {
+                            return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
+                                frame: r,
+                                item: out listItem);
+                        }));
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
+                }
             }
         }
 
@@ -50,22 +53,29 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
-                if (!obj.Items.TryGet(out var items)
-                    || items.Count == 0) return;
-                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                try
                 {
-                    FormKeyBinaryTranslation.Instance.Write(
-                        writer,
-                        obj.FormKey);
-                    writer.Write((int)GroupTypeEnum.TopicChildren);
-                    writer.Write(obj.Timestamp);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
-                        writer: writer,
-                        items: items,
-                        transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>
-                        {
-                            subItem.WriteToBinary(subWriter);
-                        });
+                    if (!obj.Items.TryGet(out var items)
+                        || items.Count == 0) return;
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                    {
+                        FormKeyBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormKey);
+                        writer.Write((int)GroupTypeEnum.TopicChildren);
+                        writer.Write(obj.Timestamp);
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
+                            writer: writer,
+                            items: items,
+                            transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>
+                            {
+                                subItem.WriteToBinary(subWriter);
+                            });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
         }
@@ -80,26 +90,33 @@ namespace Mutagen.Bethesda.Oblivion
 
             partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
-                if (stream.Complete) return;
-                var startPos = stream.Position;
-                if (!stream.TryGetGroup(out var groupMeta)) return;
-                if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
-                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
-                if (formKey != this.FormKey)
+                try
                 {
-                    throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    if (stream.Complete) return;
+                    var startPos = stream.Position;
+                    if (!stream.TryGetGroup(out var groupMeta)) return;
+                    if (groupMeta.GroupType != (int)GroupTypeEnum.TopicChildren) return;
+                    this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                    var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+                    if (formKey != this.FormKey)
+                    {
+                        throw new ArgumentException("Dialog children group did not match the FormID of the parent.");
+                    }
+                    var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
+                    this.Items = BinaryOverlayList.FactoryByArray<IDialogItemGetter>(
+                        contentSpan,
+                        _package,
+                        getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),
+                        locs: ParseRecordLocations(
+                            stream: new OverlayStream(contentSpan, _package),
+                            trigger: DialogItem_Registration.TriggeringRecordType,
+                            constants: GameConstants.Oblivion.MajorConstants,
+                            skipHeader: false));
                 }
-                var contentSpan = this._grupData.Value.Slice(_package.MetaData.Constants.GroupConstants.HeaderLength);
-                this.Items = BinaryOverlayList.FactoryByArray<IDialogItemGetter>(
-                    contentSpan,
-                    _package,
-                    getter: (s, p) => DialogItemBinaryOverlay.DialogItemFactory(new OverlayStream(s, p), p),
-                    locs: ParseRecordLocations(
-                        stream: new OverlayStream(contentSpan, _package),
-                        trigger: DialogItem_Registration.TriggeringRecordType,
-                        constants: GameConstants.Oblivion.MajorConstants,
-                        skipHeader: false));
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, this);
+                }
             }
         }
     }

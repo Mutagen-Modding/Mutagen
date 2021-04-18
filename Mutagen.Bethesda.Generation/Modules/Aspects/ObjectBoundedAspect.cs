@@ -8,30 +8,16 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
-    public class ObjectBoundedAspect : AspectInterfaceDefinition
+    public class ObjectBoundedAspect : AspectFieldInterfaceDefinition
     {
         public ObjectBoundedAspect()
-            : base("IObjectBounded", ApplicabilityTest)
+            : base("IObjectBounded")
         {
-            Interfaces = (o) =>
+            FieldActions = new()
             {
-                var field = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == "ObjectBounds") as LoquiType;
-
-                var ret = new List<(LoquiInterfaceDefinitionType Type, string Interface)>();
-                ret.Add((LoquiInterfaceDefinitionType.IGetter, $"IObjectBoundedOptionalGetter"));
-                ret.Add((LoquiInterfaceDefinitionType.ISetter, $"IObjectBoundedOptional"));
-                if (!field.Nullable)
+                (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, fg) =>
                 {
-                    ret.Add((LoquiInterfaceDefinitionType.IGetter, $"IObjectBoundedGetter"));
-                    ret.Add((LoquiInterfaceDefinitionType.ISetter, $"IObjectBounded"));
-                }
-                return ret;
-            };
-            FieldActions = new List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, Loqui.FileGeneration> Actions)>()
-            {
-                (LoquiInterfaceType.Direct, "ObjectBounds", (o, fg) =>
-                {
-                    var field = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == "ObjectBounds") as LoquiType;
+                    if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
 
                     if (!field.Nullable)
                     {
@@ -51,10 +37,22 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
             };
         }
 
-        public static bool ApplicabilityTest(ObjectGeneration o)
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => allFields
+            .TryGetValue("ObjectBounds", out var field)
+            && field is LoquiType loqui
+            && loqui.TargetObjectGeneration.Name == "ObjectBounds";
+
+        public override List<AspectInterfaceData> Interfaces(ObjectGeneration obj)
         {
-            if (o.Fields.FirstOrDefault(x => x.Name == "ObjectBounds") is not LoquiType loqui) return false;
-            return loqui.TargetObjectGeneration.Name == "ObjectBounds";
+            var field = obj.IterateFields(includeBaseClass: true).OfType<LoquiType>().Single(x => x.Name == "ObjectBounds");
+
+            var list = new List<AspectInterfaceData>();
+            AddInterfaces(list, "IObjectBoundedOptional");
+
+            if (!field.Nullable)
+                AddInterfaces(list, "IObjectBounded");
+
+            return list;
         }
     }
 }

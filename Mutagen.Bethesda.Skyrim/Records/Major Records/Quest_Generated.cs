@@ -54,6 +54,9 @@ namespace Mutagen.Bethesda.Skyrim
         IQuestAdapterGetter? IQuestGetter.VirtualMachineAdapter => this.VirtualMachineAdapter;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IQuestGetter.Name => this.Name;
@@ -1537,6 +1540,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         new QuestAdapter? VirtualMachineAdapter { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new Quest.Flag Flags { get; set; }
         new Byte Priority { get; set; }
@@ -1575,7 +1581,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Quest_Registration.Instance;
         IQuestAdapterGetter? VirtualMachineAdapter { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         Quest.Flag Flags { get; }
         Byte Priority { get; }
         Byte QuestFormVersion { get; }
@@ -3060,7 +3071,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

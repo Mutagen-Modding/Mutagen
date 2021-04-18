@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Relation" objType="Subrecord" recordType="XNAM" GUID="85a1754b-f322-4dcc-b5b1-e470d6c347b5" ID="68">
+    <Fields>
+      <FormLink name="Target">
+        <Interface>IRelatable</Interface>
+      </FormLink>
+      <Int32 name="Modifier" />
+      <Enum name="Reaction" enumName="CombatReaction" byteLength="4" />
+    </Fields>
+  </Object>
+</Loqui>

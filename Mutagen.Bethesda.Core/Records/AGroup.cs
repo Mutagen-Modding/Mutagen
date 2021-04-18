@@ -1,8 +1,6 @@
 using Ionic.Zlib;
 using Loqui;
-using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -134,6 +132,7 @@ namespace Mutagen.Bethesda
         }
 
         public class GroupMajorRecordCacheWrapper<T> : IReadOnlyCache<T, FormKey>
+            where T : IMajorRecordCommonGetter
         {
             private readonly IReadOnlyDictionary<FormKey, int> _locs;
             private readonly ReadOnlyMemorySlice<byte> _data;
@@ -159,7 +158,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Factory(ex, key, edid: null);
+                        throw RecordException.Enrich<T>(ex, key, edid: null);
                     }
                 }
             }
@@ -203,7 +202,7 @@ namespace Mutagen.Bethesda
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Factory(ex, kv.Key, edid: null);
+                        throw RecordException.Enrich<T>(ex, kv.Key, edid: null);
                     }
                     yield return item;
                 }

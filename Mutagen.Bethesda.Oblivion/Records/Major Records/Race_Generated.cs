@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IRaceGetter.Name => this.Name;
@@ -1463,6 +1466,9 @@ namespace Mutagen.Bethesda.Oblivion
         IOblivionMajorRecordInternal,
         IRaceGetter
     {
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new String? Description { get; set; }
         new ExtendedList<IFormLinkGetter<ISpellGetter>> Spells { get; }
@@ -1503,7 +1509,12 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequiredGetter
     {
         static new ILoquiRegistration Registration => Race_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         String? Description { get; }
         IReadOnlyList<IFormLinkGetter<ISpellGetter>> Spells { get; }
         IReadOnlyList<IRaceRelationGetter> Relations { get; }
@@ -3060,7 +3071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

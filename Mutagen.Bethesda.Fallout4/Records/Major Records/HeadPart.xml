@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="HeadPart" recordType="HDPT" objType="Record" majorFlag="true" baseClass="Fallout4MajorRecord" GUID="4b0a1468-1e78-4c73-95ff-8d9cd1adcb44" ID="80">
+    <Fields>
+      <String name="Name" recordType="FULL" />
+      <RefDirect name="Model" refName="Model" />
+      <Enum name="Flags" enumName="HeadPart.Flag" byteLength="1" recordType="DATA" nullable="False" />
+      <Enum name="Type" enumName="HeadPart.TypeEnum" byteLength="4" recordType="PNAM" />
+      <List name="ExtraParts">
+        <FormLink refName="HeadPart" recordType="HNAM" />
+      </List>
+      <RefList name="Parts" refName="Part" />
+      <FormLink name="TextureSet" refName="TextureSet" recordType="TNAM" />
+      <FormLink name="Color" refName="ColorRecord" recordType="CNAM" />
+      <FormLink name="ValidRaces" recordType="RNAM" refName="FormList" />
+      <RefList name="Conditions" refName="Condition" binaryOverlay="Custom" />
+    </Fields>
+  </Object>
+  <Object name="Part" objType="Subrecord" GUID="6d524f60-b1cd-4686-a4e0-3728a857c341" ID="81">
+    <Fields>
+      <Enum name="PartType" enumName="Part.PartTypeEnum" byteLength="4" recordType="NAM0" />
+      <String name="FileName" recordType="NAM1" />
+    </Fields>
+  </Object>
+</Loqui>

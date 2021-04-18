@@ -21,7 +21,9 @@ namespace Mutagen.Bethesda
             {
                 GameRelease.Oblivion => "Oblivion",
                 GameRelease.SkyrimLE => "Skyrim",
+                GameRelease.EnderalLE => "Skyrim",
                 GameRelease.SkyrimSE => "Skyrim Special Edition",
+                GameRelease.EnderalSE => "Skyrim Special Edition",
                 GameRelease.SkyrimVR => "Skyrim VR",
                 GameRelease.Fallout4 => "Fallout4",
                 _ => throw new NotImplementedException(),
@@ -35,6 +37,8 @@ namespace Mutagen.Bethesda
                 GameRelease.Oblivion => "Oblivion",
                 GameRelease.SkyrimLE => "Skyrim",
                 GameRelease.SkyrimSE => "Skyrim",
+                GameRelease.EnderalLE => "Skyrim",
+                GameRelease.EnderalSE => "Skyrim",
                 GameRelease.SkyrimVR => "SkyrimVR",
                 GameRelease.Fallout4 => "Fallout4",
                 _ => throw new NotImplementedException(),

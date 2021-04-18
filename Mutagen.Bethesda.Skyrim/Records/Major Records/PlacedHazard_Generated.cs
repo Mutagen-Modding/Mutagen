@@ -505,7 +505,8 @@ namespace Mutagen.Bethesda.Skyrim
         IAPlacedTrapInternal,
         IFormLinkContainer,
         ILoquiObjectSetter<IPlacedHazardInternal>,
-        IPlacedHazardGetter
+        IPlacedHazardGetter,
+        IScripted
     {
         new IFormLink<IHazardGetter> Hazard { get; }
     }
@@ -522,7 +523,8 @@ namespace Mutagen.Bethesda.Skyrim
         IBinaryItem,
         IFormLinkContainerGetter,
         ILoquiObject<IPlacedHazardGetter>,
-        IMapsToGetter<IPlacedHazardGetter>
+        IMapsToGetter<IPlacedHazardGetter>,
+        IScriptedGetter
     {
         static new ILoquiRegistration Registration => PlacedHazard_Registration.Instance;
         IFormLinkGetter<IHazardGetter> Hazard { get; }
@@ -1436,7 +1438,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

@@ -270,7 +270,7 @@ namespace Mutagen.Bethesda.Generation
                                 gen.AppendLine("catch (Exception ex)");
                                 using (new BraceWrapper(gen))
                                 {
-                                    gen.AppendLine("throw RecordException.Factory(ex, subItem);");
+                                    gen.AppendLine("throw RecordException.Enrich(ex, subItem);");
                                 }
                             }
                         }

@@ -43,10 +43,14 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Name
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         public String Name { get; set; } = string.Empty;
         #endregion
         #region Flags
-        public ScriptProperty.Flag Flags { get; set; } = default;
+        public readonly static ScriptProperty.Flag _Flags_Default = ScriptProperty.Flag.Edited;
+        public ScriptProperty.Flag Flags { get; set; } = _Flags_Default;
         #endregion
 
         #region To String
@@ -455,6 +459,9 @@ namespace Mutagen.Bethesda.Skyrim
         INamedRequired,
         IScriptPropertyGetter
     {
+        /// <summary>
+        /// Aspects: INamedRequired
+        /// </summary>
         new String Name { get; set; }
         new ScriptProperty.Flag Flags { get; set; }
     }
@@ -476,7 +483,12 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ScriptProperty_Registration.Instance;
+        #region Name
+        /// <summary>
+        /// Aspects: INamedRequiredGetter
+        /// </summary>
         String Name { get; }
+        #endregion
         ScriptProperty.Flag Flags { get; }
 
     }
@@ -737,7 +749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             ClearPartial();
             item.Name = string.Empty;
-            item.Flags = default;
+            item.Flags = ScriptProperty._Flags_Default;
         }
         
         #region Mutagen

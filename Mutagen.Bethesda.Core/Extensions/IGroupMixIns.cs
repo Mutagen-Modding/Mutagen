@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+                throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
             }
         }
 
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
-        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
+        /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="group">Group to add to</param>
         /// <param name="source">Source record to duplicate</param>
-        /// <param name="edid">EditorID to drive the FormID assignment off any persistance systems</param>
+        /// <param name="edid">EditorID to drive the FormID assignment off any persistence systems</param>
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TSharedParent
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, source.FormKey, source.EditorID);
+                throw RecordException.Enrich<TMajor>(ex, source.FormKey, source.EditorID);
             }
         }
 

@@ -47,6 +47,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedStringGetter IMessageGetter.Description => this.Description;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IMessageGetter.Name => this.Name;
@@ -791,6 +794,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         new TranslatedString Description { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new MemorySlice<Byte> INAM { get; set; }
         new IFormLinkNullable<IQuestGetter> Quest { get; }
@@ -819,7 +825,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => Message_Registration.Instance;
         ITranslatedStringGetter Description { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         ReadOnlyMemorySlice<Byte> INAM { get; }
         IFormLinkNullableGetter<IQuestGetter> Quest { get; }
         Message.Flag Flags { get; }
@@ -1784,7 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

@@ -52,6 +52,9 @@ namespace Mutagen.Bethesda.Oblivion
         ILocalVariableDataGetter? ILocalVariableGetter.Data => this.Data;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? ILocalVariableGetter.Name => this.Name;
@@ -473,6 +476,9 @@ namespace Mutagen.Bethesda.Oblivion
         INamedRequired
     {
         new LocalVariableData? Data { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
     }
 
@@ -491,7 +497,12 @@ namespace Mutagen.Bethesda.Oblivion
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => LocalVariable_Registration.Instance;
         ILocalVariableDataGetter? Data { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
 
     }
 

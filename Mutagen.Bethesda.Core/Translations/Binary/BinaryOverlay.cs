@@ -216,7 +216,7 @@ namespace Mutagen.Bethesda.Binary
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, majorReference);
+                throw RecordException.Enrich(ex, majorReference);
             }
         }
 

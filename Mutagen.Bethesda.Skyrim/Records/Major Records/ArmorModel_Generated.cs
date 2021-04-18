@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -58,6 +61,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         public Icons? Icons
         {
             get => _Icons;
@@ -489,7 +495,13 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<IArmorModel>,
         IModeled
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         new Icons? Icons { get; set; }
     }
 
@@ -508,8 +520,18 @@ namespace Mutagen.Bethesda.Skyrim
         [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => ArmorModel_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
         IIconsGetter? Icons { get; }
+        #endregion
 
     }
 

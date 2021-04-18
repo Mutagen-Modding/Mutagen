@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Model
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Model? _Model;
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         public Model? Model
         {
             get => _Model;
@@ -1005,6 +1008,9 @@ namespace Mutagen.Bethesda.Skyrim
         IModeled,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IModeled
+        /// </summary>
         new Model? Model { get; set; }
         new Single Duration { get; set; }
         new Impact.OrientationType Orientation { get; set; }
@@ -1039,7 +1045,12 @@ namespace Mutagen.Bethesda.Skyrim
         IModeledGetter
     {
         static new ILoquiRegistration Registration => Impact_Registration.Instance;
+        #region Model
+        /// <summary>
+        /// Aspects: IModeledGetter
+        /// </summary>
         IModelGetter? Model { get; }
+        #endregion
         Single Duration { get; }
         Impact.OrientationType Orientation { get; }
         Single AngleThreshold { get; }
@@ -2227,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

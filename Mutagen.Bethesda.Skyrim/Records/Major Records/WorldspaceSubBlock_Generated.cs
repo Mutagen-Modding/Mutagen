@@ -2147,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     catch (Exception ex)
                     {
-                        throw RecordException.Factory(ex, subItem);
+                        throw RecordException.Enrich(ex, subItem);
                     }
                 });
         }

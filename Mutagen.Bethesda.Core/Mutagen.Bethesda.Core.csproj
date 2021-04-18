@@ -31,8 +31,8 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-    <PackageReference Include="Loqui" Version="2.12.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.12.0" />
+    <PackageReference Include="Loqui" Version="2.13.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.13.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -144,10 +144,36 @@
     <Compile Include="Load Order\LoadOrderListing.cs" />
     <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Load Order\PluginListings.cs" />
-    <Compile Include="Persistance\IPersistentFormKeyAllocator.cs" />
-    <Compile Include="Persistance\ISharedFormKeyAllocator.cs" />
-    <Compile Include="Persistance\TextFileSharedFormKeyAllocator.cs" />
+    <Compile Include="Persistence\IPersistentFormKeyAllocator.cs" />
+    <Compile Include="Persistence\ISharedFormKeyAllocator.cs" />
+    <Compile Include="Persistence\TextFileSharedFormKeyAllocator.cs" />
     <Compile Include="Implicits\Implicits.cs" />
+    <Compile Include="Pex\DataTypes\DebugInfo.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\InstructionOpCodeArguments.cs" />
+    <Compile Include="Pex\DataTypes\PexFile.cs">
+      <DependentUpon>PexFile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObject.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\UserFlag.cs" />
+    <Compile Include="Pex\Enums\DebugFunctionType.cs" />
+    <Compile Include="Pex\Enums\FunctionFlags.cs" />
+    <Compile Include="Pex\Enums\InstructionOpcode.cs" />
+    <Compile Include="Pex\Enums\PropertyFlags.cs" />
+    <Compile Include="Pex\Enums\VariableType.cs" />
+    <Compile Include="Pex\Extensions\BinaryWriterExtensions.cs" />
+    <Compile Include="Pex\Extensions\NumericExtensions.cs" />
+    <Compile Include="Pex\Interfaces\IBinaryObject.cs" />
+    <Compile Include="Pex\Interfaces\IHasUserFlag.cs" />
+    <Compile Include="Pex\PexMixIn.cs" />
+    <Compile Include="Pex\PexParseMeta.cs" />
+    <Compile Include="Pex\PexUtils.cs" />
+    <Compile Include="Pex\PexWriteMeta.cs" />
+    <Compile Include="Pex\PexWriter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
@@ -183,14 +209,14 @@
     <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
     <Compile Include="Utility\RecordInfoCache.cs" />
-    <Compile Include="Persistance\TextFileFormKeyAllocator.cs" />
+    <Compile Include="Persistence\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
-    <Compile Include="Persistance\SimpleFormKeyAllocator.cs" />
+    <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
     <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
     <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
-    <Compile Include="Persistance\IFormKeyAllocator.cs" />
+    <Compile Include="Persistence\IFormKeyAllocator.cs" />
     <Compile Include="Records\GenderedItem.cs" />
     <Compile Include="Records\AListGroup.cs" />
     <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
@@ -290,6 +316,55 @@
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
     <Compile Include="Extensions\GameCategoryHelper_Generated.cs" />
+    <Compile Include="Pex\DataTypes\DebugInfo_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\DebugFunction_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\DebugPropertyGroup_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\DebugStructOrder_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\ProtocolDefinition_Pex.cs" />
+    <Compile Include="Pex\DataTypes\PexFile_Generated.cs">
+      <DependentUpon>PexFile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObject_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectStructInfo_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectStructInfoMember_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectVariable_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectVariableData_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectProperty_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectState_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectNamedFunction_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectFunction_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectFunctionVariable_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DataTypes\PexObjectFunctionInstruction_Generated.cs">
+      <DependentUpon>PexObject.xml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />

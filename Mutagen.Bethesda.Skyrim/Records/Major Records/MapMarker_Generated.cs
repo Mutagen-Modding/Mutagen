@@ -43,6 +43,9 @@ namespace Mutagen.Bethesda.Skyrim
         public MapMarker.Flag Flags { get; set; } = default;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         public TranslatedString? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         ITranslatedStringGetter? IMapMarkerGetter.Name => this.Name;
@@ -512,6 +515,9 @@ namespace Mutagen.Bethesda.Skyrim
         ITranslatedNamedRequired
     {
         new MapMarker.Flag Flags { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired, ITranslatedNamed, ITranslatedNamedRequired
+        /// </summary>
         new TranslatedString? Name { get; set; }
         new MapMarker.MarkerType Type { get; set; }
     }
@@ -533,7 +539,12 @@ namespace Mutagen.Bethesda.Skyrim
         object CommonSetterTranslationInstance();
         static ILoquiRegistration Registration => MapMarker_Registration.Instance;
         MapMarker.Flag Flags { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter, ITranslatedNamedGetter, ITranslatedNamedRequiredGetter
+        /// </summary>
         ITranslatedStringGetter? Name { get; }
+        #endregion
         MapMarker.MarkerType Type { get; }
 
     }

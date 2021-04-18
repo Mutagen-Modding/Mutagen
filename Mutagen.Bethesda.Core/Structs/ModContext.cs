@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda
             }
             catch (Exception ex)
             {
-                throw RecordException.Factory(ex, ModKey, Record);
+                throw RecordException.Enrich(ex, ModKey, Record);
             }
         }
 

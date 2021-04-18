@@ -47,6 +47,9 @@ namespace Mutagen.Bethesda.Skyrim
         public QuestAlias.TypeEnum Type { get; set; } = default;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IQuestAliasGetter.Name => this.Name;
@@ -173,6 +176,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Keywords
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private ExtendedList<IFormLinkGetter<IKeywordGetter>>? _Keywords;
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         public ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords
         {
             get => this._Keywords;
@@ -1833,6 +1839,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         new UInt32 ID { get; set; }
         new QuestAlias.TypeEnum Type { get; set; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new QuestAlias.Flag? Flags { get; set; }
         new Int32? AliasIndexToForceIntoWhenFilled { get; set; }
@@ -1845,6 +1854,9 @@ namespace Mutagen.Bethesda.Skyrim
         new FindMatchingRefNearAlias? FindMatchingRefNearAlias { get; set; }
         new FindMatchingRefFromEvent? FindMatchingRefFromEvent { get; set; }
         new ExtendedList<Condition> Conditions { get; }
+        /// <summary>
+        /// Aspects: IKeyworded&lt;IKeywordGetter&gt;
+        /// </summary>
         new ExtendedList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; set; }
         new ExtendedList<ContainerEntry>? Items { get; set; }
         new IFormLinkNullable<IFormListGetter> SpectatorOverridePackageList { get; }
@@ -1876,7 +1888,12 @@ namespace Mutagen.Bethesda.Skyrim
         static ILoquiRegistration Registration => QuestAlias_Registration.Instance;
         UInt32 ID { get; }
         QuestAlias.TypeEnum Type { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         QuestAlias.Flag? Flags { get; }
         Int32? AliasIndexToForceIntoWhenFilled { get; }
         IFormLinkNullableGetter<ILocationGetter> SpecificLocation { get; }
@@ -1888,7 +1905,12 @@ namespace Mutagen.Bethesda.Skyrim
         IFindMatchingRefNearAliasGetter? FindMatchingRefNearAlias { get; }
         IFindMatchingRefFromEventGetter? FindMatchingRefFromEvent { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
+        #region Keywords
+        /// <summary>
+        /// Aspects: IKeywordedGetter&lt;IKeywordGetter&gt;
+        /// </summary>
         IReadOnlyList<IFormLinkGetter<IKeywordGetter>>? Keywords { get; }
+        #endregion
         IReadOnlyList<IContainerEntryGetter>? Items { get; }
         IFormLinkNullableGetter<IFormListGetter> SpectatorOverridePackageList { get; }
         IFormLinkNullableGetter<IFormListGetter> ObserveDeadBodyOverridePackageList { get; }

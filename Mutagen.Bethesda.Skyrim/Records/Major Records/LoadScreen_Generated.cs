@@ -45,6 +45,9 @@ namespace Mutagen.Bethesda.Skyrim
         #region Icons
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private Icons? _Icons;
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         public Icons? Icons
         {
             get => _Icons;
@@ -856,6 +859,9 @@ namespace Mutagen.Bethesda.Skyrim
         ILoquiObjectSetter<ILoadScreenInternal>,
         ISkyrimMajorRecordInternal
     {
+        /// <summary>
+        /// Aspects: IHasIcons
+        /// </summary>
         new Icons? Icons { get; set; }
         new TranslatedString Description { get; set; }
         new ExtendedList<Condition> Conditions { get; }
@@ -887,7 +893,12 @@ namespace Mutagen.Bethesda.Skyrim
         IMapsToGetter<ILoadScreenGetter>
     {
         static new ILoquiRegistration Registration => LoadScreen_Registration.Instance;
+        #region Icons
+        /// <summary>
+        /// Aspects: IHasIconsGetter
+        /// </summary>
         IIconsGetter? Icons { get; }
+        #endregion
         ITranslatedStringGetter Description { get; }
         IReadOnlyList<IConditionGetter> Conditions { get; }
         IFormLinkGetter<IStaticGetter> LoadingScreenNif { get; }
@@ -1971,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

@@ -54,6 +54,9 @@ namespace Mutagen.Bethesda.Skyrim
         IFormLinkNullableGetter<IMaterialTypeGetter> IMaterialTypeGetter.Parent => this.Parent;
         #endregion
         #region Name
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         public String? Name { get; set; }
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         String? IMaterialTypeGetter.Name => this.Name;
@@ -657,6 +660,9 @@ namespace Mutagen.Bethesda.Skyrim
         ISkyrimMajorRecordInternal
     {
         new IFormLinkNullable<IMaterialTypeGetter> Parent { get; }
+        /// <summary>
+        /// Aspects: INamed, INamedRequired
+        /// </summary>
         new String? Name { get; set; }
         new Color? HavokDisplayColor { get; set; }
         new Single? Buoyancy { get; set; }
@@ -682,7 +688,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => MaterialType_Registration.Instance;
         IFormLinkNullableGetter<IMaterialTypeGetter> Parent { get; }
+        #region Name
+        /// <summary>
+        /// Aspects: INamedGetter, INamedRequiredGetter
+        /// </summary>
         String? Name { get; }
+        #endregion
         Color? HavokDisplayColor { get; }
         Single? Buoyancy { get; }
         MaterialType.Flag? Flags { get; }
@@ -1587,7 +1598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 catch (Exception ex)
                 {
-                    throw RecordException.Factory(ex, item.FormKey, item.EditorID);
+                    throw RecordException.Enrich(ex, item);
                 }
             }
         }

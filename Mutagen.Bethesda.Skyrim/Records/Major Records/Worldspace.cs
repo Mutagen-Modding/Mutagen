@@ -37,57 +37,64 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
-                if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
-                if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
-                {
-                    obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
-                    obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.HeaderData.Slice(groupHeader.HeaderLength - 4));
-                    var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
-                    if (formKey != obj.FormKey)
-                    {
-                        throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
-                    }
-                }
-                else
-                {
-                    frame.Reader.Position -= groupHeader.HeaderLength;
-                    return;
-                }
-                frame.MetaData.InWorldspace = true;
                 try
                 {
-                    var subFrame = MutagenFrame.ByLength(frame.Reader, groupHeader.ContentLength);
-                    for (int i = 0; i < 2; i++)
+                    if (!frame.Reader.TryReadGroup(out var groupHeader)) return;
+                    if (groupHeader.GroupType == (int)GroupTypeEnum.WorldChildren)
                     {
-                        if (subFrame.Complete) return;
-                        var subType = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var subLen);
-                        switch (subType.TypeInt)
+                        obj.SubCellsTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.LastModifiedData);
+                        obj.SubCellsUnknown = BinaryPrimitives.ReadInt32LittleEndian(groupHeader.HeaderData.Slice(groupHeader.HeaderLength - 4));
+                        var formKey = FormKeyBinaryTranslation.Instance.Parse(groupHeader.ContainedRecordTypeData, frame.MetaData.MasterReferences!);
+                        if (formKey != obj.FormKey)
                         {
-                            case 0x4C4C4543: // "CELL":
-                                if (LoquiBinaryTranslation<Cell>.Instance.Parse(subFrame, out var topCell))
-                                {
-                                    obj.TopCell = topCell;
-                                }
-                                else
-                                {
-                                    obj.TopCell = default;
-                                }
-                                break;
-                            case 0x50555247: // "GRUP":
-                                obj.SubCells.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
-                                        frame: frame,
-                                        triggeringRecord: RecordTypes.GRUP,
-                                        transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
-                                break;
-                            default:
-                                return;
+                            throw new ArgumentException("Cell children group did not match the FormID of the parent worldspace.");
                         }
                     }
+                    else
+                    {
+                        frame.Reader.Position -= groupHeader.HeaderLength;
+                        return;
+                    }
+                    frame.MetaData.InWorldspace = true;
+                    try
+                    {
+                        var subFrame = MutagenFrame.ByLength(frame.Reader, groupHeader.ContentLength);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            if (subFrame.Complete) return;
+                            var subType = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var subLen);
+                            switch (subType.TypeInt)
+                            {
+                                case 0x4C4C4543: // "CELL":
+                                    if (LoquiBinaryTranslation<Cell>.Instance.Parse(subFrame, out var topCell))
+                                    {
+                                        obj.TopCell = topCell;
+                                    }
+                                    else
+                                    {
+                                        obj.TopCell = default;
+                                    }
+                                    break;
+                                case 0x50555247: // "GRUP":
+                                    obj.SubCells.SetTo(
+                                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                            frame: frame,
+                                            triggeringRecord: RecordTypes.GRUP,
+                                            transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
+                                    break;
+                                default:
+                                    return;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        frame.MetaData.InWorldspace = false;
+                    }
                 }
-                finally
+                catch (Exception ex)
                 {
-                    frame.MetaData.InWorldspace = false;
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
         }
@@ -96,27 +103,34 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
             {
-                var topCell = obj.TopCell;
-                var subCells = obj.SubCells;
-                if (subCells?.Count == 0
-                    && topCell == null) return;
-                using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                try
                 {
-                    FormKeyBinaryTranslation.Instance.Write(
-                        writer,
-                        obj.FormKey);
-                    writer.Write((int)GroupTypeEnum.WorldChildren);
-                    writer.Write(obj.SubCellsTimestamp);
-                    writer.Write(obj.SubCellsUnknown);
+                    var topCell = obj.TopCell;
+                    var subCells = obj.SubCells;
+                    if (subCells?.Count == 0
+                        && topCell == null) return;
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                    {
+                        FormKeyBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormKey);
+                        writer.Write((int)GroupTypeEnum.WorldChildren);
+                        writer.Write(obj.SubCellsTimestamp);
+                        writer.Write(obj.SubCellsUnknown);
 
-                    topCell?.WriteToBinary(writer);
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
-                        writer: writer,
-                        items: subCells,
-                        transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>
-                        {
-                            subItem.WriteToBinary(subWriter);
-                        });
+                        topCell?.WriteToBinary(writer);
+                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                            writer: writer,
+                            items: subCells,
+                            transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>
+                            {
+                                subItem.WriteToBinary(subWriter);
+                            });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
         }
@@ -136,51 +150,58 @@ namespace Mutagen.Bethesda.Skyrim
 
             partial void CustomEnd(OverlayStream stream, int finalPos, int offset)
             {
-                if (stream.Complete) return;
-                if (!stream.TryGetGroup(out var groupMeta) || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
-
-                if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
-                {
-                    throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
-                }
-
-                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                stream = new OverlayStream(this._grupData.Value, stream.MetaData);
-                stream.Position += groupMeta.HeaderLength;
-
-                for (int i = 0; i < 2; i++)
+                try
                 {
                     if (stream.Complete) return;
-                    var varMeta = stream.GetVariableHeader();
-                    switch (varMeta.RecordTypeInt)
+                    if (!stream.TryGetGroup(out var groupMeta) || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
+
+                    if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
                     {
-                        case 0x4C4C4543: // "CELL":
-                            this._TopCellLocation = checked((int)stream.Position);
-                            stream.Position += checked((int)varMeta.TotalLength);
-                            if (!stream.Complete)
-                            {
-                                var subCellGroup = stream.GetGroup();
-                                if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
-                                {
-                                    stream.Position += checked((int)subCellGroup.TotalLength);
-                                }
-                            }
-                            break;
-                        case 0x50555247: // "GRUP":
-                            this.SubCells = BinaryOverlayList.FactoryByArray<IWorldspaceBlockGetter>(
-                                stream.RemainingMemory,
-                                _package,
-                                getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),
-                                locs: ParseRecordLocations(
-                                    stream: new OverlayStream(stream.RemainingMemory, _package),
-                                    trigger: WorldspaceBlock_Registration.TriggeringRecordType,
-                                    constants: GameConstants.Oblivion.GroupConstants,
-                                    skipHeader: false));
-                            break;
-                        default:
-                            i = 2; // Break out
-                            break;
+                        throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                     }
+
+                    this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                    stream = new OverlayStream(this._grupData.Value, stream.MetaData);
+                    stream.Position += groupMeta.HeaderLength;
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        if (stream.Complete) return;
+                        var varMeta = stream.GetVariableHeader();
+                        switch (varMeta.RecordTypeInt)
+                        {
+                            case 0x4C4C4543: // "CELL":
+                                this._TopCellLocation = checked((int)stream.Position);
+                                stream.Position += checked((int)varMeta.TotalLength);
+                                if (!stream.Complete)
+                                {
+                                    var subCellGroup = stream.GetGroup();
+                                    if (subCellGroup.IsGroup && subCellGroup.GroupType == (int)GroupTypeEnum.CellChildren)
+                                    {
+                                        stream.Position += checked((int)subCellGroup.TotalLength);
+                                    }
+                                }
+                                break;
+                            case 0x50555247: // "GRUP":
+                                this.SubCells = BinaryOverlayList.FactoryByArray<IWorldspaceBlockGetter>(
+                                    stream.RemainingMemory,
+                                    _package,
+                                    getter: (s, p) => WorldspaceBlockBinaryOverlay.WorldspaceBlockFactory(new OverlayStream(s, p), p),
+                                    locs: ParseRecordLocations(
+                                        stream: new OverlayStream(stream.RemainingMemory, _package),
+                                        trigger: WorldspaceBlock_Registration.TriggeringRecordType,
+                                        constants: GameConstants.Oblivion.GroupConstants,
+                                        skipHeader: false));
+                                break;
+                            default:
+                                i = 2; // Break out
+                                break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, this);
                 }
             }
         }

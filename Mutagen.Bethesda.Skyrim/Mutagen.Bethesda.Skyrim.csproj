@@ -66,6 +66,7 @@
     <Compile Include="Interfaces\IObjectBounded.cs" />
     <Compile Include="Interfaces\IPlaced.cs" />
     <Compile Include="Interfaces\IPositionRotation.cs" />
+    <Compile Include="Interfaces\IScripted.cs" />
     <Compile Include="IsExternalInit.cs" />
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
@@ -2079,8 +2080,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.12.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.12.0" />
+    <PackageReference Include="Loqui" Version="2.13.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.13.0" />
     <PackageReference Include="NuGetizer" Version="0.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -2088,6 +2089,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pex\" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" />

@@ -35,7 +35,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
             {
-                CustomBinaryEnd(frame, obj);
+                try
+                {
+                    CustomBinaryEnd(frame, obj);
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
+                }
             }
 
             private static void CustomBinaryEnd(MutagenFrame frame, ICellInternal obj)
@@ -199,56 +206,77 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
             {
-                var pathGrid = obj.PathGrid;
-                var landscape = obj.Landscape;
-                if ((obj.Persistent?.Count ?? 0) == 0
-                    && (obj.Temporary?.Count ?? 0) == 0
-                    && (obj.VisibleWhenDistant?.Count ?? 0) == 0
-                    && pathGrid == null
-                    && landscape == null) return;
-                using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                try
                 {
-                    FormKeyBinaryTranslation.Instance.Write(
-                        writer,
-                        obj.FormKey);
-                    writer.Write((int)GroupTypeEnum.CellChildren);
-                    writer.Write(obj.Timestamp);
-                    if (obj.Persistent?.Count > 0)
+                    var pathGrid = obj.PathGrid;
+                    var landscape = obj.Landscape;
+                    if ((obj.Persistent?.Count ?? 0) == 0
+                        && (obj.Temporary?.Count ?? 0) == 0
+                        && (obj.VisibleWhenDistant?.Count ?? 0) == 0
+                        && pathGrid == null
+                        && landscape == null) return;
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
-                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                        FormKeyBinaryTranslation.Instance.Write(
+                            writer,
+                            obj.FormKey);
+                        writer.Write((int)GroupTypeEnum.CellChildren);
+                        writer.Write(obj.Timestamp);
+                        if (obj.Persistent?.Count > 0)
                         {
-                            FormKeyBinaryTranslation.Instance.Write(
-                                writer,
-                                obj.FormKey);
-                            writer.Write((int)GroupTypeEnum.CellPersistentChildren);
-                            writer.Write(obj.PersistentTimestamp);
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
-                                writer: writer,
-                                items: obj.Persistent,
-                                transl: (r, item) =>
-                                {
-                                    item.WriteToBinary(r);
-                                });
-                        }
-                    }
-                    if (obj.Temporary?.Count > 0
-                        || pathGrid != null
-                        || landscape != null)
-                    {
-                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(
-                                writer,
-                                obj.FormKey);
-                            writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
-                            writer.Write(obj.TemporaryTimestamp);
-                            landscape?.WriteToBinary(writer);
-                            pathGrid?.WriteToBinary(writer);
-                            if (obj.Temporary != null)
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                             {
+                                FormKeyBinaryTranslation.Instance.Write(
+                                    writer,
+                                    obj.FormKey);
+                                writer.Write((int)GroupTypeEnum.CellPersistentChildren);
+                                writer.Write(obj.PersistentTimestamp);
                                 Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
-                                    items: obj.Temporary,
+                                    items: obj.Persistent,
+                                    transl: (r, item) =>
+                                    {
+                                        item.WriteToBinary(r);
+                                    });
+                            }
+                        }
+                        if (obj.Temporary?.Count > 0
+                            || pathGrid != null
+                            || landscape != null)
+                        {
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                            {
+                                FormKeyBinaryTranslation.Instance.Write(
+                                    writer,
+                                    obj.FormKey);
+                                writer.Write((int)GroupTypeEnum.CellTemporaryChildren);
+                                writer.Write(obj.TemporaryTimestamp);
+                                landscape?.WriteToBinary(writer);
+                                pathGrid?.WriteToBinary(writer);
+                                if (obj.Temporary != null)
+                                {
+                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                        writer: writer,
+                                        items: obj.Temporary,
+                                        transl: (r, item) =>
+                                        {
+                                            item.WriteToBinary(r);
+                                        });
+                                }
+                            }
+                        }
+                        if (obj.VisibleWhenDistant?.Count > 0)
+                        {
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
+                            {
+                                FormKeyBinaryTranslation.Instance.Write(
+                                    writer,
+                                    obj.FormKey);
+                                writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
+                                writer.Write(obj.VisibleWhenDistantTimestamp);
+                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                    writer: writer,
+                                    items: obj.VisibleWhenDistant,
                                     transl: (r, item) =>
                                     {
                                         item.WriteToBinary(r);
@@ -256,24 +284,10 @@ namespace Mutagen.Bethesda.Oblivion
                             }
                         }
                     }
-                    if (obj.VisibleWhenDistant?.Count > 0)
-                    {
-                        using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
-                        {
-                            FormKeyBinaryTranslation.Instance.Write(
-                                writer,
-                                obj.FormKey);
-                            writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
-                            writer.Write(obj.VisibleWhenDistantTimestamp);
-                            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
-                                writer: writer,
-                                items: obj.VisibleWhenDistant,
-                                transl: (r, item) =>
-                                {
-                                    item.WriteToBinary(r);
-                                });
-                        }
-                    }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, obj);
                 }
             }
         }
@@ -332,133 +346,140 @@ namespace Mutagen.Bethesda.Oblivion
 
             partial void CustomEnd(OverlayStream stream, int finalPos, int _)
             {
-                if (stream.Complete) return;
-                var startPos = stream.Position;
-                if (!stream.TryGetGroup(out var groupMeta)) return;
-                var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
-                if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
+                try
                 {
-                    if (formKey != this.FormKey)
+                    if (stream.Complete) return;
+                    var startPos = stream.Position;
+                    if (!stream.TryGetGroup(out var groupMeta)) return;
+                    var formKey = FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData));
+                    if (groupMeta.GroupType == (int)GroupTypeEnum.CellChildren)
                     {
-                        throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
-                    }
-                }
-                else
-                {
-                    return;
-                }
-                this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
-                stream = new OverlayStream(this._grupData.Value, stream.MetaData);
-                stream.Position += groupMeta.HeaderLength;
-                while (!stream.Complete)
-                {
-                    var subGroupLocation = stream.Position;
-                    var subGroupMeta = stream.ReadGroup();
-                    if (!subGroupMeta.IsGroup)
-                    {
-                        throw new ArgumentException();
-                    }
-
-                    IPlacedGetter TypicalGetter(
-                        ReadOnlyMemorySlice<byte> span,
-                        BinaryOverlayFactoryPackage package)
-                    {
-                        var majorMeta = package.MetaData.Constants.MajorRecord(span);
-                        switch (majorMeta.RecordType.TypeInt)
+                        if (formKey != this.FormKey)
                         {
-                            case RecordTypeInts.ACRE:
-                                return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new OverlayStream(span, stream.MetaData), package);
-                            case RecordTypeInts.ACHR:
-                                return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, stream.MetaData), package);
-                            case RecordTypeInts.REFR:
-                                return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, stream.MetaData), package);
+                            throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    this._grupData = stream.ReadMemory(checked((int)groupMeta.TotalLength));
+                    stream = new OverlayStream(this._grupData.Value, stream.MetaData);
+                    stream.Position += groupMeta.HeaderLength;
+                    while (!stream.Complete)
+                    {
+                        var subGroupLocation = stream.Position;
+                        var subGroupMeta = stream.ReadGroup();
+                        if (!subGroupMeta.IsGroup)
+                        {
+                            throw new ArgumentException();
+                        }
+
+                        IPlacedGetter TypicalGetter(
+                            ReadOnlyMemorySlice<byte> span,
+                            BinaryOverlayFactoryPackage package)
+                        {
+                            var majorMeta = package.MetaData.Constants.MajorRecord(span);
+                            switch (majorMeta.RecordType.TypeInt)
+                            {
+                                case RecordTypeInts.ACRE:
+                                    return PlacedCreatureBinaryOverlay.PlacedCreatureFactory(new OverlayStream(span, stream.MetaData), package);
+                                case RecordTypeInts.ACHR:
+                                    return PlacedNpcBinaryOverlay.PlacedNpcFactory(new OverlayStream(span, stream.MetaData), package);
+                                case RecordTypeInts.REFR:
+                                    return PlacedObjectBinaryOverlay.PlacedObjectFactory(new OverlayStream(span, stream.MetaData), package);
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        }
+
+                        GroupTypeEnum type = (GroupTypeEnum)subGroupMeta.GroupType;
+                        switch (type)
+                        {
+                            case GroupTypeEnum.CellPersistentChildren:
+                                {
+                                    this._persistentLocation = checked((int)subGroupLocation);
+                                    var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
+                                    this.Persistent = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
+                                        contentSpan,
+                                        _package,
+                                        getter: TypicalGetter,
+                                        locs: ParseRecordLocations(
+                                            stream: new OverlayStream(contentSpan, stream.MetaData),
+                                            triggers: TypicalPlacedTypes,
+                                            constants: GameConstants.Oblivion.MajorConstants,
+                                            skipHeader: false));
+                                    break;
+                                }
+                            case GroupTypeEnum.CellTemporaryChildren:
+                                {
+                                    this._temporaryLocation = checked((int)subGroupLocation);
+                                    List<int> ret = new List<int>();
+                                    var subStartPos = stream.Position;
+                                    var endPos = stream.Position + subGroupMeta.ContentLength;
+                                    var contentSpan = stream.GetMemory(checked((int)subGroupMeta.ContentLength));
+                                    while (stream.Position < endPos)
+                                    {
+                                        var majorMeta = stream.GetMajorRecord();
+                                        var recType = majorMeta.RecordType;
+                                        if (TypicalPlacedTypes.Contains(recType))
+                                        {
+                                            ret.Add(checked((int)(stream.Position - subStartPos)));
+                                        }
+                                        else
+                                        {
+                                            switch (recType.TypeInt)
+                                            {
+                                                case RecordTypeInts.PGRD:
+                                                    if (_pathgridLocation.HasValue)
+                                                    {
+                                                        throw new ArgumentException("Second pathgrid parsed.");
+                                                    }
+                                                    _pathgridLocation = checked((int)stream.Position);
+                                                    break;
+                                                case RecordTypeInts.LAND:
+                                                    if (_landscapeLocation.HasValue)
+                                                    {
+                                                        throw new ArgumentException("Second landscape parsed.");
+                                                    }
+                                                    _landscapeLocation = checked((int)stream.Position);
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                                        }
+                                        stream.Position += (int)majorMeta.TotalLength;
+                                    }
+                                    this.Temporary = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
+                                        contentSpan,
+                                        _package,
+                                        getter: TypicalGetter,
+                                        locs: ret.ToArray());
+                                    break;
+                                }
+                            case GroupTypeEnum.CellVisibleDistantChildren:
+                                {
+                                    this._visibleWhenDistantLocation = checked((int)subGroupLocation);
+                                    var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
+                                    this.VisibleWhenDistant = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
+                                        contentSpan,
+                                        _package,
+                                        getter: TypicalGetter,
+                                        locs: ParseRecordLocations(
+                                            stream: new OverlayStream(contentSpan, stream.MetaData),
+                                            triggers: TypicalPlacedTypes,
+                                            constants: GameConstants.Oblivion.MajorConstants,
+                                            skipHeader: false));
+                                    break;
+                                }
                             default:
                                 throw new NotImplementedException();
                         }
                     }
-
-                    GroupTypeEnum type = (GroupTypeEnum)subGroupMeta.GroupType;
-                    switch (type)
-                    {
-                        case GroupTypeEnum.CellPersistentChildren:
-                            {
-                                this._persistentLocation = checked((int)subGroupLocation);
-                                var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.Persistent = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
-                                    contentSpan,
-                                    _package,
-                                    getter: TypicalGetter,
-                                    locs: ParseRecordLocations(
-                                        stream: new OverlayStream(contentSpan, stream.MetaData),
-                                        triggers: TypicalPlacedTypes,
-                                        constants: GameConstants.Oblivion.MajorConstants,
-                                        skipHeader: false));
-                                break;
-                            }
-                        case GroupTypeEnum.CellTemporaryChildren:
-                            {
-                                this._temporaryLocation = checked((int)subGroupLocation);
-                                List<int> ret = new List<int>();
-                                var subStartPos = stream.Position;
-                                var endPos = stream.Position + subGroupMeta.ContentLength;
-                                var contentSpan = stream.GetMemory(checked((int)subGroupMeta.ContentLength));
-                                while (stream.Position < endPos)
-                                {
-                                    var majorMeta = stream.GetMajorRecord();
-                                    var recType = majorMeta.RecordType;
-                                    if (TypicalPlacedTypes.Contains(recType))
-                                    {
-                                        ret.Add(checked((int)(stream.Position - subStartPos)));
-                                    }
-                                    else
-                                    {
-                                        switch (recType.TypeInt)
-                                        {
-                                            case RecordTypeInts.PGRD:
-                                                if (_pathgridLocation.HasValue)
-                                                {
-                                                    throw new ArgumentException("Second pathgrid parsed.");
-                                                }
-                                                _pathgridLocation = checked((int)stream.Position);
-                                                break;
-                                            case RecordTypeInts.LAND:
-                                                if (_landscapeLocation.HasValue)
-                                                {
-                                                    throw new ArgumentException("Second landscape parsed.");
-                                                }
-                                                _landscapeLocation = checked((int)stream.Position);
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }
-                                    stream.Position += (int)majorMeta.TotalLength;
-                                }
-                                this.Temporary = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
-                                    contentSpan,
-                                    _package,
-                                    getter: TypicalGetter,
-                                    locs: ret.ToArray());
-                                break;
-                            }
-                        case GroupTypeEnum.CellVisibleDistantChildren:
-                            {
-                                this._visibleWhenDistantLocation = checked((int)subGroupLocation);
-                                var contentSpan = stream.ReadMemory(checked((int)subGroupMeta.ContentLength));
-                                this.VisibleWhenDistant = BinaryOverlayList.FactoryByArray<IPlacedGetter>(
-                                    contentSpan,
-                                    _package,
-                                    getter: TypicalGetter,
-                                    locs: ParseRecordLocations(
-                                        stream: new OverlayStream(contentSpan, stream.MetaData),
-                                        triggers: TypicalPlacedTypes,
-                                        constants: GameConstants.Oblivion.MajorConstants,
-                                        skipHeader: false));
-                                break;
-                            }
-                        default:
-                            throw new NotImplementedException();
-                    }
+                }
+                catch (Exception ex)
+                {
+                    throw RecordException.Enrich(ex, this);
                 }
             }
         }

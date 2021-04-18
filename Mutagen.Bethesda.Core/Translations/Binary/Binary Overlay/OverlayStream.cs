@@ -1,4 +1,4 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +24,8 @@ namespace Mutagen.Bethesda.Binary
         }
 
         public int Length => _readStream.Length;
+
+        public bool IsLittleEndian => _readStream.IsLittleEndian;
 
         public OverlayStream(ReadOnlyMemorySlice<byte> data, ParsingBundle constants)
         {
@@ -60,6 +62,8 @@ namespace Mutagen.Bethesda.Binary
 
         public bool IsPersistantBacking => true;
 
+        public Stream BaseStream => _readStream.BaseStream;
+
         public void Dispose()
         {
             ((IDisposable)_readStream).Dispose();
@@ -75,14 +79,14 @@ namespace Mutagen.Bethesda.Binary
             return ((IBinaryReadStream)_readStream).Get(buffer, targetOffset);
         }
 
-        public bool GetBool()
+        public bool GetBoolean()
         {
-            return ((IBinaryReadStream)_readStream).GetBool();
+            return ((IBinaryReadStream)_readStream).GetBoolean();
         }
 
-        public bool GetBool(int offset)
+        public bool GetBoolean(int offset)
         {
-            return ((IBinaryReadStream)_readStream).GetBool(offset);
+            return ((IBinaryReadStream)_readStream).GetBoolean(offset);
         }
 
         public byte[] GetBytes(int amount)
@@ -230,9 +234,9 @@ namespace Mutagen.Bethesda.Binary
             return ((IBinaryReadStream)_readStream).Read(buffer);
         }
 
-        public bool ReadBool()
+        public bool ReadBoolean()
         {
-            return ((IBinaryReadStream)_readStream).ReadBool();
+            return ((IBinaryReadStream)_readStream).ReadBoolean();
         }
 
         public byte[] ReadBytes(int amount)

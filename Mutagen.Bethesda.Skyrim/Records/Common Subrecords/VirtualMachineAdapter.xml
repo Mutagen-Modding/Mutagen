@@ -18,7 +18,7 @@
   <Object name="ScriptProperty" objType="Subrecord" GUID="80456841-752f-46cd-8781-b41679573fd0" ID="93">
     <Fields>
       <String name="Name" binaryType="PrependLengthUShort" binary="NoGeneration" />
-      <Enum name="Flags" byteLength="1" enumName="ScriptProperty.Flag" binary="NoGeneration" />
+      <Enum name="Flags" byteLength="1" enumName="ScriptProperty.Flag" binary="NoGeneration" default="ScriptProperty.Flag.Edited" />
     </Fields>
   </Object>
   <Object name="ScriptObjectProperty" objType="Subrecord" baseClass="ScriptProperty" GUID="2e12e8d5-7b18-4bc5-8e43-602766b864cb" ID="94">

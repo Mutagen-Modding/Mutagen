@@ -8,31 +8,24 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
-    public class FieldsAspect : AspectInterfaceDefinition
+    public class FieldsAspect : AspectFieldInterfaceDefinition
     {
         public (string FieldName, string TypeName)[] Fields;
 
-        public FieldsAspect(string interfaceType, params (string FieldName, string TypeName)[] fields) 
-            : base(interfaceType, null!)
+        public FieldsAspect(string interfaceType, params (string FieldName, string TypeName)[] fields)
+            : base(interfaceType)
         {
             Fields = fields;
-            Test = ApplicabilityTest;
-            Interfaces = (o) => new List<(LoquiInterfaceDefinitionType Type, string Interface)>()
-            {
-                (LoquiInterfaceDefinitionType.IGetter, $"{interfaceType}Getter"),
-                (LoquiInterfaceDefinitionType.ISetter, interfaceType),
-            };
         }
 
-        public bool ApplicabilityTest(ObjectGeneration o)
-        {
-            foreach (var f in Fields)
-            {
-                var field = o.IterateFields(includeBaseClass: true).FirstOrDefault(x => x.Name == f.FieldName);
-                if (field == null) return false;
-                if (field.TypeName(getter: true) != f.TypeName) return false;
-            }
-            return true;
-        }
+        public override bool Test(ObjectGeneration o, Dictionary<string, TypeGeneration> allFields) => Fields
+            .All((x) => allFields.TryGetValue(x.FieldName, out var field) && field.TypeName(getter: true) == x.TypeName);
+
+        public override IEnumerable<TypeGeneration> IdentifyFields(ObjectGeneration o) =>
+            from f in Fields
+            join field in o.IterateFields(includeBaseClass: true)
+                on f.FieldName equals field.Name
+            where field.TypeName(getter: true) != f.TypeName
+            select field;
     }
 }
