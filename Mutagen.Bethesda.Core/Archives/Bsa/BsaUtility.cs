@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     static class BsaUtility
     {

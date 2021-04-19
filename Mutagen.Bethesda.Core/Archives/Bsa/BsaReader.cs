@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     class BsaReader : IArchiveReader
     {

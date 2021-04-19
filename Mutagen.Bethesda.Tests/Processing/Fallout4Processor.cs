@@ -1,5 +1,7 @@
+using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;

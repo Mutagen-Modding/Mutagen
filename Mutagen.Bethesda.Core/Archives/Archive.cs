@@ -1,6 +1,6 @@
 using IniParser;
-using Mutagen.Bethesda.Ba2;
-using Mutagen.Bethesda.Bsa;
+using Mutagen.Bethesda.Archives.Ba2;
+using Mutagen.Bethesda.Archives.Bsa;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Archives
 {
     public interface IArchiveReader
     {

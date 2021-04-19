@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Core;
 using System.IO;
 using Loqui.Internal;
+using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Generation
 {

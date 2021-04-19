@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Strings;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Mutagen.Bethesda.Archives;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Strings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

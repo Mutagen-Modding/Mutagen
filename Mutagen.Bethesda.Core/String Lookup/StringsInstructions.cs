@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     /// <summary>
     /// Class to specify Strings file usage when importing a mod

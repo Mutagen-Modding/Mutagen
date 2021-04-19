@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Archives
 {
     public interface IArchiveFile
     {

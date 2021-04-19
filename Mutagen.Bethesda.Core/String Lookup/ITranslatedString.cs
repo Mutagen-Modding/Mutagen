@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     /// <summary>
     /// A readonly string that can be represented in different languages

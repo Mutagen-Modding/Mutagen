@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Strings;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;

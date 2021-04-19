@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Ba2
+namespace Mutagen.Bethesda.Archives.Ba2
 {
     class Ba2Reader : IArchiveReader
     {

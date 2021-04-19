@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     public static class StringsUtility
     {

@@ -9,7 +9,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     /// <summary>
     /// Class that does minimal processing on string file data, exposing lookup queries in a lazy on-demand fashion.

@@ -1,4 +1,5 @@
-﻿using Loqui.Internal;
+using Loqui.Internal;
+using Mutagen.Bethesda.Strings;
 using System;
 using System.Collections.Generic;
 using System.Text;

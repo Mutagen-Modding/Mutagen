@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     /// <summary>
     /// A string that can be represented in multiple different languages.<br/>

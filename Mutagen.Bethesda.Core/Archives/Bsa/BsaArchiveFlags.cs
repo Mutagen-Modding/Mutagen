@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     [Flags]
     enum BsaArchiveFlags : uint

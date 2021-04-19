@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Archives;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     public class StringsFolderLookupOverlay : IStringsFolderLookup
     {

@@ -3,6 +3,7 @@ using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -601,6 +602,19 @@ namespace Mutagen.Bethesda.Generation.Plugin
                     }
                 }
                 fg.AppendLine();
+            }
+        }
+
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            await foreach (var u in base.RequiredUsingStatements(obj))
+            {
+                yield return u;
+            }
+
+            if (obj.GetObjectType() == ObjectType.Mod)
+            {
+                yield return "Mutagen.Bethesda.Strings";
             }
         }
     }
