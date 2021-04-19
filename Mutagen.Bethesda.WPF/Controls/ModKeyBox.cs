@@ -91,6 +91,7 @@ namespace Mutagen.Bethesda.WPF
                     x => x.FileName,
                     x => x.ModType)
                 .DistinctUntilChanged()
+                .Skip(1)
                 .Subscribe(x =>
                 {
                     if (!_blockSync)
