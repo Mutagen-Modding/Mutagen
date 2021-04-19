@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Inis
 {
     // Private until API can be made more mature
     class Ini

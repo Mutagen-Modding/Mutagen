@@ -1,6 +1,7 @@
 using IniParser;
 using Mutagen.Bethesda.Archives.Ba2;
 using Mutagen.Bethesda.Archives.Bsa;
+using Mutagen.Bethesda.Inis;
 using Noggog;
 using System;
 using System.Collections.Generic;

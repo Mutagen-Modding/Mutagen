@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Mutagen.Bethesda.Persistence;
 using Noggog;
 using System;
 using System.Data;

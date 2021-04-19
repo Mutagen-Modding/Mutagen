@@ -1,4 +1,5 @@
 using Loqui;
+using Mutagen.Bethesda.Persistence;
 using Noggog;
 using System;
 using System.Collections.Generic;
