@@ -1,7 +1,8 @@
+using Mutagen.Bethesda.Binary;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Constants
 {
     public record GroupCellConstants(int TopGroupType, int[] SubTypes);
     public record GroupWorldConstants(int TopGroupType, int[] CellGroupTypes, int[] CellSubGroupTypes);

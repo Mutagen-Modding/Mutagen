@@ -1,8 +1,7 @@
+using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {

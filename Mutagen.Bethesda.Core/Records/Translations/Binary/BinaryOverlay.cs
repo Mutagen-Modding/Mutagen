@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Collections.Generic;

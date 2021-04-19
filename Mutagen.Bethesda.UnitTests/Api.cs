@@ -5,7 +5,7 @@ using Mutagen.Bethesda;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
-using Constants = Mutagen.Bethesda.Internals.Constants;
+using Constants = Mutagen.Bethesda.Constants.Constants;
 using Mutagen.Bethesda.UnitTests;
 
 namespace Api

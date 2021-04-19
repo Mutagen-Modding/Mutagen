@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -80,7 +81,7 @@ namespace Mutagen.Bethesda.Binary
         /// <summary>
         /// Whether the compression flag is on
         /// </summary>
-        public bool IsCompressed => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
+        public bool IsCompressed => (this.MajorRecordFlags & Constants.Constants.CompressedFlag) > 0;
 
         /// <summary>
         /// Returns the Form Version of the Major Record
@@ -254,16 +255,16 @@ namespace Mutagen.Bethesda.Binary
         /// </summary>
         public bool IsCompressed
         {
-            get => (this.MajorRecordFlags & Mutagen.Bethesda.Internals.Constants.CompressedFlag) > 0;
+            get => (this.MajorRecordFlags & Constants.Constants.CompressedFlag) > 0;
             set
             {
                 if (value)
                 {
-                    this.MajorRecordFlags |= Mutagen.Bethesda.Internals.Constants.CompressedFlag;
+                    this.MajorRecordFlags |= Constants.Constants.CompressedFlag;
                 }
                 else
                 {
-                    this.MajorRecordFlags &= ~Mutagen.Bethesda.Internals.Constants.CompressedFlag;
+                    this.MajorRecordFlags &= ~Constants.Constants.CompressedFlag;
                 }
             }
         }

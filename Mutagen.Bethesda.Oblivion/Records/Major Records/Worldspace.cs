@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Noggog;

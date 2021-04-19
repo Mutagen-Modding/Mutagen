@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             foreach (var release in EnumExt.GetValues<GameRelease>())
             {
-                Mutagen.Bethesda.Binary.GameConstants.Get(release);
+                Mutagen.Bethesda.Constants.GameConstants.Get(release);
             }
         }
 

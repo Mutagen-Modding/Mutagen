@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using System;
 using System.Collections.Generic;
@@ -102,7 +103,7 @@ namespace Mutagen.Bethesda.Binary
             var diff = endPos - this.SizePosition;
             if (this.RecordConstants.HeaderIncludedInLength)
             {
-                diff += Constants.HeaderLength;
+                diff += Constants.Constants.HeaderLength;
             }
             else
             {

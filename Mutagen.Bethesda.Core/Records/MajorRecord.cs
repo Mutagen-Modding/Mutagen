@@ -42,8 +42,8 @@ namespace Mutagen.Bethesda
 
         public bool IsCompressed
         {
-            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
-            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag, value);
+            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.Constants.CompressedFlag);
+            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.Constants.CompressedFlag, value);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -51,8 +51,8 @@ namespace Mutagen.Bethesda
 
         public bool IsDeleted
         {
-            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag);
-            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag, value);
+            get => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.Constants.DeletedFlag);
+            set => this.MajorRecordFlagsRaw = EnumExt.SetFlag(this.MajorRecordFlagsRaw, Constants.Constants.DeletedFlag, value);
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda
         public virtual bool Disable()
         {
             if (this.IsDeleted) return false;
-            MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Internals.Constants.InitiallyDisabled, true);
+            MajorRecordFlagsRaw = EnumExt.SetFlag(MajorRecordFlagsRaw, (int)Constants.Constants.InitiallyDisabled, true);
             return true;
         }
 
@@ -101,8 +101,8 @@ namespace Mutagen.Bethesda.Internals
     [DebuggerDisplay("{GetType().Name} {this.EditorID?.ToString()} {this.FormKey.ToString()}")]
     public abstract partial class MajorRecordBinaryOverlay : IMajorRecordCommonGetter
     {
-        public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.CompressedFlag);
-        public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Mutagen.Bethesda.Internals.Constants.DeletedFlag);
+        public bool IsCompressed => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.Constants.CompressedFlag);
+        public bool IsDeleted => EnumExt.HasFlag(this.MajorRecordFlagsRaw, Constants.Constants.DeletedFlag);
 
         protected abstract ushort? FormVersionAbstract { get; }
         ushort? IMajorRecordCommonGetter.FormVersion => FormVersionAbstract;

@@ -114,9 +114,9 @@ namespace Mutagen.Bethesda.Internals
                 modHeader.NextFormID = _nextFormID + 1;
             }
             if (EnumExt.HasFlag(modHeader.RawFlags, (int)ModHeaderCommonFlag.LightMaster)
-                && _uniqueRecordsFromMod > Constants.LightMasterLimit)
+                && _uniqueRecordsFromMod > Constants.Constants.LightMasterLimit)
             {
-                throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.LightMasterLimit}");
+                throw new ArgumentException($"Light Master Mod contained more originating records than allowed. {_uniqueRecordsFromMod} > {Constants.Constants.LightMasterLimit}");
             }
         }
 

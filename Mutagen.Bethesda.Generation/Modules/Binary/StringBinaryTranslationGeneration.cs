@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Strings;
 using Noggog;

@@ -8,6 +8,7 @@ using System.Text;
 using Noggog;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Constants;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

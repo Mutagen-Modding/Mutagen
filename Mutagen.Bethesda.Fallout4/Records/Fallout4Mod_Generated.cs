@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;

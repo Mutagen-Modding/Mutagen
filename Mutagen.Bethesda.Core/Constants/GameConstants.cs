@@ -1,10 +1,9 @@
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Constants
 {
     /// <summary> 
     /// Reference for all the alignment and length constants related to a specific game 
@@ -270,7 +269,7 @@ namespace Mutagen.Bethesda.Binary
         public VariableHeader NextRecordVariableMeta(ReadOnlyMemorySlice<byte> span)
         {
             RecordType rec = new RecordType(BinaryPrimitives.ReadInt32LittleEndian(span));
-            if (rec == Mutagen.Bethesda.Internals.Constants.Group)
+            if (rec == Mutagen.Bethesda.Constants.Constants.Group)
             {
                 return this.GroupConstants.VariableMeta(span);
             }

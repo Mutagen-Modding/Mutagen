@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Constants;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Strings;
 using System;

@@ -7,6 +7,7 @@ using Noggog;
 using Mutagen.Bethesda.Internals;
 using System.IO;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Constants;
 
 namespace Mutagen.Bethesda.Oblivion
 {

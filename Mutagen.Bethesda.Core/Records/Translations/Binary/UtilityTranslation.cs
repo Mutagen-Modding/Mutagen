@@ -1,6 +1,7 @@
 using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Noggog;
@@ -347,9 +348,9 @@ namespace Mutagen.Bethesda
                 // Copy major meta bytes over
                 slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(meta.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.Constants.CompressedFlag);
                 // Copy uncompressed data over
                 using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                 {
@@ -370,9 +371,9 @@ namespace Mutagen.Bethesda
                 // Copy major meta bytes over
                 stream.RemainingSpan.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.HeaderLength), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(stream.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.Constants.CompressedFlag);
                 // Copy uncompressed data over
                 using (var compessionStream = new ZlibStream(new ByteMemorySliceStream(stream.RemainingMemory.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                 {
@@ -754,7 +755,7 @@ namespace Mutagen.Bethesda
 
         public static RecordType GetRecordType<T>()
         {
-            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Mutagen.Bethesda.Internals.Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
+            return (RecordType)LoquiRegistration.GetRegister(typeof(T))!.GetType().GetField(Constants.Constants.TriggeringRecordTypeMember)!.GetValue(null)!;
         }
 
         public static ReadOnlyMemorySlice<byte>? ReadByteArrayWithOverflow(

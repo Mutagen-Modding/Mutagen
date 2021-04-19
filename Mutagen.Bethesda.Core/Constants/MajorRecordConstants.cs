@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Binary;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Constants
 {
     /// <summary>
     /// Reference for Major Record alignment and length constants

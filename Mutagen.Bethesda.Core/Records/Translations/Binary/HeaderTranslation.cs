@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.Binary
                 out contentLength,
                 lengthLength))
             {
-                reader.Position += Constants.HeaderLength + lengthLength;
+                reader.Position += Constants.Constants.HeaderLength + lengthLength;
                 return true;
             }
             return false;
@@ -36,7 +37,7 @@ namespace Mutagen.Bethesda.Binary
             out long contentLength,
             long lengthLength)
         {
-            if (reader.Remaining < Constants.HeaderLength + lengthLength)
+            if (reader.Remaining < Constants.Constants.HeaderLength + lengthLength)
             {
                 contentLength = -1;
                 return false;
@@ -50,13 +51,13 @@ namespace Mutagen.Bethesda.Binary
             switch (lengthLength)
             {
                 case 1:
-                    contentLength = reader.GetUInt8(offset: Constants.HeaderLength);
+                    contentLength = reader.GetUInt8(offset: Constants.Constants.HeaderLength);
                     break;
                 case 2:
-                    contentLength = reader.GetUInt16(offset: Constants.HeaderLength);
+                    contentLength = reader.GetUInt16(offset: Constants.Constants.HeaderLength);
                     break;
                 case 4:
-                    contentLength = reader.GetUInt32(offset: Constants.HeaderLength);
+                    contentLength = reader.GetUInt32(offset: Constants.Constants.HeaderLength);
                     break;
                 default:
                     throw new NotImplementedException();
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Binary
             IBinaryReadStream reader,
             RecordType expectedHeader)
         {
-            if (reader.Remaining < Constants.HeaderLength)
+            if (reader.Remaining < Constants.Constants.HeaderLength)
             {
                 return false;
             }
@@ -292,7 +293,7 @@ namespace Mutagen.Bethesda.Binary
             contentLength = GetContentLength(
                 reader: reader,
                 lengthLength: reader.MetaData.Constants.SubConstants.LengthLength,
-                offset: Constants.HeaderLength + offset);
+                offset: Constants.Constants.HeaderLength + offset);
             return ret;
         }
 

@@ -12,6 +12,7 @@ using System.IO;
 using Loqui.Internal;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Constants;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

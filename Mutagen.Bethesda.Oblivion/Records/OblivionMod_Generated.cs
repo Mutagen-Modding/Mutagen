@@ -7,6 +7,7 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;

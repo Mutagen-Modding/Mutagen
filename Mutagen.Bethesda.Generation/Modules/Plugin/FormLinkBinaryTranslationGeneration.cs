@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
 

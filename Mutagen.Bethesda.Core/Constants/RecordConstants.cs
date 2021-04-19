@@ -1,10 +1,8 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Constants
 {
     /// <summary>
     /// Reference for Record alignment and length constants

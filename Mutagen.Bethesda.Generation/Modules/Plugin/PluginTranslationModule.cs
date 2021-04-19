@@ -616,6 +616,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 yield return "Mutagen.Bethesda.Strings";
+                yield return "Mutagen.Bethesda.Constants";
             }
         }
     }

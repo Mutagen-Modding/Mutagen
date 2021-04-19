@@ -1,6 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Constants;
 using Newtonsoft.Json;
 using Noggog;
 using System;

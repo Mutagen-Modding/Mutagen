@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion

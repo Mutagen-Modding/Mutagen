@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.UnitTests
                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
                        MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                        MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(
-                           Constants.Skyrim.AsEnumerable())
+                           Skyrim.Constants.Skyrim.AsEnumerable())
                    });
             });
         }

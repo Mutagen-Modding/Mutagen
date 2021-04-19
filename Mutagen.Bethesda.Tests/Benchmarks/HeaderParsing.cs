@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Collections.Generic;

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Buffers.Binary;

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Oblivion;
 using Noggog;
 using Noggog.Utility;

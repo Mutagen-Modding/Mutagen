@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
@@ -83,7 +84,7 @@ namespace Mutagen.Bethesda.Binary
         /// True if RecordType == "GRUP".
         /// Should always be true, unless struct is overlaid on bad data.
         /// </summary>
-        public bool IsGroup => this.RecordType == Constants.Group;
+        public bool IsGroup => this.RecordType == Constants.Constants.Group;
         
         /// <summary>
         /// The length of the content of the Group, excluding the header bytes.

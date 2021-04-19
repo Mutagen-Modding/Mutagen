@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Tests
 
         private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
         {
-            { (Constants.Update, StringsSource.Normal), new() { 34 } }
+            { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
         };
 
         public SkyrimProcessor(GameRelease release, bool multithread) 
