@@ -405,7 +405,7 @@ namespace Mutagen.Bethesda
         /// <returns>Existing override record, or a copy of the given record that has already been inserted into the group</returns>
         public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter major)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+            where TMajorGetter : class, IMajorRecordGetter
         {
             try
             {
@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if a record was retrieved</returns>
         public static bool TryGetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache, [MaybeNullWhen(false)] out TMajor rec)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+            where TMajorGetter : class, IMajorRecordGetter
         {
             try
             {
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if a record was retrieved</returns>
         public static TMajor GetOrAddAsOverride<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, IFormLinkGetter<TMajorGetter> link, ILinkCache cache)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+            where TMajorGetter : class, IMajorRecordGetter
         {
             if (TryGetOrAddAsOverride(group, link, cache, out var rec))
             {

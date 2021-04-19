@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda
         /// <param name="formKey">FormKey assign the new record.</param>
         /// <returns>New record already added to the Group</returns>
         public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group, FormKey formKey)
-            where TMajor : IMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
                 formKey,
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda
         /// <param name="group">Group to add a record to</param>
         /// <returns>New record already added to the Group</returns>
         public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group)
-            where TMajor : IMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
                 group.SourceMod.GetNextFormKey(),
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
         /// <param name="editorID">Editor ID to assign the new record, and use in any FormKey persistence logic.</param>
         /// <returns>New record already added to the Group</returns>
         public static TMajor AddNew<TMajor>(this IGroupCommon<TMajor> group, string? editorID)
-            where TMajor : IMajorRecordInternal, IBinaryItem
+            where TMajor : IMajorRecordInternal
         {
             var ret = MajorRecordInstantiator<TMajor>.Activator(
                 group.SourceMod.GetNextFormKey(editorID),
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : IMajorRecordGetter, IBinaryItem
+            where TMajorGetter : IMajorRecordGetter
         {
             return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source);
         }
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroupCommon<TMajor> group, TMajorGetter source)
             where TMajor : class, IMajorRecordInternal, TSharedParent
             where TMajorGetter : TSharedParent
-            where TSharedParent : IMajorRecordGetter, IBinaryItem
+            where TSharedParent : IMajorRecordGetter
         {
             try
             {
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda
         /// <returns>Duplicated and added record</returns>
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TMajorGetter
-            where TMajorGetter : IMajorRecordGetter, IBinaryItem
+            where TMajorGetter : IMajorRecordGetter
         {
             return DuplicateInAsNewRecord<TMajor, TMajorGetter, TMajorGetter>(group, source, edid);
         }
@@ -123,7 +123,7 @@ namespace Mutagen.Bethesda
         public static TMajor DuplicateInAsNewRecord<TMajor, TMajorGetter, TSharedParent>(this IGroupCommon<TMajor> group, TMajorGetter source, string? edid)
             where TMajor : class, IMajorRecordInternal, TSharedParent
             where TMajorGetter : TSharedParent
-            where TSharedParent : IMajorRecordGetter, IBinaryItem
+            where TSharedParent : IMajorRecordGetter
         {
             try
             {
@@ -149,7 +149,7 @@ namespace Mutagen.Bethesda
             this IGroupCommonGetter<TMajor> group,
             FormKey formKey,
             [MaybeNullWhen(false)] out TMajor record)
-            where TMajor : IMajorRecordCommonGetter, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
         {
             return group.RecordCache.TryGetValue(formKey, out record);
         }
@@ -164,7 +164,7 @@ namespace Mutagen.Bethesda
         public static TMajor? TryGetValue<TMajor>(
             this IGroupCommonGetter<TMajor> group,
             FormKey formKey)
-            where TMajor : IMajorRecordCommonGetter, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
         {
             if (group.RecordCache.TryGetValue(formKey, out var record))
             {

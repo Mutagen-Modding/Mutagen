@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda
     /// An interface that Group Record objects implement to hook into the common systems
     /// </summary>
     public interface IGroupCommonGetter<out TMajor> : IEnumerable<TMajor>
-        where TMajor : IMajorRecordCommonGetter, IBinaryItem
+        where TMajor : IMajorRecordCommonGetter
     {
         /// <summary>
         /// Mod object the Group belongs to
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
     }
 
     public interface IGroupCommon<TMajor> : IGroupCommonGetter<TMajor>, IClearable
-        where TMajor : IMajorRecordCommonGetter, IBinaryItem
+        where TMajor : IMajorRecordCommonGetter
     {
         /// <summary>
         /// Access to records in an ICache interface
