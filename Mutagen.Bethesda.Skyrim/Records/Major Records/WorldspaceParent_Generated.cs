@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1010,11 +1011,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Worldspace,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<WorldspaceParent.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WorldspaceParent.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2,
@@ -1072,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)WorldspaceParent_FieldIndex.Worldspace) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Worldspace.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                             frame: frame,
                             defaultVal: FormKey.Null));
                     return (int)WorldspaceParent_FieldIndex.Worldspace;

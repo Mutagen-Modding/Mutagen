@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1129,11 +1130,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.UInt16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINC));
@@ -1143,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 integerType: FloatIntegerType.UInt,
                 multiplier: 0.01,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINV));
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.Int16BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Preset,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TIAS));

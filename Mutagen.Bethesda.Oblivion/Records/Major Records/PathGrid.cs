@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     case 0x47414750: //"PGAG":
                         frame.Reader.Position += subMeta.HeaderLength;
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        if (ByteArrayBinaryTranslation.Instance.Parse(
                            frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false),
                            item: out var unknownBytes))
                         {

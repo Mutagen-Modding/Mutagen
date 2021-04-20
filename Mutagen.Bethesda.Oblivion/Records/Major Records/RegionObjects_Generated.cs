@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1130,7 +1131,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionObjectGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IRegionObjectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RDOT),
@@ -1205,7 +1206,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Objects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionObject>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RegionObject>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: RegionObject.TryCreateFromBinary)
                         .CastExtendedList<RegionObject>();

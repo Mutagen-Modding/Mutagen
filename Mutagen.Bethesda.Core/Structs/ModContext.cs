@@ -1,6 +1,5 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Noggog;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Diagnostics.CodeAnalysis;
 

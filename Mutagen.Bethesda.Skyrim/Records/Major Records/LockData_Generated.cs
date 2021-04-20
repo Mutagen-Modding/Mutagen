@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1174,21 +1175,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILockDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockLevel>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LockLevel>.Instance.Write(
                 writer,
                 item.Level,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LockData.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LockData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
         }
@@ -1231,13 +1232,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Level = EnumBinaryTranslation<LockLevel>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
             item.Key.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             item.Flags = EnumBinaryTranslation<LockData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(11));
+            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(11));
         }
 
     }

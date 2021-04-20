@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1341,31 +1342,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceHdrGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyeAdaptSpeed);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomBlurRadius);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomThreshold);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BloomScale);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ReceiveBloomThreshold);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.White);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SunlightScale);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SkyScale);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.EyeAdaptStrength);
         }
@@ -1407,15 +1408,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceHdr item,
             MutagenFrame frame)
         {
-            item.EyeAdaptSpeed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.BloomBlurRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.BloomThreshold = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.BloomScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ReceiveBloomThreshold = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.White = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SunlightScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SkyScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.EyeAdaptStrength = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.EyeAdaptSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.BloomBlurRadius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.BloomThreshold = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.BloomScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ReceiveBloomThreshold = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.White = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SunlightScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SkyScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.EyeAdaptStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }

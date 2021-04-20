@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer);
             writer.Write(item.EventFunction);
             writer.Write(item.EventMember);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Parameter3);
             GetEventDataBinaryWriteTranslation.WriteBinaryParameterParsing(
@@ -1174,7 +1175,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EventFunction = frame.ReadUInt16();
             item.EventMember = frame.ReadUInt16();
             item.Parameter3.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             GetEventDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(

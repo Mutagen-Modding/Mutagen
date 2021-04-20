@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1337,13 +1338,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ConditionBinaryWriteTranslation.WriteBinaryInitialParser(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Fluff);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Function>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Function>.Instance.Write(
                 writer,
                 item.Function,
                 length: 4);
@@ -1392,8 +1393,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ConditionBinaryCreateTranslation.FillBinaryInitialParserCustom(
                 frame: frame,
                 item: item);
-            item.Fluff = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.ComparisonValue = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Fluff = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Function = EnumBinaryTranslation<Function>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.FirstParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();

@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1370,14 +1371,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             writer.Write(item.Damage);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.PercentMult);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CriticalData.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CriticalData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
             if (writer.MetaData.FormVersion!.Value >= 44)
@@ -1386,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (!item.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Effect);
                 if (writer.MetaData.FormVersion!.Value >= 44)
@@ -1435,9 +1436,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Damage = frame.ReadUInt16();
             item.Unused = frame.ReadInt16();
-            item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.PercentMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused3 = frame.ReadInt32();
@@ -1448,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return;
             }
             item.Effect.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             if (frame.MetaData.FormVersion!.Value >= 44)

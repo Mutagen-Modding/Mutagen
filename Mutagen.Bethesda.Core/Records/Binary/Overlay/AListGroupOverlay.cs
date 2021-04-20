@@ -1,6 +1,7 @@
 using Ionic.Zlib;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Headers;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;

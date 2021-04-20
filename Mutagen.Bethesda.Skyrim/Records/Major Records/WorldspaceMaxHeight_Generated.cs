@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1055,13 +1056,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Max);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.CellData);
         }
@@ -1103,9 +1104,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeight item,
             MutagenFrame frame)
         {
-            item.Min = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.CellData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame);
+            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.CellData = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }

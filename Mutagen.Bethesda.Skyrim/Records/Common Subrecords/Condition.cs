@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
                 item.Reference.SetTo(
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                    FormLinkBinaryTranslation.Instance.Parse(
                         frame: frame,
                         defaultVal: FormKey.Null));
                 item.Unknown3 = frame.ReadInt32();
@@ -1167,11 +1167,11 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static void WriteCommonParams(MutagenWriter writer, IConditionDataGetter item)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.RunOnType>.Instance.Write(
+                EnumBinaryTranslation<Condition.RunOnType>.Instance.Write(
                     writer,
                     item.RunOnType,
                     length: 4);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Reference);
                 writer.Write(item.Unknown3);

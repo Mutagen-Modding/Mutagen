@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -2015,12 +2016,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryParentLogic(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
                 transl: P3FloatBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
@@ -2032,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
@@ -2044,7 +2045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
@@ -2060,16 +2061,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.NavmeshGridDivisor);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceX);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceY);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Max);
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryNavmeshGrid(
@@ -2114,22 +2115,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Vertices.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: P3FloatBinaryTranslation.Instance.Parse));
             item.Triangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: NavmeshTriangle.TryCreateFromBinary));
             item.EdgeLinks.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<EdgeLink>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: EdgeLink.TryCreateFromBinary));
             item.DoorTriangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: DoorTriangle.TryCreateFromBinary));
@@ -2137,10 +2138,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.NavmeshGridDivisor = frame.ReadUInt32();
-            item.MaxDistanceX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxDistanceY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxDistanceX = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxDistanceY = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
             ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustom(
                 frame: frame,
                 item: item);

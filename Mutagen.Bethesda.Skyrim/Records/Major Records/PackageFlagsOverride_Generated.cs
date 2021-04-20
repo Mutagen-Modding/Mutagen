@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1202,27 +1203,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverrideGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
                 writer,
                 item.SetFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
                 writer,
                 item.ClearFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
                 writer,
                 item.SetInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
                 writer,
                 item.ClearInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Speed>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Speed>.Instance.Write(
                 writer,
                 item.PreferredSpeed,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
         }
@@ -1269,7 +1270,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
             item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
 
     }

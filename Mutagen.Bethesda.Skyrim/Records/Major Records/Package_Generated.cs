@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -3422,24 +3423,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.PKDT)))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Types>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Types>.Instance.Write(
                     writer,
                     item.Type,
                     length: 1);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Interrupt>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Interrupt>.Instance.Write(
                     writer,
                     item.InterruptOverride,
                     length: 1);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Speed>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Speed>.Instance.Write(
                     writer,
                     item.PreferredSpeed,
                     length: 1);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
                     writer,
                     item.InteruptFlags,
                     length: 2);
@@ -3448,19 +3449,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.PSDT)))
             {
                 writer.Write(item.ScheduleMonth);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.DayOfWeek>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.DayOfWeek>.Instance.Write(
                     writer,
                     item.ScheduleDayOfWeek,
                     length: 1);
                 writer.Write(item.ScheduleDate);
                 writer.Write(item.ScheduleHour);
                 writer.Write(item.ScheduleMinute);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Unknown3);
                 writer.Write(item.ScheduleDurationInMinutes);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
@@ -3471,7 +3472,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.Int32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLB));
@@ -3482,11 +3483,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatStyle,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.OwnerQuest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
@@ -3638,14 +3639,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ScheduleDate = dataFrame.ReadUInt8();
                     item.ScheduleHour = dataFrame.ReadInt8();
                     item.ScheduleMinute = dataFrame.ReadInt8();
-                    item.Unknown3 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
                     item.ScheduleDurationInMinutes = dataFrame.ReadInt32();
                     return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
                 case RecordTypeInts.CTDA:
                 {
                     item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
@@ -3669,7 +3670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CombatStyle.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                             frame: frame,
                             defaultVal: FormKey.Null));
                     return (int)Package_FieldIndex.CombatStyle;
@@ -3678,7 +3679,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OwnerQuest.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                             frame: frame,
                             defaultVal: FormKey.Null));
                     return (int)Package_FieldIndex.OwnerQuest;

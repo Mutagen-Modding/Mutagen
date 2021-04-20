@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Diagnostics;
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
             {
                 item.MasterReferences.SetTo(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
+                    ListBinaryTranslation<MasterReference>.Instance.Parse(
                         frame: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.MAST,
                         transl: MasterReference.TryCreateFromBinary));
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, ISkyrimModHeaderGetter item)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+                ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
                     transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>

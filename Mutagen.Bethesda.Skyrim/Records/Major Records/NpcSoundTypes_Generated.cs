@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1114,7 +1115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INpcSoundTypeGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INpcSoundTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.Types,
                 transl: (MutagenWriter subWriter, INpcSoundTypeGetter subItem, RecordTypeConverter? conv) =>
@@ -1190,7 +1191,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
                     item.Types.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: NpcSoundType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,

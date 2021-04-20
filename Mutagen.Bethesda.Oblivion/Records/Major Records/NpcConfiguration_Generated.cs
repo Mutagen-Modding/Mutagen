@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INpcConfigurationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.NpcFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Npc.NpcFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);

@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1058,16 +1059,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SceneActor.Flag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneActor.Flag>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.WriteNullable(
                 writer,
                 item.BehaviorFlags,
                 length: 4,

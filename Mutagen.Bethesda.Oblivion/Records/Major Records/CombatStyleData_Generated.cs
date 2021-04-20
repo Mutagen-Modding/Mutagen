@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2755,48 +2756,48 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.DodgePercentChance);
             writer.Write(item.LeftRightPercentChance);
             writer.WriteZeros(2);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeLeftRightTimerMin);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeLeftRightTimerMax);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeForwardTimerMin);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeForwardTimerMax);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeBackTimerMin);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DodgeBackTimerMax);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IdleTimerMin);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.IdleTimerMax);
             writer.Write(item.BlockPercentChance);
             writer.Write(item.AttackPercentChance);
             writer.WriteZeros(2);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RecoilStaggerBonusToAttack);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UnconsciousBonusToAttack);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HandToHandBonusToAttack);
             writer.Write(item.PowerAttackPercentChance);
             writer.WriteZeros(3);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.RecoilStaggerBonusToPowerAttack);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UnconsciousBonusToPowerAttack);
             writer.Write(item.PowerAttackNormal);
@@ -2805,13 +2806,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.PowerAttackLeft);
             writer.Write(item.PowerAttackRight);
             writer.WriteZeros(3);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HoldTimerMin);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.HoldTimerMax);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -2819,36 +2820,36 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.WriteZeros(2);
             if (!item.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RangeMultOptimal);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.RangeMultMax);
                 if (!item.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break1))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.SwitchDistanceMelee);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.SwitchDistanceRanged);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.BuffStandoffDistance);
                     if (!item.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break2))
                     {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.RangedStandoffDistance);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.GroupStandoffDistance);
                         if (!item.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break3))
                         {
                             writer.Write(item.RushingAttackPercentChance);
                             writer.WriteZeros(3);
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                                 writer: writer,
                                 item: item.RushingAttackDistanceMult);
                             if (!item.Versioning.HasFlag(CombatStyleData.VersioningBreaks.Break4))
@@ -2903,32 +2904,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.DodgePercentChance = frame.ReadUInt8();
             item.LeftRightPercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
-            item.DodgeLeftRightTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DodgeLeftRightTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DodgeForwardTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DodgeForwardTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DodgeBackTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DodgeBackTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.IdleTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.IdleTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeLeftRightTimerMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeLeftRightTimerMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeForwardTimerMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeForwardTimerMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeBackTimerMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DodgeBackTimerMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.IdleTimerMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.IdleTimerMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.BlockPercentChance = frame.ReadUInt8();
             item.AttackPercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
-            item.RecoilStaggerBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UnconsciousBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HandToHandBonusToAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RecoilStaggerBonusToAttack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.UnconsciousBonusToAttack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HandToHandBonusToAttack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.PowerAttackPercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 3);
-            item.RecoilStaggerBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UnconsciousBonusToPowerAttack = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RecoilStaggerBonusToPowerAttack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.UnconsciousBonusToPowerAttack = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.PowerAttackNormal = frame.ReadUInt8();
             item.PowerAttackForward = frame.ReadUInt8();
             item.PowerAttackBack = frame.ReadUInt8();
             item.PowerAttackLeft = frame.ReadUInt8();
             item.PowerAttackRight = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 3);
-            item.HoldTimerMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HoldTimerMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HoldTimerMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HoldTimerMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.AcrobaticDodgePercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
@@ -2937,23 +2938,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break0;
                 return;
             }
-            item.RangeMultOptimal = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RangeMultMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RangeMultOptimal = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RangeMultMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break1;
                 return;
             }
-            item.SwitchDistanceMelee = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SwitchDistanceRanged = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.BuffStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SwitchDistanceMelee = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SwitchDistanceRanged = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.BuffStandoffDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break2;
                 return;
             }
-            item.RangedStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.GroupStandoffDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RangedStandoffDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.GroupStandoffDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break3;
@@ -2961,7 +2962,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             item.RushingAttackPercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 3);
-            item.RushingAttackDistanceMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.RushingAttackDistanceMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleData.VersioningBreaks.Break4;

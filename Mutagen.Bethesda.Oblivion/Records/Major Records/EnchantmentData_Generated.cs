@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1096,13 +1097,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
             writer.Write(item.ChargeAmount);
             writer.Write(item.EnchantCost);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1549,11 +1550,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.ThunderLightningBeginFadeIn);
             writer.Write(item.ThunderLightningEndFadeOut);
             writer.Write(item.ThunderLightningFrequency);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Write(
                 writer,
                 item.Classification,
                 length: 1);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LightningColor,
                 binaryType: ColorBinaryType.NoAlpha);

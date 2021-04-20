@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1006,11 +1007,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectSoundGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound);
         }
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.Sound.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
         }

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1583,16 +1584,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledSpell.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LeveledSpell.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledSpellEntryGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ILeveledSpellEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Entries,
                 counterType: RecordTypes.LLCT,
@@ -1718,7 +1719,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LLCT:
                 {
                     item.Entries = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledSpellEntry>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LeveledSpellEntry>.Instance.ParsePerItem(
                             frame: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,

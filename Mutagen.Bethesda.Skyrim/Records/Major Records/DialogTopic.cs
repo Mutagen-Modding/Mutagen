@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -159,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
                         return;
                     }
                     frame.Reader.Position += groupMeta.HeaderLength;
-                    obj.Responses.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogResponses>.Instance.Parse(
+                    obj.Responses.SetTo(ListBinaryTranslation<DialogResponses>.Instance.Parse(
                         frame: frame.SpawnWithLength(groupMeta.ContentLength),
                         transl: (MutagenFrame r, RecordType header, out DialogResponses listItem) =>
                         {
@@ -219,7 +220,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write((int)GroupTypeEnum.TopicChildren);
                         writer.Write(obj.Timestamp);
                         writer.Write(obj.Unknown);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogResponsesGetter>.Instance.Write(
+                        ListBinaryTranslation<IDialogResponsesGetter>.Instance.Write(
                             writer: writer,
                             items: resp,
                             transl: (MutagenWriter subWriter, IDialogResponsesGetter subItem) =>

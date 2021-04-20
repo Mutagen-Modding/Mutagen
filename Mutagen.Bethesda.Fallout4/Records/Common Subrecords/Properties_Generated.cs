@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1057,7 +1058,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IPropertiesGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
                 items: item.PropertyList,
                 transl: FloatBinaryTranslation.Instance.Write);
@@ -1101,7 +1102,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame)
         {
             item.PropertyList.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
                     frame: frame,
                     transl: FloatBinaryTranslation.Instance.Parse));
         }

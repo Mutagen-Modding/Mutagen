@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1100,13 +1101,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Write(
                 writer: writer,
                 items: item.Data,
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, String subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         binaryType: StringBinaryType.PrependLengthUShort);
@@ -1159,12 +1160,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.Data.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<String>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: (MutagenFrame r, out String listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                        return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
                             r,
                             item: out listSubItem,
                             parseWhole: false,

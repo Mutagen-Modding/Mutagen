@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1249,24 +1250,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.UsableDimensions);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NorthwestCellCoords);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SoutheastCellCoords);
             if (!item.Versioning.HasFlag(WorldspaceMap.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CameraMinHeight);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CameraMaxHeight);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CameraInitialPitch);
             }
@@ -1309,17 +1310,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMap item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.NorthwestCellCoords = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.SoutheastCellCoords = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.UsableDimensions = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(frame: frame);
+            item.NorthwestCellCoords = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.SoutheastCellCoords = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
             if (frame.Complete)
             {
                 item.Versioning |= WorldspaceMap.VersioningBreaks.Break0;
                 return;
             }
-            item.CameraMinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.CameraMaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.CameraInitialPitch = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.CameraMinHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.CameraMaxHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.CameraInitialPitch = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }

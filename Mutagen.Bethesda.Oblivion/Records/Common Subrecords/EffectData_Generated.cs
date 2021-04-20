@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1205,17 +1206,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MagicEffect);
             writer.Write(item.Magnitude);
             writer.Write(item.Area);
             writer.Write(item.Duration);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
                 writer,
                 item.ActorValue,
                 length: 4);
@@ -1259,7 +1260,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.MagicEffect.SetTo(
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: RecordType.Null));
             item.Magnitude = frame.ReadUInt32();

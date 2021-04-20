@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     Unknown = dataFrame.Content.Slice(5, 3).ToArray(),
                                 };
                                 effect.Conditions.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                    ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         frame: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     Ability = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
                                 };
                                 effect.Conditions.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                    ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                         frame: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 var entryPt = (APerkEntryPointEffect.EntryType)dataFrame.Content[0];
                                 var func = (APerkEntryPointEffect.FunctionType)dataFrame.Content[1];
                                 var tabCount = dataFrame.Content[2];
-                                var conditions = Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
                                     frame: new MutagenFrame(stream),
                                     transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                     {
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 throw new NotImplementedException();
                         }
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPerkConditionGetter>.Instance.Write(
+                    ListBinaryTranslation<IPerkConditionGetter>.Instance.Write(
                         writer,
                         effect.Conditions,
                         (w, i) => i.WriteToBinary(w));

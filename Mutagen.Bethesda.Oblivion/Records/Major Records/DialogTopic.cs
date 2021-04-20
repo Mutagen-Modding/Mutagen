@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Oblivion
                         return;
                     }
                     frame.Reader.Position += groupMeta.HeaderLength;
-                    obj.Items.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Parse(
+                    obj.Items.SetTo(ListBinaryTranslation<DialogItem>.Instance.Parse(
                         frame: frame.SpawnWithLength(groupMeta.ContentLength),
                         transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                         {
@@ -63,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
                             obj.FormKey);
                         writer.Write((int)GroupTypeEnum.TopicChildren);
                         writer.Write(obj.Timestamp);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
+                        ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
                             writer: writer,
                             items: items,
                             transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>

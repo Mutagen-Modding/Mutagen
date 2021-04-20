@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -109,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 obj.Persistent.AddRange(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
+                    ListBinaryTranslation<IPlaced>.Instance.Parse(
                         frame: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
@@ -197,7 +198,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
-                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
+                var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
@@ -276,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                                 writer.Write(obj.PersistentTimestamp);
                                 writer.Write(obj.PersistentUnknownGroupData);
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
                                     items: obj.Persistent,
                                     transl: WritePlaced);
@@ -301,7 +302,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 }
                                 if (obj.Temporary != null)
                                 {
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                    ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                         writer: writer,
                                         items: obj.Temporary,
                                         transl: WritePlaced);

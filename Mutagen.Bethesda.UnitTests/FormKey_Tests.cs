@@ -1,12 +1,9 @@
 using FluentAssertions;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

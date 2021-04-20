@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1173,21 +1174,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Script);
             if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicSchool>.Instance.Write(
                     writer,
                     item.MagicSchool,
                     length: 4);
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.VisualEffect);
                 if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1))
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 4);
@@ -1233,7 +1234,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Script.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             if (frame.Complete)
@@ -1243,7 +1244,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.VisualEffect.SetTo(
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: RecordType.Null));
             if (frame.Complete)

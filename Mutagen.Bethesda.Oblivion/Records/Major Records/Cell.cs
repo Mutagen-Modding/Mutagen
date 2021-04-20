@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -116,7 +117,7 @@ namespace Mutagen.Bethesda.Oblivion
                     obj.VisibleWhenDistantTimestamp = groupMeta.LastModifiedData.Int32();
                 }
                 coll.AddRange(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
+                    ListBinaryTranslation<IPlaced>.Instance.Parse(
                         frame: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
@@ -167,7 +168,7 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                 }
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
-                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
+                var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
@@ -226,7 +227,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     obj.FormKey);
                                 writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                                 writer.Write(obj.PersistentTimestamp);
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
                                     items: obj.Persistent,
                                     transl: (r, item) =>
@@ -250,7 +251,7 @@ namespace Mutagen.Bethesda.Oblivion
                                 pathGrid?.WriteToBinary(writer);
                                 if (obj.Temporary != null)
                                 {
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                    ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                         writer: writer,
                                         items: obj.Temporary,
                                         transl: (r, item) =>
@@ -269,7 +270,7 @@ namespace Mutagen.Bethesda.Oblivion
                                     obj.FormKey);
                                 writer.Write((int)GroupTypeEnum.CellVisibleDistantChildren);
                                 writer.Write(obj.VisibleWhenDistantTimestamp);
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
                                     items: obj.VisibleWhenDistant,
                                     transl: (r, item) =>

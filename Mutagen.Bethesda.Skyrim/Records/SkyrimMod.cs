@@ -9,6 +9,7 @@ using System.IO;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 
 namespace Mutagen.Bethesda.Skyrim
 {

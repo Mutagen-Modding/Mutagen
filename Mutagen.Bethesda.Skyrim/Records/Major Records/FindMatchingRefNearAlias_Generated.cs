@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1032,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefNearAliasBinaryWriteTranslation.WriteBinaryAliasIndex(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,

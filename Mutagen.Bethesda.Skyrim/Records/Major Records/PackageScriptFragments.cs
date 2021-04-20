@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Buffers.Binary;
 using static Mutagen.Bethesda.Skyrim.Internals.PackageScriptFragmentsBinaryCreateTranslation;
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
             static partial void FillBinaryFlagsParseCustom(MutagenFrame frame, IPackageScriptFragments item)
             {
                 var flag = (Flag)frame.ReadUInt8();
-                item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                item.FileName = StringBinaryTranslation.Instance.Parse(
                      frame: frame,
                      stringBinaryType: StringBinaryType.PrependLengthUShort);
                 if (flag.HasFlag(Flag.OnBegin))
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
                     flag |= Flag.OnChange;
                 }
                 writer.Write((byte)flag);
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FileName,
                     binaryType: StringBinaryType.PrependLengthUShort);

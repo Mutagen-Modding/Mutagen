@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1130,12 +1131,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActivateParents.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActivateParents.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XAPD));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IActivateParentGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IActivateParentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Parents,
                 transl: (MutagenWriter subWriter, IActivateParentGetter subItem, RecordTypeConverter? conv) =>
@@ -1204,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XAPR:
                 {
                     item.Parents.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ActivateParent>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActivateParent>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RecordTypes.XAPR,
                             recordTypeConverter: recordTypeConverter,

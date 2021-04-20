@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1235,13 +1236,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Vertices);
             writer.Write(item.EdgeLink_0_1);
             writer.Write(item.EdgeLink_1_2);
             writer.Write(item.EdgeLink_2_0);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1279,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangle item,
             MutagenFrame frame)
         {
-            item.Vertices = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Vertices = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
             item.EdgeLink_0_1 = frame.ReadInt16();
             item.EdgeLink_1_2 = frame.ReadInt16();
             item.EdgeLink_2_0 = frame.ReadInt16();

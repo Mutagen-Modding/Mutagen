@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1515,7 +1516,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer)
         {
             writer.Write(item.MajorRecordFlagsRaw);
-            Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormKeyBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FormKey);
             writer.Write(item.VersionControl);
@@ -1526,7 +1527,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EditorID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EDID),
@@ -1579,7 +1580,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenFrame frame)
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
-            item.FormKey = Mutagen.Bethesda.Binary.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
+            item.FormKey = Mutagen.Bethesda.Records.Binary.Translations.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
             item.VersionControl = frame.ReadUInt32();
         }
 
@@ -1597,7 +1598,7 @@ namespace Mutagen.Bethesda.Internals
                 case RecordTypeInts.EDID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EditorID = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                    item.EditorID = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
                         frame: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MajorRecord_FieldIndex.EditorID;

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1153,14 +1154,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<EmotionType>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EmotionType>.Instance.Write(
                 writer,
                 item.Emotion,
                 length: 4);
             writer.Write(item.EmotionValue);
             writer.Write(item.Unknown);
             writer.Write(item.ResponseNumber);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
         }
@@ -1206,7 +1207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EmotionValue = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
             item.ResponseNumber = frame.ReadUInt8();
-            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
 
     }

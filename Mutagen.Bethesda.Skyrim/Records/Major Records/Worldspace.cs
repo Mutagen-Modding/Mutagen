@@ -1,7 +1,7 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
                                     break;
                                 case 0x50555247: // "GRUP":
                                     obj.SubCells.SetTo(
-                                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                        ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
                                             frame: frame,
                                             triggeringRecord: RecordTypes.GRUP,
                                             transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write(obj.SubCellsUnknown);
 
                         topCell?.WriteToBinary(writer);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                        ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                             writer: writer,
                             items: subCells,
                             transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>

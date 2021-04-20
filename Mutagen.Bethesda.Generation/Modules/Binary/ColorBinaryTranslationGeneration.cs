@@ -2,7 +2,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary

@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

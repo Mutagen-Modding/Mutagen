@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
     public class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
     {
-        public override string Namespace => "Mutagen.Bethesda.Binary.";
+        public override string Namespace => "Mutagen.Bethesda.Records.Binary.Translations.";
         public override string ModuleNickname => "Binary";
         public override bool GenerateAbstractCreates => false;
         public CustomLogicTranslationGeneration CustomLogic;

@@ -1,6 +1,6 @@
 using System;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 
 namespace Mutagen.Bethesda.Oblivion
 {

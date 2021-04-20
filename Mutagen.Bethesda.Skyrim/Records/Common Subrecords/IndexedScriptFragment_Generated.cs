@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1140,11 +1141,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.FragmentIndex);
             writer.Write(item.Unknown);
             writer.Write(item.Unknown2);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ScriptName,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FragmentName,
                 binaryType: StringBinaryType.PrependLengthUShort);
@@ -1184,10 +1185,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FragmentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadInt16();
             item.Unknown2 = frame.ReadInt8();
-            item.ScriptName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+            item.ScriptName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.FragmentName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+            item.FragmentName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
                 frame: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }

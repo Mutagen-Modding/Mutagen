@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1247,11 +1248,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Confidence);
             writer.Write(item.EnergyLevel);
             writer.Write(item.Responsibility);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
                 writer,
                 item.BuySellServices,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
                 item.Teaches,
                 length: 1);

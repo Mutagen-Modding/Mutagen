@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -998,10 +999,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBoundsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.First);
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Second);
         }
@@ -1043,8 +1044,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBounds item,
             MutagenFrame frame)
         {
-            item.First = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Second = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.First = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Second = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
         }
 
     }

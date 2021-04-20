@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
-                Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
+                CharBinaryTranslation.Instance.Write(
                     writer,
                     item.TypeChar,
                     header: RecordTypes.FNAM);

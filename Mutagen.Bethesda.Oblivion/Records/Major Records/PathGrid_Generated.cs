@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1780,7 +1781,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             PathGridBinaryWriteTranslation.WriteBinaryPointToPointConnections(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IInterCellPointGetter>.Instance.Write(
                 writer: writer,
                 items: item.InterCellConnections,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PGRI),
@@ -1792,7 +1793,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IPointToReferenceMappingGetter>.Instance.Write(
                 writer: writer,
                 items: item.PointToReferenceMappings,
                 transl: (MutagenWriter subWriter, IPointToReferenceMappingGetter subItem, RecordTypeConverter? conv) =>
@@ -1905,7 +1906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterCellConnections = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: InterCellPoint.TryCreateFromBinary)
                         .CastExtendedList<InterCellPoint>();
@@ -1914,7 +1915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.PGRL:
                 {
                     item.PointToReferenceMappings.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RecordTypes.PGRL,
                             recordTypeConverter: recordTypeConverter,

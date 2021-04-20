@@ -1,10 +1,7 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda
 {

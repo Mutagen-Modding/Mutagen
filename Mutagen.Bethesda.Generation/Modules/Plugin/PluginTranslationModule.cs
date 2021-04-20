@@ -621,6 +621,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             yield return "Mutagen.Bethesda.Records.Binary.Overlay";
+            yield return "Mutagen.Bethesda.Records.Binary.Translations";
             yield return "Mutagen.Bethesda.Records.Binary.Streams";
         }
     }

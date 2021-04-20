@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1259,7 +1260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPreferredPathingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INavmeshSetGetter>.Instance.Write(
                 writer: writer,
                 items: item.NavmeshSets,
                 countLengthLength: 4,
@@ -1271,7 +1272,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshNodeGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INavmeshNodeGetter>.Instance.Write(
                 writer: writer,
                 items: item.NavmeshTree,
                 countLengthLength: 4,
@@ -1323,12 +1324,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.NavmeshSets.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: NavmeshSet.TryCreateFromBinary));
             item.NavmeshTree.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: NavmeshNode.TryCreateFromBinary));

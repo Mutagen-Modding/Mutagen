@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.EFID))
                 {
-                    Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+                    RecordTypeBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.Data.MagicEffect);
                 }

@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1479,35 +1480,35 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
                 writer: writer,
                 items: item.PrimaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
                         subWriter,
                         subItem,
                         length: 4);
                 });
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
                 writer,
                 item.Specialization,
                 length: 4);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
                 writer: writer,
                 items: item.SecondaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
                         subWriter,
                         subItem,
                         length: 4);
                 });
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ClassFlag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ClassService>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ClassService>.Instance.Write(
                 writer,
                 item.ClassServices,
                 length: 4);
@@ -1558,23 +1559,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.PrimaryAttributes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     frame: frame,
                     amount: 2,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));
             item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.SecondaryAttributes.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     frame: frame,
                     amount: 7,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
                             frame: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));

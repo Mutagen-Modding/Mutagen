@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1368,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDefaultObjectGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IDefaultObjectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
@@ -1475,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Objects = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DefaultObject>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DefaultObject>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: DefaultObject.TryCreateFromBinary)
                         .CastExtendedList<DefaultObject>();

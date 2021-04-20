@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1134,11 +1135,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+            Mutagen.Bethesda.Records.Binary.Translations.UInt32BinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EdgeFallOff,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RPLI));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Write(
                 writer: writer,
                 items: item.RegionPointListData,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RPLD),
@@ -1203,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPointListData) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPointListData = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
                             frame: frame.SpawnWithLength(contentLength),
                             transl: P2FloatBinaryTranslation.Instance.Parse)
                         .CastExtendedList<P2Float>();

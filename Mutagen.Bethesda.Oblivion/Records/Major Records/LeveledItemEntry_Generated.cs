@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1172,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             writer.Write(item.Level);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
             writer.Write(item.Count);
@@ -1219,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Level = frame.ReadInt16();
             item.Unknown = frame.ReadInt16();
             item.Reference.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             if (frame.Complete) return;

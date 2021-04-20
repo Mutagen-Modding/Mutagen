@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -2121,7 +2122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             writer.Write(item.BlockNumberY);
             writer.Write(item.BlockNumberX);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
                 length: 4);
@@ -2134,7 +2135,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ICellGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ICellGetter>.Instance.Write(
                 writer: writer,
                 items: item.Items,
                 transl: (MutagenWriter subWriter, ICellGetter subItem, RecordTypeConverter? conv) =>
@@ -2216,7 +2217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CELL:
                 {
                     item.Items.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,

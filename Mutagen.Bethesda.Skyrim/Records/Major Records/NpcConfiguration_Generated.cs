@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1500,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.CalcMaxLevel);
             writer.Write(item.SpeedMultiplier);
             writer.Write(item.DispositionBase);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Write(
                 writer,
                 item.TemplateFlags,
                 length: 2);

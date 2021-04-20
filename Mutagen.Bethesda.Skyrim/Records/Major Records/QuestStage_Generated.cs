@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1290,13 +1291,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.INDX)))
             {
                 writer.Write(item.Index);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestStage.Flag>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<QuestStage.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
                 writer.Write(item.Unknown);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestLogEntryGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IQuestLogEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.LogEntries,
                 transl: (MutagenWriter subWriter, IQuestLogEntryGetter subItem, RecordTypeConverter? conv) =>
@@ -1377,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     item.LogEntries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: QuestLogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,

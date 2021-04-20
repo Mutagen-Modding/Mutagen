@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1635,14 +1636,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.Types>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Creature.Types>.Instance.Write(
                 writer,
                 item.Type,
                 length: 1);
             writer.Write(item.CombatSkill);
             writer.Write(item.MagicSkill);
             writer.Write(item.StealthSkill);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SoulLevel>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulLevel>.Instance.Write(
                 writer,
                 item.SoulLevel,
                 length: 2);

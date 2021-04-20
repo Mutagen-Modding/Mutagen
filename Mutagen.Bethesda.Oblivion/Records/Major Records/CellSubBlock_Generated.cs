@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1794,7 +1795,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer)
         {
             writer.Write(item.BlockNumber);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.GroupType,
                 length: 4);
@@ -1806,7 +1807,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ICellGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ICellGetter>.Instance.Write(
                 writer: writer,
                 items: item.Cells,
                 transl: (MutagenWriter subWriter, ICellGetter subItem, RecordTypeConverter? conv) =>
@@ -1886,7 +1887,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.CELL:
                 {
                     item.Cells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Cell>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,

@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1145,11 +1146,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Month>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Month>.Instance.Write(
                 writer,
                 item.Month,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weekday>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weekday>.Instance.Write(
                 writer,
                 item.DayOfWeek,
                 length: 1);

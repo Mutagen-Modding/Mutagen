@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1317,15 +1318,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.HealthPercent);
             writer.Write(item.Index);
             writer.Write(item.ModelDamageStage);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
             writer.Write(item.SelfDamagePerSecond);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Explosion);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Debris);
             writer.Write(item.DebrisCount);
@@ -1374,11 +1375,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
             item.SelfDamagePerSecond = frame.ReadInt32();
             item.Explosion.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             item.Debris.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             item.DebrisCount = frame.ReadInt32();

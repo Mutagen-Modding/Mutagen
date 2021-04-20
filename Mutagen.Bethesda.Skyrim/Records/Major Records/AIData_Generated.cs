@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1439,24 +1440,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Aggression>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Aggression>.Instance.Write(
                 writer,
                 item.Aggression,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Confidence>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Confidence>.Instance.Write(
                 writer,
                 item.Confidence,
                 length: 1);
             writer.Write(item.EnergyLevel);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Responsibility>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Responsibility>.Instance.Write(
                 writer,
                 item.Responsibility,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Mood>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Mood>.Instance.Write(
                 writer,
                 item.Mood,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Assistance>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Assistance>.Instance.Write(
                 writer,
                 item.Assistance,
                 length: 1);

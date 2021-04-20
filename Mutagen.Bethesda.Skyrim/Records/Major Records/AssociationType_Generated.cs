@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1384,7 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AssociationType.Flag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AssociationType.Flag>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4,
@@ -1483,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MPRT:
                 case RecordTypeInts.FPRT:
                 {
-                    item.ParentTitle = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                    item.ParentTitle = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MPRT,
                         femaleMarker: RecordTypes.FPRT,
@@ -1494,7 +1495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MCHT:
                 case RecordTypeInts.FCHT:
                 {
-                    item.Title = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                    item.Title = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MCHT,
                         femaleMarker: RecordTypes.FCHT,

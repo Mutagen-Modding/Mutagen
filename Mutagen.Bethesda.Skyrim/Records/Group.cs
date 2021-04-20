@@ -1,7 +1,7 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
                 IGroupGetter<T> item)
                 where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }

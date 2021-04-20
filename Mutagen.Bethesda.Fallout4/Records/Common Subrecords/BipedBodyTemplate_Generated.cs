@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -943,7 +944,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IBipedBodyTemplateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
                 writer,
                 item.FirstPersonFlags,
                 length: 4);

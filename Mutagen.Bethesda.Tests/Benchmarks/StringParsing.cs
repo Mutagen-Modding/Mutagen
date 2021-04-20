@@ -1,11 +1,9 @@
 using BenchmarkDotNet.Attributes;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Tests
 {

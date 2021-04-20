@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1116,20 +1117,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
             if (writer.MetaData.FormVersion!.Value < 44)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
             }
             if (writer.MetaData.FormVersion!.Value >= 22)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ArmorType>.Instance.Write(
                     writer,
                     item.ArmorType,
                     length: 4);

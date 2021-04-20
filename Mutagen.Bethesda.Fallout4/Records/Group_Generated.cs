@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1289,7 +1290,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1303,7 +1304,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             RecordTypeConverter? recordTypeConverter)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
@@ -1379,7 +1380,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
+                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                             frame: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,

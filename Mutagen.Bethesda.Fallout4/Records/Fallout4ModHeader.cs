@@ -1,12 +1,10 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -58,7 +56,7 @@ namespace Mutagen.Bethesda.Fallout4
             static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item)
             {
                 item.MasterReferences.SetTo(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
+                    ListBinaryTranslation<MasterReference>.Instance.Parse(
                         frame: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.MAST,
                         transl: MasterReference.TryCreateFromBinary));
@@ -70,7 +68,7 @@ namespace Mutagen.Bethesda.Fallout4
         {
             static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IFallout4ModHeaderGetter item)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+                ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
                     transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>

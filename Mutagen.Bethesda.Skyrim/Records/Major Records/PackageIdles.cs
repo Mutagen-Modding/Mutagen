@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
                         if (count == null)
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
+                                ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
                         else
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
+                                ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
                                     frame: frame,
                                     amount: count.Value,
                                     triggeringRecord: RecordTypes.IDLA,
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     foreach (var anim in anims)
                     {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        FormLinkBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: anim);
                     }

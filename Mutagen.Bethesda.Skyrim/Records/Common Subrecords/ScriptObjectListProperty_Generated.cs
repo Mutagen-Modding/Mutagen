@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
                 countLengthLength: 4,
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.Objects.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     frame: frame,
                     transl: ScriptObjectProperty.TryCreateFromBinary));

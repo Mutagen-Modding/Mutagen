@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1004,11 +1005,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<WorkbenchData.Type>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WorkbenchData.Type>.Instance.Write(
                 writer,
                 item.BenchType,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
                 writer,
                 ((int?)item.UsesSkill) ?? -1,
                 length: 1);

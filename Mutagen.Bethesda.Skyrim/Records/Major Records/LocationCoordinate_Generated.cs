@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1120,15 +1121,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
                 writer: writer,
                 items: item.Coordinates,
                 transl: (MutagenWriter subWriter, P2Int16 subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                    Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         swapCoords: true);
@@ -1167,15 +1168,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Location.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
                     frame: frame,
                     defaultVal: FormKey.Null));
             item.Coordinates.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Parse(
+                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     frame: frame,
                     transl: (MutagenFrame r, out P2Int16 listSubItem) =>
                     {
-                        listSubItem = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                        listSubItem = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(
                             r,
                             swapCoords: true);
                         return true;

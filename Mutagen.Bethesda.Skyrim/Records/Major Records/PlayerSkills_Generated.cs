@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
@@ -1601,11 +1602,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillValues,
                 transl: ByteBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillOffsets,
                 transl: ByteBinaryTranslation.Instance.Write);
@@ -1613,11 +1614,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Magicka);
             writer.Write(item.Stamina);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FarAwayModelDistance);
             writer.Write(item.GearedUpWeapons);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
         }
@@ -1659,11 +1660,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkills item,
             MutagenFrame frame)
         {
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 frame: frame,
                 item: item.SkillValues,
                 transl: ByteBinaryTranslation.Instance.Parse);
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 frame: frame,
                 item: item.SkillOffsets,
                 transl: ByteBinaryTranslation.Instance.Parse);
@@ -1671,9 +1672,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
             item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FarAwayModelDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
         }
 
     }

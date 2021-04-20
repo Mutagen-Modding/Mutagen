@@ -9,6 +9,7 @@ using Mutagen.Bethesda.Binary;
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Records.Binary.Translations;
 
 namespace Mutagen.Bethesda.Generation
 {

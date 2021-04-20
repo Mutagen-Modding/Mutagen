@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IModStatsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Version);
             writer.Write(item.NumRecords);
@@ -1092,7 +1093,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IModStats item,
             MutagenFrame frame)
         {
-            item.Version = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Version = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
             item.NumRecords = frame.ReadUInt32();
             item.NextFormID = frame.ReadUInt32();
         }

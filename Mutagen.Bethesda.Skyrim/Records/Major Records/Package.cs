@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -321,7 +321,7 @@ namespace Mutagen.Bethesda.Skyrim
                 // Skip marker
                 item.XnamMarker = frame.ReadSubrecordFrame().Content.ToArray();
                 item.ProcedureTree.SetTo(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PackageBranch>.Instance.Parse(
+                    ListBinaryTranslation<PackageBranch>.Instance.Parse(
                         frame: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
                         transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
