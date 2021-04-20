@@ -1,6 +1,7 @@
 using Ionic.Zlib;
 using Loqui;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 using System.Buffers.Binary;

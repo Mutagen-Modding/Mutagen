@@ -1,9 +1,6 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Binary
 {

@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Headers
 {
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Major Record header data on demand.

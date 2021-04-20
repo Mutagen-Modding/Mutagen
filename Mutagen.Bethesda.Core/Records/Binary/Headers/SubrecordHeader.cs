@@ -5,7 +5,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Headers
 {
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Sub Record header data on demand.

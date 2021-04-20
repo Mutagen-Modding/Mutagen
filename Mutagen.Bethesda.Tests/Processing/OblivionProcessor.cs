@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 using System.Collections.Generic;

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;

@@ -1,12 +1,14 @@
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda
 {
     /// <summary>
     /// Extension class to mix in convenience methods to header structs

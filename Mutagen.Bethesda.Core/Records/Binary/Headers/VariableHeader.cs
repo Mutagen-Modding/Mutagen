@@ -1,9 +1,10 @@
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Headers
 {
     /// <summary>
     /// A ref struct that overlays on top of bytes that is able to retrive basic header data on demand

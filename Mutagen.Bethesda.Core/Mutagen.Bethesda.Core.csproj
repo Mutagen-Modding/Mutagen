@@ -172,6 +172,13 @@
     <Compile Include="Pex\PexWriteMeta.cs" />
     <Compile Include="Pex\PexWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Records\Binary\Headers\GroupHeader.cs" />
+    <Compile Include="Records\Binary\Headers\HeaderExt.cs" />
+    <Compile Include="Records\Binary\Headers\MajorRecordHeader.cs" />
+    <Compile Include="Records\Binary\Headers\ModHeader.cs" />
+    <Compile Include="Records\Binary\Headers\StreamHeaderMixIn.cs" />
+    <Compile Include="Records\Binary\Headers\SubrecordHeader.cs" />
+    <Compile Include="Records\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Streams\WritingBundle.cs" />
@@ -196,9 +203,7 @@
     <Compile Include="Records\Translations\Binary\ExtraLengthHeaderExport.cs" />
     <Compile Include="Records\Translations\Binary\Fields\DictBinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\PercentBinaryTranslation.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\HeaderExt.cs" />
     <Compile Include="Constants\GroupConstants.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\StreamHeaderMixIn.cs" />
     <Compile Include="Records\Translations\Binary\ModHeaderWriteLogic.cs" />
     <Compile Include="Records\Translations\Binary\ParseResult.cs" />
     <Compile Include="Records\Translations\XML\TranslatedStringXmlTranslation.cs" />
@@ -228,13 +233,8 @@
     <Compile Include="Records\Translations\Binary\CompositeReadStream.cs" />
     <Compile Include="Records\Translations\Binary\GlobalCustomParsing.cs" />
     <Compile Include="Records\Translations\Binary\Fields\GenderedItemBinaryTranslation.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\GroupHeader.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\MajorRecordHeader.cs" />
     <Compile Include="Constants\MajorRecordConstants.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\ModHeader.cs" />
     <Compile Include="Constants\RecordConstants.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\SubrecordHeader.cs" />
-    <Compile Include="Records\Translations\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Records\Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
     <Compile Include="Constants\GameConstants.cs" />
     <Compile Include="Processing\BinaryFileProcessor.cs" />

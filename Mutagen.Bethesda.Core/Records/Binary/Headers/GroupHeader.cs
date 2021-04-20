@@ -1,5 +1,4 @@
 using Mutagen.Bethesda.Constants;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -7,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Headers
 {
     /// <summary>
     /// A struct that overlays on top of bytes that is able to retrive Group header data on demand.

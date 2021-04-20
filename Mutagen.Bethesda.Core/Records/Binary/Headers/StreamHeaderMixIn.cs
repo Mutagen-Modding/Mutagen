@@ -1,8 +1,10 @@
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda
 {
     /// <summary>
     /// Extension class to mix in header extraction functionality to streams

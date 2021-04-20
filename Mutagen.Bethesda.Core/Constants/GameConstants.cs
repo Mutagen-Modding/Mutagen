@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -246,7 +247,7 @@ namespace Mutagen.Bethesda.Constants
             {
                 throw new ArgumentException($"Unexpected header type: {meta.RecordType}");
             }
-            return Binary.SubrecordFrame.Factory(meta, span);
+            return Records.Binary.Headers.SubrecordFrame.Factory(meta, span);
         }
 
         public bool TrySubrecordFrame(ReadOnlyMemorySlice<byte> span, RecordType targetType, out SubrecordFrame header)
@@ -262,7 +263,7 @@ namespace Mutagen.Bethesda.Constants
                 header = default;
                 return false;
             }
-            header = Binary.SubrecordFrame.Factory(meta, span);
+            header = Records.Binary.Headers.SubrecordFrame.Factory(meta, span);
             return true;
         }
 

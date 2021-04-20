@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Noggog;
 using System;
 using System.Collections.Generic;

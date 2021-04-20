@@ -3,6 +3,7 @@ using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Utility;

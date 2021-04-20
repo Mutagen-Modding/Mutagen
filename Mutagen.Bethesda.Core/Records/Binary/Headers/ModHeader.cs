@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Headers
 {
     /// <summary>
     /// A ref struct that overlays on top of bytes that is able to retrive Mod header data on demand.
