@@ -1,9 +1,4 @@
-using Loqui;
-using Loqui.Internal;
-using Mutagen.Bethesda.Internals;
-using Noggog;
-using System;
-using System.IO;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Binary
 {

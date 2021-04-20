@@ -1,16 +1,11 @@
 using Ionic.Zlib;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Streams
 {
     /// <summary>
     /// Struct representing a begin and end location within a stream.

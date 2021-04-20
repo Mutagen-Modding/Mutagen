@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -620,6 +621,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             yield return "Mutagen.Bethesda.Records.Binary.Overlay";
+            yield return "Mutagen.Bethesda.Records.Binary.Streams";
         }
     }
 }

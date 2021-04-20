@@ -1,6 +1,4 @@
-using Noggog;
-using System;
-using System.IO;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Binary
 {

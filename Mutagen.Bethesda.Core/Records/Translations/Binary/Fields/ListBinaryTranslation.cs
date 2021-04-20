@@ -1,15 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Noggog;
 using Loqui;
-using System.IO;
-using Loqui.Internal;
-using Mutagen.Bethesda.Internals;
 using static Mutagen.Bethesda.UtilityTranslation;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Binary
 {

@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Noggog;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Oblivion
 {

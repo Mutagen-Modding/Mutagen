@@ -1,8 +1,5 @@
-﻿using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {

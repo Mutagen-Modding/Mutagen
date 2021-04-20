@@ -1,4 +1,5 @@
 using Loqui.Internal;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Collections.Generic;

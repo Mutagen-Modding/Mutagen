@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Oblivion
 {

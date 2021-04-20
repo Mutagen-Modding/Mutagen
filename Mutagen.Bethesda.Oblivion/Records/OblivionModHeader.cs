@@ -1,11 +1,10 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Core;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion
 {

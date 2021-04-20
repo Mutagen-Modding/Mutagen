@@ -2,6 +2,7 @@ using System;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Skyrim
 {

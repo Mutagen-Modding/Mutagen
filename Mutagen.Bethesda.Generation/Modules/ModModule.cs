@@ -3,12 +3,12 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 

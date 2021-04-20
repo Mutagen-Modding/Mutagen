@@ -1,11 +1,9 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Core;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Internals
 {

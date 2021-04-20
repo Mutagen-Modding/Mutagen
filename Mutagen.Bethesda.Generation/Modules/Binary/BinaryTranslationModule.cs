@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

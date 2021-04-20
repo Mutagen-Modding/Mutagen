@@ -1,8 +1,6 @@
 using Mutagen.Bethesda.Binary;
-using System;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {

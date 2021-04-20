@@ -1,11 +1,8 @@
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Strings;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Streams
 {
     /// <summary>
     /// Class containing all the extra meta bits for parsing

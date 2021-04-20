@@ -1,15 +1,11 @@
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Streams
 {
     /// <summary>
     /// A wrapper around IBinaryWriter with extra Mutagen-specific reference data

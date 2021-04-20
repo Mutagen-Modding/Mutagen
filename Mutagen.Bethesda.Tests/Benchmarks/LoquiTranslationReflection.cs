@@ -2,9 +2,7 @@ using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {

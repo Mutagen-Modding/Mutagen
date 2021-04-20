@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;

@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Mutagen.Bethesda.Binary;
-using Loqui.Internal;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Oblivion
 {

@@ -1,14 +1,11 @@
 using Loqui;
 using Noggog;
 using Loqui.Generation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Generation.Modules
 {

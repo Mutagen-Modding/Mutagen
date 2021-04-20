@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using System;

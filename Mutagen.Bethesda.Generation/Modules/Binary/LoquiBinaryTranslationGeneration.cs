@@ -3,6 +3,7 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Linq;

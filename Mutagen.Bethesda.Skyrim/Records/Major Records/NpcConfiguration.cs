@@ -1,10 +1,8 @@
-using Mutagen.Bethesda.Binary;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Noggog;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Skyrim
 {

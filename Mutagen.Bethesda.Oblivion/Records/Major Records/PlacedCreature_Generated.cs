@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Buffers.Binary;

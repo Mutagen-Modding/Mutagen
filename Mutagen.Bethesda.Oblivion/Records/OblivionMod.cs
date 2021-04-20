@@ -8,6 +8,7 @@ using Mutagen.Bethesda.Internals;
 using System.IO;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Oblivion
 {

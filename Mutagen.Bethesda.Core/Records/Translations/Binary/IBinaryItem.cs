@@ -1,8 +1,4 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Internals;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Binary
 {

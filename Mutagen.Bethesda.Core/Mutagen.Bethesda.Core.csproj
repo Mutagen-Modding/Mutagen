@@ -181,8 +181,8 @@
     <Compile Include="Records\Binary\Headers\VariableHeader.cs" />
     <Compile Include="Records\RecordTypeInts.cs" />
     <Compile Include="Records\RecordTypes.cs" />
-    <Compile Include="Streams\WritingBundle.cs" />
-    <Compile Include="Streams\ParsingBundle.cs" />
+    <Compile Include="Records\Binary\Streams\WritingBundle.cs" />
+    <Compile Include="Records\Binary\Streams\ParsingBundle.cs" />
     <Compile Include="String Lookup\IStringsLookup.cs" />
     <Compile Include="String Lookup\ITranslatedString.cs" />
     <Compile Include="String Lookup\IStringsFolderLookup.cs" />
@@ -215,7 +215,7 @@
     <Compile Include="Persistence\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
     <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
-    <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
+    <Compile Include="Records\Binary\Streams\MutagenInterfaceReadStream.cs" />
     <Compile Include="Records\Translations\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Enums\StringBinaryType.cs" />
@@ -230,7 +230,7 @@
     <Compile Include="Records\Binary\Overlay\GenderedItemBinaryOverlay.cs" />
     <Compile Include="Records\AGroup.cs" />
     <Compile Include="Records\Binary\Overlay\BinaryOverlay.cs" />
-    <Compile Include="Records\Translations\Binary\CompositeReadStream.cs" />
+    <Compile Include="Records\Binary\Streams\CompositeReadStream.cs" />
     <Compile Include="Records\Translations\Binary\GlobalCustomParsing.cs" />
     <Compile Include="Records\Translations\Binary\Fields\GenderedItemBinaryTranslation.cs" />
     <Compile Include="Constants\MajorRecordConstants.cs" />
@@ -242,7 +242,7 @@
     <Compile Include="Records\Translations\Binary\BinaryStringUtility.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
-    <Compile Include="Streams\IMutagenReadStream.cs" />
+    <Compile Include="Records\Binary\Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />
     <Compile Include="Links\FormLink.cs" />
     <Compile Include="Links\IEDIDLink.cs" />
@@ -258,9 +258,9 @@
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\Translations\Binary\RecordTypeConverter.cs" />
-    <Compile Include="Streams\MutagenBinaryReadStream.cs" />
-    <Compile Include="Streams\MutagenMemoryReadStream.cs" />
+    <Compile Include="Records\Binary\Streams\RecordTypeConverter.cs" />
+    <Compile Include="Records\Binary\Streams\MutagenBinaryReadStream.cs" />
+    <Compile Include="Records\Binary\Streams\MutagenMemoryReadStream.cs" />
     <Compile Include="Records\Translations\Binary\Fields\BooleanBinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\ByteBinaryTranslation.cs" />
@@ -283,8 +283,8 @@
     <Compile Include="Records\Translations\Binary\Fields\Int8BinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\LoquiBinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\ModKeyBinaryTranslation.cs" />
-    <Compile Include="Records\Translations\Binary\MutagenFrame.cs" />
-    <Compile Include="Streams\MutagenWriter.cs" />
+    <Compile Include="Records\Binary\Streams\MutagenFrame.cs" />
+    <Compile Include="Records\Binary\Streams\MutagenWriter.cs" />
     <Compile Include="Records\Translations\Binary\Fields\P2FloatBinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\P3Int16BinaryTranslation.cs" />
     <Compile Include="Records\Translations\Binary\Fields\P2Int16BinaryTranslation.cs" />

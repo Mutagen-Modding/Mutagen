@@ -1,5 +1,5 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Records.Binary.Overlay
 {

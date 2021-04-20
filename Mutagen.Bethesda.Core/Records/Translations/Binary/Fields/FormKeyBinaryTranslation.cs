@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using System;
 using System.Buffers.Binary;
 

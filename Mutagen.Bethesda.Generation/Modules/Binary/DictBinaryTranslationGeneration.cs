@@ -5,8 +5,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

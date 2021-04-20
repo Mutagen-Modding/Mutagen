@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
