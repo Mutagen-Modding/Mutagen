@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
 using Loqui;
+using Mutagen.Bethesda.Records.Binary;
 
 namespace Mutagen.Bethesda
 {

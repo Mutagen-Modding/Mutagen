@@ -1,13 +1,11 @@
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Strings;
-using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Records.Binary
 {
     /// <summary>
     /// Parameter object for customizing binary export job instructions

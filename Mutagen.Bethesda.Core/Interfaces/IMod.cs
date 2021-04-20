@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Persistence;
+using Mutagen.Bethesda.Records.Binary;
 
 namespace Mutagen.Bethesda
 {

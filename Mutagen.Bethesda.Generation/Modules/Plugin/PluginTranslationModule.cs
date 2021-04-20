@@ -4,6 +4,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Strings;
@@ -618,6 +619,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 yield return "Mutagen.Bethesda.Strings";
                 yield return "Mutagen.Bethesda.Constants";
+                yield return "Mutagen.Bethesda.Records.Binary";
             }
 
             yield return "Mutagen.Bethesda.Records.Binary.Overlay";

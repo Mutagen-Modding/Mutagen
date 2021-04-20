@@ -216,7 +216,7 @@
     <Compile Include="Records\AMod.cs" />
     <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
     <Compile Include="Records\Binary\Streams\MutagenInterfaceReadStream.cs" />
-    <Compile Include="Records\Translations\Binary\BinaryWriteParameters.cs" />
+    <Compile Include="Records\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Records\Binary\Translations\StringBinaryType.cs" />
     <Compile Include="Persistence\IFormKeyAllocator.cs" />

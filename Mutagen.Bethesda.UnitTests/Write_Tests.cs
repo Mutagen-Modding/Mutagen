@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Records.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
