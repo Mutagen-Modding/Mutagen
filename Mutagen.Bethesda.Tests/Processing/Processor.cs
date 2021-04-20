@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Utility;
@@ -625,7 +626,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = 0;
             var locs = RecordLocator.GetFileLocations(
                 stream,
-                interest: new Mutagen.Bethesda.RecordInterest(dict.Keys));
+                interest: new RecordInterest(dict.Keys));
 
             uint newIndex = 1;
             foreach (var rec in locs.ListedRecords)

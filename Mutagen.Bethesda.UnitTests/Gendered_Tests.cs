@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Xunit;
@@ -40,7 +41,7 @@ namespace Mutagen.Bethesda.UnitTests
                     bytes, 
                     new ParsingBundle(
                         GameRelease.SkyrimSE, 
-                        new Internals.MasterReferenceReader(Skyrim.Constants.Skyrim))));
+                        new MasterReferenceReader(Skyrim.Constants.Skyrim))));
             var headData = GenderedItemBinaryTranslation.ParseMarkerPerItem<HeadData>(
                 frame: frame,
                 maleMarker: RecordTypes.MNAM,

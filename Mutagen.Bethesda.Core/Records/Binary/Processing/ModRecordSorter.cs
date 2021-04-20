@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Utility;
 using Noggog;
 using System;
 using System.Collections.Generic;

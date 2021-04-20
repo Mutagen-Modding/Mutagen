@@ -211,7 +211,7 @@
     <Compile Include="Utility\GameEnvironment.cs" />
     <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />
-    <Compile Include="Utility\RecordInfoCache.cs" />
+    <Compile Include="Records\Utility\RecordInfoCache.cs" />
     <Compile Include="Persistence\TextFileFormKeyAllocator.cs" />
     <Compile Include="Records\AMod.cs" />
     <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
@@ -248,13 +248,13 @@
     <Compile Include="Links\IEDIDLink.cs" />
     <Compile Include="Links\ILink.cs" />
     <Compile Include="Links\IFormLinkContainerGetter.cs" />
-    <Compile Include="Utility\MasterReferenceReader.cs" />
+    <Compile Include="Records\Utility\MasterReferenceReader.cs" />
     <Compile Include="Records\Binary\Processing\ModDecompressor.cs" />
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Records\Binary\Processing\ModRecordSorter.cs" />
     <Compile Include="Enums\ObjectType.cs" />
-    <Compile Include="Utility\RecordInterest.cs" />
-    <Compile Include="Utility\RecordLocator.cs" />
+    <Compile Include="Records\Utility\RecordInterest.cs" />
+    <Compile Include="Records\Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

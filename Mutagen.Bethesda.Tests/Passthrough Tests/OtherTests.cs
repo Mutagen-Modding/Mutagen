@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Binary.Utility;
 using Noggog;
 using Noggog.Utility;
 using System;

@@ -1,6 +1,7 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Binary.Utility;
 using Newtonsoft.Json;
 using Noggog;
 using System.IO;
