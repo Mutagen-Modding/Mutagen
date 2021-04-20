@@ -1,15 +1,10 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Processing
+namespace Mutagen.Bethesda.Records.Binary.Processing
 {
     /// <summary>
     /// Processing stream that modifies input according to explicit instructions

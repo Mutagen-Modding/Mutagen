@@ -1,18 +1,15 @@
-using Loqui;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Processing;
+using Mutagen.Bethesda.Records.Binary.Processing;
 using Mutagen.Bethesda.Strings;
 using Noggog;
-using Noggog.Extensions;
 using Noggog.Streams.Binary;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests

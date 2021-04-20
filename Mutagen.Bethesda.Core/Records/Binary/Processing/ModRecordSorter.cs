@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Processing
+namespace Mutagen.Bethesda.Records.Binary.Processing
 {
     public static class ModRecordSorter
     {
