@@ -7,12 +7,10 @@ using Loqui;
 using Mutagen.Bethesda.Binary;
 using Noggog;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Core;
-using System.IO;
-using Loqui.Internal;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

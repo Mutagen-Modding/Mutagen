@@ -1,10 +1,9 @@
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
     public class OverlayStream : IMutagenReadStream
     {

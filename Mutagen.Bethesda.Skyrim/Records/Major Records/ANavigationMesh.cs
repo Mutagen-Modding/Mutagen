@@ -1,13 +1,9 @@
-using Loqui;
-using Loqui.Xml;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {

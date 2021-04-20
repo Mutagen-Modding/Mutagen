@@ -3,10 +3,8 @@ using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Noggog;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin

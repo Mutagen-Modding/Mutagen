@@ -1,12 +1,9 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
     public static class BinaryOverlayArrayHelper
     {

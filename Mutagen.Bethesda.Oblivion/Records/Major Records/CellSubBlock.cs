@@ -1,15 +1,6 @@
-using Loqui.Internal;
-using Loqui.Xml;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Oblivion
 {

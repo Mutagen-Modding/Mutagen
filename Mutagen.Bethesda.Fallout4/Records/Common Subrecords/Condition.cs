@@ -1,10 +1,10 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Fallout4.Condition;
 
 namespace Mutagen.Bethesda.Fallout4

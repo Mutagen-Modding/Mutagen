@@ -1,10 +1,7 @@
+using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
-using Mutagen.Bethesda.Internals;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
     public struct BinaryOverlayFactoryPackage
     {

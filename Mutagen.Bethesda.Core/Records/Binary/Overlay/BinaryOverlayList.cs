@@ -1,12 +1,11 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Binary
+namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
     public abstract class BinaryOverlayList
     {

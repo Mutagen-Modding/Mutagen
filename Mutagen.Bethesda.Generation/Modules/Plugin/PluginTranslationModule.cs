@@ -4,13 +4,13 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
@@ -618,6 +618,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return "Mutagen.Bethesda.Strings";
                 yield return "Mutagen.Bethesda.Constants";
             }
+
+            yield return "Mutagen.Bethesda.Records.Binary.Overlay";
         }
     }
 }

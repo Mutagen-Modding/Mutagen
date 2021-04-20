@@ -9,6 +9,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
 using System;
 using System.Buffers.Binary;

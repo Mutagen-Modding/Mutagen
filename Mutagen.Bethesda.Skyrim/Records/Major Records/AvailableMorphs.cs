@@ -1,9 +1,7 @@
 using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.Internals.AvailableMorphsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim

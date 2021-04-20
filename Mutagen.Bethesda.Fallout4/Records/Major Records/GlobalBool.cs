@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Reactive.Linq;
-using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Noggog;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 
 namespace Mutagen.Bethesda.Fallout4
 {

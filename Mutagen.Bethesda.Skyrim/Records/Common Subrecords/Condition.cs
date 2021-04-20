@@ -1,12 +1,11 @@
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.Condition;
 
 namespace Mutagen.Bethesda.Skyrim

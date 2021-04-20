@@ -1,8 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Fallout4
 {
