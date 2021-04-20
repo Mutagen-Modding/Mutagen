@@ -1,12 +1,9 @@
 using Loqui.Internal;
 using Loqui.Xml;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Xml
+namespace Mutagen.Bethesda.Records.Xml
 {
     public class RecordTypeXmlTranslation : PrimitiveXmlTranslation<RecordType>
     {

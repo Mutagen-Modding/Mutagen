@@ -1,14 +1,9 @@
 using Loqui.Internal;
 using Loqui.Xml;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Xml
+namespace Mutagen.Bethesda.Records.Xml
 {
     public class FormKeyXmlTranslation : TypicalXmlTranslation<FormKey>
     {

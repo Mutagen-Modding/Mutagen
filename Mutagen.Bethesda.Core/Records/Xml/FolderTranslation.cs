@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Records.Xml
 {
     public static class FolderTranslation
     {

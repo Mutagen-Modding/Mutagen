@@ -1,11 +1,9 @@
 using Loqui.Internal;
 using Mutagen.Bethesda.Strings;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Xml
+namespace Mutagen.Bethesda.Records.Xml
 {
     public class TranslatedStringXmlTranslation
     {

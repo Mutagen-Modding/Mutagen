@@ -206,7 +206,7 @@
     <Compile Include="Constants\GroupConstants.cs" />
     <Compile Include="Records\Binary\Translations\ModHeaderWriteLogic.cs" />
     <Compile Include="Records\Binary\Translations\ParseResult.cs" />
-    <Compile Include="Records\Translations\XML\TranslatedStringXmlTranslation.cs" />
+    <Compile Include="Records\Xml\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Structs\ModContext.cs" />
     <Compile Include="Utility\GameEnvironment.cs" />
     <Compile Include="Utility\MajorRecordTypePrinter.cs" />
@@ -300,12 +300,12 @@
     <Compile Include="Records\Binary\Translations\UInt32BinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\UInt64BinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\UtilityTranslation.cs" />
-    <Compile Include="Records\Translations\Folder\FolderTranslation.cs" />
-    <Compile Include="Records\Translations\XML\RecordTypeXmlTranslation.cs" />
-    <Compile Include="Records\Translations\XML\FormKeyXmlTranslation.cs" />
-    <Compile Include="Records\Translations\Folder\IXmlFolderItem.cs" />
-    <Compile Include="Records\Translations\Folder\LoquiXmlFolderTranslation.cs" />
-    <Compile Include="Records\Translations\XML\ModKeyXmlTranslation.cs" />
+    <Compile Include="Records\Xml\FolderTranslation.cs" />
+    <Compile Include="Records\Xml\RecordTypeXmlTranslation.cs" />
+    <Compile Include="Records\Xml\FormKeyXmlTranslation.cs" />
+    <Compile Include="Records\Xml\IXmlFolderItem.cs" />
+    <Compile Include="Records\Xml\LoquiXmlFolderTranslation.cs" />
+    <Compile Include="Records\Xml\ModKeyXmlTranslation.cs" />
     <Compile Include="String Lookup\StringsLookupOverlay.cs" />
     <Compile Include="Records\MajorRecord_Generated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>

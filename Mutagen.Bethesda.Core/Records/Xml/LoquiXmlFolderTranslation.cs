@@ -3,13 +3,11 @@ using Loqui.Internal;
 using Loqui.Xml;
 using Noggog.Utility;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace Mutagen.Bethesda.Folder
+namespace Mutagen.Bethesda.Records.Xml
 {
     public class LoquiXmlFolderTranslation<T>
         where T : class, ILoquiObjectGetter
