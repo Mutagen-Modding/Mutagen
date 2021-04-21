@@ -2510,7 +2510,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class FaceFxPhonemesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFaceFxPhonemesGetter
     {
         #region Common Routing

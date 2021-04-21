@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class MusicTypeDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMusicTypeDataGetter
     {
         #region Common Routing

@@ -1599,7 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcConfigurationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INpcConfigurationGetter
     {
         #region Common Routing

@@ -2469,7 +2469,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class Fallout4ModHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFallout4ModHeaderGetter
     {
         #region Common Routing

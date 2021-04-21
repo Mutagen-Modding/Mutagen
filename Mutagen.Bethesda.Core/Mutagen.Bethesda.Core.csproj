@@ -229,7 +229,7 @@
     <Compile Include="Records\Binary\Overlay\BinaryOverlayNumberedList.cs" />
     <Compile Include="Records\Binary\Overlay\GenderedItemBinaryOverlay.cs" />
     <Compile Include="Records\AGroup.cs" />
-    <Compile Include="Records\Binary\Overlay\BinaryOverlay.cs" />
+    <Compile Include="Records\Binary\Overlay\PluginBinaryOverlay.cs" />
     <Compile Include="Records\Binary\Streams\CompositeReadStream.cs" />
     <Compile Include="Records\Binary\Translations\GlobalCustomParsing.cs" />
     <Compile Include="Records\Binary\Translations\GenderedItemBinaryTranslation.cs" />

@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RaceRelationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRaceRelationGetter
     {
         #region Common Routing

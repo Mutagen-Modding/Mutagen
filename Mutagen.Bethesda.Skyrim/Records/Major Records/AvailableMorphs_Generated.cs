@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class AvailableMorphsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAvailableMorphsGetter
     {
         #region Common Routing

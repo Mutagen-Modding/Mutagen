@@ -1321,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PackageIdlesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPackageIdlesGetter
     {
         #region Common Routing

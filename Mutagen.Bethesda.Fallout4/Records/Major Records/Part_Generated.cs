@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class PartBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPartGetter
     {
         #region Common Routing

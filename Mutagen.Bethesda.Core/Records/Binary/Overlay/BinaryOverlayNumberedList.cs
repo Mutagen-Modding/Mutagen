@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int length,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryOverlay.ConverterFactory<T> getter)
+            PluginBinaryOverlay.ConverterFactory<T> getter)
         {
             return new NumberedLoquiList<T>(mem, amount, length, package, recordTypeConverter, getter);
         }
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
         public ReadOnlyMemorySlice<byte> Memory { get; }
         public int Length { get; }
         public BinaryOverlayFactoryPackage Package { get; }
-        public BinaryOverlay.ConverterFactory<T> Getter { get; }
+        public PluginBinaryOverlay.ConverterFactory<T> Getter { get; }
         public RecordTypeConverter RecordTypeConverter { get; }
 
         public NumberedLoquiList(
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int length,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter recordTypeConverter,
-            BinaryOverlay.ConverterFactory<T> getter)
+            PluginBinaryOverlay.ConverterFactory<T> getter)
         {
             this.Amount = amount;
             this.Memory = mem;

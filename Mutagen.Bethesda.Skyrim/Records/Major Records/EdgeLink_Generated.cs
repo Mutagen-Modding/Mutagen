@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class EdgeLinkBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IEdgeLinkGetter
     {
         #region Common Routing

@@ -2123,7 +2123,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavigationMapInfoBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavigationMapInfoGetter
     {
         #region Common Routing

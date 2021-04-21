@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavigationDoorLinkBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavigationDoorLinkGetter
     {
         #region Common Routing

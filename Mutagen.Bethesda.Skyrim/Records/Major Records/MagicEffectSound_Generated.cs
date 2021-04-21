@@ -1082,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class MagicEffectSoundBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMagicEffectSoundGetter
     {
         #region Common Routing

@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class VendorValuesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IVendorValuesGetter
     {
         #region Common Routing

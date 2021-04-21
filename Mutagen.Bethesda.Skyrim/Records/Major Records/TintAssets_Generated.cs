@@ -1480,7 +1480,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class TintAssetsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITintAssetsGetter
     {
         #region Common Routing

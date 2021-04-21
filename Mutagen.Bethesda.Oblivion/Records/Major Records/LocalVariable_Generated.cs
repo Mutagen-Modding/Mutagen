@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LocalVariableBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocalVariableGetter
     {
         #region Common Routing

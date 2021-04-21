@@ -1638,7 +1638,7 @@ namespace Mutagen.Bethesda
 namespace Mutagen.Bethesda.Internals
 {
     public partial class MajorRecordBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMajorRecordGetter
     {
         #region Common Routing

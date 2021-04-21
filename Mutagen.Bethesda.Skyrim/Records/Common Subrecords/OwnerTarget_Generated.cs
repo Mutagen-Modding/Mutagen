@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class OwnerTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IOwnerTargetGetter
     {
         #region Common Routing

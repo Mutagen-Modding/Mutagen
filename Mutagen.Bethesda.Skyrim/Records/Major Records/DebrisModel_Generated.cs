@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DebrisModelBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDebrisModelGetter
     {
         #region Common Routing

@@ -1249,7 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SoundOutputAttenuationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISoundOutputAttenuationGetter
     {
         #region Common Routing

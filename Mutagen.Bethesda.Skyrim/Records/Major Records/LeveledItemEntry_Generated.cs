@@ -1227,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledItemEntryBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILeveledItemEntryGetter
     {
         #region Common Routing

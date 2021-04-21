@@ -1188,7 +1188,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CellWaterVelocityBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellWaterVelocityGetter
     {
         #region Common Routing

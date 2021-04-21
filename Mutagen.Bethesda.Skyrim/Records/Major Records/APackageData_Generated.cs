@@ -1140,7 +1140,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class APackageDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAPackageDataGetter
     {
         #region Common Routing

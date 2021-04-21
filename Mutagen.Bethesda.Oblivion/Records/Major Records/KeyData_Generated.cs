@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class KeyDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IKeyDataGetter
     {
         #region Common Routing

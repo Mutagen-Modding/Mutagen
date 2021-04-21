@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         if (loqui.TargetObjectGeneration.IsTypelessStruct())
                         {
                             using (var args = new ArgsWrapper(fg,
-                                $"this.{typeGen.Name} = this.{nameof(BinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
+                                $"this.{typeGen.Name} = this.{nameof(PluginBinaryOverlay.ParseRepeatedTypelessSubrecord)}<{typeName}>"))
                             {
                                 args.AddPassArg("stream");
                                 args.Add($"recordTypeConverter: {converterAccessor}");
@@ -841,7 +841,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                                 args.Add(subFg =>
                                 {
                                     using (var subArgs = new FunctionWrapper(subFg,
-                                        $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
+                                        $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                                     {
                                         subArgs.AddPassArg("stream");
                                         subArgs.Add("trigger: type");
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
+                                    $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");
@@ -899,7 +899,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                             args.Add(subFg =>
                             {
                                 using (var subArgs = new FunctionWrapper(subFg,
-                                    $"locs: {nameof(BinaryOverlay.ParseRecordLocations)}"))
+                                    $"locs: {nameof(PluginBinaryOverlay.ParseRecordLocations)}"))
                                 {
                                     subArgs.AddPassArg("stream");
                                     subArgs.Add($"constants: _package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}");

@@ -5,10 +5,13 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
-    public abstract class BinaryOverlay
+    public abstract class PluginBinaryOverlay
     {
         public delegate ParseResult RecordTypeFillWrapper(
             OverlayStream stream,
@@ -29,7 +32,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
         protected ReadOnlyMemorySlice<byte> _data;
         protected BinaryOverlayFactoryPackage _package;
 
-        protected BinaryOverlay(
+        protected PluginBinaryOverlay(
             ReadOnlyMemorySlice<byte> bytes,
             BinaryOverlayFactoryPackage package)
         {

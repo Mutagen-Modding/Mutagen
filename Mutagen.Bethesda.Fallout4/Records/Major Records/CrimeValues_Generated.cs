@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class CrimeValuesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICrimeValuesGetter
     {
         #region Common Routing

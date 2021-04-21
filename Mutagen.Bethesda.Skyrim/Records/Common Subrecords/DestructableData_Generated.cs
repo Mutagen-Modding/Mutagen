@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DestructableDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDestructableDataGetter
     {
         #region Common Routing

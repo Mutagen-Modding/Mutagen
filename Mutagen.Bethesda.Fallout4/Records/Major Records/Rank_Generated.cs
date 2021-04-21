@@ -1233,7 +1233,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class RankBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing

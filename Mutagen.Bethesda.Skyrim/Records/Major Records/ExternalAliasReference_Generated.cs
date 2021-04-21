@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ExternalAliasReferenceBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IExternalAliasReferenceGetter
     {
         #region Common Routing

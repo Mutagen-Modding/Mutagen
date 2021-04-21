@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DialogResponsesUnknownDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDialogResponsesUnknownDataGetter
     {
         #region Common Routing

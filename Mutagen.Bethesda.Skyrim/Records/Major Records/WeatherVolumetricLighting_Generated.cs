@@ -1234,7 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WeatherVolumetricLightingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeatherVolumetricLightingGetter
     {
         #region Common Routing

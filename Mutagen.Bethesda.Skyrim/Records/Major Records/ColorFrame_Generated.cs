@@ -1064,7 +1064,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ColorFrameBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IColorFrameGetter
     {
         #region Common Routing

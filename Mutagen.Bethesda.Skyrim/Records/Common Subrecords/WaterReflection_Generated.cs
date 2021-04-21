@@ -1156,7 +1156,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WaterReflectionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWaterReflectionGetter
     {
         #region Common Routing

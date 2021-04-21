@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Records.Binary.Overlay
 {
-    public class GenderedItemBinaryOverlay<T> : BinaryOverlay, IGenderedItemGetter<T>
+    public class GenderedItemBinaryOverlay<T> : PluginBinaryOverlay, IGenderedItemGetter<T>
     {
         private int? _male;
         private int? _female;

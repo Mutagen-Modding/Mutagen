@@ -1077,7 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LinkedReferenceColorBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILinkedReferenceColorGetter
     {
         #region Common Routing

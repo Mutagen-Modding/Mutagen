@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SeasonalIngredientProductionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISeasonalIngredientProductionGetter
     {
         #region Common Routing

@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class ObjectBoundsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IObjectBoundsGetter
     {
         #region Common Routing

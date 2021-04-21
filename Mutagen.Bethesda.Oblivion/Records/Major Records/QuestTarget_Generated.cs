@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class QuestTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestTargetGetter
     {
         #region Common Routing

@@ -1204,7 +1204,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class TintPresetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITintPresetGetter
     {
         #region Common Routing

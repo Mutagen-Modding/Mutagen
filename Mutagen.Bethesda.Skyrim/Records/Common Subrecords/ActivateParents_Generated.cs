@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ActivateParentsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IActivateParentsGetter
     {
         #region Common Routing

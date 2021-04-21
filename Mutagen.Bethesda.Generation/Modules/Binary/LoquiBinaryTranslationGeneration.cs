@@ -288,7 +288,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
-                    return $"{nameof(BinaryOverlay)}.{nameof(BinaryOverlay.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
+                    return $"{nameof(PluginBinaryOverlay)}.{nameof(PluginBinaryOverlay.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
                 }
                 else
                 {

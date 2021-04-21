@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ConditionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IConditionGetter
     {
         #region Common Routing

@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class Int16MinMaxBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IInt16MinMaxGetter
     {
         #region Common Routing

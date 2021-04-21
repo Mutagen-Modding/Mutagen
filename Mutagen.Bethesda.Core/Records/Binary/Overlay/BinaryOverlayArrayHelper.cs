@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int length,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
-            BinaryOverlay.ConverterFactory<T> getter)
+            PluginBinaryOverlay.ConverterFactory<T> getter)
         {
             T[] ret = new T[amount];
             for (int i = 0; i < amount; i++)

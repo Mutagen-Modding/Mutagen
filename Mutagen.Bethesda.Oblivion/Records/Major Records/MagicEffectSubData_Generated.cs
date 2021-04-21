@@ -1394,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class MagicEffectSubDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMagicEffectSubDataGetter
     {
         #region Common Routing

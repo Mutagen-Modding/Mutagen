@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavmeshTriangleBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavmeshTriangleGetter
     {
         #region Common Routing

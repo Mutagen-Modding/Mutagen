@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class MessageButtonBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMessageButtonGetter
     {
         #region Common Routing

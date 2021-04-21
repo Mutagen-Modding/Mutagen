@@ -1555,7 +1555,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CrimeValuesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICrimeValuesGetter
     {
         #region Common Routing

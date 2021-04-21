@@ -2500,7 +2500,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class NpcDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INpcDataGetter
     {
         #region Common Routing

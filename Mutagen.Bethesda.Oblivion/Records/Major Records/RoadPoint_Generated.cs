@@ -1241,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RoadPointBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRoadPointGetter
     {
         #region Common Routing

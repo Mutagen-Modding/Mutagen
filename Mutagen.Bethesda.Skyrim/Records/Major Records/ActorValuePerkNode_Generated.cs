@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ActorValuePerkNodeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IActorValuePerkNodeGetter
     {
         #region Common Routing

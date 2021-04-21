@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class LocationTargetRadiusBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocationTargetRadiusGetter
     {
         #region Common Routing

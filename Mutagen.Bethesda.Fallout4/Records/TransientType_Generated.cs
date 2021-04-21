@@ -1208,7 +1208,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class TransientTypeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITransientTypeGetter
     {
         #region Common Routing

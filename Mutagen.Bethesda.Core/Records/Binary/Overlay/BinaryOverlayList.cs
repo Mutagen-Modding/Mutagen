@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
         public static IReadOnlyList<T> FactoryByArray<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
-            BinaryOverlay.SpanFactory<T> getter,
+            PluginBinaryOverlay.SpanFactory<T> getter,
             int[] locs)
         {
             return new BinaryOverlayListByLocationArray<T>(
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter,
-            BinaryOverlay.SpanRecordFactory<T> getter,
+            PluginBinaryOverlay.SpanRecordFactory<T> getter,
             int[] locs)
         {
             return new BinaryOverlayRecordListByLocationArray<T>(
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             int itemLength,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             return new BinaryOverlayListByStartIndex<T>(
                 mem,
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             RecordType subrecordType,
             int itemLength,
             uint count,
-            BinaryOverlay.SpanFactory<T> getter,
+            PluginBinaryOverlay.SpanFactory<T> getter,
             bool skipHeader = true)
         {
             if ((mem.Length / (itemLength + package.MetaData.Constants.SubConstants.HeaderLength)) != count)
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             var mem = stream.RemainingMemory;
             var initialHeader = package.MetaData.Constants.SubrecordFrame(mem);
@@ -162,7 +162,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ICollectionGetter<RecordType> subrecordType,
             RecordType countType,
             RecordTypeConverter? recordTypeConverter,
-            BinaryOverlay.SpanRecordFactory<T> getter,
+            PluginBinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
         {
             var mem = stream.RemainingMemory;
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                     package: package,
                     recordTypeConverter: recordTypeConverter,
                     getter: getter,
-                    locs: BinaryOverlay.ParseRecordLocationsByCount(
+                    locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                         stream: stream,
                         count: count,
                         trigger: subrecordType,
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                     package: package,
                     recordTypeConverter: recordTypeConverter,
                     getter: getter,
-                    locs: BinaryOverlay.ParseRecordLocations(
+                    locs: PluginBinaryOverlay.ParseRecordLocations(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         triggers: subrecordType,
@@ -213,7 +213,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             RecordType subrecordType,
             RecordType countType,
             RecordTypeConverter? recordTypeConverter,
-            BinaryOverlay.SpanRecordFactory<T> getter,
+            PluginBinaryOverlay.SpanRecordFactory<T> getter,
             bool skipHeader = true)
         {
             var mem = stream.RemainingMemory;
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                     package: package,
                     recordTypeConverter: recordTypeConverter,
                     getter: getter,
-                    locs: BinaryOverlay.ParseRecordLocationsByCount(
+                    locs: PluginBinaryOverlay.ParseRecordLocationsByCount(
                         stream: stream,
                         count: count,
                         trigger: subrecordType,
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                     package: package,
                     recordTypeConverter: recordTypeConverter,
                     getter: getter,
-                    locs: BinaryOverlay.ParseRecordLocations(
+                    locs: PluginBinaryOverlay.ParseRecordLocations(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             int countLength,
             RecordType subrecordType,
             RecordType countType,
-            BinaryOverlay.SpanFactory<T> getter,
+            PluginBinaryOverlay.SpanFactory<T> getter,
             bool skipHeader = true)
         {
             var mem = stream.RemainingMemory;
@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                     mem: stream.RemainingMemory,
                     package: package,
                     getter: getter,
-                    locs: BinaryOverlay.ParseRecordLocations(
+                    locs: PluginBinaryOverlay.ParseRecordLocations(
                         stream: stream,
                         constants: package.MetaData.Constants.SubConstants,
                         trigger: subrecordType,
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ICollectionGetter<RecordType> subrecordType,
             int itemLength,
             uint count,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             if ((mem.Length / (itemLength + package.MetaData.Constants.SubConstants.HeaderLength)) != count)
             {
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             BinaryOverlayFactoryPackage package,
             int itemLength,
             uint count,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             if ((mem.Length / itemLength) != count)
             {
@@ -348,7 +348,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             BinaryOverlayFactoryPackage package,
             int itemLength,
             byte countLength,
-            BinaryOverlay.SpanFactory<T> getter)
+            PluginBinaryOverlay.SpanFactory<T> getter)
         {
             var count = countLength switch
             {
@@ -370,7 +370,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             byte countLength,
-            BinaryOverlay.SpanFactory<string> getter)
+            PluginBinaryOverlay.SpanFactory<string> getter)
         {
             var count = countLength switch
             {
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             OverlayStream stream,
             BinaryOverlayFactoryPackage package,
             uint count,
-            BinaryOverlay.StreamFactory<T> getter)
+            PluginBinaryOverlay.StreamFactory<T> getter)
         {
             var ret = new List<T>(checked((int)count));
             for (uint i = 0; i < count; i++)
@@ -409,7 +409,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
         public static IReadOnlyList<T> FactoryByLazyParse<T>(
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
-            BinaryOverlay.Factory<T> getter)
+            PluginBinaryOverlay.Factory<T> getter)
         {
             return new BinaryOverlayLazyList<T>(
                 mem,
@@ -443,7 +443,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             ReadOnlyMemorySlice<byte> mem,
             BinaryOverlayFactoryPackage package,
             byte countLength,
-            BinaryOverlay.Factory<T> getter)
+            PluginBinaryOverlay.Factory<T> getter)
         {
             return FactoryByLazyParse(mem.Slice(countLength), package, getter);
         }
@@ -453,12 +453,12 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             private int[] _locations;
             BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryOverlay.SpanFactory<T> _getter;
+            private PluginBinaryOverlay.SpanFactory<T> _getter;
 
             public BinaryOverlayListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
-                BinaryOverlay.SpanFactory<T> getter,
+                PluginBinaryOverlay.SpanFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -487,14 +487,14 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             private int[] _locations;
             private BinaryOverlayFactoryPackage _package;
             private ReadOnlyMemorySlice<byte> _mem;
-            private BinaryOverlay.SpanRecordFactory<T> _getter;
+            private PluginBinaryOverlay.SpanRecordFactory<T> _getter;
             private RecordTypeConverter? _recordTypeConverter;
 
             public BinaryOverlayRecordListByLocationArray(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
                 RecordTypeConverter? recordTypeConverter,
-                BinaryOverlay.SpanRecordFactory<T> getter,
+                PluginBinaryOverlay.SpanRecordFactory<T> getter,
                 int[] locs)
             {
                 this._mem = mem;
@@ -524,12 +524,12 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
             private readonly ReadOnlyMemorySlice<byte> _mem;
-            private readonly BinaryOverlay.SpanFactory<T> _getter;
+            private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
 
             public BinaryOverlayListByStartIndex(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
-                BinaryOverlay.SpanFactory<T> getter,
+                PluginBinaryOverlay.SpanFactory<T> getter,
                 int itemLength)
             {
                 this._mem = mem;
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
             private readonly ReadOnlyMemorySlice<byte> _mem;
-            private readonly BinaryOverlay.SpanFactory<T> _getter;
+            private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
             private readonly RecordType _recordType;
             private readonly int _totalItemLength;
             private readonly int _sliceOffset;
@@ -574,7 +574,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             public BinaryOverlayListByStartIndexWithRecord(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
-                BinaryOverlay.SpanFactory<T> getter,
+                PluginBinaryOverlay.SpanFactory<T> getter,
                 int itemLength,
                 RecordType recordType,
                 bool skipHeader)
@@ -633,14 +633,14 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             private readonly int _itemLength;
             private readonly BinaryOverlayFactoryPackage _package;
             private readonly ReadOnlyMemorySlice<byte> _mem;
-            private readonly BinaryOverlay.SpanFactory<T> _getter;
+            private readonly PluginBinaryOverlay.SpanFactory<T> _getter;
             private readonly ICollectionGetter<RecordType> _recordTypes;
             private readonly int _totalItemLength;
 
             public BinaryOverlayListByStartIndexWithRecordSet(
                 ReadOnlyMemorySlice<byte> mem,
                 BinaryOverlayFactoryPackage package,
-                BinaryOverlay.SpanFactory<T> getter,
+                PluginBinaryOverlay.SpanFactory<T> getter,
                 int itemLength,
                 ICollectionGetter<RecordType> recordTypes)
             {

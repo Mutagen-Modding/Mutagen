@@ -2404,7 +2404,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WeaponDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeaponDataGetter
     {
         #region Common Routing

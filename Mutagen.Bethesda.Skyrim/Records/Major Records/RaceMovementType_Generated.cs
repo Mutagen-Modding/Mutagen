@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class RaceMovementTypeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRaceMovementTypeGetter
     {
         #region Common Routing

@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WeatherTypeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeatherTypeGetter
     {
         #region Common Routing

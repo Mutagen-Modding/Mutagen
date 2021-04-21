@@ -1139,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class FindMatchingRefNearAliasBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFindMatchingRefNearAliasGetter
     {
         #region Common Routing

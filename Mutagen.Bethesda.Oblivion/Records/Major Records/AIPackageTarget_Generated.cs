@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AIPackageTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAIPackageTargetGetter
     {
         #region Common Routing

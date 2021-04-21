@@ -1388,7 +1388,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ImageSpaceDepthOfFieldBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IImageSpaceDepthOfFieldGetter
     {
         #region Common Routing

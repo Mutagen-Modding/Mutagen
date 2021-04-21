@@ -1211,7 +1211,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LocationCoordinateBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocationCoordinateGetter
     {
         #region Common Routing

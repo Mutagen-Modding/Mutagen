@@ -1712,7 +1712,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class HDRDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IHDRDataGetter
     {
         #region Common Routing

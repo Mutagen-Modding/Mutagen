@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LocationAliasReferenceBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocationAliasReferenceGetter
     {
         #region Common Routing

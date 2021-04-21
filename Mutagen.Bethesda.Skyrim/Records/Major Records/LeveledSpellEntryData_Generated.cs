@@ -1243,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LeveledSpellEntryDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILeveledSpellEntryDataGetter
     {
         #region Common Routing

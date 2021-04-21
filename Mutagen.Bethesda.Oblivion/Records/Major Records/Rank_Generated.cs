@@ -1217,7 +1217,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RankBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing

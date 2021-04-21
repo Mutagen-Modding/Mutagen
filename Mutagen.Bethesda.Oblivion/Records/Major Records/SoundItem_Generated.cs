@@ -1137,7 +1137,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SoundItemBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISoundItemGetter
     {
         #region Common Routing

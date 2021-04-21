@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureConfigurationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICreatureConfigurationGetter
     {
         #region Common Routing

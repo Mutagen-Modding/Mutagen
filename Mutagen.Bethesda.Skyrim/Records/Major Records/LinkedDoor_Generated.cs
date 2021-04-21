@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LinkedDoorBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILinkedDoorGetter
     {
         #region Common Routing

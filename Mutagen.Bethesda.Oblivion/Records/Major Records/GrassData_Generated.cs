@@ -1596,7 +1596,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class GrassDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IGrassDataGetter
     {
         #region Common Routing

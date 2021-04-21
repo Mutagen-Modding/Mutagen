@@ -1079,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavmeshNodeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavmeshNodeGetter
     {
         #region Common Routing

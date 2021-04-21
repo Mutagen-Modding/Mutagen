@@ -1377,7 +1377,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestTargetGetter
     {
         #region Common Routing

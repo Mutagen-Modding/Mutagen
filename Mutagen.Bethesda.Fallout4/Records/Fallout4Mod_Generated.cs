@@ -4304,67 +4304,67 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         #region ModHeader
         private RangeInt64? _ModHeaderLocation;
-        private IFallout4ModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? Fallout4ModHeaderBinaryOverlay.Fallout4ModHeaderFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
+        private IFallout4ModHeaderGetter? _ModHeader => _ModHeaderLocation.HasValue ? Fallout4ModHeaderBinaryOverlay.Fallout4ModHeaderFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ModHeaderLocation!.Value.Min, _ModHeaderLocation!.Value.Max), _package), _package) : default;
         public IFallout4ModHeaderGetter ModHeader => _ModHeader ?? new Fallout4ModHeader();
         #endregion
         #region GameSettings
         private RangeInt64? _GameSettingsLocation;
-        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IGameSettingGetter>? _GameSettings => _GameSettingsLocation.HasValue ? GroupBinaryOverlay<IGameSettingGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GameSettingsLocation!.Value.Min, _GameSettingsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IGameSettingGetter> GameSettings => _GameSettings ?? new Group<GameSetting>(this);
         #endregion
         #region Keywords
         private RangeInt64? _KeywordsLocation;
-        private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IKeywordGetter>? _Keywords => _KeywordsLocation.HasValue ? GroupBinaryOverlay<IKeywordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _KeywordsLocation!.Value.Min, _KeywordsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IKeywordGetter> Keywords => _Keywords ?? new Group<Keyword>(this);
         #endregion
         #region LocationReferenceTypes
         private RangeInt64? _LocationReferenceTypesLocation;
-        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<ILocationReferenceTypeGetter>? _LocationReferenceTypes => _LocationReferenceTypesLocation.HasValue ? GroupBinaryOverlay<ILocationReferenceTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _LocationReferenceTypesLocation!.Value.Min, _LocationReferenceTypesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<ILocationReferenceTypeGetter> LocationReferenceTypes => _LocationReferenceTypes ?? new Group<LocationReferenceType>(this);
         #endregion
         #region Actions
         private RangeInt64? _ActionsLocation;
-        private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IActionRecordGetter>? _Actions => _ActionsLocation.HasValue ? GroupBinaryOverlay<IActionRecordGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ActionsLocation!.Value.Min, _ActionsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IActionRecordGetter> Actions => _Actions ?? new Group<ActionRecord>(this);
         #endregion
         #region Transforms
         private RangeInt64? _TransformsLocation;
-        private IGroupGetter<ITransformGetter>? _Transforms => _TransformsLocation.HasValue ? GroupBinaryOverlay<ITransformGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _TransformsLocation!.Value.Min, _TransformsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<ITransformGetter>? _Transforms => _TransformsLocation.HasValue ? GroupBinaryOverlay<ITransformGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TransformsLocation!.Value.Min, _TransformsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<ITransformGetter> Transforms => _Transforms ?? new Group<Transform>(this);
         #endregion
         #region Components
         private RangeInt64? _ComponentsLocation;
-        private IGroupGetter<IComponentGetter>? _Components => _ComponentsLocation.HasValue ? GroupBinaryOverlay<IComponentGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ComponentsLocation!.Value.Min, _ComponentsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IComponentGetter>? _Components => _ComponentsLocation.HasValue ? GroupBinaryOverlay<IComponentGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ComponentsLocation!.Value.Min, _ComponentsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IComponentGetter> Components => _Components ?? new Group<Component>(this);
         #endregion
         #region TextureSets
         private RangeInt64? _TextureSetsLocation;
-        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<ITextureSetGetter>? _TextureSets => _TextureSetsLocation.HasValue ? GroupBinaryOverlay<ITextureSetGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _TextureSetsLocation!.Value.Min, _TextureSetsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<ITextureSetGetter> TextureSets => _TextureSets ?? new Group<TextureSet>(this);
         #endregion
         #region Globals
         private RangeInt64? _GlobalsLocation;
-        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IGlobalGetter>? _Globals => _GlobalsLocation.HasValue ? GroupBinaryOverlay<IGlobalGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _GlobalsLocation!.Value.Min, _GlobalsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IGlobalGetter> Globals => _Globals ?? new Group<Global>(this);
         #endregion
         #region DamageTypes
         private RangeInt64? _DamageTypesLocation;
-        private IGroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocation.HasValue ? GroupBinaryOverlay<IADamageTypeGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _DamageTypesLocation!.Value.Min, _DamageTypesLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IADamageTypeGetter>? _DamageTypes => _DamageTypesLocation.HasValue ? GroupBinaryOverlay<IADamageTypeGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _DamageTypesLocation!.Value.Min, _DamageTypesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IADamageTypeGetter> DamageTypes => _DamageTypes ?? new Group<ADamageType>(this);
         #endregion
         #region Classes
         private RangeInt64? _ClassesLocation;
-        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IClassGetter>? _Classes => _ClassesLocation.HasValue ? GroupBinaryOverlay<IClassGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _ClassesLocation!.Value.Min, _ClassesLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IClassGetter> Classes => _Classes ?? new Group<Class>(this);
         #endregion
         #region Factions
         private RangeInt64? _FactionsLocation;
-        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IFactionGetter>? _Factions => _FactionsLocation.HasValue ? GroupBinaryOverlay<IFactionGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _FactionsLocation!.Value.Min, _FactionsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IFactionGetter> Factions => _Factions ?? new Group<Faction>(this);
         #endregion
         #region HeadParts
         private RangeInt64? _HeadPartsLocation;
-        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new OverlayStream(BinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
+        private IGroupGetter<IHeadPartGetter>? _HeadParts => _HeadPartsLocation.HasValue ? GroupBinaryOverlay<IHeadPartGetter>.GroupFactory(new OverlayStream(PluginBinaryOverlay.LockExtractMemory(_data, _HeadPartsLocation!.Value.Min, _HeadPartsLocation!.Value.Max), _package), _package) : default;
         public IGroupGetter<IHeadPartGetter> HeadParts => _HeadParts ?? new Group<HeadPart>(this);
         #endregion
         protected Fallout4ModBinaryOverlay(
@@ -4437,7 +4437,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 stream: stream,
                 modKey: modKey,
                 shouldDispose: shouldDispose);
-            BinaryOverlay.FillModTypes(
+            PluginBinaryOverlay.FillModTypes(
                 stream: stream,
                 package: ret._package,
                 fill: ret.FillRecordType);

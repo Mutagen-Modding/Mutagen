@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WeatherSoundBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeatherSoundGetter
     {
         #region Common Routing

@@ -1661,7 +1661,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptFieldsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScriptFieldsGetter
     {
         #region Common Routing

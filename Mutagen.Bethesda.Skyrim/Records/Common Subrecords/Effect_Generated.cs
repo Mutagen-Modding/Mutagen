@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class EffectBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IEffectGetter
     {
         #region Common Routing

@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SkyrimModHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISkyrimModHeaderGetter
     {
         #region Common Routing

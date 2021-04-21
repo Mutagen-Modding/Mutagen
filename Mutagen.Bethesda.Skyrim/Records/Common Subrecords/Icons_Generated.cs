@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class IconsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IIconsGetter
     {
         #region Common Routing

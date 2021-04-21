@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DoorTriangleBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDoorTriangleGetter
     {
         #region Common Routing

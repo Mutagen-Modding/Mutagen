@@ -1447,7 +1447,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ImageSpaceHdrBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IImageSpaceHdrGetter
     {
         #region Common Routing

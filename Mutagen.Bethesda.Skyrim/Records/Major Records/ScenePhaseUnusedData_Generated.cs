@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ScenePhaseUnusedDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScenePhaseUnusedDataGetter
     {
         #region Common Routing

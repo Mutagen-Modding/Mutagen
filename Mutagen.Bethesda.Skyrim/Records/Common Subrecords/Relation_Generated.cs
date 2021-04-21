@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class RelationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRelationGetter
     {
         #region Common Routing

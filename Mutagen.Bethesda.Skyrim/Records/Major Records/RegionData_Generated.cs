@@ -1203,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class RegionDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRegionDataGetter
     {
         #region Common Routing

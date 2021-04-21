@@ -1078,7 +1078,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacementBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPlacementGetter
     {
         #region Common Routing

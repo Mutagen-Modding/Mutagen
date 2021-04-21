@@ -1144,7 +1144,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class RelationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRelationGetter
     {
         #region Common Routing

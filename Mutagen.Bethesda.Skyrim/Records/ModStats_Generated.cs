@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ModStatsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IModStatsGetter
     {
         #region Common Routing

@@ -2325,7 +2325,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SceneActionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISceneActionGetter
     {
         #region Common Routing

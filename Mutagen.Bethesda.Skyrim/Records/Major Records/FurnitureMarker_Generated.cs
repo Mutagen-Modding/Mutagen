@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class FurnitureMarkerBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFurnitureMarkerGetter
     {
         #region Common Routing

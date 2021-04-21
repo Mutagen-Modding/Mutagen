@@ -1553,7 +1553,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SpeedOverridesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISpeedOverridesGetter
     {
         #region Common Routing

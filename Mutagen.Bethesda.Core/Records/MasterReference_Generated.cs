@@ -1100,7 +1100,7 @@ namespace Mutagen.Bethesda
 namespace Mutagen.Bethesda.Internals
 {
     public partial class MasterReferenceBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMasterReferenceGetter
     {
         #region Common Routing

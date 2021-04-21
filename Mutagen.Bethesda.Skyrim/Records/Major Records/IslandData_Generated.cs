@@ -1408,7 +1408,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class IslandDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IIslandDataGetter
     {
         #region Common Routing

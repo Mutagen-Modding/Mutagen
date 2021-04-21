@@ -1506,7 +1506,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PatrolBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPatrolGetter
     {
         #region Common Routing

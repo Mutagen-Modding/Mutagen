@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class FacePartBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFacePartGetter
     {
         #region Common Routing

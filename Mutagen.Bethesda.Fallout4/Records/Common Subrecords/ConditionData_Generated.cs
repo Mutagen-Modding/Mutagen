@@ -1562,7 +1562,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class ConditionDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IConditionDataGetter
     {
         #region Common Routing

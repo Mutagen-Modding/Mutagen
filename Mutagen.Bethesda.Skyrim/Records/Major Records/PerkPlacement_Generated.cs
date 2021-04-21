@@ -1151,7 +1151,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PerkPlacementBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPerkPlacementGetter
     {
         #region Common Routing

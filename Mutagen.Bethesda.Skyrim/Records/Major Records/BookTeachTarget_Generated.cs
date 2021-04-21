@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class BookTeachTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBookTeachTargetGetter
     {
         #region Common Routing

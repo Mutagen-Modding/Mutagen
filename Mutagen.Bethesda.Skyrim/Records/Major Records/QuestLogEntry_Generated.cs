@@ -1653,7 +1653,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestLogEntryBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestLogEntryGetter
     {
         #region Common Routing

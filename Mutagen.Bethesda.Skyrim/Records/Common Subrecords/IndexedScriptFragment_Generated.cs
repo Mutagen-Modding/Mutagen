@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class IndexedScriptFragmentBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IIndexedScriptFragmentGetter
     {
         #region Common Routing

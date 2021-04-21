@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class AnimationChangeThresholdsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAnimationChangeThresholdsGetter
     {
         #region Common Routing

@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LightDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILightDataGetter
     {
         #region Common Routing

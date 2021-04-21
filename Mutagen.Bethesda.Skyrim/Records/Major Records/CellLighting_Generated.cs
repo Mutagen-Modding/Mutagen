@@ -2252,7 +2252,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CellLightingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellLightingGetter
     {
         #region Common Routing

@@ -1084,7 +1084,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ScriptPropertyBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScriptPropertyGetter
     {
         #region Common Routing

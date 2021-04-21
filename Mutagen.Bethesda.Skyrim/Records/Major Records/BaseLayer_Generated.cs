@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class BaseLayerBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBaseLayerGetter
     {
         #region Common Routing

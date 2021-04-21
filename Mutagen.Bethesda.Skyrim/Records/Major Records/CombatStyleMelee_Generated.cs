@@ -1457,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CombatStyleMeleeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICombatStyleMeleeGetter
     {
         #region Common Routing

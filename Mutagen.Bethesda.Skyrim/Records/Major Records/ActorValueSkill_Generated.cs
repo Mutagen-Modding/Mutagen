@@ -1182,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ActorValueSkillBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IActorValueSkillGetter
     {
         #region Common Routing

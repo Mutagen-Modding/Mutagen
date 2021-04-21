@@ -922,7 +922,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class ALocationTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IALocationTargetGetter
     {
         #region Common Routing

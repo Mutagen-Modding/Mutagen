@@ -1201,7 +1201,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class TeleportDestinationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITeleportDestinationGetter
     {
         #region Common Routing

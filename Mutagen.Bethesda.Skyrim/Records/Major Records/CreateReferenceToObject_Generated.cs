@@ -1294,7 +1294,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CreateReferenceToObjectBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICreateReferenceToObjectGetter
     {
         #region Common Routing

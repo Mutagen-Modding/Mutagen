@@ -1018,7 +1018,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class BipedBodyTemplateBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBipedBodyTemplateGetter
     {
         #region Common Routing

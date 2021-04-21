@@ -936,7 +936,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ANpcSoundDefinitionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IANpcSoundDefinitionGetter
     {
         #region Common Routing

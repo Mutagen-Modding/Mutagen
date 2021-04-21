@@ -1705,7 +1705,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlayerSkillsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPlayerSkillsGetter
     {
         #region Common Routing

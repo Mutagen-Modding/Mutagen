@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ShoutWordBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IShoutWordGetter
     {
         #region Common Routing

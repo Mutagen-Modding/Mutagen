@@ -1551,7 +1551,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class DecalBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDecalGetter
     {
         #region Common Routing

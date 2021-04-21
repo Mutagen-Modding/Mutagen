@@ -2208,7 +2208,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CellSubBlockBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellSubBlockGetter
     {
         #region Common Routing

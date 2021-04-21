@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class StoryManagerQuestBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IStoryManagerQuestGetter
     {
         #region Common Routing

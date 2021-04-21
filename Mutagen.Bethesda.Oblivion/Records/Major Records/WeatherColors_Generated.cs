@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class WeatherColorsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeatherColorsGetter
     {
         #region Common Routing

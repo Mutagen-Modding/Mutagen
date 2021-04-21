@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.DATA,
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.DATA,
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),

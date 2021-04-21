@@ -1062,7 +1062,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SkillBoostBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISkillBoostGetter
     {
         #region Common Routing

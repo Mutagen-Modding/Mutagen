@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LocationCellEnablePointBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocationCellEnablePointGetter
     {
         #region Common Routing

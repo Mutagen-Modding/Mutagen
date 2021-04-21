@@ -1236,7 +1236,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class DialogResponseBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDialogResponseGetter
     {
         #region Common Routing

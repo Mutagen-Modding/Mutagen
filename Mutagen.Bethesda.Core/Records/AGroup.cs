@@ -293,7 +293,7 @@ namespace Mutagen.Bethesda.Records
             }
         }
 
-        public class AGroupBinaryOverlay<TMajor> : BinaryOverlay, IGroupCommonGetter<TMajor>
+        public class AGroupBinaryOverlay<TMajor> : PluginBinaryOverlay, IGroupCommonGetter<TMajor>
             where TMajor : IMajorRecordCommonGetter
         {
             protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;

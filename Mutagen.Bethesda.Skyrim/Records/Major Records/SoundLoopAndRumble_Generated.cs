@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SoundLoopAndRumbleBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISoundLoopAndRumbleGetter
     {
         #region Common Routing

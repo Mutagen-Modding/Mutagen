@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class APerkEffectBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAPerkEffectGetter
     {
         #region Common Routing

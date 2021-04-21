@@ -3125,7 +3125,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PhonemeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPhonemeGetter
     {
         #region Common Routing

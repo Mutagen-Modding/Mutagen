@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class LeveledItemEntryBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILeveledItemEntryGetter
     {
         #region Common Routing

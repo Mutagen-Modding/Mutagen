@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ArmorModelBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IArmorModelGetter
     {
         #region Common Routing

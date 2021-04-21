@@ -1449,7 +1449,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class AmbientColorsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAmbientColorsGetter
     {
         #region Common Routing

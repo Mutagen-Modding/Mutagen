@@ -1977,7 +1977,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcFaceMorphBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INpcFaceMorphGetter
     {
         #region Common Routing

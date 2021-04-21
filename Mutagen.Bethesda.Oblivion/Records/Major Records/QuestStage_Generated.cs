@@ -1251,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class QuestStageBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestStageGetter
     {
         #region Common Routing

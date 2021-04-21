@@ -1327,7 +1327,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class VendorValuesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IVendorValuesGetter
     {
         #region Common Routing

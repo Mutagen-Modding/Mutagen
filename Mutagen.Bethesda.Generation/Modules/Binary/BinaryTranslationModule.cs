@@ -1650,7 +1650,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 args.Partial = true;
                 var block = obj.GetObjectType() == ObjectType.Mod
                     || (obj.GetObjectType() == ObjectType.Group && obj.Generics.Count > 0);
-                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (block ? null : nameof(BinaryOverlay));
+                args.BaseClass = obj.HasLoquiBaseObject ? BinaryOverlayClass(obj.BaseClass) : (block ? null : nameof(PluginBinaryOverlay));
                 if (obj.GetObjectType() == ObjectType.Mod)
                 {
                     args.Interfaces.Add($"I{obj.Name}DisposableGetter");
@@ -2277,26 +2277,26 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                                 case ObjectType.Record:
                                     if (obj.IsTypelessStruct())
                                     {
-                                        call = $"ret.{nameof(BinaryOverlay.FillTypelessSubrecordTypes)}";
+                                        call = $"ret.{nameof(PluginBinaryOverlay.FillTypelessSubrecordTypes)}";
                                     }
                                     else
                                     {
-                                        call = $"ret.{nameof(BinaryOverlay.FillSubrecordTypes)}";
+                                        call = $"ret.{nameof(PluginBinaryOverlay.FillSubrecordTypes)}";
                                     }
                                     break;
                                 case ObjectType.Group:
                                     var grupLoqui = await obj.GetGroupLoquiType();
                                     if (grupLoqui.TargetObjectGeneration != null && await grupLoqui.TargetObjectGeneration.IsMajorRecord())
                                     {
-                                        call = $"ret.{nameof(BinaryOverlay.FillMajorRecords)}";
+                                        call = $"ret.{nameof(PluginBinaryOverlay.FillMajorRecords)}";
                                     }
                                     else
                                     {
-                                        call = $"ret.{nameof(BinaryOverlay.FillGroupRecordsForWrapper)}";
+                                        call = $"ret.{nameof(PluginBinaryOverlay.FillGroupRecordsForWrapper)}";
                                     }
                                     break;
                                 case ObjectType.Mod:
-                                    call = $"{nameof(BinaryOverlay)}.{nameof(BinaryOverlay.FillModTypes)}";
+                                    call = $"{nameof(PluginBinaryOverlay)}.{nameof(PluginBinaryOverlay.FillModTypes)}";
                                     break;
                                 default:
                                     throw new NotImplementedException();

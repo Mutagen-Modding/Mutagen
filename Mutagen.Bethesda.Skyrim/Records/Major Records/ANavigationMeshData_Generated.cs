@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ANavigationMeshDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IANavigationMeshDataGetter
     {
         #region Common Routing

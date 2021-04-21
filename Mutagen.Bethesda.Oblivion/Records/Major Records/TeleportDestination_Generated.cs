@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class TeleportDestinationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITeleportDestinationGetter
     {
         #region Common Routing

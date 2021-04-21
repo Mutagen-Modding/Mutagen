@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class BodyTemplateBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBodyTemplateGetter
     {
         #region Common Routing

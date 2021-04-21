@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SceneActorBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISceneActorGetter
     {
         #region Common Routing

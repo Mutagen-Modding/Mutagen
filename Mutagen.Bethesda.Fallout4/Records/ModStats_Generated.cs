@@ -1126,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class ModStatsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IModStatsGetter
     {
         #region Common Routing

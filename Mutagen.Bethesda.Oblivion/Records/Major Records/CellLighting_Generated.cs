@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CellLightingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellLightingGetter
     {
         #region Common Routing

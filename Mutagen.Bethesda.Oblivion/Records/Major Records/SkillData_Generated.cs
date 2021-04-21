@@ -1238,7 +1238,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SkillDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISkillDataGetter
     {
         #region Common Routing

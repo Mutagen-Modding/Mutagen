@@ -4011,7 +4011,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class EffectShaderDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IEffectShaderDataGetter
     {
         #region Common Routing

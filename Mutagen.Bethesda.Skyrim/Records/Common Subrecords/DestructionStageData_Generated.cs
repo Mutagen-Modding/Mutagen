@@ -1413,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DestructionStageDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDestructionStageDataGetter
     {
         #region Common Routing

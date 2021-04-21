@@ -915,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ANpcLevelBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IANpcLevelGetter
     {
         #region Common Routing
