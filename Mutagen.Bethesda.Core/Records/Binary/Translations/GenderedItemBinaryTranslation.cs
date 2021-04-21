@@ -1,5 +1,7 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
 using System;
+using static Mutagen.Bethesda.Records.Binary.Translations.UtilityTranslation;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
@@ -7,7 +9,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
     {
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
-            UtilityTranslation.BinarySubParseDelegate<TItem> transl)
+            BinarySubParseDelegate<MutagenFrame, TItem> transl)
         {
             if (!transl(frame, out var male))
             {
@@ -22,7 +24,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         public static GenderedItem<TItem?> Parse<TItem>(
             MutagenFrame frame,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            BinaryMasterParseDelegate<TItem> transl,
             RecordTypeConverter femaleRecordConverter,
             RecordTypeConverter? maleRecordConverter = null)
             where TItem : class
@@ -40,7 +42,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         public static GenderedItem<TItem> Parse<TItem>(
             MutagenFrame frame,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            BinaryMasterParseDelegate<TItem> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (!transl(frame, out var male, recordTypeConverter))
@@ -58,7 +60,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenFrame frame,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinarySubParseDelegate<TItem> transl,
+            BinarySubParseDelegate<MutagenFrame, TItem> transl,
             bool skipMarker)
             where TItem : class
         {
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenFrame frame,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinarySubParseDelegate<TItem> transl,
+            BinarySubParseDelegate<MutagenFrame, TItem> transl,
             bool skipMarker,
             TItem fallback)
         {
@@ -162,7 +164,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenFrame frame,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            BinaryMasterParseDelegate<TItem> transl,
             RecordTypeConverter? recordTypeConverter = null)
             where TItem : class
         {
@@ -201,7 +203,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType maleMarker,
             RecordType femaleMarker,
             RecordType contentMarker,
-            UtilityTranslation.BinarySubParseDelegate<TItem> transl,
+            BinarySubParseDelegate<MutagenFrame, TItem> transl,
             bool skipMarker)
             where TItem : class
         {
@@ -259,7 +261,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType marker,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterParseDelegate<TItem> transl,
+            BinaryMasterParseDelegate<TItem> transl,
             RecordTypeConverter? femaleRecordConverter = null)
             where TItem : class
         {
@@ -301,7 +303,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public static void Write<T>(
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
-            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (item == null) return;
             var male = item.Male;
@@ -319,7 +321,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public static void Write<T>(
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
-            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter femaleRecordConverter,
             RecordTypeConverter? maleRecordConverter = null)
         {
@@ -341,7 +343,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             IGenderedItemGetter<T>? item,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (item == null) return;
             try
@@ -381,7 +383,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             IGenderedItemGetter<T>? item,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            BinaryMasterWriteDelegate<T> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -431,7 +433,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             IGenderedItemGetter<IFormLinkNullableGetter<TMajor>>? item,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterWriteDelegate<IFormLinkNullableGetter<TMajor>> transl,
+            BinaryMasterWriteDelegate<IFormLinkNullableGetter<TMajor>> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
             where TMajor : class, IMajorRecordCommonGetter
@@ -489,7 +491,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType markerType,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (item == null) return;
             using (HeaderExport.Subrecord(writer, markerType))
@@ -533,7 +535,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType markerType,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            BinaryMasterWriteDelegate<T> transl,
             bool markerWrap = true,
             RecordTypeConverter? recordTypeConverter = null)
         {
@@ -593,7 +595,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType markerType,
             RecordType maleMarker,
             RecordType femaleMarker,
-            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            BinaryMasterWriteDelegate<T> transl,
             bool markerWrap = true,
             RecordTypeConverter? femaleRecordConverter = null)
         {
@@ -654,7 +656,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
             RecordType recordType,
-            UtilityTranslation.BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (item == null) return;
             using (HeaderExport.Subrecord(writer, recordType))
@@ -676,7 +678,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenWriter writer,
             IGenderedItemGetter<T>? item,
             RecordType recordType,
-            UtilityTranslation.BinaryMasterWriteDelegate<T> transl,
+            BinaryMasterWriteDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (item == null) return;

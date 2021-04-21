@@ -1892,7 +1892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Cells.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Cell>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.CELL,
                             recordTypeConverter: recordTypeConverter,
                             transl: Cell.TryCreateFromBinary));

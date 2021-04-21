@@ -1209,7 +1209,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPoints = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: P2FloatBinaryTranslation.Instance.Parse)
                         .CastExtendedList<P2Float>();
                     return (int)RegionArea_FieldIndex.RegionPoints;

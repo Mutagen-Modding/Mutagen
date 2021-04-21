@@ -1724,7 +1724,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Entries = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LeveledSpellEntry>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,
                             triggeringRecord: LeveledSpellEntry_Registration.TriggeringRecordTypes,

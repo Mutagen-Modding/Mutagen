@@ -5187,7 +5187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellPersistentReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.ActorCellPersistentReferences;
@@ -5197,7 +5197,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellPersistentReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.LocationCellPersistentReferences;
@@ -5207,7 +5207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellPersistentReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellPersistentReferences;
@@ -5217,7 +5217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellUniques = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.ActorCellUniques;
@@ -5227,7 +5227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellUniques = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationReference.TryCreateFromBinary)
                         .CastExtendedList<LocationReference>();
                     return (int)Location_FieldIndex.LocationCellUniques;
@@ -5237,7 +5237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellUnique = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<INpcGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellUnique;
@@ -5247,7 +5247,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellStaticReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
                         .CastExtendedList<LocationCellStaticReference>();
                     return (int)Location_FieldIndex.ActorCellStaticReferences;
@@ -5257,7 +5257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellStaticReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCellStaticReference>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationCellStaticReference.TryCreateFromBinary)
                         .CastExtendedList<LocationCellStaticReference>();
                     return (int)Location_FieldIndex.LocationCellStaticReferences;
@@ -5267,7 +5267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ReferenceCellStaticReferences = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedSimpleGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedSimpleGetter>>();
                     return (int)Location_FieldIndex.ReferenceCellStaticReferences;
@@ -5276,7 +5276,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActorCellEncounterCell.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.ACEC,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
@@ -5287,7 +5287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LocationCellEncounterCell.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.LCEC,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
@@ -5298,7 +5298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ReferenceCellEncounterCell.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCoordinate>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.RCEC,
                             skipHeader: true,
                             recordTypeConverter: recordTypeConverter,
@@ -5310,7 +5310,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellMarkerReference = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     return (int)Location_FieldIndex.ActorCellMarkerReference;
@@ -5320,7 +5320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellMarkerReference = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IPlacedGetter>>();
                     return (int)Location_FieldIndex.LocationCellMarkerReference;
@@ -5330,7 +5330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ActorCellEnablePoint = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
                         .CastExtendedList<LocationCellEnablePoint>();
                     return (int)Location_FieldIndex.ActorCellEnablePoint;
@@ -5340,7 +5340,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationCellEnablePoint = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocationCellEnablePoint>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: LocationCellEnablePoint.TryCreateFromBinary)
                         .CastExtendedList<LocationCellEnablePoint>();
                     return (int)Location_FieldIndex.LocationCellEnablePoint;
@@ -5359,7 +5359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),

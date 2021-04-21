@@ -2560,7 +2560,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),

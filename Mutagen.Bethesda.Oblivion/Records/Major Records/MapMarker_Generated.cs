@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Types = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                             {
                                 return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(

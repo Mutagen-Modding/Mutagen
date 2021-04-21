@@ -1594,7 +1594,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Entries.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledItemEntry.TryCreateFromBinary));

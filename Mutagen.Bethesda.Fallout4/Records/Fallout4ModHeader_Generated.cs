@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
@@ -2416,7 +2416,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.TransientTypes.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.TNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: TransientType.TryCreateFromBinary));

@@ -3163,7 +3163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Race_FieldIndex.Spells;
@@ -3172,7 +3172,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RaceRelation>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: RaceRelation.TryCreateFromBinary));
@@ -3230,7 +3230,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength + contentLength; // Skip marker
                     item.FaceData.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<FacePart>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: FacePart_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: FacePart.TryCreateFromBinary));
@@ -3251,7 +3251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IHairGetter>>();
                     return (int)Race_FieldIndex.Hairs;
@@ -3261,7 +3261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEyeGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IEyeGetter>>();
                     return (int)Race_FieldIndex.Eyes;

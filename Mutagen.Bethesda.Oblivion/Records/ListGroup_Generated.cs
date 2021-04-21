@@ -1353,7 +1353,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     {
                         item.Records.SetTo(
                             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
-                                frame: frame,
+                                reader: frame,
                                 triggeringRecord: ListGroup<T>.T_RecordType,
                                 thread: frame.MetaData.Parallel,
                                 recordTypeConverter: recordTypeConverter,

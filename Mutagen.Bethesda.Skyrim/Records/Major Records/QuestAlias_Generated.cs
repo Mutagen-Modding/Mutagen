@@ -3667,7 +3667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -3678,7 +3678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -3691,7 +3691,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
@@ -3749,7 +3749,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALSP),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.Spells;
@@ -3758,7 +3758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALFC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.Factions;
@@ -3767,7 +3767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PackageData.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALPC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.PackageData;

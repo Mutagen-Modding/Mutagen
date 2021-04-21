@@ -1224,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Fragments.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
-                    frame: frame,
+                    reader: frame,
                     transl: IndexedScriptFragment.TryCreateFromBinary));
         }
 

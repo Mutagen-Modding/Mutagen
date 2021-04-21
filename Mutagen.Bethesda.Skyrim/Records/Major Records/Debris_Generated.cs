@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Models.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DebrisModel>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.DATA,
                             recordTypeConverter: recordTypeConverter,
                             transl: DebrisModel.TryCreateFromBinary));

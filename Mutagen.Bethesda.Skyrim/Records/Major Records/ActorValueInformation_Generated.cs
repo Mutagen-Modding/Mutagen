@@ -1907,7 +1907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.PerkTree.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValuePerkNode>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.PNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ActorValuePerkNode.TryCreateFromBinary));

@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<SoundItem>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: SoundItem.TryCreateFromBinary));

@@ -1196,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundTypes_FieldIndex.Types) return ParseResult.Stop;
                     item.Types.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NpcSoundType>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: NpcSoundType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: NpcSoundType.TryCreateFromBinary));

@@ -1842,7 +1842,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Relations.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Relation>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: Relation.TryCreateFromBinary));
@@ -1867,7 +1867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Ranks.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Rank>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Rank_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Rank.TryCreateFromBinary));

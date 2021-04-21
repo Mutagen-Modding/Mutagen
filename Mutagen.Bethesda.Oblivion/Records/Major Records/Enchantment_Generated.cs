@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));

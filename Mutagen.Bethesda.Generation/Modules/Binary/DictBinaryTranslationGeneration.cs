@@ -184,14 +184,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 switch (binaryType)
                 {
                     case DictBinaryType.SubTrigger:
-                        args.AddPassArg($"frame");
+                        args.Add($"reader: {Module.ReaderMemberName}");
                         args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                         break;
                     case DictBinaryType.Trigger:
-                        args.Add($"frame: frame.Spawn(long)");
+                        args.Add($"reader: {Module.ReaderMemberName}.Spawn(long)");
                         break;
                     case DictBinaryType.EnumMap:
-                        args.AddPassArg($"frame");
+                        args.Add($"reader: {Module.ReaderMemberName}");
                         break;
                     default:
                         throw new NotImplementedException();

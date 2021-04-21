@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 };
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                        frame: new MutagenFrame(stream),
+                                        reader: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 };
                                 effect.Conditions.SetTo(
                                     ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                        frame: new MutagenFrame(stream),
+                                        reader: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 var func = (APerkEntryPointEffect.FunctionType)dataFrame.Content[1];
                                 var tabCount = dataFrame.Content[2];
                                 var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                    frame: new MutagenFrame(stream),
+                                    reader: new MutagenFrame(stream),
                                     transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                     {
                                         return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(

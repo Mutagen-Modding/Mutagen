@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     frame.Reader.Position += groupMeta.HeaderLength;
                     obj.Items.SetTo(ListBinaryTranslation<DialogItem>.Instance.Parse(
-                        frame: frame.SpawnWithLength(groupMeta.ContentLength),
+                        reader: frame.SpawnWithLength(groupMeta.ContentLength),
                         transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                         {
                             return LoquiBinaryTranslation<DialogItem>.Instance.Parse(

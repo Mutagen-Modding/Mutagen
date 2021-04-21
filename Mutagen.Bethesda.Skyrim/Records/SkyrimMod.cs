@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Records;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -194,7 +195,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var worldGroupTrib = new MemoryTributary();
                     var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
                     worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
-                    worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, gameConstants.GroupConstants.LengthLength));
+                    worldGroupWriter.Write(Zeros.Slice(0, gameConstants.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
                         worldGroupWriter,
                         worldspace.FormKey);

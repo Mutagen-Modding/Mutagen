@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             item.Animations.SetTo(
                                 ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
-                                    frame: frame,
+                                    reader: frame,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                         }
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
                         {
                             item.Animations.SetTo(
                                 ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
-                                    frame: frame,
+                                    reader: frame,
                                     amount: count.Value,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));

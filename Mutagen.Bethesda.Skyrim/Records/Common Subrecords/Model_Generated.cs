@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AlternateTextures = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<AlternateTexture>.Instance.Parse(
                             amount: frame.ReadInt32(),
-                            frame: frame,
+                            reader: frame,
                             transl: AlternateTexture.TryCreateFromBinary)
                         .CastExtendedList<AlternateTexture>();
                     return (int)Model_FieldIndex.AlternateTextures;

@@ -1,22 +1,23 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
 using System;
 using System.Collections.Generic;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
     public class DictBinaryTranslation<TValue>
     {
-        public static readonly DictBinaryTranslation<TValue> Instance = new DictBinaryTranslation<TValue>();
+        public static readonly DictBinaryTranslation<TValue> Instance = new();
 
         public IReadOnlyDictionary<TEnum, TValue> Parse<TEnum>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             IDictionary<TEnum, TValue> item,
-            UtilityTranslation.BinarySubParseDelegate<TValue> transl)
+            BinarySubParseDelegate<MutagenFrame, TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
             foreach (var e in EnumBinaryTranslation<TEnum>.Values)
             {
-                if (!transl(frame, out var parse))
+                if (!transl(reader, out var parse))
                 {
                     throw new ArgumentException();
                 }
@@ -28,7 +29,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public void Write<TEnum>(
             MutagenWriter writer,
             IReadOnlyDictionary<TEnum, TValue> items,
-            UtilityTranslation.BinarySubWriteDelegate<TValue> transl)
+            BinarySubWriteDelegate<MutagenWriter, TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
             foreach (var e in EnumBinaryTranslation<TEnum>.Values)

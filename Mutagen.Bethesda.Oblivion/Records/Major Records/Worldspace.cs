@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
                             case 0x50555247: // "GRUP":
                                 obj.SubCells.SetTo(
                                     ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
-                                        frame: frame,
+                                        reader: frame,
                                         triggeringRecord: RecordTypes.GRUP,
                                         transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                                 break;

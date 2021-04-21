@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Data.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: (MutagenFrame r, out String listSubItem) =>
                     {
                         return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(

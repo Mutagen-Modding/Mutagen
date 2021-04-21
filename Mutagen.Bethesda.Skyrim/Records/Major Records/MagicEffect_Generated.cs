@@ -4632,7 +4632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -4737,7 +4737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.CounterEffects.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IMagicEffectGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ESCE),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)MagicEffect_FieldIndex.CounterEffects;
@@ -4747,7 +4747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Sounds = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MagicEffectSound>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: MagicEffectSound.TryCreateFromBinary)
                         .CastExtendedList<MagicEffectSound>();
                     return (int)MagicEffect_FieldIndex.Sounds;

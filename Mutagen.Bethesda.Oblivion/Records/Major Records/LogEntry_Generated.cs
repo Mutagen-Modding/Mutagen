@@ -1396,7 +1396,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)LogEntry_FieldIndex.Conditions) return ParseResult.Stop;
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));

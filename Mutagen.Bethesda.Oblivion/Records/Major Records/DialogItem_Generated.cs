@@ -2506,7 +2506,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Topics.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NAME),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogItem_FieldIndex.Topics;
@@ -2517,7 +2517,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DialogResponse>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: DialogResponse_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DialogResponse.TryCreateFromBinary));
@@ -2528,7 +2528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -2538,7 +2538,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Choices.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogItem_FieldIndex.Choices;
@@ -2547,7 +2547,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LinkFrom.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogTopicGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLF),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogItem_FieldIndex.LinkFrom;

@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: QuestLogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestLogEntry.TryCreateFromBinary));

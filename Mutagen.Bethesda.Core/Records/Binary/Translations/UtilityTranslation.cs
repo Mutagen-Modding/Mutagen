@@ -17,31 +17,22 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 {
     public static class UtilityTranslation
     {
-        private static readonly byte[] _Zeros = new byte[8];
-        public static ReadOnlyMemorySlice<byte> Zeros => new ReadOnlyMemorySlice<byte>(_Zeros);
-
-        public delegate bool BinarySubParseDelegate<T>(
+        public delegate bool BinaryMasterParseDelegate<TItem>(
             MutagenFrame reader,
-            [MaybeNullWhen(false)] out T item);
-        public delegate bool BinaryMasterParseDelegate<T>(
-            MutagenFrame reader,
-            [MaybeNullWhen(false)] out T item,
+            [MaybeNullWhen(false)] out TItem item,
             RecordTypeConverter? recordTypeConverter);
-        public delegate bool BinarySubParseRecordDelegate<T>(
+        public delegate bool BinarySubParseRecordDelegate<TItem>(
             MutagenFrame reader,
             RecordType header,
-            [MaybeNullWhen(false)] out T item);
-        public delegate bool BinaryMasterParseRecordDelegate<T>(
+            [MaybeNullWhen(false)] out TItem item);
+        public delegate bool BinaryMasterParseRecordDelegate<TItem>(
             MutagenFrame reader,
             RecordType header,
-            [MaybeNullWhen(false)] out T item,
+            [MaybeNullWhen(false)] out TItem item,
             RecordTypeConverter? recordTypeConverter);
-        public delegate void BinarySubWriteDelegate<T>(
+        public delegate void BinaryMasterWriteDelegate<TItem>(
             MutagenWriter writer,
-            T item);
-        public delegate void BinaryMasterWriteDelegate<T>(
-            MutagenWriter writer,
-            T item,
+            TItem item,
             RecordTypeConverter? recordTypeConverter);
 
         public delegate void RecordStructFill<R>(

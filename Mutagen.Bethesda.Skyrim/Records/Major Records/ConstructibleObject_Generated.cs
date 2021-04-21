@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
@@ -1874,7 +1874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));

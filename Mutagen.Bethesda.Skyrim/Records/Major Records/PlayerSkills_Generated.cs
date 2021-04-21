@@ -1664,11 +1664,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
+                reader: frame,
                 item: item.SkillValues,
                 transl: ByteBinaryTranslation.Instance.Parse);
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
+                reader: frame,
                 item: item.SkillOffsets,
                 transl: ByteBinaryTranslation.Instance.Parse);
             item.Health = frame.ReadUInt16();

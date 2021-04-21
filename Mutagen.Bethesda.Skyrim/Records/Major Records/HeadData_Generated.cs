@@ -2194,7 +2194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
                     item.HeadParts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: HeadPartReference.TryCreateFromBinary));
@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
                     item.RacePresets.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.RacePresets;
@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
@@ -2231,7 +2231,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.FaceDetails;
@@ -2257,7 +2257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
                     item.TintMasks.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<TintAssets>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintAssets.TryCreateFromBinary));

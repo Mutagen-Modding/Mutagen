@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ExtraParts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadPart_FieldIndex.ExtraParts;
@@ -2237,7 +2237,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Part>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Part.TryCreateFromBinary));

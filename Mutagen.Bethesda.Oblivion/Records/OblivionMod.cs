@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Records;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -228,7 +229,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var worldGroupTrib = new MemoryTributary();
                     var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
                     worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
-                    worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
+                    worldGroupWriter.Write(Zeros.Slice(0, GameConstants.Oblivion.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
                         worldGroupWriter,
                         worldspace.FormKey);

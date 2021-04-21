@@ -3176,7 +3176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -3277,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Effects.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));

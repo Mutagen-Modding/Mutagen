@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Destructible_FieldIndex.Stages) return ParseResult.Stop;
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DestructionStage>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: DestructionStage_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DestructionStage.TryCreateFromBinary));

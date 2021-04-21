@@ -1788,7 +1788,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Quests.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<StoryManagerQuest>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.QNAM,
                             triggeringRecord: StoryManagerQuest_Registration.TriggeringRecordTypes,

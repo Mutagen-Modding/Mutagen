@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 coll.AddRange(
                     ListBinaryTranslation<IPlaced>.Instance.Parse(
-                        frame: frame,
+                        reader: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
@@ -169,7 +169,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)

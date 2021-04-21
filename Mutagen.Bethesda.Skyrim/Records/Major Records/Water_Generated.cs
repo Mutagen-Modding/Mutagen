@@ -5195,7 +5195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.UnusedNoisemaps.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                             transl: StringBinaryTranslation.Instance.Parse));
                     return (int)Water_FieldIndex.UnusedNoisemaps;

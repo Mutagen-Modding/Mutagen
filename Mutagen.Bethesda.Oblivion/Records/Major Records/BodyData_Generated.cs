@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.BodyParts) return ParseResult.Stop;
                     item.BodyParts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: BodyPart_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: BodyPart.TryCreateFromBinary));

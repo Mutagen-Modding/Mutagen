@@ -2409,7 +2409,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SoundFiles.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                             transl: StringBinaryTranslation.Instance.Parse));
                     return (int)SoundDescriptor_FieldIndex.SoundFiles;
@@ -2435,7 +2435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));

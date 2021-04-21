@@ -1795,7 +1795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.CollidesWith = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ICollisionLayerGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.INTV),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),

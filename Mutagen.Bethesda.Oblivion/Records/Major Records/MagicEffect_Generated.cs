@@ -1910,7 +1910,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CounterEffects = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IEDIDLinkGetter<IMagicEffectGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: RecordTypeBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IEDIDLinkGetter<IMagicEffectGetter>>();
                     return (int)MagicEffect_FieldIndex.CounterEffects;

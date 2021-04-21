@@ -6455,7 +6455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Portals = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Portal>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: Portal.TryCreateFromBinary)
                         .CastExtendedList<Portal>();
                     return (int)PlacedObject_FieldIndex.Portals;
@@ -6500,7 +6500,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Reflections.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XPWR,
                             recordTypeConverter: recordTypeConverter,
                             transl: WaterReflection.TryCreateFromBinary));
@@ -6510,7 +6510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LitWater.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlacedObjectGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.XLTW),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)PlacedObject_FieldIndex.LitWater;
@@ -6680,7 +6680,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     return (int)PlacedObject_FieldIndex.LocationRefTypes;
@@ -6728,7 +6728,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XLKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: LinkedReferences.TryCreateFromBinary));

@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using System;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         {
             writer.Write(record.TypeInt);
             var sizePosition = writer.Position;
-            writer.Write(UtilityTranslation.Zeros.Slice(0, writer.MetaData.Constants.Constants(type).LengthLength));
+            writer.Write(Zeros.Slice(0, writer.MetaData.Constants.Constants(type).LengthLength));
             return new HeaderExport(writer, sizePosition, writer.MetaData.Constants.Constants(type));
         }
 

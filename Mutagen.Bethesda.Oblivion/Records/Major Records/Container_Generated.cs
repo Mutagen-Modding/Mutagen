@@ -1968,7 +1968,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Items.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ContainerItem>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ContainerItem.TryCreateFromBinary));

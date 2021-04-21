@@ -2172,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.DNAMs.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
                     return (int)MaterialObject_FieldIndex.DNAMs;

@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     frame.Reader.Position += groupMeta.HeaderLength;
                     obj.Responses.SetTo(ListBinaryTranslation<DialogResponses>.Instance.Parse(
-                        frame: frame.SpawnWithLength(groupMeta.ContentLength),
+                        reader: frame.SpawnWithLength(groupMeta.ContentLength),
                         transl: (MutagenFrame r, RecordType header, out DialogResponses listItem) =>
                         {
                             return LoquiBinaryTranslation<DialogResponses>.Instance.Parse(

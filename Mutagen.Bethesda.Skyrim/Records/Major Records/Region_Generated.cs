@@ -2230,7 +2230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.RegionAreas.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: RegionArea.TryCreateFromBinary));

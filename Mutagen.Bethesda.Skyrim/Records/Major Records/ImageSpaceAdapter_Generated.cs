@@ -12287,7 +12287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BlurRadius = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.BlurRadius;
@@ -12297,7 +12297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DoubleVisionStrength = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DoubleVisionStrength;
@@ -12307,7 +12307,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TintColor = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
                         .CastExtendedList<ColorFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.TintColor;
@@ -12317,7 +12317,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FadeColor = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
                         .CastExtendedList<ColorFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.FadeColor;
@@ -12327,7 +12327,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurStrength = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStrength;
@@ -12337,7 +12337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurRampUp = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampUp;
@@ -12347,7 +12347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurStart = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurStart;
@@ -12357,7 +12357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurRampDown = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurRampDown;
@@ -12367,7 +12367,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurDownStart = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.RadialBlurDownStart;
@@ -12377,7 +12377,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldStrength = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldStrength;
@@ -12387,7 +12387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldDistance = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldDistance;
@@ -12397,7 +12397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldRange = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.DepthOfFieldRange;
@@ -12407,7 +12407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MotionBlurStrength = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.MotionBlurStrength;
@@ -12417,7 +12417,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrEyeAdaptSpeedMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedMult;
@@ -12427,7 +12427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrEyeAdaptSpeedAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrEyeAdaptSpeedAdd;
@@ -12437,7 +12437,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomBlurRadiusMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusMult;
@@ -12447,7 +12447,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomBlurRadiusAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomBlurRadiusAdd;
@@ -12457,7 +12457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomThresholdMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdMult;
@@ -12467,7 +12467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomThresholdAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomThresholdAdd;
@@ -12477,7 +12477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomScaleMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleMult;
@@ -12487,7 +12487,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomScaleAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrBloomScaleAdd;
@@ -12497,7 +12497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMinMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinMult;
@@ -12507,7 +12507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMinAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMinAdd;
@@ -12517,7 +12517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMaxMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxMult;
@@ -12527,7 +12527,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMaxAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrTargetLumMaxAdd;
@@ -12537,7 +12537,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSunlightScaleMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleMult;
@@ -12547,7 +12547,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSunlightScaleAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSunlightScaleAdd;
@@ -12557,7 +12557,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSkyScaleMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleMult;
@@ -12567,7 +12567,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSkyScaleAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.HdrSkyScaleAdd;
@@ -12577,7 +12577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown08 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown08;
@@ -12587,7 +12587,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown48 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown48;
@@ -12597,7 +12597,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown09 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown09;
@@ -12607,7 +12607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown49 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown49;
@@ -12617,7 +12617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0A = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0A;
@@ -12627,7 +12627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4A = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4A;
@@ -12637,7 +12637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0B = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0B;
@@ -12647,7 +12647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4B = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4B;
@@ -12657,7 +12657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0C = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0C;
@@ -12667,7 +12667,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4C = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4C;
@@ -12677,7 +12677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0D = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0D;
@@ -12687,7 +12687,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4D = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4D;
@@ -12697,7 +12697,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0E = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0E;
@@ -12707,7 +12707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4E = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4E;
@@ -12717,7 +12717,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0F = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown0F;
@@ -12727,7 +12727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4F = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown4F;
@@ -12737,7 +12737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown10 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown10;
@@ -12747,7 +12747,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown50 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown50;
@@ -12757,7 +12757,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicSaturationMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationMult;
@@ -12767,7 +12767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicSaturationAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicSaturationAdd;
@@ -12777,7 +12777,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicBrightnessMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessMult;
@@ -12787,7 +12787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicBrightnessAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicBrightnessAdd;
@@ -12797,7 +12797,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicContrastMult = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastMult;
@@ -12807,7 +12807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicContrastAdd = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.CinematicContrastAdd;
@@ -12817,7 +12817,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown14 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown14;
@@ -12827,7 +12827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown54 = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
                     return (int)ImageSpaceAdapter_FieldIndex.Unknown54;

@@ -304,7 +304,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     if (list is ArrayType arr
                         && arr.FixedSize.HasValue)
                     {
-                        args.AddPassArg($"frame");
+                        args.Add($"reader: {Module.ReaderMemberName}");
                         args.Add($"amount: {arr.FixedSize.Value}");
                     }
                     else
@@ -312,7 +312,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         switch (listBinaryType)
                         {
                             case ListBinaryType.SubTrigger:
-                                args.AddPassArg($"frame");
+                                args.Add($"reader: {Module.ReaderMemberName}");
                                 if (needsRecordConv)
                                 {
                                     args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
@@ -329,10 +329,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 }
                                 break;
                             case ListBinaryType.Trigger:
-                                args.Add($"frame: frame.SpawnWithLength(contentLength)");
+                                args.Add($"reader: {Module.ReaderMemberName}.SpawnWithLength(contentLength)");
                                 break;
                             case ListBinaryType.CounterRecord:
-                                args.AddPassArg($"frame");
+                                args.Add($"reader: {Module.ReaderMemberName}");
                                 if (typeGen.CustomData.TryGetValue(CounterRecordType, out var counterRecObj)
                                     && counterRecObj is string counterRecType)
                                 {
@@ -388,10 +388,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                     default:
                                         throw new NotImplementedException();
                                 }
-                                args.AddPassArg($"frame");
+                                args.Add($"reader: {Module.ReaderMemberName}");
                                 break;
                             case ListBinaryType.Frame:
-                                args.AddPassArg($"frame");
+                                args.Add($"reader: {Module.ReaderMemberName}");
                                 break;
                             default:
                                 throw new NotImplementedException();
@@ -399,7 +399,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     if (threading)
                     {
-                        args.Add($"thread: frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
+                        args.Add($"thread: {Module.ReaderMemberName}.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)}");
                     }
                     if (needsRecordConv)
                     {

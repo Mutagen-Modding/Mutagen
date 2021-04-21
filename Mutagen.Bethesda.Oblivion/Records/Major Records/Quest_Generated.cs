@@ -2159,7 +2159,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestStage.TryCreateFromBinary));
@@ -2179,7 +2179,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Targets.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestTarget>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.QSTA,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestTarget.TryCreateFromBinary));

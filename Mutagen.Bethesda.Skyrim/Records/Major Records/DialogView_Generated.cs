@@ -1844,7 +1844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Branches.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogBranchGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogView_FieldIndex.Branches;
@@ -1853,7 +1853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TNAMs.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
                     return (int)DialogView_FieldIndex.TNAMs;

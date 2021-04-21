@@ -1591,7 +1591,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LocalVariables.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocalVariable>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocalVariable.TryCreateFromBinary));
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.References.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out AScriptReference listSubItem, RecordTypeConverter? conv) =>

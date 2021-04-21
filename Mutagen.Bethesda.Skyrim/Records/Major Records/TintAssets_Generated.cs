@@ -1444,7 +1444,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     item.Presets.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<TintPreset>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintPreset.TryCreateFromBinary));

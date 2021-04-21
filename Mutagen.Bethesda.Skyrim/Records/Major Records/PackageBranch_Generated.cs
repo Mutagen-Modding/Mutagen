@@ -1982,7 +1982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -2014,7 +2014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.DataInputIndices.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Byte>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
                             transl: ByteBinaryTranslation.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.DataInputIndices;
@@ -2030,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Unknown.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                             transl: ByteArrayBinaryTranslation.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.Unknown;

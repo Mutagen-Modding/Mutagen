@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.PropertyList.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: FloatBinaryTranslation.Instance.Parse));
         }
 

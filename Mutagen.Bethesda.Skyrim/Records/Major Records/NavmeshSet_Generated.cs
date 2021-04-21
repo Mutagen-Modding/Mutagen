@@ -1113,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Navmeshes.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 

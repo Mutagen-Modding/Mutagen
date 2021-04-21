@@ -1181,7 +1181,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     defaultVal: FormKey.Null));
             item.Points.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: Int16BinaryTranslation.Instance.Parse));
         }
 

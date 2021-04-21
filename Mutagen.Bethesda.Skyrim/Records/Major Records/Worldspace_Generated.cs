@@ -5658,7 +5658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LargeReferences.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.RNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WorldspaceGridReference.TryCreateFromBinary));

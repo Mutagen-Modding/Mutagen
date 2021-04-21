@@ -322,7 +322,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.XnamMarker = frame.ReadSubrecordFrame().Content.ToArray();
                 item.ProcedureTree.SetTo(
                     ListBinaryTranslation<PackageBranch>.Instance.Parse(
-                        frame: frame.SpawnAll(),
+                        reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
                         transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
                         {

@@ -2244,13 +2244,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                        frame: frame,
+                        reader: frame,
                         item: item.SkillWeights,
                         transl: ByteBinaryTranslation.Instance.Parse);
                     item.BleedoutDefault = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.VoicePoints = dataFrame.ReadUInt32();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
-                        frame: frame,
+                        reader: frame,
                         item: item.StatWeights,
                         transl: ByteBinaryTranslation.Instance.Parse);
                     item.Unknown2 = dataFrame.ReadUInt8();

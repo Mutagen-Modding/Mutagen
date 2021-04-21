@@ -1552,7 +1552,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamageTypes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: UInt32BinaryTranslation.Instance.Parse)
                         .CastExtendedList<UInt32>();
                     return (int)DamageTypeIndexed_FieldIndex.DamageTypes;

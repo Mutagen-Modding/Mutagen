@@ -7,50 +7,44 @@ using Loqui;
 using static Mutagen.Bethesda.Records.Binary.Translations.UtilityTranslation;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Binary;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
-    public class ListBinaryTranslation<T>
+    public class ListBinaryTranslation<T> : ListBinaryTranslation<MutagenWriter, MutagenFrame, T>
     {
         public static readonly ListBinaryTranslation<T> Instance = new ListBinaryTranslation<T>();
 
-        public static readonly bool IsLoqui;
-
-        static ListBinaryTranslation()
-        {
-            IsLoqui = typeof(T).InheritsFrom(typeof(ILoquiObject));
-        }
-
         #region Out Parameters
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<MutagenFrame, T> transl)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
-                var startingPos = frame.Position;
+                if (!HeaderTranslation.TryGetRecordType(reader.Reader, triggeringRecord)) break;
+                var startingPos = reader.Position;
                 MutagenFrame subFrame;
                 if (!IsLoqui)
                 {
-                    var subHeader = frame.ReadSubrecord();
-                    subFrame = frame.ReadAndReframe(subHeader.ContentLength);
+                    var subHeader = reader.ReadSubrecord();
+                    subFrame = reader.ReadAndReframe(subHeader.ContentLength);
                 }
                 else
                 {
-                    subFrame = frame;
+                    subFrame = reader;
                 }
                 if (transl(subFrame, out var subItem))
                 {
                     ret.Add(subItem);
                 }
 
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -58,25 +52,25 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete)
+            while (!reader.Complete)
             {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                if (transl(frame, nextRecord, out var subIitem))
+                var startingPos = reader.Position;
+                if (transl(reader, nextRecord, out var subIitem))
                 {
                     ret.Add(subIitem);
                 }
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
                 }
@@ -85,27 +79,27 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             BinaryMasterParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete)
+            while (!reader.Complete)
             {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
                 nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                if (transl(frame, nextRecord, out var subIitem, recordTypeConverter))
+                var startingPos = reader.Position;
+                if (transl(reader, nextRecord, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
                 }
@@ -116,7 +110,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         #region Lengthed Triggering Record
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null,
@@ -124,22 +118,22 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         {
             var ret = new ExtendedList<T>();
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
-                if (!frame.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
+                if (!reader.Reader.TryGetSubrecord(triggeringRecord, out var header)) break;
                 if (!IsLoqui || skipHeader)
                 {
-                    frame.Position += header.HeaderLength;
+                    reader.Position += header.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                if (transl(skipHeader ? frame.SpawnWithLength(header.ContentLength) : frame, out var subItem, recordTypeConverter))
+                var startingPos = reader.Position;
+                if (transl(skipHeader ? reader.SpawnWithLength(header.ContentLength) : reader, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
 
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
                 }
             }
@@ -147,23 +141,23 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public IEnumerable<T> ParseParallel(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var frames = new List<MutagenFrame>();
             triggeringRecord = recordTypeConverter.ConvertToCustom(triggeringRecord);
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
-                var header = frame.Reader.GetVariableHeader();
+                var header = reader.Reader.GetVariableHeader();
                 if (header.RecordType != triggeringRecord) break;
                 if (!IsLoqui)
                 {
                     throw new NotImplementedException();
                 }
                 var totalLen = header.TotalLength;
-                var subFrame = new MutagenFrame(frame.ReadAndReframe(checked((int)totalLen)));
+                var subFrame = new MutagenFrame(reader.ReadAndReframe(checked((int)totalLen)));
                 frames.Add(subFrame);
             }
             var ret = new TryGet<T>[frames.Count];
@@ -183,7 +177,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public IEnumerable<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             bool thread,
             BinaryMasterParseDelegate<T> transl,
@@ -192,7 +186,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             if (thread)
             {
                 return ParseParallel(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl,
                     recordTypeConverter);
@@ -200,7 +194,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl,
                     recordTypeConverter);
@@ -210,25 +204,25 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         #region Lengthed Triggering Records
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
-            BinarySubParseDelegate<T> transl,
+            MutagenFrame reader,
+            BinarySubParseDelegate<MutagenFrame, T> transl,
             ICollectionGetter<RecordType> triggeringRecord)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete)
+            while (!reader.Complete)
             {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                if (transl(frame, out var subIitem))
+                var startingPos = reader.Position;
+                if (transl(reader, out var subIitem))
                 {
                     ret.Add(subIitem);
                 }
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
                 }
@@ -237,27 +231,27 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete)
+            while (!reader.Complete)
             {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
                 nextRecord = recordTypeConverter.ConvertToStandard(nextRecord);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                if (transl(frame, out var subIitem, recordTypeConverter))
+                var startingPos = reader.Position;
+                if (transl(reader, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
                     throw new ArgumentException($"Parsed item on the list consumed no data: {subIitem}");
                 }
@@ -267,13 +261,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         #endregion
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
-            BinarySubParseDelegate<T> transl)
+            MutagenFrame reader,
+            BinaryMasterParseDelegate<T> transl,
+            RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete)
+            while (!reader.Complete)
             {
-                if (transl(frame, out var subItem))
+                if (transl(reader, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -286,43 +281,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
-            BinaryMasterParseDelegate<T> transl,
-            RecordTypeConverter? recordTypeConverter = null)
-        {
-            var ret = new ExtendedList<T>();
-            while (!frame.Complete)
-            {
-                if (transl(frame, out var subItem, recordTypeConverter))
-                {
-                    ret.Add(subItem);
-                }
-                else
-                {
-                    break;
-                }
-            }
-            return ret;
-        }
-
-        public ExtendedList<T> Parse(
-            MutagenFrame frame,
-            int amount,
-            BinarySubParseDelegate<T> transl)
-        {
-            var ret = new ExtendedList<T>();
-            for (int i = 0; i < amount; i++)
-            {
-                if (transl(frame, out var subItem))
-                {
-                    ret.Add(subItem);
-                }
-            }
-            return ret;
-        }
-
-        public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
@@ -330,7 +289,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             var ret = new ExtendedList<T>();
             for (int i = 0; i < amount; i++)
             {
-                if (transl(frame, out var subItem, recordTypeConverter))
+                if (transl(reader, out var subItem, recordTypeConverter))
                 {
                     ret.Add(subItem);
                 }
@@ -339,32 +298,32 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             if (amount == 0) return new ExtendedList<T>();
-            var subHeader = frame.GetSubrecord();
+            var subHeader = reader.GetSubrecord();
             if (subHeader.RecordType != triggeringRecord)
             {
                 throw new ArgumentException($"Unexpected record encountered.");
             }
             if (!IsLoqui)
             {
-                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
             }
             var ret = new ExtendedList<T>();
-            var startingPos = frame.Position;
+            var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                if (transl(frame, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
             }
-            if (frame.Position == startingPos)
+            if (reader.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
@@ -372,14 +331,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var subHeader = frame.GetSubrecordFrame();
+            var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
@@ -390,9 +349,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
                     _ => throw new NotImplementedException(),
                 };
-                frame.Position += subHeader.TotalLength;
+                reader.Position += subHeader.TotalLength;
                 return Parse(
-                    frame,
+                    reader,
                     count,
                     triggeringRecord,
                     transl,
@@ -401,7 +360,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl,
                     recordTypeConverter);
@@ -409,35 +368,35 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public IEnumerable<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             RecordType triggeringRecord,
-            BinarySubParseDelegate<T> transl,
+            BinarySubParseDelegate<MutagenFrame, T> transl,
             bool nullIfZero = false)
         {
             if (amount == 0 && nullIfZero) return Enumerable.Empty<T>();
 
             // Don't return early if count is zero, as we're expecting one content record still that is empty
             // But still okay if it doesn't exist
-            if (!frame.Reader.TryGetSubrecord(triggeringRecord, out var _))
+            if (!reader.Reader.TryGetSubrecord(triggeringRecord, out var _))
             {
                 if (amount == 0) return Enumerable.Empty<T>();
                 throw new ArgumentException($"List with a non zero counter did not follow up with expected type: {triggeringRecord}");
             }
             if (!IsLoqui)
             {
-                frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
             }
             var ret = new ExtendedList<T>();
-            var startingPos = frame.Position;
+            var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                if (transl(frame, out var subIitem))
+                if (transl(reader, out var subIitem))
                 {
                     ret.Add(subIitem);
                 }
             }
-            if (amount != 0 && frame.Position == startingPos)
+            if (amount != 0 && reader.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
@@ -445,14 +404,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public IEnumerable<T> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             RecordType countRecord,
             int countLengthLength,
-            BinarySubParseDelegate<T> transl,
+            BinarySubParseDelegate<MutagenFrame, T> transl,
             bool nullIfZero = false)
         {
-            var subHeader = frame.GetSubrecordFrame();
+            var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
@@ -463,9 +422,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
                     _ => throw new NotImplementedException(),
                 };
-                frame.Position += subHeader.TotalLength;
+                reader.Position += subHeader.TotalLength;
                 return Parse(
-                    frame,
+                    reader,
                     count,
                     triggeringRecord,
                     transl,
@@ -474,14 +433,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl);
             }
         }
 
         public ExtendedList<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate<T> transl,
@@ -489,24 +448,24 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         {
             var ret = new ExtendedList<T>();
             if (amount == 0) return ret;
-            var startingPos = frame.Position;
+            var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                var subHeader = frame.GetSubrecord();
+                var subHeader = reader.GetSubrecord();
                 if (subHeader.RecordType != triggeringRecord)
                 {
                     throw new ArgumentException($"Unexpected record encountered.");
                 }
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                if (transl(frame, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
             }
-            if (frame.Position == startingPos)
+            if (reader.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
@@ -514,14 +473,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var subHeader = frame.GetSubrecordFrame();
+            var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
@@ -532,9 +491,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
                     _ => throw new NotImplementedException(),
                 };
-                frame.Position += subHeader.TotalLength;
+                reader.Position += subHeader.TotalLength;
                 return ParsePerItem(
-                    frame,
+                    reader,
                     count,
                     triggeringRecord,
                     transl,
@@ -543,7 +502,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl,
                     recordTypeConverter);
@@ -551,31 +510,31 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             RecordType triggeringRecord,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<MutagenFrame, T> transl)
         {
             var ret = new ExtendedList<T>();
             if (amount == 0) return ret;
-            var startingPos = frame.Position;
+            var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                var subHeader = frame.GetSubrecord();
+                var subHeader = reader.GetSubrecord();
                 if (subHeader.RecordType != triggeringRecord)
                 {
                     throw new ArgumentException($"Unexpected record encountered.");
                 }
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                if (transl(frame, out var subIitem))
+                if (transl(reader, out var subIitem))
                 {
                     ret.Add(subIitem);
                 }
             }
-            if (frame.Position == startingPos)
+            if (reader.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
@@ -583,13 +542,13 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public ExtendedList<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             RecordType countRecord,
             int countLengthLength,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<MutagenFrame, T> transl)
         {
-            var subHeader = frame.GetSubrecordFrame();
+            var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
@@ -600,9 +559,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
                     _ => throw new NotImplementedException(),
                 };
-                frame.Position += subHeader.TotalLength;
+                reader.Position += subHeader.TotalLength;
                 return ParsePerItem(
-                    frame,
+                    reader,
                     count,
                     triggeringRecord,
                     transl);
@@ -610,21 +569,21 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl);
             }
         }
 
         public IEnumerable<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType countRecord,
             int countLengthLength,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType> triggeringRecord,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            var subHeader = frame.GetSubrecordFrame();
+            var subHeader = reader.GetSubrecordFrame();
             var recType = subHeader.RecordType;
             if (recType == countRecord)
             {
@@ -635,9 +594,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     4 => checked((int)BinaryPrimitives.ReadUInt32LittleEndian(subHeader.Content)),
                     _ => throw new NotImplementedException(),
                 };
-                frame.Position += subHeader.TotalLength;
+                reader.Position += subHeader.TotalLength;
                 return ParsePerItem(
-                    frame,
+                    reader,
                     count,
                     transl,
                     triggeringRecord,
@@ -646,7 +605,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 return Parse(
-                    frame,
+                    reader,
                     transl,
                     triggeringRecord,
                     recordTypeConverter);
@@ -654,7 +613,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public IEnumerable<T> ParsePerItem(
-            MutagenFrame frame,
+            MutagenFrame reader,
             int amount,
             BinaryMasterParseDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null,
@@ -662,37 +621,25 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         {
             if (amount == 0) return Enumerable.Empty<T>();
             var ret = new ExtendedList<T>();
-            var startingPos = frame.Position;
+            var startingPos = reader.Position;
             for (int i = 0; i < amount; i++)
             {
-                var nextRecord = HeaderTranslation.GetNextRecordType(frame.Reader);
+                var nextRecord = HeaderTranslation.GetNextRecordType(reader.Reader);
                 if (!triggeringRecord?.Contains(nextRecord) ?? false) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                if (transl(frame, out var subIitem, recordTypeConverter))
+                if (transl(reader, out var subIitem, recordTypeConverter))
                 {
                     ret.Add(subIitem);
                 }
             }
-            if (frame.Position == startingPos)
+            if (reader.Position == startingPos)
             {
                 throw new ArgumentException($"Parsed item on the list consumed no data.");
             }
             return ret;
-        }
-
-        public void Write(
-            MutagenWriter writer,
-            IEnumerable<T>? items,
-            BinarySubWriteDelegate<T> transl)
-        {
-            if (items == null) return;
-            foreach (var item in items)
-            {
-                transl(writer, item);
-            }
         }
 
         public void Write(
@@ -712,7 +659,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             MutagenWriter writer,
             IReadOnlyList<T>? items,
             RecordType recordType,
-            BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (items == null) return;
             try
@@ -886,44 +833,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public void Write(
-            MutagenWriter writer,
-            IReadOnlyList<T>? items,
-            int countLengthLength,
-            BinarySubWriteDelegate<T> transl)
-        {
-            if (items == null) return;
-            try
-            {
-                switch (countLengthLength)
-                {
-                    case 2:
-                        writer.Write(checked((ushort)items.Count));
-                        break;
-                    case 4:
-                        writer.Write(items.Count);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-            catch (OverflowException overflow)
-            {
-                throw new OverflowException(
-                    $"List<{typeof(T)}> had an overflow with {items?.Count} items.",
-                    overflow);
-            }
-            foreach (var item in items)
-            {
-                transl(writer, item);
-            }
-        }
-
         public void WritePerItem(
             MutagenWriter writer,
             IReadOnlyList<T>? items,
             RecordType recordType,
-            BinarySubWriteDelegate<T> transl)
+            BinarySubWriteDelegate<MutagenWriter, T> transl)
         {
             if (items == null) return;
             try
@@ -947,7 +861,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             IReadOnlyList<T>? items,
             RecordType counterType,
             RecordType recordType,
-            BinarySubWriteDelegate<T> transl,
+            BinarySubWriteDelegate<MutagenWriter, T> transl,
             byte counterLength,
             bool writeCounterIfNull = false)
         {
@@ -1097,23 +1011,23 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         #region Cache Helpers
         public void Parse<K>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             ICache<T, K> item,
             RecordType triggeringRecord,
-            BinarySubParseDelegate<T> transl)
+            BinarySubParseDelegate<MutagenFrame, T> transl)
         {
             item.SetTo(
                 Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl));
         }
         #endregion
     }
 
-    public class ListAsyncBinaryTranslation<T>
+    public class PluginListAsyncBinaryTranslation<T>
     {
-        public static readonly ListAsyncBinaryTranslation<T> Instance = new ListAsyncBinaryTranslation<T>();
+        public static readonly PluginListAsyncBinaryTranslation<T> Instance = new PluginListAsyncBinaryTranslation<T>();
 
         public delegate Task<TryGet<T>> BinarySubParseDelegate(MutagenFrame reader);
         public delegate Task<TryGet<T>> BinaryMasterParseDelegate(
@@ -1124,34 +1038,34 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             RecordType header);
         public static readonly bool IsLoqui;
 
-        static ListAsyncBinaryTranslation()
+        static PluginListAsyncBinaryTranslation()
         {
             IsLoqui = typeof(T).InheritsFrom(typeof(ILoquiObject));
         }
 
         public async Task<IEnumerable<T>> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(reader.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                var item = await transl(frame).ConfigureAwait(false);
+                var startingPos = reader.Position;
+                var item = await transl(reader).ConfigureAwait(false);
                 if (item.Succeeded)
                 {
                     ret.Add(item.Value);
                 }
 
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -1159,29 +1073,29 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public async Task<IEnumerable<T>> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var ret = new ExtendedList<T>();
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
-                if (!HeaderTranslation.TryGetRecordType(frame.Reader, triggeringRecord)) break;
+                if (!HeaderTranslation.TryGetRecordType(reader.Reader, triggeringRecord)) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
-                var startingPos = frame.Position;
-                var item = await transl(frame, recordTypeConverter).ConfigureAwait(false);
+                var startingPos = reader.Position;
+                var item = await transl(reader, recordTypeConverter).ConfigureAwait(false);
                 if (item.Succeeded)
                 {
                     ret.Add(item.Value);
                 }
 
-                if (frame.Position == startingPos)
+                if (reader.Position == startingPos)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                     throw new ArgumentException($"Parsed item on the list consumed no data: {item.Value}");
                 }
             }
@@ -1189,23 +1103,23 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public async Task<IEnumerable<T>> ParseThreaded(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
         {
             var tasks = new List<Task<TryGet<T>>>();
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
                 var nextRec = HeaderTranslation.GetNextSubrecordType(
-                    reader: frame.Reader,
+                    reader: reader.Reader,
                     contentLength: out var contentLen);
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
-                var toDo = transl(frame);
+                var toDo = transl(reader);
 
                 tasks.Add(Task.Run(() => toDo));
             }
@@ -1215,24 +1129,24 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public async Task<IEnumerable<T>> ParseThreaded(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
             RecordTypeConverter? recordTypeConverter = null)
         {
             var tasks = new List<Task<TryGet<T>>>();
-            while (!frame.Complete && !frame.Reader.Complete)
+            while (!reader.Complete && !reader.Reader.Complete)
             {
                 var nextRec = HeaderTranslation.GetNextSubrecordType(
-                    reader: frame.Reader,
+                    reader: reader.Reader,
                     contentLength: out var contentLen);
                 if (nextRec != triggeringRecord) break;
                 if (!IsLoqui)
                 {
-                    frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
                 }
 
-                var toDo = transl(frame, recordTypeConverter);
+                var toDo = transl(reader, recordTypeConverter);
 
                 tasks.Add(Task.Run(() => toDo));
             }
@@ -1243,7 +1157,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         #region Lengthed Triggering Record
         public async Task<ExtendedList<T>> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl,
             bool thread = false)
@@ -1252,14 +1166,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             if (thread)
             {
                 items = await ParseThreaded(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl).ConfigureAwait(false);
             }
             else
             {
                 items = await Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl).ConfigureAwait(false);
             }
@@ -1267,7 +1181,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public async Task<ExtendedList<T>> Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             RecordType triggeringRecord,
             BinaryMasterParseDelegate transl,
             bool thread,
@@ -1277,7 +1191,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             if (thread)
             {
                 items = await ParseThreaded(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
@@ -1285,7 +1199,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             else
             {
                 items = await Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl,
                     recordTypeConverter: recordTypeConverter).ConfigureAwait(false);
@@ -1296,14 +1210,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         #region Cache Helpers
         public async Task Parse<K>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             ICache<T, K> item,
             RecordType triggeringRecord,
             BinarySubParseDelegate transl)
         {
             item.SetTo(
                 await Parse(
-                    frame,
+                    reader,
                     triggeringRecord,
                     transl: transl));
         }

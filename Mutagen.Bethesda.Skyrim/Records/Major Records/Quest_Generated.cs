@@ -3179,7 +3179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.TextDisplayGlobals.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IGlobalGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QTGL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Quest_FieldIndex.TextDisplayGlobals;
@@ -3210,7 +3210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Stages.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestStage>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.INDX,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestStage.TryCreateFromBinary));
@@ -3220,7 +3220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Objectives.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestObjective>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.QOBJ,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestObjective.TryCreateFromBinary));
@@ -3238,7 +3238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Aliases.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<QuestAlias>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: QuestAlias_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestAlias.TryCreateFromBinary));

@@ -2132,7 +2132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SubBlocks.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<CellSubBlock>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.GRUP,
                             thread: frame.MetaData.Parallel,
                             recordTypeConverter: recordTypeConverter,

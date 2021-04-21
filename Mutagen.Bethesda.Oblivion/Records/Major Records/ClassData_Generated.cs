@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.PrimaryAttributes.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     amount: 2,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
@@ -1574,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
             item.SecondaryAttributes.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     amount: 7,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {

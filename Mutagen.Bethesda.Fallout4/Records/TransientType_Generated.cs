@@ -1179,7 +1179,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.FormType = frame.ReadUInt32();
             item.Links.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 

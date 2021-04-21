@@ -2064,17 +2064,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.MergedTo.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.LinkedDoors.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: LinkedDoor.TryCreateFromBinary));
             if (frame.Complete) return;
             NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustom(

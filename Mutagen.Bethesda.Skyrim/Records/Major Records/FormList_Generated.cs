@@ -1465,7 +1465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)FormList_FieldIndex.Items;

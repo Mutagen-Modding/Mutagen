@@ -1600,7 +1600,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<BodyPart>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.BPTN,
                             recordTypeConverter: recordTypeConverter,
                             transl: BodyPart.TryCreateFromBinary));

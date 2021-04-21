@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Objects = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RegionObject>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: RegionObject.TryCreateFromBinary)
                         .CastExtendedList<RegionObject>();
                     return (int)RegionObjects_FieldIndex.Objects;

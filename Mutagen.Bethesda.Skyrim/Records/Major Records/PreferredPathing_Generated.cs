@@ -1329,12 +1329,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.NavmeshSets.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: NavmeshSet.TryCreateFromBinary));
             item.NavmeshTree.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: NavmeshNode.TryCreateFromBinary));
         }
 

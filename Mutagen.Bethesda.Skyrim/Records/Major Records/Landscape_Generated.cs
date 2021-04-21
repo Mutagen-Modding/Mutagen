@@ -1972,7 +1972,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Layers.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<BaseLayer>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, RecordTypeConverter? conv) =>
@@ -2002,7 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Textures = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandscapeTextureGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILandscapeTextureGetter>>();
                     return (int)Landscape_FieldIndex.Textures;

@@ -73,8 +73,9 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Records\Binary\Translations\ColorBinaryType.cs" />
-    <Compile Include="Enums\FloatIntegerType.cs" />
     <Compile Include="Enums\Language.cs" />
+    <Compile Include="Records\Binary\Translations\FloatIntegerType.cs" />
+    <Compile Include="Translations\Binary\ListBinaryTranslation.cs" />
     <Compile Include="Enums\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Strings\StringsLanguageFormat.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Records\Binary\Translations\ParseResult.cs" />
     <Compile Include="Records\Xml\TranslatedStringXmlTranslation.cs" />
     <Compile Include="Structs\ModContext.cs" />
+    <Compile Include="Translations\Binary\UtilityTranslation.cs" />
     <Compile Include="Utility\GameEnvironment.cs" />
     <Compile Include="Utility\MajorRecordTypePrinter.cs" />
     <Compile Include="Utility\ModInstantiator.cs" />

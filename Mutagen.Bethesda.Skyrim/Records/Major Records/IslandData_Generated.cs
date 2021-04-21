@@ -1374,12 +1374,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: P3Int16BinaryTranslation.Instance.Parse));
             item.Vertices.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: P3FloatBinaryTranslation.Instance.Parse));
         }
 

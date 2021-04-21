@@ -2662,7 +2662,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.AdditionalRaces.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IRaceGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MODL),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)ArmorAddon_FieldIndex.AdditionalRaces;

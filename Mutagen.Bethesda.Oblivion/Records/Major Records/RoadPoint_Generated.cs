@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.NumConnectionsFluffBytes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
             item.Connections.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: P3FloatBinaryTranslation.Instance.Parse));
         }
 

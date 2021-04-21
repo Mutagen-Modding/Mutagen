@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Records.Binary.Streams
     /// <summary>
     /// A wrapper around IBinaryWriter with extra Mutagen-specific reference data
     /// </summary>
-    public class MutagenWriter : IDisposable
+    public class MutagenWriter : IBinaryWriteStream, IDisposable
     {
         private readonly bool dispose = true;
         private const byte Zero = 0;
@@ -42,6 +42,8 @@ namespace Mutagen.Bethesda.Records.Binary.Streams
         {
             get => this.BaseStream.Length;
         }
+
+        public bool IsLittleEndian => true;
 
         public MutagenWriter(
             string path,

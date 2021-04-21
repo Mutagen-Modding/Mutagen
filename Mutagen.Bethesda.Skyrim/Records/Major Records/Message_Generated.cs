@@ -1918,7 +1918,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MenuButtons.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MessageButton>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: MessageButton_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: MessageButton.TryCreateFromBinary));
@@ -1997,7 +1997,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region INAM
         private int? _INAMLocation;
-        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants) : UtilityTranslation.Zeros.Slice(0, 0);
+        public ReadOnlyMemorySlice<Byte> INAM => _INAMLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _INAMLocation.Value, _package.MetaData.Constants) : Array.Empty<byte>();
         #endregion
         #region Quest
         private int? _QuestLocation;

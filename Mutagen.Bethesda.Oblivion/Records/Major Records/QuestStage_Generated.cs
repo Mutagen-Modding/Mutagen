@@ -1215,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.LogEntries.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LogEntry>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: LogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LogEntry.TryCreateFromBinary));

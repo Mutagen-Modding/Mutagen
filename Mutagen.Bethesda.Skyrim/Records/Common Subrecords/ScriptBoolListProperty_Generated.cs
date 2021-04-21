@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Data.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Boolean>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: BooleanBinaryTranslation.Instance.Parse));
         }
 

@@ -2873,7 +2873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkTo.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IDialogGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TCLT),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)DialogResponses_FieldIndex.LinkTo;
@@ -2891,7 +2891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Responses.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DialogResponse>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.TRDT,
                             recordTypeConverter: recordTypeConverter,
                             transl: DialogResponse.TryCreateFromBinary));
@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -2913,7 +2913,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.UnknownData.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DialogResponsesUnknownData>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: DialogResponsesUnknownData_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: DialogResponsesUnknownData.TryCreateFromBinary));

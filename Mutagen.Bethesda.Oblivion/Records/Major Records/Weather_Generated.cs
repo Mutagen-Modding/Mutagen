@@ -2203,7 +2203,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Colors = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WeatherColors>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: WeatherColors.TryCreateFromBinary)
                         .CastExtendedList<WeatherColors>();
                     return (int)Weather_FieldIndex.Colors;
@@ -2227,7 +2227,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WeatherSound>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WeatherSound.TryCreateFromBinary));

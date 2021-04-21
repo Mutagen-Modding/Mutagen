@@ -1385,7 +1385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);

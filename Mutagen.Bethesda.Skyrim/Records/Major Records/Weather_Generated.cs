@@ -6280,7 +6280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WeatherSound>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WeatherSound.TryCreateFromBinary));
@@ -6290,7 +6290,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.SkyStatics.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IStaticGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Weather_FieldIndex.SkyStatics;

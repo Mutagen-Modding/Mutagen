@@ -7564,7 +7564,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.ActorEffect = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
@@ -7594,7 +7594,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Keywords = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -7622,7 +7622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         transl: FloatBinaryTranslation.Instance.Parse);
                     item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-                        frame: frame,
+                        reader: frame,
                         item: item.Starting,
                         transl: FloatBinaryTranslation.Instance.Parse);
                     item.BaseCarryWeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -7635,7 +7635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.InjuredHealthPercent = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
                     item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
-                        frame: frame,
+                        reader: frame,
                         item: item.Regen,
                         transl: FloatBinaryTranslation.Instance.Parse);
                     item.UnarmedDamage = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
@@ -7671,7 +7671,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MovementTypeNames.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.MTNM),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
@@ -7739,7 +7739,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Attacks.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Attack>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Attack_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Attack.TryCreateFromBinary));
@@ -7760,7 +7760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Hairs = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHairGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IHairGetter>>();
                     return (int)Race_FieldIndex.Hairs;
@@ -7770,7 +7770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Eyes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEyesGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IEyesGetter>>();
                     return (int)Race_FieldIndex.Eyes;
@@ -7851,7 +7851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.MovementTypes.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RaceMovementType>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RaceMovementType_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: RaceMovementType.TryCreateFromBinary));
@@ -7867,7 +7867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.EquipmentSlots.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IEquipTypeGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Race_FieldIndex.EquipmentSlots;

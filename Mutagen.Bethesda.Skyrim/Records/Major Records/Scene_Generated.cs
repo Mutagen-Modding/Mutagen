@@ -2607,7 +2607,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Phases.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ScenePhase>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.HNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: ScenePhase.TryCreateFromBinary));
@@ -2617,7 +2617,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Actors.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<SceneActor>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.ALID,
                             recordTypeConverter: recordTypeConverter,
                             transl: SceneActor.TryCreateFromBinary));
@@ -2627,7 +2627,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Actions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<SceneAction>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.ANAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: SceneAction.TryCreateFromBinary));
@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));

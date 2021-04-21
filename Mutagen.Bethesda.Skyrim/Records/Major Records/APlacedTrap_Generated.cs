@@ -3160,7 +3160,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Reflections.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WaterReflection>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XPWR,
                             recordTypeConverter: recordTypeConverter,
                             transl: WaterReflection.TryCreateFromBinary));
@@ -3170,7 +3170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.LinkedReferences.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LinkedReferences>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.XLKR,
                             recordTypeConverter: recordTypeConverter,
                             transl: LinkedReferences.TryCreateFromBinary));
@@ -3217,7 +3217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.LocationRefTypes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILocationReferenceTypeGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILocationReferenceTypeGetter>>();
                     return (int)APlacedTrap_FieldIndex.LocationRefTypes;
@@ -3236,7 +3236,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DistantLodData = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FloatBinaryTranslation.Instance.Parse)
                         .CastExtendedList<Single>();
                     return (int)APlacedTrap_FieldIndex.DistantLodData;

@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterCellConnections = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<InterCellPoint>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: InterCellPoint.TryCreateFromBinary)
                         .CastExtendedList<InterCellPoint>();
                     return (int)PathGrid_FieldIndex.InterCellConnections;
@@ -1920,7 +1920,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.PointToReferenceMappings.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<PointToReferenceMapping>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.PGRL,
                             recordTypeConverter: recordTypeConverter,
                             transl: PointToReferenceMapping.TryCreateFromBinary));

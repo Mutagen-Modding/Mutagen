@@ -1581,7 +1581,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Locations.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LoadScreenLocation>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.LNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: LoadScreenLocation.TryCreateFromBinary));

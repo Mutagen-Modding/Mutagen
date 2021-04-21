@@ -1193,7 +1193,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.References.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: WorldspaceReference.TryCreateFromBinary));
         }
 

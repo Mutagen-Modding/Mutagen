@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.ExtraParts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IHeadPartGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadPart_FieldIndex.ExtraParts;
@@ -2394,7 +2394,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.Parts.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Part>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Part_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Part.TryCreateFromBinary));
@@ -2431,7 +2431,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     item.Conditions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));

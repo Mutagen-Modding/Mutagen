@@ -1229,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Grasses = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RegionGrass>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: RegionGrass.TryCreateFromBinary)
                         .CastExtendedList<RegionGrass>();
                     return (int)RegionGrasses_FieldIndex.Grasses;

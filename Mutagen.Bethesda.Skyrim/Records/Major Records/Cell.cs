@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 obj.Persistent.AddRange(
                     ListBinaryTranslation<IPlaced>.Instance.Parse(
-                        frame: frame,
+                        reader: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)

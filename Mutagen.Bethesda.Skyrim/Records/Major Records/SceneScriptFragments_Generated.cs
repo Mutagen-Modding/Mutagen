@@ -1178,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.PhaseFragments.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ScenePhaseFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
-                    frame: frame,
+                    reader: frame,
                     transl: ScenePhaseFragment.TryCreateFromBinary));
         }
 

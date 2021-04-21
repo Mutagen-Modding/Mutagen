@@ -2402,7 +2402,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     item.Items = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
-                            frame: frame,
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,

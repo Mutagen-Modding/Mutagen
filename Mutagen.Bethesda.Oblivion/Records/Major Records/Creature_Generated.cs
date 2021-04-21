@@ -3750,7 +3750,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Items.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ItemEntry>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.CNTO,
                             recordTypeConverter: recordTypeConverter,
                             transl: ItemEntry.TryCreateFromBinary));
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Spells.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Creature_FieldIndex.Spells;
@@ -3770,7 +3770,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Models = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
                                 return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
@@ -3797,7 +3797,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Factions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<RankPlacement>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: RecordTypes.SNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: RankPlacement.TryCreateFromBinary));
@@ -3830,7 +3830,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.AIPackages.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IAIPackageGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKID),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Creature_FieldIndex.AIPackages;
@@ -3840,7 +3840,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Animations = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<String>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out String listSubItem) =>
                             {
                                 return Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
@@ -3921,7 +3921,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.Sounds.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<CreatureSound>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: CreatureSound_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: CreatureSound.TryCreateFromBinary));

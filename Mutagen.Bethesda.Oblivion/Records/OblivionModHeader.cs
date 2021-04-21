@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 item.MasterReferences.SetTo(
                     ListBinaryTranslation<MasterReference>.Instance.Parse(
-                        frame: frame.SpawnAll(),
+                        reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.MAST,
                         transl: MasterReference.TryCreateFromBinary));
                 frame.MetaData.MasterReferences.SetTo(item.MasterReferences);

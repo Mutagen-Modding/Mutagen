@@ -2017,7 +2017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     item.RandomTeleportDestinations.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPlaceGetter>>.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)Door_FieldIndex.RandomTeleportDestinations;
