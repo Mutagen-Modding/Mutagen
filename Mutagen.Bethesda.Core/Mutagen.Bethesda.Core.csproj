@@ -77,9 +77,9 @@
     <Compile Include="Enums\Language.cs" />
     <Compile Include="Enums\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
-    <Compile Include="Enums\StringsLanguageFormat.cs" />
-    <Compile Include="Enums\StringsFileFormat.cs" />
-    <Compile Include="Enums\StringsSource.cs" />
+    <Compile Include="Strings\StringsLanguageFormat.cs" />
+    <Compile Include="Strings\StringsFileFormat.cs" />
+    <Compile Include="Strings\StringsSource.cs" />
     <Compile Include="Exceptions\BsaException.cs" />
     <Compile Include="Exceptions\MissingModException.cs" />
     <Compile Include="Exceptions\MissingRecordException.cs" />
@@ -183,14 +183,14 @@
     <Compile Include="Records\RecordTypes.cs" />
     <Compile Include="Records\Binary\Streams\WritingBundle.cs" />
     <Compile Include="Records\Binary\Streams\ParsingBundle.cs" />
-    <Compile Include="String Lookup\IStringsLookup.cs" />
-    <Compile Include="String Lookup\ITranslatedString.cs" />
-    <Compile Include="String Lookup\IStringsFolderLookup.cs" />
-    <Compile Include="String Lookup\StringsInstructions.cs" />
-    <Compile Include="String Lookup\StringsFolderLookupOverlay.cs" />
-    <Compile Include="String Lookup\StringsUtility.cs" />
-    <Compile Include="String Lookup\StringsWriter.cs" />
-    <Compile Include="String Lookup\TranslatedString.cs" />
+    <Compile Include="Strings\IStringsLookup.cs" />
+    <Compile Include="Strings\ITranslatedString.cs" />
+    <Compile Include="Strings\IStringsFolderLookup.cs" />
+    <Compile Include="Strings\StringsInstructions.cs" />
+    <Compile Include="Strings\StringsFolderLookupOverlay.cs" />
+    <Compile Include="Strings\StringsUtility.cs" />
+    <Compile Include="Strings\StringsWriter.cs" />
+    <Compile Include="Strings\TranslatedString.cs" />
     <Compile Include="Structs\FormID.cs" />
     <Compile Include="Structs\FormKey.cs" />
     <Compile Include="Structs\ModIndex.cs" />
@@ -306,7 +306,7 @@
     <Compile Include="Records\Xml\IXmlFolderItem.cs" />
     <Compile Include="Records\Xml\LoquiXmlFolderTranslation.cs" />
     <Compile Include="Records\Xml\ModKeyXmlTranslation.cs" />
-    <Compile Include="String Lookup\StringsLookupOverlay.cs" />
+    <Compile Include="Strings\StringsLookupOverlay.cs" />
     <Compile Include="Records\MajorRecord_Generated.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>

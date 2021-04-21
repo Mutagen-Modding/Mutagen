@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     public enum StringsFileFormat
     {
