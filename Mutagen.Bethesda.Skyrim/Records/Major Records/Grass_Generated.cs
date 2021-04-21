@@ -2270,13 +2270,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadUInt8();
                     item.UnitsFromWater = dataFrame.ReadUInt16();
                     item.Unknown2 = dataFrame.ReadUInt16();
-                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.PositionRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.HeightRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ColorRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.WavePeriod = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.PositionRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.HeightRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ColorRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.WavePeriod = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:

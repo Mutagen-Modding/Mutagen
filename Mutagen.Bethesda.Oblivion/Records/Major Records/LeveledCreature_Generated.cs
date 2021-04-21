@@ -1701,7 +1701,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LeveledCreature_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
@@ -1719,7 +1719,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)LeveledCreature_FieldIndex.Script;
                 }
@@ -1728,7 +1728,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Template.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)LeveledCreature_FieldIndex.Template;
                 }

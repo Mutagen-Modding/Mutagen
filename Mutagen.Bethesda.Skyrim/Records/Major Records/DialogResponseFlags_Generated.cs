@@ -1050,9 +1050,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponseFlags item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<DialogResponses.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<DialogResponses.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.ResetHours = FloatBinaryTranslation.Parse(
-                frame: frame,
+                reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.0003663003663003663);
         }

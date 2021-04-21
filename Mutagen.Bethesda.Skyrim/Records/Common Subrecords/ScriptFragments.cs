@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
             {
                 var flag = (Flag)frame.ReadUInt8();
                 item.FileName = StringBinaryTranslation.Instance.Parse(
-                     frame: frame,
+                     reader: frame,
                      stringBinaryType: StringBinaryType.PrependLengthUShort);
                 if (flag.HasFlag(Flag.OnBegin))
                 {

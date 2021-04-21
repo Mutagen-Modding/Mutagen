@@ -1049,8 +1049,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingFlags item,
             MutagenFrame frame)
         {
-            item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
         }
 
     }

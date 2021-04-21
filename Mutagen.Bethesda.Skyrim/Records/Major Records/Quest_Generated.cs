@@ -3153,7 +3153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Quest_FieldIndex.Name;
@@ -3162,17 +3162,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     item.Priority = dataFrame.ReadUInt8();
                     item.QuestFormVersion = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadInt32();
-                    item.Type = EnumBinaryTranslation<Quest.TypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Type = EnumBinaryTranslation<Quest.TypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     return (int)Quest_FieldIndex.Type;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Event = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Event = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Quest_FieldIndex.Event;
                 }
                 case RecordTypeInts.QTGL:
@@ -3188,7 +3188,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ObjectWindowFilter = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Quest_FieldIndex.ObjectWindowFilter;
                 }
@@ -3248,7 +3248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Quest_FieldIndex.Description;

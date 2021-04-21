@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Index = EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)BodyPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.ICON:
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.Icon;
                 }

@@ -1973,7 +1973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BranchType = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)PackageBranch_FieldIndex.BranchType;
                 }
@@ -2000,14 +2000,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ProcedureType = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:

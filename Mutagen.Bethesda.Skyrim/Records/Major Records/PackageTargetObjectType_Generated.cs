@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

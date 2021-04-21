@@ -1061,7 +1061,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MasterReference_FieldIndex.Master) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Master = Mutagen.Bethesda.Records.Binary.Translations.ModKeyBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Master = Mutagen.Bethesda.Records.Binary.Translations.ModKeyBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MasterReference_FieldIndex.Master;
                 }
                 case RecordTypeInts.DATA:

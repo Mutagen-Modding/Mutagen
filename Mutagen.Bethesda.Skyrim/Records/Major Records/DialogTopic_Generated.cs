@@ -2683,7 +2683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)DialogTopic_FieldIndex.Name;
@@ -2692,7 +2692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Priority = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         multiplier: 50f);
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
@@ -2701,7 +2701,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Branch.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
@@ -2710,7 +2710,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Quest.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
@@ -2718,15 +2718,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SubtypeName = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:

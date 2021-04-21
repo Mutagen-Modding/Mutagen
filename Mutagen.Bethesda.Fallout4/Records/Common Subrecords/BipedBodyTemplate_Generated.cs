@@ -990,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IBipedBodyTemplate item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

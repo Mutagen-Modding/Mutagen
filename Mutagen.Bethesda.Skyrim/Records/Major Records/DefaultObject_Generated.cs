@@ -1049,10 +1049,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDefaultObject item,
             MutagenFrame frame)
         {
-            item.Use = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(frame: frame);
+            item.Use = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
             item.Object.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
         }
 

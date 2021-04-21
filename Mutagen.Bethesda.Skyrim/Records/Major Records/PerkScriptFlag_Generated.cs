@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkScriptFlag item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<PerkScriptFlag.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<PerkScriptFlag.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.FragmentIndex = frame.ReadUInt16();
         }
 

@@ -2115,7 +2115,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MovementType_FieldIndex.Name;
                 }
@@ -2123,19 +2123,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.LeftWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.LeftRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RightWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.RightRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ForwardWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ForwardRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BackWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BackRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.LeftWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LeftRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RightWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RightRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ForwardWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ForwardRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BackWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BackRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.RotateInPlaceWalk = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         multiplier: 57.2958f);
                     item.RotateInPlaceRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         multiplier: 57.2958f);
                     if (dataFrame.Complete)
                     {
@@ -2143,7 +2143,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)MovementType_FieldIndex.RotateInPlaceRun;
                     }
                     item.RotateWhileMovingRun = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         multiplier: 57.2958f);
                     return (int)MovementType_FieldIndex.RotateWhileMovingRun;
                 }

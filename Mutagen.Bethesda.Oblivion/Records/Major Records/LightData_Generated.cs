@@ -1421,16 +1421,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Time = frame.ReadInt32();
             item.Radius = frame.ReadUInt32();
             item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.FalloffExponent = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FOV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.FalloffExponent = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FOV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= LightData.VersioningBreaks.Break0;
                 return;
             }
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1448,7 +1448,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.IdleAnimation.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)AnimatedObject_FieldIndex.IdleAnimation;
                 }

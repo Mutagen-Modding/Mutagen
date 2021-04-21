@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationFallback item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Data = frame.ReadInt32();
         }
 

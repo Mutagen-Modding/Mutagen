@@ -1170,7 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             ConditionFloatBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);

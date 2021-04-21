@@ -1563,12 +1563,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Fluff1 = frame.ReadUInt8();
             item.UnitFromWaterAmount = frame.ReadUInt16();
             item.Fluff2 = frame.ReadUInt16();
-            item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.PositionRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.HeightRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.ColorRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.WavePeriod = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.PositionRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.HeightRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ColorRange = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.WavePeriod = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

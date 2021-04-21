@@ -1157,8 +1157,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Index = frame.ReadInt32();
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
-            item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(12));
+            item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown2 = frame.ReadInt32();
         }
 

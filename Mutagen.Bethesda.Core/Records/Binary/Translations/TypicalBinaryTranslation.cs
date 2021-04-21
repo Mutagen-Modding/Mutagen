@@ -11,15 +11,15 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         protected abstract T ParseValue(MutagenFrame reader);
 
-        public bool Parse(MutagenFrame frame, out T item)
+        public bool Parse(MutagenFrame reader, out T item)
         {
-            item = ParseValue(frame);
+            item = ParseValue(reader);
             return true;
         }
 
-        public T Parse(MutagenFrame frame)
+        public T Parse(MutagenFrame reader)
         {
-            return ParseValue(frame);
+            return ParseValue(reader);
         }
 
         public abstract void Write(MutagenWriter writer, T item);

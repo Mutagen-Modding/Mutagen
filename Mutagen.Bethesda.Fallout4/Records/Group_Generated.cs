@@ -1365,7 +1365,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
-            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
         }

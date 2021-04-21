@@ -1118,7 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.PerkConditionTabCount = frame.ReadUInt8();
         }
 

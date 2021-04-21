@@ -1675,9 +1675,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
             item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FarAwayModelDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

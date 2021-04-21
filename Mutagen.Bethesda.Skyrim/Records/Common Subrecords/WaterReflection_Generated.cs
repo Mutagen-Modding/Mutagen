@@ -1121,14 +1121,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Water.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             if (frame.Complete)
             {
                 item.Versioning |= WaterReflection.VersioningBreaks.Break0;
                 return;
             }
-            item.Type = EnumBinaryTranslation<WaterReflection.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<WaterReflection.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

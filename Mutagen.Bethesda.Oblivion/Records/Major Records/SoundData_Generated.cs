@@ -1223,7 +1223,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             item.FrequencyAdjustment = frame.ReadInt8();
             frame.Position += 1;
-            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
         static partial void FillBinaryMinimumAttenuationDistanceCustom(

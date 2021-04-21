@@ -20,27 +20,27 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             return ret;
         }
 
-        public static float Parse(MutagenFrame frame, FloatIntegerType integerType, double multiplier)
+        public static float Parse(MutagenFrame reader, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
             {
                 case FloatIntegerType.UInt:
                     {
-                        var raw = frame.ReadUInt32();
+                        var raw = reader.ReadUInt32();
                         double d = raw;
                         d *= multiplier;
                         return (float)d;
                     }
                 case FloatIntegerType.UShort:
                     {
-                        var raw = frame.ReadUInt16();
+                        var raw = reader.ReadUInt16();
                         double d = raw;
                         d *= multiplier;
                         return (float)d;
                     }
                 case FloatIntegerType.Byte:
                     {
-                        var raw = frame.ReadUInt8();
+                        var raw = reader.ReadUInt8();
                         double d = raw;
                         d *= multiplier;
                         return (float)d;
@@ -50,9 +50,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public float Parse(MutagenFrame frame, float multiplier)
+        public float Parse(MutagenFrame reader, float multiplier)
         {
-            return Parse(frame) * multiplier;
+            return Parse(reader) * multiplier;
         }
 
         public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)

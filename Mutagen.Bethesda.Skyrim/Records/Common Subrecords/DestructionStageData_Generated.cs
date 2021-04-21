@@ -1375,15 +1375,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HealthPercent = frame.ReadUInt8();
             item.Index = frame.ReadUInt8();
             item.ModelDamageStage = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.SelfDamagePerSecond = frame.ReadInt32();
             item.Explosion.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Debris.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.DebrisCount = frame.ReadInt32();
         }

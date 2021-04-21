@@ -1172,7 +1172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Location.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(

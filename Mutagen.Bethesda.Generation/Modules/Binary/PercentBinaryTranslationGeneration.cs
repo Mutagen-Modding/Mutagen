@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             using (var args = new ArgsWrapper(fg,
                 $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
             {
-                args.Add($"frame: {reader}");
+                args.Add($"reader: {reader}");
                 args.Add($"integerType: {nameof(FloatIntegerType)}.{percType.IntegerType}");
             }
             return true;

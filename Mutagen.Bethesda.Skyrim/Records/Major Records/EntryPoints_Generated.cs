@@ -1035,8 +1035,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEntryPoints item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Furniture.AnimationType>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.Points = EnumBinaryTranslation<Furniture.Entry>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Type = EnumBinaryTranslation<Furniture.AnimationType>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Points = EnumBinaryTranslation<Furniture.Entry>.Instance.Parse(reader: frame.SpawnWithLength(2));
         }
 
     }

@@ -1826,24 +1826,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Object.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadUInt16();
-            item.Density = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Density = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Clustering = frame.ReadUInt8();
             item.MinSlope = frame.ReadUInt8();
             item.MaxSlope = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.RadiusWrtPercent = frame.ReadUInt16();
             item.Radius = frame.ReadUInt16();
-            item.MinHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Sink = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SinkVariance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SizeVariance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AngleVariance = Mutagen.Bethesda.Records.Binary.Translations.P3UInt16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(6));
+            item.MinHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MaxHeight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Sink = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SinkVariance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.SizeVariance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AngleVariance = Mutagen.Bethesda.Records.Binary.Translations.P3UInt16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(6));
         }
 
     }

@@ -1268,12 +1268,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverride item,
             MutagenFrame frame)
         {
-            item.SetFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ClearFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.SetFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.ClearFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

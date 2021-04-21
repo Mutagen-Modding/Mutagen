@@ -1520,7 +1520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= CrimeValues.VersioningBreaks.Break0;
                 return;
             }
-            item.StealMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.StealMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CrimeValues.VersioningBreaks.Break1;

@@ -1283,11 +1283,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangle item,
             MutagenFrame frame)
         {
-            item.Vertices = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Vertices = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(reader: frame);
             item.EdgeLink_0_1 = frame.ReadInt16();
             item.EdgeLink_1_2 = frame.ReadInt16();
             item.EdgeLink_2_0 = frame.ReadInt16();
-            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.CoverFlags = frame.ReadUInt16();
         }
 

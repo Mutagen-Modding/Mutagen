@@ -1521,13 +1521,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.EffectArt.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     item.Shader.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
-                    item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     return (int)VisualEffect_FieldIndex.Flags;
                 }
                 default:

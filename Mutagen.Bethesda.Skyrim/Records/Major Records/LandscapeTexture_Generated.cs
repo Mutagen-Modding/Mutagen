@@ -1870,7 +1870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TextureSet.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)LandscapeTexture_FieldIndex.TextureSet;
                 }
@@ -1879,7 +1879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MaterialType.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)LandscapeTexture_FieldIndex.MaterialType;
                 }
@@ -1911,7 +1911,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (frame.MetaData.FormVersion!.Value >= 43)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Flags = EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                        item.Flags = EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     }
                     return (int)LandscapeTexture_FieldIndex.Flags;
                 }

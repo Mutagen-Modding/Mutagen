@@ -1293,7 +1293,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)MapMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.FULL:
@@ -1301,7 +1301,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Name) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MapMarker_FieldIndex.Name;
                 }
@@ -1315,7 +1315,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                             {
                                 return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
-                                    frame: r.SpawnWithLength(2),
+                                    reader: r.SpawnWithLength(2),
                                     item: out listSubItem);
                             })
                         .CastExtendedList<MapMarker.Type>();

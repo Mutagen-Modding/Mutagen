@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.NavMesh.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.NodeIndex = frame.ReadUInt32();
         }

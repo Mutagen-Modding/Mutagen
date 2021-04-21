@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Class_FieldIndex.Name;
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Description = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Class_FieldIndex.Description;
                 }
@@ -2232,7 +2232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Class_FieldIndex.Icon;
                 }
@@ -2241,13 +2241,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Unknown = dataFrame.ReadInt32();
-                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                         reader: frame,
                         item: item.SkillWeights,
                         transl: ByteBinaryTranslation.Instance.Parse);
-                    item.BleedoutDefault = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.BleedoutDefault = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.VoicePoints = dataFrame.ReadUInt32();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
                         reader: frame,

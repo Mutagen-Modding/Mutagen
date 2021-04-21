@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1228,7 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EPFD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PerkEntryPointModifyValue_FieldIndex.Value;
                 }
                 default:

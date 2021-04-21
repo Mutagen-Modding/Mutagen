@@ -1058,7 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Reference.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)ScriptObjectReference_FieldIndex.Reference;
                 }

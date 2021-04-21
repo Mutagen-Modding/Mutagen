@@ -1113,10 +1113,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.Target.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Modifier = frame.ReadInt32();
-            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

@@ -12,27 +12,27 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 
         public virtual bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out string item)
         {
             return Parse(
-                frame: frame,
+                reader: reader,
                 parseWhole: true,
                 item: out item);
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             bool parseWhole,
             out string item,
             StringBinaryType binaryType = StringBinaryType.NullTerminate)
         {
-            item = Parse(frame, parseWhole: parseWhole, stringBinaryType: binaryType);
+            item = Parse(reader, parseWhole: parseWhole, stringBinaryType: binaryType);
             return true;
         }
 
         public string Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             bool parseWhole = true,
             StringBinaryType stringBinaryType = StringBinaryType.NullTerminate)
         {
@@ -42,21 +42,21 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                 case StringBinaryType.NullTerminate:
                     if (parseWhole)
                     {
-                        return BinaryStringUtility.ProcessWholeToZString(frame.ReadMemory(checked((int)frame.Remaining)));
+                        return BinaryStringUtility.ProcessWholeToZString(reader.ReadMemory(checked((int)reader.Remaining)));
                     }
                     else
                     {
-                        return BinaryStringUtility.ParseUnknownLengthString(frame.Reader);
+                        return BinaryStringUtility.ParseUnknownLengthString(reader.Reader);
                     }
                 case StringBinaryType.PrependLength:
                     {
-                        var len = frame.ReadInt32();
-                        return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                        var len = reader.ReadInt32();
+                        return BinaryStringUtility.ToZString(reader.ReadMemory(len));
                     }
                 case StringBinaryType.PrependLengthUShort:
                     {
-                        var len = frame.ReadInt16();
-                        return BinaryStringUtility.ToZString(frame.ReadMemory(len));
+                        var len = reader.ReadInt16();
+                        return BinaryStringUtility.ToZString(reader.ReadMemory(len));
                     }
                 default:
                     throw new NotImplementedException();
@@ -64,35 +64,35 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public TranslatedString Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             StringsSource source,
             StringBinaryType stringBinaryType,
             bool parseWhole = true)
         {
-            if (frame.MetaData.StringsLookup != null)
+            if (reader.MetaData.StringsLookup != null)
             {
-                if (frame.Remaining != 4)
+                if (reader.Remaining != 4)
                 {
-                    throw new ArgumentException($"String in Strings File format had unexpected length: {frame.Remaining} != 4");
+                    throw new ArgumentException($"String in Strings File format had unexpected length: {reader.Remaining} != 4");
                 }
-                uint key = frame.ReadUInt32();
+                uint key = reader.ReadUInt32();
                 if (key == 0) return new TranslatedString(directString: null);
-                return frame.MetaData.StringsLookup.CreateString(source, key);
+                return reader.MetaData.StringsLookup.CreateString(source, key);
             }
             else
             {
-                return Parse(frame, parseWhole, stringBinaryType);
+                return Parse(reader, parseWhole, stringBinaryType);
             }
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             StringsSource source,
             StringBinaryType binaryType,
             out TranslatedString item,
             bool parseWhole = true)
         {
-            item = Parse(frame, source, binaryType, parseWhole);
+            item = Parse(reader, source, binaryType, parseWhole);
             return true;
         }
 

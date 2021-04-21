@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public override int ExpectedLength => 3;
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)]out Color item,
             ColorBinaryType binaryType)
         {
@@ -21,15 +21,15 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                 throw new NotImplementedException();
             }
             return this.Parse(
-                frame,
+                reader,
                 out item);
         }
 
         public Color Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             ColorBinaryType binaryType)
         {
-            return frame.ReadColor(binaryType);
+            return reader.ReadColor(binaryType);
         }
 
         public override Color ParseValue(MutagenFrame reader)

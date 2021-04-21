@@ -1199,8 +1199,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             MutagenFrame frame)
         {
-            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Day = frame.ReadUInt8();
             item.Time = frame.ReadUInt8();
             item.Duration = frame.ReadInt32();

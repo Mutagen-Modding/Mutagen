@@ -1421,7 +1421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return;
             }
             item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Scale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Scale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

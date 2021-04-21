@@ -3625,12 +3625,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Type = EnumBinaryTranslation<Package.Types>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.InterruptOverride = EnumBinaryTranslation<Package.Interrupt>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Type = EnumBinaryTranslation<Package.Types>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.InterruptOverride = EnumBinaryTranslation<Package.Interrupt>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Unknown = dataFrame.ReadUInt8();
-                    item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     item.Unknown2 = dataFrame.ReadUInt16();
                     return (int)Package_FieldIndex.Unknown2;
                 }
@@ -3639,11 +3639,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.ScheduleMonth = dataFrame.ReadInt8();
-                    item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.ScheduleDate = dataFrame.ReadUInt8();
                     item.ScheduleHour = dataFrame.ReadInt8();
                     item.ScheduleMinute = dataFrame.ReadInt8();
-                    item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(3));
+                    item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     item.ScheduleDurationInMinutes = dataFrame.ReadInt32();
                     return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }
@@ -3675,7 +3675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CombatStyle.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)Package_FieldIndex.CombatStyle;
                 }
@@ -3684,7 +3684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OwnerQuest.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)Package_FieldIndex.OwnerQuest;
                 }

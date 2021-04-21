@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt16();
             item.Reference.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Count = frame.ReadInt16();
             item.Unknown2 = frame.ReadInt16();

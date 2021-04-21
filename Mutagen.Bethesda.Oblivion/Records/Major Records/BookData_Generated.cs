@@ -1153,10 +1153,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBookData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<ArtObject.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<ArtObject.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ArtObject_FieldIndex.Type;
                 }
                 default:

@@ -1085,9 +1085,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMountData item,
             MutagenFrame frame)
         {
-            item.MountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.DismountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MountCameraOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DismountOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MountCameraOffset = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

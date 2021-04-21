@@ -1149,10 +1149,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.ChargeAmount = frame.ReadUInt32();
             item.EnchantCost = frame.ReadUInt32();
-            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

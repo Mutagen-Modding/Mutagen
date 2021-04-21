@@ -23,16 +23,16 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public static Percent Parse(MutagenFrame frame, FloatIntegerType integerType)
+        public static Percent Parse(MutagenFrame reader, FloatIntegerType integerType)
         {
             switch (integerType)
             {
                 case FloatIntegerType.UInt:
-                    return Percent.FactoryPutInRange(((double)frame.ReadUInt32()) / uint.MaxValue);
+                    return Percent.FactoryPutInRange(((double)reader.ReadUInt32()) / uint.MaxValue);
                 case FloatIntegerType.UShort:
-                    return Percent.FactoryPutInRange(((double)frame.ReadUInt16()) / ushort.MaxValue);
+                    return Percent.FactoryPutInRange(((double)reader.ReadUInt16()) / ushort.MaxValue);
                 case FloatIntegerType.Byte:
-                    return Percent.FactoryPutInRange(((double)frame.ReadUInt8()) / byte.MaxValue);
+                    return Percent.FactoryPutInRange(((double)reader.ReadUInt8()) / byte.MaxValue);
                 default:
                     throw new NotImplementedException();
             }

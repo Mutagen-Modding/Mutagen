@@ -2132,22 +2132,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Action = EnumBinaryTranslation<CameraShot.ActionType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Location = EnumBinaryTranslation<CameraShot.LocationType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Target = EnumBinaryTranslation<CameraShot.TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Flags = EnumBinaryTranslation<CameraShot.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.TimeMultiplierPlayer = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.TimeMultiplierTarget = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.TimeMultiplierGlobal = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MaxTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MinTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.TargetPercentBetweenActors = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Action = EnumBinaryTranslation<CameraShot.ActionType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Location = EnumBinaryTranslation<CameraShot.LocationType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Target = EnumBinaryTranslation<CameraShot.TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<CameraShot.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.TimeMultiplierPlayer = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TimeMultiplierTarget = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TimeMultiplierGlobal = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.MaxTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.MinTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TargetPercentBetweenActors = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= CameraShot.DATADataType.Break0;
                         return (int)CameraShot_FieldIndex.TargetPercentBetweenActors;
                     }
-                    item.NearTargetDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NearTargetDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)CameraShot_FieldIndex.NearTargetDistance;
                 }
                 case RecordTypeInts.MNAM:
@@ -2155,7 +2155,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.ImageSpaceModifier.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }

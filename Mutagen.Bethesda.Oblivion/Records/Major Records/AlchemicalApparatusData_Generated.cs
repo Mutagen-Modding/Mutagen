@@ -1153,10 +1153,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Quality = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Quality = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

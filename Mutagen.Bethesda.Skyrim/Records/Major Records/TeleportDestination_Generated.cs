@@ -1169,11 +1169,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Door.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
-            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

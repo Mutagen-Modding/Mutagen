@@ -1699,11 +1699,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Creature.Types>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Type = EnumBinaryTranslation<Creature.Types>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.CombatSkill = frame.ReadUInt8();
             item.MagicSkill = frame.ReadUInt8();
             item.StealthSkill = frame.ReadUInt8();
-            item.SoulLevel = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.SoulLevel = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.Health = frame.ReadUInt32();
             item.AttackDamage = frame.ReadUInt16();
             item.Strength = frame.ReadUInt8();

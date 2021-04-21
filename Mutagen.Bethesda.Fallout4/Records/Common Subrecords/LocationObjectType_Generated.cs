@@ -1016,7 +1016,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectType item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

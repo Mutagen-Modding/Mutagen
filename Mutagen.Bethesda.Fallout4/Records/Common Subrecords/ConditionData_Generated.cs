@@ -1526,7 +1526,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionData item,
             MutagenFrame frame)
         {
-            item.Function = EnumBinaryTranslation<Condition.FunctionType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Function = EnumBinaryTranslation<Condition.FunctionType>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.Unknown2 = frame.ReadUInt16();
             ConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,

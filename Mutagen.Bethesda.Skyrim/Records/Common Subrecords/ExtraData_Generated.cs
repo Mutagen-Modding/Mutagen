@@ -1098,7 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ExtraDataBinaryCreateTranslation.FillBinaryOwnerCustom(
                 frame: frame,
                 item: item);
-            item.ItemCondition = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.ItemCondition = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
         static partial void FillBinaryOwnerCustom(

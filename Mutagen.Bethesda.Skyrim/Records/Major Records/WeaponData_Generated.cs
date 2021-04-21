@@ -2337,38 +2337,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeaponData item,
             MutagenFrame frame)
         {
-            item.AnimationType = EnumBinaryTranslation<WeaponAnimationType>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.AnimationType = EnumBinaryTranslation<WeaponAnimationType>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             WeaponDataBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
             item.Unused2 = frame.ReadInt16();
-            item.SightFOV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.SightFOV = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unknown = frame.ReadInt32();
             item.BaseVATStoHitChance = frame.ReadUInt8();
-            item.AttackAnimation = EnumBinaryTranslation<WeaponData.AttackAnimationType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.AttackAnimation = EnumBinaryTranslation<WeaponData.AttackAnimationType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.NumProjectiles = frame.ReadUInt8();
             item.EmbeddedWeaponAV = frame.ReadUInt8();
-            item.RangeMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RangeMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.OnHit = EnumBinaryTranslation<WeaponData.OnHitType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.RangeMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RangeMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.OnHit = EnumBinaryTranslation<WeaponData.OnHitType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             WeaponDataBinaryCreateTranslation.FillBinaryFlags2Custom(
                 frame: frame,
                 item: item);
-            item.AnimationAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.AnimationAttackMult = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Unknown2 = frame.ReadInt32();
-            item.RumbleLeftMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RumbleRightMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.RumbleDuration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(12));
+            item.RumbleLeftMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RumbleRightMotorStrength = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RumbleDuration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(12));
             if (frame.Complete) return;
-            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown4 = frame.ReadInt64();
-            item.Resist = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Resist = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown5 = frame.ReadInt32();
-            item.Stagger = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Stagger = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
         static partial void FillBinaryFlagsCustom(

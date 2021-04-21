@@ -1189,10 +1189,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt16();
             item.Unknown2 = frame.ReadInt8();
             item.ScriptName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
             item.FragmentName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
 

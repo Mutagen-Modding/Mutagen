@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }
                 default:

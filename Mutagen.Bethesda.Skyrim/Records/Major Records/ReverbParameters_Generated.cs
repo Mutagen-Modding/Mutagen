@@ -1951,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Reflections = dataFrame.ReadInt8();
                     item.ReverbAmp = dataFrame.ReadInt8();
                     item.DecayHfRatio = FloatBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.01);
                     item.ReflectDelayMS = dataFrame.ReadUInt8();

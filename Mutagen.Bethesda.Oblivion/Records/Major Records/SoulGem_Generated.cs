@@ -1808,7 +1808,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SoulGem_FieldIndex.Name;
                 }
@@ -1823,7 +1823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Icon = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SoulGem_FieldIndex.Icon;
                 }
@@ -1832,7 +1832,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Script.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)SoulGem_FieldIndex.Script;
                 }
@@ -1844,13 +1844,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SOUL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContainedSoul = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.ContainedSoul = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoulGem_FieldIndex.ContainedSoul;
                 }
                 case RecordTypeInts.SLCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaximumCapacity = EnumBinaryTranslation<SoulLevel>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.MaximumCapacity = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoulGem_FieldIndex.MaximumCapacity;
                 }
                 default:

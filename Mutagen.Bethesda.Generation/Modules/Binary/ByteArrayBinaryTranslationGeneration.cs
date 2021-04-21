@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {framePass}".AsEnumerable(),
+                    ExtraArgs = $"reader: {framePass}".AsEnumerable(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }

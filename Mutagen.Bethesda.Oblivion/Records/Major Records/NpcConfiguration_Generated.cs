@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INpcConfiguration item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.BaseSpellPoints = frame.ReadUInt16();
             item.Fatigue = frame.ReadUInt16();
             item.BarterGold = frame.ReadUInt16();

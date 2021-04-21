@@ -1202,10 +1202,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionData item,
             MutagenFrame frame)
         {
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 

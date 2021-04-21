@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.InsigniaUnused) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InsigniaUnused = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Rank_FieldIndex.InsigniaUnused;
                 }

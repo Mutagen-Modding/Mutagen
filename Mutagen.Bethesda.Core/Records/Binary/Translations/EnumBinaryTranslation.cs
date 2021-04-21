@@ -54,23 +54,23 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out E item)
         {
-            item = ParseValue(frame);
+            item = ParseValue(reader);
             return true;
         }
 
-        public E Parse(MutagenFrame frame)
+        public E Parse(MutagenFrame reader)
         {
-            return ParseValue(frame);
+            return ParseValue(reader);
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out E? item)
         {
-            item = ParseValue(frame);
+            item = ParseValue(reader);
             return true;
         }
 

@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.Text = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 source: StringsSource.Normal,
                 stringBinaryType: StringBinaryType.NullTerminate,
                 parseWhole: false);

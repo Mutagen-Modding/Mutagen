@@ -1611,7 +1611,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.ThunderLightningBeginFadeIn = frame.ReadUInt8();
             item.ThunderLightningEndFadeOut = frame.ReadUInt8();
             item.ThunderLightningFrequency = frame.ReadUInt8();
-            item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Classification = EnumBinaryTranslation<Weather.WeatherClassification>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.LightningColor = frame.ReadColor(ColorBinaryType.NoAlpha);
         }
 

@@ -2098,7 +2098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Filename = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)IdleAnimation_FieldIndex.Filename;
                 }
@@ -2106,7 +2106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AnimationEvent = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)IdleAnimation_FieldIndex.AnimationEvent;
                 }
@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.LoopingSecondsMin = dataFrame.ReadUInt8();
                     item.LoopingSecondsMax = dataFrame.ReadUInt8();
-                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.AnimationGroupSection = dataFrame.ReadUInt8();
                     item.ReplayDelay = dataFrame.ReadUInt16();
                     return (int)IdleAnimation_FieldIndex.ReplayDelay;

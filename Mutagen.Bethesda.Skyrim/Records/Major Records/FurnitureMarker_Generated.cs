@@ -1257,7 +1257,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             if (frame.Complete) return;
             item.MarkerKeyword.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             if (frame.Complete) return;
             item.EntryPoints = Mutagen.Bethesda.Skyrim.EntryPoints.CreateFromBinary(frame: frame);

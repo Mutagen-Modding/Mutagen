@@ -1107,13 +1107,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemData item,
             MutagenFrame frame)
         {
-            item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(reader: frame.SpawnWithLength(2));
             if (frame.Complete)
             {
                 item.Versioning |= DialogItemData.VersioningBreaks.Break0;
                 return;
             }
-            item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
         }
 
     }

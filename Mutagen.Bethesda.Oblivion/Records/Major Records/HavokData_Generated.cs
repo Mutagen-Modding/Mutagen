@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             MutagenFrame frame)
         {
-            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Friction = frame.ReadUInt8();
             item.Restitution = frame.ReadUInt8();
         }

@@ -1587,7 +1587,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:

@@ -1135,13 +1135,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<SceneActor.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<SceneActor.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneActor_FieldIndex.Flags;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneActor_FieldIndex.BehaviorFlags;
                 }
                 default:

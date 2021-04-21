@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
             bool hasCustom = false;
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
+            extraArgs.Add($"reader: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
             foreach (var writeParam in this.AdditionalCopyInParams)
             {
                 var get = writeParam(

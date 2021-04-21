@@ -1152,10 +1152,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Cost = frame.ReadUInt32();
-            item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

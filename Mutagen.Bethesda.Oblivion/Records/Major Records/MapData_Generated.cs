@@ -1099,9 +1099,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapData item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesNWCell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesSECell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.UsableDimensions = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(reader: frame);
+            item.CellCoordinatesNWCell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.CellCoordinatesSECell = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

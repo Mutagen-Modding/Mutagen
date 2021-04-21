@@ -1416,7 +1416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
@@ -1424,7 +1424,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
@@ -1433,7 +1433,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.PresetDefault.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }

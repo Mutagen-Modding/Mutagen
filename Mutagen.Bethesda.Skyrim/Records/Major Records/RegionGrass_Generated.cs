@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Grass.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Unknown = frame.ReadInt32();
         }

@@ -1157,7 +1157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyData_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Index = EnumBinaryTranslation<BodyData.PartIndex>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)BodyData_FieldIndex.Index;
                 }
                 case RecordTypeInts.MODL:

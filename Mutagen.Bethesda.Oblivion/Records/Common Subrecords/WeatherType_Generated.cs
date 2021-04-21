@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Weather.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Chance = frame.ReadInt32();
         }

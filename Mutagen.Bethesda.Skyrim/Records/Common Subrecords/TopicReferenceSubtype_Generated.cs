@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReferenceSubtype item,
             MutagenFrame frame)
         {
-            item.Subtype = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(frame: frame);
+            item.Subtype = Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

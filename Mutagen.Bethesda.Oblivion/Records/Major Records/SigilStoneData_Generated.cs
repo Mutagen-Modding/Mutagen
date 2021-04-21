@@ -1099,7 +1099,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Uses = frame.ReadUInt8();
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

@@ -12266,17 +12266,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Duration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Duration = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.RadialBlurCenter = Mutagen.Bethesda.Records.Binary.Translations.P2FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.RadialBlurCenter = Mutagen.Bethesda.Records.Binary.Translations.P2FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);
-                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);

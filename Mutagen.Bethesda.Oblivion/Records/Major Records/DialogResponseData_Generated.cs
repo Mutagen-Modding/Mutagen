@@ -1206,11 +1206,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogResponseData item,
             MutagenFrame frame)
         {
-            item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Emotion = EnumBinaryTranslation<EmotionType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.EmotionValue = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
             item.ResponseNumber = frame.ReadUInt8();
-            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

@@ -1582,7 +1582,7 @@ namespace Mutagen.Bethesda.Internals
             MutagenFrame frame)
         {
             item.MajorRecordFlagsRaw = frame.ReadInt32();
-            item.FormKey = Mutagen.Bethesda.Records.Binary.Translations.FormKeyBinaryTranslation.Instance.Parse(frame: frame);
+            item.FormKey = Mutagen.Bethesda.Records.Binary.Translations.FormKeyBinaryTranslation.Instance.Parse(reader: frame);
             item.VersionControl = frame.ReadUInt32();
         }
 
@@ -1601,7 +1601,7 @@ namespace Mutagen.Bethesda.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.EditorID = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)MajorRecord_FieldIndex.EditorID;
                 }

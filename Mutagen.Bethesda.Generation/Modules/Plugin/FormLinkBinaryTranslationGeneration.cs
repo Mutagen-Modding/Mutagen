@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (var args2 = new FunctionWrapper(subFg,
                         $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
                     {
-                        args2.AddPassArg("frame");
+                        args2.Add("reader: frame");
                         args2.Add($"defaultVal: {(linkType.FormIDType == FormLinkType.FormIDTypeEnum.Normal ? "FormKey.Null" : "RecordType.Null")}");
                     }
                 });

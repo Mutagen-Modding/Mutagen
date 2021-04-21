@@ -1095,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEffectData item,
             MutagenFrame frame)
         {
-            item.Magnitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Magnitude = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Area = frame.ReadInt32();
             item.Duration = frame.ReadInt32();
         }

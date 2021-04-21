@@ -1561,7 +1561,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CalcMaxLevel = frame.ReadInt16();
             item.SpeedMultiplier = frame.ReadInt16();
             item.DispositionBase = frame.ReadInt16();
-            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.HealthOffset = frame.ReadInt16();
             item.BleedoutOverride = frame.ReadInt16();
         }

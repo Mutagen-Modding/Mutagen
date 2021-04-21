@@ -39,14 +39,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             byte byteLength)
         {
             return byteLength switch
             {
-                1 => frame.ReadBoolean(),
-                2 => frame.ReadUInt16() > 0,
-                4 => frame.ReadUInt32() > 0,
+                1 => reader.ReadBoolean(),
+                2 => reader.ReadUInt16() > 0,
+                4 => reader.ReadUInt32() > 0,
                 _ => throw new NotImplementedException(),
             };
         }

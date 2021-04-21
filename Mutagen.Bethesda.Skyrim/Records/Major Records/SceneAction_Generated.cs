@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         case 0:
                             if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.Type = EnumBinaryTranslation<SceneAction.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                            item.Type = EnumBinaryTranslation<SceneAction.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                             return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
                         case 1:
                             frame.ReadSubrecordFrame();
@@ -2186,7 +2186,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SceneAction_FieldIndex.Name;
                 }
@@ -2199,7 +2199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.INAM:
@@ -2211,7 +2211,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<SceneAction.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<SceneAction.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.SNAM:
@@ -2224,7 +2224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             return new ParseResult((int)SceneAction_FieldIndex.StartPhase, nextRecordType);
                         case 1:
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.TimerSeconds = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                            item.TimerSeconds = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                             return new ParseResult((int)SceneAction_FieldIndex.TimerSeconds, nextRecordType);
                         default:
                             throw new NotImplementedException();
@@ -2250,7 +2250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Topic.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)SceneAction_FieldIndex.Topic;
                 }
@@ -2263,19 +2263,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DMAX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LoopingMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LoopingMax;
                 }
                 case RecordTypeInts.DMIN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LoopingMin = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.LoopingMin;
                 }
                 case RecordTypeInts.DEMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emotion = EnumBinaryTranslation<Emotion>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Emotion = EnumBinaryTranslation<Emotion>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SceneAction_FieldIndex.Emotion;
                 }
                 case RecordTypeInts.DEVA:

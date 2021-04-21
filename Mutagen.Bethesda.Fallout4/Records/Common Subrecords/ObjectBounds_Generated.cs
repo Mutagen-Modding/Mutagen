@@ -1047,8 +1047,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IObjectBounds item,
             MutagenFrame frame)
         {
-            item.First = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Second = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.First = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.Second = Mutagen.Bethesda.Records.Binary.Translations.P3Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

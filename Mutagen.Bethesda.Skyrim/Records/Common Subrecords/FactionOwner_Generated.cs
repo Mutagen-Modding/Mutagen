@@ -1090,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Faction.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.RequiredRank = frame.ReadInt32();
         }

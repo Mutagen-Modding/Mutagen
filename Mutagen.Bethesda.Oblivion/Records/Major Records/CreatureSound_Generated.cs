@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)CreatureSound_FieldIndex.SoundType;
                 }
                 case RecordTypeInts.CSDI:

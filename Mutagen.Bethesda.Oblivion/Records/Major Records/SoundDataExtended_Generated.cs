@@ -1235,7 +1235,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 frame: frame);
             item.StaticAttenuation = FloatBinaryTranslation.Parse(
-                frame: frame,
+                reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01);
             SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustom(

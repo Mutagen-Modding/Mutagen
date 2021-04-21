@@ -6092,31 +6092,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.DNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.DNAM;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.CNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ANAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.ANAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.ANAM;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.BNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.BNAM;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.LNAM;
                 }
                 case RecordTypeInts.MNAM:
@@ -6124,7 +6124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Precipitation.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.Precipitation;
                 }
@@ -6133,14 +6133,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.VisualEffect.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ONAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.ONAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.RNAM:
@@ -6208,14 +6208,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.FogDistanceDayNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceDayFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceNightNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceNightFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceDayPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceNightPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceDayMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogDistanceNightMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogDistanceDayNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceDayFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceNightNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceNightFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceDayPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceNightPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceDayMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogDistanceNightMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     return (int)Weather_FieldIndex.FogDistanceNightMax;
                 }
                 case RecordTypeInts.DATA:
@@ -6223,48 +6223,48 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.WindSpeed = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.Unknown = dataFrame.ReadUInt16();
                     item.TransDelta = FloatBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 4);
                     item.SunGlare = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.SunDamage = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.PrecipitationBeginFadeIn = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.PrecipitationEndFadeOut = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.ThunderLightningBeginFadeIn = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.ThunderLightningEndFadeOut = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.ThunderLightningFrequency = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
-                    item.Flags = EnumBinaryTranslation<Weather.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Weather.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.LightningColor = dataFrame.ReadColor(ColorBinaryType.NoAlpha);
                     item.VisualEffectBegin = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.VisualEffectEnd = PercentBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
                     item.WindDirection = FloatBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.002777777777777778);
                     item.WindDirectionRange = FloatBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.005555555555555556);
                     return (int)Weather_FieldIndex.WindDirectionRange;
@@ -6318,13 +6318,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.NAM2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.NAM2;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NAM3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.NAM3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Weather_FieldIndex.NAM3;
                 }
                 case RecordTypeInts.MODL:
@@ -6341,7 +6341,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                         item.SunGlareLensFlare.SetTo(
                             Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                                frame: frame,
+                                reader: frame,
                                 defaultVal: FormKey.Null));
                     }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;

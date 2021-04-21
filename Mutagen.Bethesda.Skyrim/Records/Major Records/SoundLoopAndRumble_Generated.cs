@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadUInt8();
-            item.Loop = EnumBinaryTranslation<SoundDescriptor.LoopType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Loop = EnumBinaryTranslation<SoundDescriptor.LoopType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Unknown2 = frame.ReadUInt8();
             item.RumbleValues = frame.ReadUInt8();
         }

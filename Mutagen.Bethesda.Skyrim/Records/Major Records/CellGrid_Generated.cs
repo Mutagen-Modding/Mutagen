@@ -1048,8 +1048,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGrid item,
             MutagenFrame frame)
         {
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P2IntBinaryTranslation.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

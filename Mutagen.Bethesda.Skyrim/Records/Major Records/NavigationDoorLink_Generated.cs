@@ -1110,7 +1110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.NavMesh.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.NavMeshTriangleIndex = frame.ReadInt16();
             item.Unused = frame.ReadInt16();

@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             }
 
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
+            extraArgs.Add($"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
             if (str.Translated.HasValue)
             {
                 extraArgs.Add($"source: {nameof(StringsSource)}.{str.Translated.Value}");

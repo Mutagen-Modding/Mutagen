@@ -2723,13 +2723,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.AmbientColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.DirectionalColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FogNearColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.FogNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogNear = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogFar = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.DirectionalRotationXY = dataFrame.ReadInt32();
                     item.DirectionalRotationZ = dataFrame.ReadInt32();
-                    item.DirectionalFade = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogClipDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FogPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.DirectionalFade = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogClipDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FogPower = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.AmbientDirectionalXPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.AmbientDirectionalXMinus = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.AmbientDirectionalYPlus = dataFrame.ReadColor(ColorBinaryType.Alpha);
@@ -2742,16 +2742,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)LightingTemplate_FieldIndex.AmbientDirectionalZMinus;
                     }
                     item.AmbientSpecular = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.AmbientScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.AmbientScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= LightingTemplate.DATADataType.Break1;
                         return (int)LightingTemplate_FieldIndex.AmbientScale;
                     }
                     item.FogFarColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.FogMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.LightFadeStartDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.LightFadeEndDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FogMax = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LightFadeStartDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LightFadeEndDistance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.Unknown = dataFrame.ReadInt32();
                     return (int)LightingTemplate_FieldIndex.Unknown;
                 }

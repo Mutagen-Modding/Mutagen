@@ -1181,15 +1181,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Reference.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             if (frame.Complete)
             {
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;
                 return;
             }
-            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

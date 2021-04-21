@@ -1698,18 +1698,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Parent.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     item.Child.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
-                    item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     item.Unknown = dataFrame.ReadUInt8();
-                    item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.AssociationType.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)Relationship_FieldIndex.AssociationType;
                 }

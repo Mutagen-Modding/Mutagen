@@ -1827,7 +1827,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.ANAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationGroupSection = EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.AnimationGroupSection = EnumBinaryTranslation<IdleAnimation.AnimationGroupSectionEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleAnimation_FieldIndex.AnimationGroupSection;
                 }
                 case RecordTypeInts.DATA:

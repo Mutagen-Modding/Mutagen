@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             MutagenFrame frame)
         {
-            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Boost = frame.ReadInt8();
         }
 

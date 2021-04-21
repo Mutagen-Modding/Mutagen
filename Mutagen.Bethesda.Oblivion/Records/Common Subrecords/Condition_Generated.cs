@@ -1396,9 +1396,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ConditionBinaryCreateTranslation.FillBinaryInitialParserCustom(
                 frame: frame,
                 item: item);
-            item.Fluff = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
-            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Fluff = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.ComparisonValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.FirstParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();
             item.ThirdParameter = frame.ReadInt32();

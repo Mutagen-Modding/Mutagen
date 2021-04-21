@@ -1369,8 +1369,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIslandData item,
             MutagenFrame frame)
         {
-            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Min = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Max = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
                     amount: frame.ReadInt32(),

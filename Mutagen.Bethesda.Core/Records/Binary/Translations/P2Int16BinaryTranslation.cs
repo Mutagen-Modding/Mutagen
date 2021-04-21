@@ -57,17 +57,17 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public P2Int16 Parse(MutagenFrame frame,
+        public P2Int16 Parse(MutagenFrame reader,
             bool swapCoords,
             P2Int16 defaultVal = default)
         {
             if (swapCoords)
             {
                 return new P2Int16(
-                    y: frame.Reader.ReadInt16(),
-                    x: frame.Reader.ReadInt16());
+                    y: reader.Reader.ReadInt16(),
+                    x: reader.Reader.ReadInt16());
             }
-            return Parse(frame, defaultVal);
+            return Parse(reader, defaultVal);
         }
     }
 }

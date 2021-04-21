@@ -1169,7 +1169,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 frame: frame);
             item.ComparisonValue.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
             item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
         }

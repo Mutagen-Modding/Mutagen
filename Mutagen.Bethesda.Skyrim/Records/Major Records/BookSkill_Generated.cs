@@ -1023,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             if (frame.Complete) return;
-            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Skill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

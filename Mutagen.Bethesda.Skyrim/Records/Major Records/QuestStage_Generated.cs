@@ -1369,7 +1369,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Index = dataFrame.ReadUInt16();
-                    item.Flags = EnumBinaryTranslation<QuestStage.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<QuestStage.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)QuestStage_FieldIndex.Unknown;
                 }

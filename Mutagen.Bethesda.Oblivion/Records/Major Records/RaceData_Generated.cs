@@ -1735,7 +1735,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation.Instance.Parse);
-            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
         }
 
     }

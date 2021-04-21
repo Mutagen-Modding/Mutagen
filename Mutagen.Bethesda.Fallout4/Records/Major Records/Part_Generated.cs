@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
@@ -1091,7 +1091,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FileName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Part_FieldIndex.FileName;
                 }

@@ -7,9 +7,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
     {
         public static readonly FilePathBinaryTranslation Instance = new FilePathBinaryTranslation();
 
-        public bool Parse(MutagenFrame frame, out FilePath item)
+        public bool Parse(MutagenFrame reader, out FilePath item)
         {
-            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
+            if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
             {
                 item = default(FilePath);
                 return false;

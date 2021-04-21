@@ -1035,7 +1035,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IColorFrame item,
             MutagenFrame frame)
         {
-            item.Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Time = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.AlphaFloat);
         }
 

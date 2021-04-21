@@ -13,9 +13,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             writer.Write(item);
         }
 
-        protected override MemorySlice<byte> ParseValue(MutagenFrame frame)
+        protected override MemorySlice<byte> ParseValue(MutagenFrame reader)
         {
-            return frame.Reader.ReadBytes(checked((int)frame.Remaining));
+            return reader.Reader.ReadBytes(checked((int)reader.Remaining));
         }
 
         protected override MemorySlice<byte> ParseBytes(MemorySlice<byte> bytes)

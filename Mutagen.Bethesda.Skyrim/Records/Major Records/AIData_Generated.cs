@@ -1508,12 +1508,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIData item,
             MutagenFrame frame)
         {
-            item.Aggression = EnumBinaryTranslation<Aggression>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Confidence = EnumBinaryTranslation<Confidence>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Aggression = EnumBinaryTranslation<Aggression>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Confidence = EnumBinaryTranslation<Confidence>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.EnergyLevel = frame.ReadUInt8();
-            item.Responsibility = EnumBinaryTranslation<Responsibility>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Mood = EnumBinaryTranslation<Mood>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Assistance = EnumBinaryTranslation<Assistance>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Responsibility = EnumBinaryTranslation<Responsibility>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Mood = EnumBinaryTranslation<Mood>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Assistance = EnumBinaryTranslation<Assistance>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.AggroRadiusBehavior = frame.ReadBoolean();
             item.Unused = frame.ReadUInt8();
             item.Warn = frame.ReadUInt32();

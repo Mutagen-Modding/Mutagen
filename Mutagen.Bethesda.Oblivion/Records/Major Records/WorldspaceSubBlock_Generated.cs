@@ -1924,7 +1924,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.BlockNumberY = frame.ReadInt16();
             item.BlockNumberX = frame.ReadInt16();
-            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.GroupType = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.LastModified = frame.ReadInt32();
         }
 

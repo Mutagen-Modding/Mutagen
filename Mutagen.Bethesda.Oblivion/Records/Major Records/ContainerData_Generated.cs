@@ -1048,8 +1048,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Flags = EnumBinaryTranslation<Container.ContainerFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

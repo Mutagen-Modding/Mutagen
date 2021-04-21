@@ -1114,10 +1114,10 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static void FillEndingParams(MutagenFrame frame, IConditionData item)
             {
-                item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.RunOnType = EnumBinaryTranslation<Condition.RunOnType>.Instance.Parse(reader: frame.SpawnWithLength(4));
                 item.Reference.SetTo(
                     FormLinkBinaryTranslation.Instance.Parse(
-                        frame: frame,
+                        reader: frame,
                         defaultVal: FormKey.Null));
                 item.Unknown3 = frame.ReadInt32();
             }

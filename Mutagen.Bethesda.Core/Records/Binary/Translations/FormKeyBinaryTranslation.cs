@@ -19,20 +19,20 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out FormKey item)
         {
             item = Parse(
-                frame.ReadSpan(4),
-                frame.MetaData.MasterReferences!);
+                reader.ReadSpan(4),
+                reader.MetaData.MasterReferences!);
             return true;
         }
 
-        public FormKey Parse(MutagenFrame frame)
+        public FormKey Parse(MutagenFrame reader)
         {
             return Parse(
-                frame.ReadSpan(4),
-                frame.MetaData.MasterReferences!);
+                reader.ReadSpan(4),
+                reader.MetaData.MasterReferences!);
         }
 
         public void Write(

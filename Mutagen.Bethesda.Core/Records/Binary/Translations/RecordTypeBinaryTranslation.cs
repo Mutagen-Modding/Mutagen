@@ -13,32 +13,32 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out EDIDLink<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
-            if (!frame.TryCheckUpcomingRead(4, out var ex))
+            if (!reader.TryCheckUpcomingRead(4, out var ex))
             {
                 throw ex;
             }
 
-            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(reader));
             return true;
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out IEDIDLinkGetter<T> item,
             RecordTypeConverter? recordTypeConverter = null)
             where T : class, IMajorRecordCommonGetter
         {
-            if (!frame.TryCheckUpcomingRead(4, out var ex))
+            if (!reader.TryCheckUpcomingRead(4, out var ex))
             {
                 throw ex;
             }
 
-            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(frame));
+            item = new EDIDLink<T>(HeaderTranslation.ReadNextRecordType(reader));
             return true;
         }
 

@@ -1042,7 +1042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.Data = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
 

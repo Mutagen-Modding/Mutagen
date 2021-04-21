@@ -1074,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.VTXT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlphaLayerData = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.AlphaLayerData = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)AlphaLayer_FieldIndex.AlphaLayerData;
                 }
                 default:

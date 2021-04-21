@@ -1264,13 +1264,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.MagicEffect.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: RecordType.Null));
             item.Magnitude = frame.ReadUInt32();
             item.Area = frame.ReadUInt32();
             item.Duration = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

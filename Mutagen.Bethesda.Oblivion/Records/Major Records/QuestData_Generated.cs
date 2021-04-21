@@ -1046,7 +1046,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Priority = frame.ReadUInt8();
         }
 

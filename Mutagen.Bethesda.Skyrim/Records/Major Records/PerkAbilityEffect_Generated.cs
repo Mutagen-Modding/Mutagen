@@ -1073,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame);
             item.Ability.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
         }
 

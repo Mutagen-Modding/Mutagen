@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Priority = frame.ReadUInt16();
             item.DuckingDecibel = FloatBinaryTranslation.Parse(
-                frame: frame,
+                reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01);
         }

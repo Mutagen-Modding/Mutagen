@@ -1177,14 +1177,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplate item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             if (frame.MetaData.FormVersion!.Value < 44)
             {
-                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             }
             if (frame.MetaData.FormVersion!.Value >= 22)
             {
-                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             }
         }
 

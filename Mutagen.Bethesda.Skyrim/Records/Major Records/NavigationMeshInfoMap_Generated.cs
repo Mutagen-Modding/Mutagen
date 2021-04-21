@@ -1727,7 +1727,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NVSI = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.NVSI = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:

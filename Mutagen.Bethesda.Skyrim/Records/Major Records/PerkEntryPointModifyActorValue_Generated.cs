@@ -1250,9 +1250,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Value = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

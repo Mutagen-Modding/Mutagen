@@ -2246,7 +2246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ObjectEffect_FieldIndex.Name;
@@ -2256,15 +2256,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.EnchantmentCost = dataFrame.ReadUInt32();
-                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.EnchantmentAmount = dataFrame.ReadInt32();
-                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.ChargeTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.ChargeTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.BaseEnchantment.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     if (dataFrame.Complete)
                     {
@@ -2273,7 +2273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     item.WornRestrictions.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }

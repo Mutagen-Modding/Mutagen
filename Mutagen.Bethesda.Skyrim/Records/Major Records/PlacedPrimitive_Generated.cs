@@ -1171,8 +1171,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
         static partial void FillBinaryBoundsCustom(

@@ -2384,7 +2384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.CNAM = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoundDescriptor_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.GNAM:
@@ -2392,7 +2392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Category.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.Category;
                 }
@@ -2401,7 +2401,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AlternateSoundFor.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.AlternateSoundFor;
                 }
@@ -2419,7 +2419,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OutputModel.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)SoundDescriptor_FieldIndex.OutputModel;
                 }
@@ -2427,7 +2427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.String = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SoundDescriptor_FieldIndex.String;
                 }
@@ -2455,7 +2455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Priority = dataFrame.ReadInt8();
                     item.Variance = dataFrame.ReadInt8();
                     item.StaticAttenuation = FloatBinaryTranslation.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         integerType: FloatIntegerType.UShort,
                         multiplier: 0.01);
                     return (int)SoundDescriptor_FieldIndex.StaticAttenuation;

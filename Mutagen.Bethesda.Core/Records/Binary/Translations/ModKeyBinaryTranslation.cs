@@ -7,9 +7,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
     {
         public readonly static ModKeyBinaryTranslation Instance = new ModKeyBinaryTranslation();
 
-        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)]out ModKey item)
+        public bool Parse(MutagenFrame reader, [MaybeNullWhen(false)]out ModKey item)
         {
-            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
+            if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
             {
                 item = default!;
                 return false;
@@ -18,9 +18,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             return ModKey.TryFromNameAndExtension(str, out item!);
         }
 
-        public ModKey Parse(MutagenFrame frame)
+        public ModKey Parse(MutagenFrame reader)
         {
-            if (!StringBinaryTranslation.Instance.Parse(frame, out var str))
+            if (!StringBinaryTranslation.Instance.Parse(reader, out var str))
             {
                 return ModKey.Null;
             }

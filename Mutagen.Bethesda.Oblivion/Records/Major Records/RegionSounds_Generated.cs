@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDSD:

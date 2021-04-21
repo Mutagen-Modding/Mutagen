@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)NpcSoundType_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<NpcSoundType.SoundType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)NpcSoundType_FieldIndex.Type;
                 }
                 case RecordTypeInts.CSDI:

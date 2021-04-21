@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.InterpolationValue = FloatBinaryTranslation.Parse(
-                        frame: frame,
+                        reader: frame,
                         integerType: FloatIntegerType.UInt,
                         multiplier: 0.01);
                     return (int)TintLayer_FieldIndex.InterpolationValue;

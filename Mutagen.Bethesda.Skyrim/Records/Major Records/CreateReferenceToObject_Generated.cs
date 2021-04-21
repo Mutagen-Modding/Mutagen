@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Object.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
@@ -1255,13 +1255,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasIndex = dataFrame.ReadInt16();
-                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     return (int)CreateReferenceToObject_FieldIndex.Create;
                 }
                 case RecordTypeInts.ALCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Level = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Level = EnumBinaryTranslation<Level>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)CreateReferenceToObject_FieldIndex.Level;
                 }
                 default:

@@ -1865,7 +1865,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.IDLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<IdleMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<IdleMarker.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.IDLC:
@@ -1878,7 +1878,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTimer = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.IdleTimer = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:

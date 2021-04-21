@@ -17,18 +17,18 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         public abstract T ParseValue(MutagenFrame reader);
 
-        public T Parse(MutagenFrame frame, T defaultVal = default)
+        public T Parse(MutagenFrame reader, T defaultVal = default)
         {
-            if (Parse(frame, out var item))
+            if (Parse(reader, out var item))
             {
                 return item;
             }
             return defaultVal;
         }
 
-        public bool Parse(MutagenFrame frame, [MaybeNullWhen(false)] out T item)
+        public bool Parse(MutagenFrame reader, [MaybeNullWhen(false)] out T item)
         {
-            item = ParseValue(frame.SpawnWithLength(this.ExpectedLength));
+            item = Parse(reader);
             return true;
         }
 

@@ -106,12 +106,12 @@ namespace Mutagen.Bethesda.Skyrim
                         obj.Unused = frame.ReadUInt16();
                         obj.Alias = frame.ReadInt16();
                         obj.Object.FormKey = FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null);
                         break;
                     case 1:
                         obj.Object.FormKey = FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null);
                         obj.Alias = frame.ReadInt16();
                         obj.Unused = frame.ReadUInt16();

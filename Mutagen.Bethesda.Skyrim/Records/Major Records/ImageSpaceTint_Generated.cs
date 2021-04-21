@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTint item,
             MutagenFrame frame)
         {
-            item.Amount = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Amount = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
         }
 

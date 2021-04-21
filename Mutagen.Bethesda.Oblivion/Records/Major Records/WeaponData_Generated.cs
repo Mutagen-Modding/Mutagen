@@ -1357,13 +1357,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Speed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Reach = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Value = frame.ReadUInt32();
             item.Health = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 

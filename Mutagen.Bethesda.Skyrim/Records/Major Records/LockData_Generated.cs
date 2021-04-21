@@ -1234,14 +1234,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILockData item,
             MutagenFrame frame)
         {
-            item.Level = EnumBinaryTranslation<LockLevel>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Level = EnumBinaryTranslation<LockLevel>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Unused = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.Key.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
-            item.Flags = EnumBinaryTranslation<LockData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(11));
+            item.Flags = EnumBinaryTranslation<LockData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Unused2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(11));
         }
 
     }

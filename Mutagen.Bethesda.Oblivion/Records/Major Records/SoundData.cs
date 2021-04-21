@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
                 if (ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     item: out var b))
                 {
                     item.MinimumAttenuationDistance = (ushort)(b * SoundData.MinAttenuationDistanceMultiplier);
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
                 if (ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     item: out var b))
                 {
                     item.MaximumAttenuationDistance = (ushort)(b * SoundData.MaxAttenuationDistanceMultiplier);

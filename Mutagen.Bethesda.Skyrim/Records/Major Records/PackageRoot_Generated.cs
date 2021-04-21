@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.BranchCount = frame.ReadInt32();
-            item.Flags = EnumBinaryTranslation<PackageRoot.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<PackageRoot.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
     }

@@ -1320,7 +1320,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasIndex = dataFrame.ReadInt32();
-                    item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     return (int)QuestObjectiveTarget_FieldIndex.Flags;
                 }
                 case RecordTypeInts.CTDA:

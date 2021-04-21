@@ -1510,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AssociationType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<AssociationType.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)AssociationType_FieldIndex.Flags;
                 }
                 default:

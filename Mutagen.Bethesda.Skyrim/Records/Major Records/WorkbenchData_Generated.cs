@@ -1055,9 +1055,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchData item,
             MutagenFrame frame)
         {
-            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(reader: frame.SpawnWithLength(1));
             if (frame.Complete) return;
-            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
         }
 
     }

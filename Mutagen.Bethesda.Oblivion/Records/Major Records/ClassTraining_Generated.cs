@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassTraining item,
             MutagenFrame frame)
         {
-            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.MaximumTrainingLevel = frame.ReadUInt8();
             item.Unknown = frame.ReadInt16();
         }

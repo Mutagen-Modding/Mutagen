@@ -1139,9 +1139,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Texture.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                    reader: frame,
                     defaultVal: FormKey.Null));
-            item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.LayerNumber = frame.ReadUInt16();
         }
 

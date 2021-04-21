@@ -1778,7 +1778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<LeveledItem.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLG:
@@ -1786,7 +1786,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Global.SetTo(
                         Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                            reader: frame,
                             defaultVal: FormKey.Null));
                     return (int)LeveledItem_FieldIndex.Global;
                 }

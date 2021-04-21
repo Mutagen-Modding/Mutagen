@@ -1304,8 +1304,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Confidence = frame.ReadUInt8();
             item.EnergyLevel = frame.ReadUInt8();
             item.Responsibility = frame.ReadUInt8();
-            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.MaximumTrainingLevel = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
         }

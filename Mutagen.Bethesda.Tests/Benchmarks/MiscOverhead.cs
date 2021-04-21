@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         {
             frame.Position = 0;
             if (ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 item: out Byte MarksmanParse))
             {
                 return MarksmanParse;

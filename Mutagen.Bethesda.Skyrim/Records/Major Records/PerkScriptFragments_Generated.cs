@@ -1219,7 +1219,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Unknown = frame.ReadInt8();
             item.FileName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
             item.Fragments.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(

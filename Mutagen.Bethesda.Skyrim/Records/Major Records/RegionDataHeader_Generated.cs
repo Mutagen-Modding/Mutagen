@@ -1126,8 +1126,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionDataHeaderInternal item,
             MutagenFrame frame)
         {
-            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Priority = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
         }

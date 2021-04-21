@@ -1188,14 +1188,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScenePhaseFragment item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<ScenePhaseFragment.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<ScenePhaseFragment.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Index = frame.ReadUInt8();
             item.Unknown = frame.ReadUInt32();
             item.ScriptName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
             item.FragmentName = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
 

@@ -1206,11 +1206,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillData item,
             MutagenFrame frame)
         {
-            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.UseValueFirst = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.UseValueSecond = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.UseValueFirst = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.UseValueSecond = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 
     }

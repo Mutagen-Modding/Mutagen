@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}".AsEnumerable(),
+                    ExtraArgs = $"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}".AsEnumerable(),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 using (var args = new ArgsWrapper(fg,
                     $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
                 {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
+                    args.Add($"reader: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
                     if (asyncMode == AsyncMode.Off)
                     {
                         args.Add($"item: out {outItemAccessor}");

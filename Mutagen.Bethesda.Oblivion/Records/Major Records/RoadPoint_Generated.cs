@@ -1208,8 +1208,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             MutagenFrame frame)
         {
-            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.NumConnectionsFluffBytes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.NumConnectionsFluffBytes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.Connections.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     reader: frame,

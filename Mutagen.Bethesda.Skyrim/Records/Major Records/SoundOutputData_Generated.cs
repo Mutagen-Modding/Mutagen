@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<SoundOutputModel.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<SoundOutputModel.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Unknown = frame.ReadUInt16();
             item.ReverbSendPercent = frame.ReadUInt8();
         }

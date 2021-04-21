@@ -1568,10 +1568,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
                         return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.SpawnWithLength(4),
+                            reader: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));
-            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.SecondaryAttributes.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
@@ -1579,11 +1579,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
                         return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
-                            frame: r.SpawnWithLength(4),
+                            reader: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));
-            item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(reader: frame.SpawnWithLength(4));
             if (frame.Complete)
             {
                 item.Versioning |= ClassData.VersioningBreaks.Break0;

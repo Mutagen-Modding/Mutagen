@@ -1266,7 +1266,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
                     item.ModelFilename = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
                     if (dataFrame.Complete)
@@ -1274,13 +1274,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                         return (int)DebrisModel_FieldIndex.ModelFilename;
                     }
-                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFileHashes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.TextureFileHashes = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DebrisModel_FieldIndex.TextureFileHashes;
                 }
                 default:

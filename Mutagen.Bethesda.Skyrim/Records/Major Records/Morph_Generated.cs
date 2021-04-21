@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorph item,
             MutagenFrame frame)
         {
-            item.Data = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(32));
+            item.Data = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(32));
         }
 
     }

@@ -1766,7 +1766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<StoryManagerQuestNode.QuestFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)StoryManagerQuestNode_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XNAM:

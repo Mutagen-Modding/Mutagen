@@ -2181,31 +2181,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.FalloffScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FalloffBias = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.NoiseUvScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MaterialUvScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ProjectionVector = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FalloffScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FalloffBias = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.NoiseUvScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.MaterialUvScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ProjectionVector = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break0;
                         return (int)MaterialObject_FieldIndex.ProjectionVector;
                     }
-                    item.NormalDampener = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NormalDampener = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break1;
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break2;
                         return (int)MaterialObject_FieldIndex.Flags;
                     }
                     item.HasSnow = Mutagen.Bethesda.Records.Binary.Translations.BooleanBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                        reader: dataFrame,
                         byteLength: 4);
                     return (int)MaterialObject_FieldIndex.HasSnow;
                 }

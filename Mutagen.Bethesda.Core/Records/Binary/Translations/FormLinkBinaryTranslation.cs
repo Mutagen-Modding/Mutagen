@@ -9,10 +9,10 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static FormLinkBinaryTranslation Instance = new FormLinkBinaryTranslation();
 
         public bool Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             out FormKey item)
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = id;
                 return true;
@@ -21,9 +21,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             return false;
         }
 
-        public FormKey Parse(MutagenFrame frame)
+        public FormKey Parse(MutagenFrame reader)
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 return id;
             }
@@ -31,10 +31,10 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public FormKey Parse(
-            MutagenFrame frame,
+            MutagenFrame reader,
             FormKey defaultVal)
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 return id;
             }
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)] out FormLink<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = new FormLink<T>(id);
                 return true;
@@ -56,11 +56,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = new FormLink<T>(id);
                 return true;
@@ -70,11 +70,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLink<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = new FormLink<T>(id);
                 return true;
@@ -84,11 +84,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkNullableGetter<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = new FormLinkNullable<T>(id);
                 return true;
@@ -98,11 +98,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse<T>(
-            MutagenFrame frame,
+            MutagenFrame reader,
             [MaybeNullWhen(false)] out IFormLinkNullable<T> item)
             where T : class, IMajorRecordCommonGetter
         {
-            if (FormKeyBinaryTranslation.Instance.Parse(frame, out FormKey id))
+            if (FormKeyBinaryTranslation.Instance.Parse(reader, out FormKey id))
             {
                 item = new FormLinkNullable<T>(id);
                 return true;
