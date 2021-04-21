@@ -234,8 +234,8 @@ namespace Mutagen.Bethesda
         public class GroupModContext<TMod, TModGetter, TMajor, TMajorGetter> : IModContext<TMod, TModGetter, TMajor, TMajorGetter>
             where TModGetter : IModGetter
             where TMod : TModGetter, IMod
-            where TMajor : class, IMajorRecordInternal, TMajorGetter, IBinaryItem
-            where TMajorGetter : class, IMajorRecordGetter, IBinaryItem
+            where TMajor : class, IMajorRecordInternal, TMajorGetter
+            where TMajorGetter : class, IMajorRecordGetter
         {
             private readonly Func<TMod, IGroupCommon<TMajor>> _group;
             private readonly Func<TModGetter, IGroupCommonGetter<TMajorGetter>> _groupGetter;
