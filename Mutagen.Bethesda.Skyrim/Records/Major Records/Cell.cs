@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
@@ -259,7 +260,7 @@ namespace Mutagen.Bethesda.Skyrim
                         && (obj.Temporary?.Count ?? 0) == 0
                         && navMeshes.Count == 0
                         && landscape == null) return;
-                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
@@ -269,7 +270,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write(obj.UnknownGroupData);
                         if (obj.Persistent?.Count > 0)
                         {
-                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                             {
                                 FormKeyBinaryTranslation.Instance.Write(
                                     writer,
@@ -287,7 +288,7 @@ namespace Mutagen.Bethesda.Skyrim
                             || navMeshes.Count > 0
                             || landscape != null)
                         {
-                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                             {
                                 FormKeyBinaryTranslation.Instance.Write(
                                     writer,

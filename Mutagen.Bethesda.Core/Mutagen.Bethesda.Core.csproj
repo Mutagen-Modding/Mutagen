@@ -252,7 +252,7 @@
     <Compile Include="Records\Binary\Processing\ModDecompressor.cs" />
     <Compile Include="Load Order\ModListing.cs" />
     <Compile Include="Records\Binary\Processing\ModRecordSorter.cs" />
-    <Compile Include="Enums\ObjectType.cs" />
+    <Compile Include="Records\ObjectType.cs" />
     <Compile Include="Records\Utility\RecordInterest.cs" />
     <Compile Include="Records\Utility\RecordLocator.cs" />
     <Compile Include="Records\MajorRecord.cs">

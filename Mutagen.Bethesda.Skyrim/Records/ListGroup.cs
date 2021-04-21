@@ -1,7 +1,8 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Skyrim
                     _data,
                     _package,
                     offset: offset,
-                    objectType: Mutagen.Bethesda.Binary.ObjectType.Group);
+                    objectType: ObjectType.Group);
             }
         }
     }

@@ -1,8 +1,8 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Constants;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Internals;
 using System;
 using System.IO;
 using Xunit;

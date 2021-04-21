@@ -1,11 +1,9 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using System;
+using Mutagen.Bethesda.Records;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Loqui;
-using Mutagen.Bethesda.Binary;
 using Noggog;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
@@ -14,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             }
         }
 
-        private bool HasRecordTypeFields(ObjectGeneration obj)
+        protected bool HasRecordTypeFields(ObjectGeneration obj)
         {
             return GetRecordTypeFields(obj).Any();
         }
@@ -1174,7 +1174,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 {
                     args.Add("writer: writer");
                     args.Add($"record: {GetRecordTypeString(obj, "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
-                    args.Add($"type: Mutagen.Bethesda.Binary.{nameof(ObjectType)}.{obj.GetObjectType()}");
+                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
                 }
             }
             using (new BraceWrapper(fg, doIt: hasRecType))

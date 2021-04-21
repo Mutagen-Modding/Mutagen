@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.Records.Internals
 {
     public static class RecordTypes
     {

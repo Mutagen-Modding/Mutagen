@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Fallout4
 {

@@ -1,7 +1,6 @@
 using Loqui;
 using Loqui.Generation;
 using Noggog;
-using Mutagen.Bethesda.Binary;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +10,7 @@ using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {

@@ -1,5 +1,5 @@
-using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Internals;
 using System.Collections.Generic;
 using Xunit;
 

@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Constants
             sbyte flagsLoc,
             sbyte formIDloc,
             sbyte? formVersionLoc)
-            : base(ObjectType.Record, headerLength, lengthLength)
+            : base(Records.ObjectType.Record, headerLength, lengthLength)
         {
             this.FlagLocationOffset = flagsLoc;
             this.FormIDLocationOffset = formIDloc;

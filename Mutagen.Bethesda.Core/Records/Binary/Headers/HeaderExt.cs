@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;

@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
@@ -108,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var subCells = obj.SubCells;
                     if (subCells?.Count == 0
                         && topCell == null) return;
-                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,

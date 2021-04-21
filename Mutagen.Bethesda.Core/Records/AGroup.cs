@@ -13,13 +13,13 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Records
 {
     /// <summary>
     /// An abstract base class for Groups to inherit from for some common functionality
     /// </summary>
     public abstract class AGroup<TMajor> : IEnumerable<TMajor>, IGroupCommon<TMajor>
-        where TMajor : class, IMajorRecordInternal, IBinaryItem
+        where TMajor : class, IMajorRecordInternal
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected abstract ICache<TMajor, FormKey> ProtectedCache { get; }
@@ -294,7 +294,7 @@ namespace Mutagen.Bethesda
         }
 
         public class AGroupBinaryOverlay<TMajor> : BinaryOverlay, IGroupCommonGetter<TMajor>
-            where TMajor : IMajorRecordCommonGetter, IBinaryItem
+            where TMajor : IMajorRecordCommonGetter
         {
             protected GroupMajorRecordCacheWrapper<TMajor>? _RecordCache;
 

@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "throw RecordException.Factory(e, obj.ModKey)";
+            string testString = "utagen.Bethesda.Binary.ObjectType";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

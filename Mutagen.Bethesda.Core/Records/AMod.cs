@@ -2,12 +2,11 @@ using Mutagen.Bethesda.Persistence;
 using System;
 using Noggog;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 using Loqui;
 using Mutagen.Bethesda.Records.Binary;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Records
 {
     /// <summary> 
     /// An abstract base class for Mods to inherit from for some common functionality 
