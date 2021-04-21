@@ -1380,7 +1380,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
-            UtilityTranslation.RecordParse(
+            PluginUtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,

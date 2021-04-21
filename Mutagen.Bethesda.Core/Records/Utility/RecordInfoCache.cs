@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Records.Binary.Utility
                     var locs = RecordLocator.GetFileLocations(
                         stream,
                         new RecordInterest(
-                            interestingTypes: UtilityTranslation.GetRecordType<T>()));
+                            interestingTypes: PluginUtilityTranslation.GetRecordType<T>()));
                     cache = locs.FormKeys.ToHashSet();
 
                     _cachedLocs.Add(typeof(T), cache);

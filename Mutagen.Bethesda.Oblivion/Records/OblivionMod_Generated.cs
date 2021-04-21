@@ -5011,7 +5011,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            UtilityTranslation.ModParse(
+            PluginUtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
@@ -6054,7 +6054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             toDo.Add(() => WriteGroupParallel(item.Waters, writer.MetaData.MasterReferences!, 54, outputStreams));
             toDo.Add(() => WriteGroupParallel(item.EffectShaders, writer.MetaData.MasterReferences!, 55, outputStreams));
             Parallel.Invoke(toDo.ToArray());
-            UtilityTranslation.CompileStreamsInto(
+            PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
         }
@@ -6094,7 +6094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 }
                 subStreams[(int)counter + 1] = trib;
             });
-            UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+            PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         

@@ -576,7 +576,7 @@ namespace Mutagen.Bethesda.Generation.Modules
                 }
                 fg.AppendLine("Parallel.Invoke(toDo.ToArray());");
                 using (var args = new ArgsWrapper(fg,
-                    $"{nameof(UtilityTranslation)}.{nameof(UtilityTranslation.CompileStreamsInto)}"))
+                    $"{nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.CompileStreamsInto)}"))
                 {
                     args.Add("outputStreams.NotNull()");
                     args.Add("stream");
@@ -651,7 +651,7 @@ namespace Mutagen.Bethesda.Generation.Modules
                         }
                         fg.AppendLine($"subStreams[(int)counter + 1] = trib;");
                     }
-                    fg.AppendLine($"UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);");
+                    fg.AppendLine($"{nameof(PluginUtilityTranslation)}.CompileSetGroupLength(subStreams, groupBytes);");
                     fg.AppendLine($"streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);");
                 }
                 fg.AppendLine();

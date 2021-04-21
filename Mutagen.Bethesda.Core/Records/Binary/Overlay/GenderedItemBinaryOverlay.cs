@@ -225,7 +225,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             where T : class
         {
             int? maleLoc = null, femaleLoc = null;
-            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+            var find = PluginUtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
             if (find[0] != null)
             {
                 maleLoc = find[0];
@@ -255,7 +255,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             where T : notnull
         {
             int? maleLoc = null, femaleLoc = null;
-            var find = UtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
+            var find = PluginUtilityTranslation.FindNextSubrecords(stream.RemainingMemory, package.MetaData.Constants, out var lenParsed, male, female);
             if (find[0] != null)
             {
                 maleLoc = find[0];

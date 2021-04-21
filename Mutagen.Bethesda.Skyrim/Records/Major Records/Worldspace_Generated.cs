@@ -2781,7 +2781,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -6038,7 +6038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;
-        public ReadOnlyMemorySlice<Byte>? OffsetData => UtilityTranslation.ReadByteArrayWithOverflow(
+        public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
             _data,
             _package.MetaData.Constants,
             _OffsetDataLocation,
@@ -6070,7 +6070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var origStream = stream;
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new WorldspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -6271,7 +6271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OFST:
                 case RecordTypeInts.XXXX:
                 {
-                    _OffsetDataLocation = UtilityTranslation.HandleOverlayRecordOverflow(
+                    _OffsetDataLocation = PluginUtilityTranslation.HandleOverlayRecordOverflow(
                         existingLoc: _OffsetDataLocation,
                         stream: stream,
                         offset: offset,

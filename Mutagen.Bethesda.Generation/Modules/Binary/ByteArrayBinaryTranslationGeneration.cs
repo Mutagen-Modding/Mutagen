@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 if (data.OverflowRecordType.HasValue)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.ReadByteArrayWithOverflow)}"))
+                        $"public {typeGen.TypeName(getter: true)}{(typeGen.Nullable ? "?" : null)} {typeGen.Name} => {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.ReadByteArrayWithOverflow)}"))
                     {
                         args.Add(dataAccessor.ToString());
                         args.Add($"_package.{nameof(BinaryOverlayFactoryPackage.MetaData)}.{nameof(ParsingBundle.Constants)}");
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 && data.BinaryOverlayFallback != BinaryGenerationType.Custom)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"_{typeGen.Name}Location = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.HandleOverlayRecordOverflow)}"))
+                    $"_{typeGen.Name}Location = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.HandleOverlayRecordOverflow)}"))
                 {
                     args.Add($"existingLoc: _{typeGen.Name}Location");
                     args.AddPassArg("stream");

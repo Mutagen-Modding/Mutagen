@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public static char? GetGlobalChar(MajorRecordFrame frame)
         {
             var subrecordSpan = frame.Content;
-            var fnamLocation = UtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
+            var fnamLocation = PluginUtilityTranslation.FindFirstSubrecord(subrecordSpan, frame.Meta, FNAM);
             if (fnamLocation == null)
             {
                 return null;
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             frame.Reader.Position = initialPos + frame.MetaData.Constants.MajorConstants.TypeAndLengthLength;
 
             // Read data
-            var fltvLoc = UtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData.Constants, FLTV, navigateToContent: true);
+            var fltvLoc = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, frame.MetaData.Constants, FLTV, navigateToContent: true);
             if (fltvLoc == null)
             {
                 throw new ArgumentException($"Could not find FLTV.");

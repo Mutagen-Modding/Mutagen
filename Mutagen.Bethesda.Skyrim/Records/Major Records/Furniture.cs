@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                 while (!stream.Complete)
                 {
                     // Find next set of records that make up a marker record
-                    var next = UtilityTranslation.FindNextSubrecords(
+                    var next = PluginUtilityTranslation.FindNextSubrecords(
                         stream.RemainingMemory,
                         stream.MetaData.Constants,
                         out var lenParsed,
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void FillBinaryMarkers(IMutagenReadStream stream, Func<int, FurnitureMarker> getter)
             {
-                var locs = UtilityTranslation.ParseRepeatingSubrecord(
+                var locs = PluginUtilityTranslation.ParseRepeatingSubrecord(
                     stream.RemainingMemory,
                     stream.MetaData.Constants,
                     RecordTypes.FNPR,

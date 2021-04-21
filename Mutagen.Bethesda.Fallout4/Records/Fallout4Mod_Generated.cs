@@ -2187,7 +2187,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            UtilityTranslation.ModParse(
+            PluginUtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
@@ -2527,7 +2527,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             toDo.Add(() => WriteGroupParallel(item.Factions, writer.MetaData.MasterReferences!, 10, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.HeadParts, writer.MetaData.MasterReferences!, 11, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
-            UtilityTranslation.CompileStreamsInto(
+            PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
         }
@@ -2569,7 +2569,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 }
                 subStreams[(int)counter + 1] = trib;
             });
-            UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+            PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         

@@ -274,7 +274,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, out SubrecordHeader header, out int loc)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 header = default;
@@ -296,7 +296,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecord(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordHeader header, out int loc)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 header = default;
@@ -317,7 +317,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 frame = default;
@@ -337,7 +337,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordFrame frame, out int loc)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 frame = default;
@@ -360,7 +360,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordFrame frame, out int loc)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 frame = default;
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, out SubrecordPinFrame pin)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 pin = default;
@@ -401,7 +401,7 @@ namespace Mutagen.Bethesda
         /// <returns>True if matching subrecord is found</returns>
         public static bool TryLocateSubrecordPinFrame(this MajorRecordFrame majorFrame, RecordType type, int offset, out SubrecordPinFrame pin)
         {
-            var find = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
+            var find = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(offset - majorFrame.HeaderLength), majorFrame.Meta, type, navigateToContent: false);
             if (find == null)
             {
                 pin = default;

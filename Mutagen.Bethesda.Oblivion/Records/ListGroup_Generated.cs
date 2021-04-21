@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static ListGroup()
         {
-            T_RecordType = UtilityTranslation.GetRecordType<T>();
+            T_RecordType = PluginUtilityTranslation.GetRecordType<T>();
         }
 
         #region Type
@@ -867,7 +867,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.GroupParse(
+            PluginUtilityTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,

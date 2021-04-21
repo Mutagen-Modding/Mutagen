@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
                         gameConstants,
                         streams);
                 });
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda.Skyrim
                             streams);
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
                         streams[(int)counter + 1] = trib;
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -222,7 +222,7 @@ namespace Mutagen.Bethesda.Skyrim
                     worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
                     streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
                 });
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -256,7 +256,7 @@ namespace Mutagen.Bethesda.Skyrim
                             streams);
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
                         streams[(int)counter + 1] = trib;
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -339,7 +339,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     subStreams[(int)counter + 1] = trib;
                 });
-                UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
             }
 

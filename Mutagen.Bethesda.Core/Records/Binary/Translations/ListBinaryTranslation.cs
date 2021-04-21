@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Noggog;
 using Loqui;
-using static Mutagen.Bethesda.Records.Binary.Translations.UtilityTranslation;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using static Mutagen.Bethesda.Records.Binary.Translations.PluginUtilityTranslation;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Translations.Binary;
 

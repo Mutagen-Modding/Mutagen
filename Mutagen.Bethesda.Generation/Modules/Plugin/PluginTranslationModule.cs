@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 bool async = this.HasAsync(obj, self: true);
                 using (var args = new ArgsWrapper(fg,
-                    $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
+                    $"{nameof(PluginUtilityTranslation)}.MajorRecordParse<{obj.Interface(getter: false, internalInterface: true)}>"))
                 {
                     args.Add($"record: {accessor}");
                     args.AddPassArg(ReaderMemberName);
@@ -1647,7 +1647,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                 }
                 bool async = this.HasAsync(obj, self: true);
-                var utilityTranslation = $"{Loqui.Generation.Utility.Await(async)}Utility{(async ? "Async" : null)}Translation";
+                var utilityTranslation = nameof(PluginUtilityTranslation);
                 switch (objType)
                 {
                     case ObjectType.Subrecord:
@@ -2180,7 +2180,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             {
                                 fg.AppendLine("var origStream = stream;");
                             }
-                            fg.AppendLine($"stream = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.DecompressStream)}(stream);");
+                            fg.AppendLine($"stream = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.DecompressStream)}(stream);");
                         }
                         if (obj.TryGetCustomRecordTypeTriggers(out var customLogicTriggers))
                         {

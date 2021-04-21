@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Generation.Modules
         {
             foreach (var genName in GetGenerics(obj, fg))
             {
-                fg.AppendLine($"{genName}_RecordType = {nameof(UtilityTranslation)}.{nameof(UtilityTranslation.GetRecordType)}<T>();");
+                fg.AppendLine($"{genName}_RecordType = {nameof(PluginUtilityTranslation)}.{nameof(PluginUtilityTranslation.GetRecordType)}<T>();");
             }
             await base.GenerateInStaticCtor(obj, fg);
         }

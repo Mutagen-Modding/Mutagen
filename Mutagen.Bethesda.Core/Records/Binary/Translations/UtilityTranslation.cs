@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
-    public static class UtilityTranslation
+    public static class PluginUtilityTranslation
     {
         public delegate bool BinaryMasterParseDelegate<TItem>(
             MutagenFrame reader,
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             byte[] bytes)
         {
             var ret = await Task.WhenAll(streams).ConfigureAwait(false);
-            UtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
+            PluginUtilityTranslation.SetGroupLength(bytes, (uint)ret.Sum(i => i.Length));
             return ret;
         }
 
@@ -720,7 +720,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             IEnumerable<Stream> streams,
             byte[] bytes)
         {
-            UtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
+            PluginUtilityTranslation.SetGroupLength(bytes, (uint)streams.NotNull().Sum(i => i.Length));
         }
 
         public static void SkipPastAll(IBinaryReadStream stream, GameConstants meta, RecordType recordType)

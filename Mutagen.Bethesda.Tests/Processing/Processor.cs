@@ -491,7 +491,7 @@ namespace Mutagen.Bethesda.Tests
                     pos += subRec.TotalLength;
                     continue;
                 }
-                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
+                var passedLen = PluginUtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
                 // Found contained record
                 if (!prevWasCounter)
                 {
@@ -799,17 +799,17 @@ namespace Mutagen.Bethesda.Tests
             ICollection<RecordType> locationsToMove,
             bool enforcePast = false)
         {
-            var offender = UtilityTranslation.FindFirstSubrecord(
+            var offender = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 recordTypes: offendingIndices.ToGetter());
             if (offender == null) return false;
-            var limit = UtilityTranslation.FindFirstSubrecord(
+            var limit = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 recordTypes: offendingLimits.ToGetter());
             if (limit == null) return false;
-            long? locToMove = UtilityTranslation.FindFirstSubrecord(
+            long? locToMove = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
                 majorFrame.Meta,
                 recordTypes: locationsToMove.ToGetter());

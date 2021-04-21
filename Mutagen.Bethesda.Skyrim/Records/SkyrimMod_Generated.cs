@@ -8838,7 +8838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ModKey modKey,
             GroupMask? importMask = null)
         {
-            UtilityTranslation.ModParse(
+            PluginUtilityTranslation.ModParse(
                 record: item,
                 frame: frame,
                 importMask: importMask,
@@ -10794,7 +10794,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             toDo.Add(() => WriteGroupParallel(item.ReverbParameters, writer.MetaData.MasterReferences!, 111, gameConstants, outputStreams, param.StringsWriter));
             toDo.Add(() => WriteGroupParallel(item.VolumetricLightings, writer.MetaData.MasterReferences!, 112, gameConstants, outputStreams, param.StringsWriter));
             Parallel.Invoke(toDo.ToArray());
-            UtilityTranslation.CompileStreamsInto(
+            PluginUtilityTranslation.CompileStreamsInto(
                 outputStreams.NotNull(),
                 stream);
         }
@@ -10837,7 +10837,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 }
                 subStreams[(int)counter + 1] = trib;
             });
-            UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+            PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
             streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
         }
         

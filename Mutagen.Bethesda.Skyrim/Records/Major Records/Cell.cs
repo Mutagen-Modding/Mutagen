@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool insideWorldspace)
             {
                 var origStream = stream;
-                stream = UtilityTranslation.DecompressStream(stream);
+                stream = PluginUtilityTranslation.DecompressStream(stream);
                 var ret = new CellBinaryOverlay(
                     bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                     package: package)
