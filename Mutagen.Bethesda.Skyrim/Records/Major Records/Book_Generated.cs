@@ -3009,19 +3009,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.PickUpSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Book_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.PutDownSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Book_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
@@ -3056,10 +3050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InventoryArt.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.InventoryArt.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Book_FieldIndex.InventoryArt;
                 }
                 case RecordTypeInts.CNAM:

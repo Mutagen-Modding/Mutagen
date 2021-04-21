@@ -1951,10 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.MaxAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Material.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Material.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;

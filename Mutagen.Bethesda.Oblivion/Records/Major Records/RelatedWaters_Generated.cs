@@ -1130,18 +1130,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelatedWaters item,
             MutagenFrame frame)
         {
-            item.RelatedWaterDaytime.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
-            item.RelatedWaterNighttime.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
-            item.RelatedWaterUnderwater.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.RelatedWaterDaytime.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RelatedWaterNighttime.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.RelatedWaterUnderwater.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

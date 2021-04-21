@@ -1108,15 +1108,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherType item,
             MutagenFrame frame)
         {
-            item.Weather.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Weather.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Chance = frame.ReadInt32();
-            item.Global.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Global.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

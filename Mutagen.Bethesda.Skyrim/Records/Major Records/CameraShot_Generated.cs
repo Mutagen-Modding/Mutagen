@@ -2153,10 +2153,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceModifier.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ImageSpaceModifier.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CameraShot_FieldIndex.ImageSpaceModifier;
                 }
                 default:

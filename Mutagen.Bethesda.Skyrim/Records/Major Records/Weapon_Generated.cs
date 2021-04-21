@@ -3959,10 +3959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EITM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObjectEffect.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ObjectEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.ObjectEffect;
                 }
                 case RecordTypeInts.EAMT:
@@ -3983,46 +3980,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ETYP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipmentType.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.EquipmentType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.EquipmentType;
                 }
                 case RecordTypeInts.BIDS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BlockBashImpact.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.BlockBashImpact.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.BlockBashImpact;
                 }
                 case RecordTypeInts.BAMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AlternateBlockMaterial.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AlternateBlockMaterial.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.AlternateBlockMaterial;
                 }
                 case RecordTypeInts.YNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PickUpSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.PickUpSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.PickUpSound;
                 }
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PutDownSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.PutDownSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.PutDownSound;
                 }
                 case RecordTypeInts.KWDA:
@@ -4063,82 +4045,55 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImpactDataSet.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ImpactDataSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.ImpactDataSet;
                 }
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FirstPersonModel.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.FirstPersonModel.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.FirstPersonModel;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttackSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.AttackSound;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackSound2D.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttackSound2D.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.AttackSound2D;
                 }
                 case RecordTypeInts.NAM7:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackLoopSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttackLoopSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.AttackLoopSound;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttackFailSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttackFailSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.AttackFailSound;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.IdleSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.IdleSound;
                 }
                 case RecordTypeInts.NAM9:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EquipSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.EquipSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.EquipSound;
                 }
                 case RecordTypeInts.NAM8:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UnequipSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.UnequipSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.UnequipSound;
                 }
                 case RecordTypeInts.DATA:
@@ -4165,10 +4120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Template.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Template.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.Template;
                 }
                 default:

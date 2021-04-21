@@ -1114,10 +1114,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.LocationReference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.LocationReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Radius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }
 

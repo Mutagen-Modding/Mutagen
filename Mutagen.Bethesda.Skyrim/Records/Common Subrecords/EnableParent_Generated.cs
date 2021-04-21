@@ -1179,10 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;

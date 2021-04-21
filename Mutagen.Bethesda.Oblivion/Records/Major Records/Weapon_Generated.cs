@@ -1834,19 +1834,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Script.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Script.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.Script;
                 }
                 case RecordTypeInts.ENAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Enchantment.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Enchantment.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weapon_FieldIndex.Enchantment;
                 }
                 case RecordTypeInts.ANAM:

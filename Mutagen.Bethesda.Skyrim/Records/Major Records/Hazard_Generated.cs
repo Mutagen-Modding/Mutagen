@@ -2329,10 +2329,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ImageSpaceModifier.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ImageSpaceModifier.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Hazard_FieldIndex.ImageSpaceModifier;
                 }
                 case RecordTypeInts.DATA:
@@ -2345,22 +2342,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceRadius = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.TargetInterval = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.Flags = EnumBinaryTranslation<Hazard.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Spell.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.Light.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.ImpactDataSet.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.Sound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Spell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Light.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ImpactDataSet.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Hazard_FieldIndex.Sound;
                 }
                 default:

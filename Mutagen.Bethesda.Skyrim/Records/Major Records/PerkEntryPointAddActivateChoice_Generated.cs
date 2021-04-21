@@ -1316,10 +1316,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             if (frame.Complete) return;
-            item.Spell.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Spell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
         public static ParseResult FillBinaryRecordTypes(

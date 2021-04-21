@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static FloatBinaryTranslation Instance = new FloatBinaryTranslation();
         public override int ExpectedLength => 4;
 
-        public override float ParseValue(MutagenFrame reader)
+        public override float Parse(MutagenFrame reader)
         {
             var ret = reader.Reader.ReadFloat();
             if (ret == float.Epsilon)

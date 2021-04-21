@@ -1784,10 +1784,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Global.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Global.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LeveledItem_FieldIndex.Global;
                 }
                 case RecordTypeInts.LVLO:

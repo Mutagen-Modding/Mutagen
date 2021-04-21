@@ -1061,10 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParent item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

@@ -1154,10 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintPreset_FieldIndex.Color) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Color.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Color.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TintPreset_FieldIndex.Color;
                 }
                 case RecordTypeInts.TINV:

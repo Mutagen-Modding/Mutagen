@@ -9,12 +9,12 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static P3FloatBinaryTranslation Instance = new P3FloatBinaryTranslation();
         public override int ExpectedLength => 12;
 
-        public override P3Float ParseValue(MutagenFrame reader)
+        public override P3Float Parse(MutagenFrame reader)
         {
             return new P3Float(
-                FloatBinaryTranslation.Instance.ParseValue(reader),
-                FloatBinaryTranslation.Instance.ParseValue(reader),
-                FloatBinaryTranslation.Instance.ParseValue(reader));
+                FloatBinaryTranslation.Instance.Parse(reader),
+                FloatBinaryTranslation.Instance.Parse(reader),
+                FloatBinaryTranslation.Instance.Parse(reader));
         }
 
         public override void Write(MutagenWriter writer, P3Float item)

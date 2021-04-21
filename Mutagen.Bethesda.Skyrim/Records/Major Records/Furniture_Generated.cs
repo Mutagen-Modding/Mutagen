@@ -2814,10 +2814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteractionKeyword.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.InteractionKeyword.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Furniture_FieldIndex.InteractionKeyword;
                 }
                 case RecordTypeInts.MNAM:
@@ -2835,10 +2832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM1:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSpell.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AssociatedSpell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Furniture_FieldIndex.AssociatedSpell;
                 }
                 case RecordTypeInts.ENAM:

@@ -1622,10 +1622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)ActorValuePerkNode_FieldIndex.Perk) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Perk.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Perk.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ActorValuePerkNode_FieldIndex.Perk;
                 }
                 case RecordTypeInts.FNAM:
@@ -1661,10 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AssociatedSkill.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AssociatedSkill.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ActorValuePerkNode_FieldIndex.AssociatedSkill;
                 }
                 case RecordTypeInts.CNAM:

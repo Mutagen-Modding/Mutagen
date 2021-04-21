@@ -6122,19 +6122,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Precipitation.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Precipitation.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weather_FieldIndex.Precipitation;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VisualEffect.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.VisualEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Weather_FieldIndex.VisualEffect;
                 }
                 case RecordTypeInts.ONAM:
@@ -6339,10 +6333,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.SunGlareLensFlare.SetTo(
-                            Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                                reader: frame,
-                                defaultVal: FormKey.Null));
+                        item.SunGlareLensFlare.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     }
                     return (int)Weather_FieldIndex.SunGlareLensFlare;
                 }

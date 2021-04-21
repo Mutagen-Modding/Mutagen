@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static UInt16BinaryTranslation Instance = new UInt16BinaryTranslation();
         public override int ExpectedLength => 2;
 
-        public override ushort ParseValue(MutagenFrame reader)
+        public override ushort Parse(MutagenFrame reader)
         {
             return reader.Reader.ReadUInt16();
         }

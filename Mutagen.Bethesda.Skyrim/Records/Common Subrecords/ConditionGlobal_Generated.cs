@@ -1179,10 +1179,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.ComparisonValue.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             ConditionGlobalBinaryCreateTranslation.FillBinaryDataCustom(
                 frame: frame,
                 item: item);

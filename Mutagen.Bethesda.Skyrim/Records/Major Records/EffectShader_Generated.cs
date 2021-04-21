@@ -7232,10 +7232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleInitialRotationDegreePlusMinus = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.ParticleRotationSpeedDegreePerSec = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.ParticleRotationSpeedDegreePerSecPlusMinus = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModels.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AddonModels.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.HolesStartTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.HolesEndTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.HolesStartValue = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
@@ -7256,10 +7253,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
                         return (int)EffectShader_FieldIndex.AddonModelsScaleOutTime;
                     }
-                    item.AmbientSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AmbientSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break1;

@@ -1061,10 +1061,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetData item,
             MutagenFrame frame)
         {
-            item.Target.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Target.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

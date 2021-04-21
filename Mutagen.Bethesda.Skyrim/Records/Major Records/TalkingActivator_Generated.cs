@@ -2382,10 +2382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNDR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoopingSound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.LoopingSound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TalkingActivator_FieldIndex.LoopingSound;
                 }
                 case RecordTypeInts.FNAM:
@@ -2397,10 +2394,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceType.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.VoiceType.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TalkingActivator_FieldIndex.VoiceType;
                 }
                 default:

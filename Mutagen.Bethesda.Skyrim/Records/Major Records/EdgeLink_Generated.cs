@@ -1098,10 +1098,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt32();
-            item.Mesh.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Mesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.TriangleIndex = frame.ReadInt16();
         }
 

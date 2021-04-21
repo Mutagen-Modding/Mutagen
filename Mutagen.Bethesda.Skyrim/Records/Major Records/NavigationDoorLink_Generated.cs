@@ -1108,10 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLink item,
             MutagenFrame frame)
         {
-            item.NavMesh.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.NavMesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.NavMeshTriangleIndex = frame.ReadInt16();
             item.Unused = frame.ReadInt16();
         }

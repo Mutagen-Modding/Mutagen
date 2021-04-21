@@ -1049,10 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceReference item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Position = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 

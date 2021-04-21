@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             return reader.ReadColor(binaryType);
         }
 
-        public override Color ParseValue(MutagenFrame reader)
+        public override Color Parse(MutagenFrame reader)
         {
             throw new NotImplementedException();
         }

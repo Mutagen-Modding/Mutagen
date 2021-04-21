@@ -1451,10 +1451,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= CriticalData.VersioningBreaks.Break0;
                 return;
             }
-            item.Effect.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Effect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused4 = frame.ReadInt32();

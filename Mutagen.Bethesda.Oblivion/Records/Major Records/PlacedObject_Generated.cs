@@ -3036,10 +3036,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Base.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XPCI:
@@ -3067,10 +3064,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XOWN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Owner.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Owner.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Owner;
                 }
                 case RecordTypeInts.XRNK:
@@ -3082,10 +3076,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XGLB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GlobalVariable.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.GlobalVariable.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.GlobalVariable;
                 }
                 case RecordTypeInts.XESP:
@@ -3096,10 +3087,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XTRG:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Target.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Target.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Target;
                 }
                 case RecordTypeInts.XSED:
@@ -3134,10 +3122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XRTM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XRTM.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.XRTM.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.XRTM;
                 }
                 case RecordTypeInts.XACT:
@@ -3182,10 +3167,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XSOL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContainedSoul.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ContainedSoul.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.ContainedSoul;
                 }
                 case RecordTypeInts.DATA:

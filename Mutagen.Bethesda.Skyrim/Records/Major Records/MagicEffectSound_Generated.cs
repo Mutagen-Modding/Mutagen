@@ -1051,10 +1051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Sound.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

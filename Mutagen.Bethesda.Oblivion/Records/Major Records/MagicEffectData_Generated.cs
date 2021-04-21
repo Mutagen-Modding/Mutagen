@@ -1607,15 +1607,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.CounterEffectCount = frame.ReadUInt32();
-            item.Light.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Light.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.ProjectileSpeed = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.EffectShader.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.EffectShader.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= MagicEffectData.VersioningBreaks.Break0;

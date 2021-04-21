@@ -1763,10 +1763,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadInt32();
                     item.ResponseNumber = dataFrame.ReadUInt8();
                     item.Unknown2 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
-                    item.Sound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Flags = EnumBinaryTranslation<DialogResponse.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Unknown3 = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)DialogResponse_FieldIndex.Unknown3;
@@ -1799,19 +1796,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpeakerIdleAnimation.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.SpeakerIdleAnimation.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponse_FieldIndex.SpeakerIdleAnimation;
                 }
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ListenerIdleAnimation.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ListenerIdleAnimation.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogResponse_FieldIndex.ListenerIdleAnimation;
                 }
                 default:

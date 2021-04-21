@@ -1119,10 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWaterReflection item,
             MutagenFrame frame)
         {
-            item.Water.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Water.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= WaterReflection.VersioningBreaks.Break0;

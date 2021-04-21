@@ -1103,10 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionSound item,
             MutagenFrame frame)
         {
-            item.Sound.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Chance = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
         }

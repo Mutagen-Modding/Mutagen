@@ -6421,10 +6421,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAME:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Base.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Base.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Base;
                 }
                 case RecordTypeInts.XMBO:
@@ -6518,10 +6515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XEMI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emittance.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Emittance.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.Emittance;
                 }
                 case RecordTypeInts.XLIG:
@@ -6542,19 +6536,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XTNM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TeleportMessageBox.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.TeleportMessageBox.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.TeleportMessageBox;
                 }
                 case RecordTypeInts.XMBR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MultiboundReference.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.MultiboundReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.MultiboundReference;
                 }
                 case RecordTypeInts.XWCN:
@@ -6583,10 +6571,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XCZR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZR.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.XCZR.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.XCZR;
                 }
                 case RecordTypeInts.XCZA:
@@ -6598,10 +6583,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XCZC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.XCZC.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.XCZC.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.XCZC;
                 }
                 case RecordTypeInts.XSCL:
@@ -6613,10 +6595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XSPC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpawnContainer.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.SpawnContainer.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.SpawnContainer;
                 }
                 case RecordTypeInts.XAPD:
@@ -6629,10 +6608,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLIB:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LeveledItemBaseObject.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.LeveledItemBaseObject.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.LeveledItemBaseObject;
                 }
                 case RecordTypeInts.XLCM:
@@ -6644,10 +6620,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PersistentLocation.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.PersistentLocation.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.PersistentLocation;
                 }
                 case RecordTypeInts.XTRI:
@@ -6664,10 +6637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.EncounterZone.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XNDP:
@@ -6713,10 +6683,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLRL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LocationReference.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.LocationReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.LocationReference;
                 }
                 case RecordTypeInts.XESP:
@@ -6775,10 +6742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XATR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttachRef.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttachRef.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)PlacedObject_FieldIndex.AttachRef;
                 }
                 case RecordTypeInts.XLOD:

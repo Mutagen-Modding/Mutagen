@@ -1116,10 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Name = Mutagen.Bethesda.Records.Binary.Translations.StringBinaryTranslation.Instance.Parse(
                 reader: frame,
                 stringBinaryType: StringBinaryType.PrependLength);
-            item.NewTexture.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.NewTexture.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Index = frame.ReadInt32();
         }
 

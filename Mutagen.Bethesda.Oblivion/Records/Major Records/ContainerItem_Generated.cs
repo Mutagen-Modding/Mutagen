@@ -1058,10 +1058,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IContainerItem item,
             MutagenFrame frame)
         {
-            item.Item.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Item.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Count = frame.ReadUInt32();
         }
 

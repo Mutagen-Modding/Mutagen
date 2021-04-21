@@ -1292,10 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RDMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Music.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)RegionSounds_FieldIndex.Music;
                 }
                 case RecordTypeInts.RDSA:

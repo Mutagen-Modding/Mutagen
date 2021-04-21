@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static DateTimeBinaryTranslation Instance = new DateTimeBinaryTranslation();
         public override int ExpectedLength => 4;
 
-        public override DateTime ParseValue(MutagenFrame reader)
+        public override DateTime Parse(MutagenFrame reader)
         {
             reader.Reader.Position += 4;
             return DateTime.Now;

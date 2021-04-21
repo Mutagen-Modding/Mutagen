@@ -1129,19 +1129,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferences item,
             MutagenFrame frame)
         {
-            item.KeywordOrReference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.KeywordOrReference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= LinkedReferences.VersioningBreaks.Break0;
                 return;
             }
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

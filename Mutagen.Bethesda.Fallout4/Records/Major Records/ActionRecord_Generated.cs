@@ -1623,10 +1623,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AttractionRule.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.AttractionRule.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ActionRecord_FieldIndex.AttractionRule;
                 }
                 case RecordTypeInts.FULL:

@@ -1048,10 +1048,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

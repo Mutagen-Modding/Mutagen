@@ -1088,10 +1088,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFactionOwner item,
             MutagenFrame frame)
         {
-            item.Faction.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Faction.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.RequiredRank = frame.ReadInt32();
         }
 

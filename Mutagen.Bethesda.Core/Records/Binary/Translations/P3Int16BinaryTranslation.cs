@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static P3Int16BinaryTranslation Instance = new P3Int16BinaryTranslation();
         public override int ExpectedLength => 4;
 
-        public override P3Int16 ParseValue(MutagenFrame reader)
+        public override P3Int16 Parse(MutagenFrame reader)
         {
             return new P3Int16(
                 reader.Reader.ReadInt16(),

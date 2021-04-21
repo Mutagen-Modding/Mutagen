@@ -9,11 +9,11 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static P2FloatBinaryTranslation Instance = new P2FloatBinaryTranslation();
         public override int ExpectedLength => 8;
 
-        public override P2Float ParseValue(MutagenFrame reader)
+        public override P2Float Parse(MutagenFrame reader)
         {
             return new P2Float(
-                FloatBinaryTranslation.Instance.ParseValue(reader),
-                FloatBinaryTranslation.Instance.ParseValue(reader));
+                FloatBinaryTranslation.Instance.Parse(reader),
+                FloatBinaryTranslation.Instance.Parse(reader));
         }
 
         public override void Write(MutagenWriter writer, P2Float item)

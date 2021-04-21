@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         public readonly static P2Int16BinaryTranslation Instance = new P2Int16BinaryTranslation();
         public override int ExpectedLength => 4;
 
-        public override P2Int16 ParseValue(MutagenFrame reader)
+        public override P2Int16 Parse(MutagenFrame reader)
         {
             return new P2Int16(
                 reader.Reader.ReadInt16(),
@@ -57,9 +57,9 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public P2Int16 Parse(MutagenFrame reader,
-            bool swapCoords,
-            P2Int16 defaultVal = default)
+        public P2Int16 Parse(
+            MutagenFrame reader,
+            bool swapCoords)
         {
             if (swapCoords)
             {
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     y: reader.Reader.ReadInt16(),
                     x: reader.Reader.ReadInt16());
             }
-            return Parse(reader, defaultVal);
+            return Parse(reader);
         }
     }
 }

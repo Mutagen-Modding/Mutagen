@@ -1031,10 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookSpell item,
             MutagenFrame frame)
         {
-            item.Spell.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Spell.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

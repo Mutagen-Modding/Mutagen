@@ -1031,10 +1031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationKeyword item,
             MutagenFrame frame)
         {
-            item.Link.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Link.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }

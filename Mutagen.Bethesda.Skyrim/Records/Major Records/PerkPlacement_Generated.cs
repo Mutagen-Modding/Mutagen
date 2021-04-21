@@ -1118,10 +1118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkPlacement item,
             MutagenFrame frame)
         {
-            item.Perk.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Perk.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Rank = frame.ReadUInt8();
             item.Fluff = Mutagen.Bethesda.Records.Binary.Translations.ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
         }

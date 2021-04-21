@@ -1111,10 +1111,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRelation item,
             MutagenFrame frame)
         {
-            item.Target.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Target.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
             item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }

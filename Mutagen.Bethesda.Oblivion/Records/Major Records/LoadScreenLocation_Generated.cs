@@ -1121,14 +1121,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocation item,
             MutagenFrame frame)
         {
-            item.Direct.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
-            item.Indirect.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Direct.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Indirect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.GridPoint = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(reader: frame);
         }
 

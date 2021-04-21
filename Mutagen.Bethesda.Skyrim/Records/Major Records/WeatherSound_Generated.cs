@@ -1061,10 +1061,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherSound item,
             MutagenFrame frame)
         {
-            item.Sound.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Type = EnumBinaryTranslation<WeatherSound.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

@@ -1047,10 +1047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGrass item,
             MutagenFrame frame)
         {
-            item.Grass.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Grass.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
         }
 

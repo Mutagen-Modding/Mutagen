@@ -1167,10 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITeleportDestination item,
             MutagenFrame frame)
         {
-            item.Door.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Door.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));

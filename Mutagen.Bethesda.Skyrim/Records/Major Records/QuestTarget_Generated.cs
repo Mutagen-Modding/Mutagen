@@ -1330,10 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)QuestTarget_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Target.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Target.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Flags = EnumBinaryTranslation<Quest.TargetFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     return (int)QuestTarget_FieldIndex.Flags;
                 }

@@ -1236,20 +1236,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptEffectData item,
             MutagenFrame frame)
         {
-            item.Script.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Script.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break0;
                 return;
             }
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.VisualEffect.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: RecordType.Null));
+            item.VisualEffect.SetTo(Mutagen.Bethesda.Records.Binary.Translations.RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break1;

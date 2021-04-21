@@ -1222,10 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Level = frame.ReadInt16();
             item.Unknown = frame.ReadInt16();
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete) return;
             item.Count = frame.ReadInt16();
             if (frame.Complete) return;

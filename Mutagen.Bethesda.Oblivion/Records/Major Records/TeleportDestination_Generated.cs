@@ -1112,10 +1112,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestination item,
             MutagenFrame frame)
         {
-            item.Destination.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Destination.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Position = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.Rotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
         }

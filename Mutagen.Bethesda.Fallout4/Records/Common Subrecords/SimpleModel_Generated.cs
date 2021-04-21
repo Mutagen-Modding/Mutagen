@@ -1233,10 +1233,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.MODS:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaterialSwap.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.MaterialSwap.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SimpleModel_FieldIndex.MaterialSwap;
                 }
                 case RecordTypeInts.MODT:

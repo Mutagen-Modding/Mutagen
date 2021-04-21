@@ -2054,10 +2054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfo item,
             MutagenFrame frame)
         {
-            item.NavigationMesh.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.NavigationMesh.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
             item.Point = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
@@ -2081,10 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.ParentWorldspace.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);

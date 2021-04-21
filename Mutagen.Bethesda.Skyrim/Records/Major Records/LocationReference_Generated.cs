@@ -1111,14 +1111,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationReference item,
             MutagenFrame frame)
         {
-            item.Actor.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
-            item.Location.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Actor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Location.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Grid = Mutagen.Bethesda.Records.Binary.Translations.P2Int16BinaryTranslation.Instance.Parse(
                 reader: frame,
                 swapCoords: true);

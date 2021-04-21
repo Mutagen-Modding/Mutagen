@@ -2262,19 +2262,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.ChargeTime = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BaseEnchantment.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.BaseEnchantment.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                         return (int)ObjectEffect_FieldIndex.BaseEnchantment;
                     }
-                    item.WornRestrictions.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.WornRestrictions.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }
                 case RecordTypeInts.EFID:

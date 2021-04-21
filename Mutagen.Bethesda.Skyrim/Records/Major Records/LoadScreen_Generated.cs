@@ -2084,10 +2084,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.LoadingScreenNif.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:

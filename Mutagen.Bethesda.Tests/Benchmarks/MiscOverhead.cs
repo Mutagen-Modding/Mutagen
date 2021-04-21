@@ -38,14 +38,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public byte ParseValue()
         {
             frame.Position = 0;
-            return ByteBinaryTranslation.Instance.ParseValue(frame);
+            return ByteBinaryTranslation.Instance.Parse(frame);
         }
 
         [Benchmark]
         public byte InstanceDirect()
         {
             frame.Position = 0;
-            return transl.ParseValue(frame);
+            return transl.Parse(frame);
         }
 
         [Benchmark]

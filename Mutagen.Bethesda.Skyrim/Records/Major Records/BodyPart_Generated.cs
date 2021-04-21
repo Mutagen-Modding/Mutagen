@@ -2856,36 +2856,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ToHitChance = dataFrame.ReadUInt8();
                     item.ExplodableExplosionChance = dataFrame.ReadUInt8();
                     item.ExplodableDebrisCount = dataFrame.ReadUInt16();
-                    item.ExplodableDebris.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableExplosion.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.ExplodableDebris.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableExplosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.TrackingMaxAngle = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.ExplodableDebrisScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.SeverableDebrisCount = dataFrame.ReadInt32();
-                    item.SeverableDebris.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.SeverableExplosion.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.SeverableDebris.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableExplosion.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SeverableDebrisScale = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.GorePositioning = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
                     item.GoreRotation = Mutagen.Bethesda.Records.Binary.Translations.P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.SeverableImpactData.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableImpactData.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.SeverableImpactData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableImpactData.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadUInt16();

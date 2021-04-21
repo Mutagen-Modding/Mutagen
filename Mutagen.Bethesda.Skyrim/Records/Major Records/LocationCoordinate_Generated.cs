@@ -1170,10 +1170,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinate item,
             MutagenFrame frame)
         {
-            item.Location.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Location.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Coordinates.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     reader: frame,

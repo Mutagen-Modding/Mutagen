@@ -1094,10 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)SoundItem_FieldIndex.Sound) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Sound.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.Sound.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundItem_FieldIndex.Sound;
                 }
                 case RecordTypeInts.CSDC:

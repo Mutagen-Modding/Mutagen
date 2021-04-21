@@ -1616,10 +1616,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SDSC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundDescriptor.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                            reader: frame,
-                            defaultVal: FormKey.Null));
+                    item.SoundDescriptor.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)SoundMarker_FieldIndex.SoundDescriptor;
                 }
                 default:

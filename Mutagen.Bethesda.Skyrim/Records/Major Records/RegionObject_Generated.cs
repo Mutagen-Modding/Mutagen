@@ -1824,10 +1824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionObject item,
             MutagenFrame frame)
         {
-            item.Object.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(
-                    reader: frame,
-                    defaultVal: FormKey.Null));
+            item.Object.SetTo(Mutagen.Bethesda.Records.Binary.Translations.FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadUInt16();
             item.Density = Mutagen.Bethesda.Records.Binary.Translations.FloatBinaryTranslation.Instance.Parse(reader: frame);
