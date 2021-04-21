@@ -11285,8 +11285,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             IOblivionModGetter item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -11304,8 +11304,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             object item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             Write(
                 item: (IOblivionModGetter)item,
@@ -12146,8 +12146,8 @@ namespace Mutagen.Bethesda.Oblivion
         public static void WriteToBinary(
             this IOblivionModGetter item,
             MutagenWriter writer,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             var modKey = item.ModKey;
             OblivionModBinaryWriteTranslation.Instance.Write(

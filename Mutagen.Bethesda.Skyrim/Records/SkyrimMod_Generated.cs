@@ -21854,8 +21854,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             ISkyrimModGetter item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -21873,8 +21873,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             object item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             Write(
                 item: (ISkyrimModGetter)item,
@@ -23513,8 +23513,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinary(
             this ISkyrimModGetter item,
             MutagenWriter writer,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             var modKey = item.ModKey;
             SkyrimModBinaryWriteTranslation.Instance.Write(

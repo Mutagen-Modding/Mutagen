@@ -151,7 +151,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 if (field is ContainerType contType)
                 {
                     var subData = contType.SubTypeGeneration.GetFieldData();
-                    if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterRecType)
+                    if (contType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterRecType)
                         && !string.IsNullOrWhiteSpace((string)counterRecType))
                     {
                         recordTypes.Add(new RecordType((string)counterRecType));
@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     obj,
                     contLoqui,
                     subData);
-                if (contType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterTypeObj)
+                if (contType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterTypeObj)
                     && counterTypeObj is string counterType
                     && !subData.HasTrigger)
                 {
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                 }
                 // If has count, mark as has been set
-                var hasCounter = (listType.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter)
+                var hasCounter = (listType.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counter)
                     && counter != null);
                 if (hasCounter 
                     && (previouslyTurnedOff || !listType.NullableProperty.Value.HasBeenSet))
@@ -486,7 +486,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     case ListType list:
                         nullable = data.RecordType != null 
-                            || (list.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counter) && counter != null);
+                            || (list.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counter) && counter != null);
                         break;
                     default:
                         nullable = data.HasTrigger;
@@ -668,7 +668,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             if (field is ContainerType cont)
             {
-                if (field.CustomData.TryGetValue(ListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
+                if (field.CustomData.TryGetValue(PluginListBinaryTranslationGeneration.CounterRecordType, out var counterObj)
                     && counterObj is string counterTypeStr)
                 {
                     //data.TriggeringRecordTypes.Clear();

@@ -558,7 +558,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion

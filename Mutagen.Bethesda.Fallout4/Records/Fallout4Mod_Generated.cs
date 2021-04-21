@@ -3925,8 +3925,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer,
             IFallout4ModGetter item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             ModHeaderWriteLogic.WriteHeader(
                 param: param,
@@ -3944,8 +3944,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer,
             object item,
             ModKey modKey,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             Write(
                 item: (IFallout4ModGetter)item,
@@ -4170,8 +4170,8 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinary(
             this IFallout4ModGetter item,
             MutagenWriter writer,
-            BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            BinaryWriteParameters? param = null)
         {
             var modKey = item.ModKey;
             Fallout4ModBinaryWriteTranslation.Instance.Write(

@@ -106,11 +106,11 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         string line;
                         if (loquiGen.TargetObjectGeneration != null)
                         {
-                            line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                            line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                         }
                         else
                         {
-                            line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                            line = $"(({this.Module.TranslationWriteInterface})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                         }
                         using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                         {
