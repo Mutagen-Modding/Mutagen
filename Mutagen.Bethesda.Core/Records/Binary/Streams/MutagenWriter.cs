@@ -348,38 +348,6 @@ namespace Mutagen.Bethesda.Records.Binary.Streams
             }
         }
 
-        /// <inheritdoc/>
-        public void Write(Color color, ColorBinaryType binaryType)
-        {
-            switch (binaryType)
-            {
-                case ColorBinaryType.NoAlpha:
-                    this.Writer.Write(color.R);
-                    this.Writer.Write(color.G);
-                    this.Writer.Write(color.B);
-                    break;
-                case ColorBinaryType.Alpha:
-                    this.Writer.Write(color.R);
-                    this.Writer.Write(color.G);
-                    this.Writer.Write(color.B);
-                    this.Writer.Write(color.A);
-                    break;
-                case ColorBinaryType.NoAlphaFloat:
-                    this.Writer.Write((float)(color.R / 255d));
-                    this.Writer.Write((float)(color.G / 255d));
-                    this.Writer.Write((float)(color.B / 255d));
-                    break;
-                case ColorBinaryType.AlphaFloat:
-                    this.Writer.Write((float)(color.R / 255d));
-                    this.Writer.Write((float)(color.G / 255d));
-                    this.Writer.Write((float)(color.B / 255d));
-                    this.Writer.Write((float)(color.A / 255d));
-                    break;
-                default:
-                    break;
-            }
-        }
-
         /// <summary>
         /// Disposes of Writer if applicable
         /// </summary>

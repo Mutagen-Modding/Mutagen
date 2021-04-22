@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -11487,7 +11488,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
@@ -11497,7 +11498,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.RadialBlurFlags,
                     length: 4);
-                P2FloatBinaryTranslation.Instance.Write(
+                P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RadialBlurCenter);
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
@@ -12267,12 +12268,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Duration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
                     item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.RadialBlurCenter = P2FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);
@@ -12923,7 +12924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region RadialBlurCenter
         private int _RadialBlurCenterLocation => _DNAMLocation!.Value + 0xCC;
         private bool _RadialBlurCenter_IsSet => _DNAMLocation.HasValue;
-        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
+        public P2Float RadialBlurCenter => _RadialBlurCenter_IsSet ? P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RadialBlurCenterLocation, 8)) : default;
         #endregion
         #region Counts2
         partial void Counts2CustomParse(

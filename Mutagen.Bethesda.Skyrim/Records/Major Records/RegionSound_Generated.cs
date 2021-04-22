@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1067,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Chance);
         }
@@ -1105,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<RegionSound.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Chance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Chance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

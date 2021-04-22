@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1908,25 +1909,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GravityVelocity);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RotationVelocity);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleSizeX);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleSizeY);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CenterOffsetMin);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CenterOffsetMax);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.InitialRotationRange);
                 writer.Write(item.NumSubtexturesX);
@@ -1938,7 +1939,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 if (!item.DATADataTypeState.HasFlag(ShaderParticleGeometry.DATADataType.Break0))
                 {
                     writer.Write(item.BoxSize);
-                    FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.ParticleDensity);
                 }
@@ -2043,13 +2044,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.GravityVelocity = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.RotationVelocity = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleSizeX = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleSizeY = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.CenterOffsetMin = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.CenterOffsetMax = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.InitialRotationRange = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.GravityVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RotationVelocity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleSizeX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleSizeY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CenterOffsetMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CenterOffsetMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.InitialRotationRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.NumSubtexturesX = dataFrame.ReadUInt32();
                     item.NumSubtexturesY = dataFrame.ReadUInt32();
                     item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
@@ -2059,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)ShaderParticleGeometry_FieldIndex.Type;
                     }
                     item.BoxSize = dataFrame.ReadUInt32();
-                    item.ParticleDensity = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ParticleDensity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)ShaderParticleGeometry_FieldIndex.ParticleDensity;
                 }
                 case RecordTypeInts.ICON:

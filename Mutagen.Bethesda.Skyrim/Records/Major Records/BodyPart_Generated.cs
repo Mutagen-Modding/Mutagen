@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2677,7 +2678,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 binaryType: StringBinaryType.NullTerminate);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.BPND)))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DamageMult);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BodyPart.Flag>.Instance.Write(
@@ -2702,10 +2703,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableExplosion);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TrackingMaxAngle);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebrisScale);
                 writer.Write(item.SeverableDebrisCount);
@@ -2715,13 +2716,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableExplosion);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebrisScale);
-                P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GorePositioning);
-                P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GoreRotation);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -2733,7 +2734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.SeverableDecalCount);
                 writer.Write(item.ExplodableDecalCount);
                 writer.Write(item.Unknown);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.LimbReplacementScale);
             }
@@ -2747,7 +2748,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.GoreTargetBone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
                 binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM5));
@@ -2848,7 +2849,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.DamageMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.DamageMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Flags = EnumBinaryTranslation<BodyPart.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.Type = EnumBinaryTranslation<BodyPart.PartType>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
                     item.HealthPercent = dataFrame.ReadUInt8();
@@ -2858,20 +2859,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ExplodableDebrisCount = dataFrame.ReadUInt16();
                     item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.TrackingMaxAngle = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ExplodableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TrackingMaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.SeverableDebrisCount = dataFrame.ReadInt32();
                     item.SeverableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.SeverableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.GorePositioning = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.GoreRotation = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SeverableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.GorePositioning = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.GoreRotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.SeverableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ExplodableImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadUInt16();
-                    item.LimbReplacementScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.LimbReplacementScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)BodyPart_FieldIndex.LimbReplacementScale;
                 }
                 case RecordTypeInts.NAM1:
@@ -2893,7 +2894,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM5:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFilesHashes = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TextureFilesHashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)BodyPart_FieldIndex.TextureFilesHashes;
                 }
                 default:
@@ -3074,12 +3075,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region GorePositioning
         private int _GorePositioningLocation => _BPNDLocation!.Value + 0x2C;
         private bool _GorePositioning_IsSet => _BPNDLocation.HasValue;
-        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_GorePositioningLocation, 12)) : default;
+        public P3Float GorePositioning => _GorePositioning_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GorePositioningLocation, 12)) : default;
         #endregion
         #region GoreRotation
         private int _GoreRotationLocation => _BPNDLocation!.Value + 0x38;
         private bool _GoreRotation_IsSet => _BPNDLocation.HasValue;
-        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_GoreRotationLocation, 12)) : default;
+        public P3Float GoreRotation => _GoreRotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_GoreRotationLocation, 12)) : default;
         #endregion
         #region SeverableImpactData
         private int _SeverableImpactDataLocation => _BPNDLocation!.Value + 0x44;

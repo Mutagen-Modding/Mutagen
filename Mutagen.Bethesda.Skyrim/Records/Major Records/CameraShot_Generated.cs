@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2001,27 +2002,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TimeMultiplierPlayer);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TimeMultiplierTarget);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TimeMultiplierGlobal);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MaxTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MinTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TargetPercentBetweenActors);
                 if (!item.DATADataTypeState.HasFlag(CameraShot.DATADataType.Break0))
                 {
-                    FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.NearTargetDistance);
                 }
@@ -2136,18 +2137,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Location = EnumBinaryTranslation<CameraShot.LocationType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Target = EnumBinaryTranslation<CameraShot.TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Flags = EnumBinaryTranslation<CameraShot.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.TimeMultiplierPlayer = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TimeMultiplierTarget = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TimeMultiplierGlobal = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.MaxTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.MinTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TargetPercentBetweenActors = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TimeMultiplierPlayer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TimeMultiplierTarget = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TimeMultiplierGlobal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaxTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MinTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TargetPercentBetweenActors = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= CameraShot.DATADataType.Break0;
                         return (int)CameraShot_FieldIndex.TargetPercentBetweenActors;
                     }
-                    item.NearTargetDistance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.NearTargetDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)CameraShot_FieldIndex.NearTargetDistance;
                 }
                 case RecordTypeInts.MNAM:

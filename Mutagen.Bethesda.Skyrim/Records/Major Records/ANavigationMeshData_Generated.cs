@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2021,7 +2022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
-                transl: P3FloatBinaryTranslation.Instance.Write);
+                transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
@@ -2062,16 +2063,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.NavmeshGridDivisor);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceX);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceY);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryNavmeshGrid(
@@ -2119,7 +2120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
+                    transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
@@ -2139,10 +2140,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.NavmeshGridDivisor = frame.ReadUInt32();
-            item.MaxDistanceX = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MaxDistanceY = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Min = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Max = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MaxDistanceX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MaxDistanceY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Min = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Max = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustom(
                 frame: frame,
                 item: item);
@@ -2232,7 +2233,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;
         #endregion
         #region Triangles

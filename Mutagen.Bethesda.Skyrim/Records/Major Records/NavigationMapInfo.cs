@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -27,7 +28,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else
                 {
-                    item.ParentWorldspaceCoord = P2Int16BinaryTranslation.Instance.Parse(frame);
+                    item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
                 }
             }
         }
@@ -55,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else
                 {
-                    P2Int16BinaryTranslation.Instance.Write(writer, item.ParentWorldspaceCoord);
+                    P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
                 }
             }
         }

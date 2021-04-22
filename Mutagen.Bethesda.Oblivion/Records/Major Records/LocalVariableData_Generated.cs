@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1109,7 +1110,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Index);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Write(
@@ -1157,7 +1158,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Index = frame.ReadInt32();
-            item.Unknown = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(12));
+            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(12));
             item.Flags = EnumBinaryTranslation<Script.LocalVariableFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Unknown2 = frame.ReadInt32();
         }

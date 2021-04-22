@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1214,11 +1215,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPointGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
             writer.Write(item.NumConnections);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unused);
         }
@@ -1254,9 +1255,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPoint item,
             MutagenFrame frame)
         {
-            item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NumConnections = frame.ReadUInt8();
-            item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1322,7 +1323,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
         public Byte NumConnections => _data.Span[0xC];
         public ReadOnlyMemorySlice<Byte> Unused => _data.Span.Slice(0xD, 0x3).ToArray();
         partial void CustomFactoryEnd(

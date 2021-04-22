@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1502,16 +1503,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.UnitFromWaterMode,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PositionRange);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.HeightRange);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ColorRange);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.WavePeriod);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Grass.GrassFlag>.Instance.Write(
@@ -1564,10 +1565,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.UnitFromWaterAmount = frame.ReadUInt16();
             item.Fluff2 = frame.ReadUInt16();
             item.UnitFromWaterMode = EnumBinaryTranslation<Grass.UnitFromWaterType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.PositionRange = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.HeightRange = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.ColorRange = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.WavePeriod = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.PositionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.HeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.ColorRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.WavePeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<Grass.GrassFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

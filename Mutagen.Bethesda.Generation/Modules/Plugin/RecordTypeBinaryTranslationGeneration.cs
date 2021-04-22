@@ -1,9 +1,5 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Noggog;
@@ -12,6 +8,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class RecordTypeBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<RecordType>
     {
+        public override bool NeedsGenerics => false;
+
         public RecordTypeBinaryTranslationGeneration()
             : base(expectedLen: 4, typeName: null, nullable: null)
         {

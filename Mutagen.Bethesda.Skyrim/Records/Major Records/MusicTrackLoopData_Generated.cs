@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1051,10 +1052,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMusicTrackLoopDataGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Begins);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Ends);
             writer.Write(item.Count);
@@ -1097,8 +1098,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMusicTrackLoopData item,
             MutagenFrame frame)
         {
-            item.Begins = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Ends = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Begins = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Ends = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Count = frame.ReadUInt32();
         }
 

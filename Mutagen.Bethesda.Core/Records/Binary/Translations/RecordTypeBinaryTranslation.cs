@@ -1,15 +1,16 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
-    public class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType>
+    public class RecordTypeBinaryTranslation : PrimitiveBinaryTranslation<RecordType, MutagenFrame, MutagenWriter>
     {
         public readonly static RecordTypeBinaryTranslation Instance = new RecordTypeBinaryTranslation();
         public override int ExpectedLength => 4;
 
         public override RecordType Parse(MutagenFrame reader)
         {
-            return HeaderTranslation.ReadNextRecordType(reader.Reader);
+            return HeaderTranslation.ReadNextRecordType(reader);
         }
 
         public bool Parse<T>(

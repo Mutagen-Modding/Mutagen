@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1043,13 +1044,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMountDataGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MountOffset);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DismountOffset);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MountCameraOffset);
         }
@@ -1085,9 +1086,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMountData item,
             MutagenFrame frame)
         {
-            item.MountOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DismountOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MountCameraOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.MountOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DismountOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MountCameraOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1153,9 +1154,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float MountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
-        public P3Float DismountOffset => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
-        public P3Float MountCameraOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x18, 0xC));
+        public P3Float MountOffset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
+        public P3Float DismountOffset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0xC));
+        public P3Float MountCameraOffset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x18, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

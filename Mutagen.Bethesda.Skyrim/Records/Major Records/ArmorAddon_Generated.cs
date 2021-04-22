@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2409,14 +2410,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.Priority,
-                    transl: ByteBinaryTranslation.Instance.Write);
+                    transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 ArmorAddonBinaryWriteTranslation.WriteBinaryWeightSliderEnabled(
                     writer: writer,
                     item: item);
                 writer.Write(item.Unknown);
                 writer.Write(item.DetectionSoundValue);
                 writer.Write(item.Unknown2);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.WeaponAdjust);
             }
@@ -2601,14 +2602,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Priority = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Byte>(
                         frame: frame,
-                        transl: ByteBinaryTranslation.Instance.Parse);
+                        transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     ArmorAddonBinaryCreateTranslation.FillBinaryWeightSliderEnabledCustom(
                         frame: dataFrame,
                         item: item);
                     item.Unknown = dataFrame.ReadUInt16();
                     item.DetectionSoundValue = dataFrame.ReadUInt8();
                     item.Unknown2 = dataFrame.ReadUInt8();
-                    item.WeaponAdjust = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.WeaponAdjust = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)ArmorAddon_FieldIndex.WeaponAdjust;
                 }
                 case RecordTypeInts.MOD2:

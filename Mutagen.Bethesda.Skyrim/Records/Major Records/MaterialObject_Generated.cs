@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2030,27 +2031,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DNAMs,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: ByteArrayBinaryTranslation.Instance.Write);
+                transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FalloffScale);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FalloffBias);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.NoiseUvScale);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MaterialUvScale);
-                P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ProjectionVector);
                 if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0))
                 {
-                    FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.NormalDampener);
                     if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1))
@@ -2174,24 +2175,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                            transl: ByteArrayBinaryTranslation.Instance.Parse));
+                            transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)MaterialObject_FieldIndex.DNAMs;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.FalloffScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FalloffBias = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.NoiseUvScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.MaterialUvScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ProjectionVector = P3FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FalloffScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FalloffBias = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.NoiseUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaterialUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ProjectionVector = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break0;
                         return (int)MaterialObject_FieldIndex.ProjectionVector;
                     }
-                    item.NormalDampener = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.NormalDampener = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break1;
@@ -2204,7 +2205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break2;
                         return (int)MaterialObject_FieldIndex.Flags;
                     }
-                    item.HasSnow = BooleanBinaryTranslation.Instance.Parse(
+                    item.HasSnow = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         byteLength: 4);
                     return (int)MaterialObject_FieldIndex.HasSnow;
@@ -2291,7 +2292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ProjectionVector
         private int _ProjectionVectorLocation => _DATALocation!.Value + 0x10;
         private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
-        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
         #endregion
         #region NormalDampener
         private int _NormalDampenerLocation => _DATALocation!.Value + 0x1C;

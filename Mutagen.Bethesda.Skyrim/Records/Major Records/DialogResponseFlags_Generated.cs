@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1006,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 2);
-            FloatBinaryTranslation.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ResetHours,
                 integerType: FloatIntegerType.UShort,
@@ -1051,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Flags = EnumBinaryTranslation<DialogResponses.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.ResetHours = FloatBinaryTranslation.Parse(
+            item.ResetHours = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.0003663003663003663);
@@ -1121,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public DialogResponses.Flag Flags => (DialogResponses.Flag)BinaryPrimitives.ReadUInt16LittleEndian(_data.Span.Slice(0x0, 0x2));
-        public Single ResetHours => FloatBinaryTranslation.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.0003663003663003663);
+        public Single ResetHours => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.0003663003663003663);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1003,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Priority);
-            FloatBinaryTranslation.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DuckingDecibel,
                 integerType: FloatIntegerType.UShort,
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Priority = frame.ReadUInt16();
-            item.DuckingDecibel = FloatBinaryTranslation.Parse(
+            item.DuckingDecibel = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01);
@@ -1118,7 +1119,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public UInt16 Priority => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Single DuckingDecibel => FloatBinaryTranslation.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single DuckingDecibel => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.01);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

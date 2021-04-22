@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReferenceGetter item,
             MutagenWriter writer)
         {
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GridPosition);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IWorldspaceReferenceGetter>.Instance.Write(
@@ -1189,7 +1190,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReference item,
             MutagenFrame frame)
         {
-            item.GridPosition = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.GridPosition = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.References.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
                     amount: frame.ReadInt32(),
@@ -1261,7 +1262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int16 GridPosition => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
         #region References
         public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<WorldspaceReferenceBinaryOverlay>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;

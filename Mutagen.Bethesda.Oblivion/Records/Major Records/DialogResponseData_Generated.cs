@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1164,7 +1165,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.EmotionValue);
             writer.Write(item.Unknown);
             writer.Write(item.ResponseNumber);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
         }
@@ -1210,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EmotionValue = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
             item.ResponseNumber = frame.ReadUInt8();
-            item.Unknown2 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

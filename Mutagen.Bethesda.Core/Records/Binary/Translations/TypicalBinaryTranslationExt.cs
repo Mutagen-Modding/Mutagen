@@ -1,25 +1,17 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
-    public abstract class TypicalBinaryTranslation<T>
+    public static class TypicalBinaryTranslationExt
     {
-        protected abstract T ParseBytes(MemorySlice<byte> bytes);
-
-        public abstract T Parse(MutagenFrame reader);
-
-        public bool Parse(MutagenFrame reader, out T item)
-        {
-            item = Parse(reader);
-            return true;
-        }
-
-        public abstract void Write(MutagenWriter writer, T item);
-
-        public void Write(
+        public static void Write<T>(
+            this TypicalBinaryTranslation<T, MutagenFrame, MutagenWriter> transl,
             MutagenWriter writer,
             T item,
             RecordType header,
@@ -34,12 +26,12 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             {
                 using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
                 {
-                    Write(writer, item);
+                    transl.Write(writer, item);
                 }
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Enrich(ex, header);
+                throw SubrecordException.Factory(ex, header);
             }
         }
     }

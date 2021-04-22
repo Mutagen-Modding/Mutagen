@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1372,7 +1373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Specular);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Scale);
             }
@@ -1421,7 +1422,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 return;
             }
             item.Specular = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Scale = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

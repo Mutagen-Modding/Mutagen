@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -54,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
-                CharBinaryTranslation.Instance.Write(
+                CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.TypeChar,
                     header: RecordTypes.FNAM);

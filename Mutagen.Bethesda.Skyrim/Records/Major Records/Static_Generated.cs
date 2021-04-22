@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1819,7 +1820,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MaxAngle);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -1831,7 +1832,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer,
                         item.Flags,
                         length: 1);
-                    ByteArrayBinaryTranslation.Instance.Write(
+                    ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.Unused);
                 }
@@ -1950,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.MaxAngle = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.MaxAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Material.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
@@ -1958,7 +1959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)Static_FieldIndex.Material;
                     }
                     item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Unused = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Static_FieldIndex.Unused;
                 }
                 case RecordTypeInts.MNAM:

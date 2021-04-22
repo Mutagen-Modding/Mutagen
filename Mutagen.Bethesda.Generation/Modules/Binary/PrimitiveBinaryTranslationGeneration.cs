@@ -26,10 +26,12 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         public delegate bool CustomWrapperAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor data, Accessor passedLen);
         public CustomWrapperAction CustomWrapper;
         public override bool NeedsNamespacePrefix => false;
+        public override string Namespace => "Mutagen.Bethesda.Translations.Binary.";
+        public virtual bool NeedsGenerics => true;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
-            return $"{Typename(typeGen)}BinaryTranslation.Instance";
+            return $"{Typename(typeGen)}BinaryTranslation{(NeedsGenerics ? $"<{Module.ReaderClass}, {Module.WriterClass}>" : null)}.Instance";
         }
 
         public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
@@ -64,7 +66,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (data.HasTrigger || !PreferDirectTranslation)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                    $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
@@ -144,7 +146,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     {
                         FG = fg,
                         TypeGen = typeGen,
-                        TranslatorLine = $"{this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                        TranslatorLine = $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}",
                         MaskAccessor = errorMaskAccessor,
                         ItemAccessor = itemAccessor,
                         TranslationMaskAccessor = null,
@@ -187,7 +189,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
                 }
                 using (var args = new ArgsWrapper(fg,
-                    $"{outItemAccessor} = {this.NamespacePrefix}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                    $"{outItemAccessor} = {this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Parse"))
                 {
                     args.Add(nodeAccessor.Access);
                     if (this.DoErrorMasks)

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -3137,13 +3138,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Type,
                     length: 2);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Gravity);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Speed);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Range);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -3152,13 +3153,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.MuzzleFlash);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TracerChance);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplosionAltTriggerProximity);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplosionAltTriggerTimer);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -3167,13 +3168,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Sound);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MuzzleFlashDuration);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FadeDuration);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ImpactForce);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -3185,16 +3186,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DefaultWeaponSource);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ConeSpread);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CollisionRadius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Lifetime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.RelaunchInterval);
                 if (!item.DATADataTypeState.HasFlag(Projectile.DATADataType.Break0))
@@ -3215,11 +3216,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.MuzzleFlashModel,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
                 binaryType: StringBinaryType.NullTerminate);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureFilesHashes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
-            UInt32BinaryTranslation.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SoundLevel,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM));
@@ -3350,26 +3351,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<Projectile.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
                     item.Type = EnumBinaryTranslation<Projectile.TypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
-                    item.Gravity = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Speed = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Range = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Gravity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.MuzzleFlash.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.TracerChance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ExplosionAltTriggerProximity = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ExplosionAltTriggerTimer = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TracerChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ExplosionAltTriggerProximity = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ExplosionAltTriggerTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.MuzzleFlashDuration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FadeDuration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ImpactForce = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.MuzzleFlashDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FadeDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ImpactForce = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.CountdownSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.DisaleSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.DefaultWeaponSource.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.ConeSpread = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.CollisionRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Lifetime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.RelaunchInterval = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ConeSpread = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.CollisionRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Lifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.RelaunchInterval = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Projectile.DATADataType.Break0;
@@ -3395,7 +3396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFilesHashes = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.TextureFilesHashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Projectile_FieldIndex.TextureFilesHashes;
                 }
                 case RecordTypeInts.VNAM:

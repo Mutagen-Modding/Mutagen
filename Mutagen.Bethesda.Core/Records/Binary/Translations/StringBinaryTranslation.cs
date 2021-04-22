@@ -8,6 +8,7 @@ using System.Buffers.Binary;
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
     public class StringBinaryTranslation
+
     {
         public readonly static StringBinaryTranslation Instance = new StringBinaryTranslation();
 

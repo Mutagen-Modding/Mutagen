@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Fallout4
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.Fallout4
                 IGroupGetter<T> item)
                 where T : class, IFallout4MajorRecordGetter, IBinaryItem
             {
-                Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }

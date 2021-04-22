@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
 using System.Buffers.Binary;
 
@@ -44,7 +45,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             {
                 item = FormKey.Null;
             }
-            UInt32BinaryTranslation.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: writer.MetaData.MasterReferences!.GetFormID(item).Raw);
         }

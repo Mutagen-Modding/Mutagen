@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1165,16 +1166,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPointGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NumConnectionsFluffBytes);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Connections,
-                transl: P3FloatBinaryTranslation.Instance.Write);
+                transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1208,12 +1209,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRoadPoint item,
             MutagenFrame frame)
         {
-            item.Point = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.NumConnectionsFluffBytes = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NumConnectionsFluffBytes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.Connections.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     reader: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
+                    transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }
@@ -1279,10 +1280,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
         public ReadOnlyMemorySlice<Byte> NumConnectionsFluffBytes => _data.Span.Slice(0xC, 0x3).ToArray();
         #region Connections
-        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Connections => BinaryOverlayList.FactoryByStartIndex<P3Float>(_data.Slice(0xF), _package, 12, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int ConnectionsEndingPos;
         #endregion
         partial void CustomFactoryEnd(

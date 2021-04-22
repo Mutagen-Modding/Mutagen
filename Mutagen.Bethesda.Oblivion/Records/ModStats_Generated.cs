@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1051,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModStatsGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Version);
             writer.Write(item.NumRecords);
@@ -1095,7 +1096,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IModStats item,
             MutagenFrame frame)
         {
-            item.Version = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Version = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.NumRecords = frame.ReadUInt32();
             item.NextFormID = frame.ReadUInt32();
         }

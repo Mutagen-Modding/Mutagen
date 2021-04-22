@@ -1,6 +1,7 @@
 using System;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -17,14 +18,14 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryStartTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item)
             {
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     (byte)Math.Round(item.StartTime / 1440f * 256f));
             }
 
             static partial void WriteBinaryStopTimeCustom(MutagenWriter writer, ISoundDataExtendedInternalGetter item)
             {
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     (byte)Math.Round(item.StopTime / 1440f * 256f));
             }
@@ -37,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void FillBinaryStartTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item)
             {
-                if (!ByteBinaryTranslation.Instance.Parse(
+                if (!ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     frame,
                     out var b))
                 {
@@ -48,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void FillBinaryStopTimeCustom(MutagenFrame frame, ISoundDataExtendedInternal item)
             {
-                if (!ByteBinaryTranslation.Instance.Parse(
+                if (!ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     frame,
                     out var b))
                 {

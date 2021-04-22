@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1051,13 +1052,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter item,
             MutagenWriter writer)
         {
-            P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.UsableDimensions);
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesNWCell);
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesSECell);
         }
@@ -1099,9 +1100,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapData item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = P2IntBinaryTranslation.Instance.Parse(reader: frame);
-            item.CellCoordinatesNWCell = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.CellCoordinatesSECell = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.UsableDimensions = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellCoordinatesNWCell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellCoordinatesSECell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1167,9 +1168,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
-        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
-        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
+        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
+        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Grid,
                 swapCoords: true);
@@ -1175,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.LocationRefType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Marker.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Grid = P2Int16BinaryTranslation.Instance.Parse(
+            item.Grid = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 swapCoords: true);
         }
@@ -1247,7 +1248,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IFormLinkGetter<ILocationReferenceTypeGetter> LocationRefType => new FormLink<ILocationReferenceTypeGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public IFormLinkGetter<ILinkedReferenceGetter> Marker => new FormLink<ILinkedReferenceGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x4, 0x4))));
         public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x8, 0x4))));
-        public P2Int16 Grid => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4), swapCoords: true);
+        public P2Int16 Grid => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4), swapCoords: true);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

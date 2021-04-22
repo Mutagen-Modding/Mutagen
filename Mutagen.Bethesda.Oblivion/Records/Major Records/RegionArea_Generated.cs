@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1139,7 +1140,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EdgeFallOff,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RPLI));
@@ -1147,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.RegionPoints,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RPLD),
-                transl: P2FloatBinaryTranslation.Instance.Write);
+                transl: P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1210,7 +1211,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.RegionPoints = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: P2FloatBinaryTranslation.Instance.Parse)
+                            transl: P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<P2Float>();
                     return (int)RegionArea_FieldIndex.RegionPoints;
                 }
@@ -1359,7 +1360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => P2FloatBinaryTranslation.Read(s));
+                        getter: (s, p) => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     stream.Position += subLen;
                     return (int)RegionArea_FieldIndex.RegionPoints;
                 }

@@ -1,7 +1,6 @@
 using Ionic.Zlib;
 using Loqui;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Constants; 
+using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;

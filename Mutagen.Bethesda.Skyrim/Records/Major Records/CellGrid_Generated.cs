@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1002,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGridGetter item,
             MutagenWriter writer)
         {
-            P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CellGrid.Flag>.Instance.Write(
@@ -1048,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGrid item,
             MutagenFrame frame)
         {
-            item.Point = P2IntBinaryTranslation.Instance.Parse(reader: frame);
+            item.Point = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int Point => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
+        public P2Int Point => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
         public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

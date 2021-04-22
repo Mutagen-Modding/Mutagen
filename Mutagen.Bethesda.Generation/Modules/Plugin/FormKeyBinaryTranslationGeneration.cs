@@ -10,6 +10,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class FormKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<FormKey>
     {
+        public override bool NeedsGenerics => false;
+
         public FormKeyBinaryTranslationGeneration()
             : base(expectedLen: 4)
         {

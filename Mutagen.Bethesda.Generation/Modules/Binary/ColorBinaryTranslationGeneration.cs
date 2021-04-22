@@ -9,6 +9,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Color>
     {
+        public override bool NeedsGenerics => false;
+
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             switch (BinaryType(typeGen))

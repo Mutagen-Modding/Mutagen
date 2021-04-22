@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1239,25 +1240,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBoundingGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Width);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Height);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Position);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationQ1);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationQ2);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationQ3);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RotationQ4);
         }
@@ -1293,13 +1294,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBounding item,
             MutagenFrame frame)
         {
-            item.Width = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Height = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Position = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ1 = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ2 = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ3 = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RotationQ4 = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Width = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Height = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationQ1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationQ2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationQ3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RotationQ4 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1367,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public Single Width => _data.Slice(0x0, 0x4).Float();
         public Single Height => _data.Slice(0x4, 0x4).Float();
-        public P3Float Position => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
+        public P3Float Position => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
         public Single RotationQ1 => _data.Slice(0x14, 0x4).Float();
         public Single RotationQ2 => _data.Slice(0x18, 0x4).Float();
         public Single RotationQ3 => _data.Slice(0x1C, 0x4).Float();

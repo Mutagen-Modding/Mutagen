@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1100,16 +1101,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFogDistanceGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DayNear);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DayFar);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NightNear);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NightFar);
         }
@@ -1151,10 +1152,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFogDistance item,
             MutagenFrame frame)
         {
-            item.DayNear = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.DayFar = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.NightNear = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.NightFar = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DayNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.DayFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NightFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

@@ -53,6 +53,40 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         public ExtendedList<T> Parse(
             MutagenFrame reader,
+            RecordType triggeringRecord,
+            BinarySubParseDelegate<IBinaryReadStream, T> transl)
+        {
+            var ret = new ExtendedList<T>();
+            while (!reader.Complete && !reader.Reader.Complete)
+            {
+                if (!HeaderTranslation.TryGetRecordType(reader.Reader, triggeringRecord)) break;
+                var startingPos = reader.Position;
+                MutagenFrame subFrame;
+                if (!IsLoqui)
+                {
+                    var subHeader = reader.ReadSubrecord();
+                    subFrame = reader.ReadAndReframe(subHeader.ContentLength);
+                }
+                else
+                {
+                    subFrame = reader;
+                }
+                if (transl(subFrame, out var subItem))
+                {
+                    ret.Add(subItem);
+                }
+
+                if (reader.Position == startingPos)
+                {
+                    reader.Position += reader.MetaData.Constants.SubConstants.HeaderLength;
+                    throw new ArgumentException($"Parsed item on the list consumed no data: {subItem}");
+                }
+            }
+            return ret;
+        }
+
+        public ExtendedList<T> Parse(
+            MutagenFrame reader,
             BinarySubParseRecordDelegate<T> transl,
             ICollectionGetter<RecordType>? triggeringRecord = null)
         {

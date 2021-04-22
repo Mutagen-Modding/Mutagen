@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
@@ -66,7 +62,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             var floatType = typeGen as Mutagen.Bethesda.Generation.FloatType;
             if (floatType.IntegerType.HasValue)
             {
-                return $"{nameof(FloatBinaryTranslation)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
+                return $"{GetTranslatorInstance(typeGen, getter: true)}.GetFloat({dataAccessor}, {nameof(FloatIntegerType)}.{floatType.IntegerType}, {floatType.Multiplier})";
             }
             else if (!floatType.Multiplier.EqualsWithin(1))
             {
@@ -84,7 +80,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (floatType.IntegerType.HasValue)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{item} = FloatBinaryTranslation.Parse"))
+                    $"{item} = {GetTranslatorInstance(typeGen, getter: true)}.Parse"))
                 {
                     args.Add($"reader: {reader}");
                     args.Add($"integerType: {nameof(FloatIntegerType)}.{floatType.IntegerType}");
@@ -105,7 +101,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (floatType.IntegerType.HasValue)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"FloatBinaryTranslation.Write"))
+                    $"{GetTranslatorInstance(typeGen, getter: true)}.Write"))
                 {
                     args.Add($"writer: {writer}");
                     args.Add($"item: {item}");

@@ -1,39 +1,14 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 
 namespace Mutagen.Bethesda.Records.Binary.Translations
 {
-    public class ByteArrayBinaryTranslation : TypicalBinaryTranslation<MemorySlice<byte>>
+    public static class ByteArrayBinaryTranslationExt
     {
-        public readonly static ByteArrayBinaryTranslation Instance = new ByteArrayBinaryTranslation();
-
-        public override void Write(MutagenWriter writer, MemorySlice<byte> item)
-        {
-            writer.Write(item);
-        }
-
-        public override MemorySlice<byte> Parse(MutagenFrame reader)
-        {
-            return reader.Reader.ReadBytes(checked((int)reader.Remaining));
-        }
-
-        protected override MemorySlice<byte> ParseBytes(MemorySlice<byte> bytes)
-        {
-            return bytes;
-        }
-
-        public void Write(MutagenWriter writer, ReadOnlySpan<byte> item)
-        {
-            writer.Write(item);
-        }
-
-        public void Write(MutagenWriter writer, ReadOnlyMemorySlice<byte> item)
-        {
-            writer.Write(item.Span);
-        }
-
-        public void Write(
+        public static void Write(
+            this ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter> transl,
             MutagenWriter writer,
             ReadOnlyMemorySlice<byte>? item,
             RecordType header)
@@ -43,16 +18,17 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                 if (!item.HasValue) return;
                 using (HeaderExport.Subrecord(writer, header))
                 {
-                    Write(writer, item.Value.Span);
+                    transl.Write(writer, item.Value.Span);
                 }
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Enrich(ex, header);
+                throw SubrecordException.Factory(ex, header);
             }
         }
 
-        public void Write(
+        public static void Write(
+            this ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter> transl,
             MutagenWriter writer,
             ReadOnlyMemorySlice<byte>? item,
             RecordType header,
@@ -70,19 +46,19 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     using (HeaderExport.Subrecord(writer, header))
                     {
                     }
-                    Write(writer, item.Value.Span);
+                    transl.Write(writer, item.Value.Span);
                 }
                 else
                 {
                     using (HeaderExport.Subrecord(writer, header))
                     {
-                        Write(writer, item.Value.Span);
+                        transl.Write(writer, item.Value.Span);
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw SubrecordException.Enrich(ex, header);
+                throw SubrecordException.Factory(ex, header);
             }
         }
     }

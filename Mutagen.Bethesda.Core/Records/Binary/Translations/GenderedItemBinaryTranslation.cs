@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Noggog;
 using System;
 using static Mutagen.Bethesda.Records.Binary.Translations.PluginUtilityTranslation;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
@@ -16,6 +17,21 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                 throw new ArgumentException();
             }
             if (!transl(frame, out var female))
+            {
+                throw new ArgumentException();
+            }
+            return new GenderedItem<TItem>(male, female);
+        }
+
+        public static GenderedItem<TItem> Parse<TItem>(
+            IBinaryReadStream reader,
+            BinarySubParseDelegate<IBinaryReadStream, TItem> transl)
+        {
+            if (!transl(reader, out var male))
+            {
+                throw new ArgumentException();
+            }
+            if (!transl(reader, out var female))
             {
                 throw new ArgumentException();
             }

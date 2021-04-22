@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1003,7 +1004,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTintGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Amount);
             ColorBinaryTranslation.Instance.Write(
@@ -1049,7 +1050,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTint item,
             MutagenFrame frame)
         {
-            item.Amount = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Amount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
         }
 

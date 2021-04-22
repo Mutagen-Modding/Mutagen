@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -4372,7 +4373,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.BaseCost);
                 MagicEffectBinaryWriteTranslation.WriteBinaryAssociatedItem(
@@ -4391,7 +4392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.CastingLight);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TaperWeight);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -4402,16 +4403,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.EnchantShader);
                 writer.Write(item.MinimumSkillLevel);
                 writer.Write(item.SpellmakingArea);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SpellmakingCastingTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TaperCurve);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TaperDuration);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SecondActorValueWeight);
                 MagicEffectBinaryWriteTranslation.WriteBinaryArchetype(
@@ -4444,13 +4445,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ImpactData);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SkillUsageMultiplier);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.DualCastArt);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DualCastScale);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -4475,10 +4476,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.CastingSoundLevel,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ScriptEffectAIScore);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ScriptEffectAIDelayTime);
             }
@@ -4642,7 +4643,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Flags = EnumBinaryTranslation<MagicEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.BaseCost = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.BaseCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryAssociatedItemCustom(
                         frame: dataFrame,
                         item: item);
@@ -4651,15 +4652,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CounterEffectCount = dataFrame.ReadUInt16();
                     item.Unknown1 = dataFrame.ReadUInt16();
                     item.CastingLight.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.TaperWeight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.TaperWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.HitShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.EnchantShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.MinimumSkillLevel = dataFrame.ReadUInt32();
                     item.SpellmakingArea = dataFrame.ReadUInt32();
-                    item.SpellmakingCastingTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TaperCurve = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TaperDuration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.SecondActorValueWeight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SpellmakingCastingTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TaperCurve = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TaperDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.SecondActorValueWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     MagicEffectBinaryCreateTranslation.FillBinaryArchetypeCustom(
                         frame: dataFrame,
                         item: item);
@@ -4671,9 +4672,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.CastingArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.HitEffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ImpactData.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.SkillUsageMultiplier = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SkillUsageMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.DualCastArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.DualCastScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.DualCastScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.EnchantArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Unknown2.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Unknown3.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
@@ -4681,8 +4682,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImageSpaceModifier.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.PerkToApply.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.CastingSoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.ScriptEffectAIScore = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ScriptEffectAIDelayTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIScore = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ScriptEffectAIDelayTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)MagicEffect_FieldIndex.ScriptEffectAIDelayTime;
                 }
                 case RecordTypeInts.ESCE:

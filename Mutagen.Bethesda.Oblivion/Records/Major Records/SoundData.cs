@@ -1,6 +1,7 @@
 using System;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MinimumAttenuationDistance / SoundData.MinAttenuationDistanceMultiplier);
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: val);
             }
@@ -78,7 +79,7 @@ namespace Mutagen.Bethesda.Oblivion
             static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MaximumAttenuationDistance / SoundData.MaxAttenuationDistanceMultiplier);
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: val);
             }
@@ -88,7 +89,7 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
-                if (ByteBinaryTranslation.Instance.Parse(
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     reader: frame,
                     item: out var b))
                 {
@@ -98,7 +99,7 @@ namespace Mutagen.Bethesda.Oblivion
 
             static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
-                if (ByteBinaryTranslation.Instance.Parse(
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     reader: frame,
                     item: out var b))
                 {

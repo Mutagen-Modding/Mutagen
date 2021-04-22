@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1296,26 +1297,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITreeDataGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.LeafCurvature);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MinimumLeafAngle);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaximumLeafAngle);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.BranchDimmingValue);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.LeafDimmingValue);
             writer.Write(item.ShadowRadius);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RockingSpeed);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RustleSpeed);
         }
@@ -1357,14 +1358,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITreeData item,
             MutagenFrame frame)
         {
-            item.LeafCurvature = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MinimumLeafAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.MaximumLeafAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.BranchDimmingValue = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.LeafDimmingValue = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.LeafCurvature = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MinimumLeafAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MaximumLeafAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.BranchDimmingValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.LeafDimmingValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ShadowRadius = frame.ReadInt32();
-            item.RockingSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RustleSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RockingSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RustleSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

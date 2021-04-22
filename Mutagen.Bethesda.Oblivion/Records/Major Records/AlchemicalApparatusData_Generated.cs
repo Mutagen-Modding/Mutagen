@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1108,10 +1109,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Type,
                 length: 1);
             writer.Write(item.Value);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Quality);
         }
@@ -1155,8 +1156,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Value = frame.ReadUInt32();
-            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Quality = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Quality = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1460,7 +1461,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             writer.Write(item.Unknown);
             if (!item.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break0))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.StealMult);
                 if (!item.Versioning.HasFlag(CrimeValues.VersioningBreaks.Break1))
@@ -1520,7 +1521,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item.Versioning |= CrimeValues.VersioningBreaks.Break0;
                 return;
             }
-            item.StealMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.StealMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CrimeValues.VersioningBreaks.Break1;

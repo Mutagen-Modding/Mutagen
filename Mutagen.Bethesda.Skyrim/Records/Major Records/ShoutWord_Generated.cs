@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1079,7 +1080,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Spell);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RecoveryTime);
         }
@@ -1123,7 +1124,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Word.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.RecoveryTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.RecoveryTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

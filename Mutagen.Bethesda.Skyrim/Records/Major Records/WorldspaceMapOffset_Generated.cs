@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1002,10 +1003,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapOffsetGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Scale);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellOffset);
         }
@@ -1047,8 +1048,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapOffset item,
             MutagenFrame frame)
         {
-            item.Scale = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.CellOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public Single Scale => _data.Slice(0x0, 0x4).Float();
-        public P3Float CellOffset => P3FloatBinaryTranslation.Read(_data.Slice(0x4, 0xC));
+        public P3Float CellOffset => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0xC));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

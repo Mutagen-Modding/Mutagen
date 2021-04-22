@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1937,11 +1938,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LoadingScreenNif,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
-            FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialScale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            P3Int16BinaryTranslation.Instance.WriteNullable(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialRotation,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -1955,7 +1956,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
-            P3FloatBinaryTranslation.Instance.WriteNullable(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialTranslationOffset,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
@@ -2090,13 +2091,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialScale = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.InitialScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialRotation = P3Int16BinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.InitialRotation = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
@@ -2108,7 +2109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialTranslationOffset = P3FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.InitialTranslationOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
@@ -2198,12 +2199,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InitialRotation
         private int? _InitialRotationLocation;
-        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
+        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
         #endregion
         public IInt16MinMaxGetter? RotationOffsetConstraints { get; private set; }
         #region InitialTranslationOffset
         private int? _InitialTranslationOffsetLocation;
-        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;

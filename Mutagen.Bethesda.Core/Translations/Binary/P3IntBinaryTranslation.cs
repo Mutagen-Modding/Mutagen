@@ -1,24 +1,26 @@
-using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.IO;
 
-namespace Mutagen.Bethesda.Records.Binary.Translations
+namespace Mutagen.Bethesda.Translations.Binary
 {
-    public class P3IntBinaryTranslation : PrimitiveBinaryTranslation<P3Int>
+    public class P3IntBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P3Int, TReader, TWriter>
+        where TReader : IBinaryReadStream
+        where TWriter : IBinaryWriteStream
     {
-        public readonly static P3IntBinaryTranslation Instance = new P3IntBinaryTranslation();
+        public readonly static P3IntBinaryTranslation<TReader, TWriter> Instance = new();
         public override int ExpectedLength => 12;
 
-        public override P3Int Parse(MutagenFrame reader)
+        public override P3Int Parse(TReader reader)
         {
             return new P3Int(
-                reader.Reader.ReadInt32(),
-                reader.Reader.ReadInt32(),
-                reader.Reader.ReadInt32());
+                reader.ReadInt32(),
+                reader.ReadInt32(),
+                reader.ReadInt32());
         }
 
-        public override void Write(MutagenWriter writer, P3Int item)
+        public override void Write(TWriter writer, P3Int item)
         {
             writer.Write(item.X);
             writer.Write(item.Y);

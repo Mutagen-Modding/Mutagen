@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2795,7 +2796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.EquipmentType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ETYP));
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
@@ -2809,7 +2810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Addiction);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddictionChance);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -2998,7 +2999,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Ingestible_FieldIndex.Weight;
                 }
                 case RecordTypeInts.ENIT:
@@ -3008,7 +3009,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Value = dataFrame.ReadUInt32();
                     item.Flags = EnumBinaryTranslation<Ingestible.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Addiction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.AddictionChance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AddictionChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ConsumeSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Ingestible_FieldIndex.ConsumeSound;
                 }

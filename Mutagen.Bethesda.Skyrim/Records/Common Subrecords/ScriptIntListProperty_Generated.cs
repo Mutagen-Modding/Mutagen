@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1108,7 +1109,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Data,
                 countLengthLength: 4,
-                transl: Int32BinaryTranslation.Instance.Write);
+                transl: Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1160,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int32>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: Int32BinaryTranslation.Instance.Parse));
+                    transl: Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }

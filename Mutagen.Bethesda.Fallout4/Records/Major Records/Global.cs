@@ -3,6 +3,7 @@ using System;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -62,7 +63,7 @@ namespace Mutagen.Bethesda.Fallout4
                 if (item is not IGlobalFloatGetter f
                     || !f.NoTypeDeclaration)
                 {
-                    CharBinaryTranslation.Instance.Write(
+                    CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.TypeChar,
                         header: RecordTypes.FNAM);

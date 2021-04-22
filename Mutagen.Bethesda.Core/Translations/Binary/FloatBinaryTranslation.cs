@@ -1,18 +1,20 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Records.Binary.Streams;
+using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.IO;
 
-namespace Mutagen.Bethesda.Records.Binary.Translations
+namespace Mutagen.Bethesda.Translations.Binary
 {
-    public class FloatBinaryTranslation : PrimitiveBinaryTranslation<float>
+    public class FloatBinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<float, TReader, TWriter>
+        where TReader : IBinaryReadStream
+        where TWriter : IBinaryWriteStream
     {
-        public readonly static FloatBinaryTranslation Instance = new FloatBinaryTranslation();
+        public readonly static FloatBinaryTranslation<TReader, TWriter> Instance = new();
         public override int ExpectedLength => 4;
 
-        public override float Parse(MutagenFrame reader)
+        public override float Parse(TReader reader)
         {
-            var ret = reader.Reader.ReadFloat();
+            var ret = reader.ReadFloat();
             if (ret == float.Epsilon)
             {
                 return 0f;
@@ -20,7 +22,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             return ret;
         }
 
-        public static float Parse(MutagenFrame reader, FloatIntegerType integerType, double multiplier)
+        public float Parse(TReader reader, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
             {
@@ -50,12 +52,12 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public float Parse(MutagenFrame reader, float multiplier)
+        public float Parse(TReader reader, float multiplier)
         {
             return Parse(reader) * multiplier;
         }
 
-        public static float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
+        public float GetFloat(ReadOnlySpan<byte> bytes, FloatIntegerType integerType, double multiplier)
         {
             switch (integerType)
             {
@@ -85,7 +87,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public override void Write(MutagenWriter writer, float item)
+        public override void Write(TWriter writer, float item)
         {
             if (item == float.Epsilon)
             {
@@ -101,29 +103,18 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public void Write(MutagenWriter writer, float item, float multiplier)
+        public void Write(TWriter writer, float item, float multiplier)
         {
             Write(writer, item / multiplier);
         }
 
-        public void Write(MutagenWriter writer, float item, RecordType header, float multiplier)
-        {
-            Write(writer, item / multiplier, header);
-        }
-
-        public void WriteNullable(MutagenWriter writer, float? item, float multiplier)
+        public void WriteNullable(TWriter writer, float? item, float multiplier)
         {
             if (!item.HasValue) return;
             Write(writer, item.Value / multiplier);
         }
 
-        public void WriteNullable(MutagenWriter writer, float? item, RecordType header, float multiplier)
-        {
-            if (!item.HasValue) return;
-            Write(writer, item.Value / multiplier, header);
-        }
-
-        public static void Write(MutagenWriter writer, float? item, FloatIntegerType integerType, double multiplier)
+        public void Write(TWriter writer, float? item, FloatIntegerType integerType, double multiplier)
         {
             if (item == null) return;
             switch (integerType)
@@ -139,22 +130,6 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
                     break;
                 default:
                     throw new NotImplementedException();
-            }
-        }
-
-        public static void Write(MutagenWriter writer, float? item, RecordType header, FloatIntegerType integerType, double multiplier)
-        {
-            try
-            {
-                if (item == null) return;
-                using (HeaderExport.Subrecord(writer, header))
-                {
-                    Write(writer, item, integerType, multiplier);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Enrich(ex, header);
             }
         }
     }

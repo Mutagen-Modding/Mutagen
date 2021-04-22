@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -3460,7 +3461,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.ScheduleDate);
                 writer.Write(item.ScheduleHour);
                 writer.Write(item.ScheduleMinute);
-                ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown3);
                 writer.Write(item.ScheduleDurationInMinutes);
@@ -3476,7 +3477,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Unknown4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLB));
@@ -3643,7 +3644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ScheduleDate = dataFrame.ReadUInt8();
                     item.ScheduleHour = dataFrame.ReadInt8();
                     item.ScheduleMinute = dataFrame.ReadInt8();
-                    item.Unknown3 = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     item.ScheduleDurationInMinutes = dataFrame.ReadInt32();
                     return (int)Package_FieldIndex.ScheduleDurationInMinutes;
                 }

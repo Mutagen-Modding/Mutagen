@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2185,16 +2186,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Limit);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Radius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Lifetime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ImageSpaceRadius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TargetInterval);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Hazard.Flag>.Instance.Write(
@@ -2337,10 +2338,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Limit = dataFrame.ReadUInt32();
-                    item.Radius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Lifetime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ImageSpaceRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.TargetInterval = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Lifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ImageSpaceRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.TargetInterval = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Flags = EnumBinaryTranslation<Hazard.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

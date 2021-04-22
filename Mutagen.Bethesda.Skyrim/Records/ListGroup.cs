@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -25,7 +26,7 @@ namespace Mutagen.Bethesda.Skyrim
                 IListGroupGetter<T> item)
                 where T : class, ICellBlockGetter, IBinaryItem
             {
-                Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }

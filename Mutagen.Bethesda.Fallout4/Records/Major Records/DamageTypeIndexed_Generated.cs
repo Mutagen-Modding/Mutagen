@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1444,7 +1445,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 items: item.DamageTypes,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: UInt32BinaryTranslation.Instance.Write);
+                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1553,7 +1554,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.DamageTypes = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: UInt32BinaryTranslation.Instance.Parse)
+                            transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<UInt32>();
                     return (int)DamageTypeIndexed_FieldIndex.DamageTypes;
                 }

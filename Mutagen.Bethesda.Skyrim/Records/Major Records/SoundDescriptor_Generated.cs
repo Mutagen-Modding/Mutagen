@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2234,7 +2235,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
@@ -2284,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.PercentFrequencyVariance);
                 writer.Write(item.Priority);
                 writer.Write(item.Variance);
-                FloatBinaryTranslation.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.StaticAttenuation,
                     integerType: FloatIntegerType.UShort,
@@ -2384,7 +2385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CNAM = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.CNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SoundDescriptor_FieldIndex.CNAM;
                 }
                 case RecordTypeInts.GNAM:
@@ -2445,7 +2446,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.PercentFrequencyVariance = dataFrame.ReadInt8();
                     item.Priority = dataFrame.ReadInt8();
                     item.Variance = dataFrame.ReadInt8();
-                    item.StaticAttenuation = FloatBinaryTranslation.Parse(
+                    item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.UShort,
                         multiplier: 0.01);
@@ -2564,7 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region StaticAttenuation
         private int _StaticAttenuationLocation => _BNAMLocation!.Value + 0x4;
         private bool _StaticAttenuation_IsSet => _BNAMLocation.HasValue;
-        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, 0.01) : default;
+        public Single StaticAttenuation => _StaticAttenuation_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_StaticAttenuationLocation, 2), FloatIntegerType.UShort, 0.01) : default;
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,

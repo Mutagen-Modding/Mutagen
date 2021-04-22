@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1366,16 +1367,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FalloffExponent);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FOV);
             if (!item.Versioning.HasFlag(LightData.VersioningBreaks.Break0))
             {
                 writer.Write(item.Value);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Weight);
             }
@@ -1422,15 +1423,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Radius = frame.ReadUInt32();
             item.Color = frame.ReadColor(ColorBinaryType.Alpha);
             item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.FalloffExponent = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FOV = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FalloffExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= LightData.VersioningBreaks.Break0;
                 return;
             }
             item.Value = frame.ReadUInt32();
-            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

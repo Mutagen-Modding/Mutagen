@@ -2,6 +2,7 @@ using System;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -16,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
                 {
                     throw new ArgumentException($"Unexpected length: {length}");
                 }
-                if (ByteBinaryTranslation.Instance.Parse(
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     frame,
                     out var parseVal)
                     && parseVal > 0)

@@ -6,6 +6,10 @@ using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 
 namespace Mutagen.Bethesda.Translations.Binary
 {
+    public class ListBinaryTranslation<TItem> : ListBinaryTranslation<IBinaryWriteStream, IBinaryReadStream, TItem>
+    {
+    }
+
     public class ListBinaryTranslation<TWriter, TReader, TItem>
         where TWriter : IBinaryWriteStream
         where TReader : IBinaryReadStream
@@ -22,6 +26,25 @@ namespace Mutagen.Bethesda.Translations.Binary
         public ExtendedList<TItem> Parse(
             TReader reader,
             BinarySubParseDelegate<TReader, TItem> transl)
+        {
+            var ret = new ExtendedList<TItem>();
+            while (!reader.Complete)
+            {
+                if (transl(reader, out var subItem))
+                {
+                    ret.Add(subItem);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return ret;
+        }
+
+        public ExtendedList<TItem> Parse(
+            TReader reader,
+            BinarySubParseDelegate<IBinaryReadStream, TItem> transl)
         {
             var ret = new ExtendedList<TItem>();
             while (!reader.Complete)

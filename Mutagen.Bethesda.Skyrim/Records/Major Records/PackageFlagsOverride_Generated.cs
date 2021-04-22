@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1226,7 +1227,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.PreferredSpeed,
                 length: 1);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
         }
@@ -1273,7 +1274,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
             item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Unknown = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1155,18 +1156,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleCloseRangeGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CircleMult);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FallbackMult);
             if (!item.Versioning.HasFlag(CombatStyleCloseRange.VersioningBreaks.Break0))
             {
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FlankDistance);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.StalkTime);
             }
@@ -1209,15 +1210,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleCloseRange item,
             MutagenFrame frame)
         {
-            item.CircleMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.FallbackMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.CircleMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FallbackMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleCloseRange.VersioningBreaks.Break0;
                 return;
             }
-            item.FlankDistance = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.StalkTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FlankDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StalkTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

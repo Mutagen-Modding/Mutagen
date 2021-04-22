@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1701,7 +1702,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 items: item.SpeedTreeSeeds,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
-                transl: UInt32BinaryTranslation.Instance.Write);
+                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             if (item.Data.TryGet(out var DataItem))
             {
                 ((TreeDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
@@ -1828,7 +1829,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item.SpeedTreeSeeds = 
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
-                            transl: UInt32BinaryTranslation.Instance.Parse)
+                            transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<UInt32>();
                     return (int)Tree_FieldIndex.SpeedTreeSeeds;
                 }

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2137,23 +2138,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.UnitsFromWaterType,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.PositionRange);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.HeightRange);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorRange);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.WavePeriod);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Grass.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
-                ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown3);
             }
@@ -2271,12 +2272,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.UnitsFromWater = dataFrame.ReadUInt16();
                     item.Unknown2 = dataFrame.ReadUInt16();
                     item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.PositionRange = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.HeightRange = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorRange = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.WavePeriod = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.PositionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.WavePeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Unknown3 = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
+                    item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Grass_FieldIndex.Unknown3;
                 }
                 default:

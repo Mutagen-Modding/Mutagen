@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1531,7 +1532,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.BaseCost);
             writer.Write(item.Unused);
@@ -1547,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Light);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ProjectileSpeed);
             FormLinkBinaryTranslation.Instance.Write(
@@ -1602,13 +1603,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.BaseCost = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.BaseCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unused = frame.ReadInt32();
             item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.CounterEffectCount = frame.ReadUInt32();
             item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.ProjectileSpeed = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.ProjectileSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.EffectShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {

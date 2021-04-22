@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -4355,7 +4356,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            P2IntBinaryTranslation.Instance.WriteNullable(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Grid,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCLC));
@@ -4381,7 +4382,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.MusicType,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCMT));
-            FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterHeight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCLW));
@@ -4397,7 +4398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Owner,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XOWN));
-            Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FactionRank,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XRNK));
@@ -4527,7 +4528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XCLC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Grid = P2IntBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Grid = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.Grid;
                 }
                 case RecordTypeInts.XCLL:
@@ -4554,7 +4555,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XCLW:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterHeight = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.WaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Cell_FieldIndex.WaterHeight;
                 }
                 case RecordTypeInts.XCCM:
@@ -4673,7 +4674,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         #endregion
         #region Grid
         private int? _GridLocation;
-        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _GridLocation.Value, _package.MetaData.Constants)) : default(P2Int?);
+        public P2Int? Grid => _GridLocation.HasValue ? P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _GridLocation.Value, _package.MetaData.Constants)) : default(P2Int?);
         #endregion
         #region Lighting
         private RangeInt32? _LightingLocation;

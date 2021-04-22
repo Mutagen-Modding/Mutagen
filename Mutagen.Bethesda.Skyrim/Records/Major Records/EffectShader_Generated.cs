@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -6752,58 +6753,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FillColorKey1);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillAlphaFadeInTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillFullAlphaTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillFadeOutTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillPersistentAlphaRatio);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillAlphaPulseAmplitude);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillAlphaPulseFrequency);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillTextureAnimationSpeedU);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillTextureAnimationSpeedV);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectFallOff);
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectColor);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectAlphaFadeInTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectFullAlphaTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectAlphaFadeOutTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectPersistentAlphaRatio);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectAlphaPulseAmplitude);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectAlphaPulseFrequency);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FillFullAlphaRatio);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeEffectFullAlphaRatio);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.BlendMode>.Instance.Write(
@@ -6826,61 +6827,61 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.ParticleDestBlendMode,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleBirthRampUpTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleFullBirthTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleBirthRampDownTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleFullBirthRatio);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticlePeristentCount);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleLifetime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleLifetimePlusMinus);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialSpeedAlongNormal);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleAccelerationAlongNormal);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialVelocity1);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialVelocity2);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialVelocity3);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleAcceleration1);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleAcceleration2);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleAcceleration3);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleScaleKey1);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleScaleKey2);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleScaleKey1Time);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleScaleKey2Time);
                 ColorBinaryTranslation.Instance.Write(
@@ -6892,81 +6893,81 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1Alpha);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey2Alpha);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3Alpha);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey1Time);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey2Time);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ColorKey3Time);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialSpeedAlongNormalPlusMinus);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialRotationDegree);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleInitialRotationDegreePlusMinus);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleRotationSpeedDegreePerSec);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ParticleRotationSpeedDegreePerSecPlusMinus);
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AddonModels);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.HolesStartTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.HolesEndTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.HolesStartValue);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.HolesEndValue);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.EdgeWidth);
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.EdgeColor);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplosionWindSpeed);
                 writer.Write(item.TextureCountU);
                 writer.Write(item.TextureCountV);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsFadeInTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsFadeOutTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsScaleStart);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsScaleEnd);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsScaleInTime);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AddonModelsScaleOutTime);
                 if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break0))
@@ -6982,33 +6983,33 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         ColorBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey3);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey1Scale);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey2Scale);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey3Scale);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey1Time);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey2Time);
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.FillColorKey3Time);
                         if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break2))
                         {
-                            FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.ColorScale);
-                            FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.BirthPositionOffset);
-                            FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.BirthPositionOffsetRangePlusMinus);
                             writer.Write(item.ParticleAnimatedStartFrame);
@@ -7022,10 +7023,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                                 writer,
                                 item.Flags,
                                 length: 4);
-                            FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.FillTextureScaleU);
-                            FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.FillTextureScaleV);
                             if (!item.DATADataTypeState.HasFlag(EffectShader.DATADataType.Break3))
@@ -7176,78 +7177,78 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.MembraneBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.MembraneZTest = EnumBinaryTranslation<EffectShader.ZTest>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.FillColorKey1 = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.FillAlphaFadeInTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillFullAlphaTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillFadeOutTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillPersistentAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillAlphaPulseAmplitude = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillAlphaPulseFrequency = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillTextureAnimationSpeedU = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillTextureAnimationSpeedV = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectFallOff = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FillAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillPersistentAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillAlphaPulseAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillTextureAnimationSpeedU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillTextureAnimationSpeedV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFallOff = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.EdgeEffectColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.EdgeEffectAlphaFadeInTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectFullAlphaTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectAlphaFadeOutTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectPersistentAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectAlphaPulseAmplitude = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillFullAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectPersistentAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaPulseAmplitude = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.MembraneDestBlendMode = EnumBinaryTranslation<EffectShader.BlendMode>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.ParticleSourceBlendMode = EnumBinaryTranslation<EffectShader.BlendMode>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.ParticleBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.ParticleZTest = EnumBinaryTranslation<EffectShader.ZTest>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.ParticleDestBlendMode = EnumBinaryTranslation<EffectShader.BlendMode>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.ParticleBirthRampUpTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleFullBirthTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleBirthRampDownTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleFullBirthRatio = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticlePeristentCount = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleLifetime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleLifetimePlusMinus = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialSpeedAlongNormal = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleAccelerationAlongNormal = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialVelocity1 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialVelocity2 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialVelocity3 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleAcceleration1 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleAcceleration2 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleAcceleration3 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleScaleKey1 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleScaleKey2 = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleScaleKey1Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleScaleKey2Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ParticleBirthRampUpTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleFullBirthTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleBirthRampDownTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleFullBirthRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticlePeristentCount = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleLifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleLifetimePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialSpeedAlongNormal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleAccelerationAlongNormal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialVelocity1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialVelocity2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialVelocity3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleAcceleration1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleAcceleration2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleAcceleration3 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleScaleKey1 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleScaleKey2 = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleScaleKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleScaleKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ColorKey1 = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.ColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.ColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.ColorKey1Alpha = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorKey2Alpha = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorKey3Alpha = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorKey1Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorKey2Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ColorKey3Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialSpeedAlongNormalPlusMinus = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialRotationDegree = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleInitialRotationDegreePlusMinus = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleRotationSpeedDegreePerSec = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ParticleRotationSpeedDegreePerSecPlusMinus = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ColorKey1Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorKey2Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorKey3Alpha = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ColorKey3Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialSpeedAlongNormalPlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialRotationDegree = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleInitialRotationDegreePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleRotationSpeedDegreePerSec = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ParticleRotationSpeedDegreePerSecPlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.AddonModels.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.HolesStartTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.HolesEndTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.HolesStartValue = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.HolesEndValue = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.EdgeWidth = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.HolesStartTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesEndTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesStartValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.HolesEndValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.EdgeWidth = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.EdgeColor = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.ExplosionWindSpeed = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ExplosionWindSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.TextureCountU = dataFrame.ReadUInt32();
                     item.TextureCountV = dataFrame.ReadUInt32();
-                    item.AddonModelsFadeInTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModelsFadeOutTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModelsScaleStart = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModelsScaleEnd = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModelsScaleInTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AddonModelsScaleOutTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsFadeOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsScaleStart = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsScaleEnd = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsScaleInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AddonModelsScaleOutTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break0;
@@ -7261,20 +7262,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     item.FillColorKey2 = dataFrame.ReadColor(ColorBinaryType.Alpha);
                     item.FillColorKey3 = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.FillColorKey1Scale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillColorKey2Scale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillColorKey3Scale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillColorKey1Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillColorKey2Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillColorKey3Time = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey1Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey2Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey3Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey1Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey2Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillColorKey3Time = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break2;
                         return (int)EffectShader_FieldIndex.FillColorKey3Time;
                     }
-                    item.ColorScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BirthPositionOffset = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BirthPositionOffsetRangePlusMinus = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ColorScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BirthPositionOffset = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BirthPositionOffsetRangePlusMinus = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ParticleAnimatedStartFrame = dataFrame.ReadUInt32();
                     item.ParticleAnimatedStartFrameVariation = dataFrame.ReadUInt32();
                     item.ParticleAnimatedEndFrame = dataFrame.ReadUInt32();
@@ -7283,8 +7284,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ParticleAnimatedFrameCount = dataFrame.ReadUInt32();
                     item.ParticleAnimatedFrameCountVariation = dataFrame.ReadUInt32();
                     item.Flags = EnumBinaryTranslation<EffectShader.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.FillTextureScaleU = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FillTextureScaleV = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.FillTextureScaleU = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FillTextureScaleV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= EffectShader.DATADataType.Break3;

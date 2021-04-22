@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1320,22 +1321,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIslandDataGetter item,
             MutagenWriter writer)
         {
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
-                transl: P3Int16BinaryTranslation.Instance.Write);
+                transl: P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
-                transl: P3FloatBinaryTranslation.Instance.Write);
+                transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1369,18 +1370,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IIslandData item,
             MutagenFrame frame)
         {
-            item.Min = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Max = P3FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Min = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Max = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Triangles.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: P3Int16BinaryTranslation.Instance.Parse));
+                    transl: P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Vertices.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
+                    transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }
@@ -1446,14 +1447,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Float Min => P3FloatBinaryTranslation.Read(_data.Slice(0x0, 0xC));
-        public P3Float Max => P3FloatBinaryTranslation.Read(_data.Slice(0xC, 0xC));
+        public P3Float Min => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0xC));
+        public P3Float Max => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0xC));
         #region Triangles
-        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList.FactoryByCountLength<P3Int16>(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation.Read(s));
+        public IReadOnlyList<P3Int16> Triangles => BinaryOverlayList.FactoryByCountLength<P3Int16>(_data.Slice(0x18), _package, 6, countLength: 4, (s, p) => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int TrianglesEndingPos;
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(TrianglesEndingPos), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1161,10 +1162,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Specialization,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.UseValueFirst);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.UseValueSecond);
         }
@@ -1209,8 +1210,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.UseValueFirst = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.UseValueSecond = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.UseValueFirst = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.UseValueSecond = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

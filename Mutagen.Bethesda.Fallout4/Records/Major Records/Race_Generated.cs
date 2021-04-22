@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -4264,29 +4265,29 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.Height,
-                    transl: FloatBinaryTranslation.Instance.Write);
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.DefaultWeight,
-                    transl: FloatBinaryTranslation.Instance.Write);
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AccelerationRate);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DecelerationRate);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Size>.Instance.Write(
                     writer,
                     item.Size,
                     length: 4);
-                ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.InjuredHealthPercent);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObject>.Instance.Write(
@@ -4301,23 +4302,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer,
                     item.BodyBipedObject,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AimAngleTolerance);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FlightRadius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularAccelerationRate);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularTolerance);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Race.Flag2>.Instance.Write(
                     writer,
                     item.Flags2,
                     length: 4);
-                ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown2);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObject>.Instance.Write(
@@ -4325,12 +4326,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     item.PipboyBipedObject,
                     length: 4);
                 writer.Write(item.XPValue);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebrisScale);
                 writer.Write(item.SeverableDebrisCount);
                 writer.Write(item.SeverableDecalCount);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebrisScale);
                 writer.Write(item.ExplodableDebrisCount);
@@ -4540,31 +4541,31 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Height = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.DefaultWeight = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.AccelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.DecelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DecelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Size = EnumBinaryTranslation<Size>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Unknown = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(16));
-                    item.InjuredHealthPercent = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(16));
+                    item.InjuredHealthPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.BearddBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.BodyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.AimAngleTolerance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FlightRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AngularAccelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AngularTolerance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AimAngleTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularAccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Flags2 = EnumBinaryTranslation<Race.Flag2>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Unknown2 = ByteArrayBinaryTranslation.Instance.Parse(reader: dataFrame.SpawnWithLength(72));
+                    item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(72));
                     item.PipboyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.XPValue = dataFrame.ReadInt16();
-                    item.SeverableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.SeverableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.SeverableDebrisCount = dataFrame.ReadUInt8();
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
-                    item.ExplodableDebrisScale = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ExplodableDebrisCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
                     item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

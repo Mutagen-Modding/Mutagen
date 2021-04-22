@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Mutagen.Bethesda.Records.Binary.Translations
+namespace Mutagen.Bethesda.Translations.Binary
 {
     public enum FloatIntegerType
     {

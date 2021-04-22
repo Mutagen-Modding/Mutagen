@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2122,7 +2123,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.EnchantType,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ChargeTime);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -2261,7 +2262,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EnchantmentAmount = dataFrame.ReadInt32();
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.ChargeTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.BaseEnchantment.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {

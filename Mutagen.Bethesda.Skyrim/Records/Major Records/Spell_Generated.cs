@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2504,7 +2505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Type,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ChargeTime);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CastType>.Instance.Write(
@@ -2515,10 +2516,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.TargetType,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CastDuration);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Range);
                 FormLinkBinaryTranslation.Instance.Write(
@@ -2682,11 +2683,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.BaseCost = dataFrame.ReadUInt32();
                     item.Flags = EnumBinaryTranslation<SpellDataFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.Type = EnumBinaryTranslation<SpellType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.ChargeTime = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.CastDuration = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Range = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.CastDuration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.HalfCostPerk.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Spell_FieldIndex.HalfCostPerk;
                 }

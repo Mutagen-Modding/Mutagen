@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         public override string GenerateForTypicalWrapper(ObjectGeneration objGen, TypeGeneration typeGen, Accessor dataAccessor, Accessor packageAccessor)
         {
-            return $"{this.Typename(typeGen)}BinaryTranslation.Read({dataAccessor}{(NeedsFlip(typeGen) ? ", swapCoords: true" : null)})";
+            return $"{GetTranslatorInstance(typeGen, getter: true)}.Read({dataAccessor}{(NeedsFlip(typeGen) ? ", swapCoords: true" : null)})";
         }
 
         public override void Load(ObjectGeneration obj, TypeGeneration field, XElement node)

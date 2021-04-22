@@ -14,6 +14,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<string>
     {
+        public override bool NeedsGenerics => false;
+
         public override bool AllowDirectParse(
             ObjectGeneration objGen,
             TypeGeneration typeGen,

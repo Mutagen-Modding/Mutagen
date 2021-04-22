@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1132,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Coordinates,
                 transl: (MutagenWriter subWriter, P2Int16 subItem) =>
                 {
-                    P2Int16BinaryTranslation.Instance.Write(
+                    P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         swapCoords: true);
@@ -1176,7 +1177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     reader: frame,
                     transl: (MutagenFrame r, out P2Int16 listSubItem) =>
                     {
-                        listSubItem = P2Int16BinaryTranslation.Instance.Parse(
+                        listSubItem = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                             r,
                             swapCoords: true);
                         return true;
@@ -1249,7 +1250,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
-        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
+        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

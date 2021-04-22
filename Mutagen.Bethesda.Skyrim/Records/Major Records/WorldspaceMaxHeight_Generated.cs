@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1059,13 +1060,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter item,
             MutagenWriter writer)
         {
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellData);
         }
@@ -1107,9 +1108,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeight item,
             MutagenFrame frame)
         {
-            item.Min = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.Max = P2Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.CellData = ByteArrayBinaryTranslation.Instance.Parse(reader: frame);
+            item.Min = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Max = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1175,8 +1176,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int16 Min => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
-        public P2Int16 Max => P2Int16BinaryTranslation.Read(_data.Slice(0x4, 0x4));
+        public P2Int16 Min => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 Max => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0x4));
         #region CellData
         public ReadOnlyMemorySlice<Byte> CellData => _data.Span.Slice(0x8).ToArray();
         protected int CellDataEndingPos;

@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1002,10 +1003,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IObjectBoundsGetter item,
             MutagenWriter writer)
         {
-            P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.First);
-            P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Second);
         }
@@ -1047,8 +1048,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IObjectBounds item,
             MutagenFrame frame)
         {
-            item.First = P3Int16BinaryTranslation.Instance.Parse(reader: frame);
-            item.Second = P3Int16BinaryTranslation.Instance.Parse(reader: frame);
+            item.First = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Second = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1114,8 +1115,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Int16 First => P3Int16BinaryTranslation.Read(_data.Slice(0x0, 0x6));
-        public P3Int16 Second => P3Int16BinaryTranslation.Read(_data.Slice(0x6, 0x6));
+        public P3Int16 First => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x6));
+        public P3Int16 Second => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x6, 0x6));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

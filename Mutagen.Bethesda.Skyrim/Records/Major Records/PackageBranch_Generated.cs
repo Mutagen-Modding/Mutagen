@@ -15,6 +15,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1911,7 +1912,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.DataInputIndices,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
-                transl: ByteBinaryTranslation.Instance.Write);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             PackageBranchBinaryWriteTranslation.WriteBinaryFlagsOverride(
                 writer: writer,
                 item: item);
@@ -1919,7 +1920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 items: item.Unknown,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
-                transl: ByteArrayBinaryTranslation.Instance.Write);
+                transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -2016,7 +2017,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Byte>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
-                            transl: ByteBinaryTranslation.Instance.Parse));
+                            transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
@@ -2032,7 +2033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
-                            transl: ByteArrayBinaryTranslation.Instance.Parse));
+                            transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:

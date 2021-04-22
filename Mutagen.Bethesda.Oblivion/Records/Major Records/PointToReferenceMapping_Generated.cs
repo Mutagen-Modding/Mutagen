@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1135,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
                 items: item.Points,
-                transl: Int16BinaryTranslation.Instance.Write);
+                transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1179,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Points.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Parse(
                     reader: frame,
-                    transl: Int16BinaryTranslation.Instance.Parse));
+                    transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }

@@ -16,6 +16,7 @@ using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1838,7 +1839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.RoomHfFilter);
                 writer.Write(item.Reflections);
                 writer.Write(item.ReverbAmp);
-                FloatBinaryTranslation.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DecayHfRatio,
                     integerType: FloatIntegerType.Byte,
@@ -1950,7 +1951,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.RoomHfFilter = dataFrame.ReadInt8();
                     item.Reflections = dataFrame.ReadInt8();
                     item.ReverbAmp = dataFrame.ReadInt8();
-                    item.DecayHfRatio = FloatBinaryTranslation.Parse(
+                    item.DecayHfRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte,
                         multiplier: 0.01);
@@ -2050,7 +2051,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region DecayHfRatio
         private int _DecayHfRatioLocation => _DATALocation!.Value + 0x8;
         private bool _DecayHfRatio_IsSet => _DATALocation.HasValue;
-        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
+        public Single DecayHfRatio => _DecayHfRatio_IsSet ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(_DecayHfRatioLocation, 1), FloatIntegerType.Byte, 0.01) : default;
         #endregion
         #region ReflectDelayMS
         private int _ReflectDelayMSLocation => _DATALocation!.Value + 0x9;

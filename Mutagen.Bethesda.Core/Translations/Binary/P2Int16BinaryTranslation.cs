@@ -1,29 +1,31 @@
-using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Buffers.Binary;
+using System.IO;
 
-namespace Mutagen.Bethesda.Records.Binary.Translations
+namespace Mutagen.Bethesda.Translations.Binary
 {
-    public class P2Int16BinaryTranslation : PrimitiveBinaryTranslation<P2Int16>
+    public class P2Int16BinaryTranslation<TReader, TWriter> : PrimitiveBinaryTranslation<P2Int16, TReader, TWriter>
+        where TReader : IBinaryReadStream
+        where TWriter : IBinaryWriteStream
     {
-        public readonly static P2Int16BinaryTranslation Instance = new P2Int16BinaryTranslation();
+        public readonly static P2Int16BinaryTranslation<TReader, TWriter> Instance = new();
         public override int ExpectedLength => 4;
 
-        public override P2Int16 Parse(MutagenFrame reader)
+        public override P2Int16 Parse(TReader reader)
         {
             return new P2Int16(
-                reader.Reader.ReadInt16(),
-                reader.Reader.ReadInt16());
+                reader.ReadInt16(),
+                reader.ReadInt16());
         }
 
-        public override void Write(MutagenWriter writer, P2Int16 item)
+        public override void Write(TWriter writer, P2Int16 item)
         {
             writer.Write(item.X);
             writer.Write(item.Y);
         }
 
-        public void Write(MutagenWriter writer, P2Int16 item, bool swapCoords)
+        public void Write(TWriter writer, P2Int16 item, bool swapCoords)
         {
             if (swapCoords)
             {
@@ -36,14 +38,14 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public static P2Int16 Read(ReadOnlySpan<byte> span)
+        public P2Int16 Read(ReadOnlySpan<byte> span)
         {
             return new P2Int16(
                 x: BinaryPrimitives.ReadInt16LittleEndian(span),
                 y: BinaryPrimitives.ReadInt16LittleEndian(span.Slice(2)));
         }
 
-        public static P2Int16 Read(ReadOnlySpan<byte> span, bool swapCoords)
+        public P2Int16 Read(ReadOnlySpan<byte> span, bool swapCoords)
         {
             if (swapCoords)
             {
@@ -57,15 +59,13 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             }
         }
 
-        public P2Int16 Parse(
-            MutagenFrame reader,
-            bool swapCoords)
+        public P2Int16 Parse(TReader reader, bool swapCoords)
         {
             if (swapCoords)
             {
                 return new P2Int16(
-                    y: reader.Reader.ReadInt16(),
-                    x: reader.Reader.ReadInt16());
+                    y: reader.ReadInt16(),
+                    x: reader.ReadInt16());
             }
             return Parse(reader);
         }

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2592,21 +2593,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SpawnProjectile);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Force);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Damage);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Radius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ISRadius);
                 if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break0))
                 {
-                    FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.VerticalOffsetMult);
                     if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break1))
@@ -2764,16 +2765,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.PlacedObject.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.SpawnProjectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Force = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Damage = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.Radius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.ISRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Force = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Damage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ISRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break0;
                         return (int)Explosion_FieldIndex.ISRadius;
                     }
-                    item.VerticalOffsetMult = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.VerticalOffsetMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break1;

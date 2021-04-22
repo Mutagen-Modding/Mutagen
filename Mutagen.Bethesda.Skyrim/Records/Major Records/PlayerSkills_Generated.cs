@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1608,20 +1609,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillValues,
-                transl: ByteBinaryTranslation.Instance.Write);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillOffsets,
-                transl: ByteBinaryTranslation.Instance.Write);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             writer.Write(item.Health);
             writer.Write(item.Magicka);
             writer.Write(item.Stamina);
             writer.Write(item.Unused);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FarAwayModelDistance);
             writer.Write(item.GearedUpWeapons);
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
         }
@@ -1666,18 +1667,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 reader: frame,
                 item: item.SkillValues,
-                transl: ByteBinaryTranslation.Instance.Parse);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
             Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 reader: frame,
                 item: item.SkillOffsets,
-                transl: ByteBinaryTranslation.Instance.Parse);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
             item.Health = frame.ReadUInt16();
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
             item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.FarAwayModelDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(3));
+            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1747,13 +1748,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)),
             new Dictionary<Skill, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region SkillOffsets
         public IReadOnlyDictionary<Skill, Byte> SkillOffsets => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         public UInt16 Health => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x24, 0x2));
         public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x26, 0x2));

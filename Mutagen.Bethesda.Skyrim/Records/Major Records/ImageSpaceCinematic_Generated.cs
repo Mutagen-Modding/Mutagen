@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1051,13 +1052,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceCinematicGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Saturation);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Brightness);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Contrast);
         }
@@ -1099,9 +1100,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceCinematic item,
             MutagenFrame frame)
         {
-            item.Saturation = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Brightness = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Contrast = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Saturation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Brightness = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Contrast = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

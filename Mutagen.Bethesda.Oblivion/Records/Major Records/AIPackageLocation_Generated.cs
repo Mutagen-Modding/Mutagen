@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1071,7 +1072,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LocationReference);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Radius);
         }
@@ -1115,7 +1116,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Type = EnumBinaryTranslation<AIPackageLocation.LocationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
             item.LocationReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Radius = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Radius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

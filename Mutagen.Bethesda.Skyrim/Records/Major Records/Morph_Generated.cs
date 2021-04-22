@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -947,7 +948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorphGetter item,
             MutagenWriter writer)
         {
-            ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Data);
         }
@@ -983,7 +984,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorph item,
             MutagenFrame frame)
         {
-            item.Data = ByteArrayBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(32));
+            item.Data = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(32));
         }
 
     }

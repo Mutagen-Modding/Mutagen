@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1108,10 +1109,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Teaches,
                 length: 1);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Value);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight);
         }
@@ -1155,8 +1156,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         {
             item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
             item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Value = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Weight = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }

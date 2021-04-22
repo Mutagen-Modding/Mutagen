@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2109,15 +2110,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                     writer: writer,
                     items: item.SkillWeights,
-                    transl: ByteBinaryTranslation.Instance.Write);
-                FloatBinaryTranslation.Instance.Write(
+                    transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.BleedoutDefault);
                 writer.Write(item.VoicePoints);
                 Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                     writer: writer,
                     items: item.StatWeights,
-                    transl: ByteBinaryTranslation.Instance.Write);
+                    transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 writer.Write(item.Unknown2);
             }
         }
@@ -2246,13 +2247,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                         reader: frame,
                         item: item.SkillWeights,
-                        transl: ByteBinaryTranslation.Instance.Parse);
-                    item.BleedoutDefault = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                        transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    item.BleedoutDefault = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.VoicePoints = dataFrame.ReadUInt32();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
                         reader: frame,
                         item: item.StatWeights,
-                        transl: ByteBinaryTranslation.Instance.Parse);
+                        transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.Unknown2 = dataFrame.ReadUInt8();
                     return (int)Class_FieldIndex.Unknown2;
                 }
@@ -2357,7 +2358,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<Skill, Byte> SkillWeights => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_SkillWeightsLocation), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BleedoutDefault
         private int _BleedoutDefaultLocation => _DATALocation!.Value + 0x18;
@@ -2375,7 +2376,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<BasicStat, Byte> StatWeights => DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StatWeightsLocation), _package.MetaData)),
             new Dictionary<BasicStat, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region Unknown2
         private int _Unknown2Location => _DATALocation!.Value + 0x23;

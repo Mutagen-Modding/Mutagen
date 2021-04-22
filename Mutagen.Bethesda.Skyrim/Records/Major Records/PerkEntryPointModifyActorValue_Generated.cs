@@ -14,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1181,7 +1182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.ActorValue,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Value);
             Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType>.Instance.Write(
@@ -1251,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.ActorValue = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Value = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Modification = EnumBinaryTranslation<PerkEntryPointModifyActorValue.ModificationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
         }
 

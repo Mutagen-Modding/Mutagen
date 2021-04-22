@@ -6,6 +6,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class ModKeyBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<ModKey>
     {
+        public override bool NeedsGenerics => false;
+
         public ModKeyBinaryTranslationGeneration()
             : base(expectedLen: null, typeName: null, nullable: null)
         {

@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -7114,11 +7115,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.Height,
-                    transl: FloatBinaryTranslation.Instance.Write);
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.Weight,
-                    transl: FloatBinaryTranslation.Instance.Write);
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Race.Flag>.Instance.Write(
                     writer,
                     item.Flags,
@@ -7126,17 +7127,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Write(
                     writer: writer,
                     items: item.Starting,
-                    transl: FloatBinaryTranslation.Instance.Write);
-                FloatBinaryTranslation.Instance.Write(
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.BaseCarryWeight);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.BaseMass);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AccelerationRate);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DecelerationRate);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Size>.Instance.Write(
@@ -7151,7 +7152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.HairBipedObject,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.InjuredHealthPercent);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObject>.Instance.Write(
@@ -7161,27 +7162,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Write(
                     writer: writer,
                     items: item.Regen,
-                    transl: FloatBinaryTranslation.Instance.Write);
-                FloatBinaryTranslation.Instance.Write(
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.UnarmedDamage);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.UnarmedReach);
                 Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObject>.Instance.Write(
                     writer,
                     item.BodyBipedObject,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AimAngleTolerance);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FlightRadius);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularAccelerationRate);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularTolerance);
                 RaceBinaryWriteTranslation.WriteBinaryFlags2(
@@ -7253,15 +7254,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            UInt16BinaryTranslation.Instance.WriteNullable(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.NumberOfTintsInList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINL));
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FacegenMainClamp,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FacegenFaceClamp,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM));
@@ -7613,35 +7614,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadInt16();
                     item.Height = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.Weight = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
                         reader: frame,
                         item: item.Starting,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.BaseCarryWeight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.BaseMass = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AccelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.DecelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    item.BaseCarryWeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BaseMass = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DecelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Size = EnumBinaryTranslation<Size>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.HeadBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     item.HairBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.InjuredHealthPercent = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.InjuredHealthPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
                         reader: frame,
                         item: item.Regen,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.UnarmedDamage = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.UnarmedReach = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    item.UnarmedDamage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.UnarmedReach = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.BodyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.AimAngleTolerance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.FlightRadius = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AngularAccelerationRate = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
-                    item.AngularTolerance = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.AimAngleTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularAccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     RaceBinaryCreateTranslation.FillBinaryFlags2Custom(
                         frame: dataFrame,
                         item: item);
@@ -7713,13 +7714,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenMainClamp = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FacegenMainClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Race_FieldIndex.FacegenMainClamp;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FacegenFaceClamp = FloatBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FacegenFaceClamp = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Race_FieldIndex.FacegenFaceClamp;
                 }
                 case RecordTypeInts.ATKR:
@@ -8128,7 +8129,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<BasicStat, Single> Starting => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_StartingLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
-            FloatBinaryTranslation.Instance.Parse);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region BaseCarryWeight
         private int _BaseCarryWeightLocation => _DATALocation!.Value + 0x30;
@@ -8181,7 +8182,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<BasicStat, Single> Regen => DictBinaryTranslation<Single>.Instance.Parse<BasicStat>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(_RegenLocation), _package.MetaData)),
             new Dictionary<BasicStat, Single>(),
-            FloatBinaryTranslation.Instance.Parse);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region UnarmedDamage
         private int _UnarmedDamageLocation => _DATALocation!.Value + 0x60;

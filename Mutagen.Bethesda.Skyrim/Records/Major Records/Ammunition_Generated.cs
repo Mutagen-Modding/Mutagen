@@ -17,6 +17,7 @@ using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2568,7 +2569,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer,
                     item.Flags,
                     length: 4);
-                FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Damage);
                 writer.Write(item.Value);
@@ -2576,7 +2577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (writer.MetaData.FormVersion!.Value >= 44)
                     {
-                        FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.Weight);
                     }
@@ -2755,7 +2756,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Damage = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                    item.Damage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
                     if (dataFrame.Complete)
                     {
@@ -2764,7 +2765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     if (frame.MetaData.FormVersion!.Value >= 44)
                     {
-                        item.Weight = FloatBinaryTranslation.Instance.Parse(reader: dataFrame);
+                        item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     }
                     return (int)Ammunition_FieldIndex.Weight;
                 }

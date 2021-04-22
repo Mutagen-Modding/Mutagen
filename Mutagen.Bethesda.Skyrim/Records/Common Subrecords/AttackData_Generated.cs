@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -1465,10 +1466,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackDataGetter item,
             MutagenWriter writer)
         {
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DamageMult);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Chance);
             FormLinkBinaryTranslation.Instance.Write(
@@ -1478,25 +1479,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer,
                 item.Flags,
                 length: 4);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.AttackAngle);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.StrikeAngle);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Stagger);
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AttackType);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Knockdown);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.RecoveryTime);
-            FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.StaminaMult);
         }
@@ -1538,17 +1539,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackData item,
             MutagenFrame frame)
         {
-            item.DamageMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Chance = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.DamageMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Chance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Flags = EnumBinaryTranslation<AttackData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.AttackAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.StrikeAngle = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.Stagger = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.AttackAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StrikeAngle = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Stagger = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.AttackType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Knockdown = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.RecoveryTime = FloatBinaryTranslation.Instance.Parse(reader: frame);
-            item.StaminaMult = FloatBinaryTranslation.Instance.Parse(reader: frame);
+            item.Knockdown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.RecoveryTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.StaminaMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
