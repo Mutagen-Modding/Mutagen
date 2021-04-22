@@ -51,7 +51,6 @@ namespace Mutagen.Bethesda.Strings
 
         public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, string dataPath, StringsReadParameters? instructions)
         {
-            var bsaComparer = Archive.GetPriorityOrderComparer(release, instructions?.BsaOrdering);
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
             {
@@ -65,10 +64,6 @@ namespace Mutagen.Bethesda.Strings
                     if (stringsFolderPath.Value.Exists)
                     {
                         var bsaEnumer = stringsFolderPath.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}");
-                        if (bsaComparer != null)
-                        {
-                            bsaEnumer = bsaEnumer.OrderBy(x => x.FullName, bsaComparer);
-                        }
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
@@ -84,7 +79,7 @@ namespace Mutagen.Bethesda.Strings
                             dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
-                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, bsaOrdering: bsaComparer))
+                    foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey))
                     {
                         try
                         {
@@ -133,21 +128,6 @@ namespace Mutagen.Bethesda.Strings
                 }),
                 dataPath: dataPath,
                 modKey: modKey);
-        }
-
-        private static List<string>? GetBsaOrdering(GameRelease gameRelease, StringsReadParameters? instructions)
-        {
-            if (instructions?.BsaOrdering == null) return null;
-
-            var bsaLoadOrderList = instructions.BsaOrdering.Reverse().ToList();
-            if (bsaLoadOrderList.Count == 0) return null;
-
-            // ToDo
-            // Migrate to more official Skyrim.ini parsing systems
-            
-
-
-            return bsaLoadOrderList;
         }
 
         /// <inheritdoc />

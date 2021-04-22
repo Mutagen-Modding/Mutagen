@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return t;
             }
-            var bsaOrder = Archive.GetTypicalOrder(GameRelease).ToList();
+            var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
