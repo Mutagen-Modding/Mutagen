@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.ParallaxScale);
             writer.Write(item.ParallaxPasses);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Decal.Flag>.Instance.Write(
+            EnumBinaryTranslation<Decal.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1522,7 +1522,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Shininess = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParallaxScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParallaxPasses = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<Decal.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<Decal.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.AlphaThreshold = frame.ReadUInt16();
             item.Color = frame.ReadColor(ColorBinaryType.Alpha);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -81,11 +82,11 @@ namespace Mutagen.Bethesda.Oblivion
         {
             static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
             {
-                EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
+                EnumBinaryTranslation<AIPackage.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                EnumBinaryTranslation<AIPackage.Types>.Instance.Write(
+                EnumBinaryTranslation<AIPackage.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);

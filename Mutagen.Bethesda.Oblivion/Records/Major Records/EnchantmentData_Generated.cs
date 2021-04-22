@@ -1101,13 +1101,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+            EnumBinaryTranslation<Enchantment.EnchantmentType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
             writer.Write(item.ChargeAmount);
             writer.Write(item.EnchantCost);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+            EnumBinaryTranslation<Enchantment.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1150,10 +1150,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.ChargeAmount = frame.ReadUInt32();
             item.EnchantCost = frame.ReadUInt32();
-            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Enchantment.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

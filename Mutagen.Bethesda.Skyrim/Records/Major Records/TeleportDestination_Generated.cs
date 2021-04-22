@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Rotation);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Write(
+            EnumBinaryTranslation<TeleportDestination.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1171,7 +1171,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Door.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<TeleportDestination.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<TeleportDestination.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

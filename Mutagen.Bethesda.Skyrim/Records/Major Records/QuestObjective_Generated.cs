@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QOBJ));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<QuestObjective.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<QuestObjective.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
@@ -1332,7 +1332,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<QuestObjective.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<QuestObjective.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)QuestObjective_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NNAM:

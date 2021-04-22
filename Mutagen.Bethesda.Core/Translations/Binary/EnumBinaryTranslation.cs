@@ -1,19 +1,19 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Noggog;
 using System;
 using System.Collections.Generic;
 
-namespace Mutagen.Bethesda.Records.Binary.Translations
+namespace Mutagen.Bethesda.Translations.Binary
 {
-    public class EnumBinaryTranslation<E>
-        where E : struct, Enum, IConvertible
+    public class EnumBinaryTranslation<TEnum, TReader, TWriter>
+        where TEnum : struct, Enum, IConvertible
+        where TReader : IBinaryReadStream
+        where TWriter : IBinaryWriteStream
     {
-        public readonly static EnumBinaryTranslation<E> Instance = new EnumBinaryTranslation<E>();
+        public readonly static EnumBinaryTranslation<TEnum, TReader, TWriter> Instance = new();
         public readonly static UnderlyingType Underlying;
-        public readonly static int EnumSize = EnumExt.GetSize<E>();
-        public readonly static IReadOnlyList<E> Values = EnumExt.GetValues<E>().ToExtendedList();
+        public readonly static int EnumSize = EnumExt.GetSize<TEnum>();
+        public readonly static IReadOnlyList<TEnum> Values = EnumExt.GetValues<TEnum>().ToExtendedList();
 
         public enum UnderlyingType
         {
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 
         static EnumBinaryTranslation()
         {
-            var underlying = Enum.GetUnderlyingType(typeof(E));
+            var underlying = Enum.GetUnderlyingType(typeof(TEnum));
             if (underlying == typeof(int))
             {
                 Underlying = UnderlyingType.Int;
@@ -54,32 +54,65 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public bool Parse(
-            MutagenFrame reader,
-            out E item)
+            TReader reader,
+            int length,
+            out TEnum item)
         {
-            item = ParseValue(reader);
+            item = Parse(reader, length);
             return true;
         }
 
-        public E Parse(MutagenFrame reader)
+        public TEnum Parse(TReader reader, long length)
         {
-            return ParseValue(reader);
+            return ParseValue(reader, length);
         }
 
         public bool Parse(
-            MutagenFrame reader,
-            out E? item)
+            TReader reader,
+            out TEnum? item)
         {
-            item = ParseValue(reader);
+            item = ParseValue(reader, reader.Remaining);
             return true;
         }
 
-        public void Write(MutagenWriter writer, E item, long length)
+        private TEnum ParseValue(IBinaryReadStream reader, long length)
+        {
+            var i = length switch
+            {
+                1 => reader.ReadUInt8(),
+                2 => reader.ReadInt16(),
+                4 => reader.ReadInt32(),
+                _ => throw new NotImplementedException(),
+            };
+            return EnumExt<TEnum>.Convert(i);
+        }
+
+        public TEnum ParseValue(TReader reader)
+        {
+            int i;
+            switch (reader.Remaining)
+            {
+                case 1:
+                    i = reader.ReadUInt8();
+                    break;
+                case 2:
+                    i = reader.ReadInt16();
+                    break;
+                case 4:
+                    i = reader.ReadInt32();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return EnumExt<TEnum>.Convert(i);
+        }
+
+        public void Write(TWriter writer, TEnum item, long length)
         {
             WriteValue(writer, item, length);
         }
 
-        public void Write(MutagenWriter writer, int item, long length)
+        public void Write(TWriter writer, int item, long length)
         {
             switch (length)
             {
@@ -98,8 +131,8 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
         }
 
         public void Write(
-            MutagenWriter writer,
-            E? item,
+            TWriter writer,
+            TEnum? item,
             long length)
         {
             if (!item.HasValue)
@@ -109,71 +142,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             WriteValue(writer, item.Value, length);
         }
 
-        public void Write(
-            MutagenWriter writer,
-            E item,
-            RecordType header,
-            long length)
-        {
-            try
-            {
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    WriteValue(writer, item, length);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Enrich(ex, header);
-            }
-        }
-
-        public void WriteNullable(
-            MutagenWriter writer,
-            E? item,
-            RecordType header,
-            long length)
-        {
-            try
-            {
-                if (!item.HasValue) return;
-                using (HeaderExport.Header(writer, header, ObjectType.Subrecord))
-                {
-                    WriteValue(writer, item.Value, length);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw SubrecordException.Enrich(ex, header);
-            }
-        }
-
-        public E ParseValue(MutagenFrame reader, ErrorMaskBuilder? errorMask)
-        {
-            int i;
-            switch (reader.Remaining)
-            {
-                case 1:
-                    i = reader.Reader.ReadUInt8();
-                    break;
-                case 2:
-                    i = reader.Reader.ReadInt16();
-                    break;
-                case 4:
-                    i = reader.Reader.ReadInt32();
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-            return EnumExt<E>.Convert(i);
-        }
-
-        public E ParseValue(MutagenFrame reader)
-        {
-            return ParseValue(reader, errorMask: null);
-        }
-
-        protected void WriteValue(MutagenWriter writer, E item, long length)
+        public void WriteValue(TWriter writer, TEnum item, long length)
         {
             long i;
             switch (Underlying)

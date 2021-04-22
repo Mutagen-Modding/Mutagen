@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ImpactDataSet);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DualCastData.InheritScaleType>.Instance.Write(
+                EnumBinaryTranslation<DualCastData.InheritScaleType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.InheritScale,
                     length: 4);
@@ -1821,7 +1821,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.EffectShader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.HitEffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.InheritScale = EnumBinaryTranslation<DualCastData.InheritScaleType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.InheritScale = EnumBinaryTranslation<DualCastData.InheritScaleType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     return (int)DualCastData_FieldIndex.InheritScale;
                 }
                 default:

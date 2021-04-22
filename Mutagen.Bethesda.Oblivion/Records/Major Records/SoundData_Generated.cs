@@ -1173,7 +1173,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Marker);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundData.Flag>.Instance.Write(
+            EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1224,7 +1224,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             item.FrequencyAdjustment = frame.ReadInt8();
             frame.Position += 1;
-            item.Flags = EnumBinaryTranslation<SoundData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
         static partial void FillBinaryMinimumAttenuationDistanceCustom(

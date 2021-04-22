@@ -2037,7 +2037,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneAction.TypeEnum>.Instance.Write(
+            EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 2,
@@ -2059,7 +2059,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneAction.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
@@ -2102,7 +2102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LoopingMin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DMIN));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Emotion>.Instance.WriteNullable(
+            EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Emotion,
                 length: 4,
@@ -2174,7 +2174,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         case 0:
                             if (lastParsed.HasValue && lastParsed.Value >= (int)SceneAction_FieldIndex.Type) return ParseResult.Stop;
                             frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                            item.Type = EnumBinaryTranslation<SceneAction.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                            item.Type = EnumBinaryTranslation<SceneAction.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                                reader: frame,
+                                length: contentLength);
                             return new ParseResult((int)SceneAction_FieldIndex.Type, nextRecordType);
                         case 1:
                             frame.ReadSubrecordFrame();
@@ -2212,7 +2214,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<SceneAction.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<SceneAction.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneAction_FieldIndex.Flags;
                 }
                 case RecordTypeInts.SNAM:
@@ -2273,7 +2277,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DEMO:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Emotion = EnumBinaryTranslation<Emotion>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Emotion = EnumBinaryTranslation<Emotion, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneAction_FieldIndex.Emotion;
                 }
                 case RecordTypeInts.DEVA:

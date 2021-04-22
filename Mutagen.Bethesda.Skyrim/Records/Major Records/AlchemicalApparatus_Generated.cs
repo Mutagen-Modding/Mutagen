@@ -2287,7 +2287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PutDownSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<QualityLevel>.Instance.WriteNullable(
+            EnumBinaryTranslation<QualityLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Quality,
                 length: 4,
@@ -2453,7 +2453,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QUAL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quality = EnumBinaryTranslation<QualityLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Quality = EnumBinaryTranslation<QualityLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)AlchemicalApparatus_FieldIndex.Quality;
                 }
                 case RecordTypeInts.DESC:

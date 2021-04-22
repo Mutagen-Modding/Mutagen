@@ -1163,7 +1163,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.VariableCount);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
+            EnumBinaryTranslation<ScriptFields.ScriptType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1212,7 +1212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 item: item);
             item.VariableCount = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
         static partial void FillBinaryCompiledSizeCustom(

@@ -1363,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Color);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Light.LightFlag>.Instance.Write(
+            EnumBinaryTranslation<Light.LightFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1422,7 +1422,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Time = frame.ReadInt32();
             item.Radius = frame.ReadUInt32();
             item.Color = frame.ReadColor(ColorBinaryType.Alpha);
-            item.Flags = EnumBinaryTranslation<Light.LightFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Light.LightFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FalloffExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)

@@ -1486,7 +1486,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Condition.FunctionType>.Instance.Write(
+            EnumBinaryTranslation<Condition.FunctionType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Function,
                 length: 2);
@@ -1527,7 +1527,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionData item,
             MutagenFrame frame)
         {
-            item.Function = EnumBinaryTranslation<Condition.FunctionType>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Function = EnumBinaryTranslation<Condition.FunctionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.Unknown2 = frame.ReadUInt16();
             ConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,

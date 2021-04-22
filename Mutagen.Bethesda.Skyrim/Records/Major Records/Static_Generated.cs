@@ -1828,7 +1828,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.Material);
                 if (!item.DNAMDataTypeState.HasFlag(Static.DNAMDataType.Break0))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Static.Flag>.Instance.Write(
+                    EnumBinaryTranslation<Static.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 1);
@@ -1958,7 +1958,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DNAMDataTypeState |= Static.DNAMDataType.Break0;
                         return (int)Static_FieldIndex.Material;
                     }
-                    item.Flags = EnumBinaryTranslation<Static.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Static.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Static_FieldIndex.Unused;
                 }

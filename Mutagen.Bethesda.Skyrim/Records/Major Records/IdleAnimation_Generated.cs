@@ -1987,7 +1987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 writer.Write(item.LoopingSecondsMin);
                 writer.Write(item.LoopingSecondsMax);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Write(
+                EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -2126,7 +2126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.LoopingSecondsMin = dataFrame.ReadUInt8();
                     item.LoopingSecondsMax = dataFrame.ReadUInt8();
-                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<IdleAnimation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.AnimationGroupSection = dataFrame.ReadUInt8();
                     item.ReplayDelay = dataFrame.ReadUInt16();
                     return (int)IdleAnimation_FieldIndex.ReplayDelay;

@@ -983,7 +983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<TargetObjectType>.Instance.Write(
+            EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1034,7 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APackageTargetBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

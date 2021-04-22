@@ -995,11 +995,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEntryPointsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Furniture.AnimationType>.Instance.Write(
+            EnumBinaryTranslation<Furniture.AnimationType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 2);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Furniture.Entry>.Instance.Write(
+            EnumBinaryTranslation<Furniture.Entry, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Points,
                 length: 2);
@@ -1036,8 +1036,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEntryPoints item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Furniture.AnimationType>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.Points = EnumBinaryTranslation<Furniture.Entry>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Type = EnumBinaryTranslation<Furniture.AnimationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.Points = EnumBinaryTranslation<Furniture.Entry, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
         }
 
     }

@@ -2565,7 +2565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Projectile);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Ammunition.Flag>.Instance.Write(
+                EnumBinaryTranslation<Ammunition.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -2755,7 +2755,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Projectile.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Flags = EnumBinaryTranslation<Ammunition.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Ammunition.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.Damage = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.Value = dataFrame.ReadUInt32();
                     if (dataFrame.Complete)

@@ -1246,7 +1246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.EdgeLink_0_1);
             writer.Write(item.EdgeLink_1_2);
             writer.Write(item.EdgeLink_2_0);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Write(
+            EnumBinaryTranslation<NavmeshTriangle.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1288,7 +1288,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.EdgeLink_0_1 = frame.ReadInt16();
             item.EdgeLink_1_2 = frame.ReadInt16();
             item.EdgeLink_2_0 = frame.ReadInt16();
-            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.CoverFlags = frame.ReadUInt16();
         }
 

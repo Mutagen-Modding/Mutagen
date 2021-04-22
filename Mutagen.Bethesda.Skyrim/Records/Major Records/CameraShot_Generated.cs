@@ -1986,19 +1986,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CameraShot.ActionType>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Action,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CameraShot.LocationType>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Location,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CameraShot.TargetType>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Target,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CameraShot.Flag>.Instance.Write(
+                EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -2133,10 +2133,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Action = EnumBinaryTranslation<CameraShot.ActionType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Location = EnumBinaryTranslation<CameraShot.LocationType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Target = EnumBinaryTranslation<CameraShot.TargetType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Flags = EnumBinaryTranslation<CameraShot.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Action = EnumBinaryTranslation<CameraShot.ActionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Location = EnumBinaryTranslation<CameraShot.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Target = EnumBinaryTranslation<CameraShot.TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Flags = EnumBinaryTranslation<CameraShot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.TimeMultiplierPlayer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.TimeMultiplierTarget = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.TimeMultiplierGlobal = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);

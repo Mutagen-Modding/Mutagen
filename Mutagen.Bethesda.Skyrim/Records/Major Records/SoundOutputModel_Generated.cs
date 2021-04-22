@@ -1733,7 +1733,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.FNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundOutputModel.TypeEnum>.Instance.WriteNullable(
+            EnumBinaryTranslation<SoundOutputModel.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
@@ -1865,7 +1865,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<SoundOutputModel.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<SoundOutputModel.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SoundOutputModel_FieldIndex.Type;
                 }
                 case RecordTypeInts.CNAM:

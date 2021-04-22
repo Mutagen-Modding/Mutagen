@@ -1003,11 +1003,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingFlagsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedFlag>.Instance.Write(
+            EnumBinaryTranslation<BipedFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BipedFlags,
                 length: 2);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EquipmentFlag>.Instance.Write(
+            EnumBinaryTranslation<EquipmentFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.GeneralFlags,
                 length: 2);
@@ -1050,8 +1050,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClothingFlags item,
             MutagenFrame frame)
         {
-            item.BipedFlags = EnumBinaryTranslation<BipedFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.BipedFlags = EnumBinaryTranslation<BipedFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.GeneralFlags = EnumBinaryTranslation<EquipmentFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
         }
 
     }

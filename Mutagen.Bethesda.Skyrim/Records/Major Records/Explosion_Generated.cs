@@ -2612,13 +2612,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: item.VerticalOffsetMult);
                     if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break1))
                     {
-                        Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Explosion.Flag>.Instance.Write(
+                        EnumBinaryTranslation<Explosion.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                             writer,
                             item.Flags,
                             length: 4);
                         if (!item.DATADataTypeState.HasFlag(Explosion.DATADataType.Break2))
                         {
-                            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundLevel>.Instance.Write(
+                            EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer,
                                 item.SoundLevel,
                                 length: 4);
@@ -2780,13 +2780,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= Explosion.DATADataType.Break1;
                         return (int)Explosion_FieldIndex.VerticalOffsetMult;
                     }
-                    item.Flags = EnumBinaryTranslation<Explosion.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Explosion.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Explosion.DATADataType.Break2;
                         return (int)Explosion_FieldIndex.Flags;
                     }
-                    item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     return (int)Explosion_FieldIndex.SoundLevel;
                 }
                 default:

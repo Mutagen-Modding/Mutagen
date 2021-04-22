@@ -3428,24 +3428,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.PKDT)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+                EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Types>.Instance.Write(
+                EnumBinaryTranslation<Package.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Interrupt>.Instance.Write(
+                EnumBinaryTranslation<Package.Interrupt, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.InterruptOverride,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Speed>.Instance.Write(
+                EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.PreferredSpeed,
                     length: 1);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+                EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.InteruptFlags,
                     length: 2);
@@ -3454,7 +3454,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.PSDT)))
             {
                 writer.Write(item.ScheduleMonth);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.DayOfWeek>.Instance.Write(
+                EnumBinaryTranslation<Package.DayOfWeek, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ScheduleDayOfWeek,
                     length: 1);
@@ -3626,12 +3626,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Type = EnumBinaryTranslation<Package.Types>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.InterruptOverride = EnumBinaryTranslation<Package.Interrupt>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Type = EnumBinaryTranslation<Package.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.InterruptOverride = EnumBinaryTranslation<Package.Interrupt, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.PreferredSpeed = EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unknown = dataFrame.ReadUInt8();
-                    item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.InteruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     item.Unknown2 = dataFrame.ReadUInt16();
                     return (int)Package_FieldIndex.Unknown2;
                 }
@@ -3640,7 +3650,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.ScheduleMonth = dataFrame.ReadInt8();
-                    item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.ScheduleDayOfWeek = EnumBinaryTranslation<Package.DayOfWeek, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.ScheduleDate = dataFrame.ReadUInt8();
                     item.ScheduleHour = dataFrame.ReadInt8();
                     item.ScheduleMinute = dataFrame.ReadInt8();

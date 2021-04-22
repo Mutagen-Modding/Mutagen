@@ -2803,7 +2803,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ENIT)))
             {
                 writer.Write(item.Value);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Ingestible.Flag>.Instance.Write(
+                EnumBinaryTranslation<Ingestible.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -3007,7 +3007,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Value = dataFrame.ReadUInt32();
-                    item.Flags = EnumBinaryTranslation<Ingestible.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Ingestible.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.Addiction.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.AddictionChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ConsumeSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

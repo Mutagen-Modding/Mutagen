@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AIPackageTarget.ObjectTypes>.Instance.Write(
+            EnumBinaryTranslation<AIPackageTarget.ObjectTypes, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ObjectType,
                 length: 4);
@@ -1097,7 +1097,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTarget item,
             MutagenFrame frame)
         {
-            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypes>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.ObjectType = EnumBinaryTranslation<AIPackageTarget.ObjectTypes, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Object = frame.ReadInt32();
             item.Count = frame.ReadInt32();
         }

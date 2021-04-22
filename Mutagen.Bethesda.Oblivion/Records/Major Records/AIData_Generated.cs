@@ -1301,11 +1301,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Confidence);
             writer.Write(item.EnergyLevel);
             writer.Write(item.Responsibility);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
+            EnumBinaryTranslation<Npc.BuySellServiceFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BuySellServices,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Teaches,
                 length: 1);
@@ -1354,8 +1354,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Confidence = frame.ReadUInt8();
             item.EnergyLevel = frame.ReadUInt8();
             item.Responsibility = frame.ReadUInt8();
-            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.MaximumTrainingLevel = frame.ReadUInt8();
             item.Unused = frame.ReadInt16();
         }

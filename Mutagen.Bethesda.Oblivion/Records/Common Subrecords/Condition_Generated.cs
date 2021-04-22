@@ -1348,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ComparisonValue);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Function>.Instance.Write(
+            EnumBinaryTranslation<Function, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Function,
                 length: 4);
@@ -1399,7 +1399,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
             item.Fluff = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.ComparisonValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Function = EnumBinaryTranslation<Function>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Function = EnumBinaryTranslation<Function, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FirstParameter = frame.ReadInt32();
             item.SecondParameter = frame.ReadInt32();
             item.ThirdParameter = frame.ReadInt32();

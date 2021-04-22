@@ -1104,7 +1104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Write(
+            EnumBinaryTranslation<AlchemicalApparatus.ApparatusType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 1);
@@ -1154,7 +1154,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlchemicalApparatusData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Type = EnumBinaryTranslation<AlchemicalApparatus.ApparatusType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Value = frame.ReadUInt32();
             item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Quality = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

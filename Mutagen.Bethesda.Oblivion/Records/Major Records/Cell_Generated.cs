@@ -4351,7 +4351,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Cell.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -4377,7 +4377,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MusicType>.Instance.WriteNullable(
+            EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MusicType,
                 length: 1,
@@ -4522,7 +4522,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Cell.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<Cell.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Cell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.XCLC:
@@ -4549,7 +4551,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XCMT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MusicType = EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Cell_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.XCLW:

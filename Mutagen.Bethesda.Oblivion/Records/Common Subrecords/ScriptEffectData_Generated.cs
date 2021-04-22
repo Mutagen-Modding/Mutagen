@@ -1183,7 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Script);
             if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+                EnumBinaryTranslation<MagicSchool, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.MagicSchool,
                     length: 4);
@@ -1192,7 +1192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     item: item.VisualEffect);
                 if (!item.Versioning.HasFlag(ScriptEffectData.VersioningBreaks.Break1))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Write(
+                    EnumBinaryTranslation<ScriptEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 4);
@@ -1243,14 +1243,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break0;
                 return;
             }
-            item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.MagicSchool = EnumBinaryTranslation<MagicSchool, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.VisualEffect.SetTo(RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.Complete)
             {
                 item.Versioning |= ScriptEffectData.VersioningBreaks.Break1;
                 return;
             }
-            item.Flags = EnumBinaryTranslation<ScriptEffect.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<ScriptEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

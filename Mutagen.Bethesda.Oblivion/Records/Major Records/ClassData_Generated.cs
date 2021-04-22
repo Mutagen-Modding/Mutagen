@@ -1489,12 +1489,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.PrimaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
                         subWriter,
                         subItem,
                         length: 4);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Write(
+            EnumBinaryTranslation<Class.SpecializationFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Specialization,
                 length: 4);
@@ -1503,16 +1503,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 items: item.SecondaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
+                    EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
                         subWriter,
                         subItem,
                         length: 4);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ClassFlag>.Instance.Write(
+            EnumBinaryTranslation<ClassFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ClassService>.Instance.Write(
+            EnumBinaryTranslation<ClassService, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ClassServices,
                 length: 4);
@@ -1568,23 +1568,29 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     amount: 2,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        return EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));
-            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Specialization = EnumBinaryTranslation<Class.SpecializationFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.SecondaryAttributes.SetTo(
                 Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
                     amount: 7,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
                     {
-                        return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Parse(
+                        return EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
                             reader: r.SpawnWithLength(4),
                             item: out listSubItem);
                     }));
-            item.Flags = EnumBinaryTranslation<ClassFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ClassServices = EnumBinaryTranslation<ClassService>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<ClassFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ClassServices = EnumBinaryTranslation<ClassService, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             if (frame.Complete)
             {
                 item.Versioning |= ClassData.VersioningBreaks.Break0;

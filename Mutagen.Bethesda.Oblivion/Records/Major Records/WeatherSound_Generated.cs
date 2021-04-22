@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sound);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Write(
+            EnumBinaryTranslation<WeatherSound.SoundType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1063,7 +1063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Type = EnumBinaryTranslation<WeatherSound.SoundType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<WeatherSound.SoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

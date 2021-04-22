@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INpcConfigurationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Npc.NpcFlag>.Instance.Write(
+            EnumBinaryTranslation<Npc.NpcFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1297,7 +1297,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             INpcConfiguration item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Npc.NpcFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Npc.NpcFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.BaseSpellPoints = frame.ReadUInt16();
             item.Fatigue = frame.ReadUInt16();
             item.BarterGold = frame.ReadUInt16();

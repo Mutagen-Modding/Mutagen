@@ -1505,7 +1505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.CalcMaxLevel);
             writer.Write(item.SpeedMultiplier);
             writer.Write(item.DispositionBase);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Write(
+            EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.TemplateFlags,
                 length: 2);
@@ -1562,7 +1562,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CalcMaxLevel = frame.ReadInt16();
             item.SpeedMultiplier = frame.ReadInt16();
             item.DispositionBase = frame.ReadInt16();
-            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.HealthOffset = frame.ReadInt16();
             item.BleedoutOverride = frame.ReadInt16();
         }

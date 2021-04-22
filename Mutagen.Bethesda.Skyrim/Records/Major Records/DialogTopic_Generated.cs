@@ -2566,15 +2566,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.TopicFlags,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Category,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Subtype,
                     length: 2);
@@ -2713,9 +2713,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:

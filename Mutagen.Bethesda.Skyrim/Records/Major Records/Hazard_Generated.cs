@@ -2198,7 +2198,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.TargetInterval);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Hazard.Flag>.Instance.Write(
+                EnumBinaryTranslation<Hazard.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -2342,7 +2342,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Lifetime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ImageSpaceRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.TargetInterval = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Flags = EnumBinaryTranslation<Hazard.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Hazard.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.Spell.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.ImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

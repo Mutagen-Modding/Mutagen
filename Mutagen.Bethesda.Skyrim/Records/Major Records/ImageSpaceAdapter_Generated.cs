@@ -11484,7 +11484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Write(
+                EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -11494,7 +11494,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts1(
                     writer: writer,
                     item: item);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Write(
+                EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.RadialBlurFlags,
                     length: 4);
@@ -11504,7 +11504,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ImageSpaceAdapterBinaryWriteTranslation.WriteBinaryCounts2(
                     writer: writer,
                     item: item);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Write(
+                EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.DepthOfFieldFlags,
                     length: 4);
@@ -12267,17 +12267,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<ImageSpaceAdapter.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts1Custom(
                         frame: dataFrame,
                         item: item);
-                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.RadialBlurFlags = EnumBinaryTranslation<ImageSpaceAdapter.RadialBlurFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.RadialBlurCenter = P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts2Custom(
                         frame: dataFrame,
                         item: item);
-                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.DepthOfFieldFlags = EnumBinaryTranslation<ImageSpaceAdapter.DepthOfFieldFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     ImageSpaceAdapterBinaryCreateTranslation.FillBinaryCounts3Custom(
                         frame: dataFrame,
                         item: item);

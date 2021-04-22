@@ -1191,7 +1191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MusicType>.Instance.WriteNullable(
+            EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MusicType,
                 length: 4,
@@ -1270,7 +1270,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.RDMD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MusicType = EnumBinaryTranslation<MusicType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MusicType = EnumBinaryTranslation<MusicType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)RegionSounds_FieldIndex.MusicType;
                 }
                 case RecordTypeInts.RDSD:

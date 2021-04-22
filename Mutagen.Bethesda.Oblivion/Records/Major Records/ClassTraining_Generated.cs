@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassTrainingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.TrainedSkill,
                 length: 1);
@@ -1084,7 +1084,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassTraining item,
             MutagenFrame frame)
         {
-            item.TrainedSkill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.TrainedSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.MaximumTrainingLevel = frame.ReadUInt8();
             item.Unknown = frame.ReadInt16();
         }

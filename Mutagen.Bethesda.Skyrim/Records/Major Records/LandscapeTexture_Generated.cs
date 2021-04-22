@@ -1769,7 +1769,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 });
             if (writer.MetaData.FormVersion!.Value >= 43)
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.WriteNullable(
+                EnumBinaryTranslation<LandscapeTexture.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                     writer,
                     item.Flags,
                     length: 4,
@@ -1906,7 +1906,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     if (frame.MetaData.FormVersion!.Value >= 43)
                     {
                         frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                        item.Flags = EnumBinaryTranslation<LandscapeTexture.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                        item.Flags = EnumBinaryTranslation<LandscapeTexture.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                            reader: frame,
+                            length: contentLength);
                     }
                     return (int)LandscapeTexture_FieldIndex.Flags;
                 }

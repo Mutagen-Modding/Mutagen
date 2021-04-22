@@ -1068,12 +1068,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneActor.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<SceneActor.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.WriteNullable(
+            EnumBinaryTranslation<SceneActor.BehaviorFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.BehaviorFlags,
                 length: 4,
@@ -1136,13 +1136,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<SceneActor.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<SceneActor.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneActor_FieldIndex.Flags;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneActor_FieldIndex.BehaviorFlags;
                 }
                 default:

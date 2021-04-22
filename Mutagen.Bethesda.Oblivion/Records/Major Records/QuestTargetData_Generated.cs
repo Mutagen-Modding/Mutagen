@@ -1019,7 +1019,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
+            EnumBinaryTranslation<QuestTarget.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1063,7 +1063,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Flags = EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<QuestTarget.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

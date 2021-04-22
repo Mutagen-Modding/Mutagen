@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundOutputModel.Flag>.Instance.Write(
+            EnumBinaryTranslation<SoundOutputModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1097,7 +1097,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<SoundOutputModel.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<SoundOutputModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unknown = frame.ReadUInt16();
             item.ReverbSendPercent = frame.ReadUInt8();
         }

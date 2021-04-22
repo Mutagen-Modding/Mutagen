@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Write(
+            EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1173,7 +1173,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
             item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
         static partial void FillBinaryBoundsCustom(

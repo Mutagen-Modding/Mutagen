@@ -1221,7 +1221,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MapMarker.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 transl: (MutagenWriter subWriter, MapMarker.Type subItem) =>
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MapMarker.Type>.Instance.Write(
+                    EnumBinaryTranslation<MapMarker.Type, MutagenFrame, MutagenWriter>.Instance.Write(
                         subWriter,
                         subItem,
                         length: 2);
@@ -1294,7 +1294,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)MapMarker_FieldIndex.Flags) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<MapMarker.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<MapMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)MapMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.FULL:
@@ -1315,7 +1317,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                             reader: frame.SpawnWithLength(contentLength),
                             transl: (MutagenFrame r, out MapMarker.Type listSubItem) =>
                             {
-                                return Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MapMarker.Type>.Instance.Parse(
+                                return EnumBinaryTranslation<MapMarker.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
                                     reader: r.SpawnWithLength(2),
                                     item: out listSubItem);
                             })

@@ -2102,7 +2102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
+                EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     ((int?)item.Teaches) ?? -1,
                     length: 1);
@@ -2242,7 +2242,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Unknown = dataFrame.ReadInt32();
-                    item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
                     Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                         reader: frame,

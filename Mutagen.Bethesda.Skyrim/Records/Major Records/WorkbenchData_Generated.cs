@@ -1009,11 +1009,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WorkbenchData.Type>.Instance.Write(
+            EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BenchType,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 ((int?)item.UsesSkill) ?? -1,
                 length: 1);
@@ -1056,9 +1056,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchData item,
             MutagenFrame frame)
         {
-            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             if (frame.Complete) return;
-            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
         }
 
     }

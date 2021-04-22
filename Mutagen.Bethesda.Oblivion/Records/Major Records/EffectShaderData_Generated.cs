@@ -3705,19 +3705,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.Flag>.Instance.Write(
+            EnumBinaryTranslation<EffectShader.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+            EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MembraneShaderSourceBlendMode,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
+            EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MembraneShaderBlendOperation,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
+            EnumBinaryTranslation<EffectShader.ZTestFunction, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MembraneShaderZTestFunction,
                 length: 4);
@@ -3778,25 +3778,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.EdgeEffectFullAlphaRatio);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+            EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MembraneShaderDestBlendMode,
                 length: 4);
             if (!item.Versioning.HasFlag(EffectShaderData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ParticleShaderSourceBlendMode,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Write(
+                EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ParticleShaderBlendOperation,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Write(
+                EnumBinaryTranslation<EffectShader.ZTestFunction, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ParticleShaderZTestFunction,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Write(
+                EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ParticleShaderDestBlendMode,
                     length: 4);
@@ -3924,10 +3924,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectShaderData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<EffectShader.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.MembraneShaderSourceBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.MembraneShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.MembraneShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<EffectShader.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.MembraneShaderSourceBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.MembraneShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.MembraneShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FillTextureEffectColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FillTextureEffectAlphaFadeInTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FillTextureEffectFullAlphaTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
@@ -3947,16 +3955,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.EdgeEffectAlphaPulseFrequency = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.FillTextureEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.EdgeEffectFullAlphaRatio = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.MembraneShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.MembraneShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             if (frame.Complete)
             {
                 item.Versioning |= EffectShaderData.VersioningBreaks.Break0;
                 return;
             }
-            item.ParticleShaderSourceBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ParticleShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ParticleShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ParticleShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.ParticleShaderSourceBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderBlendOperation = EnumBinaryTranslation<EffectShader.BlendOperation, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderZTestFunction = EnumBinaryTranslation<EffectShader.ZTestFunction, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ParticleShaderDestBlendMode = EnumBinaryTranslation<EffectShader.SourceBlendMode, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.ParticleShaderParticleBirthRampUpTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParticleShaderFullParticleBirthTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.ParticleShaderParticleBirthRampDownTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

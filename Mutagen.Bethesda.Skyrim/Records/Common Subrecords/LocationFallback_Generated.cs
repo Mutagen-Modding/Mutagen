@@ -1025,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationFallbackGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Write(
+            EnumBinaryTranslation<LocationTargetRadius.LocationType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1074,7 +1074,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationFallback item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<LocationTargetRadius.LocationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<LocationTargetRadius.LocationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Data = frame.ReadInt32();
         }
 

@@ -84,6 +84,7 @@
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\CharBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\DoubleBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\EnumBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\FloatIntegerType.cs" />
     <Compile Include="Translations\Binary\Int16BinaryTranslation.cs" />
@@ -294,7 +295,7 @@
     <Compile Include="Records\Binary\Translations\IBinaryItem.cs" />
     <Compile Include="Records\Binary\Translations\ListBinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\DateTimeBinaryTranslation.cs" />
-    <Compile Include="Records\Binary\Translations\EnumBinaryTranslation.cs" />
+    <Compile Include="Records\Binary\Translations\EnumBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\FilePathBinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\FormKeyBinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\FormLinkBinaryTranslation.cs" />

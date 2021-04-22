@@ -1101,11 +1101,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBookDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Book.BookFlag>.Instance.Write(
+            EnumBinaryTranslation<Book.BookFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Teaches,
                 length: 1);
@@ -1154,8 +1154,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBookData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Book.BookFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<Book.BookFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }

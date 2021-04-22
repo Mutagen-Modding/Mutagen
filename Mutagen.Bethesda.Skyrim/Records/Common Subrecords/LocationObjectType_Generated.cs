@@ -969,7 +969,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationObjectTypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<TargetObjectType>.Instance.Write(
+            EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1017,7 +1017,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationObjectType item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

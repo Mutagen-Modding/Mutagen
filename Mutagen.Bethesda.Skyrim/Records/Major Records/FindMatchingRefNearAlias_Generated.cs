@@ -1038,7 +1038,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FindMatchingRefNearAliasBinaryWriteTranslation.WriteBinaryAliasIndex(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.WriteNullable(
+            EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
@@ -1103,7 +1103,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }
                 default:

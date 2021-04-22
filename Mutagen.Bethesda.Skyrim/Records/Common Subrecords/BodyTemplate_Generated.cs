@@ -1121,20 +1121,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
+            EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
             if (writer.MetaData.FormVersion!.Value < 44)
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
+                EnumBinaryTranslation<BodyTemplate.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
             }
             if (writer.MetaData.FormVersion!.Value >= 22)
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                EnumBinaryTranslation<ArmorType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ArmorType,
                     length: 4);
@@ -1178,14 +1178,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplate item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             if (frame.MetaData.FormVersion!.Value < 44)
             {
-                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
             }
             if (frame.MetaData.FormVersion!.Value >= 22)
             {
-                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+                item.ArmorType = EnumBinaryTranslation<ArmorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
             }
         }
 

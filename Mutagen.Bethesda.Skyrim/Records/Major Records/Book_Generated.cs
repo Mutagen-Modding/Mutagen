@@ -2842,7 +2842,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 BookBinaryWriteTranslation.WriteBinaryFlags(
                     writer: writer,
                     item: item);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Book.BookType>.Instance.Write(
+                EnumBinaryTranslation<Book.BookType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 1);
@@ -3039,7 +3039,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     BookBinaryCreateTranslation.FillBinaryFlagsCustom(
                         frame: dataFrame,
                         item: item);
-                    item.Type = EnumBinaryTranslation<Book.BookType>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Type = EnumBinaryTranslation<Book.BookType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unused = dataFrame.ReadUInt16();
                     BookBinaryCreateTranslation.FillBinaryTeachesCustom(
                         frame: dataFrame,

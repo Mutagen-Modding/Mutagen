@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Clustering);
             writer.Write(item.MinSlope);
             writer.Write(item.MaxSlope);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<RegionObject.Flag>.Instance.Write(
+            EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1832,7 +1832,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Clustering = frame.ReadUInt8();
             item.MinSlope = frame.ReadUInt8();
             item.MaxSlope = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.RadiusWrtPercent = frame.ReadUInt16();
             item.Radius = frame.ReadUInt16();
             item.MinHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -2333,7 +2333,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
             item.FormVersion = frame.ReadUInt16();

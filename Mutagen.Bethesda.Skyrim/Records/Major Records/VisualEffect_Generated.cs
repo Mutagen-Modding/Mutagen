@@ -1420,7 +1420,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Shader);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<VisualEffect.Flag>.Instance.Write(
+                EnumBinaryTranslation<VisualEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -1522,7 +1522,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.EffectArt.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Shader.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Flags = EnumBinaryTranslation<VisualEffect.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<VisualEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     return (int)VisualEffect_FieldIndex.Flags;
                 }
                 default:

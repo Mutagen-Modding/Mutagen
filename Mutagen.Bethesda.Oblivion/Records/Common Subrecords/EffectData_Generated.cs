@@ -1216,11 +1216,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Magnitude);
             writer.Write(item.Area);
             writer.Write(item.Duration);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
+            EnumBinaryTranslation<Effect.EffectType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            EnumBinaryTranslation<ActorValueExtended, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ActorValue,
                 length: 4);
@@ -1267,8 +1267,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Magnitude = frame.ReadUInt32();
             item.Area = frame.ReadUInt32();
             item.Duration = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Effect.EffectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ActorValue = EnumBinaryTranslation<ActorValueExtended, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

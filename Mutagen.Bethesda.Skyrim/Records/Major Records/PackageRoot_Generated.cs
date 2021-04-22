@@ -996,7 +996,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.BranchCount);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PackageRoot.Flag>.Instance.Write(
+            EnumBinaryTranslation<PackageRoot.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1034,7 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.BranchCount = frame.ReadInt32();
-            item.Flags = EnumBinaryTranslation<PackageRoot.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<PackageRoot.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

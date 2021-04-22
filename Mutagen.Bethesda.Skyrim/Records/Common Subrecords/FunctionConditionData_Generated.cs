@@ -1387,7 +1387,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Condition.Function>.Instance.Write(
+            EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Function,
                 length: 2);
@@ -1442,7 +1442,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Function = EnumBinaryTranslation<Condition.Function>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Function = EnumBinaryTranslation<Condition.Function, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.Unknown2 = frame.ReadUInt16();
             FunctionConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,

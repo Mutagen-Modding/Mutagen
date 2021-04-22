@@ -1593,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LeveledSpell.Flag>.Instance.Write(
+            EnumBinaryTranslation<LeveledSpell.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -1716,7 +1716,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledSpell.Flag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<LeveledSpell.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)LeveledSpell_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:

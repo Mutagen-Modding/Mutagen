@@ -948,7 +948,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IBipedBodyTemplateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
+            EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
@@ -991,7 +991,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IBipedBodyTemplate item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

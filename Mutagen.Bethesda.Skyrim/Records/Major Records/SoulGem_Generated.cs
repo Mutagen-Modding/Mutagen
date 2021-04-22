@@ -2451,12 +2451,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.Weight);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulGem.Level>.Instance.Write(
+            EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ContainedSoul,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SOUL));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulGem.Level>.Instance.Write(
+            EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MaximumCapacity,
                 length: 1,
@@ -2629,13 +2629,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SOUL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContainedSoul = EnumBinaryTranslation<SoulGem.Level>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ContainedSoul = EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SoulGem_FieldIndex.ContainedSoul;
                 }
                 case RecordTypeInts.SLCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaximumCapacity = EnumBinaryTranslation<SoulGem.Level>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MaximumCapacity = EnumBinaryTranslation<SoulGem.Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SoulGem_FieldIndex.MaximumCapacity;
                 }
                 case RecordTypeInts.NAM0:

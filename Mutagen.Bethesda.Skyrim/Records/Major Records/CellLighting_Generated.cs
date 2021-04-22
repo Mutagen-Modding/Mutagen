@@ -2154,7 +2154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.LightFadeEnd);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CellLighting.Inherit>.Instance.Write(
+                EnumBinaryTranslation<CellLighting.Inherit, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Inherits,
                     length: 4);
@@ -2225,7 +2225,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.FogMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.LightFadeBegin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.LightFadeEnd = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Inherits = EnumBinaryTranslation<CellLighting.Inherit>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Inherits = EnumBinaryTranslation<CellLighting.Inherit, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

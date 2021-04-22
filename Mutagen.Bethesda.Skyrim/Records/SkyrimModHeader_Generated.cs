@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<SkyrimModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -2060,7 +2060,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<SkyrimModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
             item.FormVersion = frame.ReadUInt16();

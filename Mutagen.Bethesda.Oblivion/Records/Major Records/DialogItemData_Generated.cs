@@ -1058,13 +1058,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogType>.Instance.Write(
+            EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.DialogType,
                 length: 2);
             if (!item.Versioning.HasFlag(DialogItemData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogItem.Flag>.Instance.Write(
+                EnumBinaryTranslation<DialogItem.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -1108,13 +1108,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemData item,
             MutagenFrame frame)
         {
-            item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.DialogType = EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             if (frame.Complete)
             {
                 item.Versioning |= DialogItemData.VersioningBreaks.Break0;
                 return;
             }
-            item.Flags = EnumBinaryTranslation<DialogItem.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<DialogItem.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
         }
 
     }

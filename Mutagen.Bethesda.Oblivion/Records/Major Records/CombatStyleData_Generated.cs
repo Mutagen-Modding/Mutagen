@@ -2816,7 +2816,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.HoldTimerMax);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CombatStyle.Flag>.Instance.Write(
+            EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -2934,7 +2934,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame.SetPosition(frame.Position + 3);
             item.HoldTimerMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.HoldTimerMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<CombatStyle.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<CombatStyle.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.AcrobaticDodgePercentChance = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
             if (frame.Complete)

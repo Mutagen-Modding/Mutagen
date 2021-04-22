@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.FileName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.WriteNullable(
+            EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MaskType,
                 length: 2,
@@ -1425,7 +1425,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:

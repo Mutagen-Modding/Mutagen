@@ -1444,24 +1444,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Aggression>.Instance.Write(
+            EnumBinaryTranslation<Aggression, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Aggression,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Confidence>.Instance.Write(
+            EnumBinaryTranslation<Confidence, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Confidence,
                 length: 1);
             writer.Write(item.EnergyLevel);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Responsibility>.Instance.Write(
+            EnumBinaryTranslation<Responsibility, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Responsibility,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Mood>.Instance.Write(
+            EnumBinaryTranslation<Mood, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Mood,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Assistance>.Instance.Write(
+            EnumBinaryTranslation<Assistance, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Assistance,
                 length: 1);
@@ -1509,12 +1509,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIData item,
             MutagenFrame frame)
         {
-            item.Aggression = EnumBinaryTranslation<Aggression>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Confidence = EnumBinaryTranslation<Confidence>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Aggression = EnumBinaryTranslation<Aggression, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Confidence = EnumBinaryTranslation<Confidence, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.EnergyLevel = frame.ReadUInt8();
-            item.Responsibility = EnumBinaryTranslation<Responsibility>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Mood = EnumBinaryTranslation<Mood>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.Assistance = EnumBinaryTranslation<Assistance>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Responsibility = EnumBinaryTranslation<Responsibility, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Mood = EnumBinaryTranslation<Mood, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Assistance = EnumBinaryTranslation<Assistance, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.AggroRadiusBehavior = frame.ReadBoolean();
             item.Unused = frame.ReadUInt8();
             item.Warn = frame.ReadUInt32();

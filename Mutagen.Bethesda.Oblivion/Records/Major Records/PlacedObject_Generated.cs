@@ -2901,7 +2901,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.XRTM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XRTM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.WriteNullable(
+            EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.ActionFlags,
                 length: 4,
@@ -3129,7 +3129,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.XACT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ActionFlags = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ActionFlags = EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)PlacedObject_FieldIndex.ActionFlags;
                 }
                 case RecordTypeInts.XCNT:

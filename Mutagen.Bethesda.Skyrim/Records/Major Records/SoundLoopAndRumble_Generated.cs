@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundDescriptor.LoopType>.Instance.Write(
+            EnumBinaryTranslation<SoundDescriptor.LoopType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Loop,
                 length: 1);
@@ -1148,7 +1148,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadUInt8();
-            item.Loop = EnumBinaryTranslation<SoundDescriptor.LoopType>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Loop = EnumBinaryTranslation<SoundDescriptor.LoopType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unknown2 = frame.ReadUInt8();
             item.RumbleValues = frame.ReadUInt8();
         }

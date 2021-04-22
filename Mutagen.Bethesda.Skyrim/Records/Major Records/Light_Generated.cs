@@ -2672,7 +2672,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 ColorBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Color);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Light.Flag>.Instance.Write(
+                EnumBinaryTranslation<Light.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
@@ -2847,7 +2847,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Time = dataFrame.ReadInt32();
                     item.Radius = dataFrame.ReadUInt32();
                     item.Color = dataFrame.ReadColor(ColorBinaryType.Alpha);
-                    item.Flags = EnumBinaryTranslation<Light.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<Light.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.FalloffExponent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.FOV = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.NearClip = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);

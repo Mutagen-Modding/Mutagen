@@ -2975,14 +2975,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 source: StringsSource.Normal);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
+                EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 2);
                 writer.Write(item.Priority);
                 writer.Write(item.QuestFormVersion);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Quest.TypeEnum>.Instance.Write(
+                EnumBinaryTranslation<Quest.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
@@ -3163,11 +3163,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.Flags = EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     item.Priority = dataFrame.ReadUInt8();
                     item.QuestFormVersion = dataFrame.ReadUInt8();
                     item.Unknown = dataFrame.ReadInt32();
-                    item.Type = EnumBinaryTranslation<Quest.TypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Type = EnumBinaryTranslation<Quest.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     return (int)Quest_FieldIndex.Type;
                 }
                 case RecordTypeInts.ENAM:

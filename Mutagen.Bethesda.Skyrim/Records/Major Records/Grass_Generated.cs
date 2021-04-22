@@ -2134,7 +2134,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer.Write(item.Unknown);
                 writer.Write(item.UnitsFromWater);
                 writer.Write(item.Unknown2);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Write(
+                EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.UnitsFromWaterType,
                     length: 4);
@@ -2150,7 +2150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.WavePeriod);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Grass.Flag>.Instance.Write(
+                EnumBinaryTranslation<Grass.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -2271,12 +2271,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.Unknown = dataFrame.ReadUInt8();
                     item.UnitsFromWater = dataFrame.ReadUInt16();
                     item.Unknown2 = dataFrame.ReadUInt16();
-                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.UnitsFromWaterType = EnumBinaryTranslation<Grass.UnitsFromWaterTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.PositionRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.HeightRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ColorRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.WavePeriod = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Flags = EnumBinaryTranslation<Grass.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Grass.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unknown3 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(3));
                     return (int)Grass_FieldIndex.Unknown3;
                 }

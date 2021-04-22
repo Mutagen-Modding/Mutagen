@@ -1155,7 +1155,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Speed);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Write(
+            EnumBinaryTranslation<AmmunitionData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1204,7 +1204,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Value = frame.ReadUInt32();
             item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();

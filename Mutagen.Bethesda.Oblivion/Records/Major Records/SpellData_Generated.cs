@@ -1101,16 +1101,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Spell.SpellType>.Instance.Write(
+            EnumBinaryTranslation<Spell.SpellType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
             writer.Write(item.Cost);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Spell.SpellLevel>.Instance.Write(
+            EnumBinaryTranslation<Spell.SpellLevel, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Level,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Spell.SpellFlag>.Instance.Write(
+            EnumBinaryTranslation<Spell.SpellFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flag,
                 length: 4);
@@ -1153,10 +1153,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Spell.SpellType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Spell.SpellType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Cost = frame.ReadUInt32();
-            item.Level = EnumBinaryTranslation<Spell.SpellLevel>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Flag = EnumBinaryTranslation<Spell.SpellFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Level = EnumBinaryTranslation<Spell.SpellLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Flag = EnumBinaryTranslation<Spell.SpellFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

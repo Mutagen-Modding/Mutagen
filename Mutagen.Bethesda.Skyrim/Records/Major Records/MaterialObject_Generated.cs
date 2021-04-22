@@ -2060,7 +2060,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             writer: writer,
                             item: item.SinglePassColor,
                             binaryType: ColorBinaryType.NoAlphaFloat);
-                        Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MaterialObject.Flag>.Instance.Write(
+                        EnumBinaryTranslation<MaterialObject.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                             writer,
                             item.Flags,
                             length: 4);
@@ -2199,7 +2199,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break2;

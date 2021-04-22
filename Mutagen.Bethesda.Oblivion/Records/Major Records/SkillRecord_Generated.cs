@@ -1638,7 +1638,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.WriteNullable(
+            EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Skill,
                 length: 4,
@@ -1774,7 +1774,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.INDX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Skill = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SkillRecord_FieldIndex.Skill;
                 }
                 case RecordTypeInts.DESC:

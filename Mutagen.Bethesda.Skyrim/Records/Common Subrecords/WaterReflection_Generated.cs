@@ -1076,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Water);
             if (!item.Versioning.HasFlag(WaterReflection.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<WaterReflection.Flag>.Instance.Write(
+                EnumBinaryTranslation<WaterReflection.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
@@ -1126,7 +1126,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= WaterReflection.VersioningBreaks.Break0;
                 return;
             }
-            item.Type = EnumBinaryTranslation<WaterReflection.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<WaterReflection.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

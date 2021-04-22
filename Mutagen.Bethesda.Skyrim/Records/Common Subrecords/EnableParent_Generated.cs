@@ -1133,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.Reference);
             if (!item.Versioning.HasFlag(EnableParent.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EnableParent.Flag>.Instance.Write(
+                EnumBinaryTranslation<EnableParent.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -1186,7 +1186,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= EnableParent.VersioningBreaks.Break0;
                 return;
             }
-            item.Flags = EnumBinaryTranslation<EnableParent.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<EnableParent.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 

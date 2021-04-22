@@ -1612,7 +1612,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     writer.Write(item.Rank);
                     writer.Write(item.MinLevel);
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<EncounterZone.Flag>.Instance.Write(
+                    EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 1);
@@ -1723,7 +1723,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     item.Rank = dataFrame.ReadInt8();
                     item.MinLevel = dataFrame.ReadInt8();
-                    item.Flags = EnumBinaryTranslation<EncounterZone.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<EncounterZone.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.MaxLevel = dataFrame.ReadInt8();
                     return (int)EncounterZone_FieldIndex.MaxLevel;
                 }

@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkScriptFlagGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PerkScriptFlag.Flag>.Instance.Write(
+            EnumBinaryTranslation<PerkScriptFlag.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1047,7 +1047,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkScriptFlag item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<PerkScriptFlag.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<PerkScriptFlag.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.FragmentIndex = frame.ReadUInt16();
         }
 

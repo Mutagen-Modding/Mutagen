@@ -1322,7 +1322,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.HealthPercent);
             writer.Write(item.Index);
             writer.Write(item.ModelDamageStage);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Write(
+            EnumBinaryTranslation<DestructionStageData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1376,7 +1376,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.HealthPercent = frame.ReadUInt8();
             item.Index = frame.ReadUInt8();
             item.ModelDamageStage = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<DestructionStageData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.SelfDamagePerSecond = frame.ReadInt32();
             item.Explosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Debris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));

@@ -2256,7 +2256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogType>.Instance.WriteNullable(
+            EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.DialogType,
                 length: 1,
@@ -2375,7 +2375,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DialogType = EnumBinaryTranslation<DialogType>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.DialogType = EnumBinaryTranslation<DialogType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)DialogTopic_FieldIndex.DialogType;
                 }
                 default:

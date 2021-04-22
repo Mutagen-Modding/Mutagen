@@ -1288,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ListGroupBinaryWriteTranslation.WriteBinaryContainedRecordType(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
+            EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1358,7 +1358,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ListGroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeCustom(
                 frame: frame,
                 item: item);
-            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.LastModified = frame.ReadInt32();
             item.Unknown = frame.ReadInt32();
         }

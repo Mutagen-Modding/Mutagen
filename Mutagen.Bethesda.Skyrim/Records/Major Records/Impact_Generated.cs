@@ -2169,7 +2169,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Duration);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Impact.OrientationType>.Instance.Write(
+                EnumBinaryTranslation<Impact.OrientationType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Orientation,
                     length: 4);
@@ -2179,15 +2179,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.PlacementRadius);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoundLevel>.Instance.Write(
+                EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.SoundLevel,
                     length: 4);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Impact.Flag>.Instance.Write(
+                EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Impact.ResultType>.Instance.Write(
+                EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Result,
                     length: 1);
@@ -2323,12 +2323,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Duration = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.Orientation = EnumBinaryTranslation<Impact.OrientationType>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Orientation = EnumBinaryTranslation<Impact.OrientationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.AngleThreshold = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.PlacementRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
-                    item.SoundLevel = EnumBinaryTranslation<SoundLevel>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
-                    item.Flags = EnumBinaryTranslation<Impact.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
-                    item.Result = EnumBinaryTranslation<Impact.ResultType>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.SoundLevel = EnumBinaryTranslation<SoundLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Flags = EnumBinaryTranslation<Impact.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Result = EnumBinaryTranslation<Impact.ResultType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unknown = dataFrame.ReadInt16();
                     return (int)Impact_FieldIndex.Unknown;
                 }

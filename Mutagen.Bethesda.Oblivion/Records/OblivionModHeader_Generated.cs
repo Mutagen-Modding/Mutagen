@@ -1563,7 +1563,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<OblivionModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1645,7 +1645,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<OblivionModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
         }

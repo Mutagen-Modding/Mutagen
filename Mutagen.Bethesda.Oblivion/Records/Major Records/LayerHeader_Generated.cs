@@ -1094,7 +1094,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Texture);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Quadrant>.Instance.Write(
+            EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Quadrant,
                 length: 2);
@@ -1139,7 +1139,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.Texture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Quadrant = EnumBinaryTranslation<Quadrant>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Quadrant = EnumBinaryTranslation<Quadrant, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.LayerNumber = frame.ReadUInt16();
         }
 

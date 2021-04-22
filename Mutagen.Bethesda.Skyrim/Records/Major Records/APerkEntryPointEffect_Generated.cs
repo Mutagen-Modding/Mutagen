@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Write(
+            EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EntryPoint,
                 length: 1);
@@ -1119,7 +1119,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.PerkConditionTabCount = frame.ReadUInt8();
         }
 

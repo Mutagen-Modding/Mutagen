@@ -1150,15 +1150,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
+            EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Action,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActorValue>.Instance.Write(
+            EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Attribute,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Specialization>.Instance.Write(
+            EnumBinaryTranslation<Specialization, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Specialization,
                 length: 4);
@@ -1207,9 +1207,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillData item,
             MutagenFrame frame)
         {
-            item.Action = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Attribute = EnumBinaryTranslation<ActorValue>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Specialization = EnumBinaryTranslation<Specialization>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Action = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Attribute = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Specialization = EnumBinaryTranslation<Specialization, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.UseValueFirst = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.UseValueSecond = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }

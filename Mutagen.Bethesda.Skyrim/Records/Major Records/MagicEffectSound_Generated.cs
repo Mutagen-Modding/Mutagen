@@ -1011,7 +1011,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectSoundGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Write(
+            EnumBinaryTranslation<MagicEffect.SoundType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1051,7 +1051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectSound item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<MagicEffect.SoundType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<MagicEffect.SoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Sound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 

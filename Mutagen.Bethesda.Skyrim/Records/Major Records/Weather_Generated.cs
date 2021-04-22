@@ -5906,7 +5906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.ThunderLightningFrequency,
                     integerType: FloatIntegerType.Byte);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weather.Flag>.Instance.Write(
+                EnumBinaryTranslation<Weather.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -6246,7 +6246,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.ThunderLightningFrequency = PercentBinaryTranslation.Parse(
                         reader: dataFrame,
                         integerType: FloatIntegerType.Byte);
-                    item.Flags = EnumBinaryTranslation<Weather.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Weather.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.LightningColor = dataFrame.ReadColor(ColorBinaryType.NoAlpha);
                     item.VisualEffectBegin = PercentBinaryTranslation.Parse(
                         reader: dataFrame,

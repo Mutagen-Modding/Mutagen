@@ -1679,7 +1679,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.Weight,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+            EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1736,7 +1736,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
         }
 
     }

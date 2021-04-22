@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PercentMult);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CriticalData.Flag>.Instance.Write(
+            EnumBinaryTranslation<CriticalData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1441,7 +1441,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Damage = frame.ReadUInt16();
             item.Unused = frame.ReadInt16();
             item.PercentMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<CriticalData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {

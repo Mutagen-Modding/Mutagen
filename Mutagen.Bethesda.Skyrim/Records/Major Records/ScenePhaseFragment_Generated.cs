@@ -1142,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScenePhaseFragmentGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ScenePhaseFragment.Flag>.Instance.Write(
+            EnumBinaryTranslation<ScenePhaseFragment.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1189,7 +1189,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScenePhaseFragment item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<ScenePhaseFragment.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<ScenePhaseFragment.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Index = frame.ReadUInt8();
             item.Unknown = frame.ReadUInt32();
             item.ScriptName = StringBinaryTranslation.Instance.Parse(

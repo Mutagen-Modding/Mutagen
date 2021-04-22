@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponseFlagsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DialogResponses.Flag>.Instance.Write(
+            EnumBinaryTranslation<DialogResponses.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1051,7 +1051,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponseFlags item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<DialogResponses.Flag>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<DialogResponses.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.ResetHours = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 reader: frame,
                 integerType: FloatIntegerType.UShort,

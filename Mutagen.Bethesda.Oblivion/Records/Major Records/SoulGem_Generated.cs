@@ -1704,12 +1704,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulLevel>.Instance.WriteNullable(
+            EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.ContainedSoul,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SOUL));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulLevel>.Instance.WriteNullable(
+            EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MaximumCapacity,
                 length: 1,
@@ -1842,13 +1842,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SOUL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ContainedSoul = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.ContainedSoul = EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SoulGem_FieldIndex.ContainedSoul;
                 }
                 case RecordTypeInts.SLCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaximumCapacity = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.MaximumCapacity = EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SoulGem_FieldIndex.MaximumCapacity;
                 }
                 default:

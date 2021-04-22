@@ -1052,7 +1052,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
+            EnumBinaryTranslation<HavokData.MaterialType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Material,
                 length: 1);
@@ -1097,7 +1097,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             MutagenFrame frame)
         {
-            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Material = EnumBinaryTranslation<HavokData.MaterialType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Friction = frame.ReadUInt8();
             item.Restitution = frame.ReadUInt8();
         }

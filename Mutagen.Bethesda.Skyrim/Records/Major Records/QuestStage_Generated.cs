@@ -1296,7 +1296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.INDX)))
             {
                 writer.Write(item.Index);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<QuestStage.Flag>.Instance.Write(
+                EnumBinaryTranslation<QuestStage.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -1370,7 +1370,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Index = dataFrame.ReadUInt16();
-                    item.Flags = EnumBinaryTranslation<QuestStage.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<QuestStage.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)QuestStage_FieldIndex.Unknown;
                 }

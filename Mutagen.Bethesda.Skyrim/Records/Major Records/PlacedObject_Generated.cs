@@ -6194,7 +6194,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.LeveledItemBaseObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLIB));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Level>.Instance.WriteNullable(
+            EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.LevelModifier,
                 length: 4,
@@ -6283,7 +6283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.WriteNullable(
+            EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Action,
                 length: 4,
@@ -6615,7 +6615,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XLCM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LevelModifier = EnumBinaryTranslation<Level>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.LevelModifier = EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)PlacedObject_FieldIndex.LevelModifier;
                 }
                 case RecordTypeInts.XLCN:
@@ -6712,7 +6714,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XACT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Action = EnumBinaryTranslation<PlacedObject.ActionFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)PlacedObject_FieldIndex.Action;
                 }
                 case RecordTypeInts.XHTW:

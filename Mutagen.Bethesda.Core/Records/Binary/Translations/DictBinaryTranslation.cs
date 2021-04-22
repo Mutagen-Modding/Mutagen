@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
 using System.Collections.Generic;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
@@ -15,7 +16,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             BinarySubParseDelegate<MutagenFrame, TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
-            foreach (var e in EnumBinaryTranslation<TEnum>.Values)
+            foreach (var e in EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter>.Values)
             {
                 if (!transl(reader, out var parse))
                 {
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
             BinarySubWriteDelegate<MutagenWriter, TValue> transl)
             where TEnum : struct, Enum, IConvertible
         {
-            foreach (var e in EnumBinaryTranslation<TEnum>.Values)
+            foreach (var e in EnumBinaryTranslation<TEnum, MutagenFrame, MutagenWriter>.Values)
             {
                 if (items.TryGetValue(e, out var val))
                 {

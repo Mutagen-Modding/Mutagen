@@ -1496,7 +1496,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item.Notes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ActionRecord.TypeEnum>.Instance.WriteNullable(
+            EnumBinaryTranslation<ActionRecord.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Type,
                 length: 4,
@@ -1618,7 +1618,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<ActionRecord.TypeEnum>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<ActionRecord.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)ActionRecord_FieldIndex.Type;
                 }
                 case RecordTypeInts.DATA:

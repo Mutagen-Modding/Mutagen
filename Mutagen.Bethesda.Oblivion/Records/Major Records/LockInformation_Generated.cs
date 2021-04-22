@@ -1129,7 +1129,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Key);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<LockInformation.Flag>.Instance.Write(
+            EnumBinaryTranslation<LockInformation.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1175,7 +1175,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.LockLevel = frame.ReadUInt8();
             item.Unused = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             item.Key.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-            item.Flags = EnumBinaryTranslation<LockInformation.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<LockInformation.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

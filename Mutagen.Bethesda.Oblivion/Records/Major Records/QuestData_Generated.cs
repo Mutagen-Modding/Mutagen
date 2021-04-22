@@ -1003,7 +1003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Quest.Flag>.Instance.Write(
+            EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1047,7 +1047,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Quest.Flag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<Quest.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Priority = frame.ReadUInt8();
         }
 

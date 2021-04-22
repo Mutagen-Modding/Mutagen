@@ -1932,7 +1932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.InitialRotationRange);
                 writer.Write(item.NumSubtexturesX);
                 writer.Write(item.NumSubtexturesY);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Write(
+                EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
@@ -2053,7 +2053,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item.InitialRotationRange = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.NumSubtexturesX = dataFrame.ReadUInt32();
                     item.NumSubtexturesY = dataFrame.ReadUInt32();
-                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(4));
+                    item.Type = EnumBinaryTranslation<ShaderParticleGeometry.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= ShaderParticleGeometry.DATADataType.Break0;

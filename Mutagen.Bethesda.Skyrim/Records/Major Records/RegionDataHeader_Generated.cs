@@ -1078,11 +1078,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionDataHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
+            EnumBinaryTranslation<RegionData.RegionDataType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.DataType,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
+            EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1127,8 +1127,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionDataHeaderInternal item,
             MutagenFrame frame)
         {
-            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Priority = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
         }

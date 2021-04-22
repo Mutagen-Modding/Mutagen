@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.Target);
             writer.Write(item.Modifier);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CombatReaction>.Instance.Write(
+            EnumBinaryTranslation<CombatReaction, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Reaction,
                 length: 4);
@@ -1114,7 +1114,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Modifier = frame.ReadInt32();
-            item.Reaction = EnumBinaryTranslation<CombatReaction>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Reaction = EnumBinaryTranslation<CombatReaction, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

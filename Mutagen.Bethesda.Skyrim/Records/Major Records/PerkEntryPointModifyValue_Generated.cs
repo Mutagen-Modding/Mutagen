@@ -1130,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Write(
+            EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Modification,
                 length: 4);
@@ -1211,7 +1211,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
         public static ParseResult FillBinaryRecordTypes(

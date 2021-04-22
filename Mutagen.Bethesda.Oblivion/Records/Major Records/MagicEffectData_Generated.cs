@@ -1528,7 +1528,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Write(
+            EnumBinaryTranslation<MagicEffect.MagicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1536,11 +1536,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 item: item.BaseCost);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<MagicSchool>.Instance.Write(
+            EnumBinaryTranslation<MagicSchool, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.MagicSchool,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Resistance>.Instance.Write(
+            EnumBinaryTranslation<Resistance, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Resistance,
                 length: 4);
@@ -1602,11 +1602,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectData item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<MagicEffect.MagicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.BaseCost = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Unused = frame.ReadInt32();
-            item.MagicSchool = EnumBinaryTranslation<MagicSchool>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.Resistance = EnumBinaryTranslation<Resistance>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.MagicSchool = EnumBinaryTranslation<MagicSchool, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Resistance = EnumBinaryTranslation<Resistance, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.CounterEffectCount = frame.ReadUInt32();
             item.Light.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.ProjectileSpeed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

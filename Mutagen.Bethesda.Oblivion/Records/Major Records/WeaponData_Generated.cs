@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weapon.WeaponType>.Instance.Write(
+            EnumBinaryTranslation<Weapon.WeaponType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Reach);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Write(
+            EnumBinaryTranslation<Weapon.WeaponFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1358,10 +1358,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Weapon.WeaponType>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Weapon.WeaponType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Reach = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
-            item.Flags = EnumBinaryTranslation<Weapon.WeaponFlag>.Instance.Parse(reader: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Weapon.WeaponFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Value = frame.ReadUInt32();
             item.Health = frame.ReadUInt32();
             item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);

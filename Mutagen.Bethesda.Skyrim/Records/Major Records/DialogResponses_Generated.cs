@@ -2669,7 +2669,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.PreviousDialog,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<FavorLevel>.Instance.WriteNullable(
+            EnumBinaryTranslation<FavorLevel, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.FavorLevel,
                 length: 1,
@@ -2861,7 +2861,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FavorLevel = EnumBinaryTranslation<FavorLevel>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.FavorLevel = EnumBinaryTranslation<FavorLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)DialogResponses_FieldIndex.FavorLevel;
                 }
                 case RecordTypeInts.TCLT:

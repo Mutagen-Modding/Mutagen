@@ -1207,23 +1207,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverrideGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SetFlags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ClearFlags,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SetInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ClearInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Package.Speed>.Instance.Write(
+            EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.PreferredSpeed,
                 length: 1);
@@ -1269,11 +1269,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverride item,
             MutagenFrame frame)
         {
-            item.SetFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.ClearFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(reader: frame.SpawnWithLength(4));
-            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(reader: frame.SpawnWithLength(2));
-            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.SetFlags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ClearFlags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 

@@ -1199,7 +1199,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     binaryType: StringBinaryType.NullTerminate);
                 if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<DebrisModel.Flag>.Instance.Write(
+                    EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 1);
@@ -1275,7 +1275,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                         return (int)DebrisModel_FieldIndex.ModelFilename;
                     }
-                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:

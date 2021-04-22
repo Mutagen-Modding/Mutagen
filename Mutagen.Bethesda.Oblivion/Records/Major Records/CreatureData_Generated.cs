@@ -1640,14 +1640,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Creature.Types>.Instance.Write(
+            EnumBinaryTranslation<Creature.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 1);
             writer.Write(item.CombatSkill);
             writer.Write(item.MagicSkill);
             writer.Write(item.StealthSkill);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<SoulLevel>.Instance.Write(
+            EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SoulLevel,
                 length: 2);
@@ -1700,11 +1700,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Creature.Types>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Type = EnumBinaryTranslation<Creature.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.CombatSkill = frame.ReadUInt8();
             item.MagicSkill = frame.ReadUInt8();
             item.StealthSkill = frame.ReadUInt8();
-            item.SoulLevel = EnumBinaryTranslation<SoulLevel>.Instance.Parse(reader: frame.SpawnWithLength(2));
+            item.SoulLevel = EnumBinaryTranslation<SoulLevel, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.Health = frame.ReadUInt32();
             item.AttackDamage = frame.ReadUInt16();
             item.Strength = frame.ReadUInt8();

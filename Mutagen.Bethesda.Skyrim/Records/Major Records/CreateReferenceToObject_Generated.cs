@@ -1180,12 +1180,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ALCA)))
             {
                 writer.Write(item.AliasIndex);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Write(
+                EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Create,
                     length: 2);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Level>.Instance.Write(
+            EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Level,
                 length: 4,
@@ -1253,13 +1253,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasIndex = dataFrame.ReadInt16();
-                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     return (int)CreateReferenceToObject_FieldIndex.Create;
                 }
                 case RecordTypeInts.ALCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Level = EnumBinaryTranslation<Level>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
+                    item.Level = EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)CreateReferenceToObject_FieldIndex.Level;
                 }
                 default:

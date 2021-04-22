@@ -1589,12 +1589,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Child);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Relationship.RankType>.Instance.Write(
+                EnumBinaryTranslation<Relationship.RankType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Rank,
                     length: 2);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Relationship.Flag>.Instance.Write(
+                EnumBinaryTranslation<Relationship.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
@@ -1699,9 +1699,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
-                    item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(reader: dataFrame.SpawnWithLength(2));
+                    item.Rank = EnumBinaryTranslation<Relationship.RankType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     item.Unknown = dataFrame.ReadUInt8();
-                    item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(reader: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<Relationship.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.AssociationType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Relationship_FieldIndex.AssociationType;
                 }

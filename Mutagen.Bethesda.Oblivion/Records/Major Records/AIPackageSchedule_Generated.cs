@@ -1150,11 +1150,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Month>.Instance.Write(
+            EnumBinaryTranslation<Month, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Month,
                 length: 1);
-            Mutagen.Bethesda.Records.Binary.Translations.EnumBinaryTranslation<Weekday>.Instance.Write(
+            EnumBinaryTranslation<Weekday, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.DayOfWeek,
                 length: 1);
@@ -1200,8 +1200,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             MutagenFrame frame)
         {
-            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(reader: frame.SpawnWithLength(1));
-            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(reader: frame.SpawnWithLength(1));
+            item.Month = EnumBinaryTranslation<Month, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.DayOfWeek = EnumBinaryTranslation<Weekday, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Day = frame.ReadUInt8();
             item.Time = frame.ReadUInt8();
             item.Duration = frame.ReadInt32();
