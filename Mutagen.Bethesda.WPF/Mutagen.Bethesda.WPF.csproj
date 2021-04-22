@@ -25,12 +25,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Noggog.WPF" Version="2.13.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.0">
+    <PackageReference Include="Noggog.WPF" Version="2.13.0.1-dev" />
+    <PackageReference Include="NuGetizer" Version="0.6.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI.Fody" Version="13.2.2" />
+    <PackageReference Include="ReactiveUI.Fody" Version="13.2.18" />
   </ItemGroup>
 
   <ItemGroup>

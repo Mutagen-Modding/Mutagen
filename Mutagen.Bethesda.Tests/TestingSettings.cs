@@ -1,4 +1,3 @@
-using Microsoft.Diagnostics.Tracing.Parsers.MicrosoftWindowsTCPIP;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ namespace Mutagen.Bethesda.Tests
         public bool TestBenchmarks { get; set; }
         public bool TestRecordEnumerables { get; set; }
         public bool TestEquality { get; set; }
+        public bool TestPex { get; set; }
         public DataFolderLocations DataFolderLocations { get; set; } = new DataFolderLocations();
         public PassthroughSettings PassthroughSettings { get; set; } = new PassthroughSettings();
         public List<TargetGroup> TargetGroups { get; set; } = new List<TargetGroup>();

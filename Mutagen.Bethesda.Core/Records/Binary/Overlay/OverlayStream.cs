@@ -13,8 +13,8 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
         public ReadOnlyMemorySlice<byte> Data { get; private set; }
         public int Position
         {
-            get => _readStream.Position;
-            set => _readStream.Position = value;
+            get => _readStream.PositionInt;
+            set => _readStream.PositionInt = value;
         }
         long IBinaryReadStream.Position
         {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
             set => ((IBinaryReadStream)_readStream).Position = value;
         }
 
-        public int Length => _readStream.Length;
+        public int Length => _readStream.LengthInt;
 
         public bool IsLittleEndian => _readStream.IsLittleEndian;
 
