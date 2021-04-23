@@ -26,6 +26,7 @@ namespace Mutagen.Bethesda.Generation.Modules
             var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
             fg.AppendLine("using System.Collections.Generic;");
+            fg.AppendLine("using Mutagen.Bethesda.Records;");
             fg.AppendLine("using Mutagen.Bethesda.Internals;");
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))

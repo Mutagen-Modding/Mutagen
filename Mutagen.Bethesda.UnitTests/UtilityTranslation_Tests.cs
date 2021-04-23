@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Constants;
 using Noggog;

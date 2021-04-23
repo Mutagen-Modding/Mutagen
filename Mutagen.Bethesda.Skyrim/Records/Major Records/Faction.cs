@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,5 @@
 using BenchmarkDotNet.Attributes;
+using Mutagen.Bethesda.Records;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,13 +33,13 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public FormID ParseFormID()
         {
-            return Bethesda.FormID.Factory(IDString);
+            return FormID.Factory(IDString);
         }
 
         [Benchmark]
         public FormID ParseFormID0x()
         {
-            return Bethesda.FormID.Factory(IDString0x);
+            return FormID.Factory(IDString0x);
         }
     }
 }

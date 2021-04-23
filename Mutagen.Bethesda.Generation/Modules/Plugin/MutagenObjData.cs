@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
         private async Task<IEnumerable<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>>> GetGenerationTypes()
         {
-            List<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>> ret = new List<KeyValuePair<IEnumerable<Bethesda.RecordType>, ObjectGeneration>>()
+            List<KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>> ret = new()
             {
                 new KeyValuePair<IEnumerable<RecordType>, ObjectGeneration>(
                     this.TriggeringRecordTypes,

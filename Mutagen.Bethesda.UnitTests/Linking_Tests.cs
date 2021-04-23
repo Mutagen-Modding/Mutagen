@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;

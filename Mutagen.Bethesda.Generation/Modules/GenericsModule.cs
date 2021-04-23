@@ -1,5 +1,6 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Collections.Generic;

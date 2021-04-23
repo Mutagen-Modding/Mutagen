@@ -80,6 +80,7 @@
     <Compile Include="Records\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\TypicalBinaryTranslationExt.cs" />
+    <Compile Include="Structs\TypedLoadOrderAccess.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
@@ -209,11 +210,10 @@
     <Compile Include="Strings\StringsUtility.cs" />
     <Compile Include="Strings\StringsWriter.cs" />
     <Compile Include="Strings\TranslatedString.cs" />
-    <Compile Include="Structs\FormID.cs" />
+    <Compile Include="Records\FormID.cs" />
     <Compile Include="Structs\FormKey.cs" />
-    <Compile Include="Structs\ModIndex.cs" />
-    <Compile Include="Structs\RecordType.cs" />
-    <Compile Include="Structs\TypedLoadOrderAccess.cs" />
+    <Compile Include="Records\ModIndex.cs" />
+    <Compile Include="Records\RecordType.cs" />
     <Compile Include="TestingPermissions.cs" />
     <Compile Include="Interfaces\IFormVersionGetter.cs" />
     <Compile Include="Records\Binary\Overlay\FormVersionGetter.cs" />

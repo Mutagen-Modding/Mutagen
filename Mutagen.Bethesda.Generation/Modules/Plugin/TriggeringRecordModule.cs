@@ -728,6 +728,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
             }
             FileGeneration fg = new FileGeneration();
+            fg.AppendLine("using Mutagen.Bethesda.Records;");
+            fg.AppendLine();
+
             using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))
             {
                 using (var c = new ClassWrapper(fg, "RecordTypes"))

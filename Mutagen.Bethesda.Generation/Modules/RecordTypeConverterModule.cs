@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Generation.Modules
 {

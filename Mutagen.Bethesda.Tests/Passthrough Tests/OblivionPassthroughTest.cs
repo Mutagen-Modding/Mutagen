@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records;
 using Noggog;
 using System;
 using System.Collections.Generic;

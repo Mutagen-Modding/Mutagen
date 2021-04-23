@@ -1,5 +1,6 @@
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Strings;

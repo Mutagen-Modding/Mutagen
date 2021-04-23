@@ -1,8 +1,7 @@
-using System;
 using System.Buffers.Binary;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Noggog;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {

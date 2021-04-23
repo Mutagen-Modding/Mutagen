@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Constants;
 using System.Collections.Generic;

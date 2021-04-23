@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Records;
+
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public class RecordTypes

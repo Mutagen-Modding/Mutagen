@@ -1,7 +1,7 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;

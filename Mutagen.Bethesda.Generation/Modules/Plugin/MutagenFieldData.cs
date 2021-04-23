@@ -1,5 +1,6 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         public RecordType? MarkerType { get; set; }
         public RecordType? RecordType { get; set; }
         public RecordType? OverflowRecordType { get; set; }
-        public HashSet<RecordType> TriggeringRecordTypes { get; } = new HashSet<Mutagen.Bethesda.RecordType>();
+        public HashSet<RecordType> TriggeringRecordTypes { get; } = new();
         public HashSet<string> TriggeringRecordAccessors = new HashSet<string>();
         public string TriggeringRecordSetAccessor { get; set; }
         public bool HasTrigger => this.TriggeringRecordAccessors.Count > 0 || SubLoquiTypes.Count > 0;

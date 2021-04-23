@@ -1,5 +1,4 @@
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records.Binary.Translations;
 using System;
 using System.Diagnostics.CodeAnalysis;
 

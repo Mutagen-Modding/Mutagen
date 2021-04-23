@@ -7,6 +7,7 @@ using Noggog;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Generation.Modules;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records;
 
 namespace Mutagen.Bethesda.Generation
 {

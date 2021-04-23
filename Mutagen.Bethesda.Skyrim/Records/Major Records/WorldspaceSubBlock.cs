@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Noggog;
 
