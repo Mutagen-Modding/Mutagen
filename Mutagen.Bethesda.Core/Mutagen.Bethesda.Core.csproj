@@ -76,7 +76,7 @@
     <Compile Include="Records\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\ColorBinaryType.cs" />
-    <Compile Include="Enums\Language.cs" />
+    <Compile Include="Strings\Language.cs" />
     <Compile Include="Records\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\TypicalBinaryTranslationExt.cs" />
@@ -94,7 +94,7 @@
     <Compile Include="Translations\Binary\Int8BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ListBinaryTranslation.cs" />
     <Compile Include="Records\ModHeaderCommonFlag.cs" />
-    <Compile Include="Enums\Quadrant.cs" />
+    <Compile Include="Records\Quadrant.cs" />
     <Compile Include="Strings\StringsLanguageFormat.cs" />
     <Compile Include="Strings\StringsFileFormat.cs" />
     <Compile Include="Strings\StringsSource.cs" />

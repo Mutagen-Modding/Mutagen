@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Strings
 {
     public enum Language
     {
