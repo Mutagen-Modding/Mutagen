@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mutagen.Bethesda.Implicit;
 using Mutagen.Bethesda.Fallout4;
 
 namespace Mutagen.Bethesda

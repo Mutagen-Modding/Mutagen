@@ -1,17 +1,19 @@
+using Mutagen.Bethesda.Implicit;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
+// Intentionally not in Implicit
 namespace Mutagen.Bethesda
 {
-    public record ImplicitRegistration(
-        GameRelease GameRelease,
-        IReadOnlyCollection<ModKey> BaseMasters,
-        IReadOnlyCollection<ModKey> Listings,
-        IReadOnlyCollection<FormKey> RecordFormKeys);
+    namespace Implicit
+    {
+        public record ImplicitRegistration(
+            GameRelease GameRelease,
+            IReadOnlyCollection<ModKey> BaseMasters,
+            IReadOnlyCollection<ModKey> Listings,
+            IReadOnlyCollection<FormKey> RecordFormKeys);
+    }
 
     public static class Implicits
     {

@@ -1,10 +1,7 @@
 using Loqui;
 using Loqui.Generation;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules
@@ -22,6 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules
 
             FileGeneration fg = new FileGeneration();
             fg.AppendLine("using System.Collections.Generic;");
+            fg.AppendLine($"using Mutagen.Bethesda.Implicit;");
             fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda"))
