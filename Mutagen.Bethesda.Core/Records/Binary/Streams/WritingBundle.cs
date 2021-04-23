@@ -1,5 +1,5 @@
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Records.Constants;
 using Mutagen.Bethesda.Strings;
 
 namespace Mutagen.Bethesda.Records.Binary.Streams

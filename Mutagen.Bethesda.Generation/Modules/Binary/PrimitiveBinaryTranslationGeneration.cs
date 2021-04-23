@@ -1,10 +1,10 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Constants;
 using Noggog;
 using System;
 using System.Collections.Generic;

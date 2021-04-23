@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -9,14 +7,14 @@ namespace Mutagen.Bethesda.Skyrim
         [Flags]
         public enum SkyrimMajorRecordFlag
         {
-            ESM = Mutagen.Bethesda.Constants.Constants.MasterFlag,
+            ESM = Bethesda.Records.Constants.Constants.MasterFlag,
             NotPlayable = 0x0000_0004,
-            Deleted = Mutagen.Bethesda.Constants.Constants.DeletedFlag,
-            InitiallyDisabled = Mutagen.Bethesda.Constants.Constants.InitiallyDisabled,
-            Ignored = Mutagen.Bethesda.Constants.Constants.Ignored,
+            Deleted = Bethesda.Records.Constants.Constants.DeletedFlag,
+            InitiallyDisabled = Bethesda.Records.Constants.Constants.InitiallyDisabled,
+            Ignored = Bethesda.Records.Constants.Constants.Ignored,
             VisibleWhenDistant = 0x00008000,
             Dangerous_OffLimits_InteriorCell = 0x00020000,
-            Compressed = Mutagen.Bethesda.Constants.Constants.CompressedFlag,
+            Compressed = Bethesda.Records.Constants.Constants.CompressedFlag,
             CantWait = 0x00080000,
         }
 

@@ -1,8 +1,7 @@
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Constants;
 using Noggog;
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace Mutagen.Bethesda.Records.Binary.Streams

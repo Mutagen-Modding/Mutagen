@@ -7,12 +7,12 @@ using Noggog;
 using Mutagen.Bethesda.Internals;
 using System.IO;
 using System.Buffers.Binary;
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Records;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
+using Mutagen.Bethesda.Records.Constants;
 
 namespace Mutagen.Bethesda.Oblivion
 {

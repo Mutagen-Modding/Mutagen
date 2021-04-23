@@ -1,12 +1,10 @@
-using Mutagen.Bethesda.Constants;
+using Mutagen.Bethesda.Records.Constants;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Records.Binary.Headers
 {

@@ -1,7 +1,6 @@
 using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Generation.Modules.Binary;
 using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary;
@@ -9,6 +8,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Records.Constants;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -627,7 +627,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 yield return "Mutagen.Bethesda.Strings";
-                yield return "Mutagen.Bethesda.Constants";
+                yield return "Mutagen.Bethesda.Records.Constants";
                 yield return "Mutagen.Bethesda.Records.Binary";
                 yield return "Mutagen.Bethesda.Records.Binary.Utility";
             }

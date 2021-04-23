@@ -1,11 +1,12 @@
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Records.Constants;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Utility;
@@ -309,7 +310,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: refLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                loc: refLoc + Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -326,7 +327,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: refLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                loc: refLoc + Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -351,7 +352,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: recordLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                loc: recordLoc + Constants.HeaderLength,
                 sub: lenData);
 
             if (subRecordLoc != null)
@@ -361,7 +362,7 @@ namespace Mutagen.Bethesda.Tests
                 lenData = new byte[2];
                 BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
                 this._Instructions.SetSubstitution(
-                    loc: subRecordLoc.Value + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                    loc: subRecordLoc.Value + Constants.HeaderLength,
                     sub: lenData);
             }
         }

@@ -93,7 +93,7 @@
     <Compile Include="Translations\Binary\Int64BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\Int8BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ListBinaryTranslation.cs" />
-    <Compile Include="Enums\ModHeaderCommonFlag.cs" />
+    <Compile Include="Records\ModHeaderCommonFlag.cs" />
     <Compile Include="Enums\Quadrant.cs" />
     <Compile Include="Strings\StringsLanguageFormat.cs" />
     <Compile Include="Strings\StringsFileFormat.cs" />
@@ -221,7 +221,7 @@
     <Compile Include="Records\Binary\Translations\ExtraLengthHeaderExport.cs" />
     <Compile Include="Records\Binary\Translations\DictBinaryTranslation.cs" />
     <Compile Include="Records\Binary\Translations\PercentBinaryTranslation.cs" />
-    <Compile Include="Constants\GroupConstants.cs" />
+    <Compile Include="Records\Constants\GroupConstants.cs" />
     <Compile Include="Records\Binary\Translations\ModHeaderWriteLogic.cs" />
     <Compile Include="Records\Binary\Translations\ParseResult.cs" />
     <Compile Include="Records\Xml\TranslatedStringXmlTranslation.cs" />
@@ -264,14 +264,14 @@
     <Compile Include="Records\Binary\Streams\CompositeReadStream.cs" />
     <Compile Include="Records\Binary\Translations\GlobalCustomParsing.cs" />
     <Compile Include="Records\Binary\Translations\GenderedItemBinaryTranslation.cs" />
-    <Compile Include="Constants\MajorRecordConstants.cs" />
-    <Compile Include="Constants\RecordConstants.cs" />
+    <Compile Include="Records\Constants\MajorRecordConstants.cs" />
+    <Compile Include="Records\Constants\RecordConstants.cs" />
     <Compile Include="Records\Binary\Translations\LoquiBinaryOverlayTranslation.cs" />
-    <Compile Include="Constants\GameConstants.cs" />
+    <Compile Include="Records\Constants\GameConstants.cs" />
     <Compile Include="Records\Binary\Processing\BinaryFileProcessor.cs" />
     <Compile Include="Records\Binary\Processing\ModRecordAligner.cs" />
     <Compile Include="Records\Binary\Translations\BinaryStringUtility.cs" />
-    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Records\Constants\Constants.cs" />
     <Compile Include="Extensions\IBinaryStreamExt.cs" />
     <Compile Include="Records\Binary\Streams\IMutagenReadStream.cs" />
     <Compile Include="Links\EDIDLink.cs" />

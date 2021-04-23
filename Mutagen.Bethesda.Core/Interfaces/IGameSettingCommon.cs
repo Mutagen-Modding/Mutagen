@@ -1,5 +1,5 @@
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Records.Constants;
 using Noggog;
 using System;
 
@@ -152,7 +152,7 @@ namespace Mutagen.Bethesda
         public static GetResponse<GameSettingType> GetGameSettingType(ReadOnlyMemorySlice<byte> span, GameConstants meta)
         {
             var majorMeta = meta.MajorRecordFrame(span);
-            var edidLoc = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.Constants.EditorID);
+            var edidLoc = PluginUtilityTranslation.FindFirstSubrecord(majorMeta.Content, meta, Constants.EditorID);
             if (edidLoc == null)
             {
                 return GetResponse<GameSettingType>.Fail($"EDID was not located");

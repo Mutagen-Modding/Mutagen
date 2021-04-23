@@ -1,6 +1,6 @@
 using System;
 
-namespace Mutagen.Bethesda.Constants
+namespace Mutagen.Bethesda.Records.Constants
 {
     public class Constants
     {

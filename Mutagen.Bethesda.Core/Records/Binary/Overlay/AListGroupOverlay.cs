@@ -1,5 +1,4 @@
 using Ionic.Zlib;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Noggog;
@@ -41,9 +40,9 @@ namespace Mutagen.Bethesda.Records.Binary.Overlay
                 // Copy major meta bytes over
                 slice.Span.Slice(0, majorMeta.HeaderLength).CopyTo(buf.AsSpan());
                 // Set length bytes
-                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Mutagen.Bethesda.Constants.Constants.HeaderLength), uncompressedLength);
+                BinaryPrimitives.WriteUInt32LittleEndian(buf.AsSpan().Slice(Constants.Constants.HeaderLength), uncompressedLength);
                 // Remove compression flag
-                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Mutagen.Bethesda.Constants.Constants.CompressedFlag);
+                BinaryPrimitives.WriteInt32LittleEndian(buf.AsSpan().Slice(_package.MetaData.Constants.MajorConstants.FlagLocationOffset), majorMeta.MajorRecordFlags & ~Constants.Constants.CompressedFlag);
                 // Copy uncompressed data over
                 using (var stream = new ZlibStream(new ByteMemorySliceStream(slice.Slice(majorMeta.HeaderLength + 4)), CompressionMode.Decompress))
                 {

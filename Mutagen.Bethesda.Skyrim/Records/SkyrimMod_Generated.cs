@@ -7,7 +7,6 @@
 using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary;
@@ -15,6 +14,7 @@ using Mutagen.Bethesda.Records.Binary.Overlay;
 using Mutagen.Bethesda.Records.Binary.Streams;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Records.Constants;
 using Mutagen.Bethesda.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;

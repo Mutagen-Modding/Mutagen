@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Constants;
 using Mutagen.Bethesda.Records.Binary.Headers;
 using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Records.Constants;
 using Noggog;
 using System;
 
@@ -860,7 +860,7 @@ namespace Mutagen.Bethesda
         public static VariableHeader GetVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             RecordType rec = new RecordType(stream.GetInt32());
-            if (rec == Constants.Constants.Group)
+            if (rec == Constants.Group)
             {
                 return constants.GroupConstants.VariableMeta(stream.GetMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe));
             }
@@ -884,7 +884,7 @@ namespace Mutagen.Bethesda
         public static VariableHeader ReadVariableHeader(this IBinaryReadStream stream, GameConstants constants, bool readSafe = true)
         {
             RecordType rec = new RecordType(stream.GetInt32());
-            if (rec == Constants.Constants.Group)
+            if (rec == Constants.Group)
             {
                 return constants.GroupConstants.VariableMeta(stream.ReadMemory(constants.GroupConstants.HeaderLength, readSafe: readSafe));
             }

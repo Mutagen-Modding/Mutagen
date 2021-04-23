@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Tests
                     writer.Write((ushort)(existingLen - 7));
                 }
                 this._Instructions.SetSubstitution(
-                    loc: fileOffset + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                    loc: fileOffset + Records.Constants.Constants.HeaderLength,
                     sub: lenData);
             }
 
@@ -453,7 +453,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x02)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Records.Constants.Constants.HeaderLength,
                         sub: new byte[] { 0, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -465,7 +465,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x56)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Records.Constants.Constants.HeaderLength,
                         sub: new byte[] { 0x54, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -477,7 +477,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x2A)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Records.Constants.Constants.HeaderLength,
                         sub: new byte[] { 0x28, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x3E)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Constants.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Records.Constants.Constants.HeaderLength,
                         sub: new byte[] { 0x3C, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
