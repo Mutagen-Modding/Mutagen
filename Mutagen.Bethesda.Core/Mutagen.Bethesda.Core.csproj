@@ -73,6 +73,7 @@
     <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
+    <Compile Include="LoadOrders\LoadOrderMixIn.cs" />
     <Compile Include="Records\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\ColorBinaryType.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Records\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Records\Binary\Translations\TypicalBinaryTranslationExt.cs" />
-    <Compile Include="Structs\TypedLoadOrderAccess.cs" />
+    <Compile Include="LoadOrders\TypedLoadOrderAccess.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
@@ -155,12 +156,12 @@
     <Compile Include="Links\Cache\MutableModLinkCache.cs" />
     <Compile Include="Links\Cache\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Links\FormLinkTypelessComparer.cs" />
-    <Compile Include="Load Order\CreationClubListings.cs" />
-    <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="LoadOrders\CreationClubListings.cs" />
+    <Compile Include="LoadOrders\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
-    <Compile Include="Load Order\LoadOrderListing.cs" />
-    <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
-    <Compile Include="Load Order\PluginListings.cs" />
+    <Compile Include="LoadOrders\LoadOrderListing.cs" />
+    <Compile Include="LoadOrders\LoadOrderTimestampComparer.cs" />
+    <Compile Include="LoadOrders\PluginListings.cs" />
     <Compile Include="Persistence\IPersistentFormKeyAllocator.cs" />
     <Compile Include="Persistence\ISharedFormKeyAllocator.cs" />
     <Compile Include="Persistence\TextFileSharedFormKeyAllocator.cs" />
@@ -281,7 +282,7 @@
     <Compile Include="Links\IFormLinkContainerGetter.cs" />
     <Compile Include="Records\Utility\MasterReferenceReader.cs" />
     <Compile Include="Records\Binary\Processing\ModDecompressor.cs" />
-    <Compile Include="Load Order\ModListing.cs" />
+    <Compile Include="LoadOrders\ModListing.cs" />
     <Compile Include="Records\Binary\Processing\ModRecordSorter.cs" />
     <Compile Include="Records\ObjectType.cs" />
     <Compile Include="Records\Utility\RecordInterest.cs" />

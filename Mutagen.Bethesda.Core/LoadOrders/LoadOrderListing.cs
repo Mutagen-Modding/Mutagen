@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.LoadOrders
 {
     [DebuggerDisplay("LoadOrderListing {ToString()}")]
     public record LoadOrderListing

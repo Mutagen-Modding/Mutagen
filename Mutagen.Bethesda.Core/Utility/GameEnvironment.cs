@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.LoadOrders;
 
 namespace Mutagen.Bethesda
 {
@@ -63,9 +60,9 @@ namespace Mutagen.Bethesda
         {
             var dataPath = Path.Combine(gameFolderPath, "Data");
 
-            var loadOrder = Mutagen.Bethesda.LoadOrder.Import<TModGetter>(
+            var loadOrder = Mutagen.Bethesda.LoadOrders.LoadOrder.Import<TModGetter>(
                 dataPath,
-                Mutagen.Bethesda.LoadOrder.GetListings(release, dataPath),
+                Mutagen.Bethesda.LoadOrders.LoadOrder.GetListings(release, dataPath),
                 release);
 
             return new GameEnvironmentState<TModSetter, TModGetter>(

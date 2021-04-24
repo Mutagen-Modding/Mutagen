@@ -1,4 +1,5 @@
 using DynamicData;
+using Mutagen.Bethesda.LoadOrders;
 using Noggog;
 using Noggog.WPF;
 using ReactiveUI;
@@ -7,8 +8,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 

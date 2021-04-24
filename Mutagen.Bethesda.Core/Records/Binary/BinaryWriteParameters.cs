@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.LoadOrders;
 using Mutagen.Bethesda.Records.Binary.Utility;
 using Mutagen.Bethesda.Strings;
 using System;

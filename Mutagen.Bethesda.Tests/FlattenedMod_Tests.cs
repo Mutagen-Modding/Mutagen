@@ -1,9 +1,6 @@
+using Mutagen.Bethesda.LoadOrders;
 using Mutagen.Bethesda.Oblivion;
-using Noggog;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Mutagen.Bethesda.LoadOrders;
 
 namespace Mutagen.Bethesda.Skyrim
 {

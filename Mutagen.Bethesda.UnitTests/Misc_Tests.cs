@@ -1,13 +1,7 @@
 using FluentAssertions;
 using Loqui;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.LoadOrders;
 using Mutagen.Bethesda.Oblivion.Internals;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

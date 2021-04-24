@@ -1,7 +1,7 @@
 using DynamicData;
 using FluentAssertions;
+using Mutagen.Bethesda.LoadOrders;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;

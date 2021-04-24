@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.LoadOrders.Internals;
 
 namespace Mutagen.Bethesda.Skyrim
 {

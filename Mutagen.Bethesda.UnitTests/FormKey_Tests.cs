@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Mutagen.Bethesda.LoadOrders;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Records.Binary.Translations;
 using Mutagen.Bethesda.Records.Binary.Utility;

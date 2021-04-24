@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.LoadOrders;
 using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Records.Binary.Utility;
 using Noggog;

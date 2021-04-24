@@ -1,9 +1,8 @@
-﻿using Noggog;
+using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Mutagen.Bethesda.Internals
+namespace Mutagen.Bethesda.LoadOrders.Internals
 {
     public class LoadOrderTimestampComparer : IComparer<(ModKey ModKey, DateTime Write)>
     {

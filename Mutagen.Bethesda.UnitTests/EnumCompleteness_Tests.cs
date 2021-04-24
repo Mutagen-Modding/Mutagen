@@ -1,4 +1,5 @@
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.LoadOrders;
 using Noggog;
 using Xunit;
 

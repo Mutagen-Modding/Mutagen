@@ -19,6 +19,7 @@ namespace Mutagen.Bethesda.Generation.Modules
             FileGeneration fg = new FileGeneration();
 
             fg.AppendLine("using System.Collections.Generic;");
+            fg.AppendLine("using Mutagen.Bethesda.LoadOrders;");
 
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))

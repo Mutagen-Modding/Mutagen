@@ -7,6 +7,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Constants = Mutagen.Bethesda.Records.Constants.Constants;
 using Mutagen.Bethesda.UnitTests;
+using Mutagen.Bethesda.LoadOrders;
 
 namespace Api
 {

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.LoadOrders
 {
     public static class PluginListings
     {
