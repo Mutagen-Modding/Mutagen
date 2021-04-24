@@ -212,7 +212,7 @@
     <Compile Include="Strings\StringsWriter.cs" />
     <Compile Include="Strings\TranslatedString.cs" />
     <Compile Include="Records\FormID.cs" />
-    <Compile Include="Structs\FormKey.cs" />
+    <Compile Include="FormKey.cs" />
     <Compile Include="Records\ModIndex.cs" />
     <Compile Include="Records\RecordType.cs" />
     <Compile Include="TestingPermissions.cs" />
