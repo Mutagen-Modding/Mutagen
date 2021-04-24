@@ -1,9 +1,9 @@
 using Loqui;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Records;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion
 {

@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Records;
 using Noggog;
 using System;
 using System.Collections.Generic;

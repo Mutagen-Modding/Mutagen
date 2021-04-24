@@ -1,5 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Records;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System.Linq;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Loqui;
+using Mutagen.Bethesda.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda

@@ -1,8 +1,8 @@
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Records.Internals;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Records
 {
     public interface IModContext
     {

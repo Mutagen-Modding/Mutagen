@@ -226,7 +226,7 @@
     <Compile Include="Records\Binary\Translations\ModHeaderWriteLogic.cs" />
     <Compile Include="Records\Binary\Translations\ParseResult.cs" />
     <Compile Include="Records\Xml\TranslatedStringXmlTranslation.cs" />
-    <Compile Include="Structs\ModContext.cs" />
+    <Compile Include="Records\ModContext.cs" />
     <Compile Include="Translations\Binary\P2FloatBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P2Int16BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\P2IntBinaryTranslation.cs" />
