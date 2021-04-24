@@ -554,7 +554,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Keyword_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => KeywordSetterCommon.Instance.RemapLinks(this, mapping);
         public Keyword(FormKey formKey)
         {
@@ -1311,7 +1311,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IKeywordGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IKeywordGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1783,7 +1783,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => KeywordCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => KeywordBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

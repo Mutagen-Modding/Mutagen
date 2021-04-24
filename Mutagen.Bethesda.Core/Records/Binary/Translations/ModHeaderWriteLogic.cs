@@ -11,8 +11,8 @@ namespace Mutagen.Bethesda.Records.Binary.Translations
 {
     public class ModHeaderWriteLogic
     {
-        private readonly List<Action<IMajorRecordCommonGetter>> _recordIterationActions = new List<Action<IMajorRecordCommonGetter>>();
-        private readonly List<Action<FormKey, FormLinkInformation>> _formLinkIterationActions = new List<Action<FormKey, FormLinkInformation>>();
+        private readonly List<Action<IMajorRecordCommonGetter>> _recordIterationActions = new();
+        private readonly List<Action<FormKey, IFormLinkGetter>> _formLinkIterationActions = new();
         private readonly BinaryWriteParameters _params;
 
         private readonly ModKey _modKey;

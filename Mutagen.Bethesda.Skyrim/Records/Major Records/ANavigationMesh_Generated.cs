@@ -435,7 +435,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ANavigationMesh_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public ANavigationMesh(
             FormKey formKey,
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANavigationMeshGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IANavigationMeshGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1584,7 +1584,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ANavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

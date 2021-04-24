@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda
                 formKey = rec;
                 return true;
             }
-            formKey = default!;
+            formKey = default;
             return false;
         }
 

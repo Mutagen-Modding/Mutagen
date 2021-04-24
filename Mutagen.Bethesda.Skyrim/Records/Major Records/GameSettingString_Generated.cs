@@ -1049,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGameSettingStringGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGameSettingStringGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {

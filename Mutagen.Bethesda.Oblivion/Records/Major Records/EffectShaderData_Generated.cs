@@ -3360,7 +3360,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEffectShaderDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEffectShaderDataGetter obj)
         {
             yield break;
         }

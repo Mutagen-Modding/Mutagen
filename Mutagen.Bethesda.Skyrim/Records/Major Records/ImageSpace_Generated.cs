@@ -1273,7 +1273,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImageSpaceGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {

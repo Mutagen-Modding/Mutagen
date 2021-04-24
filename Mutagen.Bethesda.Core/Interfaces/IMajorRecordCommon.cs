@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda
 
     public static class IMajorRecordCommonGetterExt
     {
-        public static FormLinkInformation ToFormLinkInformation(this IMajorRecordCommonGetter majorRec)
+        public static IFormLinkGetter ToFormLinkInformation(this IMajorRecordCommonGetter majorRec)
         {
             return FormLinkInformation.Factory(majorRec);
         }

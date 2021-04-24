@@ -1983,7 +1983,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeaponDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeaponDataGetter obj)
         {
             yield break;
         }

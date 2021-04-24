@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITransformGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITransformGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {

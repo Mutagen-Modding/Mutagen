@@ -879,7 +879,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestDataGetter obj)
         {
             yield break;
         }

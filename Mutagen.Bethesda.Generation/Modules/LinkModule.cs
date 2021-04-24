@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Generation.Modules
         {
             if (maskTypes.Applicable(LoquiInterfaceType.IGetter, CommonGenerics.Class))
             {
-                fg.AppendLine($"public IEnumerable<{nameof(FormLinkInformation)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");
+                fg.AppendLine($"public IEnumerable<{nameof(IFormLinkGetter)}> GetContainedFormLinks({obj.Interface(getter: true)} obj)");
                 using (new BraceWrapper(fg))
                 {
                     foreach (var baseClass in obj.BaseClassTrail())
@@ -422,7 +422,7 @@ namespace Mutagen.Bethesda.Generation.Modules
 
         public static async Task GenerateInterfaceImplementation(ObjectGeneration obj, FileGeneration fg, bool getter)
         {
-            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(FormLinkInformation)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
+            fg.AppendLine($"public{await obj.FunctionOverride(async (o) => obj.GetObjectType() == ObjectType.Mod || (await HasLinks(o, includeBaseClass: false)) != LinkCase.No)}IEnumerable<{nameof(IFormLinkGetter)}> {nameof(IFormLinkContainerGetter.ContainedFormLinks)} => {obj.CommonClass(LoquiInterfaceType.IGetter, CommonGenerics.Class)}.Instance.GetContainedFormLinks(this);");
 
             if (!getter)
             {

@@ -1185,7 +1185,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHairGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHairGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {

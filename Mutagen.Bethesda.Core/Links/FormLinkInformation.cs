@@ -1,13 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Mutagen.Bethesda
 {
-    public record FormLinkInformation(FormKey FormKey, Type Type)
+    public record FormLinkInformation(FormKey FormKey, Type Type) : IFormLinkGetter
     {
+        public FormKey? FormKeyNullable => this.FormKey;
+
+        public bool IsNull => this.FormKey.IsNull;
+
         public override string ToString()
         {
             return $"({Type}) => {FormKey}";
@@ -30,6 +31,23 @@ namespace Mutagen.Bethesda
             return new FormLinkInformation(majorRec.FormKey, majorRec.Registration.GetterType);
         }
 
-        public static FormLinkInformation Factory(FormLinkInformation rhs) => rhs;
+        public static IFormLinkGetter Factory(IFormLinkGetter rhs) => rhs;
+
+        public bool TryGetModKey([MaybeNullWhen(false)] out ModKey modKey)
+        {
+            modKey = this.FormKey.ModKey;
+            return true;
+        }
+
+        public bool TryResolveFormKey(ILinkCache cache, out FormKey formKey)
+        {
+            formKey = this.FormKey;
+            return true;
+        }
+
+        public bool TryResolveCommon(ILinkCache cache, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRecord)
+        {
+            return cache.TryResolve<IMajorRecordCommonGetter>(this.FormKey, out majorRecord);
+        }
     }
 }

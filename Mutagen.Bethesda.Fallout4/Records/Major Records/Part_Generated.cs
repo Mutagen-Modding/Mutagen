@@ -897,7 +897,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPartGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPartGetter obj)
         {
             yield break;
         }

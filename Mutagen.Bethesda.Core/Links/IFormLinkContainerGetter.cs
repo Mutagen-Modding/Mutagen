@@ -25,6 +25,6 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Enumerable of all contained FormKeys
         /// </summary>
-        IEnumerable<FormLinkInformation> ContainedFormLinks { get; }
+        IEnumerable<IFormLinkGetter> ContainedFormLinks { get; }
     }
 }
