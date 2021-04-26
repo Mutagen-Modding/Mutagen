@@ -7,7 +7,7 @@ using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Aspects;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules
 {

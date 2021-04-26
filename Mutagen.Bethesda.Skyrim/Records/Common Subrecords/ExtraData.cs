@@ -1,7 +1,7 @@
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Binary.Utility;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Utility;
 using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ExtraDataBinaryCreateTranslation
         {
-            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordInfoCache cache, MasterReferenceReader masters)
+            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, MasterReferenceReader masters)
             {
                 FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
                 FormKey formKey = FormKey.Factory(masters, form.Raw);

@@ -1,11 +1,12 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -137,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var groupMeta = stream.GetGroup();
                     if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-                    if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+                    if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                     }

@@ -6,14 +6,18 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1598,7 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ILeveledSpellEntryGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledSpellEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Entries,
                 counterType: RecordTypes.LLCT,
@@ -1726,7 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LLCT:
                 {
                     item.Entries = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LeveledSpellEntry>.Instance.ParsePerItem(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledSpellEntry>.Instance.ParsePerItem(
                             reader: frame,
                             countLengthLength: 1,
                             countRecord: RecordTypes.LLCT,

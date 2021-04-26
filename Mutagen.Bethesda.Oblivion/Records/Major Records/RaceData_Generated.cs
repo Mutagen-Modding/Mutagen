@@ -10,10 +10,13 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1730,10 +1733,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.Unused = frame.ReadInt32();
-            item.Height = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+            item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-            item.Weight = Mutagen.Bethesda.Records.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
+            item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
                 transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
             item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(

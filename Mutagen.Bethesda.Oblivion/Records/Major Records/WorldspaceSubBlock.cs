@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals

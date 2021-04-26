@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using Mutagen.Bethesda.LoadOrders;
-using Mutagen.Bethesda.LoadOrders.Internals;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.Internals;
 
 namespace Mutagen.Bethesda.Oblivion
 {

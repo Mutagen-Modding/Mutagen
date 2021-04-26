@@ -1,7 +1,8 @@
 using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Records.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;

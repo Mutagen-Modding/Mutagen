@@ -1,6 +1,6 @@
+using Mutagen.Bethesda.Plugins.Records;
 using ReactiveUI;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace Mutagen.Bethesda.WPF
 {

@@ -9,11 +9,15 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1285,7 +1289,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             RecordTypeConverter? recordTypeConverter)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
                 writer: writer,
                 items: item.RecordCache.Items,
                 transl: (MutagenWriter r, T dictSubItem) =>
@@ -1362,7 +1366,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,

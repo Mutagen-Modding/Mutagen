@@ -1,13 +1,11 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Inis;
-using System;
+using Mutagen.Bethesda.Plugins;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

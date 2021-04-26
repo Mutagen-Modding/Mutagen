@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Cache.Implementations;
 
 namespace Mutagen.Bethesda.Fallout4
 {

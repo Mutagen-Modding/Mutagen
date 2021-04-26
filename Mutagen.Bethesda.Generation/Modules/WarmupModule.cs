@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Generation.Modules
                             }
                             foreach (var otherProto in proto.Gen.Protocols.Values
                                 .Where(p => p.DefaultNamespace.Contains("Mutagen.Bethesda"))
-                                .Where(p => p.DefaultNamespace.Length > "Mutagen.Bethesda".Length)
+                                .Where(p => !p.DefaultNamespace.Contains("Mutagen.Bethesda.Plugins.Records"))
                                 .Where(p => !object.ReferenceEquals(p, proto)))
                             {
                                 fg.AppendLine($"{otherProto.DefaultNamespace}.Warmup{otherProto.Protocol.Namespace}.Init();");
@@ -75,9 +75,9 @@ namespace Mutagen.Bethesda.Generation.Modules
                                 args.Add($"new ProtocolDefinition_Bethesda()");
                                 args.Add($"new ProtocolDefinition_{proto.Protocol.Namespace}()");
                             }
-                            fg.AppendLine($"Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;");
+                            fg.AppendLine($"Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;");
                             using (var args = new ArgsWrapper(fg,
-                                $"Mutagen.Bethesda.Core.LinkInterfaceMapping.Register"))
+                                $"Plugins.Records.Internals.LinkInterfaceMapping.Register"))
                             {
                                 args.Add($"new {proto.DefaultNamespace}.Internals.LinkInterfaceMapping()");
                             }

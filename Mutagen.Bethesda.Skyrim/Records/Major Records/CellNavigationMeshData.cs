@@ -1,4 +1,5 @@
-using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using System.Buffers.Binary;
 
 namespace Mutagen.Bethesda.Skyrim

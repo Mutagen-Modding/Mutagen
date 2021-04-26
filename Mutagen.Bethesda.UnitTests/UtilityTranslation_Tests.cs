@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System.Linq;
 using Xunit;

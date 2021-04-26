@@ -1,5 +1,6 @@
 using DynamicData;
-using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
 using Noggog.WPF;
 using ReactiveUI;

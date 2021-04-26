@@ -10,6 +10,7 @@ using System.Linq;
 using System.IO;
 using Noggog.WPF;
 using System.ComponentModel;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.WPF
 {

@@ -8,10 +8,13 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -1117,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptFragmentsBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IScenePhaseFragmentGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScenePhaseFragmentGetter>.Instance.Write(
                 writer: writer,
                 items: item.PhaseFragments,
                 countLengthLength: 2,
@@ -1177,7 +1180,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.PhaseFragments.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ScenePhaseFragment>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScenePhaseFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
                     reader: frame,
                     transl: ScenePhaseFragment.TryCreateFromBinary));

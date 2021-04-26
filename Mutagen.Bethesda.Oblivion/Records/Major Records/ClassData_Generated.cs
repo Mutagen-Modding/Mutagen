@@ -10,10 +10,13 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1484,7 +1487,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
                 writer: writer,
                 items: item.PrimaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
@@ -1498,7 +1501,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer,
                 item.Specialization,
                 length: 4);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Write(
                 writer: writer,
                 items: item.SecondaryAttributes,
                 transl: (MutagenWriter subWriter, ActorValue subItem) =>
@@ -1563,7 +1566,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame)
         {
             item.PrimaryAttributes.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
                     amount: 2,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>
@@ -1576,7 +1579,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 reader: frame,
                 length: 4);
             item.SecondaryAttributes.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ActorValue>.Instance.Parse(
                     reader: frame,
                     amount: 7,
                     transl: (MutagenFrame r, out ActorValue listSubItem) =>

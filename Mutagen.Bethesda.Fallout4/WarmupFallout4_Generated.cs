@@ -23,8 +23,8 @@ namespace Mutagen.Bethesda.Fallout4
             Loqui.Initialization.SpinUp(
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Fallout4());
-            Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;
-            Mutagen.Bethesda.Core.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
+            Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;
+            Plugins.Records.Internals.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Fallout4.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

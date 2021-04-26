@@ -10,11 +10,15 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
@@ -1487,7 +1491,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item.SourceCode,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX),
                 binaryType: StringBinaryType.Plain);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
                 writer: writer,
                 items: item.LocalVariables,
                 transl: (MutagenWriter subWriter, ILocalVariableGetter subItem, RecordTypeConverter? conv) =>
@@ -1498,7 +1502,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.References,
                 transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, RecordTypeConverter? conv) =>
@@ -1591,7 +1595,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCVR:
                 {
                     item.LocalVariables.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<LocalVariable>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocalVariable>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
@@ -1602,7 +1606,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRO:
                 {
                     item.References.SetTo(
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
                             reader: frame,
                             triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,

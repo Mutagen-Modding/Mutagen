@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Text;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Strings
 {

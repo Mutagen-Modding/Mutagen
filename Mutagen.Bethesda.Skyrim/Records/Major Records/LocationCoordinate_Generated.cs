@@ -8,10 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1128,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
                 writer: writer,
                 items: item.Coordinates,
                 transl: (MutagenWriter subWriter, P2Int16 subItem) =>
@@ -1173,7 +1178,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Coordinates.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
                     reader: frame,
                     transl: (MutagenFrame r, out P2Int16 listSubItem) =>
                     {

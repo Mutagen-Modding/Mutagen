@@ -6,14 +6,17 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Strings;
@@ -2107,7 +2110,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     ((int?)item.Teaches) ?? -1,
                     length: 1);
                 writer.Write(item.MaxTrainingLevel);
-                Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
+                Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                     writer: writer,
                     items: item.SkillWeights,
                     transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
@@ -2115,7 +2118,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item.BleedoutDefault);
                 writer.Write(item.VoicePoints);
-                Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
+                Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                     writer: writer,
                     items: item.StatWeights,
                     transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
@@ -2246,13 +2249,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         reader: dataFrame,
                         length: 1);
                     item.MaxTrainingLevel = dataFrame.ReadUInt8();
-                    Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                    Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                         reader: frame,
                         item: item.SkillWeights,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
                     item.BleedoutDefault = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.VoicePoints = dataFrame.ReadUInt32();
-                    Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
+                    Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<BasicStat>(
                         reader: frame,
                         item: item.StatWeights,
                         transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);

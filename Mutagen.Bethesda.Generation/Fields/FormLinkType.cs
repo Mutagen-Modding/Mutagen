@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Generation
 {

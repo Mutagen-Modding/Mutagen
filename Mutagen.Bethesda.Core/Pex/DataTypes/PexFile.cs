@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Noggog;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Pex
 {

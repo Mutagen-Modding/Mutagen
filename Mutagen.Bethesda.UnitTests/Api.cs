@@ -5,10 +5,13 @@ using Mutagen.Bethesda;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
-using Constants = Mutagen.Bethesda.Records.Constants.Constants;
+using Constants = Mutagen.Bethesda.Plugins.Internals.Constants;
 using Mutagen.Bethesda.UnitTests;
-using Mutagen.Bethesda.LoadOrders;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Aspects;
 
 namespace Api
 {

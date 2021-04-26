@@ -19,7 +19,8 @@ namespace Mutagen.Bethesda.Generation.Modules
 
             FileGeneration fg = new FileGeneration();
             fg.AppendLine("using System.Collections.Generic;");
-            fg.AppendLine($"using Mutagen.Bethesda.Implicit;");
+            fg.AppendLine($"using Mutagen.Bethesda.Plugins;");
+            fg.AppendLine($"using Mutagen.Bethesda.Plugins.Implicit;");
             fg.AppendLine($"using Mutagen.Bethesda.{proto.Protocol.Namespace};");
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, "Mutagen.Bethesda"))

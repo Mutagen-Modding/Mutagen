@@ -1,4 +1,6 @@
-using Mutagen.Bethesda.Records.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;

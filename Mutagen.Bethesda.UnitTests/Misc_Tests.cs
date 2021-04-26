@@ -1,6 +1,6 @@
 using FluentAssertions;
 using Loqui;
-using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Xunit;
 

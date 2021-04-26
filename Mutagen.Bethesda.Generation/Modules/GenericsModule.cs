@@ -1,7 +1,7 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

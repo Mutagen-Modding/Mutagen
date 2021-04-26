@@ -4,7 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Noggog;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules
 {
@@ -26,8 +27,9 @@ namespace Mutagen.Bethesda.Generation.Modules
             var modObj = proto.ObjectGenerationsByID.Values.FirstOrDefault(o => o.GetObjectType() == ObjectType.Mod);
 
             fg.AppendLine("using System.Collections.Generic;");
-            fg.AppendLine("using Mutagen.Bethesda.LoadOrders;");
-            fg.AppendLine("using Mutagen.Bethesda.LoadOrders.Internals;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Cache;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Order;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins.Order.Internals;");
             fg.AppendLine();
             using (var n = new NamespaceWrapper(fg, proto.DefaultNamespace))
             {

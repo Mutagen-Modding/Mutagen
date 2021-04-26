@@ -2,13 +2,15 @@ using Loqui;
 using Loqui.Generation;
 using Loqui.Internal;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Binary.Utility;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -139,7 +141,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 });
             var recordInfoCache = new APILine(
                 nicknameKey: "RecordInfoCache",
-                resolutionString: $"{nameof(RecordInfoCache)} infoCache",
+                resolutionString: $"{nameof(RecordTypeInfoCacheReader)} infoCache",
                 when: (obj, dir) =>
                 {
                     if (dir != TranslationDirection.Reader) return false;
@@ -404,7 +406,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 {
                     fg.AppendLine("var modKey = path.ModKey;");
                     fg.AppendLine("var frame = new MutagenFrame(reader);");
-                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
+                    fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}));");
                     fg.AppendLine($"frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Parallel)} = parallel;");
                     if (obj.GetObjectData().UsesStringFiles)
                     {
@@ -467,7 +469,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     gameReleaseStr = $"release.ToGameRelease()";
                 }
                 fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
+                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(bytes, meta));");
                 if (objData.UsesStringFiles)
                 {
                     fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
@@ -627,20 +629,31 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.GetObjectType() == ObjectType.Mod)
             {
                 yield return "Mutagen.Bethesda.Strings";
-                yield return "Mutagen.Bethesda.Records.Constants";
-                yield return "Mutagen.Bethesda.Records.Binary";
-                yield return "Mutagen.Bethesda.Records.Binary.Utility";
+                yield return "Mutagen.Bethesda.Plugins.Binary";
+                yield return "Mutagen.Bethesda.Plugins.Meta";
+                yield return "Mutagen.Bethesda.Plugins.Utility";
+                yield return "Mutagen.Bethesda.Plugins.Cache.Internals";
             }
 
             if (HasRecordTypeFields(obj))
             {
-                yield return "Mutagen.Bethesda.Records.Internals";
+                yield return "Mutagen.Bethesda.Plugins.Internals";
             }
 
-            yield return "Mutagen.Bethesda.Records";
-            yield return "Mutagen.Bethesda.Records.Binary.Overlay";
-            yield return "Mutagen.Bethesda.Records.Binary.Translations";
-            yield return "Mutagen.Bethesda.Records.Binary.Streams";
+            yield return "Mutagen.Bethesda.Plugins";
+            yield return "Mutagen.Bethesda.Plugins.Records";
+            yield return "Mutagen.Bethesda.Plugins.Records.Internals";
+            yield return "Mutagen.Bethesda.Plugins.Binary.Overlay";
+            yield return "Mutagen.Bethesda.Plugins.Binary.Translations";
+            yield return "Mutagen.Bethesda.Plugins.Binary.Streams";
+            yield return "Mutagen.Bethesda.Plugins.Exceptions";
+
+            if (await LinkModule.HasLinks(obj, includeBaseClass: false) != LinkModule.LinkCase.No
+                || obj.IterateFields().Any(f => f is FormKeyType))
+            {
+                yield return "Mutagen.Bethesda.Plugins.Cache";
+                yield return "Mutagen.Bethesda.Plugins.Internals";
+            }
         }
 
         public override async Task GenerateInTranslationCreateClass(ObjectGeneration obj, FileGeneration fg)
@@ -2058,7 +2071,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 $"return {obj.Name}Factory"))
                             {
                                 fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(modKey));");
-                                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
+                                fg.AppendLine($"meta.{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenMemoryReadStream)}(data, meta));");
                                 if (objData.UsesStringFiles)
                                 {
                                     fg.AppendLine($"meta.{nameof(ParsingBundle.StringsLookup)} = stringsLookup;");
@@ -2100,7 +2113,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             fg.AppendLine($"var meta = new {nameof(ParsingBundle)}({gameReleaseStr}, new {nameof(MasterReferenceReader)}(path.ModKey))");
                             using (new BraceWrapper(fg) { AppendSemicolon = true })
                             {
-                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordInfoCache)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
+                                fg.AppendLine($"{nameof(ParsingBundle.RecordInfoCache)} = new {nameof(RecordTypeInfoCacheReader)}(() => new {nameof(MutagenBinaryReadStream)}(path, {gameReleaseStr}))");
                             }
                             using (var args = new ArgsWrapper(fg,
                                 $"var stream = new {nameof(MutagenBinaryReadStream)}"))

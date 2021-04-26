@@ -1,9 +1,7 @@
+using Mutagen.Bethesda.Plugins;
 using Noggog.Utility;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Mutagen.Bethesda.UnitTests
 {

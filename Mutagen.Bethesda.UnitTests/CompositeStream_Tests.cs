@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Collections.Generic;
 using System.IO;

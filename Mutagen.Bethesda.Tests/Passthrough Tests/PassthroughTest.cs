@@ -1,10 +1,12 @@
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Pex;
-using Mutagen.Bethesda.Records.Binary;
-using Mutagen.Bethesda.Records.Binary.Processing;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Utility;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Processing;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;

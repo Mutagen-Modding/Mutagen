@@ -1,12 +1,9 @@
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 using FluentAssertions;
-using FluentAssertions.Common;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.UnitTests
 {

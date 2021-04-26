@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "utagen.Bethesda.Binary.ObjectType";
+            string testString = "string INamedRequiredGetter.Name => this.Name ?? string.Empty";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -83,13 +83,13 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Bethesda"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Records"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Plugins/Records"))
                 {
-                    DefaultNamespace = "Mutagen.Bethesda",
+                    DefaultNamespace = "Mutagen.Bethesda.Plugins.Records",
                     DoGeneration = ShouldRun("All")
                 });
             bethesdaProto.AddProjectToModify(
-                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
+                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.Core.csproj")));
 
             if (ShouldRun("All"))
             {

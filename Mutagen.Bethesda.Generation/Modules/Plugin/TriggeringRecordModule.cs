@@ -1,8 +1,9 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -67,7 +68,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
             else if (objTypeEnum == ObjectType.Group)
             {
-                data.RecordType = Records.Constants.Constants.Group;
+                data.RecordType = Plugins.Internals.Constants.Group;
             }
 
             foreach (var elem in obj.Node.Elements(XName.Get("CustomRecordTypeTrigger", LoquiGenerator.Namespace)))
@@ -219,7 +220,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             if (obj.Name.EndsWith("MajorRecord")) return;
             if (count == 1)
             {
-                fg.AppendLine($"public static readonly {nameof(RecordType)} {Records.Constants.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
+                fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.TriggeringRecordTypeMember} = {obj.RecordTypeHeaderName(trigRecordTypes.First())};");
             }
             else if (count > 1)
             {
@@ -590,7 +591,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             if (data.ObjectType == ObjectType.Group)
             {
-                data.TriggeringRecordTypes.Add(Records.Constants.Constants.Group);
+                data.TriggeringRecordTypes.Add(Plugins.Internals.Constants.Group);
             }
 
             if (obj.TryGetMarkerType(out var markerType))
@@ -707,13 +708,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 var grupLoqui = await obj.GetGroupLoquiType();
                 if (grupLoqui.GenericDef == null)
                 {
-                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Records.Constants.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Records.Constants.Constants.GrupRecordTypeMember};");
+                    fg.AppendLine($"public static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = (RecordType){grupLoqui.TargetObjectGeneration.Name}.{Plugins.Internals.Constants.GrupRecordTypeMember};");
                 }
             }
             else if (await obj.IsSingleTriggerSource())
             {
                 await obj.IsSingleTriggerSource();
-                fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Records.Constants.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Records.Constants.Constants.TriggeringRecordTypeMember};");
+                fg.AppendLine($"public{obj.NewOverride(b => !b.Abstract)}static readonly {nameof(RecordType)} {Plugins.Internals.Constants.GrupRecordTypeMember} = {obj.RegistrationName}.{Plugins.Internals.Constants.TriggeringRecordTypeMember};");
             }
             await base.GenerateInClass(obj, fg);
         }
@@ -728,7 +729,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 recordTypes.Add(GetAllRecordTypes(obj).ToEnumerable());
             }
             FileGeneration fg = new FileGeneration();
-            fg.AppendLine("using Mutagen.Bethesda.Records;");
+            fg.AppendLine("using Mutagen.Bethesda.Plugins;");
             fg.AppendLine();
 
             using (var n = new NamespaceWrapper(fg, $"{proto.DefaultNamespace}.Internals"))

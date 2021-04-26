@@ -2,9 +2,7 @@ using Noggog.WPF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Threading.Tasks;
 using System.Collections;
 using Noggog;
 using System.Windows.Media;
@@ -14,6 +12,9 @@ using System.Reactive.Disposables;
 using System.Windows.Input;
 using DynamicData;
 using System.Windows.Controls;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.WPF
 {

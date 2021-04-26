@@ -1,11 +1,10 @@
 using Mutagen.Bethesda.Archives;
-using Noggog;
+using Mutagen.Bethesda.Archives.Exceptions;
+using Mutagen.Bethesda.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 
 namespace Mutagen.Bethesda.Strings
@@ -109,19 +108,19 @@ namespace Mutagen.Bethesda.Strings
                                         }
                                         catch (Exception ex)
                                         {
-                                            throw BsaException.FolderError("String file from BSA failed to parse", ex, bsaFile, item.Path.ToString());
+                                            throw ArchiveException.FolderError("String file from BSA failed to parse", ex, bsaFile, item.Path.ToString());
                                         }
                                     }, LazyThreadSafetyMode.ExecutionAndPublication);
                                 }
                             }
                             catch (Exception ex)
                             {
-                                throw BsaException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Path ?? string.Empty);
+                                throw ArchiveException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Path ?? string.Empty);
                             }
                         }
                         catch (Exception ex)
                         {
-                            throw BsaException.OverallError("BSA failed to parse for string file", ex, bsaFile);
+                            throw ArchiveException.OverallError("BSA failed to parse for string file", ex, bsaFile);
                         }
                     }
                     return bundle;

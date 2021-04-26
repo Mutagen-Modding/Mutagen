@@ -1,7 +1,7 @@
 using BenchmarkDotNet.Attributes;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
 

@@ -1,8 +1,10 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Binary.Utility;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using Noggog.Utility;
 using System;

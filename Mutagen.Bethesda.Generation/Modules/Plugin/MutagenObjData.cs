@@ -1,7 +1,8 @@
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules.Binary;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;

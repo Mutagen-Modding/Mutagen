@@ -1,8 +1,9 @@
 using FluentAssertions;
 using Mutagen.Bethesda;
-using Mutagen.Bethesda.LoadOrders;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary;
+using Mutagen.Bethesda.Cache.Implementations;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
@@ -10,6 +11,8 @@ using System;
 using System.Linq;
 using System.Reactive.Disposables;
 using Xunit;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Records;
 #nullable disable
 #pragma warning disable CS0618 // Type or member is obsolete
 

@@ -10,14 +10,19 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Binary.Utility;
-using Mutagen.Bethesda.Records.Constants;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Cache.Internals;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1072,7 +1077,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     if (reader.Remaining < 12)
                     {
@@ -1108,7 +1113,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     if (reader.Remaining < 12)
                     {
@@ -1134,7 +1139,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
-            RecordInfoCache infoCache,
+            RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
@@ -1160,7 +1165,7 @@ namespace Mutagen.Bethesda.Fallout4
         public static Fallout4Mod CreateFromBinary(
             Stream stream,
             ModKey modKey,
-            RecordInfoCache infoCache,
+            RecordTypeInfoCacheReader infoCache,
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             bool parallel = true)
@@ -1192,7 +1197,7 @@ namespace Mutagen.Bethesda.Fallout4
             IStringsFolderLookup? stringsLookup = null)
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(bytes, meta));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(bytes, meta));
             meta.StringsLookup = stringsLookup;
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 stream: new MutagenMemoryReadStream(
@@ -1784,7 +1789,7 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
-                    frame.MetaData.RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
+                    frame.MetaData.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4));
                     frame.MetaData.Parallel = parallel;
                     if (reader.Remaining < 12)
                     {
@@ -1812,7 +1817,7 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4Mod item,
             Stream stream,
             ModKey modKey,
-            RecordInfoCache infoCache,
+            RecordTypeInfoCacheReader infoCache,
             GroupMask? importMask = null,
             bool parallel = true)
         {
@@ -4385,7 +4390,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IStringsFolderLookup? stringsLookup = null)
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(modKey));
-            meta.RecordInfoCache = new RecordInfoCache(() => new MutagenMemoryReadStream(data, meta));
+            meta.RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenMemoryReadStream(data, meta));
             meta.StringsLookup = stringsLookup;
             return Fallout4ModFactory(
                 stream: new MutagenMemoryReadStream(
@@ -4401,7 +4406,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(path.ModKey))
             {
-                RecordInfoCache = new RecordInfoCache(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                RecordInfoCache = new RecordTypeInfoCacheReader(() => new MutagenBinaryReadStream(path, GameRelease.Fallout4))
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,

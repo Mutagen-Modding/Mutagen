@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Records.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
 
 namespace Mutagen.Bethesda.Skyrim

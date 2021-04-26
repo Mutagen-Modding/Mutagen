@@ -1,6 +1,6 @@
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Internals;
 using System.Collections.Generic;
 using Xunit;
 

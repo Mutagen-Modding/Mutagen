@@ -1,5 +1,5 @@
 using Loqui.Generation;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins;
 using System;
 
 namespace Mutagen.Bethesda.Generation

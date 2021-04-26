@@ -5,6 +5,7 @@ using ReactiveUI;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Noggog;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.WPF
 {

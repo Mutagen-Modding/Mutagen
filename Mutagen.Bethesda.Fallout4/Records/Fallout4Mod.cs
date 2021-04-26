@@ -1,13 +1,4 @@
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Noggog;
-using System.IO;
-using System.Buffers.Binary;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Fallout4
 {

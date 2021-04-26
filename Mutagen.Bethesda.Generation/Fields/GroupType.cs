@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new XAttribute("TypeToSpecify", "T"));
             dir.Add(gen);
             this.ThisConstruction = true;
-            this.CustomData[Records.Constants.Constants.EdidLinked] = node.GetAttribute<bool>(Records.Constants.Constants.EdidLinked, false);
+            this.CustomData[Plugins.Internals.Constants.EdidLinked] = node.GetAttribute<bool>(Plugins.Internals.Constants.EdidLinked, false);
             return base.Load(convert, requireName);
         }
     }

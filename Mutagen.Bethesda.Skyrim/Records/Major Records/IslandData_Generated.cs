@@ -8,10 +8,13 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1327,12 +1330,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
                 transl: P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
@@ -1373,12 +1376,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Min = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Max = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Triangles.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Int16>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Vertices.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));

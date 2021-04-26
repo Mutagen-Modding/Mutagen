@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Aspects;
 
 namespace Mutagen.Bethesda.Skyrim
 {

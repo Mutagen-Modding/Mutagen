@@ -8,10 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -2018,12 +2023,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryParentLogic(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
                 transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
@@ -2035,7 +2040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
@@ -2047,7 +2052,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
@@ -2117,22 +2122,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Vertices.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Triangles.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: NavmeshTriangle.TryCreateFromBinary));
             item.EdgeLinks.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: EdgeLink.TryCreateFromBinary));
             item.DoorTriangles.SetTo(
-                Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
                     reader: frame,
                     transl: DoorTriangle.TryCreateFromBinary));

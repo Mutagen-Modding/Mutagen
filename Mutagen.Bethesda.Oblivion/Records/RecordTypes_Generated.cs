@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {

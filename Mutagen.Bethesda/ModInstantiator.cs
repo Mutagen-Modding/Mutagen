@@ -1,9 +1,6 @@
-﻿using Mutagen.Bethesda.Internals;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Plugins.Records
 {
     public static class ModInstantiator
     {

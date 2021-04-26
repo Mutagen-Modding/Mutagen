@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
     public abstract class BinaryTranslationGeneration : TranslationGeneration
     {
         public BinaryTranslationModule Module;
-        public virtual string Namespace => "Mutagen.Bethesda.Records.Binary.Translations.";
+        public virtual string Namespace => "Mutagen.Bethesda.Plugins.Binary.Translations.";
         public virtual bool NeedsNamespacePrefix => true;
         public string NamespacePrefix => NeedsNamespacePrefix ? Namespace : string.Empty;
         public virtual bool DoErrorMasks => this.Module.DoErrorMasks;

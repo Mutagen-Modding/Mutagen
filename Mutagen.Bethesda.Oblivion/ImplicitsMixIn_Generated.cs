@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-using Mutagen.Bethesda.Implicit;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Implicit;
 using Mutagen.Bethesda.Oblivion;
 
 namespace Mutagen.Bethesda

@@ -1,6 +1,6 @@
 using DynamicData;
 using FluentAssertions;
-using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Plugins.Order;
 using System;
 using System.IO;
 using System.Linq;

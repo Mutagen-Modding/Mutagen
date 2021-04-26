@@ -5,7 +5,7 @@
 */
 using System;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Core;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Skyrim.Internals
 {

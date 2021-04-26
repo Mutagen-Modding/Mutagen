@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Loqui;
 using Noggog;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Constants;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
     public abstract class BinaryTranslationModule : TranslationModule<BinaryTranslationGeneration>
     {
-        public override string Namespace => "Mutagen.Bethesda.Records.Binary.Translations.";
+        public override string Namespace => "Mutagen.Bethesda.Plugins.Binary.Translations.";
         public override string ModuleNickname => "Binary";
         public override bool GenerateAbstractCreates => false;
         public CustomLogicTranslationGeneration CustomLogic;

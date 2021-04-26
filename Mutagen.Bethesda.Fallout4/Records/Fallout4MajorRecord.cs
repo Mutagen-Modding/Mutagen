@@ -7,14 +7,14 @@ namespace Mutagen.Bethesda.Fallout4
         [Flags]
         public enum Fallout4MajorRecordFlag
         {
-            ESM = Records.Constants.Constants.MasterFlag,
+            ESM = Plugins.Internals.Constants.MasterFlag,
             NotPlayable = 0x0000_0004,
-            Deleted = Records.Constants.Constants.DeletedFlag,
-            InitiallyDisabled = Records.Constants.Constants.InitiallyDisabled,
-            Ignored = Records.Constants.Constants.Ignored,
+            Deleted = Plugins.Internals.Constants.DeletedFlag,
+            InitiallyDisabled = Plugins.Internals.Constants.InitiallyDisabled,
+            Ignored = Plugins.Internals.Constants.Ignored,
             VisibleWhenDistant = 0x00008000,
             Dangerous_OffLimits_InteriorCell = 0x00020000,
-            Compressed = Records.Constants.Constants.CompressedFlag,
+            Compressed = Plugins.Internals.Constants.CompressedFlag,
             CantWait = 0x00080000,
         }
 

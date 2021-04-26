@@ -1,7 +1,8 @@
-using Mutagen.Bethesda.LoadOrders;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Oblivion;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Tests
 {

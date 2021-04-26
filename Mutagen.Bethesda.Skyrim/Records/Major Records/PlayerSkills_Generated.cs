@@ -8,10 +8,13 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
@@ -1606,11 +1609,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillValues,
                 transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
-            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillOffsets,
                 transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
@@ -1664,11 +1667,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkills item,
             MutagenFrame frame)
         {
-            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 reader: frame,
                 item: item.SkillValues,
                 transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
-            Mutagen.Bethesda.Records.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
                 reader: frame,
                 item: item.SkillOffsets,
                 transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);

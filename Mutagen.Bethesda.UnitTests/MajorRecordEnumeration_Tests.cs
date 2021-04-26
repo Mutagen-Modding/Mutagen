@@ -1,11 +1,7 @@
 using Mutagen.Bethesda.Oblivion;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

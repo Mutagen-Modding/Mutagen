@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Records;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace Mutagen.Bethesda.Generation.Modules
             {
                 fg.AppendLine($"using Mutagen.Bethesda.{modObj.ProtoGen.Protocol.Namespace};");
             }
+            fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
             fg.AppendLine();
 
             using (new NamespaceWrapper(fg, "Mutagen.Bethesda"))

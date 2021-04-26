@@ -1,5 +1,7 @@
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Records.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.IO;
 using System.Linq;

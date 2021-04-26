@@ -6,14 +6,16 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Records;
-using Mutagen.Bethesda.Records.Binary.Overlay;
-using Mutagen.Bethesda.Records.Binary.Streams;
-using Mutagen.Bethesda.Records.Binary.Translations;
-using Mutagen.Bethesda.Records.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
 using Mutagen.Bethesda.Translations.Binary;
@@ -11512,7 +11514,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     item: item);
             }
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.BlurRadius,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM),
@@ -11524,7 +11526,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoubleVisionStrength,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VNAM),
@@ -11536,7 +11538,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintColor,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
@@ -11548,7 +11550,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IColorFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.FadeColor,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3),
@@ -11560,7 +11562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurStrength,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
@@ -11572,7 +11574,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurRampUp,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
@@ -11584,7 +11586,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurStart,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
@@ -11596,7 +11598,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurRampDown,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
@@ -11608,7 +11610,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.RadialBlurDownStart,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2),
@@ -11620,7 +11622,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldStrength,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM),
@@ -11632,7 +11634,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldDistance,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
@@ -11644,7 +11646,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.DepthOfFieldRange,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.YNAM),
@@ -11656,7 +11658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.MotionBlurStrength,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4),
@@ -11668,7 +11670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._0_IAD),
@@ -11680,7 +11682,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrEyeAdaptSpeedAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.@IAD),
@@ -11692,7 +11694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomBlurRadiusMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._1_IAD),
@@ -11704,7 +11706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomBlurRadiusAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.AIAD),
@@ -11716,7 +11718,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomThresholdMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._2_IAD),
@@ -11728,7 +11730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomThresholdAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.BIAD),
@@ -11740,7 +11742,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomScaleMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._3_IAD),
@@ -11752,7 +11754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrBloomScaleAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.CIAD),
@@ -11764,7 +11766,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMinMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._4_IAD),
@@ -11776,7 +11778,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMinAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DIAD),
@@ -11788,7 +11790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMaxMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._5_IAD),
@@ -11800,7 +11802,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrTargetLumMaxAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.EIAD),
@@ -11812,7 +11814,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSunlightScaleMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._6_IAD),
@@ -11824,7 +11826,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSunlightScaleAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.FIAD),
@@ -11836,7 +11838,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSkyScaleMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._7_IAD),
@@ -11848,7 +11850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.HdrSkyScaleAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.GIAD),
@@ -11860,7 +11862,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown08,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._8_IAD),
@@ -11872,7 +11874,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown48,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.HIAD),
@@ -11884,7 +11886,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown09,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._9_IAD),
@@ -11896,7 +11898,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown49,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.IIAD),
@@ -11908,7 +11910,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0A,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._A_IAD),
@@ -11920,7 +11922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4A,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.JIAD),
@@ -11932,7 +11934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0B,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._B_IAD),
@@ -11944,7 +11946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4B,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KIAD),
@@ -11956,7 +11958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0C,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._C_IAD),
@@ -11968,7 +11970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4C,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.LIAD),
@@ -11980,7 +11982,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0D,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._D_IAD),
@@ -11992,7 +11994,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4D,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.MIAD),
@@ -12004,7 +12006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0E,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._E_IAD),
@@ -12016,7 +12018,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4E,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.NIAD),
@@ -12028,7 +12030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown0F,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._F_IAD),
@@ -12040,7 +12042,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown4F,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.OIAD),
@@ -12052,7 +12054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown10,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._10_IAD),
@@ -12064,7 +12066,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown50,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PIAD),
@@ -12076,7 +12078,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicSaturationMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._11_IAD),
@@ -12088,7 +12090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicSaturationAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.QIAD),
@@ -12100,7 +12102,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicBrightnessMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._12_IAD),
@@ -12112,7 +12114,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicBrightnessAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RIAD),
@@ -12124,7 +12126,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicContrastMult,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._13_IAD),
@@ -12136,7 +12138,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.CinematicContrastAdd,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.SIAD),
@@ -12148,7 +12150,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown14,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes._14_IAD),
@@ -12160,7 +12162,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IKeyFrameGetter>.Instance.Write(
                 writer: writer,
                 items: item.Unknown54,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.TIAD),
@@ -12293,7 +12295,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.BlurRadius = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12303,7 +12305,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DoubleVisionStrength = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12313,7 +12315,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.TintColor = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
                         .CastExtendedList<ColorFrame>();
@@ -12323,7 +12325,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.FadeColor = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ColorFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: ColorFrame.TryCreateFromBinary)
                         .CastExtendedList<ColorFrame>();
@@ -12333,7 +12335,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurStrength = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12343,7 +12345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurRampUp = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12353,7 +12355,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurStart = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12363,7 +12365,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurRampDown = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12373,7 +12375,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RadialBlurDownStart = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12383,7 +12385,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldStrength = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12393,7 +12395,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldDistance = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12403,7 +12405,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DepthOfFieldRange = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12413,7 +12415,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.MotionBlurStrength = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12423,7 +12425,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrEyeAdaptSpeedMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12433,7 +12435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrEyeAdaptSpeedAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12443,7 +12445,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomBlurRadiusMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12453,7 +12455,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomBlurRadiusAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12463,7 +12465,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomThresholdMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12473,7 +12475,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomThresholdAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12483,7 +12485,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomScaleMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12493,7 +12495,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrBloomScaleAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12503,7 +12505,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMinMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12513,7 +12515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMinAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12523,7 +12525,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMaxMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12533,7 +12535,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrTargetLumMaxAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12543,7 +12545,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSunlightScaleMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12553,7 +12555,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSunlightScaleAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12563,7 +12565,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSkyScaleMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12573,7 +12575,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.HdrSkyScaleAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12583,7 +12585,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown08 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12593,7 +12595,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown48 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12603,7 +12605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown09 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12613,7 +12615,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown49 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12623,7 +12625,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0A = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12633,7 +12635,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4A = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12643,7 +12645,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0B = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12653,7 +12655,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4B = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12663,7 +12665,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0C = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12673,7 +12675,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4C = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12683,7 +12685,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0D = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12693,7 +12695,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4D = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12703,7 +12705,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0E = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12713,7 +12715,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4E = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12723,7 +12725,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown0F = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12733,7 +12735,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown4F = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12743,7 +12745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown10 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12753,7 +12755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown50 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12763,7 +12765,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicSaturationMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12773,7 +12775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicSaturationAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12783,7 +12785,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicBrightnessMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12793,7 +12795,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicBrightnessAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12803,7 +12805,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicContrastMult = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12813,7 +12815,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.CinematicContrastAdd = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12823,7 +12825,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown14 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();
@@ -12833,7 +12835,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Unknown54 = 
-                        Mutagen.Bethesda.Records.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<KeyFrame>.Instance.Parse(
                             reader: frame.SpawnWithLength(contentLength),
                             transl: KeyFrame.TryCreateFromBinary)
                         .CastExtendedList<KeyFrame>();

@@ -2,6 +2,7 @@ using IniParser;
 using Mutagen.Bethesda.Archives.Ba2;
 using Mutagen.Bethesda.Archives.Bsa;
 using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Plugins;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -9,8 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Archives
 {

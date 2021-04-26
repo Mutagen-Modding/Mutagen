@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Records.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 
 namespace Mutagen.Bethesda.Skyrim
 {
