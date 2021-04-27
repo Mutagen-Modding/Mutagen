@@ -76,6 +76,7 @@
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Plugins\Cache\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
+    <Compile Include="Plugins\Extensions\ModContextExt.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
