@@ -74,7 +74,7 @@
     <Compile Include="Archives\Exceptions\BsaException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
-    <Compile Include="Plugins\Cache\ILinkCacheExt.cs" />
+    <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
