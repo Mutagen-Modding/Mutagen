@@ -386,7 +386,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     }
                     catch (Exception ex)
                     {
-                        RecordException.Enrich(ex, listing.ModKey);
+                        throw RecordException.Enrich(ex, listing.ModKey);
                     }
                 });
                 return new LoadOrder<IModListing<TMod>>(results

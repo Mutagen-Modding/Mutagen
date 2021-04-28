@@ -18,7 +18,15 @@ using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.WPF
 {
+    public enum FormKeyPickerSearchMode
+    {
+        None,
+        EditorID,
+        FormKey,
+    }
+
     [TemplatePart(Name = "PART_EditorIDBox", Type = typeof(TextBox))]
+    [TemplatePart(Name = "PART_FormKeyBox", Type = typeof(TextBox))]
     public class AFormKeyPicker : NoggogControl
     {
         private bool _updating;
@@ -63,13 +71,21 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyProperty FormKeyProperty = DependencyProperty.Register(nameof(FormKey), typeof(FormKey), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(FormKey), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+        public string FormKeyStr
+        {
+            get => (string)GetValue(FormKeyStrProperty);
+            set => SetValue(FormKeyStrProperty, value);
+        }
+        public static readonly DependencyProperty FormKeyStrProperty = DependencyProperty.Register(nameof(FormKeyStr), typeof(string), typeof(AFormKeyPicker),
+             new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+
         public string EditorID
         {
             get => (string)GetValue(EditorIDProperty);
             set => SetValue(EditorIDProperty, value);
         }
         public static readonly DependencyProperty EditorIDProperty = DependencyProperty.Register(nameof(EditorID), typeof(string), typeof(AFormKeyPicker),
-             new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
+             new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         public StatusIndicatorState Status
         {
@@ -105,6 +121,27 @@ namespace Mutagen.Bethesda.WPF
         public static readonly DependencyPropertyKey InSearchModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(InSearchMode), typeof(bool), typeof(AFormKeyPicker),
              new FrameworkPropertyMetadata(default(bool)));
         public static readonly DependencyProperty InSearchModeProperty = InSearchModePropertyKey.DependencyProperty;
+
+        public FormKeyPickerSearchMode SearchMode
+        {
+            get => (FormKeyPickerSearchMode)GetValue(SearchModeProperty);
+            set => SetValue(SearchModePropertyKey, value);
+        }
+        public static readonly DependencyPropertyKey SearchModePropertyKey = DependencyProperty.RegisterReadOnly(nameof(SearchMode), typeof(FormKeyPickerSearchMode), typeof(AFormKeyPicker),
+             new FrameworkPropertyMetadata(default(FormKeyPickerSearchMode), (o, e) =>
+             {
+                 var control = (AFormKeyPicker)o;
+                 switch ((FormKeyPickerSearchMode)e.NewValue)
+                 {
+                     case FormKeyPickerSearchMode.None:
+                         control.InSearchMode = false;
+                         break;
+                     default:
+                         control.InSearchMode = true;
+                         break;
+                 }
+             }));
+        public static readonly DependencyProperty SearchModeProperty = SearchModePropertyKey.DependencyProperty;
 
         #region Theming
         public Brush ProcessingSpinnerForeground
@@ -268,6 +305,14 @@ namespace Mutagen.Bethesda.WPF
                             _updating = false;
                         }
 
+                        var formKeyStr = rec.FormKey.ToString();
+                        if (formKeyStr != FormKeyStr)
+                        {
+                            _updating = true;
+                            FormKeyStr = formKeyStr;
+                            _updating = false;
+                        }
+
                         if (!Found)
                         {
                             Found = true;
@@ -279,6 +324,13 @@ namespace Mutagen.Bethesda.WPF
                         {
                             _updating = true;
                             EditorID = string.Empty;
+                            _updating = false;
+                        }
+
+                        if (FormKeyStr != string.Empty)
+                        {
+                            _updating = true;
+                            FormKeyStr = string.Empty;
                             _updating = false;
                         }
 
@@ -376,6 +428,159 @@ namespace Mutagen.Bethesda.WPF
                             _updating = false;
                         }
 
+                        if (FormKeyStr != string.Empty)
+                        {
+                            _updating = true;
+                            FormKeyStr = string.Empty;
+                            _updating = false;
+                        }
+
+                        if (Found)
+                        {
+                            Found = false;
+                        }
+                    }
+                })
+                .DisposeWith(_unloadDisposable);
+
+            this.WhenAnyValue(x => x.FormKeyStr)
+                .Skip(1)
+                .Select(x => x.Trim())
+                .DistinctUntilChanged()
+                .Where(x => !_updating)
+                .CombineLatest(
+                    this.WhenAnyValue(
+                        x => x.LinkCache,
+                        x => x.ScopedTypes),
+                    (str, sources) => (Raw: str, LinkCache: sources.Item1, Types: sources.Item2))
+                .Do(_ =>
+                {
+                    if (!Processing)
+                    {
+                        Processing = true;
+                    }
+                })
+                .Throttle(TimeSpan.FromMilliseconds(100), RxApp.MainThreadScheduler)
+                .ObserveOn(RxApp.TaskpoolScheduler)
+                .Select(x =>
+                {
+                    try
+                    {
+                        if (string.IsNullOrWhiteSpace(x.Raw))
+                        {
+                            return new State(StatusIndicatorState.Passive, "Input is empty.  No lookup required", FormKey.Null, string.Empty);
+                        }
+
+                        var scopedTypes = ScopedTypesInternal(x.Types);
+
+                        if (FormKey.TryFactory(x.Raw, out var formKey))
+                        {
+                            if (x.LinkCache == null)
+                            {
+                                return new State(StatusIndicatorState.Success, "Located record", formKey, string.Empty);
+                            }
+                            if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid))
+                            {
+                                return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty);
+                            }
+                            else
+                            {
+                                return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                            }
+                        }
+
+                        if (x.LinkCache == null)
+                        {
+                            return new State(StatusIndicatorState.Passive, "No LinkCache is provided for lookup", FormKey.Null, string.Empty);
+                        }
+
+                        if (FormID.TryFactory(x.Raw, out var formID, strictLength: true))
+                        {
+                            if (x.LinkCache.ListedOrder.Count >= formID.ModIndex.ID)
+                            {
+                                var targetMod = x.LinkCache.ListedOrder[formID.ModIndex.ID];
+                                formKey = new FormKey(targetMod.ModKey, formID.ID);
+                                if (x.LinkCache.TryResolveIdentifier(formKey, scopedTypes, out var edid))
+                                {
+                                    return new State(StatusIndicatorState.Success, "Located record", formKey, edid ?? string.Empty);
+                                }
+                                else
+                                {
+                                    return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                                }
+                            }
+                        }
+
+                        return new State(StatusIndicatorState.Failure, "Could not resolve record", FormKey.Null, string.Empty);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new State(StatusIndicatorState.Failure, ex.ToString(), FormKey.Null, string.Empty);
+                    }
+                })
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .Subscribe(rec =>
+                {
+                    if (Processing)
+                    {
+                        Processing = false;
+                    }
+
+                    if (StatusString != rec.Text)
+                    {
+                        StatusString = rec.Text;
+                    }
+
+                    if (Status != rec.Status)
+                    {
+                        Status = rec.Status;
+                    }
+
+                    if (rec.Status == StatusIndicatorState.Success)
+                    {
+                        if (FormKey != rec.FormKey)
+                        {
+                            _updating = true;
+                            FormKey = rec.FormKey;
+                            _updating = false;
+                        }
+
+                        var formKeyStr = rec.FormKey.ToString();
+                        if (FormKeyStr != formKeyStr)
+                        {
+                            _updating = true;
+                            FormKeyStr = formKeyStr;
+                            _updating = false;
+                        }
+
+                        if (EditorID != rec.Edid)
+                        {
+                            _updating = true;
+                            EditorID = rec.Edid;
+                            _updating = false;
+                        }
+
+                        if (!Found)
+                        {
+                            Found = true;
+                        }
+                    }
+                    else
+                    {
+                        if (!FormKey.IsNull)
+                        {
+                            _updating = true;
+                            FormKey = FormKey.Null;
+                            _updating = false;
+                        }
+
+                        if (EditorID != string.Empty)
+                        {
+                            _updating = true;
+                            EditorID = string.Empty;
+                            _updating = false;
+                        }
+
                         if (Found)
                         {
                             Found = false;
@@ -405,7 +610,6 @@ namespace Mutagen.Bethesda.WPF
                             {
                                 if (cancel.IsCancellationRequested) return;
                                 var edid = item.EditorID;
-                                if (edid.IsNullOrWhitespace()) continue;
                                 obs.OnNext(item);
                             }
                         }
@@ -421,14 +625,64 @@ namespace Mutagen.Bethesda.WPF
                 .Select(x => x.ToObservableChangeSet())
                 .Switch()
                 .ObserveOnGui()
-                .Filter(this.WhenAnyValue(x => x.EditorID)
-                    .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-                    .ObserveOn(RxApp.TaskpoolScheduler)
-                    .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                .Filter(Observable.CombineLatest(
+                        this.WhenAnyValue(x => x.SearchMode)
+                            .DistinctUntilChanged(),
+                        this.WhenAnyValue(x => x.LinkCache),
+                        (SearchMode, Cache) => (SearchMode, Cache))
+                    .Select(x =>
                     {
-                        var edid = ident.EditorID;
-                        return edid.IsNullOrWhitespace() || term.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
-                    }))
+                        switch (x.SearchMode)
+                        {
+                            case FormKeyPickerSearchMode.None:
+                                return Observable.Return<Func<IMajorRecordIdentifier, bool>>(x => false);
+                            case FormKeyPickerSearchMode.EditorID:
+                                return this.WhenAnyValue(x => x.EditorID)
+                                    .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                                    .ObserveOn(RxApp.TaskpoolScheduler)
+                                    .Select<string, Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                    {
+                                        var edid = ident.EditorID;
+                                        return edid.IsNullOrWhitespace() || term.IsNullOrWhitespace() ? true : edid.ContainsInsensitive(term);
+                                    });
+                            case FormKeyPickerSearchMode.FormKey:
+
+                                var modKeyToId = x.Cache?.ListedOrder
+                                    .Select((mod, index) => (mod, index))
+                                    .Take(ModIndex.MaxIndex)
+                                    .ToDictionary(keySelector: x => x.mod.ModKey, elementSelector: x => (byte)x.index)
+                                    ?? default;
+
+                                return this.WhenAnyValue(x => x.FormKeyStr)
+                                    .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                                    .ObserveOn(RxApp.TaskpoolScheduler)
+                                    .Select(RawStr =>
+                                    {
+                                        return (RawStr: RawStr, FormKey: FormKey.TryFactory(RawStr), FormID: FormID.TryFactory(RawStr, strictLength: false));
+                                    })
+                                    .Select<(string RawStr, FormKey? FormKey, FormID? ID), Func<IMajorRecordIdentifier, bool>>(term => (ident) =>
+                                    {
+                                        var fk = ident.FormKey;
+                                        if (fk == term.FormKey) return true;
+                                        if (term.ID != null)
+                                        {
+                                            if (term.RawStr.Length <= 6)
+                                            {
+                                                return fk.ID == term.ID.Value.Raw;
+                                            }
+                                            else if (modKeyToId != null && modKeyToId.TryGetValue(fk.ModKey, out var index))
+                                            {
+                                                var formID = new FormID(new ModIndex(index), fk.ID);
+                                                return formID.Raw == term.ID.Value.Raw;
+                                            }
+                                        }
+                                        return false;
+                                    });
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    })
+                    .Switch())
                 .ObserveOnGui()
                 .ToObservableCollection(this._unloadDisposable);
 
@@ -457,40 +711,45 @@ namespace Mutagen.Bethesda.WPF
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            InSearchMode = false;
+            SearchMode = FormKeyPickerSearchMode.None;
             var editorIdBox = GetTemplateChild("PART_EditorIDBox") as TextBox;
-            if (editorIdBox != null)
-            {
-                editorIdBox.WhenAnyValue(x => x.Text)
-                    .Skip(1)
-                    .FilterSwitch(editorIdBox.WhenAnyValue(x => x.IsKeyboardFocused))
-                    .Subscribe(_ =>
-                    {
-                        this.InSearchMode = true;
-                    })
-                    .DisposeWith(_templateDisposable);
-                editorIdBox.WhenAnyValue(x => x.IsKeyboardFocused)
-                    .DistinctUntilChanged()
-                    .Where(focused => focused)
-                    .WithLatestFrom(
-                        this.WhenAnyValue(x => x.Found),
-                        (_, found) => found)
-                    .Where(found => !found)
-                    .Subscribe(_ =>
-                    {
-                        this.InSearchMode = true;
-                    })
-                    .DisposeWith(_templateDisposable);
-                this.WhenAnyValue(x => x.IsKeyboardFocusWithin)
-                    .Merge(this.WhenAnyValue(x => x.IsVisible))
-                    .Where(x => !x)
-                    .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
-                    .Subscribe(_ =>
-                    {
-                        this.InSearchMode = false;
-                    })
-                    .DisposeWith(_templateDisposable);
-            }
+            AttachTextBox(editorIdBox, FormKeyPickerSearchMode.EditorID);
+            var formKeyBox = GetTemplateChild("PART_FormKeyBox") as TextBox;
+            AttachTextBox(formKeyBox, FormKeyPickerSearchMode.FormKey);
+        }
+
+        private void AttachTextBox(TextBox? textBox, FormKeyPickerSearchMode searchMode)
+        {
+            if (textBox == null) return;
+            textBox.WhenAnyValue(x => x.Text)
+                .Skip(1)
+                .FilterSwitch(textBox.WhenAnyValue(x => x.IsKeyboardFocused))
+                .Subscribe(_ =>
+                {
+                    this.SearchMode = searchMode;
+                })
+                .DisposeWith(_templateDisposable);
+            textBox.WhenAnyValue(x => x.IsKeyboardFocused)
+                .DistinctUntilChanged()
+                .Where(focused => focused)
+                .WithLatestFrom(
+                    this.WhenAnyValue(x => x.Found),
+                    (_, found) => found)
+                .Where(found => !found)
+                .Subscribe(_ =>
+                {
+                    this.SearchMode = searchMode;
+                })
+                .DisposeWith(_templateDisposable);
+            this.WhenAnyValue(x => x.IsKeyboardFocusWithin)
+                .Merge(this.WhenAnyValue(x => x.IsVisible))
+                .Where(x => !x)
+                .Delay(TimeSpan.FromMilliseconds(150), RxApp.MainThreadScheduler)
+                .Subscribe(_ =>
+                {
+                    this.SearchMode = FormKeyPickerSearchMode.None;
+                })
+                .DisposeWith(_templateDisposable);
         }
     }
 }
