@@ -83,20 +83,21 @@ namespace Mutagen.Bethesda.Plugins
             return result;
         }
 
-        /// <summary>
-        /// Attempts to convert a string in hexadecimal format to a FormID
-        /// </summary>
-        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
-        /// <param name="id">Converted FormID if successful</param>
-        /// <returns>True if successful</returns>
-        public static bool TryFactory(ReadOnlySpan<char> hexStr, [MaybeNullWhen(false)] out FormID id)
+        /// <summary> 
+        /// Attempts to convert a string in hexadecimal format to a FormID 
+        /// </summary> 
+        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param> 
+        /// <param name="id">Converted FormID if successful</param> 
+        /// <param name="strictLength">If the input string has to be 8 chars long</param> 
+        /// <returns>True if successful</returns> 
+        public static bool TryFactory(ReadOnlySpan<char> hexStr, [MaybeNullWhen(false)] out FormID id, bool strictLength = true)
         {
             if (hexStr.StartsWith("0x"))
             {
                 hexStr = hexStr.Slice(2);
             }
 
-            if (hexStr.Length != 8)
+            if (strictLength && hexStr.Length != 8)
             {
                 id = default;
                 return false;
@@ -111,14 +112,15 @@ namespace Mutagen.Bethesda.Plugins
             return true;
         }
 
-        /// <summary>
-        /// Attempts to convert a string in hexadecimal format to a FormID
-        /// </summary>
-        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
-        /// <returns>Converted FormID if successful, otherwise null</returns>
-        public static FormID? TryFactory(ReadOnlySpan<char> hexStr)
+        /// <summary> 
+        /// Attempts to convert a string in hexadecimal format to a FormID 
+        /// </summary> 
+        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param> 
+        /// <param name="strictLength">If the input string has to be 8 chars long</param> 
+        /// <returns>Converted FormID if successful, otherwise null</returns> 
+        public static FormID? TryFactory(ReadOnlySpan<char> hexStr, bool strictLength = true)
         {
-            if (TryFactory(hexStr, out var id))
+            if (TryFactory(hexStr, out var id, strictLength: strictLength))
             {
                 return id;
             }

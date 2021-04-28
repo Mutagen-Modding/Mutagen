@@ -12,7 +12,9 @@ namespace Mutagen.Bethesda.Plugins
         /// A static readonly singleton ModID with value 0
         /// </summary>
         public static readonly ModIndex Zero = new ModIndex(0);
-        
+
+        public const byte MaxIndex = 254;
+
         /// <summary>
         /// Index value
         /// </summary>
