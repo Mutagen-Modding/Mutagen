@@ -97,12 +97,12 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("All"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda/Plugins/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
                 });
                 proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
             }
 
             if (ShouldRun("Oblivion"))
