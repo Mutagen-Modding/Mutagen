@@ -112,6 +112,20 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Attempts to convert a string in hexadecimal format to a FormID
+        /// </summary>
+        /// <param name="hexStr">string in hexadecimal format: (0x)FFFFFFFF</param>
+        /// <returns>Converted FormID if successful, otherwise null</returns>
+        public static FormID? TryFactory(ReadOnlySpan<char> hexStr)
+        {
+            if (TryFactory(hexStr, out var id))
+            {
+                return id;
+            }
+            return default;
+        }
+
+        /// <summary>
         /// Convert an array to a FormID
         /// </summary>
         /// <param name="bytes">Input byte array</param>

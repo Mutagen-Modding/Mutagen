@@ -165,6 +165,21 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
+        /// Attempts to construct a FormKey from a string:
+        ///   012ABC:ModName.esp
+        /// </summary>
+        /// <param name="str">String to parse</param>
+        /// <returns>FormKey if successfully converted, otherwise null</returns>
+        public static FormKey? TryFactory(ReadOnlySpan<char> str)
+        {
+            if (TryFactory(str, out var formKey))
+            {
+                return formKey;
+            }
+            return default;
+        }
+
+        /// <summary>
         /// Constructs a FormKey from a string:
         ///   012ABC:ModName.esp
         /// </summary>
