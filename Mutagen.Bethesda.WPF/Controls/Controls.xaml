@@ -434,8 +434,11 @@
                                 Margin="-1"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
-                            <local:FormKeyBox Grid.Row="0" Grid.Column="2"
-                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <TextBox Grid.Row="0" Grid.Column="2"
+                                x:Name="PART_FormKeyBox"
+                                Margin="-1"
+                                mahapps:TextBoxHelper.Watermark="FormKey"
+                                Text="{Binding FormKeyStr, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <noggog:StatusIndicator Grid.Row="0" Grid.Column="2"
                                 x:Name="PART_ErrorStateCircle"
                                 Margin="0,0,5,0"
@@ -614,8 +617,11 @@
                                 Margin="-1"
                                 mahapps:TextBoxHelper.Watermark="EditorID"
                                 Text="{Binding EditorID, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
-                            <local:FormKeyBox Grid.Row="0" Grid.Column="2"
-                                FormKey="{Binding FormKey, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <TextBox Grid.Row="0" Grid.Column="2"
+                                x:Name="PART_FormKeyBox"
+                                Margin="-1"
+                                mahapps:TextBoxHelper.Watermark="FormKey"
+                                Text="{Binding FormKeyStr, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" />
                             <Button Grid.Row="0" Grid.Column="2"
                                 Margin="0,0,5,0"
                                 HorizontalAlignment="Right"
