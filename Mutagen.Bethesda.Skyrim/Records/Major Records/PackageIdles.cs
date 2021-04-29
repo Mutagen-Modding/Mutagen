@@ -24,12 +24,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageIdlesBinaryCreateTranslation
         {
-            static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
+            public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
             {
                 FillBinaryAnimationsCustom(frame, item);
             }
 
-            static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
+            public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
             {
                 byte? count = null;
                 for (int i = 0; i < 3; i++)
@@ -84,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageIdlesBinaryWriteTranslation
         {
-            static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
+            public static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
             {
                 var anims = item.Animations;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
@@ -107,6 +107,10 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                 }
             }
+
+            public static partial void WriteBinaryTimerSettingCustom(MutagenWriter writer, IPackageIdlesGetter item)
+            {
+            }
         }
 
         public partial class PackageIdlesBinaryOverlay
@@ -115,6 +119,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             private float _timerSetting;
             public Single GetTimerSettingCustom() => _timerSetting;
+
+            partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
+            {
+            }
 
             partial void AnimationsCustomParse(
                 OverlayStream stream,

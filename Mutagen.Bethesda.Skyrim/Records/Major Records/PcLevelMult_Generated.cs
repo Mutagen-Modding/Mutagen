@@ -963,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PcLevelMultBinaryWriteTranslation Instance = new PcLevelMultBinaryWriteTranslation();
 
-        static partial void WriteBinaryLevelMultCustom(
+        public static partial void WriteBinaryLevelMultCustom(
             MutagenWriter writer,
             IPcLevelMultGetter item);
 
@@ -1032,7 +1032,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryLevelMultCustom(
+        public static partial void FillBinaryLevelMultCustom(
             MutagenFrame frame,
             IPcLevelMult item);
 

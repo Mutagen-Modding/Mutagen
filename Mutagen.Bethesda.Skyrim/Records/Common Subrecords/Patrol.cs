@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PatrolBinaryCreateTranslation
         {
-            static partial void FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item)
+            public static partial void FillBinaryPatrolScriptMarkerCustom(MutagenFrame frame, IPatrol item)
             {
                 if (frame.ReadSubrecordFrame().Content.Length != 0)
                 {
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
+            public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPatrol item)
             {
                 item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
             }
@@ -29,12 +29,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PatrolBinaryWriteTranslation
         {
-            static partial void WriteBinaryPatrolScriptMarkerCustom(MutagenWriter writer, IPatrolGetter item)
+            public static partial void WriteBinaryPatrolScriptMarkerCustom(MutagenWriter writer, IPatrolGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XPPA)) { }
             }
 
-            static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPatrolGetter item)
+            public static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPatrolGetter item)
             {
                 ATopicReferenceBinaryWriteTranslation.Write(writer, item.Topics);
             }

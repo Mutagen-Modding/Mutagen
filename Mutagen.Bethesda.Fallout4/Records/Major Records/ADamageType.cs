@@ -42,5 +42,19 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
         }
+
+        public partial class ADamageTypeBinaryCreateTranslation
+        {
+            public static partial void FillBinaryCustomLogicCustom(MutagenFrame frame, IADamageTypeInternal item)
+            {
+            }
+        }
+
+        public partial class ADamageTypeBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryCustomLogicCustom(MutagenWriter writer, IADamageTypeGetter item)
+            {
+            }
+        }
     }
 }

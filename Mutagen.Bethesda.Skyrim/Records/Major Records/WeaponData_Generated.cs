@@ -2202,7 +2202,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IWeaponDataGetter item);
 
@@ -2215,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFlags2Custom(
+        public static partial void WriteBinaryFlags2Custom(
             MutagenWriter writer,
             IWeaponDataGetter item);
 
@@ -2385,11 +2385,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Stagger = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             IWeaponData item);
 
-        static partial void FillBinaryFlags2Custom(
+        public static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IWeaponData item);
 

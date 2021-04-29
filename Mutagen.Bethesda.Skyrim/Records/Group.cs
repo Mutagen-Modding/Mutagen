@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GroupBinaryWriteTranslation
         {
-            static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+            public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item)
                 where T : class, ISkyrimMajorRecordGetter, IBinaryItem
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinaryContainedRecordTypeParseCustom(
+            public static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
                 IGroup<T> item)
             {

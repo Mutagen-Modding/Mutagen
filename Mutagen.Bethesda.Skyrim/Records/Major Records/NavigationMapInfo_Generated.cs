@@ -1941,7 +1941,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
 
-        static partial void WriteBinaryIslandCustom(
+        public static partial void WriteBinaryIslandCustom(
             MutagenWriter writer,
             INavigationMapInfoGetter item);
 
@@ -1954,7 +1954,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryParentParseLogicCustom(
+        public static partial void WriteBinaryParentParseLogicCustom(
             MutagenWriter writer,
             INavigationMapInfoGetter item);
 
@@ -2090,11 +2090,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryIslandCustom(
+        public static partial void FillBinaryIslandCustom(
             MutagenFrame frame,
             INavigationMapInfo item);
 
-        static partial void FillBinaryParentParseLogicCustom(
+        public static partial void FillBinaryParentParseLogicCustom(
             MutagenFrame frame,
             INavigationMapInfo item);
 

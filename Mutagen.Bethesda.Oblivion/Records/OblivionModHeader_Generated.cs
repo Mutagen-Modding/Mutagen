@@ -1548,7 +1548,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
 
-        static partial void WriteBinaryMasterReferencesCustom(
+        public static partial void WriteBinaryMasterReferencesCustom(
             MutagenWriter writer,
             IOblivionModHeaderGetter item);
 
@@ -1711,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryMasterReferencesCustom(
+        public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
             IOblivionModHeader item);
 

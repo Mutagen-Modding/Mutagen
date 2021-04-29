@@ -1176,7 +1176,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
 
-        static partial void WriteBinaryTimerSettingCustom(
+        public static partial void WriteBinaryTimerSettingCustom(
             MutagenWriter writer,
             IPackageIdlesGetter item);
 
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryAnimationsCustom(
+        public static partial void WriteBinaryAnimationsCustom(
             MutagenWriter writer,
             IPackageIdlesGetter item);
 
@@ -1295,11 +1295,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryTimerSettingCustom(
+        public static partial void FillBinaryTimerSettingCustom(
             MutagenFrame frame,
             IPackageIdles item);
 
-        static partial void FillBinaryAnimationsCustom(
+        public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
             IPackageIdles item);
 

@@ -239,7 +239,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             var data = obj.GetObjectData();
             if (data.CustomBinaryEnd == CustomEnd.Off) return;
             using (var args = new ArgsWrapper(fg,
-                $"static partial void CustomBinaryEndExport"))
+                $"public static partial void CustomBinaryEndExport"))
             {
                 args.Add($"{WriterClass} {WriterMemberName}");
                 args.Add($"{obj.Interface(internalInterface: true, getter: true)} obj");
@@ -268,7 +268,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (data.CustomBinaryEnd == CustomEnd.Normal)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"static partial void CustomBinaryEndImport"))
+                    $"public static partial void CustomBinaryEndImport"))
                 {
                     args.Add($"{ReaderClass} {ReaderMemberName}");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} obj");

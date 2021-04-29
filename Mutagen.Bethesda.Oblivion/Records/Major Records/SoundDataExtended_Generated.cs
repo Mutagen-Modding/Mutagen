@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
 
-        static partial void WriteBinaryStopTimeCustom(
+        public static partial void WriteBinaryStopTimeCustom(
             MutagenWriter writer,
             ISoundDataExtendedInternalGetter item);
 
@@ -1154,7 +1154,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryStartTimeCustom(
+        public static partial void WriteBinaryStartTimeCustom(
             MutagenWriter writer,
             ISoundDataExtendedInternalGetter item);
 
@@ -1250,11 +1250,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void FillBinaryStopTimeCustom(
+        public static partial void FillBinaryStopTimeCustom(
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
 
-        static partial void FillBinaryStartTimeCustom(
+        public static partial void FillBinaryStartTimeCustom(
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
 

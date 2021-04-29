@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static readonly RecordType RDSA = new RecordType("RDSA");
             public static readonly RecordType RDMO = new RecordType("RDMO");
 
-            static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+            public static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
             {
                 var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
                 while (rdat.Equals(RecordTypes.RDAT))
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RegionBinaryWriteTranslation
         {
-            static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
+            public static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
             {
                 item.Objects?.WriteToBinary(writer);
                 item.Weather?.WriteToBinary(writer);

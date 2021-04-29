@@ -1103,7 +1103,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ArmorDataBinaryWriteTranslation Instance = new ArmorDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryArmorValueCustom(
+        public static partial void WriteBinaryArmorValueCustom(
             MutagenWriter writer,
             IArmorDataGetter item);
 
@@ -1175,7 +1175,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
-        static partial void FillBinaryArmorValueCustom(
+        public static partial void FillBinaryArmorValueCustom(
             MutagenFrame frame,
             IArmorData item);
 

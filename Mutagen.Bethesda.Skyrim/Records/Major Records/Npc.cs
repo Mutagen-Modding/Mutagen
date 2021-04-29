@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NpcBinaryCreateTranslation
         {
-            static partial void FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
+            public static partial void FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
             {
                 // Skip marker
                 frame.ReadSubrecordFrame();
@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NpcBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataMarkerCustom(MutagenWriter writer, INpcGetter item)
+            public static partial void WriteBinaryDataMarkerCustom(MutagenWriter writer, INpcGetter item)
             {
                 using var header = HeaderExport.Subrecord(writer, RecordTypes.DATA);
             }

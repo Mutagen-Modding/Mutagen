@@ -1280,7 +1280,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
 
-        static partial void WriteBinaryParseCustom(
+        public static partial void WriteBinaryParseCustom(
             MutagenWriter writer,
             IAvailableMorphsGetter item);
 
@@ -1371,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryParseCustom(
+        public static partial void FillBinaryParseCustom(
             MutagenFrame frame,
             IAvailableMorphs item);
 

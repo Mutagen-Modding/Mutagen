@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IConditionFloatGetter item);
 
@@ -1096,7 +1096,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IConditionFloatGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -1182,11 +1182,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IConditionFloat item);
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IConditionFloat obj);
         public static void CustomBinaryEndImportPublic(

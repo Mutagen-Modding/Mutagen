@@ -2523,7 +2523,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FurnitureBinaryWriteTranslation Instance = new FurnitureBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
@@ -2536,7 +2536,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFlags2Custom(
+        public static partial void WriteBinaryFlags2Custom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
@@ -2549,7 +2549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryDisabledMarkersCustom(
+        public static partial void WriteBinaryDisabledMarkersCustom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
@@ -2562,7 +2562,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryMarkersCustom(
+        public static partial void WriteBinaryMarkersCustom(
             MutagenWriter writer,
             IFurnitureGetter item);
 
@@ -2872,19 +2872,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        static partial void FillBinaryFlags2Custom(
+        public static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        static partial void FillBinaryDisabledMarkersCustom(
+        public static partial void FillBinaryDisabledMarkersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 
-        static partial void FillBinaryMarkersCustom(
+        public static partial void FillBinaryMarkersCustom(
             MutagenFrame frame,
             IFurnitureInternal item);
 

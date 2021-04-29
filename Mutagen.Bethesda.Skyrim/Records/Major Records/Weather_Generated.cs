@@ -5592,7 +5592,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
 
-        static partial void WriteBinaryCloudTexturesParseCustom(
+        public static partial void WriteBinaryCloudTexturesParseCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5605,7 +5605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCloudsCustom(
+        public static partial void WriteBinaryCloudsCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5618,7 +5618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCloudXSpeedsCustom(
+        public static partial void WriteBinaryCloudXSpeedsCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5631,7 +5631,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCloudColorsCustom(
+        public static partial void WriteBinaryCloudColorsCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5644,7 +5644,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCloudAlphasCustom(
+        public static partial void WriteBinaryCloudAlphasCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5657,7 +5657,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryDisabledCloudLayersCustom(
+        public static partial void WriteBinaryDisabledCloudLayersCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -5670,7 +5670,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(
+        public static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(
             MutagenWriter writer,
             IWeatherGetter item);
 
@@ -6354,31 +6354,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryCloudTexturesParseCustom(
+        public static partial void FillBinaryCloudTexturesParseCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryCloudsCustom(
+        public static partial void FillBinaryCloudsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryCloudXSpeedsCustom(
+        public static partial void FillBinaryCloudXSpeedsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryCloudColorsCustom(
+        public static partial void FillBinaryCloudColorsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryCloudAlphasCustom(
+        public static partial void FillBinaryCloudAlphasCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryDisabledCloudLayersCustom(
+        public static partial void FillBinaryDisabledCloudLayersCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 
-        static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
+        public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(
             MutagenFrame frame,
             IWeatherInternal item);
 

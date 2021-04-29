@@ -2079,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
-        static partial void WriteBinaryRegionAreaLogicCustom(
+        public static partial void WriteBinaryRegionAreaLogicCustom(
             MutagenWriter writer,
             IRegionGetter item);
 
@@ -2254,7 +2254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryRegionAreaLogicCustom(
+        public static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
             IRegionInternal item);
 

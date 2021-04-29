@@ -1254,7 +1254,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
 
-        static partial void WriteBinaryBlurRadiusCustom(
+        public static partial void WriteBinaryBlurRadiusCustom(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item);
 
@@ -1267,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinarySkyCustom(
+        public static partial void WriteBinarySkyCustom(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item);
 
@@ -1359,11 +1359,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryBlurRadiusCustom(
+        public static partial void FillBinaryBlurRadiusCustom(
             MutagenFrame frame,
             IImageSpaceDepthOfField item);
 
-        static partial void FillBinarySkyCustom(
+        public static partial void FillBinarySkyCustom(
             MutagenFrame frame,
             IImageSpaceDepthOfField item);
 

@@ -1143,7 +1143,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
 
-        static partial void WriteBinaryCompiledSizeCustom(
+        public static partial void WriteBinaryCompiledSizeCustom(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item);
 
@@ -1220,7 +1220,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 4);
         }
 
-        static partial void FillBinaryCompiledSizeCustom(
+        public static partial void FillBinaryCompiledSizeCustom(
             MutagenFrame frame,
             IScriptMetaSummary item);
 

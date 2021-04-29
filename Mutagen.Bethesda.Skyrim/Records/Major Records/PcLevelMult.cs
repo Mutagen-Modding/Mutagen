@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PcLevelMultBinaryCreateTranslation
         {
-            static partial void FillBinaryLevelMultCustom(MutagenFrame frame, IPcLevelMult item)
+            public static partial void FillBinaryLevelMultCustom(MutagenFrame frame, IPcLevelMult item)
             {
                 throw new NotImplementedException();
             }
@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PcLevelMultBinaryWriteTranslation
         {
-            static partial void WriteBinaryLevelMultCustom(MutagenWriter writer, IPcLevelMultGetter item)
+            public static partial void WriteBinaryLevelMultCustom(MutagenWriter writer, IPcLevelMultGetter item)
             {
                 throw new NotImplementedException();
             }

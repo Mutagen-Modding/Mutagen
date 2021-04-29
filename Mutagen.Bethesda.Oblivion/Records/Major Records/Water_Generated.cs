@@ -1634,7 +1634,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WaterBinaryWriteTranslation Instance = new WaterBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IWaterGetter item);
 
@@ -1838,7 +1838,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IWaterInternal item);
 

@@ -1458,7 +1458,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryFragmentCountCustom(
+        public static partial void WriteBinaryFragmentCountCustom(
             MutagenWriter writer,
             IQuestAdapterGetter item);
 
@@ -1471,7 +1471,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFileNameCustom(
+        public static partial void WriteBinaryFileNameCustom(
             MutagenWriter writer,
             IQuestAdapterGetter item);
 
@@ -1484,7 +1484,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFragmentsCustom(
+        public static partial void WriteBinaryFragmentsCustom(
             MutagenWriter writer,
             IQuestAdapterGetter item);
 
@@ -1497,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryAliasesCustom(
+        public static partial void WriteBinaryAliasesCustom(
             MutagenWriter writer,
             IQuestAdapterGetter item);
 
@@ -1606,19 +1606,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryFragmentCountCustom(
+        public static partial void FillBinaryFragmentCountCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryFileNameCustom(
+        public static partial void FillBinaryFileNameCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryFragmentsCustom(
+        public static partial void FillBinaryFragmentsCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryAliasesCustom(
+        public static partial void FillBinaryAliasesCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 

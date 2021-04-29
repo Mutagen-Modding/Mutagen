@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class SkyrimModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
+            public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, ISkyrimModHeader item)
             {
                 item.MasterReferences.SetTo(
                     ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class SkyrimModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, ISkyrimModHeaderGetter item)
+            public static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, ISkyrimModHeaderGetter item)
             {
                 ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

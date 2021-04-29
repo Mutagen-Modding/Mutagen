@@ -5312,7 +5312,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataMarkerCustom(
+        public static partial void WriteBinaryDataMarkerCustom(
             MutagenWriter writer,
             INpcGetter item);
 
@@ -6056,7 +6056,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryDataMarkerCustom(
+        public static partial void FillBinaryDataMarkerCustom(
             MutagenFrame frame,
             INpcInternal item);
 

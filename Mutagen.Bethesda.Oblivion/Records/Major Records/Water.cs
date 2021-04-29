@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WaterDataBinaryCreateTranslation
         {
-            static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterData item)
+            public static partial void FillBinaryOddExtraBytesCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterData item)
+            public static partial void FillBinaryBloodCustomLogicCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
@@ -34,12 +34,27 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterData item)
+            public static partial void FillBinaryOilCustomLogicCustom(MutagenFrame frame, IWaterData item)
             {
                 if (frame.Remaining == 2)
                 {
                     frame.Position += 2;
                 }
+            }
+        }
+
+        public partial class WaterDataBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryBloodCustomLogicCustom(MutagenWriter writer, IWaterDataGetter item)
+            {
+            }
+
+            public static partial void WriteBinaryOddExtraBytesCustom(MutagenWriter writer, IWaterDataGetter item)
+            {
+            }
+
+            public static partial void WriteBinaryOilCustomLogicCustom(MutagenWriter writer, IWaterDataGetter item)
+            {
             }
         }
 
@@ -62,7 +77,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IWaterInternal item)
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IWaterInternal item)
             {
                 item.Data = CreateCustom(frame);
             }
@@ -70,7 +85,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         partial class WaterBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IWaterGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IWaterGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 data.WriteToBinary(writer);

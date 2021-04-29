@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ANavigationMeshBinaryCreateTranslation
         {
-            static partial void FillBinaryLengthLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
+            public static partial void FillBinaryLengthLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
             {
                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                 var xxxxSize = frame.ReadInt32();
@@ -48,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
                 GetSetData(frame, item);
             }
 
-            static partial void FillBinaryDataLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
+            public static partial void FillBinaryDataLogicCustom(MutagenFrame frame, IANavigationMeshInternal item)
             {
                 HeaderTranslation.ReadNextSubrecordType(frame, out var len);
                 frame = frame.SpawnWithLength(len);
@@ -89,12 +89,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ANavigationMeshBinaryWriteTranslation
         {
-            static partial void WriteBinaryLengthLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
+            public static partial void WriteBinaryLengthLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
             {
                 // Handled in data logic
             }
 
-            static partial void WriteBinaryDataLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
+            public static partial void WriteBinaryDataLogicCustom(MutagenWriter writer, IANavigationMeshGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (var header = HeaderExport.Subrecord(

@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
+            public static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
             {
                 item.Scripts.AddRange(ReadEntries(frame, item.ObjectFormat));
             }
@@ -197,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
+            public static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
             {
                 WriteScripts(writer, item.ObjectFormat, item.Scripts);
             }

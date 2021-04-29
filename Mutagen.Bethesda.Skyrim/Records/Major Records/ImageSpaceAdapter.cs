@@ -36,19 +36,19 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ImageSpaceAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryCounts1Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+            public static partial void FillBinaryCounts1Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
             {
                 // Don't care about counts, currently
                 frame.Position += 192;
             }
 
-            static partial void FillBinaryCounts2Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+            public static partial void FillBinaryCounts2Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
             {
                 // Don't care about counts, currently
                 frame.Position += 12;
             }
 
-            static partial void FillBinaryCounts3Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
+            public static partial void FillBinaryCounts3Custom(MutagenFrame frame, IImageSpaceAdapterInternal item)
             {
                 // Don't care about counts, currently
                 frame.Position += 16;
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ImageSpaceAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryCounts1Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+            public static partial void WriteBinaryCounts1Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
             {
                 writer.Write(item.HdrEyeAdaptSpeedMult?.Count ?? 0);
                 writer.Write(item.HdrEyeAdaptSpeedAdd?.Count ?? 0);
@@ -109,14 +109,14 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(item.RadialBlurStart?.Count ?? 0);
             }
 
-            static partial void WriteBinaryCounts2Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+            public static partial void WriteBinaryCounts2Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
             {
                 writer.Write(item.DepthOfFieldStrength?.Count ?? 0);
                 writer.Write(item.DepthOfFieldDistance?.Count ?? 0);
                 writer.Write(item.DepthOfFieldRange?.Count ?? 0);
             }
 
-            static partial void WriteBinaryCounts3Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
+            public static partial void WriteBinaryCounts3Custom(MutagenWriter writer, IImageSpaceAdapterGetter item)
             {
                 writer.Write(item.RadialBlurRampDown?.Count ?? 0);
                 writer.Write(item.RadialBlurDownStart?.Count ?? 0);

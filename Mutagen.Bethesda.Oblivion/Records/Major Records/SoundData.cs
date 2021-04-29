@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class SoundDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
+            public static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MinimumAttenuationDistance / SoundData.MinAttenuationDistanceMultiplier);
                 ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
                     item: val);
             }
 
-            static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
+            public static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MaximumAttenuationDistance / SoundData.MaxAttenuationDistanceMultiplier);
                 ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class SoundDataBinaryCreateTranslation
         {
-            static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
+            public static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
                 if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     reader: frame,
@@ -97,7 +97,7 @@ namespace Mutagen.Bethesda.Oblivion
                 }
             }
 
-            static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
+            public static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
                 if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     reader: frame,

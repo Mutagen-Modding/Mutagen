@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            public static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
             {
                 FillBinaryParse(frame, item);
             }
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryParseCustom(MutagenWriter writer, IAvailableMorphsGetter item)
+            public static partial void WriteBinaryParseCustom(MutagenWriter writer, IAvailableMorphsGetter item)
             {
                 WriteMorph(writer, MorphEnum.Nose, item.Nose);
                 WriteMorph(writer, MorphEnum.Brow, item.Brow);

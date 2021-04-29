@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class OblivionModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
+            public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
             {
                 item.MasterReferences.SetTo(
                     ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class OblivionModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IOblivionModHeaderGetter item)
+            public static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IOblivionModHeaderGetter item)
             {
                 ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

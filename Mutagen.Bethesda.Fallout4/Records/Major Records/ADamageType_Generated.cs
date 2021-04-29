@@ -1132,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ADamageTypeBinaryWriteTranslation Instance = new ADamageTypeBinaryWriteTranslation();
 
-        static partial void WriteBinaryCustomLogicCustom(
+        public static partial void WriteBinaryCustomLogicCustom(
             MutagenWriter writer,
             IADamageTypeGetter item);
 
@@ -1212,7 +1212,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public new readonly static ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        static partial void FillBinaryCustomLogicCustom(
+        public static partial void FillBinaryCustomLogicCustom(
             MutagenFrame frame,
             IADamageTypeInternal item);
 

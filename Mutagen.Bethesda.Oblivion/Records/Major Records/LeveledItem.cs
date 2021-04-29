@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class LeveledItemBinaryCreateTranslation
         {
-            static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
+            public static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
             {
                 var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
                 if (length != 1)
@@ -28,6 +28,13 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     item.Flags |= LeveledFlag.CalculateForEachItemInCount;
                 }
+            }
+        }
+
+        public partial class LeveledItemBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryVestigialCustom(MutagenWriter writer, ILeveledItemGetter item)
+            {
             }
         }
 

@@ -2357,7 +2357,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
-        static partial void WriteBinaryBodyTemplateCustom(
+        public static partial void WriteBinaryBodyTemplateCustom(
             MutagenWriter writer,
             IArmorAddonGetter item);
 
@@ -2370,7 +2370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryWeightSliderEnabledCustom(
+        public static partial void WriteBinaryWeightSliderEnabledCustom(
             MutagenWriter writer,
             IArmorAddonGetter item);
 
@@ -2690,11 +2690,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryBodyTemplateCustom(
+        public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
             IArmorAddonInternal item);
 
-        static partial void FillBinaryWeightSliderEnabledCustom(
+        public static partial void FillBinaryWeightSliderEnabledCustom(
             MutagenFrame frame,
             IArmorAddonInternal item);
 

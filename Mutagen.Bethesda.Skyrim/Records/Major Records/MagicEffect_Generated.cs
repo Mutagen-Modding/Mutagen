@@ -4285,7 +4285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
 
-        static partial void WriteBinaryAssociatedItemCustom(
+        public static partial void WriteBinaryAssociatedItemCustom(
             MutagenWriter writer,
             IMagicEffectGetter item);
 
@@ -4298,7 +4298,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryArchetypeCustom(
+        public static partial void WriteBinaryArchetypeCustom(
             MutagenWriter writer,
             IMagicEffectGetter item);
 
@@ -4311,7 +4311,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryConditionsCustom(
+        public static partial void WriteBinaryConditionsCustom(
             MutagenWriter writer,
             IMagicEffectGetter item);
 
@@ -4749,15 +4749,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAssociatedItemCustom(
+        public static partial void FillBinaryAssociatedItemCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
-        static partial void FillBinaryArchetypeCustom(
+        public static partial void FillBinaryArchetypeCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 
-        static partial void FillBinaryConditionsCustom(
+        public static partial void FillBinaryConditionsCustom(
             MutagenFrame frame,
             IMagicEffectInternal item);
 

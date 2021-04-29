@@ -1147,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
 
-        static partial void WriteBinaryTypeCharCustom(
+        public static partial void WriteBinaryTypeCharCustom(
             MutagenWriter writer,
             IGlobalGetter item);
 
@@ -1271,7 +1271,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryTypeCharCustom(
+        public static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
             IGlobalInternal item);
 

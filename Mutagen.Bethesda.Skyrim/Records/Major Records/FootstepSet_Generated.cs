@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FootstepSetBinaryWriteTranslation Instance = new FootstepSetBinaryWriteTranslation();
 
-        static partial void WriteBinaryCountCustom(
+        public static partial void WriteBinaryCountCustom(
             MutagenWriter writer,
             IFootstepSetGetter item);
 
@@ -2171,7 +2171,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryCountCustom(
+        public static partial void FillBinaryCountCustom(
             MutagenFrame frame,
             IFootstepSetInternal item);
 

@@ -2915,7 +2915,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
 
-        static partial void WriteBinaryTrapFormCustom(
+        public static partial void WriteBinaryTrapFormCustom(
             MutagenWriter writer,
             IAPlacedTrapGetter item);
 
@@ -3255,7 +3255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryTrapFormCustom(
+        public static partial void FillBinaryTrapFormCustom(
             MutagenFrame frame,
             IAPlacedTrapInternal item);
 

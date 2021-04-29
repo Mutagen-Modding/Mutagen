@@ -1663,7 +1663,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static AddonNodeBinaryWriteTranslation Instance = new AddonNodeBinaryWriteTranslation();
 
-        static partial void WriteBinaryAlwaysLoadedCustom(
+        public static partial void WriteBinaryAlwaysLoadedCustom(
             MutagenWriter writer,
             IAddonNodeGetter item);
 
@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAlwaysLoadedCustom(
+        public static partial void FillBinaryAlwaysLoadedCustom(
             MutagenFrame frame,
             IAddonNodeInternal item);
 

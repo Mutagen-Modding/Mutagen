@@ -70,14 +70,14 @@ namespace Mutagen.Bethesda.Skyrim
                 FNMK,
             };
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IFurnitureInternal item)
             {
                 var subFrame = frame.ReadSubrecordFrame();
                 // Read flags like normal
                 item.Flags = (Furniture.Flag)BinaryPrimitives.ReadUInt16LittleEndian(subFrame.Content);
             }
 
-            static partial void FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IFurnitureInternal item)
             {
                 // Clear out old stuff
                 // This assumes flags will be parsed first.  Might need to be upgraded to not need that assumption
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return marker;
             }
 
-            static partial void FillBinaryDisabledMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryDisabledMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
             {
                 FillBinaryDisabledMarkers(frame, (i) => GetNthMarker(item, i));
             }
@@ -196,7 +196,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
+            public static partial void FillBinaryMarkersCustom(MutagenFrame frame, IFurnitureInternal item)
             {
                 FillBinaryMarkers(frame, (i) => GetNthMarker(item, i));
             }
@@ -226,7 +226,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FurnitureBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IFurnitureGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IFurnitureGetter item)
             {
                 var flags = (uint)(item.Flags ?? 0);
                 // Trim out upper flags
@@ -237,7 +237,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IFurnitureGetter item)
+            public static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IFurnitureGetter item)
             {
                 var flags = (uint)(item.Flags ?? 0);
                 // Trim out lower flags
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryDisabledMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
+            public static partial void WriteBinaryDisabledMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
             {
                 var markers = item.Markers;
                 if (markers == null) return;
@@ -295,7 +295,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
+            public static partial void WriteBinaryMarkersCustom(MutagenWriter writer, IFurnitureGetter item)
             {
                 var markers = item.Markers;
                 if (markers == null) return;

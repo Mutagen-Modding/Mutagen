@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IConditionGlobalGetter item);
 
@@ -1105,7 +1105,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IConditionGlobalGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -1191,11 +1191,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IConditionGlobal item);
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IConditionGlobal obj);
         public static void CustomBinaryEndImportPublic(

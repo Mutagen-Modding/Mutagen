@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RoadBinaryWriteTranslation Instance = new RoadBinaryWriteTranslation();
 
-        static partial void WriteBinaryPointsCustom(
+        public static partial void WriteBinaryPointsCustom(
             MutagenWriter writer,
             IRoadGetter item);
 
@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryPointsCustom(
+        public static partial void FillBinaryPointsCustom(
             MutagenFrame frame,
             IRoadInternal item);
 

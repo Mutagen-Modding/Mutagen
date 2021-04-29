@@ -1164,7 +1164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AVirtualMachineAdapterBinaryWriteTranslation Instance = new AVirtualMachineAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryScriptsCustom(
+        public static partial void WriteBinaryScriptsCustom(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item);
 
@@ -1232,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryScriptsCustom(
+        public static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
             IAVirtualMachineAdapter item);
 

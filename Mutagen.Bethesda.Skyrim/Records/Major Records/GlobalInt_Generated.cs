@@ -1323,7 +1323,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalIntBinaryWriteTranslation Instance = new GlobalIntBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IGlobalIntGetter item);
 
@@ -1467,7 +1467,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGlobalIntInternal item);
 

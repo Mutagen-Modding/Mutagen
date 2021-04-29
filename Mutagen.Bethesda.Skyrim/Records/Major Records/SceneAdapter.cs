@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class SceneAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, ISceneAdapter item)
+            public static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, ISceneAdapter item)
             {
                 item.ScriptFragments = Mutagen.Bethesda.Skyrim.SceneScriptFragments.CreateFromBinary(frame: frame);
             }
@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class SceneAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, ISceneAdapterGetter item)
+            public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, ISceneAdapterGetter item)
             {
                 if (!item.ScriptFragments.TryGet(out var frags)) return;
                 frags.WriteToBinary(writer);

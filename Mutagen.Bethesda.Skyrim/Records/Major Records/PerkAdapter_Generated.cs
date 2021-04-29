@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryScriptFragmentsCustom(
+        public static partial void WriteBinaryScriptFragmentsCustom(
             MutagenWriter writer,
             IPerkAdapterGetter item);
 
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryScriptFragmentsCustom(
+        public static partial void FillBinaryScriptFragmentsCustom(
             MutagenFrame frame,
             IPerkAdapter item);
 

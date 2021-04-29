@@ -1370,7 +1370,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ANavigationMeshBinaryWriteTranslation Instance = new ANavigationMeshBinaryWriteTranslation();
 
-        static partial void WriteBinaryLengthLogicCustom(
+        public static partial void WriteBinaryLengthLogicCustom(
             MutagenWriter writer,
             IANavigationMeshGetter item);
 
@@ -1383,7 +1383,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryDataLogicCustom(
+        public static partial void WriteBinaryDataLogicCustom(
             MutagenWriter writer,
             IANavigationMeshGetter item);
 
@@ -1547,11 +1547,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryLengthLogicCustom(
+        public static partial void FillBinaryLengthLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
-        static partial void FillBinaryDataLogicCustom(
+        public static partial void FillBinaryDataLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 

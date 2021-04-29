@@ -62,6 +62,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class APackageTargetBinaryCreateTranslation
         {
+            public static partial void FillBinaryDataParseCustom(MutagenFrame frame, IAPackageTarget item)
+            {
+            }
         }
 
         public partial class APackageTargetBinaryWriteTranslation
@@ -102,6 +105,10 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new NotImplementedException();
                 }
                 writer.Write(item.CountOrDistance);
+            }
+
+            public static partial void WriteBinaryDataParseCustom(MutagenWriter writer, IAPackageTargetGetter item)
+            {
             }
         }
 

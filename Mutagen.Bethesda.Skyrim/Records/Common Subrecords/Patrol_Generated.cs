@@ -1330,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PatrolBinaryWriteTranslation Instance = new PatrolBinaryWriteTranslation();
 
-        static partial void WriteBinaryPatrolScriptMarkerCustom(
+        public static partial void WriteBinaryPatrolScriptMarkerCustom(
             MutagenWriter writer,
             IPatrolGetter item);
 
@@ -1343,7 +1343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryTopicsCustom(
+        public static partial void WriteBinaryTopicsCustom(
             MutagenWriter writer,
             IPatrolGetter item);
 
@@ -1475,11 +1475,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryPatrolScriptMarkerCustom(
+        public static partial void FillBinaryPatrolScriptMarkerCustom(
             MutagenFrame frame,
             IPatrol item);
 
-        static partial void FillBinaryTopicsCustom(
+        public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
             IPatrol item);
 

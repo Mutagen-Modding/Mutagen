@@ -48,12 +48,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class MagicEffectBinaryCreateTranslation
         {
-            static partial void FillBinaryConditionsCustom(MutagenFrame frame, IMagicEffectInternal item)
+            public static partial void FillBinaryConditionsCustom(MutagenFrame frame, IMagicEffectInternal item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.Conditions, frame);
             }
 
-            static partial void FillBinaryAssociatedItemCustom(MutagenFrame frame, IMagicEffectInternal item)
+            public static partial void FillBinaryAssociatedItemCustom(MutagenFrame frame, IMagicEffectInternal item)
             {
                 // Skip for now.  Will be parsed by Archetype.
                 frame.Position += 4;
@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return archetype;
             }
 
-            static partial void FillBinaryArchetypeCustom(MutagenFrame frame, IMagicEffectInternal item)
+            public static partial void FillBinaryArchetypeCustom(MutagenFrame frame, IMagicEffectInternal item)
             {
                 item.Archetype = ReadArchetype(frame);
             }
@@ -150,18 +150,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class MagicEffectBinaryWriteTranslation
         {
-            static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IMagicEffectGetter item)
+            public static partial void WriteBinaryConditionsCustom(MutagenWriter writer, IMagicEffectGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
 
-            static partial void WriteBinaryArchetypeCustom(MutagenWriter writer, IMagicEffectGetter item)
+            public static partial void WriteBinaryArchetypeCustom(MutagenWriter writer, IMagicEffectGetter item)
             {
                 writer.Write((int)item.Archetype.Type);
                 writer.Write((int)item.Archetype.ActorValue);
             }
 
-            static partial void WriteBinaryAssociatedItemCustom(MutagenWriter writer, IMagicEffectGetter item)
+            public static partial void WriteBinaryAssociatedItemCustom(MutagenWriter writer, IMagicEffectGetter item)
             {
                 writer.Write(writer.MetaData.MasterReferences!.GetFormID(item.Archetype.AssociationKey).Raw);
             }

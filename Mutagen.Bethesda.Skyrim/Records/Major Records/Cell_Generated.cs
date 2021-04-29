@@ -5439,7 +5439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             ICellGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -5847,7 +5847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             ICellInternal obj);
         public static void CustomBinaryEndImportPublic(

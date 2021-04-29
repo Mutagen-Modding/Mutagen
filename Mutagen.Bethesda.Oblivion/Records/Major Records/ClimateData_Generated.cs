@@ -1248,7 +1248,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ClimateDataBinaryWriteTranslation Instance = new ClimateDataBinaryWriteTranslation();
 
-        static partial void WriteBinarySunriseBeginCustom(
+        public static partial void WriteBinarySunriseBeginCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinarySunriseEndCustom(
+        public static partial void WriteBinarySunriseEndCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1274,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinarySunsetBeginCustom(
+        public static partial void WriteBinarySunsetBeginCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1287,7 +1287,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinarySunsetEndCustom(
+        public static partial void WriteBinarySunsetEndCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1300,7 +1300,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryPhaseCustom(
+        public static partial void WriteBinaryPhaseCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1313,7 +1313,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryPhaseLengthCustom(
+        public static partial void WriteBinaryPhaseLengthCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
 
@@ -1409,27 +1409,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void FillBinarySunriseBeginCustom(
+        public static partial void FillBinarySunriseBeginCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        static partial void FillBinarySunriseEndCustom(
+        public static partial void FillBinarySunriseEndCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        static partial void FillBinarySunsetBeginCustom(
+        public static partial void FillBinarySunsetBeginCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        static partial void FillBinarySunsetEndCustom(
+        public static partial void FillBinarySunsetEndCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        static partial void FillBinaryPhaseCustom(
+        public static partial void FillBinaryPhaseCustom(
             MutagenFrame frame,
             IClimateData item);
 
-        static partial void FillBinaryPhaseLengthCustom(
+        public static partial void FillBinaryPhaseLengthCustom(
             MutagenFrame frame,
             IClimateData item);
 

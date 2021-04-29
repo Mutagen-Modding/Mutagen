@@ -1276,7 +1276,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+        public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item)
             where T : class, IFallout4MajorRecordGetter, IBinaryItem;
@@ -1403,7 +1403,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
 
-        static partial void FillBinaryContainedRecordTypeParseCustom(
+        public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item);
 

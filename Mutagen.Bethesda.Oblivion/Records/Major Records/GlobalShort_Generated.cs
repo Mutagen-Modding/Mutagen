@@ -1299,7 +1299,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IGlobalShortGetter item);
 
@@ -1443,7 +1443,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGlobalShortInternal item);
 

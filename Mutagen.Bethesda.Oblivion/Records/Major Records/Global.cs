@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GlobalBinaryWriteTranslation
         {
-            static partial void WriteBinaryTypeCharCustom(
+            public static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
@@ -55,6 +55,13 @@ namespace Mutagen.Bethesda.Oblivion
                     writer,
                     item.TypeChar,
                     header: RecordTypes.FNAM);
+            }
+        }
+
+        public partial class GlobalBinaryCreateTranslation
+        {
+            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            {
             }
         }
 

@@ -5392,7 +5392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IWorldspaceGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -5858,7 +5858,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IWorldspaceInternal obj);
         public static void CustomBinaryEndImportPublic(

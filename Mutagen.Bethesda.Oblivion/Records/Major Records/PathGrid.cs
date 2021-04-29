@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
-        static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
+        public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
         {
             FillBinaryPointToPointConnections(frame, item);
         }
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWriteTranslation
     {
-        static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item)
+        public static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item)
         {
             if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
 

@@ -32,14 +32,14 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class GlobalIntBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
             {
             }
         }
 
         public partial class GlobalIntBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))

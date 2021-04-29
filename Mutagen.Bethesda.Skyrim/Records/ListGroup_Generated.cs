@@ -1269,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ListGroupBinaryWriteTranslation Instance = new ListGroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeCustom<T>(
+        public static partial void WriteBinaryContainedRecordTypeCustom<T>(
             MutagenWriter writer,
             IListGroupGetter<T> item)
             where T : class, ICellBlockGetter, IBinaryItem;
@@ -1397,7 +1397,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryContainedRecordTypeCustom(
+        public static partial void FillBinaryContainedRecordTypeCustom(
             MutagenFrame frame,
             IListGroup<T> item);
 

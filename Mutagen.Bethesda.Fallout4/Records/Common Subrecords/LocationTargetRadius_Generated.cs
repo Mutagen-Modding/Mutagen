@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
 
-        static partial void WriteBinaryTargetCustom(
+        public static partial void WriteBinaryTargetCustom(
             MutagenWriter writer,
             ILocationTargetRadiusGetter item);
 
@@ -1145,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.CollectionIndex = frame.ReadUInt32();
         }
 
-        static partial void FillBinaryTargetCustom(
+        public static partial void FillBinaryTargetCustom(
             MutagenFrame frame,
             ILocationTargetRadius item);
 

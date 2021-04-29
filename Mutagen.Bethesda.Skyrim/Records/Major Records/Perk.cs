@@ -297,7 +297,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+            public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
             {
                 item.Effects.SetTo(ParseEffects(frame.Reader));
             }
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
 
-            static partial void WriteBinaryEffectsCustom(MutagenWriter writer, IPerkGetter item)
+            public static partial void WriteBinaryEffectsCustom(MutagenWriter writer, IPerkGetter item)
             {
                 foreach (var effect in item.Effects)
                 {

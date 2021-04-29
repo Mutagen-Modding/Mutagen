@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class AddonNodeBinaryCreateTranslation
         {
-            static partial void FillBinaryAlwaysLoadedCustom(MutagenFrame frame, IAddonNodeInternal item)
+            public static partial void FillBinaryAlwaysLoadedCustom(MutagenFrame frame, IAddonNodeInternal item)
             {
                 var flags = frame.ReadUInt16();
                 item.AlwaysLoaded = flags switch 
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class AddonNodeBinaryWriteTranslation
         {
-            static partial void WriteBinaryAlwaysLoadedCustom(MutagenWriter writer, IAddonNodeGetter item)
+            public static partial void WriteBinaryAlwaysLoadedCustom(MutagenWriter writer, IAddonNodeGetter item)
             {
                 if (item.AlwaysLoaded)
                 {

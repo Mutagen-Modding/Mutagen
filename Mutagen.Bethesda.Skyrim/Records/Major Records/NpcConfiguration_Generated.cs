@@ -1466,7 +1466,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NpcConfigurationBinaryWriteTranslation Instance = new NpcConfigurationBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             INpcConfigurationGetter item);
 
@@ -1479,7 +1479,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryLevelCustom(
+        public static partial void WriteBinaryLevelCustom(
             MutagenWriter writer,
             INpcConfigurationGetter item);
 
@@ -1572,11 +1572,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.BleedoutOverride = frame.ReadInt16();
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             INpcConfiguration item);
 
-        static partial void FillBinaryLevelCustom(
+        public static partial void FillBinaryLevelCustom(
             MutagenFrame frame,
             INpcConfiguration item);
 

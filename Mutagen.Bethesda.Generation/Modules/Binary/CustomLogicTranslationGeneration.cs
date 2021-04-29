@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             if (!isAsync)
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"static partial void FillBinary{field.Name}Custom")
+                    $"public static partial void FillBinary{field.Name}Custom")
                 {
                     SemiColon = true
                 })
@@ -105,7 +105,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             bool isAsync)
         {
             using (var args = new FunctionWrapper(fg,
-                $"static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.SemiColon = true;
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg, 
-            ObjectGeneration objGen, 
+            ObjectGeneration objGen,  
             TypeGeneration typeGen, 
             Accessor locationAccessor, 
             Accessor packageAccessor, 

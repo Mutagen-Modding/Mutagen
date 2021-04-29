@@ -1020,7 +1020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static FindMatchingRefNearAliasBinaryWriteTranslation Instance = new FindMatchingRefNearAliasBinaryWriteTranslation();
 
-        static partial void WriteBinaryAliasIndexCustom(
+        public static partial void WriteBinaryAliasIndexCustom(
             MutagenWriter writer,
             IFindMatchingRefNearAliasGetter item);
 
@@ -1116,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAliasIndexCustom(
+        public static partial void FillBinaryAliasIndexCustom(
             MutagenFrame frame,
             IFindMatchingRefNearAlias item);
 

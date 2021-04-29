@@ -2240,7 +2240,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static WaterDataBinaryWriteTranslation Instance = new WaterDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryBloodCustomLogicCustom(
+        public static partial void WriteBinaryBloodCustomLogicCustom(
             MutagenWriter writer,
             IWaterDataGetter item);
 
@@ -2253,7 +2253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryOilCustomLogicCustom(
+        public static partial void WriteBinaryOilCustomLogicCustom(
             MutagenWriter writer,
             IWaterDataGetter item);
 
@@ -2266,7 +2266,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryOddExtraBytesCustom(
+        public static partial void WriteBinaryOddExtraBytesCustom(
             MutagenWriter writer,
             IWaterDataGetter item);
 
@@ -2476,15 +2476,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Damage = frame.ReadUInt16();
         }
 
-        static partial void FillBinaryBloodCustomLogicCustom(
+        public static partial void FillBinaryBloodCustomLogicCustom(
             MutagenFrame frame,
             IWaterData item);
 
-        static partial void FillBinaryOilCustomLogicCustom(
+        public static partial void FillBinaryOilCustomLogicCustom(
             MutagenFrame frame,
             IWaterData item);
 
-        static partial void FillBinaryOddExtraBytesCustom(
+        public static partial void FillBinaryOddExtraBytesCustom(
             MutagenFrame frame,
             IWaterData item);
 

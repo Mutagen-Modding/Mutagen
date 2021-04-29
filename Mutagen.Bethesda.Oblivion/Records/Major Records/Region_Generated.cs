@@ -2003,7 +2003,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
-        static partial void WriteBinaryRegionAreaLogicCustom(
+        public static partial void WriteBinaryRegionAreaLogicCustom(
             MutagenWriter writer,
             IRegionGetter item);
 
@@ -2191,7 +2191,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryRegionAreaLogicCustom(
+        public static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
             IRegionInternal item);
 

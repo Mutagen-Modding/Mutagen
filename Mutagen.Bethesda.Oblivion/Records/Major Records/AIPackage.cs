@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class AIPackageDataBinaryCreateTranslation
         {
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageData item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageData item)
             {
                 if (frame.Remaining == 8)
                 {
@@ -76,11 +76,15 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
                 }
             }
+
+            public static partial void FillBinaryTypeCustom(MutagenFrame frame, IAIPackageData item)
+            {
+            }
         }
 
         public partial class AIPackageDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
             {
                 EnumBinaryTranslation<AIPackage.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
@@ -90,6 +94,10 @@ namespace Mutagen.Bethesda.Oblivion
                     writer,
                     item.Type,
                     length: 4);
+            }
+
+            public static partial void WriteBinaryTypeCustom(MutagenWriter writer, IAIPackageDataGetter item)
+            {
             }
         }
 

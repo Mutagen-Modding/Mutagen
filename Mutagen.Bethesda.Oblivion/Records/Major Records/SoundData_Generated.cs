@@ -1136,7 +1136,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static SoundDataBinaryWriteTranslation Instance = new SoundDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryMinimumAttenuationDistanceCustom(
+        public static partial void WriteBinaryMinimumAttenuationDistanceCustom(
             MutagenWriter writer,
             ISoundDataInternalGetter item);
 
@@ -1149,7 +1149,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryMaximumAttenuationDistanceCustom(
+        public static partial void WriteBinaryMaximumAttenuationDistanceCustom(
             MutagenWriter writer,
             ISoundDataInternalGetter item);
 
@@ -1232,11 +1232,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 length: 4);
         }
 
-        static partial void FillBinaryMinimumAttenuationDistanceCustom(
+        public static partial void FillBinaryMinimumAttenuationDistanceCustom(
             MutagenFrame frame,
             ISoundDataInternal item);
 
-        static partial void FillBinaryMaximumAttenuationDistanceCustom(
+        public static partial void FillBinaryMaximumAttenuationDistanceCustom(
             MutagenFrame frame,
             ISoundDataInternal item);
 

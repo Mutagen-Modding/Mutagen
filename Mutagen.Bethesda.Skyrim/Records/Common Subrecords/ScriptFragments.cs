@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
                 OnEnd = 0x02,
             }
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
             {
                 var flag = (Flag)frame.ReadUInt8();
                 item.FileName = StringBinaryTranslation.Instance.Parse(
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ScriptFragmentsBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
             {
                 var begin = item.OnBegin;
                 var end = item.OnEnd;

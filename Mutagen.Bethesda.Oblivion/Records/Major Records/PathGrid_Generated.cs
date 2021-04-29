@@ -1764,7 +1764,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PathGridBinaryWriteTranslation Instance = new PathGridBinaryWriteTranslation();
 
-        static partial void WriteBinaryPointToPointConnectionsCustom(
+        public static partial void WriteBinaryPointToPointConnectionsCustom(
             MutagenWriter writer,
             IPathGridGetter item);
 
@@ -1940,7 +1940,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryPointToPointConnectionsCustom(
+        public static partial void FillBinaryPointToPointConnectionsCustom(
             MutagenFrame frame,
             IPathGridInternal item);
 

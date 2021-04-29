@@ -30,9 +30,16 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
+        public partial class GlobalShortBinaryCreateTranslation
+        {
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalShortInternal item)
+            {
+            }
+        }
+
         public partial class GlobalShortBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalShortGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))
@@ -53,6 +60,7 @@ namespace Mutagen.Bethesda.Oblivion
             {
                 return (short)HeaderTranslation.ExtractSubrecordMemory(_data, _DataLocation!.Value, _package.MetaData.Constants).Float();
             }
+
             partial void DataCustomParse(OverlayStream stream, long finalPos, int offset)
             {
                 _DataLocation = (ushort)(stream.Position - offset);

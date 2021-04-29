@@ -1503,7 +1503,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageEventBinaryWriteTranslation Instance = new PackageEventBinaryWriteTranslation();
 
-        static partial void WriteBinaryTopicsCustom(
+        public static partial void WriteBinaryTopicsCustom(
             MutagenWriter writer,
             IPackageEventGetter item);
 
@@ -1651,7 +1651,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryTopicsCustom(
+        public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
             IPackageEvent item);
 

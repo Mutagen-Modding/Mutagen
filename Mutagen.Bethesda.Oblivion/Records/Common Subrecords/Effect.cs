@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class EffectBinaryCreateTranslation
         {
-            static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item)
+            public static partial void FillBinaryEffectInitialCustom(MutagenFrame frame, IEffect item)
             {
                 var subMeta = frame.ReadSubrecord();
                 if (subMeta.ContentLength != Plugins.Internals.Constants.HeaderLength)
@@ -46,7 +46,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class EffectBinaryWriteTranslation
         {
-            static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item)
+            public static partial void WriteBinaryEffectInitialCustom(MutagenWriter writer, IEffectGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.EFID))
                 {

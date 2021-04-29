@@ -11,12 +11,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ScenePhaseBinaryCreateTranslation
         {
-            static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item)
+            public static partial void FillBinaryStartConditionsCustom(MutagenFrame frame, IScenePhase item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.StartConditions, frame);
             }
 
-            static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item)
+            public static partial void FillBinaryCompletionConditionsCustom(MutagenFrame frame, IScenePhase item)
             {
                 frame.ReadSubrecordFrame();
                 ConditionBinaryCreateTranslation.FillConditionsList(item.CompletionConditions, frame);
@@ -25,12 +25,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ScenePhaseBinaryWriteTranslation
         {
-            static partial void WriteBinaryStartConditionsCustom(MutagenWriter writer, IScenePhaseGetter item)
+            public static partial void WriteBinaryStartConditionsCustom(MutagenWriter writer, IScenePhaseGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.StartConditions, writer);
             }
 
-            static partial void WriteBinaryCompletionConditionsCustom(MutagenWriter writer, IScenePhaseGetter item)
+            public static partial void WriteBinaryCompletionConditionsCustom(MutagenWriter writer, IScenePhaseGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.CompletionConditions, writer);

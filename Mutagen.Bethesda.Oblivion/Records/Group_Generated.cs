@@ -1253,7 +1253,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+        public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem;
@@ -1378,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryContainedRecordTypeParseCustom(
+        public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item);
 

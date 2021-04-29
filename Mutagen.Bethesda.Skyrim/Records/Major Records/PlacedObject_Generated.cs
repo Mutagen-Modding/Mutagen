@@ -5986,7 +5986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
-        static partial void WriteBinaryBoundDataCustom(
+        public static partial void WriteBinaryBoundDataCustom(
             MutagenWriter writer,
             IPlacedObjectGetter item);
 
@@ -6775,7 +6775,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryBoundDataCustom(
+        public static partial void FillBinaryBoundDataCustom(
             MutagenFrame frame,
             IPlacedObjectInternal item);
 

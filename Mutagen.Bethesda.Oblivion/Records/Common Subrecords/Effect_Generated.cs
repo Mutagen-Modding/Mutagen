@@ -1102,7 +1102,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
 
-        static partial void WriteBinaryEffectInitialCustom(
+        public static partial void WriteBinaryEffectInitialCustom(
             MutagenWriter writer,
             IEffectGetter item);
 
@@ -1210,7 +1210,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryEffectInitialCustom(
+        public static partial void FillBinaryEffectInitialCustom(
             MutagenFrame frame,
             IEffect item);
 

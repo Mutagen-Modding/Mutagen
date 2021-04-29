@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static GlobalIntBinaryWriteTranslation Instance = new GlobalIntBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IGlobalIntGetter item);
 
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGlobalIntInternal item);
 

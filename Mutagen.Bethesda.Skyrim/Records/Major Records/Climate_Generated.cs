@@ -1995,7 +1995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ClimateBinaryWriteTranslation Instance = new ClimateBinaryWriteTranslation();
 
-        static partial void WriteBinaryMoonAndPhaseLengthCustom(
+        public static partial void WriteBinaryMoonAndPhaseLengthCustom(
             MutagenWriter writer,
             IClimateGetter item);
 
@@ -2214,7 +2214,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryMoonAndPhaseLengthCustom(
+        public static partial void FillBinaryMoonAndPhaseLengthCustom(
             MutagenFrame frame,
             IClimateInternal item);
 

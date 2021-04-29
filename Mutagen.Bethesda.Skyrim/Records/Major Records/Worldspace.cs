@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
                 try
                 {
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
             {
                 try
                 {

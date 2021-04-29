@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CellBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
             {
                 try
                 {
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
             {
                 try
                 {

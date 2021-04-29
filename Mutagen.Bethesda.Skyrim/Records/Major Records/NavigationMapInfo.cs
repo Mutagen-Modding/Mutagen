@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NavigationMapInfoBinaryCreateTranslation
         {
-            static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
+            public static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
             {
                 if (frame.ReadUInt8() > 0)
                 {
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
+            public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
             {
                 if (item.ParentWorldspace.IsNull)
                 {
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NavigationMapInfoBinaryWriteTranslation
         {
-            static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+            public static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
             {
                 if (item.Island.TryGet(out var island))
                 {
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+            public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
             {
                 if (item.ParentWorldspace.IsNull)
                 {

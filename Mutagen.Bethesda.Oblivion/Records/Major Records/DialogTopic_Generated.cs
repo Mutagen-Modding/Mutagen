@@ -2216,7 +2216,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IDialogTopicGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -2394,7 +2394,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IDialogTopicInternal obj);
         public static void CustomBinaryEndImportPublic(

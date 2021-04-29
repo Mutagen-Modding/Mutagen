@@ -1106,7 +1106,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GetEventDataBinaryWriteTranslation Instance = new GetEventDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParameterParsingCustom(
+        public static partial void WriteBinaryParameterParsingCustom(
             MutagenWriter writer,
             IGetEventDataGetter item);
 
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryParameterParsingCustom(
+        public static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
             IGetEventData item);
 

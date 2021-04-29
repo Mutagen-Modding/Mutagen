@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PerkAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IPerkAdapter item)
+            public static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IPerkAdapter item)
             {
                 item.ScriptFragments = Mutagen.Bethesda.Skyrim.PerkScriptFragments.CreateFromBinary(frame: frame);
             }
@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PerkAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IPerkAdapterGetter item)
+            public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IPerkAdapterGetter item)
             {
                 if (!item.ScriptFragments.TryGet(out var frags)) return;
                 frags.WriteToBinary(writer);

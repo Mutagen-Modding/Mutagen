@@ -66,13 +66,13 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public const uint PcLevelMultFlag = 0x0000_0080;
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, INpcConfiguration item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, INpcConfiguration item)
             {
                 // Read normally
                 item.Flags = (NpcConfiguration.Flag)frame.ReadUInt32();
             }
 
-            static partial void FillBinaryLevelCustom(MutagenFrame frame, INpcConfiguration item)
+            public static partial void FillBinaryLevelCustom(MutagenFrame frame, INpcConfiguration item)
             {
                 if (EnumExt.HasFlag((uint)item.Flags, PcLevelMultFlag))
                 {
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NpcConfigurationBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, INpcConfigurationGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, INpcConfigurationGetter item)
             {
                 // Add back PcLevelMult flag
                 uint raw = (uint)item.Flags;
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(raw);
             }
 
-            static partial void WriteBinaryLevelCustom(MutagenWriter writer, INpcConfigurationGetter item)
+            public static partial void WriteBinaryLevelCustom(MutagenWriter writer, INpcConfigurationGetter item)
             {
                 switch (item.Level)
                 {

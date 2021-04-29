@@ -3641,7 +3641,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IWorldspaceGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -3916,7 +3916,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IWorldspaceInternal obj);
         public static void CustomBinaryEndImportPublic(

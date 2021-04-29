@@ -2507,7 +2507,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
-        static partial void WriteBinaryResponseCountCustom(
+        public static partial void WriteBinaryResponseCountCustom(
             MutagenWriter writer,
             IDialogTopicGetter item);
 
@@ -2520,7 +2520,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IDialogTopicGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -2751,11 +2751,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryResponseCountCustom(
+        public static partial void FillBinaryResponseCountCustom(
             MutagenFrame frame,
             IDialogTopicInternal item);
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IDialogTopicInternal obj);
         public static void CustomBinaryEndImportPublic(

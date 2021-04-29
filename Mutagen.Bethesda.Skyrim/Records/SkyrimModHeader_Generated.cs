@@ -1943,7 +1943,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
 
-        static partial void WriteBinaryMasterReferencesCustom(
+        public static partial void WriteBinaryMasterReferencesCustom(
             MutagenWriter writer,
             ISkyrimModHeaderGetter item);
 
@@ -2157,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryMasterReferencesCustom(
+        public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
             ISkyrimModHeader item);
 

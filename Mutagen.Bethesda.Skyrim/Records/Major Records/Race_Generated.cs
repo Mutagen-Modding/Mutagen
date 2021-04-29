@@ -6935,7 +6935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
-        static partial void WriteBinaryBodyTemplateCustom(
+        public static partial void WriteBinaryBodyTemplateCustom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -6948,7 +6948,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFlags2Custom(
+        public static partial void WriteBinaryFlags2Custom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -6961,7 +6961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryExtraNAM2Custom(
+        public static partial void WriteBinaryExtraNAM2Custom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -6974,7 +6974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryBipedObjectNamesCustom(
+        public static partial void WriteBinaryBipedObjectNamesCustom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -6987,7 +6987,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
+        public static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -7000,7 +7000,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
+        public static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
             MutagenWriter writer,
             IRaceGetter item);
 
@@ -7956,27 +7956,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryBodyTemplateCustom(
+        public static partial void FillBinaryBodyTemplateCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        static partial void FillBinaryFlags2Custom(
+        public static partial void FillBinaryFlags2Custom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        static partial void FillBinaryExtraNAM2Custom(
+        public static partial void FillBinaryExtraNAM2Custom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        static partial void FillBinaryBipedObjectNamesCustom(
+        public static partial void FillBinaryBipedObjectNamesCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        static partial void FillBinaryFaceFxPhonemesListingParsingCustom(
+        public static partial void FillBinaryFaceFxPhonemesListingParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
 
-        static partial void FillBinaryFaceFxPhonemesRawParsingCustom(
+        public static partial void FillBinaryFaceFxPhonemesRawParsingCustom(
             MutagenFrame frame,
             IRaceInternal item);
 

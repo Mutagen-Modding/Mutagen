@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class GameSettingBoolBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
             {
                 var subFrame = frame.ReadSubrecordFrame();
                 item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class GameSettingBoolBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))

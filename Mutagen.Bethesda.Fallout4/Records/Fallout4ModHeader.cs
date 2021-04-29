@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class Fallout4ModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item)
+            public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IFallout4ModHeader item)
             {
                 item.MasterReferences.SetTo(
                     ListBinaryTranslation<MasterReference>.Instance.Parse(
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class Fallout4ModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IFallout4ModHeaderGetter item)
+            public static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IFallout4ModHeaderGetter item)
             {
                 ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,

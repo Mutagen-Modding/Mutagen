@@ -1975,7 +1975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ANavigationMeshDataBinaryWriteTranslation Instance = new ANavigationMeshDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParentLogicCustom(
+        public static partial void WriteBinaryParentLogicCustom(
             MutagenWriter writer,
             IANavigationMeshDataGetter item);
 
@@ -1988,7 +1988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCoverTrianglesLogicCustom(
+        public static partial void WriteBinaryCoverTrianglesLogicCustom(
             MutagenWriter writer,
             IANavigationMeshDataGetter item);
 
@@ -2001,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryNavmeshGridCustom(
+        public static partial void WriteBinaryNavmeshGridCustom(
             MutagenWriter writer,
             IANavigationMeshDataGetter item);
 
@@ -2154,15 +2154,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryParentLogicCustom(
+        public static partial void FillBinaryParentLogicCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        static partial void FillBinaryCoverTrianglesLogicCustom(
+        public static partial void FillBinaryCoverTrianglesLogicCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        static partial void FillBinaryNavmeshGridCustom(
+        public static partial void FillBinaryNavmeshGridCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 

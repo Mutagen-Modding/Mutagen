@@ -2732,7 +2732,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static BookBinaryWriteTranslation Instance = new BookBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IBookGetter item);
 
@@ -2745,7 +2745,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryTeachesCustom(
+        public static partial void WriteBinaryTeachesCustom(
             MutagenWriter writer,
             IBookGetter item);
 
@@ -3079,11 +3079,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             IBookInternal item);
 
-        static partial void FillBinaryTeachesCustom(
+        public static partial void FillBinaryTeachesCustom(
             MutagenFrame frame,
             IBookInternal item);
 

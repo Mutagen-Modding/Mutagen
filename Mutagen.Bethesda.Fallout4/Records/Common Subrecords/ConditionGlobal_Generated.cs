@@ -1092,7 +1092,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IConditionGlobalGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -1177,7 +1177,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IConditionGlobal obj);
         public static void CustomBinaryEndImportPublic(

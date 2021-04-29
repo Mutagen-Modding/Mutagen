@@ -1446,7 +1446,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledItemBinaryWriteTranslation Instance = new LeveledItemBinaryWriteTranslation();
 
-        static partial void WriteBinaryVestigialCustom(
+        public static partial void WriteBinaryVestigialCustom(
             MutagenWriter writer,
             ILeveledItemGetter item);
 
@@ -1623,7 +1623,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryVestigialCustom(
+        public static partial void FillBinaryVestigialCustom(
             MutagenFrame frame,
             ILeveledItemInternal item);
 

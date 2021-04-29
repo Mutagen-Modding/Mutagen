@@ -1043,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogResponsesAdapterBinaryWriteTranslation Instance = new DialogResponsesAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryScriptFragmentsCustom(
+        public static partial void WriteBinaryScriptFragmentsCustom(
             MutagenWriter writer,
             IDialogResponsesAdapterGetter item);
 
@@ -1125,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryScriptFragmentsCustom(
+        public static partial void FillBinaryScriptFragmentsCustom(
             MutagenFrame frame,
             IDialogResponsesAdapter item);
 

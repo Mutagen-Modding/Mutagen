@@ -37,6 +37,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
+        public partial class ScriptFieldsBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryMetadataSummaryOldCustom(MutagenWriter writer, IScriptFieldsGetter item)
+            {
+            }
+        }
+
         public partial class ScriptFieldsBinaryCreateTranslation
         {
             private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
@@ -44,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                     new RecordType("SCHR"),
                     new RecordType("SCHD")));
 
-            static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
+            public static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
             {
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,

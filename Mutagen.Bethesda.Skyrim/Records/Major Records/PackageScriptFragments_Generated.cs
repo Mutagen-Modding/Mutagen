@@ -1277,7 +1277,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageScriptFragmentsBinaryWriteTranslation Instance = new PackageScriptFragmentsBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsParseCustom(
+        public static partial void WriteBinaryFlagsParseCustom(
             MutagenWriter writer,
             IPackageScriptFragmentsGetter item);
 
@@ -1337,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryFlagsParseCustom(
+        public static partial void FillBinaryFlagsParseCustom(
             MutagenFrame frame,
             IPackageScriptFragments item);
 

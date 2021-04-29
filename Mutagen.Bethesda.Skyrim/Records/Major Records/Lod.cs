@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public const int TotalLen = 260;
 
-        static partial void FillBinaryLevel0Custom(MutagenFrame frame, ILod item)
+        public static partial void FillBinaryLevel0Custom(MutagenFrame frame, ILod item)
         {
             item.Level0 = ReadString(frame, out var bytes);
             item.Level0Extra = bytes;
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
     public partial class LodBinaryWriteTranslation
     {
-        static partial void WriteBinaryLevel0Custom(MutagenWriter writer, ILodGetter item)
+        public static partial void WriteBinaryLevel0Custom(MutagenWriter writer, ILodGetter item)
         {
             WriteString(writer, item.Level0, item.Level0Extra);
             WriteString(writer, item.Level1, item.Level1Extra);

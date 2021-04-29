@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestAliasBinaryCreateTranslation
         {
-            static partial void FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item)
+            public static partial void FillBinaryIDParseCustom(MutagenFrame frame, IQuestAlias item)
             {
                 var subMeta = frame.ReadSubrecord();
                 item.Type = subMeta.RecordTypeInt switch
@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.ID = frame.ReadUInt32();
             }
 
-            static partial void FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item)
+            public static partial void FillBinaryEndCustom(MutagenFrame frame, IQuestAlias item)
             {
                 // Skip
                 frame.ReadSubrecordFrame();
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class QuestAliasBinaryWriteTranslation
         {
-            static partial void WriteBinaryIDParseCustom(MutagenWriter writer, IQuestAliasGetter item)
+            public static partial void WriteBinaryIDParseCustom(MutagenWriter writer, IQuestAliasGetter item)
             {
                 RecordType type = item.Type switch
                 {
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)
+            public static partial void WriteBinaryEndCustom(MutagenWriter writer, IQuestAliasGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.ALED)) { }
             }

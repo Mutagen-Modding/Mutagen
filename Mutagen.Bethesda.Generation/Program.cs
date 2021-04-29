@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "string INamedRequiredGetter.Name => this.Name ?? string.Empty";
+            string testString = "public partial void DirectionalAmbientLightingColorsCustomPars";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

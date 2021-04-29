@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class IdleMarkerBinaryCreateTranslation
         {
-            static partial void FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
+            public static partial void FillBinaryAnimationCountCustom(MutagenFrame frame, IIdleMarkerInternal item)
             {
                 // Skip. Don't care
                 frame.ReadSubrecordFrame();
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return ret;
             }
 
-            static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item)
+            public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IIdleMarkerInternal item)
             {
                 item.Animations = ParseAnimations(frame);
             }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class IdleMarkerBinaryWriteTranslation
         {
-            static partial void WriteBinaryAnimationCountCustom(MutagenWriter writer, IIdleMarkerGetter item)
+            public static partial void WriteBinaryAnimationCountCustom(MutagenWriter writer, IIdleMarkerGetter item)
             {
                 if (!item.Animations.TryGet(out var anims)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IIdleMarkerGetter item)
+            public static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IIdleMarkerGetter item)
             {
                 if (!item.Animations.TryGet(out var anims)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLA))

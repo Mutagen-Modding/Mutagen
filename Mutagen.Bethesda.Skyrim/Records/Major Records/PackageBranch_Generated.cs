@@ -1856,7 +1856,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageBranchBinaryWriteTranslation Instance = new PackageBranchBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsOverrideCustom(
+        public static partial void WriteBinaryFlagsOverrideCustom(
             MutagenWriter writer,
             IPackageBranchGetter item);
 
@@ -2047,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFlagsOverrideCustom(
+        public static partial void FillBinaryFlagsOverrideCustom(
             MutagenFrame frame,
             IPackageBranch item);
 

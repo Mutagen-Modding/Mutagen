@@ -1709,7 +1709,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
 
-        static partial void WriteBinaryAnimationCountCustom(
+        public static partial void WriteBinaryAnimationCountCustom(
             MutagenWriter writer,
             IIdleMarkerGetter item);
 
@@ -1722,7 +1722,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryAnimationsCustom(
+        public static partial void WriteBinaryAnimationsCustom(
             MutagenWriter writer,
             IIdleMarkerGetter item);
 
@@ -1912,11 +1912,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAnimationCountCustom(
+        public static partial void FillBinaryAnimationCountCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
 
-        static partial void FillBinaryAnimationsCustom(
+        public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
 

@@ -926,7 +926,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataParseCustom(
+        public static partial void WriteBinaryDataParseCustom(
             MutagenWriter writer,
             IAPackageTargetGetter item);
 
@@ -986,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CountOrDistance = frame.ReadInt32();
         }
 
-        static partial void FillBinaryDataParseCustom(
+        public static partial void FillBinaryDataParseCustom(
             MutagenFrame frame,
             IAPackageTarget item);
 

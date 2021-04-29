@@ -1265,7 +1265,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
 
-        static partial void WriteBinaryPropertyCustom(
+        public static partial void WriteBinaryPropertyCustom(
             MutagenWriter writer,
             IQuestFragmentAliasGetter item);
 
@@ -1278,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryScriptsCustom(
+        public static partial void WriteBinaryScriptsCustom(
             MutagenWriter writer,
             IQuestFragmentAliasGetter item);
 
@@ -1346,11 +1346,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryPropertyCustom(
+        public static partial void FillBinaryPropertyCustom(
             MutagenFrame frame,
             IQuestFragmentAlias item);
 
-        static partial void FillBinaryScriptsCustom(
+        public static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
             IQuestFragmentAlias item);
 

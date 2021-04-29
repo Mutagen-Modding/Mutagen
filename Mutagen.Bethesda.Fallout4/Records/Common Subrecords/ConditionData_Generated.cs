@@ -1474,7 +1474,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParameterParsingCustom(
+        public static partial void WriteBinaryParameterParsingCustom(
             MutagenWriter writer,
             IConditionDataGetter item);
 
@@ -1541,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item);
         }
 
-        static partial void FillBinaryParameterParsingCustom(
+        public static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
             IConditionData item);
 

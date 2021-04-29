@@ -58,12 +58,12 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static bool IsEnabled(byte b) => EnumExt.HasFlag(b, (byte)2);
 
-            static partial void FillBinaryWeightSliderEnabledCustom(MutagenFrame frame, IArmorAddonInternal item)
+            public static partial void FillBinaryWeightSliderEnabledCustom(MutagenFrame frame, IArmorAddonInternal item)
             {
                 item.WeightSliderEnabled = new ArmorAddonWeightSliderContainer(frame.ReadUInt8(), frame.ReadUInt8());
             }
 
-            static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorAddonInternal item)
+            public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorAddonInternal item)
             {
                 item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
             }
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ArmorAddonBinaryWriteTranslation
         {
-            static partial void WriteBinaryWeightSliderEnabledCustom(MutagenWriter writer, IArmorAddonGetter item)
+            public static partial void WriteBinaryWeightSliderEnabledCustom(MutagenWriter writer, IArmorAddonGetter item)
             {
                 var weightSlider = item.WeightSliderEnabled;
                 if (weightSlider is ArmorAddonWeightSliderContainer special)
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IArmorAddonGetter item)
+            public static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IArmorAddonGetter item)
             {
                 if (item.BodyTemplate.TryGet(out var templ))
                 {

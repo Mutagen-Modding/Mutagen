@@ -11427,7 +11427,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryCounts1Custom(
+        public static partial void WriteBinaryCounts1Custom(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item);
 
@@ -11440,7 +11440,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCounts2Custom(
+        public static partial void WriteBinaryCounts2Custom(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item);
 
@@ -11453,7 +11453,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCounts3Custom(
+        public static partial void WriteBinaryCounts3Custom(
             MutagenWriter writer,
             IImageSpaceAdapterGetter item);
 
@@ -12851,15 +12851,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryCounts1Custom(
+        public static partial void FillBinaryCounts1Custom(
             MutagenFrame frame,
             IImageSpaceAdapterInternal item);
 
-        static partial void FillBinaryCounts2Custom(
+        public static partial void FillBinaryCounts2Custom(
             MutagenFrame frame,
             IImageSpaceAdapterInternal item);
 
-        static partial void FillBinaryCounts3Custom(
+        public static partial void FillBinaryCounts3Custom(
             MutagenFrame frame,
             IImageSpaceAdapterInternal item);
 

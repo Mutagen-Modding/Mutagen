@@ -1083,7 +1083,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IConditionFloatGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -1168,7 +1168,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IConditionFloat obj);
         public static void CustomBinaryEndImportPublic(

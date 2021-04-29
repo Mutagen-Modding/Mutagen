@@ -142,7 +142,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 try
                 {
@@ -177,7 +177,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
+            public static partial void FillBinaryResponseCountCustom(MutagenFrame frame, IDialogTopicInternal item)
             {
                 // Skip counter
                 frame.ReadSubrecordFrame();
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void WriteBinaryResponseCountCustom(MutagenWriter writer, IDialogTopicGetter item)
+            public static partial void WriteBinaryResponseCountCustom(MutagenWriter writer, IDialogTopicGetter item)
             {
                 if (!item.Responses.TryGet(out var resp)
                     || resp.Count == 0)
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
                 try
                 {

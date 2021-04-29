@@ -1040,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IConditionGetter item);
 
@@ -1108,7 +1108,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             ICondition item);
 

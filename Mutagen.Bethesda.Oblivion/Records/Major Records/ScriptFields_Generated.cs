@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
 
-        static partial void WriteBinaryMetadataSummaryOldCustom(
+        public static partial void WriteBinaryMetadataSummaryOldCustom(
             MutagenWriter writer,
             IScriptFieldsGetter item);
 
@@ -1637,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryMetadataSummaryOldCustom(
+        public static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
             IScriptFields item);
 

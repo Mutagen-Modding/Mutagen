@@ -1033,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static APerkEntryPointEffectBinaryWriteTranslation Instance = new APerkEntryPointEffectBinaryWriteTranslation();
 
-        static partial void WriteBinaryFunctionParametersCustom(
+        public static partial void WriteBinaryFunctionParametersCustom(
             MutagenWriter writer,
             IAPerkEntryPointEffectGetter item);
 
@@ -1159,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFunctionParametersCustom(
+        public static partial void FillBinaryFunctionParametersCustom(
             MutagenFrame frame,
             IAPerkEntryPointEffect item);
 

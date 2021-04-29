@@ -3378,7 +3378,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PackageBinaryWriteTranslation Instance = new PackageBinaryWriteTranslation();
 
-        static partial void WriteBinaryPackageTemplateCustom(
+        public static partial void WriteBinaryPackageTemplateCustom(
             MutagenWriter writer,
             IPackageGetter item);
 
@@ -3391,7 +3391,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryXnamMarkerCustom(
+        public static partial void WriteBinaryXnamMarkerCustom(
             MutagenWriter writer,
             IPackageGetter item);
 
@@ -3746,11 +3746,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryPackageTemplateCustom(
+        public static partial void FillBinaryPackageTemplateCustom(
             MutagenFrame frame,
             IPackageInternal item);
 
-        static partial void FillBinaryXnamMarkerCustom(
+        public static partial void FillBinaryXnamMarkerCustom(
             MutagenFrame frame,
             IPackageInternal item);
 

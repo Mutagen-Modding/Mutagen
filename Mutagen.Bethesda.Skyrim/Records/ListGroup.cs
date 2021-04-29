@@ -1,9 +1,6 @@
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins.Internals;
-using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Translations.Binary;
 
@@ -13,7 +10,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ListGroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinaryContainedRecordTypeCustom(
+            public static partial void FillBinaryContainedRecordTypeCustom(
                 MutagenFrame frame,
                 IListGroup<T> item)
             {
@@ -23,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ListGroupBinaryWriteTranslation
         {
-            static partial void WriteBinaryContainedRecordTypeCustom<T>(
+            public static partial void WriteBinaryContainedRecordTypeCustom<T>(
                 MutagenWriter writer,
                 IListGroupGetter<T> item)
                 where T : class, ICellBlockGetter, IBinaryItem

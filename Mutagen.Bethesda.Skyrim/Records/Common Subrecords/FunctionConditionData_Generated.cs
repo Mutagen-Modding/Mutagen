@@ -1372,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FunctionConditionDataBinaryWriteTranslation Instance = new FunctionConditionDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParameterParsingCustom(
+        public static partial void WriteBinaryParameterParsingCustom(
             MutagenWriter writer,
             IFunctionConditionDataGetter item);
 
@@ -1456,7 +1456,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryParameterParsingCustom(
+        public static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
             IFunctionConditionData item);
 

@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageBranchBinaryCreateTranslation
         {
-            static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
+            public static partial void FillBinaryFlagsOverrideCustom(MutagenFrame frame, IPackageBranch item)
             {
                 item.FlagsOverride = PackageFlagsOverride.CreateFromBinary(frame);
                 if (frame.Reader.TryGetSubrecord(RecordTypes.PFO2, out var rec))
@@ -32,7 +32,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageBranchBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsOverrideCustom(MutagenWriter writer, IPackageBranchGetter item)
+            public static partial void WriteBinaryFlagsOverrideCustom(MutagenWriter writer, IPackageBranchGetter item)
             {
                 item.FlagsOverride?.WriteToBinary(writer);
                 item.FlagsOverrideUnused?.WriteToBinary(writer);

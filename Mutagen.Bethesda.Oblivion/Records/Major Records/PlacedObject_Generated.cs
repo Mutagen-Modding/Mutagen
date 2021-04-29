@@ -2806,7 +2806,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
-        static partial void WriteBinaryOpenByDefaultCustom(
+        public static partial void WriteBinaryOpenByDefaultCustom(
             MutagenWriter writer,
             IPlacedObjectGetter item);
 
@@ -3192,7 +3192,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryOpenByDefaultCustom(
+        public static partial void FillBinaryOpenByDefaultCustom(
             MutagenFrame frame,
             IPlacedObjectInternal item);
 

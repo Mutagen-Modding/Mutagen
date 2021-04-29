@@ -1316,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static GlobalBoolBinaryWriteTranslation Instance = new GlobalBoolBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataCustom(
+        public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IGlobalBoolGetter item);
 
@@ -1460,7 +1460,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
 
-        static partial void FillBinaryDataCustom(
+        public static partial void FillBinaryDataCustom(
             MutagenFrame frame,
             IGlobalBoolInternal item);
 

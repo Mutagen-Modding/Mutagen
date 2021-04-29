@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 try
                 {
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
                 try
                 {

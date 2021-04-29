@@ -1589,7 +1589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ScenePhaseBinaryWriteTranslation Instance = new ScenePhaseBinaryWriteTranslation();
 
-        static partial void WriteBinaryStartConditionsCustom(
+        public static partial void WriteBinaryStartConditionsCustom(
             MutagenWriter writer,
             IScenePhaseGetter item);
 
@@ -1602,7 +1602,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryCompletionConditionsCustom(
+        public static partial void WriteBinaryCompletionConditionsCustom(
             MutagenWriter writer,
             IScenePhaseGetter item);
 
@@ -1770,11 +1770,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryStartConditionsCustom(
+        public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
             IScenePhase item);
 
-        static partial void FillBinaryCompletionConditionsCustom(
+        public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
             IScenePhase item);
 

@@ -71,13 +71,13 @@ namespace Mutagen.Bethesda.Skyrim
             public const uint UpperFlagMask = 0xFFFF_0000;
             public const byte UpperFlagShift = 16;
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IWeaponData item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IWeaponData item)
             {
                 // Read normally
                 item.Flags = (WeaponData.Flag)frame.ReadUInt16();
             }
 
-            static partial void FillBinaryFlags2Custom(MutagenFrame frame, IWeaponData item)
+            public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IWeaponData item)
             {
                 var flags2 = frame.ReadUInt32();
                 flags2 <<= UpperFlagShift;
@@ -93,12 +93,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WeaponDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IWeaponDataGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IWeaponDataGetter item)
             {
                 writer.Write((ushort)item.Flags);
             }
 
-            static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IWeaponDataGetter item)
+            public static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IWeaponDataGetter item)
             {
                 var flags = (uint)item.Flags;
 
