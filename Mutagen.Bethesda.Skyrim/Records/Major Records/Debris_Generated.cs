@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DebrisModel> Models
         {
             get => this._Models;
-            protected set => this._Models = value;
+            init => this._Models = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<BodyPart> Parts
         {
             get => this._Parts;
-            protected set => this._Parts = value;
+            init => this._Parts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

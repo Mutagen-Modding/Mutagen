@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
-            protected set => this._Stages = value;
+            init => this._Stages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<QuestTarget> Targets
         {
             get => this._Targets;
-            protected set => this._Targets = value;
+            init => this._Targets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

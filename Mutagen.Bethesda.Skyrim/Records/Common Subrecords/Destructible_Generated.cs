@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DestructionStage> Stages
         {
             get => this._Stages;
-            protected set => this._Stages = value;
+            init => this._Stages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

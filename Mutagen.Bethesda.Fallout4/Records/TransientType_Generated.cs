@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links
         {
             get => this._Links;
-            protected set => this._Links = value;
+            init => this._Links = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

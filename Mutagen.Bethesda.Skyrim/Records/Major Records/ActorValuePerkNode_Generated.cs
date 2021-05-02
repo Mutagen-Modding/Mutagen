@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<UInt32> ConnectionLineToIndices
         {
             get => this._ConnectionLineToIndices;
-            protected set => this._ConnectionLineToIndices = value;
+            init => this._ConnectionLineToIndices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

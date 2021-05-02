@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScenePhaseFragment> PhaseFragments
         {
             get => this._PhaseFragments;
-            protected set => this._PhaseFragments = value;
+            init => this._PhaseFragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

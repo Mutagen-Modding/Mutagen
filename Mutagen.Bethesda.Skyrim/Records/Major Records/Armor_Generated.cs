@@ -265,7 +265,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IArmorAddonGetter>> Armature
         {
             get => this._Armature;
-            protected set => this._Armature = value;
+            init => this._Armature = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

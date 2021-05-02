@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IDialogGetter>> LinkTo
         {
             get => this._LinkTo;
-            protected set => this._LinkTo = value;
+            init => this._LinkTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -140,7 +140,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
-            protected set => this._Responses = value;
+            init => this._Responses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -154,7 +154,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -168,7 +168,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DialogResponsesUnknownData> UnknownData
         {
             get => this._UnknownData;
-            protected set => this._UnknownData = value;
+            init => this._UnknownData = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

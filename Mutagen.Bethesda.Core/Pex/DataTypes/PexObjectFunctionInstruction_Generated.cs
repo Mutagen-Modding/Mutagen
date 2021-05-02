@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectVariableData> Arguments
         {
             get => this._Arguments;
-            protected set => this._Arguments = value;
+            init => this._Arguments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<String> PropertyNames
         {
             get => this._PropertyNames;
-            protected set => this._PropertyNames = value;
+            init => this._PropertyNames = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

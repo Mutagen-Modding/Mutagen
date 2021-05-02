@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IQuestGetter>> Quests
         {
             get => this._Quests;
-            protected set => this._Quests = value;
+            init => this._Quests = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -98,7 +98,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<DialogItem> Items
         {
             get => this._Items;
-            protected set => this._Items = value;
+            init => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Int16> Points
         {
             get => this._Points;
-            protected set => this._Points = value;
+            init => this._Points = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

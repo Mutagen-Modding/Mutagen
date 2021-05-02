@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectFunctionVariable> Parameters
         {
             get => this._Parameters;
-            protected set => this._Parameters = value;
+            init => this._Parameters = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectFunctionVariable> Locals
         {
             get => this._Locals;
-            protected set => this._Locals = value;
+            init => this._Locals = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectFunctionInstruction> Instructions
         {
             get => this._Instructions;
-            protected set => this._Instructions = value;
+            init => this._Instructions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

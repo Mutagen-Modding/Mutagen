@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<Single> PropertyList
         {
             get => this._PropertyList;
-            protected set => this._PropertyList = value;
+            init => this._PropertyList = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

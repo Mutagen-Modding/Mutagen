@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ActorValuePerkNode> PerkTree
         {
             get => this._PerkTree;
-            protected set => this._PerkTree = value;
+            init => this._PerkTree = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

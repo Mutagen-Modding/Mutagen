@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScriptEntry> Scripts
         {
             get => this._Scripts;
-            protected set => this._Scripts = value;
+            init => this._Scripts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

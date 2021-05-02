@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<SoundItem> Sounds
         {
             get => this._Sounds;
-            protected set => this._Sounds = value;
+            init => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

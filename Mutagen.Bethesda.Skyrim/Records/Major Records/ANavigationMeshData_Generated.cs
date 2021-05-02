@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
-            protected set => this._Vertices = value;
+            init => this._Vertices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshTriangle> Triangles
         {
             get => this._Triangles;
-            protected set => this._Triangles = value;
+            init => this._Triangles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<EdgeLink> EdgeLinks
         {
             get => this._EdgeLinks;
-            protected set => this._EdgeLinks = value;
+            init => this._EdgeLinks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DoorTriangle> DoorTriangles
         {
             get => this._DoorTriangles;
-            protected set => this._DoorTriangles = value;
+            init => this._DoorTriangles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

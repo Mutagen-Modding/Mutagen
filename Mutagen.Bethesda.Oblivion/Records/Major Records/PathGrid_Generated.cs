@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<PointToReferenceMapping> PointToReferenceMappings
         {
             get => this._PointToReferenceMappings;
-            protected set => this._PointToReferenceMappings = value;
+            init => this._PointToReferenceMappings = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

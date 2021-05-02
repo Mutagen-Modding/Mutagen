@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WaterReflection> Reflections
         {
             get => this._Reflections;
-            protected set => this._Reflections = value;
+            init => this._Reflections = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
-            protected set => this._LinkedReferences = value;
+            init => this._LinkedReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -128,7 +128,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<MessageButton> MenuButtons
         {
             get => this._MenuButtons;
-            protected set => this._MenuButtons = value;
+            init => this._MenuButtons = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

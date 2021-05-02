@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Int32> Data
         {
             get => this._Data;
-            protected set => this._Data = value;
+            init => this._Data = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

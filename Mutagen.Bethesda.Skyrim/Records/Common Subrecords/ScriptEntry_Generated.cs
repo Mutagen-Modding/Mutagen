@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScriptProperty> Properties
         {
             get => this._Properties;
-            protected set => this._Properties = value;
+            init => this._Properties = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

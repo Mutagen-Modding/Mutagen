@@ -76,7 +76,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Relation> Relations
         {
             get => this._Relations;
-            protected set => this._Relations = value;
+            init => this._Relations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Rank> Ranks
         {
             get => this._Ranks;
-            protected set => this._Ranks = value;
+            init => this._Ranks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

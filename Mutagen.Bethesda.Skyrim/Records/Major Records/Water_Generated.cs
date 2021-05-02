@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<String> UnusedNoisemaps
         {
             get => this._UnusedNoisemaps;
-            protected set => this._UnusedNoisemaps = value;
+            init => this._UnusedNoisemaps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

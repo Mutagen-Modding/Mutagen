@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DialogResponses> Responses
         {
             get => this._Responses;
-            protected set => this._Responses = value;
+            init => this._Responses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

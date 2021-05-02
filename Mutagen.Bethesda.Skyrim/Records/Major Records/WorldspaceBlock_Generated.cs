@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceSubBlock> Items
         {
             get => this._Items;
-            protected set => this._Items = value;
+            init => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

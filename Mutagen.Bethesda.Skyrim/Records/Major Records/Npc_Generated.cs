@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
-            protected set => this._Factions = value;
+            init => this._Factions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Attack> Attacks
         {
             get => this._Attacks;
-            protected set => this._Attacks = value;
+            init => this._Attacks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -299,7 +299,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IPackageGetter>> Packages
         {
             get => this._Packages;
-            protected set => this._Packages = value;
+            init => this._Packages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -396,7 +396,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IHeadPartGetter>> HeadParts
         {
             get => this._HeadParts;
-            protected set => this._HeadParts = value;
+            init => this._HeadParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<TintLayer> TintLayers
         {
             get => this._TintLayers;
-            protected set => this._TintLayers = value;
+            init => this._TintLayers = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

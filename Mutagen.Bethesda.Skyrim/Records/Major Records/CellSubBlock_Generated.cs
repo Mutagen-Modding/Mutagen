@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Cell> Cells
         {
             get => this._Cells;
-            protected set => this._Cells = value;
+            init => this._Cells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

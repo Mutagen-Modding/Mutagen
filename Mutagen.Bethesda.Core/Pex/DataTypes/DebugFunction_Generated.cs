@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<UInt16> Instructions
         {
             get => this._Instructions;
-            protected set => this._Instructions = value;
+            init => this._Instructions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Topics
         {
             get => this._Topics;
-            protected set => this._Topics = value;
+            init => this._Topics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<DialogResponse> Responses
         {
             get => this._Responses;
-            protected set => this._Responses = value;
+            init => this._Responses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IDialogTopicGetter>> Choices
         {
             get => this._Choices;
-            protected set => this._Choices = value;
+            init => this._Choices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IDialogTopicGetter>> LinkFrom
         {
             get => this._LinkFrom;
-            protected set => this._LinkFrom = value;
+            init => this._LinkFrom = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

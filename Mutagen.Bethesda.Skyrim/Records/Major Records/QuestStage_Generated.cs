@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestLogEntry> LogEntries
         {
             get => this._LogEntries;
-            protected set => this._LogEntries = value;
+            init => this._LogEntries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

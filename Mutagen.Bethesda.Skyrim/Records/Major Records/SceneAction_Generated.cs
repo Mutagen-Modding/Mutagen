@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IPackageGetter>> Packages
         {
             get => this._Packages;
-            protected set => this._Packages = value;
+            init => this._Packages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

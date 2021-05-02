@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IRaceGetter>> AdditionalRaces
         {
             get => this._AdditionalRaces;
-            protected set => this._AdditionalRaces = value;
+            init => this._AdditionalRaces = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

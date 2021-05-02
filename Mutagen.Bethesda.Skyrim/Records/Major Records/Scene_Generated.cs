@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScenePhase> Phases
         {
             get => this._Phases;
-            protected set => this._Phases = value;
+            init => this._Phases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -87,7 +87,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<SceneActor> Actors
         {
             get => this._Actors;
-            protected set => this._Actors = value;
+            init => this._Actors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<SceneAction> Actions
         {
             get => this._Actions;
-            protected set => this._Actions = value;
+            init => this._Actions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -163,7 +163,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

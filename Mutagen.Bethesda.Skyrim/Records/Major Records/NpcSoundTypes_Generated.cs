@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NpcSoundType> Types
         {
             get => this._Types;
-            protected set => this._Types = value;
+            init => this._Types = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

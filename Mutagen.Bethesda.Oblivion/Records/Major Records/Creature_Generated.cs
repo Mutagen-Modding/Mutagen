@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<ItemEntry> Items
         {
             get => this._Items;
-            protected set => this._Items = value;
+            init => this._Items = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<ISpellRecordGetter>> Spells
         {
             get => this._Spells;
-            protected set => this._Spells = value;
+            init => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<RankPlacement> Factions
         {
             get => this._Factions;
-            protected set => this._Factions = value;
+            init => this._Factions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IAIPackageGetter>> AIPackages
         {
             get => this._AIPackages;
-            protected set => this._AIPackages = value;
+            init => this._AIPackages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -292,7 +292,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<CreatureSound> Sounds
         {
             get => this._Sounds;
-            protected set => this._Sounds = value;
+            init => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

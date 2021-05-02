@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestObjectiveTarget> Targets
         {
             get => this._Targets;
-            protected set => this._Targets = value;
+            init => this._Targets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

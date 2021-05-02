@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
-            protected set => this._Fragments = value;
+            init => this._Fragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
-            protected set => this._Aliases = value;
+            init => this._Aliases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

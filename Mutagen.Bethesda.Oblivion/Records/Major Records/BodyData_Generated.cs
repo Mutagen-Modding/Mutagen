@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<BodyPart> BodyParts
         {
             get => this._BodyParts;
-            protected set => this._BodyParts = value;
+            init => this._BodyParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

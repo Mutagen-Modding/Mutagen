@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts
         {
             get => this._ExtraParts;
-            protected set => this._ExtraParts = value;
+            init => this._ExtraParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<Part> Parts
         {
             get => this._Parts;
-            protected set => this._Parts = value;
+            init => this._Parts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

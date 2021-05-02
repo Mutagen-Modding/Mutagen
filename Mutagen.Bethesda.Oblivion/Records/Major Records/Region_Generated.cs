@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<RegionArea> Areas
         {
             get => this._Areas;
-            protected set => this._Areas = value;
+            init => this._Areas = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

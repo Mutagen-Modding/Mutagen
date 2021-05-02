@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<RegionArea> RegionAreas
         {
             get => this._RegionAreas;
-            protected set => this._RegionAreas = value;
+            init => this._RegionAreas = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

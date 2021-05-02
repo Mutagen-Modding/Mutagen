@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ActorValue[] PrimaryAttributes
         {
             get => this._PrimaryAttributes;
-            protected set => this._PrimaryAttributes = value;
+            init => this._PrimaryAttributes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ActorValue[] SecondaryAttributes
         {
             get => this._SecondaryAttributes;
-            protected set => this._SecondaryAttributes = value;
+            init => this._SecondaryAttributes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

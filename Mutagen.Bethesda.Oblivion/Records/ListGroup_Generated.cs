@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<T> Records
         {
             get => this._Records;
-            protected set => this._Records = value;
+            init => this._Records = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IDialogBranchGetter>> Branches
         {
             get => this._Branches;
-            protected set => this._Branches = value;
+            init => this._Branches = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SliceList<byte> TNAMs
         {
             get => this._TNAMs;
-            protected set => this._TNAMs = value;
+            init => this._TNAMs = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

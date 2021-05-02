@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
-            protected set => this._Topics = value;
+            init => this._Topics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

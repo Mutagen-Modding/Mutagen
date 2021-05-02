@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IGlobalGetter>> TextDisplayGlobals
         {
             get => this._TextDisplayGlobals;
-            protected set => this._TextDisplayGlobals = value;
+            init => this._TextDisplayGlobals = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> DialogConditions
         {
             get => this._DialogConditions;
-            protected set => this._DialogConditions = value;
+            init => this._DialogConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> UnusedConditions
         {
             get => this._UnusedConditions;
-            protected set => this._UnusedConditions = value;
+            init => this._UnusedConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestStage> Stages
         {
             get => this._Stages;
-            protected set => this._Stages = value;
+            init => this._Stages = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -188,7 +188,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestObjective> Objectives
         {
             get => this._Objectives;
-            protected set => this._Objectives = value;
+            init => this._Objectives = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -202,7 +202,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestAlias> Aliases
         {
             get => this._Aliases;
-            protected set => this._Aliases = value;
+            init => this._Aliases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

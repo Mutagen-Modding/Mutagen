@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshSet> NavmeshSets
         {
             get => this._NavmeshSets;
-            protected set => this._NavmeshSets = value;
+            init => this._NavmeshSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshNode> NavmeshTree
         {
             get => this._NavmeshTree;
-            protected set => this._NavmeshTree = value;
+            init => this._NavmeshTree = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

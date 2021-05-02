@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ShoutWord> WordsOfPower
         {
             get => this._WordsOfPower;
-            protected set => this._WordsOfPower = value;
+            init => this._WordsOfPower = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

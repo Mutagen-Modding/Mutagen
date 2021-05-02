@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
-            protected set => this._Fragments = value;
+            init => this._Fragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

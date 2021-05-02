@@ -327,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ANavigationMesh> NavigationMeshes
         {
             get => this._NavigationMeshes;
-            protected set => this._NavigationMeshes = value;
+            init => this._NavigationMeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -353,7 +353,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
-            protected set => this._Persistent = value;
+            init => this._Persistent = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
-            protected set => this._Temporary = value;
+            init => this._Temporary = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

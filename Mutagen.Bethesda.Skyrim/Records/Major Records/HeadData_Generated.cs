@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<HeadPartReference> HeadParts
         {
             get => this._HeadParts;
-            protected set => this._HeadParts = value;
+            init => this._HeadParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets
         {
             get => this._RacePresets;
-            protected set => this._RacePresets = value;
+            init => this._RacePresets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -96,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors
         {
             get => this._AvailableHairColors;
-            protected set => this._AvailableHairColors = value;
+            init => this._AvailableHairColors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails
         {
             get => this._FaceDetails;
-            protected set => this._FaceDetails = value;
+            init => this._FaceDetails = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<TintAssets> TintMasks
         {
             get => this._TintMasks;
-            protected set => this._TintMasks = value;
+            init => this._TintMasks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

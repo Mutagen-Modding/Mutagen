@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<PackageBranch> ProcedureTree
         {
             get => this._ProcedureTree;
-            protected set => this._ProcedureTree = value;
+            init => this._ProcedureTree = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

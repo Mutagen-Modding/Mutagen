@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<ICameraPathGetter>> RelatedPaths
         {
             get => this._RelatedPaths;
-            protected set => this._RelatedPaths = value;
+            init => this._RelatedPaths = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<ICameraShotGetter>> Shots
         {
             get => this._Shots;
-            protected set => this._Shots = value;
+            init => this._Shots = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

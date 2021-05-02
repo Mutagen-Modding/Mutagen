@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IGrassGetter>> Grasses
         {
             get => this._Grasses;
-            protected set => this._Grasses = value;
+            init => this._Grasses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

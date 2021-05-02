@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceGridReference> LargeReferences
         {
             get => this._LargeReferences;
-            protected set => this._LargeReferences = value;
+            init => this._LargeReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -326,7 +326,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
-            protected set => this._SubCells = value;
+            init => this._SubCells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

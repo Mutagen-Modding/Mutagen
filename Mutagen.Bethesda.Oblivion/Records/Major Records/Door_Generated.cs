@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IPlaceGetter>> RandomTeleportDestinations
         {
             get => this._RandomTeleportDestinations;
-            protected set => this._RandomTeleportDestinations = value;
+            init => this._RandomTeleportDestinations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

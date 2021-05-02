@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<LoadScreenLocation> Locations
         {
             get => this._Locations;
-            protected set => this._Locations = value;
+            init => this._Locations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

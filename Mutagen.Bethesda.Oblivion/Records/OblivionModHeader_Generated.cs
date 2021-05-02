@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
-            protected set => this._MasterReferences = value;
+            init => this._MasterReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

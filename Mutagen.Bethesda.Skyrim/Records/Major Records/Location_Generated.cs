@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LocationCoordinate> ActorCellEncounterCell
         {
             get => this._ActorCellEncounterCell;
-            protected set => this._ActorCellEncounterCell = value;
+            init => this._ActorCellEncounterCell = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -200,7 +200,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LocationCoordinate> LocationCellEncounterCell
         {
             get => this._LocationCellEncounterCell;
-            protected set => this._LocationCellEncounterCell = value;
+            init => this._LocationCellEncounterCell = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -214,7 +214,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LocationCoordinate> ReferenceCellEncounterCell
         {
             get => this._ReferenceCellEncounterCell;
-            protected set => this._ReferenceCellEncounterCell = value;
+            init => this._ReferenceCellEncounterCell = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

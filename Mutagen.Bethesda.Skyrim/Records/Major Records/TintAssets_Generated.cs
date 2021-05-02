@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<TintPreset> Presets
         {
             get => this._Presets;
-            protected set => this._Presets = value;
+            init => this._Presets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

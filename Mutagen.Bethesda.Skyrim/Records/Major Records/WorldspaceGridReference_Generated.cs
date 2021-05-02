@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceReference> References
         {
             get => this._References;
-            protected set => this._References = value;
+            init => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

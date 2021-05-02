@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P2Int16> Coordinates
         {
             get => this._Coordinates;
-            protected set => this._Coordinates = value;
+            init => this._Coordinates = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

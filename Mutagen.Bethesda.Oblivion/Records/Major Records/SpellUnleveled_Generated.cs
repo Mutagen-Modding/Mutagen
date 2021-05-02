@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Effect> Effects
         {
             get => this._Effects;
-            protected set => this._Effects = value;
+            init => this._Effects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

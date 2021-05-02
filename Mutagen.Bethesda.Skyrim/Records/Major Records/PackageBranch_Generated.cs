@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -94,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
-            protected set => this._DataInputIndices = value;
+            init => this._DataInputIndices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -130,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SliceList<byte> Unknown
         {
             get => this._Unknown;
-            protected set => this._Unknown = value;
+            init => this._Unknown = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

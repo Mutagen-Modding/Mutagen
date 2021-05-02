@@ -283,7 +283,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<String> MovementTypeNames
         {
             get => this._MovementTypeNames;
-            protected set => this._MovementTypeNames = value;
+            init => this._MovementTypeNames = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -330,7 +330,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Attack> Attacks
         {
             get => this._Attacks;
-            protected set => this._Attacks = value;
+            init => this._Attacks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -449,7 +449,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<RaceMovementType> MovementTypes
         {
             get => this._MovementTypes;
-            protected set => this._MovementTypes = value;
+            init => this._MovementTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -468,7 +468,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IEquipTypeGetter>> EquipmentSlots
         {
             get => this._EquipmentSlots;
-            protected set => this._EquipmentSlots = value;
+            init => this._EquipmentSlots = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

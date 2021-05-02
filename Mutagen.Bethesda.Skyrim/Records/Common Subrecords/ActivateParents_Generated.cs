@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ActivateParent> Parents
         {
             get => this._Parents;
-            protected set => this._Parents = value;
+            init => this._Parents = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

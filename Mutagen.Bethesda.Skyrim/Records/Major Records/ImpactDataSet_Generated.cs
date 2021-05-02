@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ImpactData> Impacts
         {
             get => this._Impacts;
-            protected set => this._Impacts = value;
+            init => this._Impacts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<IGrassGetter>> PotentialGrass
         {
             get => this._PotentialGrass;
-            protected set => this._PotentialGrass = value;
+            init => this._PotentialGrass = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

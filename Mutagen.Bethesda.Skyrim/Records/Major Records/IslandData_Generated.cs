@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P3Int16> Triangles
         {
             get => this._Triangles;
-            protected set => this._Triangles = value;
+            init => this._Triangles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
-            protected set => this._Vertices = value;
+            init => this._Vertices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

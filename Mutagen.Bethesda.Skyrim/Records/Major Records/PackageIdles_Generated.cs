@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations
         {
             get => this._Animations;
-            protected set => this._Animations = value;
+            init => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

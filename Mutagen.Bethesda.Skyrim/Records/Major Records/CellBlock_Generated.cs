@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<CellSubBlock> SubBlocks
         {
             get => this._SubBlocks;
-            protected set => this._SubBlocks = value;
+            init => this._SubBlocks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

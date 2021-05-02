@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
-            protected set => this._LocalVariables = value;
+            init => this._LocalVariables = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<AScriptReference> References
         {
             get => this._References;
-            protected set => this._References = value;
+            init => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> StartConditions
         {
             get => this._StartConditions;
-            protected set => this._StartConditions = value;
+            init => this._StartConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> CompletionConditions
         {
             get => this._CompletionConditions;
-            protected set => this._CompletionConditions = value;
+            init => this._CompletionConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

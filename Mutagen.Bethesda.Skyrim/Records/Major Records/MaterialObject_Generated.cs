@@ -77,7 +77,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SliceList<byte> DNAMs
         {
             get => this._DNAMs;
-            protected set => this._DNAMs = value;
+            init => this._DNAMs = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

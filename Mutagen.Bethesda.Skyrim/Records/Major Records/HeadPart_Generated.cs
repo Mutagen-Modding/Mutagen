@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IHeadPartGetter>> ExtraParts
         {
             get => this._ExtraParts;
-            protected set => this._ExtraParts = value;
+            init => this._ExtraParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -135,7 +135,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Part> Parts
         {
             get => this._Parts;
-            protected set => this._Parts = value;
+            init => this._Parts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

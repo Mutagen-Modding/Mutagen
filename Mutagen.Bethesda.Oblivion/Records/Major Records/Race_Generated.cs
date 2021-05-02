@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IFormLinkGetter<ISpellGetter>> Spells
         {
             get => this._Spells;
-            protected set => this._Spells = value;
+            init => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<RaceRelation> Relations
         {
             get => this._Relations;
-            protected set => this._Relations = value;
+            init => this._Relations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<FacePart> FaceData
         {
             get => this._FaceData;
-            protected set => this._FaceData = value;
+            init => this._FaceData = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

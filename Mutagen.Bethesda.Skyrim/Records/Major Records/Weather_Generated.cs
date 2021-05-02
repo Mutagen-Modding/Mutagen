@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public String[] CloudTextures
         {
             get => this._CloudTextures;
-            protected set => this._CloudTextures = value;
+            init => this._CloudTextures = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.Skyrim
         public CloudLayer[] Clouds
         {
             get => this._Clouds;
-            protected set => this._Clouds = value;
+            init => this._Clouds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -332,7 +332,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
-            protected set => this._Sounds = value;
+            init => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -346,7 +346,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IStaticGetter>> SkyStatics
         {
             get => this._SkyStatics;
-            protected set => this._SkyStatics = value;
+            init => this._SkyStatics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

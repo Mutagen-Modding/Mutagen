@@ -194,7 +194,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IPlaced> Persistent
         {
             get => this._Persistent;
-            protected set => this._Persistent = value;
+            init => this._Persistent = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -211,7 +211,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IPlaced> Temporary
         {
             get => this._Temporary;
-            protected set => this._Temporary = value;
+            init => this._Temporary = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -228,7 +228,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<IPlaced> VisibleWhenDistant
         {
             get => this._VisibleWhenDistant;
-            protected set => this._VisibleWhenDistant = value;
+            init => this._VisibleWhenDistant = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

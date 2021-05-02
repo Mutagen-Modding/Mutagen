@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<LeveledSpellEntry> Entries
         {
             get => this._Entries;
-            protected set => this._Entries = value;
+            init => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
-            protected set => this._MasterReferences = value;
+            init => this._MasterReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -147,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<TransientType> TransientTypes
         {
             get => this._TransientTypes;
-            protected set => this._TransientTypes = value;
+            init => this._TransientTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

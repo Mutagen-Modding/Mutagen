@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LinkedReferences> LinkedReferences
         {
             get => this._LinkedReferences;
-            protected set => this._LinkedReferences = value;
+            init => this._LinkedReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

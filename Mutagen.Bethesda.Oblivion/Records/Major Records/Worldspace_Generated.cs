@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
-            protected set => this._SubCells = value;
+            init => this._SubCells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

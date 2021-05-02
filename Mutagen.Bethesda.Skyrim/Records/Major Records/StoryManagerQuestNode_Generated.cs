@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<StoryManagerQuest> Quests
         {
             get => this._Quests;
-            protected set => this._Quests = value;
+            init => this._Quests = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

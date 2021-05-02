@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> Navmeshes
         {
             get => this._Navmeshes;
-            protected set => this._Navmeshes = value;
+            init => this._Navmeshes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

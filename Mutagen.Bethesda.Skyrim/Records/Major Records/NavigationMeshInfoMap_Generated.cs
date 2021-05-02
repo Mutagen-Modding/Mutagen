@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavigationMapInfo> MapInfos
         {
             get => this._MapInfos;
-            protected set => this._MapInfos = value;
+            init => this._MapInfos = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

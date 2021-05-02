@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps
         {
             get => this._WalkForwardFootsteps;
-            protected set => this._WalkForwardFootsteps = value;
+            init => this._WalkForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps
         {
             get => this._RunForwardFootsteps;
-            protected set => this._RunForwardFootsteps = value;
+            init => this._RunForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps
         {
             get => this._WalkForwardAlternateFootsteps;
-            protected set => this._WalkForwardAlternateFootsteps = value;
+            init => this._WalkForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,7 +99,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps
         {
             get => this._RunForwardAlternateFootsteps;
-            protected set => this._RunForwardAlternateFootsteps = value;
+            init => this._RunForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -113,7 +113,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2
         {
             get => this._WalkForwardAlternateFootsteps2;
-            protected set => this._WalkForwardAlternateFootsteps2 = value;
+            init => this._WalkForwardAlternateFootsteps2 = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

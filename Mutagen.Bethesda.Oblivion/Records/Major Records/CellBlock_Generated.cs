@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<CellSubBlock> SubBlocks
         {
             get => this._SubBlocks;
-            protected set => this._SubBlocks = value;
+            init => this._SubBlocks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

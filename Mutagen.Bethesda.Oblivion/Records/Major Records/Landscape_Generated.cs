@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
-            protected set => this._Layers = value;
+            init => this._Layers = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

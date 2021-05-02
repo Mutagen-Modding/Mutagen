@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Int16> Connections
         {
             get => this._Connections;
-            protected set => this._Connections = value;
+            init => this._Connections = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

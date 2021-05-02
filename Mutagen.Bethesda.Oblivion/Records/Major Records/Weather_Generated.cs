@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<WeatherSound> Sounds
         {
             get => this._Sounds;
-            protected set => this._Sounds = value;
+            init => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

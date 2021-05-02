@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
-            protected set => this._MergedTo = value;
+            init => this._MergedTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
-            protected set => this._PreferredMerges = value;
+            init => this._PreferredMerges = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
-            protected set => this._LinkedDoors = value;
+            init => this._LinkedDoors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
