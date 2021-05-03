@@ -310,43 +310,6 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
             }
         }
 
-        /// <inheritdoc/>
-        public void Write(ReadOnlySpan<char> str)
-        {
-            Span<byte> bytes = stackalloc byte[str.Length];
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                var c = str[i];
-                bytes[i] = (byte)c;
-            }
-            this.Writer.Write(bytes);
-        }
-
-        /// <inheritdoc/>
-        public void Write(string str, StringBinaryType binaryType)
-        {
-            switch (binaryType)
-            {
-                case StringBinaryType.Plain:
-                    Write(str.AsSpan());
-                    break;
-                case StringBinaryType.NullTerminate:
-                    Write(str.AsSpan());
-                    this.Write((byte)0);
-                    break;
-                case StringBinaryType.PrependLength:
-                    Write(str.Length);
-                    Write(str.AsSpan());
-                    break;
-                case StringBinaryType.PrependLengthUShort:
-                    Write(checked((ushort)str.Length));
-                    Write(str.AsSpan());
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-
         /// <summary>
         /// Disposes of Writer if applicable
         /// </summary>
@@ -356,6 +319,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
             {
                 this.Writer.Dispose();
             }
+        }
+
+        public void Write(ReadOnlySpan<char> value)
+        {
+            BinaryStringUtility.Write(this, value);
         }
     }
 }

@@ -189,5 +189,41 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
                     throw new NotImplementedException();
             }
         }
+
+        public static void Write(this IBinaryWriteStream stream, string str, StringBinaryType binaryType)
+        {
+            switch (binaryType)
+            {
+                case StringBinaryType.Plain:
+                    Write(stream, str.AsSpan());
+                    break;
+                case StringBinaryType.NullTerminate:
+                    Write(stream, str.AsSpan());
+                    stream.Write((byte)0);
+                    break;
+                case StringBinaryType.PrependLength:
+                    stream.Write(str.Length);
+                    Write(stream, str.AsSpan());
+                    break;
+                case StringBinaryType.PrependLengthUShort:
+                    stream.Write(checked((ushort)str.Length));
+                    Write(stream, str.AsSpan());
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        /// <inheritdoc/>
+        public static void Write(IBinaryWriteStream stream, ReadOnlySpan<char> str)
+        {
+            Span<byte> bytes = stackalloc byte[str.Length];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                var c = str[i];
+                bytes[i] = (byte)c;
+            }
+            stream.Write(bytes);
+        }
     }
 }
