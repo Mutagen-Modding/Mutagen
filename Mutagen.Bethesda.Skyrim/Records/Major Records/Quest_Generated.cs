@@ -2907,45 +2907,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestBinaryWriteTranslation Instance = new QuestBinaryWriteTranslation();
 
-        public static partial void WriteBinaryDialogConditionsCustom(
-            MutagenWriter writer,
-            IQuestGetter item);
-
-        public static void WriteBinaryDialogConditions(
-            MutagenWriter writer,
-            IQuestGetter item)
-        {
-            WriteBinaryDialogConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryUnusedConditionsLogicCustom(
-            MutagenWriter writer,
-            IQuestGetter item);
-
-        public static void WriteBinaryUnusedConditionsLogic(
-            MutagenWriter writer,
-            IQuestGetter item)
-        {
-            WriteBinaryUnusedConditionsLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryNextAliasIDCustom(
-            MutagenWriter writer,
-            IQuestGetter item);
-
-        public static void WriteBinaryNextAliasID(
-            MutagenWriter writer,
-            IQuestGetter item)
-        {
-            WriteBinaryNextAliasIDCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestGetter item,
             MutagenWriter writer)
@@ -3058,6 +3019,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
+        }
+
+        public static partial void WriteBinaryDialogConditionsCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryDialogConditions(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryDialogConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryUnusedConditionsLogicCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryUnusedConditionsLogic(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryUnusedConditionsLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryNextAliasIDCustom(
+            MutagenWriter writer,
+            IQuestGetter item);
+
+        public static void WriteBinaryNextAliasID(
+            MutagenWriter writer,
+            IQuestGetter item)
+        {
+            WriteBinaryNextAliasIDCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

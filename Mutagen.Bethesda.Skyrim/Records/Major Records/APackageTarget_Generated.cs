@@ -926,6 +926,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IAPackageTargetGetter item,
+            MutagenWriter writer)
+        {
+            APackageTargetBinaryWriteTranslation.WriteBinaryDataParse(
+                writer: writer,
+                item: item);
+            writer.Write(item.CountOrDistance, length: 4);
+        }
+
         public static partial void WriteBinaryDataParseCustom(
             MutagenWriter writer,
             IAPackageTargetGetter item);
@@ -937,16 +947,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryDataParseCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IAPackageTargetGetter item,
-            MutagenWriter writer)
-        {
-            APackageTargetBinaryWriteTranslation.WriteBinaryDataParse(
-                writer: writer,
-                item: item);
-            writer.Write(item.CountOrDistance, length: 4);
         }
 
         public virtual void Write(

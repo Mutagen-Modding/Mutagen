@@ -5392,17 +5392,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
-        public static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IWorldspaceGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IWorldspaceGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             IWorldspaceGetter item,
             MutagenWriter writer)
@@ -5567,6 +5556,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 overflowRecord: RecordTypes.XXXX);
         }
 
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IWorldspaceGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IWorldspaceGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,

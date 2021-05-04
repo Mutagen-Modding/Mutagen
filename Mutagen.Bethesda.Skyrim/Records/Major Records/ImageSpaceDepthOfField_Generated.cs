@@ -1254,6 +1254,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IImageSpaceDepthOfFieldGetter item,
+            MutagenWriter writer)
+        {
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Strength);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Distance);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Range);
+            if (!item.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Unknown);
+                ImageSpaceDepthOfFieldBinaryWriteTranslation.WriteBinaryBlurRadius(
+                    writer: writer,
+                    item: item);
+                ImageSpaceDepthOfFieldBinaryWriteTranslation.WriteBinarySky(
+                    writer: writer,
+                    item: item);
+            }
+        }
+
         public static partial void WriteBinaryBlurRadiusCustom(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item);
@@ -1278,31 +1303,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinarySkyCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IImageSpaceDepthOfFieldGetter item,
-            MutagenWriter writer)
-        {
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Strength);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Distance);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Range);
-            if (!item.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0))
-            {
-                writer.Write(item.Unknown);
-                ImageSpaceDepthOfFieldBinaryWriteTranslation.WriteBinaryBlurRadius(
-                    writer: writer,
-                    item: item);
-                ImageSpaceDepthOfFieldBinaryWriteTranslation.WriteBinarySky(
-                    writer: writer,
-                    item: item);
-            }
         }
 
         public void Write(

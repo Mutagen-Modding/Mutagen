@@ -1043,6 +1043,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PackageAdapterBinaryWriteTranslation Instance = new PackageAdapterBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IPackageAdapterGetter item,
+            MutagenWriter writer)
+        {
+            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            PackageAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryScriptFragmentsCustom(
             MutagenWriter writer,
             IPackageAdapterGetter item);
@@ -1052,18 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageAdapterGetter item)
         {
             WriteBinaryScriptFragmentsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IPackageAdapterGetter item,
-            MutagenWriter writer)
-        {
-            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            PackageAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
                 writer: writer,
                 item: item);
         }

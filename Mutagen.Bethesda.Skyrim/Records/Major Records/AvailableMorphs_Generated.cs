@@ -1280,19 +1280,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AvailableMorphsBinaryWriteTranslation Instance = new AvailableMorphsBinaryWriteTranslation();
 
-        public static partial void WriteBinaryParseCustom(
-            MutagenWriter writer,
-            IAvailableMorphsGetter item);
-
-        public static void WriteBinaryParse(
-            MutagenWriter writer,
-            IAvailableMorphsGetter item)
-        {
-            WriteBinaryParseCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IAvailableMorphsGetter item,
             MutagenWriter writer)
@@ -1305,6 +1292,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter)
         {
             AvailableMorphsBinaryWriteTranslation.WriteBinaryParse(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParseCustom(
+            MutagenWriter writer,
+            IAvailableMorphsGetter item);
+
+        public static void WriteBinaryParse(
+            MutagenWriter writer,
+            IAvailableMorphsGetter item)
+        {
+            WriteBinaryParseCustom(
                 writer: writer,
                 item: item);
         }

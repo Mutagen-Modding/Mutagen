@@ -1316,19 +1316,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static GlobalShortBinaryWriteTranslation Instance = new GlobalShortBinaryWriteTranslation();
 
-        public static partial void WriteBinaryDataCustom(
-            MutagenWriter writer,
-            IGlobalShortGetter item);
-
-        public static void WriteBinaryData(
-            MutagenWriter writer,
-            IGlobalShortGetter item)
-        {
-            WriteBinaryDataCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IGlobalShortGetter item,
             MutagenWriter writer,
@@ -1339,6 +1326,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
             GlobalShortBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IGlobalShortGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IGlobalShortGetter item)
+        {
+            WriteBinaryDataCustom(
                 writer: writer,
                 item: item);
         }

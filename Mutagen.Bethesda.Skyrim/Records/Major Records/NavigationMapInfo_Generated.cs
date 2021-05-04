@@ -1941,32 +1941,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
 
-        public static partial void WriteBinaryIslandCustom(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item);
-
-        public static void WriteBinaryIsland(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item)
-        {
-            WriteBinaryIslandCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryParentParseLogicCustom(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item);
-
-        public static void WriteBinaryParentParseLogic(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item)
-        {
-            WriteBinaryParentParseLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             INavigationMapInfoGetter item,
             MutagenWriter writer)
@@ -2019,6 +1993,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ParentWorldspace);
             NavigationMapInfoBinaryWriteTranslation.WriteBinaryParentParseLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryIslandCustom(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item);
+
+        public static void WriteBinaryIsland(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item)
+        {
+            WriteBinaryIslandCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParentParseLogicCustom(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item);
+
+        public static void WriteBinaryParentParseLogic(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item)
+        {
+            WriteBinaryParentParseLogicCustom(
                 writer: writer,
                 item: item);
         }

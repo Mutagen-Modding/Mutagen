@@ -1276,21 +1276,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
-            MutagenWriter writer,
-            IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IBinaryItem;
-
-        public static void WriteBinaryContainedRecordTypeParse<T>(
-            MutagenWriter writer,
-            IGroupGetter<T> item)
-            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
-        {
-            WriteBinaryContainedRecordTypeParseCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded<T>(
             IGroupGetter<T> item,
             MutagenWriter writer)
@@ -1325,6 +1310,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                             writer: r);
                     }
                 });
+        }
+
+        public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+            MutagenWriter writer,
+            IGroupGetter<T> item)
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem;
+
+        public static void WriteBinaryContainedRecordTypeParse<T>(
+            MutagenWriter writer,
+            IGroupGetter<T> item)
+            where T : class, ISkyrimMajorRecordGetter, IBinaryItem
+        {
+            WriteBinaryContainedRecordTypeParseCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write<T>(

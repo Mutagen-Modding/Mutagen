@@ -1103,19 +1103,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ArmorDataBinaryWriteTranslation Instance = new ArmorDataBinaryWriteTranslation();
 
-        public static partial void WriteBinaryArmorValueCustom(
-            MutagenWriter writer,
-            IArmorDataGetter item);
-
-        public static void WriteBinaryArmorValue(
-            MutagenWriter writer,
-            IArmorDataGetter item)
-        {
-            WriteBinaryArmorValueCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IArmorDataGetter item,
             MutagenWriter writer)
@@ -1128,6 +1115,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight);
+        }
+
+        public static partial void WriteBinaryArmorValueCustom(
+            MutagenWriter writer,
+            IArmorDataGetter item);
+
+        public static void WriteBinaryArmorValue(
+            MutagenWriter writer,
+            IArmorDataGetter item)
+        {
+            WriteBinaryArmorValueCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

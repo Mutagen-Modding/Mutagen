@@ -1943,19 +1943,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
 
-        public static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            ISkyrimModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            ISkyrimModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             ISkyrimModHeaderGetter item,
             MutagenWriter writer)
@@ -2020,6 +2007,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.INCC,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            ISkyrimModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            ISkyrimModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

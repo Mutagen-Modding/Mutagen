@@ -1330,32 +1330,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PatrolBinaryWriteTranslation Instance = new PatrolBinaryWriteTranslation();
 
-        public static partial void WriteBinaryPatrolScriptMarkerCustom(
-            MutagenWriter writer,
-            IPatrolGetter item);
-
-        public static void WriteBinaryPatrolScriptMarker(
-            MutagenWriter writer,
-            IPatrolGetter item)
-        {
-            WriteBinaryPatrolScriptMarkerCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryTopicsCustom(
-            MutagenWriter writer,
-            IPatrolGetter item);
-
-        public static void WriteBinaryTopics(
-            MutagenWriter writer,
-            IPatrolGetter item)
-        {
-            WriteBinaryTopicsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IPatrolGetter item,
             MutagenWriter writer,
@@ -1381,6 +1355,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.SCTX,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
             PatrolBinaryWriteTranslation.WriteBinaryTopics(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryPatrolScriptMarkerCustom(
+            MutagenWriter writer,
+            IPatrolGetter item);
+
+        public static void WriteBinaryPatrolScriptMarker(
+            MutagenWriter writer,
+            IPatrolGetter item)
+        {
+            WriteBinaryPatrolScriptMarkerCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTopicsCustom(
+            MutagenWriter writer,
+            IPatrolGetter item);
+
+        public static void WriteBinaryTopics(
+            MutagenWriter writer,
+            IPatrolGetter item)
+        {
+            WriteBinaryTopicsCustom(
                 writer: writer,
                 item: item);
         }

@@ -5986,19 +5986,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
-        public static partial void WriteBinaryBoundDataCustom(
-            MutagenWriter writer,
-            IPlacedObjectGetter item);
-
-        public static void WriteBinaryBoundData(
-            MutagenWriter writer,
-            IPlacedObjectGetter item)
-        {
-            WriteBinaryBoundDataCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IPlacedObjectGetter item,
             MutagenWriter writer)
@@ -6327,6 +6314,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+        }
+
+        public static partial void WriteBinaryBoundDataCustom(
+            MutagenWriter writer,
+            IPlacedObjectGetter item);
+
+        public static void WriteBinaryBoundData(
+            MutagenWriter writer,
+            IPlacedObjectGetter item)
+        {
+            WriteBinaryBoundDataCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

@@ -1372,6 +1372,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static LodBinaryWriteTranslation Instance = new LodBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILodGetter item,
+            MutagenWriter writer)
+        {
+            LodBinaryWriteTranslation.WriteBinaryLevel0(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryLevel0Custom(
             MutagenWriter writer,
             ILodGetter item);
@@ -1381,15 +1390,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILodGetter item)
         {
             WriteBinaryLevel0Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            ILodGetter item,
-            MutagenWriter writer)
-        {
-            LodBinaryWriteTranslation.WriteBinaryLevel0(
                 writer: writer,
                 item: item);
         }

@@ -2636,5 +2636,480 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             fg.AppendLine();
         }
 
+        public override async Task GenerateInTranslationWriteClass(ObjectGeneration obj, FileGeneration fg)
+        {
+            await GenerateWriteExtras(obj, fg);
+            await base.GenerateInTranslationWriteClass(obj, fg);
+        }
+
+        protected override async Task GenerateWriteSnippet(ObjectGeneration obj, FileGeneration fg)
+        {
+            var data = obj.GetObjectData();
+            var isMajor = await obj.IsMajorRecord();
+            var hasRecType = obj.TryGetRecordType(out var recType);
+            if (hasRecType)
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Header)}",
+                    ")",
+                    semiColon: false))
+                {
+                    args.AddPassArg(WriterMemberName);
+                    args.Add($"record: {GetRecordTypeString(obj, "writer.MetaData.Constants.Release", "writer.MetaData.FormVersion")}");
+                    args.Add($"type: {nameof(ObjectType)}.{obj.GetObjectType()}");
+                }
+            }
+            using (new BraceWrapper(fg, doIt: hasRecType))
+            {
+                if (isMajor)
+                {
+                    fg.AppendLine("try");
+                }
+                if (obj.GetObjectType() == ObjectType.Mod)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"{nameof(ModHeaderWriteLogic)}.{nameof(ModHeaderWriteLogic.WriteHeader)}"))
+                    {
+                        args.AddPassArg("param");
+                        args.AddPassArg(WriterMemberName);
+                        args.Add("mod: item");
+                        args.Add("modHeader: item.ModHeader.DeepCopy()");
+                        args.AddPassArg("modKey");
+                    }
+                }
+                using (new BraceWrapper(fg, doIt: isMajor))
+                {
+                    if (HasEmbeddedFields(obj))
+                    {
+                        using (var args = new ArgsWrapper(fg,
+                            $"WriteEmbedded"))
+                        {
+                            args.AddPassArg($"item");
+                            args.AddPassArg(WriterMemberName);
+                        }
+                    }
+                    else
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"{this.TranslationWriteClass(firstBase)}.WriteEmbedded"))
+                            {
+                                args.AddPassArg($"item");
+                                args.AddPassArg(WriterMemberName);
+                            }
+                        }
+                    }
+                    if (HasRecordTypeFields(obj))
+                    {
+                        if (await obj.IsMajorRecord())
+                        {
+                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = item.FormVersion;");
+                        }
+                        using (var args = new ArgsWrapper(fg,
+                            $"WriteRecordTypes"))
+                        {
+                            args.AddPassArg($"item");
+                            args.AddPassArg(WriterMemberName);
+                            if (obj.GetObjectType() == ObjectType.Mod)
+                            {
+                                args.AddPassArg($"importMask");
+                            }
+                            else
+                            {
+                                args.AddPassArg($"recordTypeConverter");
+                            }
+                        }
+                        if (await obj.IsMajorRecord())
+                        {
+                            fg.AppendLine($"{WriterMemberName}.{nameof(MutagenWriter.MetaData)}.{nameof(WritingBundle.FormVersion)} = null;");
+                        }
+                    }
+                    else
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasRecordTypeFields(b));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                            $"{this.TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                            {
+                                args.AddPassArg($"item");
+                                args.AddPassArg(WriterMemberName);
+                                args.AddPassArg($"recordTypeConverter");
+                            }
+                        }
+                    }
+                }
+                if (isMajor)
+                {
+                    fg.AppendLine("catch (Exception ex)");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"throw RecordException.Enrich(ex, item);");
+                    }
+                }
+            }
+            if (data.CustomBinaryEnd != CustomEnd.Off)
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"CustomBinaryEndExportInternal"))
+                {
+                    args.AddPassArg(WriterMemberName);
+                    args.Add("obj: item");
+                }
+            }
+        }
+
+        private async Task GenerateWriteExtras(ObjectGeneration obj, FileGeneration fg)
+        {
+            var data = obj.GetObjectData();
+            if (HasEmbeddedFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void WriteEmbedded{obj.GetGenericTypes(MaskType.Normal)}"))
+                {
+                    args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
+                    args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
+                    args.Add($"{WriterClass} {WriterMemberName}");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.HasLoquiBaseObject)
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((b) => HasEmbeddedFields(b));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"{TranslationWriteClass(firstBase)}.WriteEmbedded"))
+                            {
+                                args.AddPassArg("item");
+                                args.AddPassArg(WriterMemberName);
+                            }
+                        }
+                    }
+                    foreach (var field in obj.IterateFields(nonIntegrated: true, expandSets: SetMarkerType.ExpandSets.False))
+                    {
+                        var fieldData = field.GetFieldData();
+                        if (fieldData.HasTrigger) continue;
+                        if (field is CustomLogic logic && logic.IsRecordType) continue;
+                        if (fieldData.Binary == BinaryGenerationType.NoGeneration) continue;
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        if (field is BreakType breakType)
+                        {
+                            fg.AppendLine($"if (!item.{VersioningModule.VersioningFieldName}.HasFlag({obj.Name}.{VersioningModule.VersioningEnumName}.Break{breakType.Index}))");
+                            fg.AppendLine("{");
+                            fg.Depth++;
+                        }
+                        if (!field.Enabled) continue;
+                        List<string> conditions = new List<string>();
+                        if (conditions.Count > 0)
+                        {
+                            using (var args = new IfWrapper(fg, ANDs: true))
+                            {
+                                foreach (var item in conditions)
+                                {
+                                    args.Add(item);
+                                }
+                            }
+                        }
+                        using (new BraceWrapper(fg, doIt: conditions.Count > 0))
+                        {
+                            var maskType = this.Gen.MaskModule.GetMaskModule(field.GetType()).GetErrorMaskTypeStr(field);
+                            if (fieldData.Binary == BinaryGenerationType.Custom)
+                            {
+                                CustomLogic.GenerateWrite(
+                                    fg: fg,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                                continue;
+                            }
+                            if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                            {
+                                if (!field.IntegrateField) continue;
+                                throw new ArgumentException("Unsupported type generator: " + field);
+                            }
+                            if (fieldData.HasVersioning)
+                            {
+                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, "writer.MetaData.FormVersion!.Value")})");
+                            }
+                            using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
+                            {
+                                await generator.GenerateWrite(
+                                    fg: fg,
+                                    objGen: obj,
+                                    typeGen: field,
+                                    writerAccessor: WriterMemberName,
+                                    itemAccessor: Accessor.FromType(field, "item"),
+                                    translationAccessor: null,
+                                    errorMaskAccessor: null,
+                                    converterAccessor: null);
+                            }
+                        }
+                    }
+                    for (int i = 0; i < obj.Fields.WhereCastable<TypeGeneration, BreakType>().Count(); i++)
+                    {
+                        fg.Depth--;
+                        fg.AppendLine("}");
+                    }
+                }
+                fg.AppendLine();
+            }
+
+            if (HasRecordTypeFields(obj))
+            {
+                using (var args = new FunctionWrapper(fg,
+                    $"public static void WriteRecordTypes{obj.GetGenericTypes(MaskType.Normal)}"))
+                {
+                    args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
+                    args.Add($"{obj.Interface(internalInterface: true, getter: true)} item");
+                    args.Add($"{WriterClass} {WriterMemberName}");
+                    if (obj.GetObjectType() == ObjectType.Mod)
+                    {
+                        args.Add($"GroupMask? importMask");
+                    }
+                    args.Add($"RecordTypeConverter? recordTypeConverter{(obj.GetObjectType() == ObjectType.Mod ? " = null" : null)}");
+                }
+                using (new BraceWrapper(fg))
+                {
+                    if (obj.HasLoquiBaseObject)
+                    {
+                        var firstBase = obj.BaseClassTrail().FirstOrDefault((f) => HasRecordTypeFields(f));
+                        if (firstBase != null)
+                        {
+                            using (var args = new ArgsWrapper(fg,
+                                $"{TranslationWriteClass(firstBase)}.WriteRecordTypes"))
+                            {
+                                args.AddPassArg($"item");
+                                args.AddPassArg(WriterMemberName);
+                                if (data.BaseRecordTypeConverter?.FromConversions.Count > 0)
+                                {
+                                    args.Add($"recordTypeConverter: recordTypeConverter.Combine({obj.RegistrationName}.BaseConverter)");
+                                }
+                                else
+                                {
+                                    args.AddPassArg("recordTypeConverter");
+                                }
+                            }
+                        }
+                    }
+                    foreach (var field in obj.IterateFields(expandSets: SetMarkerType.ExpandSets.FalseAndInclude, nonIntegrated: true))
+                    {
+                        var fieldData = field.GetFieldData();
+                        if (!fieldData.HasTrigger)
+                        {
+                            if (field is not CustomLogic custom)
+                            {
+                                continue;
+                            }
+                            if (!custom.IsRecordType)
+                            {
+                                continue;
+                            }
+                        }
+                        if (field.Derivative && fieldData.Binary != BinaryGenerationType.Custom) continue;
+                        switch (fieldData.Binary)
+                        {
+                            case BinaryGenerationType.Normal:
+                                break;
+                            case BinaryGenerationType.NoGeneration:
+                                continue;
+                            case BinaryGenerationType.Custom:
+                                CustomLogic.GenerateWrite(
+                                    fg: fg,
+                                    obj: obj,
+                                    field: field,
+                                    writerAccessor: WriterMemberName);
+                                continue;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        if (!this.TryGetTypeGeneration(field.GetType(), out var generator))
+                        {
+                            throw new ArgumentException("Unsupported type generator: " + field);
+                        }
+
+                        Func<Task> generate = async () =>
+                        {
+                            var accessor = Accessor.FromType(field, "item");
+                            if (field is DataType dataType)
+                            {
+                                if (dataType.Nullable)
+                                {
+                                    fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Has))");
+                                }
+                                using (new BraceWrapper(fg, doIt: dataType.Nullable))
+                                {
+                                    fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, recordTypeConverter.ConvertToCustom({obj.RecordTypeHeaderName(fieldData.RecordType.Value)})))");
+                                    using (new BraceWrapper(fg))
+                                    {
+                                        bool isInRange = false;
+                                        foreach (var subField in dataType.IterateFieldsWithMeta())
+                                        {
+                                            if (!this.TryGetTypeGeneration(subField.Field.GetType(), out var subGenerator))
+                                            {
+                                                throw new ArgumentException("Unsupported type generator: " + subField.Field);
+                                            }
+
+                                            var subData = subField.Field.GetFieldData();
+                                            if (!subGenerator.ShouldGenerateCopyIn(subField.Field)) continue;
+                                            switch (subData.Binary)
+                                            {
+                                                case BinaryGenerationType.Normal:
+                                                    break;
+                                                case BinaryGenerationType.NoGeneration:
+                                                    continue;
+                                                case BinaryGenerationType.Custom:
+                                                    using (var args = new ArgsWrapper(fg,
+                                                        $"{TranslationWriteClass(obj)}.WriteBinary{subField.Field.Name}"))
+                                                    {
+                                                        args.AddPassArg(WriterMemberName);
+                                                        args.AddPassArg("item");
+                                                    }
+                                                    continue;
+                                                default:
+                                                    throw new NotImplementedException();
+                                            }
+                                            if (subField.BreakIndex != -1)
+                                            {
+                                                fg.AppendLine($"if (!item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Break{subField.BreakIndex}))");
+                                                fg.AppendLine("{");
+                                                fg.Depth++;
+                                            }
+                                            if (subField.Range != null && !isInRange)
+                                            {
+                                                isInRange = true;
+                                                fg.AppendLine($"if (item.{dataType.StateName}.HasFlag({obj.Name}.{dataType.EnumName}.Range{subField.RangeIndex}))");
+                                                fg.AppendLine("{");
+                                                fg.Depth++;
+                                            }
+                                            if (subField.Range == null && isInRange)
+                                            {
+                                                isInRange = false;
+                                                fg.Depth--;
+                                                fg.AppendLine("}");
+                                            }
+                                            if (subData.HasVersioning)
+                                            {
+                                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(subData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                                            }
+                                            using (new BraceWrapper(fg, doIt: subData.HasVersioning))
+                                            {
+                                                await subGenerator.GenerateWrite(
+                                                    fg: fg,
+                                                    objGen: obj,
+                                                    typeGen: subField.Field,
+                                                    writerAccessor: WriterMemberName,
+                                                        translationAccessor: null,
+                                                    itemAccessor: Accessor.FromType(subField.Field, "item"),
+                                                    errorMaskAccessor: null,
+                                                    converterAccessor: "recordTypeConverter");
+                                            }
+                                        }
+                                        for (int i = 0; i < dataType.BreakIndices.Count; i++)
+                                        {
+                                            fg.Depth--;
+                                            fg.AppendLine("}");
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!generator.ShouldGenerateWrite(field)) return;
+                                if (fieldData.Binary == BinaryGenerationType.NoGeneration) return;
+
+                                var loqui = field as LoquiType;
+
+                                // Skip modheader
+                                if (loqui != null
+                                    && loqui.Name == "ModHeader")
+                                {
+                                    return;
+                                }
+
+                                bool doIf = true;
+                                if (loqui != null
+                                    && loqui.TargetObjectGeneration?.GetObjectType() == ObjectType.Group
+                                    && obj.GetObjectType() == ObjectType.Mod)
+                                {
+                                    fg.AppendLine($"if (importMask?.{field.Name} ?? true)");
+                                }
+                                else
+                                {
+                                    doIf = false;
+                                }
+                                using (new BraceWrapper(fg, doIt: doIf))
+                                {
+                                    await generator.GenerateWrite(
+                                        fg: fg,
+                                        objGen: obj,
+                                        typeGen: field,
+                                        writerAccessor: WriterMemberName,
+                                        itemAccessor: accessor,
+                                        translationAccessor: null,
+                                        errorMaskAccessor: null,
+                                        converterAccessor: "recordTypeConverter");
+                                }
+                            }
+                        };
+
+                        if (fieldData.CustomVersion == null)
+                        {
+                            if (fieldData.HasVersioning)
+                            {
+                                fg.AppendLine($"if ({VersioningModule.GetVersionIfCheck(fieldData, $"{WriterMemberName}.MetaData.FormVersion!.Value")})");
+                            }
+                            using (new BraceWrapper(fg, doIt: fieldData.HasVersioning))
+                            {
+                                await generate();
+                            }
+                        }
+                        else
+                        {
+                            fg.AppendLine($"if (item.FormVersion <= {fieldData.CustomVersion})");
+                            using (new BraceWrapper(fg))
+                            {
+                                using (var args = new ArgsWrapper(fg,
+                                    $"{field.Name}CustomVersionWrite"))
+                                {
+                                    args.AddPassArg($"item");
+                                    args.AddPassArg(WriterMemberName);
+                                    args.AddPassArg($"recordTypeConverter");
+                                }
+                            }
+                            fg.AppendLine("else");
+                            using (new BraceWrapper(fg))
+                            {
+                                await generate();
+                            }
+                        }
+                    }
+
+                    if (data.EndMarkerType.HasValue)
+                    {
+                        fg.AppendLine($"using ({nameof(HeaderExport)}.{nameof(HeaderExport.Subrecord)}({WriterMemberName}, {obj.RecordTypeHeaderName(data.EndMarkerType.Value)})) {{ }} // End Marker");
+                    }
+                }
+                fg.AppendLine();
+            }
+
+            foreach (var field in obj.Fields)
+            {
+                var fieldData = field.GetFieldData();
+                if (fieldData.CustomVersion != null)
+                {
+                    using (var args = new ArgsWrapper(fg,
+                        $"static partial void {field.Name}CustomVersionWrite"))
+                    {
+                        args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
+                        args.Add($"{WriterClass} {WriterMemberName}");
+                        args.Add($"{nameof(RecordTypeConverter)}? recordTypeConverter");
+                    }
+                    fg.AppendLine();
+                }
+            }
+        }
     }
 }

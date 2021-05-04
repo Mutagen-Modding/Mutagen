@@ -1008,6 +1008,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static WorldspaceObjectBoundsBinaryWriteTranslation Instance = new WorldspaceObjectBoundsBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IWorldspaceObjectBoundsGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMin(
+                writer: writer,
+                item: item);
+            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMax(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryMinCustom(
             MutagenWriter writer,
             IWorldspaceObjectBoundsGetter item);
@@ -1030,19 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceObjectBoundsGetter item)
         {
             WriteBinaryMaxCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IWorldspaceObjectBoundsGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMin(
-                writer: writer,
-                item: item);
-            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMax(
                 writer: writer,
                 item: item);
         }

@@ -1034,6 +1034,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILocationTargetRadiusGetter item,
+            MutagenWriter writer)
+        {
+            LocationTargetRadiusBinaryWriteTranslation.WriteBinaryTarget(
+                writer: writer,
+                item: item);
+            writer.Write(item.Radius);
+        }
+
         public static partial void WriteBinaryTargetCustom(
             MutagenWriter writer,
             ILocationTargetRadiusGetter item);
@@ -1045,16 +1055,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryTargetCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            ILocationTargetRadiusGetter item,
-            MutagenWriter writer)
-        {
-            LocationTargetRadiusBinaryWriteTranslation.WriteBinaryTarget(
-                writer: writer,
-                item: item);
-            writer.Write(item.Radius);
         }
 
         public void Write(

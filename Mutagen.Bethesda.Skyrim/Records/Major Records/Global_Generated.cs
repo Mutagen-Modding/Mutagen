@@ -1147,19 +1147,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
 
-        public static partial void WriteBinaryTypeCharCustom(
-            MutagenWriter writer,
-            IGlobalGetter item);
-
-        public static void WriteBinaryTypeChar(
-            MutagenWriter writer,
-            IGlobalGetter item)
-        {
-            WriteBinaryTypeCharCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
@@ -1170,6 +1157,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
             GlobalBinaryWriteTranslation.WriteBinaryTypeChar(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTypeCharCustom(
+            MutagenWriter writer,
+            IGlobalGetter item);
+
+        public static void WriteBinaryTypeChar(
+            MutagenWriter writer,
+            IGlobalGetter item)
+        {
+            WriteBinaryTypeCharCustom(
                 writer: writer,
                 item: item);
         }

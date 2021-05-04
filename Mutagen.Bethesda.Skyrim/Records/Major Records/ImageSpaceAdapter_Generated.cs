@@ -11427,45 +11427,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ImageSpaceAdapterBinaryWriteTranslation Instance = new ImageSpaceAdapterBinaryWriteTranslation();
 
-        public static partial void WriteBinaryCounts1Custom(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item);
-
-        public static void WriteBinaryCounts1(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item)
-        {
-            WriteBinaryCounts1Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCounts2Custom(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item);
-
-        public static void WriteBinaryCounts2(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item)
-        {
-            WriteBinaryCounts2Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCounts3Custom(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item);
-
-        public static void WriteBinaryCounts3(
-            MutagenWriter writer,
-            IImageSpaceAdapterGetter item)
-        {
-            WriteBinaryCounts3Custom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IImageSpaceAdapterGetter item,
             MutagenWriter writer)
@@ -12174,6 +12135,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
+        }
+
+        public static partial void WriteBinaryCounts1Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts1(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts1Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounts2Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts2(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCounts3Custom(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item);
+
+        public static void WriteBinaryCounts3(
+            MutagenWriter writer,
+            IImageSpaceAdapterGetter item)
+        {
+            WriteBinaryCounts3Custom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

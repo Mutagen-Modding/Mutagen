@@ -1043,6 +1043,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogResponsesAdapterBinaryWriteTranslation Instance = new DialogResponsesAdapterBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IDialogResponsesAdapterGetter item,
+            MutagenWriter writer)
+        {
+            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            DialogResponsesAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryScriptFragmentsCustom(
             MutagenWriter writer,
             IDialogResponsesAdapterGetter item);
@@ -1052,18 +1064,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponsesAdapterGetter item)
         {
             WriteBinaryScriptFragmentsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IDialogResponsesAdapterGetter item,
-            MutagenWriter writer)
-        {
-            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            DialogResponsesAdapterBinaryWriteTranslation.WriteBinaryScriptFragments(
                 writer: writer,
                 item: item);
         }

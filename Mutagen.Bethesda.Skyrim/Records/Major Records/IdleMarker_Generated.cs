@@ -1709,32 +1709,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
 
-        public static partial void WriteBinaryAnimationCountCustom(
-            MutagenWriter writer,
-            IIdleMarkerGetter item);
-
-        public static void WriteBinaryAnimationCount(
-            MutagenWriter writer,
-            IIdleMarkerGetter item)
-        {
-            WriteBinaryAnimationCountCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryAnimationsCustom(
-            MutagenWriter writer,
-            IIdleMarkerGetter item);
-
-        public static void WriteBinaryAnimations(
-            MutagenWriter writer,
-            IIdleMarkerGetter item)
-        {
-            WriteBinaryAnimationsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IIdleMarkerGetter item,
             MutagenWriter writer,
@@ -1771,6 +1745,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+        }
+
+        public static partial void WriteBinaryAnimationCountCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimationCount(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryAnimationsCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimations(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

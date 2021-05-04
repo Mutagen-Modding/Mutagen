@@ -6935,84 +6935,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RaceBinaryWriteTranslation Instance = new RaceBinaryWriteTranslation();
 
-        public static partial void WriteBinaryBodyTemplateCustom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryBodyTemplate(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryBodyTemplateCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFlags2Custom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryFlags2(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryFlags2Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryExtraNAM2Custom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryExtraNAM2(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryExtraNAM2Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryBipedObjectNamesCustom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryBipedObjectNames(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryBipedObjectNamesCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryFaceFxPhonemesListingParsing(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryFaceFxPhonemesListingParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
-            MutagenWriter writer,
-            IRaceGetter item);
-
-        public static void WriteBinaryFaceFxPhonemesRawParsing(
-            MutagenWriter writer,
-            IRaceGetter item)
-        {
-            WriteBinaryFaceFxPhonemesRawParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IRaceGetter item,
             MutagenWriter writer)
@@ -7452,6 +7374,84 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ArmorRace,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
+        }
+
+        public static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryExtraNAM2Custom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryExtraNAM2(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryExtraNAM2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryBipedObjectNamesCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryBipedObjectNames(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryBipedObjectNamesCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesListingParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesListingParsingCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(
+            MutagenWriter writer,
+            IRaceGetter item);
+
+        public static void WriteBinaryFaceFxPhonemesRawParsing(
+            MutagenWriter writer,
+            IRaceGetter item)
+        {
+            WriteBinaryFaceFxPhonemesRawParsingCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

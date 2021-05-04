@@ -1040,6 +1040,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IConditionGetter item,
+            MutagenWriter writer)
+        {
+            ConditionBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown1);
+        }
+
         public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IConditionGetter item);
@@ -1051,18 +1063,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryFlagsCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IConditionGetter item,
-            MutagenWriter writer)
-        {
-            ConditionBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
         }
 
         public virtual void Write(

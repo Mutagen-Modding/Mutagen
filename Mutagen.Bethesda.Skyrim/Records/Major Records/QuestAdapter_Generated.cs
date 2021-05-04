@@ -1458,6 +1458,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IQuestAdapterGetter item,
+            MutagenWriter writer)
+        {
+            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            if (!item.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0))
+            {
+                writer.Write(item.Unknown);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryFileName(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryFragments(
+                    writer: writer,
+                    item: item);
+                QuestAdapterBinaryWriteTranslation.WriteBinaryAliases(
+                    writer: writer,
+                    item: item);
+            }
+        }
+
         public static partial void WriteBinaryFragmentCountCustom(
             MutagenWriter writer,
             IQuestAdapterGetter item);
@@ -1508,31 +1533,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryAliasesCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IQuestAdapterGetter item,
-            MutagenWriter writer)
-        {
-            AVirtualMachineAdapterBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            if (!item.Versioning.HasFlag(QuestAdapter.VersioningBreaks.Break0))
-            {
-                writer.Write(item.Unknown);
-                QuestAdapterBinaryWriteTranslation.WriteBinaryFragmentCount(
-                    writer: writer,
-                    item: item);
-                QuestAdapterBinaryWriteTranslation.WriteBinaryFileName(
-                    writer: writer,
-                    item: item);
-                QuestAdapterBinaryWriteTranslation.WriteBinaryFragments(
-                    writer: writer,
-                    item: item);
-                QuestAdapterBinaryWriteTranslation.WriteBinaryAliases(
-                    writer: writer,
-                    item: item);
-            }
         }
 
         public void Write(

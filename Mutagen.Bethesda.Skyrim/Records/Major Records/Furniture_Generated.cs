@@ -2523,58 +2523,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FurnitureBinaryWriteTranslation Instance = new FurnitureBinaryWriteTranslation();
 
-        public static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFlags2Custom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryFlags2(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryFlags2Custom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryDisabledMarkersCustom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryDisabledMarkers(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryDisabledMarkersCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryMarkersCustom(
-            MutagenWriter writer,
-            IFurnitureGetter item);
-
-        public static void WriteBinaryMarkers(
-            MutagenWriter writer,
-            IFurnitureGetter item)
-        {
-            WriteBinaryMarkersCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IFurnitureGetter item,
             MutagenWriter writer,
@@ -2664,6 +2612,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.ModelFilename,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XMRK),
                 binaryType: StringBinaryType.NullTerminate);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IFurnitureGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IFurnitureGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IFurnitureGetter item);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IFurnitureGetter item)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDisabledMarkersCustom(
+            MutagenWriter writer,
+            IFurnitureGetter item);
+
+        public static void WriteBinaryDisabledMarkers(
+            MutagenWriter writer,
+            IFurnitureGetter item)
+        {
+            WriteBinaryDisabledMarkersCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMarkersCustom(
+            MutagenWriter writer,
+            IFurnitureGetter item);
+
+        public static void WriteBinaryMarkers(
+            MutagenWriter writer,
+            IFurnitureGetter item)
+        {
+            WriteBinaryMarkersCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

@@ -1246,21 +1246,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ListGroupBinaryWriteTranslation Instance = new ListGroupBinaryWriteTranslation();
 
-        public static partial void WriteBinaryContainedRecordTypeCustom<T>(
-            MutagenWriter writer,
-            IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IBinaryItem;
-
-        public static void WriteBinaryContainedRecordType<T>(
-            MutagenWriter writer,
-            IListGroupGetter<T> item)
-            where T : class, ICellBlockGetter, IBinaryItem
-        {
-            WriteBinaryContainedRecordTypeCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded<T>(
             IListGroupGetter<T> item,
             MutagenWriter writer)
@@ -1293,6 +1278,21 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
+        }
+
+        public static partial void WriteBinaryContainedRecordTypeCustom<T>(
+            MutagenWriter writer,
+            IListGroupGetter<T> item)
+            where T : class, ICellBlockGetter, IBinaryItem;
+
+        public static void WriteBinaryContainedRecordType<T>(
+            MutagenWriter writer,
+            IListGroupGetter<T> item)
+            where T : class, ICellBlockGetter, IBinaryItem
+        {
+            WriteBinaryContainedRecordTypeCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write<T>(

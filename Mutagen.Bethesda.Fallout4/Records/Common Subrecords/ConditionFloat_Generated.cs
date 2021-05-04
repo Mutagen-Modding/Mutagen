@@ -1083,17 +1083,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ConditionFloatBinaryWriteTranslation Instance = new ConditionFloatBinaryWriteTranslation();
 
-        public static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IConditionFloatGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IConditionFloatGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             IConditionFloatGetter item,
             MutagenWriter writer)
@@ -1110,6 +1099,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer);
         }
 
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IConditionFloatGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IConditionFloatGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IConditionFloatGetter item,

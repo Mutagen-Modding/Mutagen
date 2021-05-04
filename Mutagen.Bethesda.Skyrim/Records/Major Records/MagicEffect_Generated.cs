@@ -4285,45 +4285,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static MagicEffectBinaryWriteTranslation Instance = new MagicEffectBinaryWriteTranslation();
 
-        public static partial void WriteBinaryAssociatedItemCustom(
-            MutagenWriter writer,
-            IMagicEffectGetter item);
-
-        public static void WriteBinaryAssociatedItem(
-            MutagenWriter writer,
-            IMagicEffectGetter item)
-        {
-            WriteBinaryAssociatedItemCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryArchetypeCustom(
-            MutagenWriter writer,
-            IMagicEffectGetter item);
-
-        public static void WriteBinaryArchetype(
-            MutagenWriter writer,
-            IMagicEffectGetter item)
-        {
-            WriteBinaryArchetypeCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryConditionsCustom(
-            MutagenWriter writer,
-            IMagicEffectGetter item);
-
-        public static void WriteBinaryConditions(
-            MutagenWriter writer,
-            IMagicEffectGetter item)
-        {
-            WriteBinaryConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IMagicEffectGetter item,
             MutagenWriter writer)
@@ -4516,6 +4477,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
             MagicEffectBinaryWriteTranslation.WriteBinaryConditions(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryAssociatedItemCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryAssociatedItem(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryAssociatedItemCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryArchetypeCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryArchetype(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryArchetypeCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryConditionsCustom(
+            MutagenWriter writer,
+            IMagicEffectGetter item);
+
+        public static void WriteBinaryConditions(
+            MutagenWriter writer,
+            IMagicEffectGetter item)
+        {
+            WriteBinaryConditionsCustom(
                 writer: writer,
                 item: item);
         }

@@ -1002,6 +1002,18 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static AIPackageDataBinaryWriteTranslation Instance = new AIPackageDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IAIPackageDataGetter item,
+            MutagenWriter writer)
+        {
+            AIPackageDataBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+            AIPackageDataBinaryWriteTranslation.WriteBinaryType(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IAIPackageDataGetter item);
@@ -1024,18 +1036,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageDataGetter item)
         {
             WriteBinaryTypeCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IAIPackageDataGetter item,
-            MutagenWriter writer)
-        {
-            AIPackageDataBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
-            AIPackageDataBinaryWriteTranslation.WriteBinaryType(
                 writer: writer,
                 item: item);
         }

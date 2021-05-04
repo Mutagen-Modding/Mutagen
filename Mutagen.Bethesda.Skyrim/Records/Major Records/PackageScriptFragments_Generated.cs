@@ -1277,6 +1277,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageScriptFragmentsBinaryWriteTranslation Instance = new PackageScriptFragmentsBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IPackageScriptFragmentsGetter item,
+            MutagenWriter writer)
+        {
+            writer.Write(item.Unknown);
+            PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryFlagsParseCustom(
             MutagenWriter writer,
             IPackageScriptFragmentsGetter item);
@@ -1286,16 +1296,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageScriptFragmentsGetter item)
         {
             WriteBinaryFlagsParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IPackageScriptFragmentsGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Unknown);
-            PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
                 writer: writer,
                 item: item);
         }

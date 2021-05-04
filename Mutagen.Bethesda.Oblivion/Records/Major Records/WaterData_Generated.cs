@@ -2240,45 +2240,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static WaterDataBinaryWriteTranslation Instance = new WaterDataBinaryWriteTranslation();
 
-        public static partial void WriteBinaryBloodCustomLogicCustom(
-            MutagenWriter writer,
-            IWaterDataGetter item);
-
-        public static void WriteBinaryBloodCustomLogic(
-            MutagenWriter writer,
-            IWaterDataGetter item)
-        {
-            WriteBinaryBloodCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryOilCustomLogicCustom(
-            MutagenWriter writer,
-            IWaterDataGetter item);
-
-        public static void WriteBinaryOilCustomLogic(
-            MutagenWriter writer,
-            IWaterDataGetter item)
-        {
-            WriteBinaryOilCustomLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryOddExtraBytesCustom(
-            MutagenWriter writer,
-            IWaterDataGetter item);
-
-        public static void WriteBinaryOddExtraBytes(
-            MutagenWriter writer,
-            IWaterDataGetter item)
-        {
-            WriteBinaryOddExtraBytesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IWaterDataGetter item,
             MutagenWriter writer)
@@ -2379,6 +2340,45 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+        }
+
+        public static partial void WriteBinaryBloodCustomLogicCustom(
+            MutagenWriter writer,
+            IWaterDataGetter item);
+
+        public static void WriteBinaryBloodCustomLogic(
+            MutagenWriter writer,
+            IWaterDataGetter item)
+        {
+            WriteBinaryBloodCustomLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryOilCustomLogicCustom(
+            MutagenWriter writer,
+            IWaterDataGetter item);
+
+        public static void WriteBinaryOilCustomLogic(
+            MutagenWriter writer,
+            IWaterDataGetter item)
+        {
+            WriteBinaryOilCustomLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryOddExtraBytesCustom(
+            MutagenWriter writer,
+            IWaterDataGetter item);
+
+        public static void WriteBinaryOddExtraBytes(
+            MutagenWriter writer,
+            IWaterDataGetter item)
+        {
+            WriteBinaryOddExtraBytesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

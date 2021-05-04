@@ -1299,19 +1299,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static GlobalIntBinaryWriteTranslation Instance = new GlobalIntBinaryWriteTranslation();
 
-        public static partial void WriteBinaryDataCustom(
-            MutagenWriter writer,
-            IGlobalIntGetter item);
-
-        public static void WriteBinaryData(
-            MutagenWriter writer,
-            IGlobalIntGetter item)
-        {
-            WriteBinaryDataCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IGlobalIntGetter item,
             MutagenWriter writer,
@@ -1322,6 +1309,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
             GlobalIntBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IGlobalIntGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IGlobalIntGetter item)
+        {
+            WriteBinaryDataCustom(
                 writer: writer,
                 item: item);
         }

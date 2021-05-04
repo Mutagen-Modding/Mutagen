@@ -2732,32 +2732,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static BookBinaryWriteTranslation Instance = new BookBinaryWriteTranslation();
 
-        public static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IBookGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IBookGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryTeachesCustom(
-            MutagenWriter writer,
-            IBookGetter item);
-
-        public static void WriteBinaryTeaches(
-            MutagenWriter writer,
-            IBookGetter item)
-        {
-            WriteBinaryTeachesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IBookGetter item,
             MutagenWriter writer)
@@ -2869,6 +2843,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IBookGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IBookGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTeachesCustom(
+            MutagenWriter writer,
+            IBookGetter item);
+
+        public static void WriteBinaryTeaches(
+            MutagenWriter writer,
+            IBookGetter item)
+        {
+            WriteBinaryTeachesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

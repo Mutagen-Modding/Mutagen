@@ -1176,6 +1176,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
 
+        public static void WriteRecordTypes(
+            IPackageIdlesGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
+            PackageIdlesBinaryWriteTranslation.WriteBinaryTimerSetting(
+                writer: writer,
+                item: item);
+            PackageIdlesBinaryWriteTranslation.WriteBinaryAnimations(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryTimerSettingCustom(
             MutagenWriter writer,
             IPackageIdlesGetter item);
@@ -1198,24 +1216,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageIdlesGetter item)
         {
             WriteBinaryAnimationsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IPackageIdlesGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Type,
-                length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
-            PackageIdlesBinaryWriteTranslation.WriteBinaryTimerSetting(
-                writer: writer,
-                item: item);
-            PackageIdlesBinaryWriteTranslation.WriteBinaryAnimations(
                 writer: writer,
                 item: item);
         }

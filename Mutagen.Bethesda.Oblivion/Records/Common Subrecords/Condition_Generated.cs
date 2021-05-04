@@ -1325,19 +1325,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
-        public static partial void WriteBinaryInitialParserCustom(
-            MutagenWriter writer,
-            IConditionGetter item);
-
-        public static void WriteBinaryInitialParser(
-            MutagenWriter writer,
-            IConditionGetter item)
-        {
-            WriteBinaryInitialParserCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IConditionGetter item,
             MutagenWriter writer)
@@ -1358,6 +1345,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.FirstParameter);
             writer.Write(item.SecondParameter);
             writer.Write(item.ThirdParameter);
+        }
+
+        public static partial void WriteBinaryInitialParserCustom(
+            MutagenWriter writer,
+            IConditionGetter item);
+
+        public static void WriteBinaryInitialParser(
+            MutagenWriter writer,
+            IConditionGetter item)
+        {
+            WriteBinaryInitialParserCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

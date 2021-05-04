@@ -1039,6 +1039,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ExtraDataBinaryWriteTranslation Instance = new ExtraDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IExtraDataGetter item,
+            MutagenWriter writer)
+        {
+            ExtraDataBinaryWriteTranslation.WriteBinaryOwner(
+                writer: writer,
+                item: item);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.ItemCondition);
+        }
+
         public static partial void WriteBinaryOwnerCustom(
             MutagenWriter writer,
             IExtraDataGetter item);
@@ -1050,18 +1062,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryOwnerCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IExtraDataGetter item,
-            MutagenWriter writer)
-        {
-            ExtraDataBinaryWriteTranslation.WriteBinaryOwner(
-                writer: writer,
-                item: item);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.ItemCondition);
         }
 
         public void Write(

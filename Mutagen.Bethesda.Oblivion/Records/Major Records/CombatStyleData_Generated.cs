@@ -2743,19 +2743,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static CombatStyleDataBinaryWriteTranslation Instance = new CombatStyleDataBinaryWriteTranslation();
 
-        public static partial void WriteBinarySecondaryFlagsCustom(
-            MutagenWriter writer,
-            ICombatStyleDataGetter item);
-
-        public static void WriteBinarySecondaryFlags(
-            MutagenWriter writer,
-            ICombatStyleDataGetter item)
-        {
-            WriteBinarySecondaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             ICombatStyleDataGetter item,
             MutagenWriter writer)
@@ -2869,6 +2856,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     }
                 }
             }
+        }
+
+        public static partial void WriteBinarySecondaryFlagsCustom(
+            MutagenWriter writer,
+            ICombatStyleDataGetter item);
+
+        public static void WriteBinarySecondaryFlags(
+            MutagenWriter writer,
+            ICombatStyleDataGetter item)
+        {
+            WriteBinarySecondaryFlagsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

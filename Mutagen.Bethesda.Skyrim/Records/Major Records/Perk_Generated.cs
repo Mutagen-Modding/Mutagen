@@ -2274,19 +2274,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkBinaryWriteTranslation Instance = new PerkBinaryWriteTranslation();
 
-        public static partial void WriteBinaryEffectsCustom(
-            MutagenWriter writer,
-            IPerkGetter item);
-
-        public static void WriteBinaryEffects(
-            MutagenWriter writer,
-            IPerkGetter item)
-        {
-            WriteBinaryEffectsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IPerkGetter item,
             MutagenWriter writer)
@@ -2355,6 +2342,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.NextPerk,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
             PerkBinaryWriteTranslation.WriteBinaryEffects(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryEffectsCustom(
+            MutagenWriter writer,
+            IPerkGetter item);
+
+        public static void WriteBinaryEffects(
+            MutagenWriter writer,
+            IPerkGetter item)
+        {
+            WriteBinaryEffectsCustom(
                 writer: writer,
                 item: item);
         }

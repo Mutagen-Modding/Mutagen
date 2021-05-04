@@ -5439,17 +5439,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CellBinaryWriteTranslation Instance = new CellBinaryWriteTranslation();
 
-        public static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            ICellGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            ICellGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             ICellGetter item,
             MutagenWriter writer)
@@ -5589,6 +5578,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XCIM));
         }
 
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            ICellGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            ICellGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             ICellGetter item,

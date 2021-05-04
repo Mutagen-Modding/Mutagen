@@ -1083,6 +1083,17 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static LocationTargetRadiusBinaryWriteTranslation Instance = new LocationTargetRadiusBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ILocationTargetRadiusGetter item,
+            MutagenWriter writer)
+        {
+            LocationTargetRadiusBinaryWriteTranslation.WriteBinaryTarget(
+                writer: writer,
+                item: item);
+            writer.Write(item.Radius);
+            writer.Write(item.CollectionIndex);
+        }
+
         public static partial void WriteBinaryTargetCustom(
             MutagenWriter writer,
             ILocationTargetRadiusGetter item);
@@ -1094,17 +1105,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             WriteBinaryTargetCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            ILocationTargetRadiusGetter item,
-            MutagenWriter writer)
-        {
-            LocationTargetRadiusBinaryWriteTranslation.WriteBinaryTarget(
-                writer: writer,
-                item: item);
-            writer.Write(item.Radius);
-            writer.Write(item.CollectionIndex);
         }
 
         public void Write(

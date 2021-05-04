@@ -1102,19 +1102,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static EffectBinaryWriteTranslation Instance = new EffectBinaryWriteTranslation();
 
-        public static partial void WriteBinaryEffectInitialCustom(
-            MutagenWriter writer,
-            IEffectGetter item);
-
-        public static void WriteBinaryEffectInitial(
-            MutagenWriter writer,
-            IEffectGetter item)
-        {
-            WriteBinaryEffectInitialCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IEffectGetter item,
             MutagenWriter writer,
@@ -1135,6 +1122,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+        }
+
+        public static partial void WriteBinaryEffectInitialCustom(
+            MutagenWriter writer,
+            IEffectGetter item);
+
+        public static void WriteBinaryEffectInitial(
+            MutagenWriter writer,
+            IEffectGetter item)
+        {
+            WriteBinaryEffectInitialCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

@@ -1020,19 +1020,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static FindMatchingRefNearAliasBinaryWriteTranslation Instance = new FindMatchingRefNearAliasBinaryWriteTranslation();
 
-        public static partial void WriteBinaryAliasIndexCustom(
-            MutagenWriter writer,
-            IFindMatchingRefNearAliasGetter item);
-
-        public static void WriteBinaryAliasIndex(
-            MutagenWriter writer,
-            IFindMatchingRefNearAliasGetter item)
-        {
-            WriteBinaryAliasIndexCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IFindMatchingRefNearAliasGetter item,
             MutagenWriter writer,
@@ -1046,6 +1033,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Type,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALNT));
+        }
+
+        public static partial void WriteBinaryAliasIndexCustom(
+            MutagenWriter writer,
+            IFindMatchingRefNearAliasGetter item);
+
+        public static void WriteBinaryAliasIndex(
+            MutagenWriter writer,
+            IFindMatchingRefNearAliasGetter item)
+        {
+            WriteBinaryAliasIndexCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

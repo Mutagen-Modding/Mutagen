@@ -3059,19 +3059,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorBinaryWriteTranslation Instance = new ArmorBinaryWriteTranslation();
 
-        public static partial void WriteBinaryBodyTemplateCustom(
-            MutagenWriter writer,
-            IArmorGetter item);
-
-        public static void WriteBinaryBodyTemplate(
-            MutagenWriter writer,
-            IArmorGetter item)
-        {
-            WriteBinaryBodyTemplateCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IArmorGetter item,
             MutagenWriter writer)
@@ -3215,6 +3202,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.TemplateArmor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
+        }
+
+        public static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IArmorGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IArmorGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

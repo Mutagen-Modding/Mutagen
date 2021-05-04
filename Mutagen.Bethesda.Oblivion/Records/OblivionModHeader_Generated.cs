@@ -1548,19 +1548,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
 
-        public static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            IOblivionModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            IOblivionModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IOblivionModHeaderGetter item,
             MutagenWriter writer)
@@ -1602,6 +1589,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             OblivionModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IOblivionModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IOblivionModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
                 writer: writer,
                 item: item);
         }

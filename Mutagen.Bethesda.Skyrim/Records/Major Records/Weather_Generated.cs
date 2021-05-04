@@ -5592,97 +5592,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WeatherBinaryWriteTranslation Instance = new WeatherBinaryWriteTranslation();
 
-        public static partial void WriteBinaryCloudTexturesParseCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryCloudTexturesParse(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryCloudTexturesParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCloudsCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryClouds(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryCloudsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCloudXSpeedsCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryCloudXSpeeds(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryCloudXSpeedsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCloudColorsCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryCloudColors(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryCloudColorsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCloudAlphasCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryCloudAlphas(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryCloudAlphasCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryDisabledCloudLayersCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryDisabledCloudLayers(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryDisabledCloudLayersCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(
-            MutagenWriter writer,
-            IWeatherGetter item);
-
-        public static void WriteBinaryDirectionalAmbientLightingColors(
-            MutagenWriter writer,
-            IWeatherGetter item)
-        {
-            WriteBinaryDirectionalAmbientLightingColorsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IWeatherGetter item,
             MutagenWriter writer)
@@ -6002,6 +5911,97 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     item: item.SunGlareLensFlare,
                     header: recordTypeConverter.ConvertToCustom(RecordTypes.GNAM));
             }
+        }
+
+        public static partial void WriteBinaryCloudTexturesParseCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryCloudTexturesParse(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudTexturesParseCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCloudsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryClouds(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCloudXSpeedsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryCloudXSpeeds(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudXSpeedsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCloudColorsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryCloudColors(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudColorsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCloudAlphasCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryCloudAlphas(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryCloudAlphasCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDisabledCloudLayersCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryDisabledCloudLayers(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryDisabledCloudLayersCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(
+            MutagenWriter writer,
+            IWeatherGetter item);
+
+        public static void WriteBinaryDirectionalAmbientLightingColors(
+            MutagenWriter writer,
+            IWeatherGetter item)
+        {
+            WriteBinaryDirectionalAmbientLightingColorsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

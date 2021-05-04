@@ -1141,6 +1141,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ISoundDataExtendedInternalGetter item,
+            MutagenWriter writer)
+        {
+            SoundDataBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.StaticAttenuation,
+                integerType: FloatIntegerType.UShort,
+                multiplier: 0.01);
+            SoundDataExtendedBinaryWriteTranslation.WriteBinaryStopTime(
+                writer: writer,
+                item: item);
+            SoundDataExtendedBinaryWriteTranslation.WriteBinaryStartTime(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryStopTimeCustom(
             MutagenWriter writer,
             ISoundDataExtendedInternalGetter item);
@@ -1163,26 +1183,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter item)
         {
             WriteBinaryStartTimeCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            ISoundDataExtendedInternalGetter item,
-            MutagenWriter writer)
-        {
-            SoundDataBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.StaticAttenuation,
-                integerType: FloatIntegerType.UShort,
-                multiplier: 0.01);
-            SoundDataExtendedBinaryWriteTranslation.WriteBinaryStopTime(
-                writer: writer,
-                item: item);
-            SoundDataExtendedBinaryWriteTranslation.WriteBinaryStartTime(
                 writer: writer,
                 item: item);
         }

@@ -1136,6 +1136,26 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static SoundDataBinaryWriteTranslation Instance = new SoundDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            ISoundDataInternalGetter item,
+            MutagenWriter writer)
+        {
+            SoundDataBinaryWriteTranslation.WriteBinaryMinimumAttenuationDistance(
+                writer: writer,
+                item: item);
+            SoundDataBinaryWriteTranslation.WriteBinaryMaximumAttenuationDistance(
+                writer: writer,
+                item: item);
+            writer.Write(item.FrequencyAdjustment);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Marker);
+            EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Flags,
+                length: 4);
+        }
+
         public static partial void WriteBinaryMinimumAttenuationDistanceCustom(
             MutagenWriter writer,
             ISoundDataInternalGetter item);
@@ -1160,26 +1180,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             WriteBinaryMaximumAttenuationDistanceCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            ISoundDataInternalGetter item,
-            MutagenWriter writer)
-        {
-            SoundDataBinaryWriteTranslation.WriteBinaryMinimumAttenuationDistance(
-                writer: writer,
-                item: item);
-            SoundDataBinaryWriteTranslation.WriteBinaryMaximumAttenuationDistance(
-                writer: writer,
-                item: item);
-            writer.Write(item.FrequencyAdjustment);
-            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
-                writer: writer,
-                item: item.Marker);
-            EnumBinaryTranslation<SoundData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.Flags,
-                length: 4);
         }
 
         public virtual void Write(

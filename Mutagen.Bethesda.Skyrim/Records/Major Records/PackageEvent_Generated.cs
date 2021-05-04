@@ -1503,19 +1503,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageEventBinaryWriteTranslation Instance = new PackageEventBinaryWriteTranslation();
 
-        public static partial void WriteBinaryTopicsCustom(
-            MutagenWriter writer,
-            IPackageEventGetter item);
-
-        public static void WriteBinaryTopics(
-            MutagenWriter writer,
-            IPackageEventGetter item)
-        {
-            WriteBinaryTopicsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IPackageEventGetter item,
             MutagenWriter writer,
@@ -1546,6 +1533,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.TNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM));
             PackageEventBinaryWriteTranslation.WriteBinaryTopics(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTopicsCustom(
+            MutagenWriter writer,
+            IPackageEventGetter item);
+
+        public static void WriteBinaryTopics(
+            MutagenWriter writer,
+            IPackageEventGetter item)
+        {
+            WriteBinaryTopicsCustom(
                 writer: writer,
                 item: item);
         }

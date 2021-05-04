@@ -3378,32 +3378,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PackageBinaryWriteTranslation Instance = new PackageBinaryWriteTranslation();
 
-        public static partial void WriteBinaryPackageTemplateCustom(
-            MutagenWriter writer,
-            IPackageGetter item);
-
-        public static void WriteBinaryPackageTemplate(
-            MutagenWriter writer,
-            IPackageGetter item)
-        {
-            WriteBinaryPackageTemplateCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryXnamMarkerCustom(
-            MutagenWriter writer,
-            IPackageGetter item);
-
-        public static void WriteBinaryXnamMarker(
-            MutagenWriter writer,
-            IPackageGetter item)
-        {
-            WriteBinaryXnamMarkerCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IPackageGetter item,
             MutagenWriter writer)
@@ -3529,6 +3503,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+        }
+
+        public static partial void WriteBinaryPackageTemplateCustom(
+            MutagenWriter writer,
+            IPackageGetter item);
+
+        public static void WriteBinaryPackageTemplate(
+            MutagenWriter writer,
+            IPackageGetter item)
+        {
+            WriteBinaryPackageTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryXnamMarkerCustom(
+            MutagenWriter writer,
+            IPackageGetter item);
+
+        public static void WriteBinaryXnamMarker(
+            MutagenWriter writer,
+            IPackageGetter item)
+        {
+            WriteBinaryXnamMarkerCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

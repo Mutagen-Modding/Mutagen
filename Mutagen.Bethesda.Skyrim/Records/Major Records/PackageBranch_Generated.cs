@@ -1856,19 +1856,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageBranchBinaryWriteTranslation Instance = new PackageBranchBinaryWriteTranslation();
 
-        public static partial void WriteBinaryFlagsOverrideCustom(
-            MutagenWriter writer,
-            IPackageBranchGetter item);
-
-        public static void WriteBinaryFlagsOverride(
-            MutagenWriter writer,
-            IPackageBranchGetter item)
-        {
-            WriteBinaryFlagsOverrideCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IPackageBranchGetter item,
             MutagenWriter writer,
@@ -1925,6 +1912,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 items: item.Unknown,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
                 transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+        }
+
+        public static partial void WriteBinaryFlagsOverrideCustom(
+            MutagenWriter writer,
+            IPackageBranchGetter item);
+
+        public static void WriteBinaryFlagsOverride(
+            MutagenWriter writer,
+            IPackageBranchGetter item)
+        {
+            WriteBinaryFlagsOverrideCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

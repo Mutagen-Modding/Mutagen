@@ -2507,30 +2507,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
-        public static partial void WriteBinaryResponseCountCustom(
-            MutagenWriter writer,
-            IDialogTopicGetter item);
-
-        public static void WriteBinaryResponseCount(
-            MutagenWriter writer,
-            IDialogTopicGetter item)
-        {
-            WriteBinaryResponseCountCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IDialogTopicGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IDialogTopicGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             IDialogTopicGetter item,
             MutagenWriter writer)
@@ -2592,6 +2568,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryResponseCountCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryResponseCount(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryResponseCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IDialogTopicGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IDialogTopicGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IDialogTopicGetter item,

@@ -2357,32 +2357,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ArmorAddonBinaryWriteTranslation Instance = new ArmorAddonBinaryWriteTranslation();
 
-        public static partial void WriteBinaryBodyTemplateCustom(
-            MutagenWriter writer,
-            IArmorAddonGetter item);
-
-        public static void WriteBinaryBodyTemplate(
-            MutagenWriter writer,
-            IArmorAddonGetter item)
-        {
-            WriteBinaryBodyTemplateCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryWeightSliderEnabledCustom(
-            MutagenWriter writer,
-            IArmorAddonGetter item);
-
-        public static void WriteBinaryWeightSliderEnabled(
-            MutagenWriter writer,
-            IArmorAddonGetter item)
-        {
-            WriteBinaryWeightSliderEnabledCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IArmorAddonGetter item,
             MutagenWriter writer)
@@ -2494,6 +2468,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.ArtObject,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
+        }
+
+        public static partial void WriteBinaryBodyTemplateCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryBodyTemplate(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryBodyTemplateCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryWeightSliderEnabledCustom(
+            MutagenWriter writer,
+            IArmorAddonGetter item);
+
+        public static void WriteBinaryWeightSliderEnabled(
+            MutagenWriter writer,
+            IArmorAddonGetter item)
+        {
+            WriteBinaryWeightSliderEnabledCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

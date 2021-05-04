@@ -1589,32 +1589,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ScenePhaseBinaryWriteTranslation Instance = new ScenePhaseBinaryWriteTranslation();
 
-        public static partial void WriteBinaryStartConditionsCustom(
-            MutagenWriter writer,
-            IScenePhaseGetter item);
-
-        public static void WriteBinaryStartConditions(
-            MutagenWriter writer,
-            IScenePhaseGetter item)
-        {
-            WriteBinaryStartConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCompletionConditionsCustom(
-            MutagenWriter writer,
-            IScenePhaseGetter item);
-
-        public static void WriteBinaryCompletionConditions(
-            MutagenWriter writer,
-            IScenePhaseGetter item)
-        {
-            WriteBinaryCompletionConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IScenePhaseGetter item,
             MutagenWriter writer,
@@ -1652,6 +1626,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.EditorWidth,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { }
+        }
+
+        public static partial void WriteBinaryStartConditionsCustom(
+            MutagenWriter writer,
+            IScenePhaseGetter item);
+
+        public static void WriteBinaryStartConditions(
+            MutagenWriter writer,
+            IScenePhaseGetter item)
+        {
+            WriteBinaryStartConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCompletionConditionsCustom(
+            MutagenWriter writer,
+            IScenePhaseGetter item);
+
+        public static void WriteBinaryCompletionConditions(
+            MutagenWriter writer,
+            IScenePhaseGetter item)
+        {
+            WriteBinaryCompletionConditionsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

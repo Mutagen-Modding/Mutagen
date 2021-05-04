@@ -1248,6 +1248,31 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ClimateDataBinaryWriteTranslation Instance = new ClimateDataBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IClimateDataGetter item,
+            MutagenWriter writer)
+        {
+            ClimateDataBinaryWriteTranslation.WriteBinarySunriseBegin(
+                writer: writer,
+                item: item);
+            ClimateDataBinaryWriteTranslation.WriteBinarySunriseEnd(
+                writer: writer,
+                item: item);
+            ClimateDataBinaryWriteTranslation.WriteBinarySunsetBegin(
+                writer: writer,
+                item: item);
+            ClimateDataBinaryWriteTranslation.WriteBinarySunsetEnd(
+                writer: writer,
+                item: item);
+            writer.Write(item.Volatility);
+            ClimateDataBinaryWriteTranslation.WriteBinaryPhase(
+                writer: writer,
+                item: item);
+            ClimateDataBinaryWriteTranslation.WriteBinaryPhaseLength(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinarySunriseBeginCustom(
             MutagenWriter writer,
             IClimateDataGetter item);
@@ -1322,31 +1347,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateDataGetter item)
         {
             WriteBinaryPhaseLengthCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IClimateDataGetter item,
-            MutagenWriter writer)
-        {
-            ClimateDataBinaryWriteTranslation.WriteBinarySunriseBegin(
-                writer: writer,
-                item: item);
-            ClimateDataBinaryWriteTranslation.WriteBinarySunriseEnd(
-                writer: writer,
-                item: item);
-            ClimateDataBinaryWriteTranslation.WriteBinarySunsetBegin(
-                writer: writer,
-                item: item);
-            ClimateDataBinaryWriteTranslation.WriteBinarySunsetEnd(
-                writer: writer,
-                item: item);
-            writer.Write(item.Volatility);
-            ClimateDataBinaryWriteTranslation.WriteBinaryPhase(
-                writer: writer,
-                item: item);
-            ClimateDataBinaryWriteTranslation.WriteBinaryPhaseLength(
                 writer: writer,
                 item: item);
         }

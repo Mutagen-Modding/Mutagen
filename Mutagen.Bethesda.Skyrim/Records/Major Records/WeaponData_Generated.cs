@@ -2202,32 +2202,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static WeaponDataBinaryWriteTranslation Instance = new WeaponDataBinaryWriteTranslation();
 
-        public static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            IWeaponDataGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            IWeaponDataGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryFlags2Custom(
-            MutagenWriter writer,
-            IWeaponDataGetter item);
-
-        public static void WriteBinaryFlags2(
-            MutagenWriter writer,
-            IWeaponDataGetter item)
-        {
-            WriteBinaryFlags2Custom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IWeaponDataGetter item,
             MutagenWriter writer)
@@ -2302,6 +2276,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Stagger);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            IWeaponDataGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            IWeaponDataGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlags2Custom(
+            MutagenWriter writer,
+            IWeaponDataGetter item);
+
+        public static void WriteBinaryFlags2(
+            MutagenWriter writer,
+            IWeaponDataGetter item)
+        {
+            WriteBinaryFlags2Custom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

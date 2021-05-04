@@ -1370,32 +1370,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ANavigationMeshBinaryWriteTranslation Instance = new ANavigationMeshBinaryWriteTranslation();
 
-        public static partial void WriteBinaryLengthLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshGetter item);
-
-        public static void WriteBinaryLengthLogic(
-            MutagenWriter writer,
-            IANavigationMeshGetter item)
-        {
-            WriteBinaryLengthLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryDataLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshGetter item);
-
-        public static void WriteBinaryDataLogic(
-            MutagenWriter writer,
-            IANavigationMeshGetter item)
-        {
-            WriteBinaryDataLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IANavigationMeshGetter item,
             MutagenWriter writer,
@@ -1423,6 +1397,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.NNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+        }
+
+        public static partial void WriteBinaryLengthLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshGetter item);
+
+        public static void WriteBinaryLengthLogic(
+            MutagenWriter writer,
+            IANavigationMeshGetter item)
+        {
+            WriteBinaryLengthLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshGetter item);
+
+        public static void WriteBinaryDataLogic(
+            MutagenWriter writer,
+            IANavigationMeshGetter item)
+        {
+            WriteBinaryDataLogicCustom(
+                writer: writer,
+                item: item);
         }
 
         public virtual void Write(

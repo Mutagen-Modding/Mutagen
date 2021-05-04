@@ -1466,6 +1466,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NpcConfigurationBinaryWriteTranslation Instance = new NpcConfigurationBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            INpcConfigurationGetter item,
+            MutagenWriter writer)
+        {
+            NpcConfigurationBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+            writer.Write(item.MagickaOffset);
+            writer.Write(item.StaminaOffset);
+            NpcConfigurationBinaryWriteTranslation.WriteBinaryLevel(
+                writer: writer,
+                item: item);
+            writer.Write(item.CalcMinLevel);
+            writer.Write(item.CalcMaxLevel);
+            writer.Write(item.SpeedMultiplier);
+            writer.Write(item.DispositionBase);
+            EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.TemplateFlags,
+                length: 2);
+            writer.Write(item.HealthOffset);
+            writer.Write(item.BleedoutOverride);
+        }
+
         public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             INpcConfigurationGetter item);
@@ -1490,30 +1514,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryLevelCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            INpcConfigurationGetter item,
-            MutagenWriter writer)
-        {
-            NpcConfigurationBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
-            writer.Write(item.MagickaOffset);
-            writer.Write(item.StaminaOffset);
-            NpcConfigurationBinaryWriteTranslation.WriteBinaryLevel(
-                writer: writer,
-                item: item);
-            writer.Write(item.CalcMinLevel);
-            writer.Write(item.CalcMaxLevel);
-            writer.Write(item.SpeedMultiplier);
-            writer.Write(item.DispositionBase);
-            EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Write(
-                writer,
-                item.TemplateFlags,
-                length: 2);
-            writer.Write(item.HealthOffset);
-            writer.Write(item.BleedoutOverride);
         }
 
         public void Write(

@@ -1795,19 +1795,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static CameraPathBinaryWriteTranslation Instance = new CameraPathBinaryWriteTranslation();
 
-        public static partial void WriteBinaryZoomCustom(
-            MutagenWriter writer,
-            ICameraPathGetter item);
-
-        public static void WriteBinaryZoom(
-            MutagenWriter writer,
-            ICameraPathGetter item)
-        {
-            WriteBinaryZoomCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             ICameraPathGetter item,
             MutagenWriter writer)
@@ -1860,6 +1847,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
                 });
+        }
+
+        public static partial void WriteBinaryZoomCustom(
+            MutagenWriter writer,
+            ICameraPathGetter item);
+
+        public static void WriteBinaryZoom(
+            MutagenWriter writer,
+            ICameraPathGetter item)
+        {
+            WriteBinaryZoomCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

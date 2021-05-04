@@ -5312,19 +5312,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static NpcBinaryWriteTranslation Instance = new NpcBinaryWriteTranslation();
 
-        public static partial void WriteBinaryDataMarkerCustom(
-            MutagenWriter writer,
-            INpcGetter item);
-
-        public static void WriteBinaryDataMarker(
-            MutagenWriter writer,
-            INpcGetter item)
-        {
-            WriteBinaryDataMarkerCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             INpcGetter item,
             MutagenWriter writer,
@@ -5612,6 +5599,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
+        }
+
+        public static partial void WriteBinaryDataMarkerCustom(
+            MutagenWriter writer,
+            INpcGetter item);
+
+        public static void WriteBinaryDataMarker(
+            MutagenWriter writer,
+            INpcGetter item)
+        {
+            WriteBinaryDataMarkerCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

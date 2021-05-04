@@ -1092,6 +1092,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
+        public static void WriteEmbedded(
+            IConditionGlobalGetter item,
+            MutagenWriter writer)
+        {
+            ConditionBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ComparisonValue);
+            ConditionGlobalBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
         public static partial void WriteBinaryDataCustom(
             MutagenWriter writer,
             IConditionGlobalGetter item);
@@ -1116,21 +1131,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 obj: obj);
         }
-        public static void WriteEmbedded(
-            IConditionGlobalGetter item,
-            MutagenWriter writer)
-        {
-            ConditionBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ComparisonValue);
-            ConditionGlobalBinaryWriteTranslation.WriteBinaryData(
-                writer: writer,
-                item: item);
-        }
-
         public void Write(
             MutagenWriter writer,
             IConditionGlobalGetter item,

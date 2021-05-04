@@ -1323,19 +1323,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static GameSettingBoolBinaryWriteTranslation Instance = new GameSettingBoolBinaryWriteTranslation();
 
-        public static partial void WriteBinaryDataCustom(
-            MutagenWriter writer,
-            IGameSettingBoolGetter item);
-
-        public static void WriteBinaryData(
-            MutagenWriter writer,
-            IGameSettingBoolGetter item)
-        {
-            WriteBinaryDataCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IGameSettingBoolGetter item,
             MutagenWriter writer,
@@ -1346,6 +1333,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
             GameSettingBoolBinaryWriteTranslation.WriteBinaryData(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataCustom(
+            MutagenWriter writer,
+            IGameSettingBoolGetter item);
+
+        public static void WriteBinaryData(
+            MutagenWriter writer,
+            IGameSettingBoolGetter item)
+        {
+            WriteBinaryDataCustom(
                 writer: writer,
                 item: item);
         }

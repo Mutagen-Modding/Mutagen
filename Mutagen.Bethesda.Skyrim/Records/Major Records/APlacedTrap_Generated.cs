@@ -2915,19 +2915,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static APlacedTrapBinaryWriteTranslation Instance = new APlacedTrapBinaryWriteTranslation();
 
-        public static partial void WriteBinaryTrapFormCustom(
-            MutagenWriter writer,
-            IAPlacedTrapGetter item);
-
-        public static void WriteBinaryTrapForm(
-            MutagenWriter writer,
-            IAPlacedTrapGetter item)
-        {
-            WriteBinaryTrapFormCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IAPlacedTrapGetter item,
             MutagenWriter writer,
@@ -3044,6 +3031,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
+        }
+
+        public static partial void WriteBinaryTrapFormCustom(
+            MutagenWriter writer,
+            IAPlacedTrapGetter item);
+
+        public static void WriteBinaryTrapForm(
+            MutagenWriter writer,
+            IAPlacedTrapGetter item)
+        {
+            WriteBinaryTrapFormCustom(
+                writer: writer,
+                item: item);
         }
 
         public virtual void Write(

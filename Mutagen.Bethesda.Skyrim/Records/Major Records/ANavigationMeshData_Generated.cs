@@ -1975,45 +1975,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ANavigationMeshDataBinaryWriteTranslation Instance = new ANavigationMeshDataBinaryWriteTranslation();
 
-        public static partial void WriteBinaryParentLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryParentLogic(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryParentLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryCoverTrianglesLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryCoverTrianglesLogic(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryCoverTrianglesLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryNavmeshGridCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryNavmeshGrid(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryNavmeshGridCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IANavigationMeshDataGetter item,
             MutagenWriter writer)
@@ -2081,6 +2042,45 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item.Max);
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryNavmeshGrid(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParentLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryParentLogic(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryParentLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCoverTrianglesLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryCoverTrianglesLogic(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryCoverTrianglesLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryNavmeshGridCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryNavmeshGrid(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryNavmeshGridCustom(
                 writer: writer,
                 item: item);
         }

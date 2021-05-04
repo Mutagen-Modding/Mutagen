@@ -2806,19 +2806,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static PlacedObjectBinaryWriteTranslation Instance = new PlacedObjectBinaryWriteTranslation();
 
-        public static partial void WriteBinaryOpenByDefaultCustom(
-            MutagenWriter writer,
-            IPlacedObjectGetter item);
-
-        public static void WriteBinaryOpenByDefault(
-            MutagenWriter writer,
-            IPlacedObjectGetter item)
-        {
-            WriteBinaryOpenByDefaultCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IPlacedObjectGetter item,
             MutagenWriter writer,
@@ -2946,6 +2933,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
+        }
+
+        public static partial void WriteBinaryOpenByDefaultCustom(
+            MutagenWriter writer,
+            IPlacedObjectGetter item);
+
+        public static void WriteBinaryOpenByDefault(
+            MutagenWriter writer,
+            IPlacedObjectGetter item)
+        {
+            WriteBinaryOpenByDefaultCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

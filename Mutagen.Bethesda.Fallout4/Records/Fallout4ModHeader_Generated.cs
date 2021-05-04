@@ -2201,19 +2201,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
 
-        public static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            IFallout4ModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            IFallout4ModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IFallout4ModHeaderGetter item,
             MutagenWriter writer)
@@ -2293,6 +2280,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 item: item.INCC,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IFallout4ModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IFallout4ModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(

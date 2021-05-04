@@ -3328,32 +3328,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestAliasBinaryWriteTranslation Instance = new QuestAliasBinaryWriteTranslation();
 
-        public static partial void WriteBinaryIDParseCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryIDParse(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryIDParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static partial void WriteBinaryEndCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryEnd(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryEndCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestAliasGetter item,
             MutagenWriter writer)
@@ -3520,6 +3494,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item.VoiceTypes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VTCK));
             QuestAliasBinaryWriteTranslation.WriteBinaryEnd(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryIDParseCustom(
+            MutagenWriter writer,
+            IQuestAliasGetter item);
+
+        public static void WriteBinaryIDParse(
+            MutagenWriter writer,
+            IQuestAliasGetter item)
+        {
+            WriteBinaryIDParseCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryEndCustom(
+            MutagenWriter writer,
+            IQuestAliasGetter item);
+
+        public static void WriteBinaryEnd(
+            MutagenWriter writer,
+            IQuestAliasGetter item)
+        {
+            WriteBinaryEndCustom(
                 writer: writer,
                 item: item);
         }

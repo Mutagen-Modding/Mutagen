@@ -1474,19 +1474,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
-        public static partial void WriteBinaryParameterParsingCustom(
-            MutagenWriter writer,
-            IConditionDataGetter item);
-
-        public static void WriteBinaryParameterParsing(
-            MutagenWriter writer,
-            IConditionDataGetter item)
-        {
-            WriteBinaryParameterParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IConditionDataGetter item,
             MutagenWriter writer)
@@ -1497,6 +1484,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 length: 2);
             writer.Write(item.Unknown2);
             ConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParameterParsingCustom(
+            MutagenWriter writer,
+            IConditionDataGetter item);
+
+        public static void WriteBinaryParameterParsing(
+            MutagenWriter writer,
+            IConditionDataGetter item)
+        {
+            WriteBinaryParameterParsingCustom(
                 writer: writer,
                 item: item);
         }

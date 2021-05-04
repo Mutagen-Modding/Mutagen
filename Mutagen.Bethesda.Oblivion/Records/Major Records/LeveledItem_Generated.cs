@@ -1446,19 +1446,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledItemBinaryWriteTranslation Instance = new LeveledItemBinaryWriteTranslation();
 
-        public static partial void WriteBinaryVestigialCustom(
-            MutagenWriter writer,
-            ILeveledItemGetter item);
-
-        public static void WriteBinaryVestigial(
-            MutagenWriter writer,
-            ILeveledItemGetter item)
-        {
-            WriteBinaryVestigialCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             ILeveledItemGetter item,
             MutagenWriter writer,
@@ -1489,6 +1476,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         recordTypeConverter: conv);
                 });
             LeveledItemBinaryWriteTranslation.WriteBinaryVestigial(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryVestigialCustom(
+            MutagenWriter writer,
+            ILeveledItemGetter item);
+
+        public static void WriteBinaryVestigial(
+            MutagenWriter writer,
+            ILeveledItemGetter item)
+        {
+            WriteBinaryVestigialCustom(
                 writer: writer,
                 item: item);
         }
