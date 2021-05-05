@@ -2,6 +2,7 @@ using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -111,6 +112,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             using (new BraceWrapper(fg))
             {
                 fg.AppendLine("this.EditorID = editorID;");
+            }
+            fg.AppendLine();
+
+            fg.AppendLine($"public override string ToString()");
+            using (new BraceWrapper(fg))
+            {
+                fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
             }
             fg.AppendLine();
         }
@@ -308,6 +316,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 }
             }
             return deepRecordMapping;
+        }
+
+        public override async IAsyncEnumerable<string> RequiredUsingStatements(ObjectGeneration obj)
+        {
+            if (await obj.IsMajorRecord())
+            {
+                yield return "Mutagen.Bethesda.Plugins.Utility";
+            }
         }
     }
 }

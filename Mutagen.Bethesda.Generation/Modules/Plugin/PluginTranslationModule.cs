@@ -2624,6 +2624,16 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
                 await obj.GenerateToStringCode(fg);
 
+                if (await obj.IsMajorRecord())
+                {
+                    fg.AppendLine($"public override string ToString()");
+                    using (new BraceWrapper(fg))
+                    {
+                        fg.AppendLine($"return MajorRecordPrinter<{obj.Name}>.ToString(this);");
+                    }
+                    fg.AppendLine();
+                }
+
                 obj.GenerateEqualsSection(fg);
                 await MajorRecordLinkEqualityModule.Generate(obj, fg);
 

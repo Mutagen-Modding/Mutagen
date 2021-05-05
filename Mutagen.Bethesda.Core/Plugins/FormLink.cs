@@ -127,7 +127,7 @@ namespace Mutagen.Bethesda.Plugins
         /// Returns string representation of link
         /// </summary>
         /// <returns>Returns FormKey string</returns>
-        public override string ToString() => $"<{MajorRecordTypePrinter<TMajorGetter>.TypeString}>{this.FormKey}";
+        public override string ToString() => $"<{MajorRecordPrinter<TMajorGetter>.TypeString}>{this.FormKey}";
 
         public bool Equals(TMajorGetter? other)
         {

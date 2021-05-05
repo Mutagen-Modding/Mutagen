@@ -244,7 +244,7 @@
     <Compile Include="Translations\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\UtilityTranslation.cs" />
     <Compile Include="GameEnvironment.cs" />
-    <Compile Include="Plugins\Utility\MajorRecordTypePrinter.cs" />
+    <Compile Include="Plugins\Utility\MajorRecordPrinter.cs" />
     <Compile Include="Plugins\Records\ModInstantiator.cs" />
     <Compile Include="Plugins\Utility\RecordTypeInfoCacheReader.cs" />
     <Compile Include="Plugins\Allocators\TextFileFormKeyAllocator.cs" />
