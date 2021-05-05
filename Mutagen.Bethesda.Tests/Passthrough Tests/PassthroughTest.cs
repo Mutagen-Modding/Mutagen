@@ -1,5 +1,4 @@
 using Mutagen.Bethesda.Archives;
-using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Processing;
@@ -324,8 +323,6 @@ namespace Mutagen.Bethesda.Tests
 
         public void TestPex(GameRelease release, ReadOnlyMemorySlice<byte> bytes)
         {
-            var memStream = new BinaryMemoryReadStream(bytes);
-            PexFile.CreateFromStream(memStream, release.ToCategory());
         }
 
         public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)

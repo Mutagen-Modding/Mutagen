@@ -113,7 +113,40 @@ namespace Mutagen.Bethesda.Translations.Binary
             catch (OverflowException overflow)
             {
                 throw new OverflowException(
-                    $"List<{typeof(TItem)}> had an overflow with {items?.Count} items.",
+                    $"List<{typeof(TItem)}> had an overflow with {items.Count} items.",
+                    overflow);
+            }
+            foreach (var item in items)
+            {
+                transl(writer, item);
+            }
+        }
+
+        public void Write(
+            TWriter writer,
+            ReadOnlyMemorySlice<TItem>? items,
+            int countLengthLength,
+            BinarySubWriteDelegate<TWriter, TItem> transl)
+        {
+            if (items == null) return;
+            try
+            {
+                switch (countLengthLength)
+                {
+                    case 2:
+                        writer.Write(checked((ushort)items.Value.Length));
+                        break;
+                    case 4:
+                        writer.Write(items.Value.Length);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+            catch (OverflowException overflow)
+            {
+                throw new OverflowException(
+                    $"List<{typeof(TItem)}> had an overflow with {items.Value.Length} items.",
                     overflow);
             }
             foreach (var item in items)

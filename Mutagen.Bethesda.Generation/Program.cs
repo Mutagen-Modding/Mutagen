@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Generation.Modules;
+using Mutagen.Bethesda.Generation.Modules.Pex;
 using Mutagen.Bethesda.Generation.Modules.Plugin;
 using System;
 using System.IO;
@@ -32,7 +33,7 @@ namespace Mutagen.Bethesda.Generation
 #if DEBUG
             AttachDebugInspector();
 #endif
-            await GenerateRecords();
+            //await GenerateRecords();
             GeneratePex();
         }
  
@@ -160,19 +161,27 @@ namespace Mutagen.Bethesda.Generation
             };
             gen.AddTypicalTypeAssociations();
             gen.Add(gen.MaskModule);
+            gen.Add(new PexModule(gen));
+            gen.ReplaceTypeAssociation<Loqui.Generation.EnumType, Mutagen.Bethesda.Generation.EnumType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.StringType, Mutagen.Bethesda.Generation.StringType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.LoquiType, Mutagen.Bethesda.Generation.MutagenLoquiType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.BoolType, Mutagen.Bethesda.Generation.BoolType>();
+            gen.ReplaceTypeAssociation<Loqui.Generation.FloatType, Mutagen.Bethesda.Generation.FloatType>();
+            gen.AddTypeAssociation<CustomLogic>("CustomLogic");
 
-            var dir = new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Pex/DataTypes");
-            var pexProto = gen.AddProtocol(
+            if (ShouldRun("Skyrim"))
+            {
+                var proto = gen.AddProtocol(
                 new ProtocolGeneration(
                     gen,
-                    new ProtocolKey("Pex"),
-                    dir)
+                    new ProtocolKey("SkyrimPex"),
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Skyrim/Pex"))
                 {
-                    DefaultNamespace = "Mutagen.Bethesda.Pex",
-                    DoGeneration = ShouldRun("Pex")
+                    DefaultNamespace = "Mutagen.Bethesda.Skyrim.Pex",
                 });
-            var projFile = new FileInfo(Path.Combine(pexProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.Core.csproj"));
-            pexProto.AddProjectToModify(projFile);
+                proto.AddProjectToModify(
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.Skyrim.csproj")));
+            }
 
             gen.Generate().Wait();
         }

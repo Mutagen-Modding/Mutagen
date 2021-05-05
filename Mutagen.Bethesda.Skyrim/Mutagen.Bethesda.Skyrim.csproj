@@ -72,6 +72,36 @@
     <Compile Include="Interfaces\IPositionRotation.cs" />
     <Compile Include="Interfaces\IScripted.cs" />
     <Compile Include="IsExternalInit.cs" />
+    <Compile Include="Pex\AVariable.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DebugFunction_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\DebugInfo_Generated.cs">
+      <DependentUpon>DebugInfo.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Instruction.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\InstructionOpCodeArguments.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ObjectVariableData.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\PexFile.cs">
+      <DependentUpon>PexFile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\PexFile_Generated.cs">
+      <DependentUpon>PexFile.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Object.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Property.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
     <Compile Include="Records\Common Subrecords\ActivateParents.cs">
       <DependentUpon>ActivateParents.xml</DependentUpon>
     </Compile>
@@ -2078,6 +2108,146 @@
     <Compile Include="Interfaces\IConstructible_Generated.cs" />
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Pex\ProtocolDefinition_SkyrimPex.cs" />
+    <Compile Include="Pex\Instruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\NothingInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ProcessIntsInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ProcessFloatsInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\IntRemainderInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\FlipBoolInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\NegateIntInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\AssignInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CastInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CompareInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\UnconditionalBranchInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ConditionalBranchInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CallMethodInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CallParentInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CallStaticInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ReturnInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\StringConcatInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\PropertyGetInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\PropertySetInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\CreateArrayInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\GetArrayLengthInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\GetArrayElementInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\SetArrayElementInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\FindArrayElementInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\NamedFunction_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Function_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\State_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\FunctionVariable_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Property_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\Object_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ObjectVariable_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\ObjectVariableData_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\StringObjectVariableData_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\IntegerObjectVariableData_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\FloatObjectVariableData_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\BoolObjectVariableData_Generated.cs">
+      <DependentUpon>Object.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\AMathInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\NegateFloatInstruction_Generated.cs">
+      <DependentUpon>Instructions.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\AVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\StringVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\IntVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\FloatVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\BoolVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Pex\IdentifierVariable_Generated.cs">
+      <DependentUpon>Variables.xml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Pex\DebugInfo.xml" />
+    <Content Include="Pex\Instructions.xml" />
+    <Content Include="Pex\Object.xml" />
+    <Content Include="Pex\PexFile.xml" />
+    <Content Include="Pex\Variables.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
@@ -2093,6 +2263,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+    <ProjectReference Include="..\Mutagen.Bethesda.Oblivion\Mutagen.Bethesda.Oblivion.csproj" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" />

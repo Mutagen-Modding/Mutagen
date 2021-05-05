@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Instruction" abstract="true" GUID="a8e271c3-2a2c-4702-90c0-f1514582651f" ID="21">
+    <Fields>
+      <CustomLogic name="OpTranslation" />
+    </Fields>
+  </Object>
+  <Object name="NothingInstruction" baseClass="Instruction" GUID="f73985ff-4baf-4e85-bb50-3058b1d2294a" ID="22">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="AMathInstruction" abstract="true" baseClass="Instruction" GUID="00596dd5-b178-4477-927a-58763a3030b5" ID="46">
+    <Fields>
+      <Enum name="Operation" enumName="NumericOperationType" binary="NoGeneration" />
+      <RefDirect name="Identifier" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="ProcessIntsInstruction" baseClass="AMathInstruction" GUID="bc4cba52-2b59-4732-8e6e-f7549150b44e" ID="24">
+    <Fields>
+      <Int32 name="First" />
+      <Int32 name="Second" />
+    </Fields>
+  </Object>
+  <Object name="ProcessFloatsInstruction" baseClass="AMathInstruction" GUID="c421495b-42fe-467f-a0f0-2f5346c52be5" ID="25">
+    <Fields>
+      <Float name="First" />
+      <Float name="Second" />
+    </Fields>
+  </Object>
+  <Object name="IntRemainderInstruction" baseClass="Instruction" GUID="2b19b1aa-8f8d-4c4c-8846-7fd2e92a4af8" ID="26">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Int32 name="First" />
+      <Int32 name="Second" />
+    </Fields>
+  </Object>
+  <Object name="FlipBoolInstruction" baseClass="Instruction" GUID="57c5de60-56e4-491c-8666-352f4f9b83bd" ID="27">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+  <Object name="NegateIntInstruction" baseClass="Instruction" GUID="1a322f3c-97b8-4964-87cf-16a18e0b96ab" ID="28">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Int32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="NegateFloatInstruction" baseClass="Instruction" GUID="2dae9988-c368-4f62-acfa-df53eff161d9" ID="48">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Int32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="AssignInstruction" baseClass="Instruction" GUID="48350445-04c2-47e1-820c-f453db09bf7e" ID="29">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="Value" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="CastInstruction" baseClass="Instruction" GUID="778461d2-b9bc-449e-910b-e1e5be3372d1" ID="30">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+  <Object name="CompareInstruction" baseClass="Instruction" GUID="069a262f-c818-4c93-8822-b94a6a0a5b31" ID="47">
+    <Fields>
+      <Enum name="Operation" enumName="CompareOperationType" binary="NoGeneration" />
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Bool name="First" />
+      <Bool name="Second" />
+    </Fields>
+  </Object>
+  <Object name="UnconditionalBranchInstruction" baseClass="Instruction" GUID="05e224f3-0a5d-483c-afbf-0e975af05c62" ID="32">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="ConditionalBranchInstruction" baseClass="Instruction" GUID="84788080-9db3-41b3-9967-bd56f3f67be5" ID="33">
+    <Fields>
+      <Bool name="Value" />
+      <Bool name="Comparison" binary="NoGeneration" />
+      <RefDirect name="Identifier" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="CallMethodInstruction" baseClass="Instruction" GUID="04ac6fdf-8994-4acd-a6ed-4de18a0a1a5c" ID="34">
+    <Fields>
+      <RefDirect name="String1" refName="StringVariable" />
+      <RefDirect name="String2" refName="StringVariable" />
+      <RefDirect name="String3" refName="StringVariable" />
+      <RefList name="ExtraVariables" refName="AVariable" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="CallParentInstruction" baseClass="Instruction" GUID="e54634df-83fb-4067-913e-3ced657509cd" ID="35">
+    <Fields>
+      <RefDirect name="String1" refName="StringVariable" />
+      <RefDirect name="String2" refName="StringVariable" />
+      <RefList name="ExtraVariables" refName="AVariable" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="CallStaticInstruction" baseClass="Instruction" GUID="3edad6f6-fcf3-4028-a52e-09dcdb07b850" ID="36">
+    <Fields>
+      <RefDirect name="String1" refName="StringVariable" />
+      <RefDirect name="String2" refName="StringVariable" />
+      <RefDirect name="String3" refName="StringVariable" />
+      <RefList name="ExtraVariables" refName="AVariable" binary="Custom" />
+    </Fields>
+  </Object>
+  <Object name="ReturnInstruction" baseClass="Instruction" GUID="f2fb3aae-f8e6-428a-a32b-43c5e4a2e03d" ID="37">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="StringConcatInstruction" baseClass="Instruction" GUID="1cc59a94-8bb1-4079-9aab-8b521834e5f2" ID="38">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String1" refName="StringVariable" />
+      <RefDirect name="String2" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="PropertyGetInstruction" baseClass="Instruction" GUID="51488bc5-2547-4b5c-aa4e-ad39cea486cf" ID="39">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String1" refName="StringVariable" />
+      <RefDirect name="String2" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="PropertySetInstruction" baseClass="Instruction" GUID="f8cc059f-7db7-42a1-81d6-1f96c48e799a" ID="40">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String" refName="StringVariable" />
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+  <Object name="CreateArrayInstruction" baseClass="Instruction" GUID="148f3c11-1046-47ef-aa68-534091d8a4a1" ID="41">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <UInt32 name="Size" />
+    </Fields>
+  </Object>
+  <Object name="GetArrayLengthInstruction" baseClass="Instruction" GUID="044908ea-b0da-4658-a372-51e32948a105" ID="42">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String" refName="StringVariable" />
+    </Fields>
+  </Object>
+  <Object name="GetArrayElementInstruction" baseClass="Instruction" GUID="8419087d-ecef-4bee-b245-74e0e7e2567c" ID="43">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String" refName="StringVariable" />
+      <Int32 name="Index" />
+    </Fields>
+  </Object>
+  <Object name="SetArrayElementInstruction" baseClass="Instruction" GUID="b3a415a3-08c5-4f7d-9254-3fd835ee5815" ID="44">
+    <Fields>
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <Int32 name="Index" />
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+  <Object name="FindArrayElementInstruction" baseClass="Instruction" GUID="0bf2872c-1ee1-45d5-bf9f-0f05ff895724" ID="45">
+    <Fields>
+      <Bool name="StartFromEnd" binary="NoGeneration" />
+      <RefDirect name="Identifier" refName="StringVariable" />
+      <RefDirect name="String" refName="StringVariable" />
+      <Int32 name="OtherIndex" />
+      <Int32 name="StartIndex" />
+    </Fields>
+  </Object>
+</Loqui>

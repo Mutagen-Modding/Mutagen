@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="AVariable" abstract="true" GUID="7fc0a5a4-3887-4741-857c-cdf17957835a" ID="49">
+    <Fields>
+      <CustomLogic name="TypeTranslation" />
+    </Fields>
+  </Object>
+  <Object name="StringVariable" baseClass="AVariable" GUID="f9c694de-74c0-4a64-a0c1-aacae5b4836c" ID="51">
+    <Fields>
+      <String name="Value" />
+    </Fields>
+  </Object>
+  <Object name="IdentifierVariable" baseClass="StringVariable" GUID="64e2c65b-f8c5-4888-9aaa-8477823ec0a0" ID="50">
+    <Fields>
+    </Fields>
+  </Object>
+  <Object name="IntVariable" baseClass="AVariable" GUID="6223900d-69e9-4c61-ad72-2dfac4a6a4d3" ID="52">
+    <Fields>
+      <Int32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="FloatVariable" baseClass="AVariable" GUID="72ba5d2d-9652-4f6e-bfb1-4e8789ca170c" ID="53">
+    <Fields>
+      <Float name="Value" />
+    </Fields>
+  </Object>
+  <Object name="BoolVariable" baseClass="AVariable" GUID="3523c570-d0f2-4a2f-bc1c-3cd59a3068af" ID="54">
+    <Fields>
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+</Loqui>

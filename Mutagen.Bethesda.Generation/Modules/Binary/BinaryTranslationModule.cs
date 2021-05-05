@@ -10,6 +10,7 @@ using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using System.Xml.Linq;
 
 namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
@@ -50,6 +51,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
         public BinaryTranslationModule(LoquiGenerator gen)
             : base(gen)
         {
+            this.CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
         }
 
         public override async Task LoadWrapup(ObjectGeneration obj)
@@ -136,6 +138,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg: fg,
                     obj: obj,
                     field: field,
+                    writerClass: WriterClass,
+                    writerMemberName: WriterMemberName,
                     isAsync: false);
             }
         }
@@ -149,6 +153,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     fg: fg,
                     obj: obj,
                     field: field,
+                    readerClass: ReaderClass,
+                    readerMemberName: ReaderMemberName,
                     isAsync: false);
             }
         }
@@ -626,6 +632,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         break;
                 }
             }
+        }
+
+        public override async Task PostFieldLoad(ObjectGeneration obj, TypeGeneration field, XElement node)
+        {
+            var data = field.CustomData.GetOrAdd(Constants.DataKey, () => new MutagenFieldData(field)) as MutagenFieldData;
+            data.Binary = node.GetAttribute<BinaryGenerationType>(Constants.Binary, BinaryGenerationType.Normal);
+            data.BinaryOverlay = node.GetAttribute<BinaryGenerationType?>(Constants.BinaryOverlay, default);
+            await base.PostFieldLoad(obj, field, node);
         }
     }
 }

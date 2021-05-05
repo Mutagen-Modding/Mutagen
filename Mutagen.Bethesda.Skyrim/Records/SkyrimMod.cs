@@ -1,15 +1,11 @@
 using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;

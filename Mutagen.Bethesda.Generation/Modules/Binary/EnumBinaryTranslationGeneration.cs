@@ -80,7 +80,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             Accessor errorMaskAccessor,
             Accessor translationMaskAccessor)
         {
-            var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
+            var data = typeGen.GetFieldData();
             var eType = typeGen as EnumType;
             if (data.HasTrigger)
             {

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="Object" GUID="fbbe966b-4956-4867-be4d-fbd4181e2417" ID="6">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" />
+      <CustomLogic name="SizeMarker" />
+      <String name="ParentClassName" />
+      <String name="DocString" />
+      <UInt32 name="RawUserFlags" />
+      <String name="AutoStateName" />
+      <RefList name="Variables" refName="ObjectVariable" />
+      <RefList name="Properties" refName="Property" />
+      <RefList name="States" refName="State" />
+      <CustomLogic name="SizeConfirmation" />
+    </Fields>
+  </Object>
+  <Object name="ObjectVariable" GUID="dcbe94f2-dda2-47b9-9057-e30c6c8fac8c" ID="9">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" />
+      <String name="TypeName" />
+      <UInt32 name="RawUserFlags" />
+      <RefDirect name="VariableData" nullable="True" refName="ObjectVariableData" />
+    </Fields>
+  </Object>
+  <Object name="ObjectVariableData" abstract="true" GUID="5abe0b17-91a4-4c71-ae9b-f733317a4a31" ID="10" />
+  <Object name="StringObjectVariableData" baseClass="ObjectVariableData" GUID="06414205-5d74-4c6b-913e-5dfd9f41497b" ID="17">
+    <Fields>
+      <String name="Value" />
+    </Fields>
+  </Object>
+  <Object name="IntegerObjectVariableData" baseClass="ObjectVariableData" GUID="69745a65-e06c-41cb-b2b7-88453a568d22" ID="18">
+    <Fields>
+      <Int32 name="Value" />
+    </Fields>
+  </Object>
+  <Object name="FloatObjectVariableData" baseClass="ObjectVariableData" GUID="66f13166-00c7-4670-bd69-16ee0b1d98f6" ID="19">
+    <Fields>
+      <Float name="Value" />
+    </Fields>
+  </Object>
+  <Object name="BoolObjectVariableData" baseClass="ObjectVariableData" GUID="52d46f11-1473-43e8-9990-436310f1958f" ID="20">
+    <Fields>
+      <Bool name="Value" />
+    </Fields>
+  </Object>
+  <Object name="Property" GUID="0dfa3f68-af0f-47a9-afbb-2d5d6b4bb994" ID="11">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="Name" />
+      <String name="TypeName" />
+      <String name="DocString" />
+      <UInt32 name="RawUserFlags" />
+      <Enum name="Flags" enumName="PropertyFlags" byteLength="1" />
+      <CustomLogic name="FlagsParse" />
+      <String name="AutoVarName" nullable="True" binary="NoGeneration" />
+      <RefDirect name="ReadHandler" nullable="True" refName="Function" binary="NoGeneration" />
+      <RefDirect name="WriteHandler" nullable="True" refName="Function" binary="NoGeneration" />
+    </Fields>
+  </Object>
+  <Object name="State" GUID="8840a495-0e1d-41d4-9397-a81a14b0b040" ID="12">
+    <Fields>
+      <String name="Name" />
+      <RefList name="Functions" refName="NamedFunction" />
+    </Fields>
+  </Object>
+  <Object name="NamedFunction" GUID="6d5e808d-a83c-475c-a7ae-c1c4d3aeff6a" ID="13">
+    <Fields>
+      <String name="FunctionName" />
+      <RefDirect name="Function" refName="Function" />
+    </Fields>
+  </Object>
+  <Object name="Function" GUID="5d7ba301-e8be-4d47-a00e-87a0c49ce82b" ID="14">
+    <Interface>IHasUserFlags</Interface>
+    <Fields>
+      <String name="ReturnTypeName" />
+      <String name="DocString"  />
+      <UInt32 name="RawUserFlags" />
+      <Enum name="Flags" enumName="FunctionFlags" byteLength="1" />
+      <RefList name="Parameters" refName="FunctionVariable" />
+      <RefList name="Locals" refName="FunctionVariable" />
+      <RefList name="Instructions" refName="Instruction" />
+    </Fields>
+  </Object>
+  <Object name="FunctionVariable" GUID="eadd25a2-cd64-4da0-95d0-9fdf432ee9aa" ID="15">
+    <Fields>
+      <String name="Name" />
+      <String name="TypeName" />
+    </Fields>
+  </Object>
+</Loqui>

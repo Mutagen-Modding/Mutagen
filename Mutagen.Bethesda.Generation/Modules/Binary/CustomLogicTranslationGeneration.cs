@@ -81,6 +81,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
+            string readerClass,
+            string readerMemberName,
             bool isAsync)
         {
             if (!isAsync)
@@ -91,7 +93,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     SemiColon = true
                 })
                 {
-                    args.Add($"{nameof(MutagenFrame)} frame");
+                    args.Add($"{readerClass} {readerMemberName}");
                     args.Add($"{obj.Interface(getter: false, internalInterface: true)} item");
                 }
                 fg.AppendLine();
@@ -102,6 +104,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             FileGeneration fg,
             ObjectGeneration obj,
             TypeGeneration field,
+            string writerClass,
+            string writerMemberName,
             bool isAsync)
         {
             using (var args = new FunctionWrapper(fg,
@@ -109,7 +113,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.SemiColon = true;
-                args.Add($"{nameof(MutagenWriter)} writer");
+                args.Add($"{writerClass} {writerMemberName}");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
             }
             fg.AppendLine();
@@ -117,7 +121,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 $"public static void WriteBinary{field.Name}{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
-                args.Add($"{nameof(MutagenWriter)} writer");
+                args.Add($"{writerClass} {writerMemberName}");
                 args.Add($"{obj.Interface(getter: true, internalInterface: true)} item");
             }
             using (new BraceWrapper(fg))
@@ -125,8 +129,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                 using (var args = new ArgsWrapper(fg,
                     $"WriteBinary{field.Name}Custom"))
                 {
-                    args.Add("writer: writer");
-                    args.Add("item: item");
+                    args.AddPassArg(writerMemberName);
+                    args.AddPassArg("item");
                 }
             }
             fg.AppendLine();
@@ -141,7 +145,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             using (var args = new ArgsWrapper(fg,
                 $"{this.Module.TranslationWriteClass(obj)}.WriteBinary{field.Name}"))
             {
-                args.Add($"writer: {writerAccessor}");
+                args.Add($"{this.Module.WriterMemberName}: {writerAccessor}");
                 args.Add("item: item");
             }
         }
@@ -156,7 +160,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
             using (var args = new ArgsWrapper(fg,
                 $"{Loqui.Generation.Utility.Await(isAsync)}{this.Module.TranslationCreateClass(field.ObjectGen)}.FillBinary{field.Name}Custom"))
             {
-                args.Add($"frame: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
+                args.Add($"{this.Module.ReaderMemberName}: {(data.HasTrigger ? $"{frameAccessor}.SpawnWithLength(frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)} + contentLength)" : frameAccessor)}");
                 args.Add("item: item");
             }
         }
@@ -246,7 +250,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
 
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
-            CustomLogic custom = typeGen as CustomLogic;
             var data = typeGen.GetFieldData();
             return data.Length;
         }

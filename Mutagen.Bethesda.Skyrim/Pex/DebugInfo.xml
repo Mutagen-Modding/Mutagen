@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="DebugInfo" GUID="8adc2f6d-0800-4851-b0bf-f6d812a4d25b" ID="1">
+    <Fields>
+      <DateTime name="ModificationTime" />
+      <RefList name="Functions" refName="DebugFunction" />
+    </Fields>
+  </Object>
+  <Object name="DebugFunction" GUID="d0eebac8-b25e-4eae-a95d-5bf054772260" ID="2">
+    <Fields>
+      <String name="ObjectName" />
+      <String name="StateName" />
+      <String name="FunctionName" />
+      <Enum name="FunctionType" enumName="DebugFunctionType" byteLength="1" />
+      <List name="Instructions">
+        <UInt16 />
+      </List>
+    </Fields>
+  </Object>
+</Loqui>

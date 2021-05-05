@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<Loqui xmlns="http://tempuri.org/LoquiSource.xsd">
+  <Object name="PexFile" GUID="6cbf970c-2533-422d-b90a-6b7b74817e63" ID="5" >
+    <Interface>Mutagen.Bethesda.Pex.Records.IPexFileCommon</Interface>
+    <Fields>
+      <UInt8 name="MajorVersion" binary="NoGeneration" />
+      <UInt8 name="MinorVersion" binary="NoGeneration" />
+      <UInt16 name="GameId" binary="NoGeneration" />
+      <DateTime name="CompilationTime" binary="NoGeneration" />
+      <String name="SourceFileName" binary="NoGeneration" />
+      <String name="Username" binary="NoGeneration" />
+      <String name="MachineName" binary="NoGeneration" />
+      <RefDirect name="DebugInfo" nullable="True" refName="DebugInfo" binary="NoGeneration" />
+      <RefList name="Objects" refName="Object" binary="NoGeneration" />
+      <Array name="UserFlags" fixedSize="32" binary="NoGeneration" >
+        <String nullable="True" />
+      </Array>
+    </Fields>
+  </Object>
+</Loqui>

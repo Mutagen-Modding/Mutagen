@@ -175,7 +175,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                     using (var args = new ArgsWrapper(fg,
                         $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                     {
-                        args.Add($"frame: {frameAccessor}");
+                        args.Add($"{Module.ReaderMemberName}: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
                     }
                 }
@@ -186,9 +186,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Binary
                         fg.AppendLine($"frame.Position += frame.{nameof(MutagenFrame.MetaData)}.{nameof(ParsingBundle.Constants)}.{nameof(GameConstants.SubConstants)}.{nameof(GameConstants.SubConstants.HeaderLength)}; // Skip header");
                     }
                     using (var args = new ArgsWrapper(fg,
-                        $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}{this.Module.ModuleNickname}"))
+                        $"{itemAccessor} = {loqui.TargetObjectGeneration.Namespace}.{loqui.TypeNameInternal(getter: false, internalInterface: true)}.{this.Module.CreateFromPrefix}Binary"))
                     {
-                        args.Add($"frame: {frameAccessor}");
+                        args.Add($"{Module.ReaderMemberName}: {frameAccessor}");
                         if (data?.RecordTypeConverter != null
                             && data.RecordTypeConverter.FromConversions.Count > 0)
                         {

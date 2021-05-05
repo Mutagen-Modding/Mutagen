@@ -258,7 +258,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                         ConvertFromStreamIn),
                     When = (o, _) => o.GetObjectType() == ObjectType.Mod
                 });
-            this.CustomLogic = new CustomLogicTranslationGeneration() { Module = this };
         }
 
         #region Minor API Translations

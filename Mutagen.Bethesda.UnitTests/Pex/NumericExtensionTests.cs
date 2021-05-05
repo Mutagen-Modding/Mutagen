@@ -1,4 +1,4 @@
-using Mutagen.Bethesda.Pex;
+using Mutagen.Bethesda.Pex.Binary.Translations;
 using System;
 using Xunit;
 
