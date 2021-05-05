@@ -11,11 +11,11 @@ using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.Generation.Modules
 {
-    public class MutagenModule : GenerationModule
+    public class PluginModule : GenerationModule
     {
         public override string RegionString => "Mutagen";
 
-        public MutagenModule()
+        public PluginModule()
         {
             this.SubModules.Add(new TriggeringRecordModule());
             this.SubModules.Add(new GenericsModule());
@@ -25,8 +25,6 @@ namespace Mutagen.Bethesda.Generation.Modules
             this.SubModules.Add(new ModModule());
             this.SubModules.Add(new ColorTypeModule());
             this.SubModules.Add(new LinkModule());
-            //this.SubModules.Add(new FolderExportModule());
-            this.SubModules.Add(new ReactiveModule());
             this.SubModules.Add(new MajorRecordModule());
             this.SubModules.Add(new MajorRecordEnumerationModule());
             this.SubModules.Add(new ContainerParentModule());

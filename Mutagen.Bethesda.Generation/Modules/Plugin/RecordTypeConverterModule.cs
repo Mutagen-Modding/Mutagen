@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class RecordTypeConverterModule : GenerationModule
     {

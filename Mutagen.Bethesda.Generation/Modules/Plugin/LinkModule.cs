@@ -1,6 +1,5 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Generation.Modules.Plugin;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Internals;
 using Mutagen.Bethesda.Plugins.Records;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class LinkModule : GenerationModule
     {

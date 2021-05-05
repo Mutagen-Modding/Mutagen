@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
-            gen.GenerationModules.Add(new MutagenModule());
+            gen.GenerationModules.Add(new PluginModule());
             gen.Add(new PluginTranslationModule(gen));
             gen.AddTypeAssociation<FormLinkType>("FormLink");
             gen.AddTypeAssociation<FormIDType>("FormID");

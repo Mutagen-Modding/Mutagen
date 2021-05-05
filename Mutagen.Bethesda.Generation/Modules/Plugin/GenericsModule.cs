@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class GenericsModule : GenerationModule
     {

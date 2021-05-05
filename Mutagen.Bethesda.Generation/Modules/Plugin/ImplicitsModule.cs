@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class ImplicitsModule : GenerationModule
     {

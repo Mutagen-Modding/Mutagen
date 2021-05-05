@@ -4,11 +4,10 @@ using System;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Generation.Modules;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 
 namespace Mutagen.Bethesda.Generation
 {

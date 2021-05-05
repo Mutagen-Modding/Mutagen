@@ -1,14 +1,10 @@
 using Loqui;
 using Loqui.Generation;
 using Noggog;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class LinkCacheExtensionsModule : GenerationModule
     {

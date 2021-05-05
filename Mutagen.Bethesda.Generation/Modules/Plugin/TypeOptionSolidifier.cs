@@ -7,7 +7,7 @@ using Noggog;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records.Internals;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     /// <summary>
     /// One of the harder parts to offer via natural intellisense is informing all the viable options

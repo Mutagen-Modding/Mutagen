@@ -5,7 +5,7 @@ using Noggog;
 using System;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class MajorRecordFlagModule : GenerationModule
     {

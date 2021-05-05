@@ -4,7 +4,7 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Plugins;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation.Modules
+namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
     public class DuplicateModule : GenerationModule
     {
