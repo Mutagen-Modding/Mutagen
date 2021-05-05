@@ -1,3 +1,4 @@
+using FluentAssertions;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
@@ -84,6 +85,7 @@ namespace Mutagen.Bethesda.UnitTests
         public void EnumerateDeepLinkInterface()
         {
             var mod = new OblivionMod(Utility.PluginModKey);
+            var placed = new PlacedNpc(mod);
             mod.Cells.Records.Add(new CellBlock()
             {
                 BlockNumber = 0,
@@ -102,7 +104,7 @@ namespace Mutagen.Bethesda.UnitTests
                             {
                                 Persistent =
                                 {
-                                    new PlacedNpc(mod.GetNextFormKey())
+                                    placed
                                 }
                             }
                         }
@@ -113,6 +115,40 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.NotEmpty(conv.EnumerateMajorRecords<ICellGetter>());
             Assert.NotEmpty(conv.EnumerateMajorRecords<IPlacedGetter>());
             Assert.Equal(Getter ? 0 : 1, conv.EnumerateMajorRecords<IPlaced>().Count());
+        }
+
+        [Fact]
+        public void EnumerateDeepMajorRecordType()
+        {
+            var mod = new OblivionMod(Utility.PluginModKey);
+            var placed = new PlacedNpc(mod);
+            mod.Cells.Records.Add(new CellBlock()
+            {
+                BlockNumber = 0,
+                GroupType = GroupTypeEnum.InteriorCellBlock,
+                LastModified = 4,
+                SubBlocks =
+                {
+                    new CellSubBlock()
+                    {
+                        BlockNumber = 0,
+                        GroupType = GroupTypeEnum.InteriorCellSubBlock,
+                        LastModified = 4,
+                        Cells =
+                        {
+                            new Cell(mod.GetNextFormKey())
+                            {
+                                Persistent =
+                                {
+                                    placed
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            var conv = ConvertMod(mod);
+            conv.EnumerateMajorRecords<IOblivionMajorRecordGetter>().Should().Contain(placed);
         }
     }
 
