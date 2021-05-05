@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public IMagicEffectArchetypeGetter GetArchetypeCustom()
             {
-                if (!_DATALocation.HasValue) return default!;
+                if (!_DATALocation.HasValue) return new MagicEffectArchetype();
                 var frame = new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData))
                 {
                     Position = _ArchetypeLocation
