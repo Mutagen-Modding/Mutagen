@@ -914,6 +914,10 @@ namespace Mutagen.Bethesda.Cache.Implementations
 
         private IReadOnlyCache<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>, K> GetContextCache(Type type)
         {
+            if (_parent._simple)
+            {
+                throw new ArgumentException("Queried for record on a simple cache");
+            }
             lock (_contexts)
             {
                 if (!_contexts.TryGetValue(type, out var cache))

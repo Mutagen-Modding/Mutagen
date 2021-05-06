@@ -510,6 +510,10 @@ namespace Mutagen.Bethesda.Cache.Implementations
 
         private DepthCache<K, LinkCacheItem> GetTypeCache(Type type)
         {
+            if (_parent._simple)
+            {
+                throw new ArgumentException("Queried for record on a simple cache");
+            }
             lock (_winningRecords)
             {
                 // Get cache object by type

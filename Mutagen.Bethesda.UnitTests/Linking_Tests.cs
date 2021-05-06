@@ -2818,15 +2818,15 @@ namespace Mutagen.Bethesda.UnitTests
             var (style, package) = GetLinkCache(mod, cacheType);
             WrapPotentialThrow(cacheType, style, () =>
             {
-                package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
-                .Should().BeTrue();
-                rec.Record.Should().Be(placed);
-            });
-            WrapPotentialThrow(cacheType, style, () =>
-            {
                 package.TryResolve<ISkyrimMajorRecordGetter>(placed.FormKey, out var rec2)
                 .Should().BeTrue();
                 rec2.Should().Be(placed);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                package.TryResolveContext<ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(placed.FormKey, out var rec)
+                .Should().BeTrue();
+                rec.Record.Should().Be(placed);
             });
         }
         #endregion
