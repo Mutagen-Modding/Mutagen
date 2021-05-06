@@ -1,4 +1,6 @@
 using IniParser;
+using IniParser.Model.Configuration;
+using IniParser.Parser;
 using Mutagen.Bethesda.Archives.Ba2;
 using Mutagen.Bethesda.Archives.Bsa;
 using Mutagen.Bethesda.Inis;
@@ -30,6 +32,16 @@ namespace Mutagen.Bethesda.Archives
 
     public static class Archive
     {
+        private static readonly IniParserConfiguration Config = new IniParserConfiguration()
+        {
+            AllowDuplicateKeys = true,
+            AllowDuplicateSections = true,
+            AllowKeysWithoutSection = true,
+            AllowCreateSectionsOnFly = true,
+            CaseInsensitive = true,
+            SkipInvalidLines = true,
+        };
+
         // ToDo
         // Migrate this to a more centralized/official place within Mutagen
         internal static IFileSystem FileSystem = new FileSystem();
@@ -185,7 +197,7 @@ namespace Mutagen.Bethesda.Archives
         {
             // Release exists as parameter, in case future games need different handling
 
-            var parser = new FileIniDataParser();
+            var parser = new FileIniDataParser(new IniDataParser(Config));
             var data = parser.ReadData(new StreamReader(iniStream));
             var basePath = data["Archive"];
             var str1 = basePath["sResourceArchiveList"]?.Split(", ");
