@@ -558,10 +558,6 @@ namespace Mutagen.Bethesda.Skyrim
                                                 }
                                                 break;
                                             case RecordTypeInts.LAND:
-                                                if (_landscapeLocation.HasValue)
-                                                {
-                                                    throw new ArgumentException("Second landscape parsed.");
-                                                }
                                                 _landscapeLocation = checked((int)stream.Position);
                                                 stream.Position += (int)majorMeta.TotalLength;
                                                 break;

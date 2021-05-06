@@ -429,17 +429,9 @@ namespace Mutagen.Bethesda.Oblivion
                                             switch (recType.TypeInt)
                                             {
                                                 case RecordTypeInts.PGRD:
-                                                    if (_pathgridLocation.HasValue)
-                                                    {
-                                                        throw new ArgumentException("Second pathgrid parsed.");
-                                                    }
                                                     _pathgridLocation = checked((int)stream.Position);
                                                     break;
                                                 case RecordTypeInts.LAND:
-                                                    if (_landscapeLocation.HasValue)
-                                                    {
-                                                        throw new ArgumentException("Second landscape parsed.");
-                                                    }
                                                     _landscapeLocation = checked((int)stream.Position);
                                                     break;
                                                 default:
