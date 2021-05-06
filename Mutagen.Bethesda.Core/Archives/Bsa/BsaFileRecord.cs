@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
+using Noggog.Streams;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -73,9 +74,9 @@ namespace Mutagen.Bethesda.Archives.Bsa
             }
         }
 
-        public void CopyDataTo(Stream output)
+        public Stream AsStream()
         {
-            using var rdr = BSA.GetStream();
+            var rdr = BSA.GetStream();
             rdr.BaseStream.Position = Offset;
 
             (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
@@ -88,61 +89,25 @@ namespace Mutagen.Bethesda.Archives.Bsa
             {
                 if (Compressed && size.Size != size.OnDisk)
                 {
-                    using var r = LZ4Stream.Decode(rdr.BaseStream);
-                    r.CopyToLimit(output, size.Original);
+                    return LZ4Stream.Decode(rdr.BaseStream);
                 }
                 else
                 {
-                    rdr.BaseStream.CopyToLimit(output, size.OnDisk);
+                    return new FramedStream(rdr.BaseStream, size.OnDisk);
                 }
             }
             else
             {
                 if (Compressed)
                 {
-                    using var z = new InflaterInputStream(rdr.BaseStream);
-                    z.CopyToLimit(output, size.Original);
+                    return new InflaterInputStream(rdr.BaseStream)
+                    {
+                        IsStreamOwner = true
+                    };
                 }
                 else
                 {
-                    rdr.BaseStream.CopyToLimit(output, size.OnDisk);
-                }
-            }
-        }
-
-        public async ValueTask CopyDataToAsync(Stream output)
-        {
-            using var rdr = BSA.GetStream();
-            rdr.BaseStream.Position = Offset;
-
-            (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
-            if (!_size.IsValueCreated)
-            {
-                _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
-            }
-
-            if (BSA.HeaderType == BsaVersionType.SSE)
-            {
-                if (Compressed && size.Size != size.OnDisk)
-                {
-                    using var r = LZ4Stream.Decode(rdr.BaseStream);
-                    await r.CopyToLimitAsync(output, size.Original).ConfigureAwait(false);
-                }
-                else
-                {
-                    await rdr.BaseStream.CopyToLimitAsync(output, size.OnDisk).ConfigureAwait(false);
-                }
-            }
-            else
-            {
-                if (Compressed)
-                {
-                    await using var z = new InflaterInputStream(rdr.BaseStream);
-                    await z.CopyToLimitAsync(output, size.Original).ConfigureAwait(false);
-                }
-                else
-                {
-                    await rdr.BaseStream.CopyToLimitAsync(output, size.OnDisk).ConfigureAwait(false);
+                    return new FramedStream(rdr.BaseStream, size.OnDisk);
                 }
             }
         }
@@ -200,45 +165,10 @@ namespace Mutagen.Bethesda.Archives.Bsa
 
         public byte[] GetBytes()
         {
-            using var rdr = BSA.GetStream();
-            rdr.BaseStream.Position = Offset;
-
-            (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
-            if (!_size.IsValueCreated)
-            {
-                _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
-            }
-
-            if (BSA.HeaderType == BsaVersionType.SSE)
-            {
-                if (Compressed && size.Size != size.OnDisk)
-                {
-                    using var r = LZ4Stream.Decode(rdr.BaseStream);
-                    var bytes = new byte[size.Original];
-                    var memStream = new MemoryStream(bytes);
-                    r.CopyToLimit(memStream, size.Original);
-                    return bytes;
-                }
-                else
-                {
-                    return rdr.ReadBytes(checked((int)size.OnDisk));
-                }
-            }
-            else
-            {
-                if (Compressed)
-                {
-                    using var z = new InflaterInputStream(rdr.BaseStream);
-                    var bytes = new byte[size.Original];
-                    var memStream = new MemoryStream(bytes);
-                    z.CopyToLimit(memStream, size.Original);
-                    return bytes;
-                }
-                else
-                {
-                    return rdr.ReadBytes(checked((int)size.OnDisk));
-                }
-            }
+            using var s = AsStream();
+            byte[] ret = new byte[s.Remaining()];
+            s.Read(ret);
+            return ret;
         }
 
         public ReadOnlySpan<byte> GetSpan()

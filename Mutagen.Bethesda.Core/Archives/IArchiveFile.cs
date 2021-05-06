@@ -21,16 +21,6 @@ namespace Mutagen.Bethesda.Archives
         uint Size { get; }
 
         /// <summary>
-        /// Copies this entry to the given stream
-        /// </summary>
-        void CopyDataTo(Stream output);
-
-        /// <summary>
-        /// Copies this entry to the given stream
-        /// </summary>
-        ValueTask CopyDataToAsync(Stream output);
-
-        /// <summary>
         /// Retrieves the data and returns it as a new array of bytes
         /// </summary>
         /// <returns>New array of bytes containing data</returns>
@@ -47,5 +37,11 @@ namespace Mutagen.Bethesda.Archives
         /// </summary>
         /// <returns>span containing data that may be part of a larger memory block</returns>
         ReadOnlyMemorySlice<byte> GetMemorySlice();
+
+        /// <summary>
+        /// Retrieves the data as a Stream
+        /// </summary>
+        /// <returns>File data as a Stream</returns>
+        Stream AsStream();
     }
 }
