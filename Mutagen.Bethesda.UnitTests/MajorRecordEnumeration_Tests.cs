@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.UnitTests
                 }
             });
             var conv = ConvertMod(mod);
-            conv.EnumerateMajorRecords<IOblivionMajorRecordGetter>().Should().Contain(placed);
+            conv.EnumerateMajorRecords<IOblivionMajorRecordGetter>().Any(p => p.FormKey == placed.FormKey).Should().BeTrue();
         }
     }
 

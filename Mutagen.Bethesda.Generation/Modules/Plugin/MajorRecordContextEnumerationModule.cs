@@ -278,7 +278,6 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     FileGeneration fieldGen;
                     if (field is LoquiType loqui)
                     {
-                        if (loqui.TargetObjectGeneration.IsListGroup()) continue;
                         var isMajorRecord = loqui.TargetObjectGeneration != null && await loqui.TargetObjectGeneration.IsMajorRecord();
                         if (!isMajorRecord
                             && await MajorRecordModule.HasMajorRecords(loqui, includeBaseClass: true) == Case.No)

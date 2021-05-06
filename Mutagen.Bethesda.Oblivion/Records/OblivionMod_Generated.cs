@@ -7966,6 +7966,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     group: (m) => m.Regions,
                     groupGetter: (m) => m.Regions);
             }
+            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                linkCache: linkCache,
+                modKey: obj.ModKey,
+                parent: null))
+            {
+                yield return item;
+            }
             foreach (var item in obj.Worldspaces)
             {
                 yield return new GroupModContext<IOblivionMod, IOblivionModGetter, Worldspace, IWorldspaceGetter>(

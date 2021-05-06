@@ -14728,6 +14728,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     group: (m) => m.NavigationMeshInfoMaps,
                     groupGetter: (m) => m.NavigationMeshInfoMaps);
             }
+            foreach (var item in obj.Cells.EnumerateMajorRecordContexts(
+                linkCache: linkCache,
+                modKey: obj.ModKey,
+                parent: null))
+            {
+                yield return item;
+            }
             foreach (var item in obj.Worldspaces)
             {
                 yield return new GroupModContext<ISkyrimMod, ISkyrimModGetter, Worldspace, IWorldspaceGetter>(
