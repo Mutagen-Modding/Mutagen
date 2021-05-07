@@ -19,6 +19,31 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(Utility.PluginModKey, item.ModKey);
             item = LoadOrderListing.FromString($"*{Utility.PluginModKey.FileName}", enabledMarkerProcessing: true);
             Assert.True(item.Enabled);
+            Assert.False(item.Ghosted);
+            Assert.Equal(Utility.PluginModKey, item.ModKey);
+        }
+
+        [Fact]
+        public void GhostProcessing()
+        {
+            var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
+            Assert.False(item.Enabled);
+            Assert.Equal(Utility.PluginModKey, item.ModKey);
+            item = LoadOrderListing.FromString($"{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
+            Assert.False(item.Enabled);
+            Assert.False(item.Ghosted);
+            Assert.Equal(Utility.PluginModKey, item.ModKey);
+        }
+
+        [Fact]
+        public void EnabledGhostProcessing()
+        {
+            var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
+            Assert.False(item.Enabled);
+            Assert.Equal(Utility.PluginModKey, item.ModKey);
+            item = LoadOrderListing.FromString($"*{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
+            Assert.False(item.Enabled);
+            Assert.False(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
         }
 
