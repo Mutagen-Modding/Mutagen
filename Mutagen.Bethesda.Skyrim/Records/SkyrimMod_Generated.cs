@@ -8679,6 +8679,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
                     Remove(obj, keys, typeof(ILeveledItemGetter), throwIfUnknown: throwIfUnknown);
                     break;
+                case "IBindableEquipment":
+                case "IBindableEquipmentGetter":
+                    Remove(obj, keys, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown);
+                    Remove(obj, keys, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown);
+                    break;
                 case "IComplexLocation":
                 case "IComplexLocationGetter":
                     Remove(obj, keys, typeof(IWorldspaceGetter), throwIfUnknown: throwIfUnknown);
@@ -13699,6 +13704,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     yield break;
                 }
+                case "IBindableEquipment":
+                {
+                    if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IBindableEquipmentGetter":
+                {
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IArmorGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecords(obj, typeof(IWeaponGetter), throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
                 case "IComplexLocation":
                 {
                     if (!SkyrimMod_Registration.SetterType.IsAssignableFrom(obj.GetType())) yield break;
@@ -17359,6 +17389,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         obj,
                         linkCache: linkCache,
                         type: typeof(ILeveledItemGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    yield break;
+                }
+                case "IBindableEquipment":
+                case "IBindableEquipmentGetter":
+                {
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IArmorGetter),
+                        throwIfUnknown: throwIfUnknown))
+                    {
+                        yield return item;
+                    }
+                    foreach (var item in EnumerateMajorRecordContexts(
+                        obj,
+                        linkCache: linkCache,
+                        type: typeof(IWeaponGetter),
                         throwIfUnknown: throwIfUnknown))
                     {
                         yield return item;

@@ -3468,6 +3468,30 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         /// <summary>
+        /// Scope a load order query to IBindableEquipment
+        /// </summary>
+        /// <param name="listings">ModListings to query</param>
+        /// <returns>A typed object to do further queries on IBindableEquipment</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter> IBindableEquipment(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter>(
+                (bool includeDeletedRecords) => listings.WinningOverrides<IBindableEquipmentGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => listings.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
+        /// Scope a load order query to IBindableEquipment
+        /// </summary>
+        /// <param name="mods">Mods to query</param>
+        /// <returns>A typed object to do further queries on IBindableEquipment</returns>
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter> IBindableEquipment(this IEnumerable<ISkyrimModGetter> mods)
+        {
+            return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter>(
+                (bool includeDeletedRecords) => mods.WinningOverrides<IBindableEquipmentGetter>(includeDeletedRecords: includeDeletedRecords),
+                (ILinkCache linkCache, bool includeDeletedRecords) => mods.WinningOverrideContexts<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter>(linkCache, includeDeletedRecords: includeDeletedRecords));
+        }
+
+        /// <summary>
         /// Scope a load order query to IComplexLocation
         /// </summary>
         /// <param name="listings">ModListings to query</param>

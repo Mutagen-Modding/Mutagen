@@ -62,7 +62,6 @@
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
-    <Compile Include="Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Interfaces\IConstructible.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
@@ -2078,6 +2077,7 @@
     <Compile Include="Interfaces\IConstructible_Generated.cs" />
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Interfaces\IBindableEquipment_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">

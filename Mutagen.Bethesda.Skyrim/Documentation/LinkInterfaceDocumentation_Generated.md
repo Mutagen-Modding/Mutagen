@@ -8,6 +8,9 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### IAliasVoiceType
 - FormList
 - Npc
+### IBindableEquipment
+- Armor
+- Weapon
 ### IComplexLocation
 - Cell
 - Worldspace
@@ -155,6 +158,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 - IPlaced
 - IPlacedThing
 ### Armor
+- IBindableEquipment
 - IConstructible
 - IItem
 - IObjectId
@@ -289,6 +293,7 @@ A `FormLink<IItem>` could then point to all those record types by pointing to th
 ### Tree
 - IRegionTarget
 ### Weapon
+- IBindableEquipment
 - IConstructible
 - IItem
 - IObjectId

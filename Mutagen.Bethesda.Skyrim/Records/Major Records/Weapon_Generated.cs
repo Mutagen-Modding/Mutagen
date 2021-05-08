@@ -1830,6 +1830,7 @@ namespace Mutagen.Bethesda.Skyrim
 
     #region Interface
     public partial interface IWeapon :
+        IBindableEquipment,
         IConstructible,
         IFormLinkContainer,
         IHasIcons,
@@ -1913,6 +1914,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IWeaponGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IBindableEquipmentGetter,
         IConstructibleGetter,
         IFormLinkContainerGetter,
         IHasIconsGetter,

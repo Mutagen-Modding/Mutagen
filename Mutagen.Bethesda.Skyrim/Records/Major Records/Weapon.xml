@@ -47,6 +47,7 @@
     <LinkInterface>IItem</LinkInterface>
     <LinkInterface>IObjectId</LinkInterface>
     <LinkInterface>IConstructible</LinkInterface>
+    <LinkInterface>IBindableEquipment</LinkInterface>
   </Object>
   <Object name="WeaponBasicStats" objType="Subrecord" recordType="DATA" GUID="be7d3fc4-80d6-464c-931d-8329744fe7d3" ID="196">
     <Fields>

@@ -1529,6 +1529,7 @@ namespace Mutagen.Bethesda.Skyrim
     #region Interface
     public partial interface IArmor :
         IArmorGetter,
+        IBindableEquipment,
         IConstructible,
         IFormLinkContainer,
         IItem,
@@ -1598,6 +1599,7 @@ namespace Mutagen.Bethesda.Skyrim
     public partial interface IArmorGetter :
         ISkyrimMajorRecordGetter,
         IBinaryItem,
+        IBindableEquipmentGetter,
         IConstructibleGetter,
         IFormLinkContainerGetter,
         IItemGetter,
