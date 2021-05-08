@@ -16,7 +16,7 @@ using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     public enum FormKeyPickerSearchMode
     {

@@ -12,7 +12,7 @@ using Noggog.WPF;
 using System.ComponentModel;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     [TemplatePart(Name = "PART_FileNameBox", Type = typeof(TextBox))]
     public class ModKeyBox : NoggogControl

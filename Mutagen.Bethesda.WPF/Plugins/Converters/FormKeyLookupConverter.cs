@@ -1,47 +1,40 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins.Converters
 {
-    public class CanLookupConverter : IMultiValueConverter
+    public class FormKeyLookupConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             if (values.Length != 3) return Binding.DoNothing;
             if (values[0] is not FormKey formKey) return Binding.DoNothing;
             if (values[1] is not ILinkCache linkCache) return Binding.DoNothing;
-            bool compareTo = true;
-            if (parameter is bool p)
-            {
-                compareTo = p;
-            }
-            else if (parameter is string str && str.Equals("FALSE", StringComparison.OrdinalIgnoreCase))
-            {
-                compareTo = false;
-            }
             if (values[2] is Type type)
             {
-                if (linkCache.TryResolveIdentifier(formKey, type, out var _))
+                if (linkCache.TryResolveIdentifier(formKey, type, out var edid))
                 {
-                    return compareTo;
+                    return edid.IsNullOrWhitespace() ? formKey.ToString() : edid;
                 }
             }
             else if (values[2] is IEnumerable<Type> types)
             {
-                if (linkCache.TryResolveIdentifier(formKey, types, out var _))
+                if (linkCache.TryResolveIdentifier(formKey, types, out var edid))
                 {
-                    return compareTo;
+                    return edid.IsNullOrWhitespace() ? formKey.ToString() : edid;
                 }
             }
             else
             {
                 return Binding.DoNothing;
             }
-            return !compareTo;
+            if (parameter is string failMessage) return failMessage;
+            return formKey.ToString();
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

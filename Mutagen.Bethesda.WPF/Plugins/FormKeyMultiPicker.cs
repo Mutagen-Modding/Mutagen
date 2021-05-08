@@ -12,7 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     public class FormKeyItemViewModel : ViewModel
     {

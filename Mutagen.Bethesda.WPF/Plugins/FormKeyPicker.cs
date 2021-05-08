@@ -2,7 +2,7 @@ using Mutagen.Bethesda.Plugins.Records;
 using ReactiveUI;
 using System.Windows;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     public class FormKeyPicker : AFormKeyPicker
     {

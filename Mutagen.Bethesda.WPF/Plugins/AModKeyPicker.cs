@@ -12,7 +12,7 @@ using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     [TemplatePart(Name = "PART_ModKeyBox", Type = typeof(ModKeyBox))]
     public class AModKeyPicker : NoggogControl

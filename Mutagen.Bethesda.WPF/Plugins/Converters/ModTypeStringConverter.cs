@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins.Converters
 {
     public class ModTypeStringConverter : IValueConverter
     {

@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins.Converters
 {
-    public class FormKeyLookupConverter : IMultiValueConverter
+    public class FormKeyEditorIdLookupConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -19,14 +19,14 @@ namespace Mutagen.Bethesda.WPF
             {
                 if (linkCache.TryResolveIdentifier(formKey, type, out var edid))
                 {
-                    return edid.IsNullOrWhitespace() ? formKey.ToString() : edid;
+                    return edid.IsNullOrWhitespace() ? "<No Editor ID>" : edid;
                 }
             }
             else if (values[2] is IEnumerable<Type> types)
             {
                 if (linkCache.TryResolveIdentifier(formKey, types, out var edid))
                 {
-                    return edid.IsNullOrWhitespace() ? formKey.ToString() : edid;
+                    return edid.IsNullOrWhitespace() ? "<No Editor ID>" : edid;
                 }
             }
             else
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.WPF
                 return Binding.DoNothing;
             }
             if (parameter is string failMessage) return failMessage;
-            return formKey.ToString();
+            return "<Not Found>";
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

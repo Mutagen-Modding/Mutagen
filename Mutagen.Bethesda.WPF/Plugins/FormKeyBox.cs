@@ -7,7 +7,7 @@ using System.Reactive.Disposables;
 using Noggog;
 using Mutagen.Bethesda.Plugins;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins
 {
     public class FormKeyBox : NoggogControl
     {

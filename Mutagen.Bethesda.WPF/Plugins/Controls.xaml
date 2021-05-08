@@ -1,8 +1,9 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:Mutagen.Bethesda.WPF.Plugins.Converters"
     xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
-    xmlns:local="clr-namespace:Mutagen.Bethesda.WPF"
+    xmlns:local="clr-namespace:Mutagen.Bethesda.WPF.Plugins"
     xmlns:mahapps="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
     xmlns:noggog="clr-namespace:Noggog.WPF;assembly=Noggog.WPF">
 
@@ -11,7 +12,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:ModKeyBox}">
                     <ControlTemplate.Resources>
-                        <local:ModTypeStringConverter x:Key="ModTypeStringConverter" />
+                        <conv:ModTypeStringConverter x:Key="ModTypeStringConverter" />
                     </ControlTemplate.Resources>
                     <Border
                         Background="{TemplateBinding Background}"
@@ -410,8 +411,8 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
-                            <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
-                            <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
+                            <conv:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
+                            <conv:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
                         </ResourceDictionary>
                     </ControlTemplate.Resources>
                     <Border
@@ -591,10 +592,10 @@
                             <ResourceDictionary.MergedDictionaries>
                                 <ResourceDictionary Source="pack://application:,,,/Noggog.WPF;component/Everything.xaml" />
                             </ResourceDictionary.MergedDictionaries>
-                            <local:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
-                            <local:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
-                            <local:FormKeyLookupConverter x:Key="FormKeyLookupConverter" />
-                            <local:CanLookupConverter x:Key="CanLookupConverter" />
+                            <conv:RecordTypeNameConverter x:Key="RecordTypeNameConverter" />
+                            <conv:RecordTypeGameConverter x:Key="RecordTypeGameConverter" />
+                            <conv:FormKeyLookupConverter x:Key="FormKeyLookupConverter" />
+                            <conv:CanLookupConverter x:Key="CanLookupConverter" />
                         </ResourceDictionary>
                     </ControlTemplate.Resources>
                     <Border

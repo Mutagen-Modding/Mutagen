@@ -1,13 +1,13 @@
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.WPF.Plugins;
 using Noggog;
 using Noggog.WPF;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace Mutagen.Bethesda.WPF.TestDisplay
 {

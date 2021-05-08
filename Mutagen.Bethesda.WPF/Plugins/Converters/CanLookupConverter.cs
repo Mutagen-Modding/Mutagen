@@ -3,12 +3,11 @@ using Mutagen.Bethesda.Plugins.Cache;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Windows;
 using System.Windows.Data;
 
-namespace Mutagen.Bethesda.WPF
+namespace Mutagen.Bethesda.WPF.Plugins.Converters
 {
-    public class CanLookupVisibilityConverter : IMultiValueConverter
+    public class CanLookupConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -28,21 +27,21 @@ namespace Mutagen.Bethesda.WPF
             {
                 if (linkCache.TryResolveIdentifier(formKey, type, out var _))
                 {
-                    return compareTo ? Visibility.Visible : Visibility.Collapsed;
+                    return compareTo;
                 }
             }
             else if (values[2] is IEnumerable<Type> types)
             {
                 if (linkCache.TryResolveIdentifier(formKey, types, out var _))
                 {
-                    return compareTo ? Visibility.Visible : Visibility.Collapsed;
+                    return compareTo;
                 }
             }
             else
             {
                 return Binding.DoNothing;
             }
-            return compareTo ? Visibility.Collapsed : Visibility.Visible;
+            return !compareTo;
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
