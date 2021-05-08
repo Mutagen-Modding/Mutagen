@@ -4,11 +4,32 @@ namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectGuideArchetype
     {
-        public FormLink<IHazard> Association => new FormLink<IHazard>(this.AssociationKey);
+        public FormLink<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
+
+        IFormLink<IHazardGetter> IMagicEffectGuideArchetype.Association => this.Association;
+        IFormLinkGetter<IHazardGetter> IMagicEffectGuideArchetypeGetter.Association => this.Association;
 
         public MagicEffectGuideArchetype()
             : base(TypeEnum.Guide)
         {
+        }
+    }
+
+    public partial interface IMagicEffectGuideArchetype
+    {
+        new IFormLink<IHazardGetter> Association { get; }
+    }
+
+    public partial interface IMagicEffectGuideArchetypeGetter
+    {
+        IFormLinkGetter<IHazardGetter> Association { get; }
+    }
+
+    namespace Internals
+    {
+        public partial class MagicEffectGuideArchetypeBinaryOverlay
+        {
+            public IFormLinkGetter<IHazardGetter> Association => this.AssociationKey.AsLink<IHazardGetter>();
         }
     }
 }
