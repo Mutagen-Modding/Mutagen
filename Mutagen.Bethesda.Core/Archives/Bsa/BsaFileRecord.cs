@@ -89,7 +89,9 @@ namespace Mutagen.Bethesda.Archives.Bsa
             {
                 if (Compressed && size.Size != size.OnDisk)
                 {
-                    return LZ4Stream.Decode(rdr.BaseStream);
+                    return new FramedStream(
+                        LZ4Stream.Decode(rdr.BaseStream),
+                        size.Original);
                 }
                 else
                 {
@@ -100,10 +102,12 @@ namespace Mutagen.Bethesda.Archives.Bsa
             {
                 if (Compressed)
                 {
-                    return new InflaterInputStream(rdr.BaseStream)
-                    {
-                        IsStreamOwner = true
-                    };
+                    return new FramedStream(
+                        new InflaterInputStream(rdr.BaseStream)
+                        {
+                            IsStreamOwner = true
+                        }, 
+                        size.Original);
                 }
                 else
                 {

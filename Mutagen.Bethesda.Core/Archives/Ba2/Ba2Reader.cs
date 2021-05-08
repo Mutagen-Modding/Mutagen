@@ -1,6 +1,7 @@
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Noggog;
+using Noggog.Streams;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -387,10 +388,12 @@ namespace Mutagen.Bethesda.Archives.Ba2
             }
             else
             {
-                return new InflaterInputStream(fs)
-                {
-                    IsStreamOwner = true
-                };
+                return new FramedStream(
+                    new InflaterInputStream(fs)
+                    {
+                        IsStreamOwner = true
+                    }, 
+                    _realSize);
             }
         }
 
