@@ -510,10 +510,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
 
         private DepthCache<K, LinkCacheItem> GetTypeCache(Type type)
         {
-            if (_parent._simple)
-            {
-                throw new ArgumentException("Queried for record on a simple cache");
-            }
             lock (_winningRecords)
             {
                 // Get cache object by type
@@ -1045,6 +1041,11 @@ namespace Mutagen.Bethesda.Cache.Implementations
             Type type,
             [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec)
         {
+            if (_parent._simple)
+            {
+                throw new ArgumentException("Queried for record on a simple cache");
+            }
+            
             if (!_parent._hasAny || _shortCircuit(key))
             {
                 majorRec = default;
