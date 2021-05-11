@@ -25,27 +25,27 @@ namespace Mutagen.Bethesda.Plugins.Order
             }
         }
 
-        public static IEnumerable<LoadOrderListing> GetListings(GameCategory category, DirectoryPath dataPath)
+        public static IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath)
         {
             var path = GetListingsPath(category, dataPath);
-            if (!path.Exists) return Enumerable.Empty<LoadOrderListing>();
+            if (!path.Exists) return Enumerable.Empty<IModListingGetter>();
             return ListingsFromPath(
                 path,
                 dataPath);
         }
 
-        public static IEnumerable<LoadOrderListing> ListingsFromPath(
+        public static IEnumerable<IModListingGetter> ListingsFromPath(
             FilePath cccFilePath,
             DirectoryPath dataPath)
         {
             return File.ReadAllLines(cccFilePath.Path)
                 .Select(x => ModKey.FromNameAndExtension(x))
                 .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
-                .Select(x => new LoadOrderListing(x, enabled: true))
+                .Select(x => new ModListing(x, enabled: true))
                 .ToList();
         }
 
-        public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
+        public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             FilePath cccFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     .Filter(x => x.Succeeded)
                     .Transform(x => x.Value)
                     .RemoveKey())
-                .Transform(x => new LoadOrderListing(x, true));
+                .Transform<ModKey, IModListingGetter>(x => new ModListing(x, true));
             if (orderListings)
             {
                 ret = ret.OrderListings();

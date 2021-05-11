@@ -97,14 +97,12 @@ namespace Mutagen.Bethesda.WPF.Plugins
                 {
                     switch (lo)
                     {
-                        case IObservable<IChangeSet<LoadOrderListing>> liveLo:
+                        case IObservable<IChangeSet<IModListingGetter>> liveLo:
                             return liveLo.Transform(x => x.ModKey);
                         case IObservable<IChangeSet<ModKey>> liveLoKeys:
                             return liveLoKeys;
-                        case IEnumerable<IModListing> modListings:
+                        case IEnumerable<IModListingGetter> modListings:
                             return modListings.Select(l => l.ModKey).AsObservableChangeSet();
-                        case IEnumerable<LoadOrderListing> listings:
-                            return listings.Select(l => l.ModKey).AsObservableChangeSet();
                         case IEnumerable<ModKey> modKeys:
                             return modKeys.AsObservableChangeSet();
                         case ILoadOrderGetter loGetter:

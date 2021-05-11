@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda
         /// <param name="modKey">ModKey to look for</param>
         /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
         /// <returns>True if ModKey is in the listings, with the desired enabled state</returns>
-        public static bool HasMod(this IEnumerable<LoadOrderListing> listings, ModKey modKey, bool? enabled = null)
+        public static bool HasMod(this IEnumerable<IModListingGetter> listings, ModKey modKey, bool? enabled = null)
         {
             foreach (var listing in listings)
             {
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMod(this IEnumerable<LoadOrderListing> listings, ModKey modKey, bool? enabled = null, string? message = null)
+        public static void AssertHasMod(this IEnumerable<IModListingGetter> listings, ModKey modKey, bool? enabled = null, string? message = null)
         {
             if (!HasMod(listings, modKey, enabled))
             {
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda
         /// <param name="listings">Listings to look through</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods(this IEnumerable<LoadOrderListing> listings, params ModKey[] modKeys)
+        public static bool HasMods(this IEnumerable<IModListingGetter> listings, params ModKey[] modKeys)
         {
             return HasMods(listings.Select(x => x.ModKey), modKeys);
         }
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, params ModKey[] modKeys)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, params ModKey[] modKeys)
         {
             AssertHasMods(listings, message: null, modKeys);
         }
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, string? message, params ModKey[] modKeys)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, string? message, params ModKey[] modKeys)
         {
             AssertHasMods(listings.Select(x => x.ModKey), message, modKeys);
         }
@@ -92,7 +92,7 @@ namespace Mutagen.Bethesda
         /// <param name="listings">Listings to look through</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods(this IEnumerable<LoadOrderListing> listings, IEnumerable<ModKey> modKeys)
+        public static bool HasMods(this IEnumerable<IModListingGetter> listings, IEnumerable<ModKey> modKeys)
         {
             return HasMods(listings, modKeys.ToArray());
         }
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, IEnumerable<ModKey> modKeys, string? message = null)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, IEnumerable<ModKey> modKeys, string? message = null)
         {
             AssertHasMods(listings, message, modKeys.ToArray());
         }
@@ -118,7 +118,7 @@ namespace Mutagen.Bethesda
         /// <param name="enabled">Whether the ModKey should be enabled/disabled</param>
         /// <param name="modKeys">ModKey to look for</param>
         /// <returns>True if all ModKeys are present in the listings, with the desired enabled state</returns>
-        public static bool HasMods(this IEnumerable<LoadOrderListing> listings, bool enabled, params ModKey[] modKeys)
+        public static bool HasMods(this IEnumerable<IModListingGetter> listings, bool enabled, params ModKey[] modKeys)
         {
             if (modKeys.Length == 0) return true;
             if (modKeys.Length == 1) return HasMod(listings, modKeys[0], enabled);
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, bool enabled, params ModKey[] modKeys)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, bool enabled, params ModKey[] modKeys)
         {
             AssertHasMods(listings, enabled, message: null, modKeys: modKeys);
         }
@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, bool enabled, string? message, params ModKey[] modKeys)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, bool enabled, string? message, params ModKey[] modKeys)
         {
             if (modKeys.Length == 0) return;
             if (modKeys.Length == 1) AssertHasMod(listings, modKeys[0], enabled);
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda
         /// <param name="enabled">Whether the ModKey should be enabled/disabled</param>
         /// <param name="modKeys">ModKey to look for</param>
         /// <returns>True if all ModKeys are present in the listings, with the desired enabled state</returns>
-        public static bool HasMods(this IEnumerable<LoadOrderListing> listings, bool enabled, IEnumerable<ModKey> modKeys)
+        public static bool HasMods(this IEnumerable<IModListingGetter> listings, bool enabled, IEnumerable<ModKey> modKeys)
         {
             return HasMods(listings, enabled, modKeys.ToArray());
         }
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods(this IEnumerable<LoadOrderListing> listings, bool enabled, IEnumerable<ModKey> modKeys, string? message = null)
+        public static void AssertHasMods(this IEnumerable<IModListingGetter> listings, bool enabled, IEnumerable<ModKey> modKeys, string? message = null)
         {
             AssertHasMods(listings, enabled, message: message, modKeys: modKeys.ToArray());
         }
@@ -329,10 +329,10 @@ namespace Mutagen.Bethesda
         /// <param name="modKey">ModKey to look for</param>
         /// <param name="enabled">Whether the ModKey should be enabled/disabled.  Default is no preference</param>
         /// <returns>True if ModKey is in the listings, with the desired enabled state</returns>
-        public static bool HasMod<TMod>(this IEnumerable<IModListing<TMod>> listings, ModKey modKey, bool? enabled = null)
+        public static bool HasMod<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, ModKey modKey, bool? enabled = null)
             where TMod : class, IModGetter
         {
-            return listings.Select(m => new LoadOrderListing(m.ModKey, m.Enabled)).HasMod(modKey, enabled);
+            return listings.Select(m => new ModListing(m.ModKey, m.Enabled)).HasMod(modKey, enabled);
         }
 
         /// <summary>
@@ -345,10 +345,10 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMod<TMod>(this IEnumerable<IModListing<TMod>> listings, ModKey modKey, bool? enabled = null, string? message = null)
+        public static void AssertHasMod<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, ModKey modKey, bool? enabled = null, string? message = null)
             where TMod : class, IModGetter
         {
-            AssertHasMod(listings.Select(m => new LoadOrderListing(m.ModKey, m.Enabled)), enabled: enabled, modKey: modKey);
+            AssertHasMod(listings.Select(m => new ModListing(m.ModKey, m.Enabled)), enabled: enabled, modKey: modKey);
         }
 
         /// <summary>
@@ -357,10 +357,10 @@ namespace Mutagen.Bethesda
         /// <param name="listings">Listings to look through</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, params ModKey[] modKeys)
+        public static bool HasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
-            return listings.Select(m => new LoadOrderListing(m.ModKey, m.Enabled)).HasMods(modKeys);
+            return listings.Select(m => new ModListing(m.ModKey, m.Enabled)).HasMods(modKeys);
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, params ModKey[] modKeys)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
             AssertHasMods(listings.Select(m => m.ModKey), modKeys: modKeys);
@@ -388,7 +388,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, string message, params ModKey[] modKeys)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, string message, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
             AssertHasMods(listings.Select(m => m.ModKey), modKeys: modKeys, message: message);
@@ -400,7 +400,7 @@ namespace Mutagen.Bethesda
         /// <param name="listings">Listings to look through</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, IEnumerable<ModKey> modKeys)
+        public static bool HasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, IEnumerable<ModKey> modKeys)
             where TMod : class, IModGetter
         {
             return listings.Select(m => m.ModKey).HasMods(modKeys);
@@ -415,7 +415,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, IEnumerable<ModKey> modKeys, string? message = null)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, IEnumerable<ModKey> modKeys, string? message = null)
             where TMod : class, IModGetter
         {
             AssertHasMods(listings.Select(m => m.ModKey), message: message, modKeys: modKeys.ToArray());
@@ -429,7 +429,7 @@ namespace Mutagen.Bethesda
         /// <param name="present">Whether the ModKey should be present on disk</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
+        public static bool HasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
             if (modKeys.Length == 0) return true;
@@ -458,7 +458,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
             AssertHasMods(listings, enabled: enabled, present: present, message: null, modKeys: modKeys);
@@ -475,7 +475,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, bool? enabled, bool? present, string? message, params ModKey[] modKeys)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, string? message, params ModKey[] modKeys)
             where TMod : class, IModGetter
         {
             if (modKeys.Length == 0) return;
@@ -506,7 +506,7 @@ namespace Mutagen.Bethesda
         /// <param name="present">Whether the ModKey should be present on disk</param>
         /// <param name="modKeys">ModKeys to look for</param>
         /// <returns>True if all ModKeys are present in the listings</returns>
-        public static bool HasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, bool? enabled, bool? present, IEnumerable<ModKey> modKeys)
+        public static bool HasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, IEnumerable<ModKey> modKeys)
             where TMod : class, IModGetter
         {
             return HasMods(listings, enabled, present, modKeys.ToArray());
@@ -523,7 +523,7 @@ namespace Mutagen.Bethesda
         /// <exception cref="MissingModException">
         /// Thrown if given mod is not on the collection of listings
         /// </exception>
-        public static void AssertHasMods<TMod>(this IEnumerable<IModListing<TMod>> listings, bool? enabled, bool? present, IEnumerable<ModKey> modKeys, string? message = null)
+        public static void AssertHasMods<TMod>(this IEnumerable<IModListingGetter<TMod>> listings, bool? enabled, bool? present, IEnumerable<ModKey> modKeys, string? message = null)
             where TMod : class, IModGetter
         {
             AssertHasMods(listings, enabled: enabled, present: present, message: message, modKeys: modKeys.ToArray());

@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this LoadOrder<IModListing<IOblivionModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this LoadOrder<IModListingGetter<IOblivionModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IOblivionMod, IOblivionModGetter>();
         }
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this IEnumerable<IModListing<IOblivionModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this IEnumerable<IModListingGetter<IOblivionModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IOblivionMod, IOblivionModGetter>();
         }
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
-            this LoadOrder<IModListing<IOblivionModGetter>> immutableBaseCache,
+            this LoadOrder<IModListingGetter<IOblivionModGetter>> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<IOblivionMod, IOblivionModGetter>(mutableMods);

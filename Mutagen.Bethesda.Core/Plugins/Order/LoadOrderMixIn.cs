@@ -16,7 +16,8 @@ namespace Mutagen.Bethesda
             return LoadOrder.OrderListings(e, i => i);
         }
 
-        public static IEnumerable<LoadOrderListing> OrderListings(this IEnumerable<LoadOrderListing> e)
+        public static IEnumerable<TListing> OrderListings<TListing>(this IEnumerable<TListing> e)
+            where TListing : IModListingGetter
         {
             return LoadOrder.OrderListings(e, i => i.ModKey);
         }
@@ -26,11 +27,12 @@ namespace Mutagen.Bethesda
             return e.Sort(ModKey.ByTypeComparer);
         }
 
-        public static IObservable<IChangeSet<LoadOrderListing>> OrderListings(this IObservable<IChangeSet<LoadOrderListing>> e)
+        public static IObservable<IChangeSet<TListing>> OrderListings<TListing>(this IObservable<IChangeSet<TListing>> e)
+            where TListing : IModListingGetter
         {
-            return ObservableListEx.Sort(e, LoadOrderListing.GetComparer(ModKey.ByTypeComparer));
+            return ObservableListEx.Sort(e, ModListing.GetComparer<TListing>(ModKey.ByTypeComparer));
         }
-        public static bool TryGetIfEnabled<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out IModListing<TMod> item)
+        public static bool TryGetIfEnabled<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out IModListingGetter<TMod> item)
             where TMod : class, IModGetter
         {
             if (loadOrder.TryGetValue(modKey, out var listing)
@@ -44,7 +46,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static IModListing<TMod> GetIfEnabled<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey)
+        public static IModListingGetter<TMod> GetIfEnabled<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey)
             where TMod : class, IModGetter
         {
             if (TryGetIfEnabled(loadOrder, modKey, out var listing))
@@ -54,7 +56,7 @@ namespace Mutagen.Bethesda
             throw new MissingModException(modKey);
         }
 
-        public static bool TryGetIfEnabledAndExists<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
+        public static bool TryGetIfEnabledAndExists<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
             where TMod : class, IModGetter
         {
             if (!TryGetIfEnabled(loadOrder, modKey, out var listing))
@@ -67,7 +69,7 @@ namespace Mutagen.Bethesda
             return item != null;
         }
 
-        public static TMod GetIfEnabledAndExists<TMod>(this LoadOrder<IModListing<TMod>> loadOrder, ModKey modKey)
+        public static TMod GetIfEnabledAndExists<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey)
             where TMod : class, IModGetter
         {
             if (TryGetIfEnabledAndExists(loadOrder, modKey, out var mod))

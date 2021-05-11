@@ -162,7 +162,6 @@
     <Compile Include="Plugins\Order\CreationClubListings.cs" />
     <Compile Include="Plugins\Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
-    <Compile Include="Plugins\Order\LoadOrderListing.cs" />
     <Compile Include="Plugins\Order\LoadOrderTimestampComparer.cs" />
     <Compile Include="Plugins\Order\PluginListings.cs" />
     <Compile Include="Plugins\Allocators\IPersistentFormKeyAllocator.cs" />

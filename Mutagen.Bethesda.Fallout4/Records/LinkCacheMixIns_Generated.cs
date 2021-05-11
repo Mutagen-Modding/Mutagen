@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToImmutableLinkCache(this LoadOrder<IModListing<IFallout4ModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToImmutableLinkCache(this LoadOrder<IModListingGetter<IFallout4ModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IFallout4Mod, IFallout4ModGetter>();
         }
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToImmutableLinkCache(this IEnumerable<IModListing<IFallout4ModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToImmutableLinkCache(this IEnumerable<IModListingGetter<IFallout4ModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IFallout4Mod, IFallout4ModGetter>();
         }
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Fallout4
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<IFallout4Mod, IFallout4ModGetter> ToMutableLinkCache(
-            this LoadOrder<IModListing<IFallout4ModGetter>> immutableBaseCache,
+            this LoadOrder<IModListingGetter<IFallout4ModGetter>> immutableBaseCache,
             params IFallout4Mod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<IFallout4Mod, IFallout4ModGetter>(mutableMods);

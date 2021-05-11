@@ -14,10 +14,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnabledMarkerProcessing()
         {
-            var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
+            var item = ModListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = LoadOrderListing.FromString($"*{Utility.PluginModKey.FileName}", enabledMarkerProcessing: true);
+            item = ModListing.FromString($"*{Utility.PluginModKey.FileName}", enabledMarkerProcessing: true);
             Assert.True(item.Enabled);
             Assert.False(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
@@ -26,10 +26,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void GhostProcessing()
         {
-            var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
+            var item = ModListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = LoadOrderListing.FromString($"{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
+            item = ModListing.FromString($"{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
             Assert.False(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
@@ -38,10 +38,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void EnabledGhostProcessing()
         {
-            var item = LoadOrderListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
+            var item = ModListing.FromString(Utility.PluginModKey.FileName, enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = LoadOrderListing.FromString($"*{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
+            item = ModListing.FromString($"*{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
             Assert.False(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.UnitTests
                 creationClubFilePath: null,
                 game: GameRelease.SkyrimSE,
                 dataPath: tmpFolder.Dir.Path)
-                .Should().Equal(new LoadOrderListing("Skyrim.esm", true));
+                .Should().Equal(new ModListing("Skyrim.esm", true));
         }
 
         [Fact]

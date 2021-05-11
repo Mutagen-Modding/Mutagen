@@ -8,17 +8,17 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order
 {
     public class LoadOrderEntryVM : ViewModel
     {
-        public LoadOrderListing Listing {get;}
+        public IModListingGetter Listing { get; }
 
         private readonly ObservableAsPropertyHelper<bool> _Exists;
         public bool Exists => _Exists.Value;
 
-        public LoadOrderEntryVM(LoadOrderListing listing, string dataFolder)
+        public LoadOrderEntryVM(IModListingGetter listing, string dataFolder)
         {
             Listing = listing;
             var path = Path.Combine(dataFolder, listing.ModKey.FileName);
             var exists = File.Exists(path);
-            _Exists = Observable.Defer(() => 
+            _Exists = Observable.Defer(() =>
                 Noggog.ObservableExt.WatchFile(path)
                     .Select(_ =>
                     {

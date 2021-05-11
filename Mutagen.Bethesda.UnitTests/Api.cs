@@ -106,7 +106,7 @@ namespace Api
         [Fact]
         public static void TypeSolidifier()
         {
-            IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
+            IEnumerable<IModListingGetter<ISkyrimModGetter>> listings = Enumerable.Empty<IModListingGetter<ISkyrimModGetter>>();
             IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
             IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
             IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);

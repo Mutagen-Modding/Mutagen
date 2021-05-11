@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AcousticSpace</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAcousticSpace, IAcousticSpaceGetter> AcousticSpace(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAcousticSpace, IAcousticSpaceGetter> AcousticSpace(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAcousticSpace, IAcousticSpaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAcousticSpaceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ActionRecord</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActionRecord, IActionRecordGetter> ActionRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActionRecord, IActionRecordGetter> ActionRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActionRecord, IActionRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IActionRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Activator</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActivator, IActivatorGetter> Activator(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActivator, IActivatorGetter> Activator(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActivator, IActivatorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IActivatorGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ActorValueInformation</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActorValueInformation, IActorValueInformationGetter> ActorValueInformation(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IActorValueInformation, IActorValueInformationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IActorValueInformationGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AddonNode</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAddonNode, IAddonNodeGetter> AddonNode(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAddonNode, IAddonNodeGetter> AddonNode(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAddonNode, IAddonNodeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAddonNodeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AlchemicalApparatus</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter> AlchemicalApparatus(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter> AlchemicalApparatus(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAlchemicalApparatus, IAlchemicalApparatusGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAlchemicalApparatusGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Ammunition</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAmmunition, IAmmunitionGetter> Ammunition(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAmmunition, IAmmunitionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAmmunitionGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ANavigationMesh</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IANavigationMesh, IANavigationMeshGetter> ANavigationMesh(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IANavigationMesh, IANavigationMeshGetter> ANavigationMesh(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IANavigationMesh, IANavigationMeshGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IANavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -205,7 +205,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AnimatedObject</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAnimatedObject, IAnimatedObjectGetter> AnimatedObject(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAnimatedObject, IAnimatedObjectGetter> AnimatedObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAnimatedObject, IAnimatedObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAnimatedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on APlacedTrap</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAPlacedTrap, IAPlacedTrapGetter> APlacedTrap(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAPlacedTrap, IAPlacedTrapGetter> APlacedTrap(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAPlacedTrap, IAPlacedTrapGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Armor</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmor, IArmorGetter> Armor(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmor, IArmorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IArmorGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -277,7 +277,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ArmorAddon</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmorAddon, IArmorAddonGetter> ArmorAddon(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmorAddon, IArmorAddonGetter> ArmorAddon(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArmorAddon, IArmorAddonGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IArmorAddonGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -301,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ArtObject</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArtObject, IArtObjectGetter> ArtObject(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArtObject, IArtObjectGetter> ArtObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IArtObject, IArtObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IArtObjectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -325,7 +325,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AssociationType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAssociationType, IAssociationTypeGetter> AssociationType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAssociationType, IAssociationTypeGetter> AssociationType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAssociationType, IAssociationTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAssociationTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -349,7 +349,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on AStoryManagerNode</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAStoryManagerNode, IAStoryManagerNodeGetter> AStoryManagerNode(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAStoryManagerNode, IAStoryManagerNodeGetter> AStoryManagerNode(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAStoryManagerNode, IAStoryManagerNodeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAStoryManagerNodeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -373,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on BodyPartData</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBodyPartData, IBodyPartDataGetter> BodyPartData(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBodyPartData, IBodyPartDataGetter> BodyPartData(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBodyPartData, IBodyPartDataGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBodyPartDataGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -397,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Book</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBook, IBookGetter> Book(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBook, IBookGetter> Book(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBook, IBookGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBookGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -421,7 +421,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CameraPath</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraPath, ICameraPathGetter> CameraPath(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraPath, ICameraPathGetter> CameraPath(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraPath, ICameraPathGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICameraPathGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -445,7 +445,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CameraShot</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraShot, ICameraShotGetter> CameraShot(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraShot, ICameraShotGetter> CameraShot(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICameraShot, ICameraShotGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICameraShotGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -469,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Cell</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter> Cell(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter> Cell(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICellGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -493,7 +493,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CellNavigationMesh</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICellNavigationMesh, ICellNavigationMeshGetter> CellNavigationMesh(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICellNavigationMesh, ICellNavigationMeshGetter> CellNavigationMesh(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICellNavigationMesh, ICellNavigationMeshGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICellNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -517,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Class</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClass, IClassGetter> Class(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClass, IClassGetter> Class(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClass, IClassGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IClassGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -541,7 +541,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Climate</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClimate, IClimateGetter> Climate(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClimate, IClimateGetter> Climate(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IClimate, IClimateGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IClimateGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -565,7 +565,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CollisionLayer</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICollisionLayer, ICollisionLayerGetter> CollisionLayer(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICollisionLayer, ICollisionLayerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICollisionLayerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -589,7 +589,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ColorRecord</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IColorRecord, IColorRecordGetter> ColorRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IColorRecord, IColorRecordGetter> ColorRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IColorRecord, IColorRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IColorRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -613,7 +613,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on CombatStyle</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICombatStyle, ICombatStyleGetter> CombatStyle(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICombatStyle, ICombatStyleGetter> CombatStyle(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ICombatStyle, ICombatStyleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ICombatStyleGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -637,7 +637,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ConstructibleObject</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructibleObject, IConstructibleObjectGetter> ConstructibleObject(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructibleObject, IConstructibleObjectGetter> ConstructibleObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructibleObject, IConstructibleObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IConstructibleObjectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -661,7 +661,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Container</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IContainer, IContainerGetter> Container(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IContainer, IContainerGetter> Container(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IContainer, IContainerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IContainerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -685,7 +685,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Debris</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDebris, IDebrisGetter> Debris(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDebris, IDebrisGetter> Debris(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDebris, IDebrisGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDebrisGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -709,7 +709,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DefaultObjectManager</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDefaultObjectManager, IDefaultObjectManagerGetter> DefaultObjectManager(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDefaultObjectManager, IDefaultObjectManagerGetter> DefaultObjectManager(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDefaultObjectManager, IDefaultObjectManagerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDefaultObjectManagerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -733,7 +733,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DialogBranch</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogBranch, IDialogBranchGetter> DialogBranch(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogBranch, IDialogBranchGetter> DialogBranch(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogBranch, IDialogBranchGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogBranchGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -757,7 +757,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DialogResponses</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogResponses, IDialogResponsesGetter> DialogResponses(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogResponses, IDialogResponsesGetter> DialogResponses(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogResponses, IDialogResponsesGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogResponsesGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -781,7 +781,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DialogTopic</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter> DialogTopic(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter> DialogTopic(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogTopic, IDialogTopicGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogTopicGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -805,7 +805,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DialogView</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogView, IDialogViewGetter> DialogView(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogView, IDialogViewGetter> DialogView(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialogView, IDialogViewGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogViewGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -829,7 +829,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Door</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDoor, IDoorGetter> Door(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDoor, IDoorGetter> Door(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDoor, IDoorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDoorGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -853,7 +853,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on DualCastData</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDualCastData, IDualCastDataGetter> DualCastData(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDualCastData, IDualCastDataGetter> DualCastData(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDualCastData, IDualCastDataGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDualCastDataGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -877,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on EffectShader</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectShader, IEffectShaderGetter> EffectShader(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectShader, IEffectShaderGetter> EffectShader(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectShader, IEffectShaderGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEffectShaderGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -901,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on EncounterZone</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEncounterZone, IEncounterZoneGetter> EncounterZone(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEncounterZone, IEncounterZoneGetter> EncounterZone(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEncounterZone, IEncounterZoneGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEncounterZoneGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -925,7 +925,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on EquipType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEquipType, IEquipTypeGetter> EquipType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEquipType, IEquipTypeGetter> EquipType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEquipType, IEquipTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEquipTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -949,7 +949,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Explosion</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IExplosion, IExplosionGetter> Explosion(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IExplosion, IExplosionGetter> Explosion(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IExplosion, IExplosionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IExplosionGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -973,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Eyes</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEyes, IEyesGetter> Eyes(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEyes, IEyesGetter> Eyes(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEyes, IEyesGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEyesGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -997,7 +997,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Faction</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFaction, IFactionGetter> Faction(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFaction, IFactionGetter> Faction(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFaction, IFactionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFactionGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1021,7 +1021,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Flora</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFlora, IFloraGetter> Flora(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFlora, IFloraGetter> Flora(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFlora, IFloraGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFloraGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1045,7 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Footstep</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstep, IFootstepGetter> Footstep(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstep, IFootstepGetter> Footstep(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstep, IFootstepGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFootstepGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1069,7 +1069,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on FootstepSet</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstepSet, IFootstepSetGetter> FootstepSet(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstepSet, IFootstepSetGetter> FootstepSet(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFootstepSet, IFootstepSetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFootstepSetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1093,7 +1093,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on FormList</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFormList, IFormListGetter> FormList(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFormList, IFormListGetter> FormList(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFormList, IFormListGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFormListGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1117,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Furniture</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFurniture, IFurnitureGetter> Furniture(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFurniture, IFurnitureGetter> Furniture(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IFurniture, IFurnitureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IFurnitureGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1141,7 +1141,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GameSetting</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSetting, IGameSettingGetter> GameSetting(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSetting, IGameSettingGetter> GameSetting(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSetting, IGameSettingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1165,7 +1165,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GameSettingBool</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingBool, IGameSettingBoolGetter> GameSettingBool(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingBool, IGameSettingBoolGetter> GameSettingBool(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingBool, IGameSettingBoolGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingBoolGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1189,7 +1189,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GameSettingFloat</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingFloat, IGameSettingFloatGetter> GameSettingFloat(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingFloat, IGameSettingFloatGetter> GameSettingFloat(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingFloat, IGameSettingFloatGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingFloatGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1213,7 +1213,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GameSettingInt</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingInt, IGameSettingIntGetter> GameSettingInt(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingInt, IGameSettingIntGetter> GameSettingInt(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingInt, IGameSettingIntGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingIntGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1237,7 +1237,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GameSettingString</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingString, IGameSettingStringGetter> GameSettingString(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingString, IGameSettingStringGetter> GameSettingString(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGameSettingString, IGameSettingStringGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGameSettingStringGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1261,7 +1261,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Global</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobal, IGlobalGetter> Global(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobal, IGlobalGetter> Global(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobal, IGlobalGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1285,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GlobalFloat</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalFloat, IGlobalFloatGetter> GlobalFloat(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalFloat, IGlobalFloatGetter> GlobalFloat(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalFloat, IGlobalFloatGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalFloatGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1309,7 +1309,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GlobalInt</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalInt, IGlobalIntGetter> GlobalInt(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalInt, IGlobalIntGetter> GlobalInt(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalInt, IGlobalIntGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalIntGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1333,7 +1333,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on GlobalShort</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalShort, IGlobalShortGetter> GlobalShort(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalShort, IGlobalShortGetter> GlobalShort(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGlobalShort, IGlobalShortGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGlobalShortGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1357,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Grass</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGrass, IGrassGetter> Grass(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGrass, IGrassGetter> Grass(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IGrass, IGrassGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IGrassGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1381,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Hair</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHair, IHairGetter> Hair(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHair, IHairGetter> Hair(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHair, IHairGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IHairGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1405,7 +1405,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Hazard</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHazard, IHazardGetter> Hazard(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHazard, IHazardGetter> Hazard(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHazard, IHazardGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IHazardGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1429,7 +1429,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on HeadPart</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHeadPart, IHeadPartGetter> HeadPart(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHeadPart, IHeadPartGetter> HeadPart(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHeadPart, IHeadPartGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IHeadPartGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1453,7 +1453,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IdleAnimation</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleAnimation, IIdleAnimationGetter> IdleAnimation(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleAnimation, IIdleAnimationGetter> IdleAnimation(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleAnimation, IIdleAnimationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIdleAnimationGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1477,7 +1477,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IdleMarker</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleMarker, IIdleMarkerGetter> IdleMarker(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleMarker, IIdleMarkerGetter> IdleMarker(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleMarker, IIdleMarkerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIdleMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1501,7 +1501,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ImageSpace</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpace, IImageSpaceGetter> ImageSpace(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpace, IImageSpaceGetter> ImageSpace(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpace, IImageSpaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IImageSpaceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1525,7 +1525,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ImageSpaceAdapter</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpaceAdapter, IImageSpaceAdapterGetter> ImageSpaceAdapter(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpaceAdapter, IImageSpaceAdapterGetter> ImageSpaceAdapter(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImageSpaceAdapter, IImageSpaceAdapterGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IImageSpaceAdapterGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1549,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Impact</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpact, IImpactGetter> Impact(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpact, IImpactGetter> Impact(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpact, IImpactGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IImpactGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1573,7 +1573,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ImpactDataSet</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpactDataSet, IImpactDataSetGetter> ImpactDataSet(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpactDataSet, IImpactDataSetGetter> ImpactDataSet(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IImpactDataSet, IImpactDataSetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IImpactDataSetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1597,7 +1597,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Ingestible</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngestible, IIngestibleGetter> Ingestible(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngestible, IIngestibleGetter> Ingestible(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngestible, IIngestibleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIngestibleGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1621,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Ingredient</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngredient, IIngredientGetter> Ingredient(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngredient, IIngredientGetter> Ingredient(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIngredient, IIngredientGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIngredientGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1645,7 +1645,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Key</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKey, IKeyGetter> Key(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKey, IKeyGetter> Key(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKey, IKeyGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IKeyGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1669,7 +1669,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Keyword</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeyword, IKeywordGetter> Keyword(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeyword, IKeywordGetter> Keyword(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeyword, IKeywordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IKeywordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1693,7 +1693,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Landscape</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscape, ILandscapeGetter> Landscape(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscape, ILandscapeGetter> Landscape(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscape, ILandscapeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILandscapeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1717,7 +1717,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LandscapeTexture</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscapeTexture, ILandscapeTextureGetter> LandscapeTexture(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscapeTexture, ILandscapeTextureGetter> LandscapeTexture(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILandscapeTexture, ILandscapeTextureGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILandscapeTextureGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1741,7 +1741,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LensFlare</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter> LensFlare(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILensFlare, ILensFlareGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILensFlareGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1765,7 +1765,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LeveledItem</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledItem, ILeveledItemGetter> LeveledItem(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledItem, ILeveledItemGetter> LeveledItem(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledItem, ILeveledItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledItemGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1789,7 +1789,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LeveledNpc</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledNpc, ILeveledNpcGetter> LeveledNpc(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledNpc, ILeveledNpcGetter> LeveledNpc(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledNpc, ILeveledNpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledNpcGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1813,7 +1813,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LeveledSpell</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledSpell, ILeveledSpellGetter> LeveledSpell(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledSpell, ILeveledSpellGetter> LeveledSpell(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILeveledSpell, ILeveledSpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILeveledSpellGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1837,7 +1837,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Light</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> Light(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter> Light(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILight, ILightGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILightGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1861,7 +1861,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LightingTemplate</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILightingTemplate, ILightingTemplateGetter> LightingTemplate(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILightingTemplate, ILightingTemplateGetter> LightingTemplate(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILightingTemplate, ILightingTemplateGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILightingTemplateGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1885,7 +1885,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LoadScreen</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILoadScreen, ILoadScreenGetter> LoadScreen(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILoadScreen, ILoadScreenGetter> LoadScreen(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILoadScreen, ILoadScreenGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILoadScreenGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1909,7 +1909,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Location</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocation, ILocationGetter> Location(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocation, ILocationGetter> Location(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocation, ILocationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILocationGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1933,7 +1933,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on LocationReferenceType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationReferenceType, ILocationReferenceTypeGetter> LocationReferenceType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationReferenceType, ILocationReferenceTypeGetter> LocationReferenceType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationReferenceType, ILocationReferenceTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILocationReferenceTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1957,7 +1957,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MagicEffect</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMagicEffect, IMagicEffectGetter> MagicEffect(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMagicEffect, IMagicEffectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMagicEffectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -1981,7 +1981,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MaterialObject</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialObject, IMaterialObjectGetter> MaterialObject(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialObject, IMaterialObjectGetter> MaterialObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialObject, IMaterialObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMaterialObjectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2005,7 +2005,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MaterialType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialType, IMaterialTypeGetter> MaterialType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMaterialType, IMaterialTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMaterialTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2029,7 +2029,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Message</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMessage, IMessageGetter> Message(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMessage, IMessageGetter> Message(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMessage, IMessageGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMessageGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2053,7 +2053,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MiscItem</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMiscItem, IMiscItemGetter> MiscItem(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMiscItem, IMiscItemGetter> MiscItem(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMiscItem, IMiscItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMiscItemGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2077,7 +2077,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MoveableStatic</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMoveableStatic, IMoveableStaticGetter> MoveableStatic(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMoveableStatic, IMoveableStaticGetter> MoveableStatic(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMoveableStatic, IMoveableStaticGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMoveableStaticGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2101,7 +2101,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MovementType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMovementType, IMovementTypeGetter> MovementType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMovementType, IMovementTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMovementTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2125,7 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MusicTrack</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicTrack, IMusicTrackGetter> MusicTrack(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicTrack, IMusicTrackGetter> MusicTrack(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicTrack, IMusicTrackGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMusicTrackGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2149,7 +2149,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on MusicType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicType, IMusicTypeGetter> MusicType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicType, IMusicTypeGetter> MusicType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IMusicType, IMusicTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IMusicTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2173,7 +2173,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on NavigationMeshInfoMap</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INavigationMeshInfoMap, INavigationMeshInfoMapGetter> NavigationMeshInfoMap(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INavigationMeshInfoMap, INavigationMeshInfoMapGetter> NavigationMeshInfoMap(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INavigationMeshInfoMap, INavigationMeshInfoMapGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<INavigationMeshInfoMapGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2197,7 +2197,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Npc</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter> Npc(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter> Npc(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpc, INpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<INpcGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2221,7 +2221,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ObjectEffect</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectEffect, IObjectEffectGetter> ObjectEffect(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectEffect, IObjectEffectGetter> ObjectEffect(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectEffect, IObjectEffectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IObjectEffectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2245,7 +2245,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Outfit</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfit, IOutfitGetter> Outfit(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfit, IOutfitGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOutfitGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2269,7 +2269,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Package</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPackage, IPackageGetter> Package(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPackage, IPackageGetter> Package(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPackage, IPackageGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPackageGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2293,7 +2293,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Perk</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPerk, IPerkGetter> Perk(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPerk, IPerkGetter> Perk(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPerk, IPerkGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPerkGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2317,7 +2317,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedArrow</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedArrow, IPlacedArrowGetter> PlacedArrow(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedArrow, IPlacedArrowGetter> PlacedArrow(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedArrow, IPlacedArrowGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedArrowGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2341,7 +2341,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedBarrier</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBarrier, IPlacedBarrierGetter> PlacedBarrier(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBarrier, IPlacedBarrierGetter> PlacedBarrier(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBarrier, IPlacedBarrierGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedBarrierGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2365,7 +2365,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedBeam</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBeam, IPlacedBeamGetter> PlacedBeam(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBeam, IPlacedBeamGetter> PlacedBeam(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedBeam, IPlacedBeamGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedBeamGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2389,7 +2389,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedCone</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedCone, IPlacedConeGetter> PlacedCone(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedCone, IPlacedConeGetter> PlacedCone(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedCone, IPlacedConeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedConeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2413,7 +2413,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedFlame</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedFlame, IPlacedFlameGetter> PlacedFlame(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedFlame, IPlacedFlameGetter> PlacedFlame(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedFlame, IPlacedFlameGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedFlameGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2437,7 +2437,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedHazard</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedHazard, IPlacedHazardGetter> PlacedHazard(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedHazard, IPlacedHazardGetter> PlacedHazard(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedHazard, IPlacedHazardGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedHazardGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2461,7 +2461,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedMissile</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedMissile, IPlacedMissileGetter> PlacedMissile(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedMissile, IPlacedMissileGetter> PlacedMissile(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedMissile, IPlacedMissileGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedMissileGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2485,7 +2485,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedNpc</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter> PlacedNpc(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter> PlacedNpc(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedNpc, IPlacedNpcGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedNpcGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2509,7 +2509,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedObject</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedObject, IPlacedObjectGetter> PlacedObject(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedObject, IPlacedObjectGetter> PlacedObject(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedObject, IPlacedObjectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedObjectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2533,7 +2533,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on PlacedTrap</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrap, IPlacedTrapGetter> PlacedTrap(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrap, IPlacedTrapGetter> PlacedTrap(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrap, IPlacedTrapGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedTrapGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2557,7 +2557,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Projectile</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IProjectile, IProjectileGetter> Projectile(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IProjectile, IProjectileGetter> Projectile(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IProjectile, IProjectileGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IProjectileGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2581,7 +2581,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Quest</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IQuest, IQuestGetter> Quest(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IQuest, IQuestGetter> Quest(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IQuest, IQuestGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IQuestGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2605,7 +2605,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Race</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRace, IRaceGetter> Race(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRace, IRaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRaceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2629,7 +2629,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Region</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegion, IRegionGetter> Region(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegion, IRegionGetter> Region(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegion, IRegionGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRegionGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2653,7 +2653,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Relationship</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelationship, IRelationshipGetter> Relationship(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelationship, IRelationshipGetter> Relationship(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelationship, IRelationshipGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRelationshipGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2677,7 +2677,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ReverbParameters</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IReverbParameters, IReverbParametersGetter> ReverbParameters(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IReverbParameters, IReverbParametersGetter> ReverbParameters(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IReverbParameters, IReverbParametersGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IReverbParametersGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2701,7 +2701,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Scene</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScene, ISceneGetter> Scene(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScene, ISceneGetter> Scene(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScene, ISceneGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISceneGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2725,7 +2725,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Scroll</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScroll, IScrollGetter> Scroll(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScroll, IScrollGetter> Scroll(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IScroll, IScrollGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IScrollGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2749,7 +2749,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ShaderParticleGeometry</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShaderParticleGeometry, IShaderParticleGeometryGetter> ShaderParticleGeometry(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShaderParticleGeometry, IShaderParticleGeometryGetter> ShaderParticleGeometry(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShaderParticleGeometry, IShaderParticleGeometryGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IShaderParticleGeometryGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2773,7 +2773,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Shout</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShout, IShoutGetter> Shout(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShout, IShoutGetter> Shout(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IShout, IShoutGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IShoutGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2797,7 +2797,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SkyrimMajorRecord</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> SkyrimMajorRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter> SkyrimMajorRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecord, ISkyrimMajorRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISkyrimMajorRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2821,7 +2821,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoulGem</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoulGem, ISoulGemGetter> SoulGem(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoulGem, ISoulGemGetter> SoulGem(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoulGem, ISoulGemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoulGemGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2845,7 +2845,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundCategory</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundCategory, ISoundCategoryGetter> SoundCategory(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundCategory, ISoundCategoryGetter> SoundCategory(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundCategory, ISoundCategoryGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundCategoryGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2869,7 +2869,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundDescriptor</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundDescriptor, ISoundDescriptorGetter> SoundDescriptor(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundDescriptor, ISoundDescriptorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundDescriptorGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2893,7 +2893,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundMarker</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundMarker, ISoundMarkerGetter> SoundMarker(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundMarker, ISoundMarkerGetter> SoundMarker(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundMarker, ISoundMarkerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundMarkerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2917,7 +2917,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on SoundOutputModel</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundOutputModel, ISoundOutputModelGetter> SoundOutputModel(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundOutputModel, ISoundOutputModelGetter> SoundOutputModel(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISoundOutputModel, ISoundOutputModelGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundOutputModelGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2941,7 +2941,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Spell</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpell, ISpellGetter> Spell(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpell, ISpellGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2965,7 +2965,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Static</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStatic, IStaticGetter> Static(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStatic, IStaticGetter> Static(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStatic, IStaticGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStaticGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -2989,7 +2989,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on StoryManagerBranchNode</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerBranchNode, IStoryManagerBranchNodeGetter> StoryManagerBranchNode(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerBranchNode, IStoryManagerBranchNodeGetter> StoryManagerBranchNode(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerBranchNode, IStoryManagerBranchNodeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStoryManagerBranchNodeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3013,7 +3013,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on StoryManagerEventNode</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerEventNode, IStoryManagerEventNodeGetter> StoryManagerEventNode(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerEventNode, IStoryManagerEventNodeGetter> StoryManagerEventNode(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerEventNode, IStoryManagerEventNodeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStoryManagerEventNodeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3037,7 +3037,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on StoryManagerQuestNode</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerQuestNode, IStoryManagerQuestNodeGetter> StoryManagerQuestNode(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerQuestNode, IStoryManagerQuestNodeGetter> StoryManagerQuestNode(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IStoryManagerQuestNode, IStoryManagerQuestNodeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IStoryManagerQuestNodeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3061,7 +3061,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on TalkingActivator</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITalkingActivator, ITalkingActivatorGetter> TalkingActivator(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITalkingActivator, ITalkingActivatorGetter> TalkingActivator(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITalkingActivator, ITalkingActivatorGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITalkingActivatorGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3085,7 +3085,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on TextureSet</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITextureSet, ITextureSetGetter> TextureSet(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITextureSet, ITextureSetGetter> TextureSet(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITextureSet, ITextureSetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITextureSetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3109,7 +3109,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Tree</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITree, ITreeGetter> Tree(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITree, ITreeGetter> Tree(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ITree, ITreeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ITreeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3133,7 +3133,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on VisualEffect</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVisualEffect, IVisualEffectGetter> VisualEffect(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVisualEffect, IVisualEffectGetter> VisualEffect(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVisualEffect, IVisualEffectGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IVisualEffectGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3157,7 +3157,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on VoiceType</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVoiceType, IVoiceTypeGetter> VoiceType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVoiceType, IVoiceTypeGetter> VoiceType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVoiceType, IVoiceTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3181,7 +3181,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on VolumetricLighting</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVolumetricLighting, IVolumetricLightingGetter> VolumetricLighting(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IVolumetricLighting, IVolumetricLightingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IVolumetricLightingGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3205,7 +3205,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Water</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWater, IWaterGetter> Water(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWater, IWaterGetter> Water(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWater, IWaterGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWaterGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3229,7 +3229,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Weapon</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeapon, IWeaponGetter> Weapon(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeapon, IWeaponGetter> Weapon(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeapon, IWeaponGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWeaponGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3253,7 +3253,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Weather</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeather, IWeatherGetter> Weather(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeather, IWeatherGetter> Weather(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWeather, IWeatherGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWeatherGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3277,7 +3277,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on WordOfPower</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWordOfPower, IWordOfPowerGetter> WordOfPower(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWordOfPower, IWordOfPowerGetter> WordOfPower(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWordOfPower, IWordOfPowerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWordOfPowerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3301,7 +3301,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on Worldspace</returns>
-        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter> Worldspace(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter> Worldspace(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TopLevelTypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspace, IWorldspaceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWorldspaceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3325,7 +3325,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on WorldspaceNavigationMesh</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspaceNavigationMesh, IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspaceNavigationMesh, IWorldspaceNavigationMeshGetter> WorldspaceNavigationMesh(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IWorldspaceNavigationMesh, IWorldspaceNavigationMeshGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IWorldspaceNavigationMeshGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3352,7 +3352,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IIdleRelation</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleRelation, IIdleRelationGetter> IIdleRelation(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleRelation, IIdleRelationGetter> IIdleRelation(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IIdleRelation, IIdleRelationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IIdleRelationGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3376,7 +3376,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IObjectId</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectId, IObjectIdGetter> IObjectId(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectId, IObjectIdGetter> IObjectId(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IObjectId, IObjectIdGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IObjectIdGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3400,7 +3400,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IItem</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IItem, IItemGetter> IItem(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IItem, IItemGetter> IItem(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IItem, IItemGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IItemGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3424,7 +3424,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IConstructible</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructible, IConstructibleGetter> IConstructible(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructible, IConstructibleGetter> IConstructible(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IConstructible, IConstructibleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IConstructibleGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3448,7 +3448,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IOutfitTarget</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfitTarget, IOutfitTargetGetter> IOutfitTarget(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfitTarget, IOutfitTargetGetter> IOutfitTarget(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOutfitTarget, IOutfitTargetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOutfitTargetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3472,7 +3472,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IBindableEquipment</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter> IBindableEquipment(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter> IBindableEquipment(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IBindableEquipment, IBindableEquipmentGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IBindableEquipmentGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3496,7 +3496,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IComplexLocation</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IComplexLocation, IComplexLocationGetter> IComplexLocation(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IComplexLocation, IComplexLocationGetter> IComplexLocation(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IComplexLocation, IComplexLocationGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IComplexLocationGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3520,7 +3520,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IDialog</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialog, IDialogGetter> IDialog(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialog, IDialogGetter> IDialog(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IDialog, IDialogGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IDialogGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3544,7 +3544,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ILocationTargetable</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter> ILocationTargetable(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter> ILocationTargetable(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationTargetable, ILocationTargetableGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILocationTargetableGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3568,7 +3568,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IOwner</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOwner, IOwnerGetter> IOwner(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IOwner, IOwnerGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IOwnerGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3592,7 +3592,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IRelatable</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelatable, IRelatableGetter> IRelatable(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRelatable, IRelatableGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRelatableGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3616,7 +3616,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IRegionTarget</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegionTarget, IRegionTargetGetter> IRegionTarget(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegionTarget, IRegionTargetGetter> IRegionTarget(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IRegionTarget, IRegionTargetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IRegionTargetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3640,7 +3640,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IAliasVoiceType</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAliasVoiceType, IAliasVoiceTypeGetter> IAliasVoiceType(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAliasVoiceType, IAliasVoiceTypeGetter> IAliasVoiceType(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IAliasVoiceType, IAliasVoiceTypeGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IAliasVoiceTypeGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3664,7 +3664,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ILockList</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILockList, ILockListGetter> ILockList(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILockList, ILockListGetter> ILockList(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILockList, ILockListGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILockListGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3688,7 +3688,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IPlacedTrapTarget</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrapTarget, IPlacedTrapTargetGetter> IPlacedTrapTarget(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrapTarget, IPlacedTrapTargetGetter> IPlacedTrapTarget(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedTrapTarget, IPlacedTrapTargetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedTrapTargetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3712,7 +3712,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IHarvestTarget</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHarvestTarget, IHarvestTargetGetter> IHarvestTarget(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHarvestTarget, IHarvestTargetGetter> IHarvestTarget(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IHarvestTarget, IHarvestTargetGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IHarvestTargetGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3736,7 +3736,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IKeywordLinkedReference</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeywordLinkedReference, IKeywordLinkedReferenceGetter> IKeywordLinkedReference(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeywordLinkedReference, IKeywordLinkedReferenceGetter> IKeywordLinkedReference(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IKeywordLinkedReference, IKeywordLinkedReferenceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IKeywordLinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3760,7 +3760,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on INpcSpawn</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcSpawn, INpcSpawnGetter> INpcSpawn(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, INpcSpawn, INpcSpawnGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<INpcSpawnGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3784,7 +3784,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ISpellRecord</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter> ISpellRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter> ISpellRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISpellRecord, ISpellRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISpellRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3808,7 +3808,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IEmittance</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEmittance, IEmittanceGetter> IEmittance(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEmittance, IEmittanceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEmittanceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3832,7 +3832,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ILocationRecord</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationRecord, ILocationRecordGetter> ILocationRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationRecord, ILocationRecordGetter> ILocationRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILocationRecord, ILocationRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILocationRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3856,7 +3856,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IEffectRecord</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter> IEffectRecord(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IEffectRecord, IEffectRecordGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IEffectRecordGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3880,7 +3880,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ILinkedReference</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter> ILinkedReference(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter> ILinkedReference(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ILinkedReference, ILinkedReferenceGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ILinkedReferenceGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3904,7 +3904,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IPlaced</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter> IPlaced(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter> IPlaced(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlaced, IPlacedGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3928,7 +3928,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IPlacedSimple</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedSimple, IPlacedSimpleGetter> IPlacedSimple(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedSimple, IPlacedSimpleGetter> IPlacedSimple(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedSimple, IPlacedSimpleGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedSimpleGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3952,7 +3952,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on IPlacedThing</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedThing, IPlacedThingGetter> IPlacedThing(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedThing, IPlacedThingGetter> IPlacedThing(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, IPlacedThing, IPlacedThingGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<IPlacedThingGetter>(includeDeletedRecords: includeDeletedRecords),
@@ -3976,7 +3976,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="listings">ModListings to query</param>
         /// <returns>A typed object to do further queries on ISound</returns>
-        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISound, ISoundGetter> ISound(this IEnumerable<IModListing<ISkyrimModGetter>> listings)
+        public static TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISound, ISoundGetter> ISound(this IEnumerable<IModListingGetter<ISkyrimModGetter>> listings)
         {
             return new TypedLoadOrderAccess<ISkyrimMod, ISkyrimModGetter, ISound, ISoundGetter>(
                 (bool includeDeletedRecords) => listings.WinningOverrides<ISoundGetter>(includeDeletedRecords: includeDeletedRecords),

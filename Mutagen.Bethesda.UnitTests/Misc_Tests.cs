@@ -19,24 +19,24 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void LoadOrderListingTests()
         {
-            var listing1 = new LoadOrderListing(Utility.PluginModKey, enabled: true);
-            var listing1Eq = new LoadOrderListing
+            var listing1 = new ModListing(Utility.PluginModKey, enabled: true);
+            var listing1Eq = new ModListing
             {
                 ModKey = Utility.PluginModKey,
                 Enabled = true,
             };
-            var listing1Disabled = new LoadOrderListing
+            var listing1Disabled = new ModListing
             {
                 ModKey = Utility.PluginModKey,
                 Enabled = false,
             };
-            var listing2 = new LoadOrderListing(Utility.PluginModKey2, enabled: true);
-            var listing2Eq = new LoadOrderListing()
+            var listing2 = new ModListing(Utility.PluginModKey2, enabled: true);
+            var listing2Eq = new ModListing()
             {
                 ModKey = Utility.PluginModKey2,
                 Enabled = true
             };
-            var listing2Disabled = new LoadOrderListing()
+            var listing2Disabled = new ModListing()
             {
                 ModKey = Utility.PluginModKey2,
                 Enabled = false

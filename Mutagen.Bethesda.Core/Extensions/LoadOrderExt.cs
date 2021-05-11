@@ -14,7 +14,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that are enabled</returns>
-        public static IEnumerable<LoadOrderListing> OnlyEnabled(this IEnumerable<LoadOrderListing> loadOrder)
+        public static IEnumerable<TListing> OnlyEnabled<TListing>(this IEnumerable<TListing> loadOrder)
+            where TListing : IModListingGetter
         {
             return loadOrder.Where(x => x.Enabled);
         }
@@ -24,7 +25,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that are enabled</returns>
-        public static IEnumerable<IModListing<TMod>> OnlyEnabled<TMod>(this IEnumerable<IModListing<TMod>> loadOrder)
+        public static IEnumerable<TListing> OnlyEnabled<TListing, TMod>(this IEnumerable<TListing> loadOrder)
+            where TListing : IModListingGetter<TMod>
             where TMod : class, IModGetter
         {
             return loadOrder.Where(x => x.Enabled);
@@ -35,7 +37,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that have mods that exist</returns>
-        public static IEnumerable<IModListing<TMod>> OnlyExisting<TMod>(this IEnumerable<IModListing<TMod>> loadOrder)
+        public static IEnumerable<TListing> OnlyExisting<TListing, TMod>(this IEnumerable<TListing> loadOrder)
+            where TListing : IModListingGetter<TMod>
             where TMod : class, IModGetter
         {
             return loadOrder
@@ -47,7 +50,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that are enabled and have mods that exist</returns>
-        public static IEnumerable<IModListing<TMod>> OnlyEnabledAndExisting<TMod>(this IEnumerable<IModListing<TMod>> loadOrder)
+        public static IEnumerable<TListing> OnlyEnabledAndExisting<TListing, TMod>(this IEnumerable<TListing> loadOrder)
+            where TListing : IModListingGetter<TMod>
             where TMod : class, IModGetter
         {
             return loadOrder
@@ -60,7 +64,7 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">Listings to convert</param>
         /// <exception cref="MissingModException">Thrown if a listing is missing its mod</exception>
         /// <returns>Mods contained in the listings</returns>
-        public static IEnumerable<TMod> Resolve<TMod>(this IEnumerable<IModListing<TMod>> loadOrder)
+        public static IEnumerable<TMod> Resolve<TMod>(this IEnumerable<IModListingGetter<TMod>> loadOrder)
             where TMod : class, IModGetter
         {
             return loadOrder
@@ -80,9 +84,9 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">ModKeys to convert</param>
         /// <param name="markEnabled">Whether to mark the listings as enabled</param>
         /// <returns>ModKeys as LoadOrderListing objects</returns>
-        public static IEnumerable<LoadOrderListing> AsListings(this IEnumerable<ModKey> loadOrder, bool markEnabled = true)
+        public static IEnumerable<IModListingGetter> AsListings(this IEnumerable<ModKey> loadOrder, bool markEnabled = true)
         {
-            return loadOrder.Select(x => new LoadOrderListing(x, markEnabled));
+            return loadOrder.Select(x => new ModListing(x, markEnabled));
         }
     }
 }

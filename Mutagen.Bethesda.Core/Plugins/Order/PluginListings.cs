@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="game">Game type</param>
         /// <returns>List of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        public static IEnumerable<LoadOrderListing> ListingsFromStream(Stream stream, GameRelease game)
+        public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
         {
             using var streamReader = new StreamReader(stream);
             var enabledMarkerProcessing = HasEnabledMarkers(game);
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     str = str.Slice(0, commentIndex);
                 }
                 if (MemoryExtensions.IsWhiteSpace(str) || str.Length == 0) continue;
-                yield return LoadOrderListing.FromString(str, enabledMarkerProcessing);
+                yield return ModListing.FromString(str, enabledMarkerProcessing);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IEnumerable<LoadOrderListing> ListingsFromPath(
+        public static IEnumerable<IModListingGetter> ListingsFromPath(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
         /// <returns>Enumerable of modkeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        public static IEnumerable<LoadOrderListing> ListingsFromPath(
+        public static IEnumerable<IModListingGetter> ListingsFromPath(
             FilePath pluginTextPath,
             GameRelease game,
             DirectoryPath dataPath,
@@ -133,7 +133,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             }
         }
 
-        public static IEnumerable<LoadOrderListing> RawListingsFromPath(
+        public static IEnumerable<IModListingGetter> RawListingsFromPath(
             FilePath pluginTextPath,
             GameRelease game)
         {
@@ -145,7 +145,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return ListingsFromStream(stream, game).ToList();
         }
 
-        public static IObservable<IChangeSet<LoadOrderListing>> GetLiveLoadOrder(
+        public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
@@ -164,11 +164,11 @@ namespace Mutagen.Bethesda.Plugins.Order
                         {
                             lo = lo.OrderListings();
                         }
-                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Succeed(lo.AsObservableChangeSet());
+                        return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Succeed(lo.AsObservableChangeSet());
                     }
                     catch (Exception ex)
                     {
-                        return GetResponse<IObservable<IChangeSet<LoadOrderListing>>>.Fail(ex);
+                        return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Fail(ex);
                     }
                 })
                 .Replay(1)
@@ -178,7 +178,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return results
                 .Select(r =>
                 {
-                    return r.Value ?? Observable.Empty<IChangeSet<LoadOrderListing>>();
+                    return r.Value ?? Observable.Empty<IChangeSet<IModListingGetter>>();
                 })
                 .Switch();
         }

@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
         /// </summary>
-        public LoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+        public LoadOrder<IModListingGetter<TModGetter>> LoadOrder { get; }
 
         /// <summary>
         /// Convenience Link Cache to use created from the provided Load Order object
@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda
 
         public GameEnvironmentState(
             string gameFolderPath,
-            LoadOrder<IModListing<TModGetter>> loadOrder,
+            LoadOrder<IModListingGetter<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
