@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             using (var args = new FunctionWrapper(fg,
                                 $"public static {topLevelStr}TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {obj.Interface(getter: false)}, {obj.Interface(getter: true)}> {obj.Name}"))
                             {
-                                args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
+                                args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                             }
                             using (new BraceWrapper(fg))
                             {
@@ -119,7 +119,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                                 using (var args = new FunctionWrapper(fg,
                                     $"public static TypedLoadOrderAccess<I{proto.Protocol.Namespace}Mod, I{proto.Protocol.Namespace}ModGetter, {interf.Key}, {getter}> {interf.Key}"))
                                 {
-                                    args.Add($"this IEnumerable<IModListing<I{proto.Protocol.Namespace}ModGetter>> listings");
+                                    args.Add($"this IEnumerable<IModListingGetter<I{proto.Protocol.Namespace}ModGetter>> listings");
                                 }
                                 using (new BraceWrapper(fg))
                                 {

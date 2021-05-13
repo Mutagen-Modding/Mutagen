@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (var args = new FunctionWrapper(fg,
                         $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                     {
-                        args.Add($"this LoadOrder<IModListing<{getterName}>> loadOrder");
+                        args.Add($"this LoadOrder<IModListingGetter<{getterName}>> loadOrder");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (var args = new FunctionWrapper(fg,
                         $"public static ImmutableLoadOrderLinkCache{generic} ToImmutableLinkCache"))
                     {
-                        args.Add($"this IEnumerable<IModListing<{getterName}>> loadOrder");
+                        args.Add($"this IEnumerable<IModListingGetter<{getterName}>> loadOrder");
                     }
                     using (new BraceWrapper(fg))
                     {
@@ -179,7 +179,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     using (var args = new FunctionWrapper(fg,
                         $"public static MutableLoadOrderLinkCache{generic} ToMutableLinkCache"))
                     {
-                        args.Add($"this LoadOrder<IModListing<{getterName}>> immutableBaseCache");
+                        args.Add($"this LoadOrder<IModListingGetter<{getterName}>> immutableBaseCache");
                         args.Add($"params {setterName}[] mutableMods");
                     }
                     using (new BraceWrapper(fg))
