@@ -27,6 +27,10 @@ namespace Mutagen.Bethesda
 
         public DirectoryPath DataFolderPath { get; }
 
+        public FilePath LoadOrderFilePath { get; }
+
+        public FilePath? CreationKitLoadOrderFilePath { get; }
+
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
         /// </summary>
@@ -38,12 +42,16 @@ namespace Mutagen.Bethesda
         public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 
         public GameEnvironmentState(
-            DirectoryPath gameFolderPath,
+            DirectoryPath dataFolderPath,
+            FilePath loadOrderFilePath,
+            FilePath? creationKitLoadOrderFilePath,
             LoadOrder<IModListingGetter<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
-            DataFolderPath = gameFolderPath;
+            LoadOrderFilePath = loadOrderFilePath;
+            DataFolderPath = dataFolderPath;
+            CreationKitLoadOrderFilePath = creationKitLoadOrderFilePath;
             LoadOrder = loadOrder;
             LinkCache = linkCache;
             _dispose = dispose;
@@ -68,8 +76,17 @@ namespace Mutagen.Bethesda
                 Mutagen.Bethesda.Plugins.Order.LoadOrder.GetListings(release, dataPath),
                 release);
 
+            if (!PluginListings.TryGetListingsFile(release, out var loadOrderFilePath))
+            {
+                throw new FileNotFoundException("Could not locate plugins file");
+            }
+
+            var ccPath = CreationClubListings.GetListingsPath(release.ToCategory(), dataPath);
+
             return new GameEnvironmentState<TModSetter, TModGetter>(
-                gameFolderPath: dataFolder,
+                dataFolderPath: dataFolder,
+                loadOrderFilePath: loadOrderFilePath.Path,
+                creationKitLoadOrderFilePath: ccPath,
                 loadOrder: loadOrder,
                 linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
                 dispose: true);

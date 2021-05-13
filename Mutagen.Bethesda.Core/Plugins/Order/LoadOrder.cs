@@ -2,7 +2,6 @@ using DynamicData;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order.Internals;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using System;
 using System.Collections;
@@ -228,6 +227,34 @@ namespace Mutagen.Bethesda.Plugins.Order
                 throwOnMissingMods: throwOnMissingMods);
         }
 
+        public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+            IObservable<GameRelease> game,
+            IObservable<DirectoryPath> dataFolderPath,
+            out IObservable<ErrorResponse> state,
+            bool throwOnMissingMods = true)
+        {
+            var obs = Observable.CombineLatest(
+                    game,
+                    dataFolderPath,
+                    (gameVal, dataFolderVal) =>
+                    {
+                        var lo = GetLiveLoadOrder(
+                            game: gameVal,
+                            dataFolderPath: dataFolderVal,
+                            loadOrderFilePath: PluginListings.GetListingsPath(gameVal),
+                            cccLoadOrderFilePath: CreationClubListings.GetListingsPath(gameVal.ToCategory(), dataFolderVal),
+                            state: out var state,
+                            throwOnMissingMods: throwOnMissingMods);
+                        return (LoadOrder: lo, State: state);
+                    })
+                .Replay(1)
+                .RefCount();
+            state = obs.Select(x => x.State)
+                .Switch();
+            return obs.Select(x => x.LoadOrder)
+                .Switch();
+        }
+
         // ToDo
         // Add scheduler for throttle
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
@@ -295,6 +322,38 @@ namespace Mutagen.Bethesda.Plugins.Order
                     .Subscribe(observer);
                 return disp;
             });
+        }
+
+        public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
+            IObservable<GameRelease> game,
+            IObservable<FilePath> loadOrderFilePath,
+            IObservable<DirectoryPath> dataFolderPath,
+            out IObservable<ErrorResponse> state,
+            IObservable<FilePath?>? cccLoadOrderFilePath = null,
+            bool throwOnMissingMods = true)
+        {
+            var obs = Observable.CombineLatest(
+                    game,
+                    dataFolderPath,
+                    loadOrderFilePath,
+                    cccLoadOrderFilePath ?? Observable.Return(default(FilePath?)),
+                    (gameVal, dataFolderVal, loadOrderFilePathVal, cccVal) =>
+                    {
+                        var lo = GetLiveLoadOrder(
+                            game: gameVal,
+                            dataFolderPath: dataFolderVal,
+                            loadOrderFilePath: loadOrderFilePathVal,
+                            cccLoadOrderFilePath: cccVal,
+                            state: out var state,
+                            throwOnMissingMods: throwOnMissingMods);
+                        return (LoadOrder: lo, State: state);
+                    })
+                .Replay(1)
+                .RefCount();
+            state = obs.Select(x => x.State)
+                .Switch();
+            return obs.Select(x => x.LoadOrder)
+                .Switch();
         }
 
         /// <summary>

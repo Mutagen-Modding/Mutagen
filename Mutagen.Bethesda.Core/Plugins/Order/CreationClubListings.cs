@@ -11,12 +11,12 @@ namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class CreationClubListings
     {
-        public static FilePath GetListingsPath(GameCategory category, DirectoryPath dataPath)
+        public static FilePath? GetListingsPath(GameCategory category, DirectoryPath dataPath)
         {
             switch (category)
             {
                 case GameCategory.Oblivion:
-                    throw new ArgumentException();
+                    return null;
                 case GameCategory.Skyrim:
                 case GameCategory.Fallout4:
                     return Path.Combine(Path.GetDirectoryName(dataPath.Path)!, $"{category}.ccc");
@@ -28,9 +28,9 @@ namespace Mutagen.Bethesda.Plugins.Order
         public static IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath)
         {
             var path = GetListingsPath(category, dataPath);
-            if (!path.Exists) return Enumerable.Empty<IModListingGetter>();
+            if (path == null || !path.Value.Exists) return Enumerable.Empty<IModListingGetter>();
             return ListingsFromPath(
-                path,
+                path.Value,
                 dataPath);
         }
 

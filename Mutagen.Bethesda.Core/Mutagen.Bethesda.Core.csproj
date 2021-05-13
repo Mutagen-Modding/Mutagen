@@ -377,6 +377,13 @@
     <Compile Include="Plugins\Records\RecordTypes_Generated.cs" />
     <Compile Include="Plugins\Records\RecordTypeInts_Generated.cs" />
     <Compile Include="Plugins\Extensions\GameCategoryHelper_Generated.cs" />
+    <Compile Include="WPF\Reflection\Attributes\Ignore.cs" />
+    <Compile Include="WPF\Reflection\Attributes\JsonDiskName.cs" />
+    <Compile Include="WPF\Reflection\Attributes\MaintainOrder.cs" />
+    <Compile Include="WPF\Reflection\Attributes\ObjectNameMember.cs" />
+    <Compile Include="WPF\Reflection\Attributes\SettingName.cs" />
+    <Compile Include="WPF\Reflection\Attributes\StaticEnumDictionary.cs" />
+    <Compile Include="WPF\Reflection\Attributes\Tooltip.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />
