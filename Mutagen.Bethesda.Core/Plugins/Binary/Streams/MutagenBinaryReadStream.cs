@@ -9,7 +9,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
     /// </summary>
     public class MutagenBinaryReadStream : BinaryReadStream, IMutagenReadStream
     {
-        private readonly string? _path;
+        private readonly FilePath _path;
 
         /// <inheritdoc/>
         public long OffsetReference { get; }
@@ -25,11 +25,11 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
         public MutagenBinaryReadStream(
-            string path,
+            FilePath path,
             ParsingBundle metaData,
             int bufferSize = 4096,
             long offsetReference = 0)
-            : base(path, bufferSize)
+            : base(path.Path, bufferSize)
         {
             this._path = path;
             this.MetaData = metaData;
@@ -124,7 +124,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
 
         public override string ToString()
         {
-            return $"{(_path == null ? " " : $"{_path}: ")}{this._stream.Position}-{this._stream.Length} ({this._stream.Remaining()})";
+            return $"{_path}{this._stream.Position}-{this._stream.Length} ({this._stream.Remaining()})";
         }
     }
 }

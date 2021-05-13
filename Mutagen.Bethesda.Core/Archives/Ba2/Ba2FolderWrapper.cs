@@ -1,8 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Noggog;
 
 namespace Mutagen.Bethesda.Archives.Ba2
 {
@@ -10,9 +8,9 @@ namespace Mutagen.Bethesda.Archives.Ba2
     {
         public IReadOnlyCollection<IArchiveFile> Files { get; }
 
-        public string? Path { get; }
+        public DirectoryPath? Path { get; }
 
-        public Ba2FolderWrapper(string path, IEnumerable<IArchiveFile> files)
+        public Ba2FolderWrapper(DirectoryPath path, IEnumerable<IArchiveFile> files)
         {
             Path = path;
             Files = files.ToList();

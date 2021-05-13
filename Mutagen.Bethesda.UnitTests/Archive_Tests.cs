@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Inis;
 using Mutagen.Bethesda.Plugins;
+using Noggog;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
@@ -16,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             Archive.FileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
             {
-                { Ini.GetTypicalPath(GameRelease.SkyrimSE), new MockFileData(@"[Archive]
+                { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData(@"[Archive]
 sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
             });
         }
@@ -27,7 +28,7 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
         {
             SetUpIni();
             using var temp = Utility.GetTempFolder(nameof(Archive_Tests));
-            Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<string>())
+            Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<FileName>())
                 .Should().BeEmpty();
         }
 
@@ -39,9 +40,9 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
             File.WriteAllText(Path.Combine(temp.Dir.Path, "Skyrim.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
-            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<string>())
+            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim, Enumerable.Empty<FileName>())
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new string[]
+            applicable.Should().BeEquivalentTo(new FilePath[]
             {
                 Path.Combine(temp.Dir.Path, "Skyrim.bsa"),
                 Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa")
@@ -56,9 +57,9 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
             File.WriteAllText(Path.Combine(temp.Dir.Path, $"{Utility.MasterModKey2.Name}.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa"), string.Empty);
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
-            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.MasterModKey2, Enumerable.Empty<string>())
+            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.MasterModKey2, Enumerable.Empty<FileName>())
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new string[]
+            applicable.Should().BeEquivalentTo(new FilePath[]
             {
                 Path.Combine(temp.Dir.Path, $"{Utility.MasterModKey2.Name}.bsa"),
                 Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa")
@@ -75,7 +76,7 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
             var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.Skyrim)
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new string[]
+            applicable.Should().BeEquivalentTo(new FilePath[]
             {
                 Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa"),
                 Path.Combine(temp.Dir.Path, "Skyrim.bsa"),
@@ -92,7 +93,7 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
             File.WriteAllText(Path.Combine(temp.Dir.Path, "MyMod.bsa"), string.Empty);
             var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, Utility.MasterModKey2)
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new string[]
+            applicable.Should().BeEquivalentTo(new FilePath[]
             {
                 Path.Combine(temp.Dir.Path, "SomeExplicitListing.bsa"),
                 Path.Combine(temp.Dir.Path, $"{Utility.MasterModKey2.Name}.bsa"),
@@ -174,13 +175,13 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
         {
             Archive.FileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
             {
-                { Ini.GetTypicalPath(GameRelease.SkyrimSE), new MockFileData(@"[Archive]
+                { Ini.GetTypicalPath(GameRelease.SkyrimSE).Path, new MockFileData(@"[Archive]
 sResourceArchiveList=Skyrim - Misc.bsa, Skyrim - Shaders.bsa
 sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
             });
 
             Archive.GetIniListings(GameRelease.SkyrimSE, Ini.GetTypicalPath(GameRelease.SkyrimSE))
-                .Should().BeEquivalentTo(new string[]
+                .Should().BeEquivalentTo(new FileName[]
                 {
                     "Skyrim - Misc.bsa",
                     "Skyrim - Shaders.bsa",

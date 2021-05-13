@@ -170,7 +170,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Throws<MissingModException>(() =>
             {
                 mod.WriteToBinary(
-                   tmp.File.Path,
+                   tmp.File,
                    new BinaryWriteParameters()
                    {
                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,

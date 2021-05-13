@@ -301,18 +301,18 @@ namespace Mutagen.Bethesda.Tests
         {
             return TestBattery.RunTest("Pex", GameRelease, Target, async (output) =>
             {
-                IEnumerable<string> bsas;
+                IEnumerable<FileName> bsas;
                 if (Implicits.Get(GameRelease).BaseMasters.Contains(FilePath.ModKey))
                 {
                     bsas = Archive.GetIniListings(GameRelease).ToList();
                 }
                 else
                 {
-                    bsas = $"{FilePath.ModKey.Name}.{Archive.GetExtension(GameRelease)}".AsEnumerable();
+                    bsas = new FileName($"{FilePath.ModKey.Name}.{Archive.GetExtension(GameRelease)}").AsEnumerable();
                 }
                 foreach (var bsa in bsas)
                 {
-                    var archive = Archive.CreateReader(GameRelease, Path.Combine(Path.GetDirectoryName(FilePath)!, bsa));
+                    var archive = Archive.CreateReader(GameRelease, Path.Combine(Path.GetDirectoryName(FilePath)!, bsa.String));
                     foreach (var file in archive.Files)
                     {
                         if (!Path.GetExtension(file.Path).Equals(".pex", StringComparison.OrdinalIgnoreCase)) continue;

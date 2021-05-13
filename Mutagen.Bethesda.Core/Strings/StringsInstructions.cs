@@ -18,6 +18,6 @@ namespace Mutagen.Bethesda.Strings
         /// Null is the default, which will fall back on typical ini files for the bsa ordering.<br/>
         /// Otherwise, given order will be treated like other load order concepts.  Later entries override earlier entries.
         /// </summary>
-        public IEnumerable<string>? BsaOrdering;
+        public IEnumerable<FileName>? BsaOrdering;
     }
 }

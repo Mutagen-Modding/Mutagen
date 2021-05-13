@@ -23591,7 +23591,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public static void WriteToBinary(
             this ISkyrimModGetter item,
-            string path,
+            FilePath path,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {

@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Archives.Ba2
 {
@@ -24,8 +23,8 @@ namespace Mutagen.Bethesda.Archives.Ba2
 
         public bool HasNameTable => _nameTableOffset > 0;
 
-        public Ba2Reader(string filename)
-            : this(() => File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public Ba2Reader(FilePath filename)
+            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 

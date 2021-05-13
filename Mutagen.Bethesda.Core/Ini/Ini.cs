@@ -1,12 +1,13 @@
 using System;
 using System.IO;
+using Noggog;
 
 namespace Mutagen.Bethesda.Inis
 {
     // Private until API can be made more mature
     class Ini
     {
-        public static string GetTypicalPath(GameRelease release)
+        public static FilePath GetTypicalPath(GameRelease release)
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My Games", ToMyDocumentsString(release), $"{ToIniName(release)}.ini");
         }

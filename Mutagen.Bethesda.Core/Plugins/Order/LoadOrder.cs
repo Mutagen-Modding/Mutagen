@@ -62,12 +62,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             foreach (var key in incomingLoadOrder)
             {
                 ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
-                if (!File.Exists(modPath.Path))
+                if (!modPath.Path.Exists)
                 {
                     if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                list.Add((key.Enabled, key.ModKey, File.GetLastWriteTime(modPath.Path)));
+                list.Add((key.Enabled, key.ModKey, File.GetLastWriteTime(modPath.Path.Path)));
             }
             var comp = new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList());
             return list
@@ -110,12 +110,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             foreach (var mod in loadOrder)
             {
                 ModPath modPath = new ModPath(mod, Path.Combine(dataPath.Path, mod.FileName));
-                if (!File.Exists(modPath.Path))
+                if (!modPath.Path.Exists)
                 {
                     if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;
                 }
-                File.SetLastWriteTime(modPath.Path, startDate.Value);
+                File.SetLastWriteTime(modPath.Path.Path, startDate.Value);
                 startDate = startDate.Value.Add(interval.Value);
             }
         }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
             }
             var implicitListings = Implicits.Get(game).Listings
-                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName)))
+                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName.String)))
                 .Select(x => new ModListing(x, enabled: true));
             var ccListings = Enumerable.Empty<IModListingGetter>();
             if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
@@ -376,7 +376,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     try
                     {
                         var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
-                        if (!File.Exists(modPath.Path))
+                        if (!modPath.Path.Exists)
                         {
                             results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
                             return;
@@ -450,7 +450,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     }
                     else
                     {
-                        return x.ModKey.FileName;
+                        return x.ModKey.FileName.String;
                     }
                 }));
         }

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
 
         private readonly uint _folderRecordOffset;
         private readonly Lazy<BsaFolderRecord[]> _folders;
-        private readonly Lazy<Dictionary<string, BsaFolderRecord>> _foldersByName;
+        private readonly Lazy<Dictionary<DirectoryPath, BsaFolderRecord>> _foldersByName;
         private readonly string _magic = string.Empty;
         private readonly Func<Stream> _streamGetter;
 
@@ -50,8 +50,8 @@ namespace Mutagen.Bethesda.Archives.Bsa
             }
         }
 
-        public BsaReader(string filename)
-            : this(() => File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public BsaReader(FilePath filename)
+            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
             _folders = new Lazy<BsaFolderRecord[]>(
                 isThreadSafe: true,
                 valueFactory: () => LoadFolderRecords());
-            _foldersByName = new Lazy<Dictionary<string, BsaFolderRecord>>(
+            _foldersByName = new Lazy<Dictionary<DirectoryPath, BsaFolderRecord>>(
                 isThreadSafe: true,
                 valueFactory: GetFolderDictionary);
         }
@@ -119,16 +119,17 @@ namespace Mutagen.Bethesda.Archives.Bsa
             return ret;
         }
 
-        private Dictionary<string, BsaFolderRecord> GetFolderDictionary()
+        private Dictionary<DirectoryPath, BsaFolderRecord> GetFolderDictionary()
         {
             if (!HasFolderNames)
             {
                 throw new ArgumentException("Cannot get folders by name if the BSA does not have folder names.");
             }
-            var ret = new Dictionary<string, BsaFolderRecord>();
+            var ret = new Dictionary<DirectoryPath, BsaFolderRecord>();
             foreach (var folder in _folders.Value)
             {
-                ret.Add(folder.Path!, folder);
+                if (folder.Path == null) continue;
+                ret.Add(folder.Path.Value, folder);
             }
             return ret;
         }

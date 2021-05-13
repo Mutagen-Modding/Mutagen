@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
             StringsSource source, 
             ModKey modKey,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder)
+            IEnumerable<FileName> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)

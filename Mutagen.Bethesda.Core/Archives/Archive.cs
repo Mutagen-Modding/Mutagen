@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="release">GameRelease the archive is for</param>
         /// <param name="path">Path to create archive reader from</param>
         /// <returns>Archive reader object</returns>
-        public static IArchiveReader CreateReader(GameRelease release, string path)
+        public static IArchiveReader CreateReader(GameRelease release, FilePath path)
         {
             switch (release)
             {
@@ -93,9 +93,21 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
         /// <param name="modKey">ModKey to query about</param>
+        /// <returns></returns>
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey)
+        {
+            return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release));
+        }
+
+        /// <summary>
+        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
+        /// </summary>
+        /// <param name="release">GameRelease to query for</param>
+        /// <param name="dataFolderPath">Folder to query within</param>
+        /// <param name="modKey">ModKey to query about</param>
         /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey, IEnumerable<string>? archiveOrdering)
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
         {
             return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release, archiveOrdering));
         }
@@ -109,20 +121,18 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="modKey">ModKey to query about</param>
         /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
         /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-        public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey, IComparer<string>? archiveOrdering = null)
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering = null)
         {
-            var iniListedArchives = GetIniListings(release).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var ret = Directory.EnumerateFiles(dataFolderPath, $"*{GetExtension(release)}")
+            var iniListedArchives = GetIniListings(release).ToHashSet();
+            var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}")
                 .Where(archive =>
                 {
-                    var archiveFileName = Path.GetFileName(archive);
-                    if (archiveFileName == null) return false;
-                    if (iniListedArchives.Contains(archiveFileName)) return true;
-                    return IsApplicable(release, modKey, archiveFileName);
+                    if (iniListedArchives.Contains(archive.Name)) return true;
+                    return IsApplicable(release, modKey, archive.Name);
                 });
             if (archiveOrdering != null)
             {
-                return ret.OrderBy(x => x, archiveOrdering);
+                return ret.OrderBy(x => x.Name, archiveOrdering);
             }
             return ret;
         }
@@ -138,19 +148,19 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="modKey">ModKey to check applicability for</param>
         /// <param name="archiveFileName">Filename of the Archive, with extension</param>
         /// <returns>True if Archive is typically applicable to the given ModKey</returns>
-        public static bool IsApplicable(GameRelease release, ModKey modKey, ReadOnlySpan<char> archiveFileName)
+        public static bool IsApplicable(GameRelease release, ModKey modKey, FileName archiveFileName)
         {
-            if (!Path.GetExtension(archiveFileName).Equals(GetExtension(release), StringComparison.OrdinalIgnoreCase)) return false;
-            archiveFileName = Path.GetFileNameWithoutExtension(archiveFileName);
+            if (!archiveFileName.Extension.Equals(GetExtension(release), StringComparison.OrdinalIgnoreCase)) return false;
+            var nameWithoutExt = archiveFileName.NameWithoutExtension.AsSpan();
 
             // See if the name matches straight up
-            if (modKey.Name.AsSpan().Equals(archiveFileName, StringComparison.OrdinalIgnoreCase)) return true;
+            if (modKey.Name.AsSpan().Equals(nameWithoutExt, StringComparison.OrdinalIgnoreCase)) return true;
 
             // Trim ending "type" information and try again
-            var delimIndex = archiveFileName.LastIndexOf(" - ");
+            var delimIndex = nameWithoutExt.LastIndexOf(" - ");
             if (delimIndex == -1) return false;
 
-            return modKey.Name.AsSpan().Equals(archiveFileName.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
+            return modKey.Name.AsSpan().Equals(nameWithoutExt.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -158,7 +168,7 @@ namespace Mutagen.Bethesda.Archives
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-        public static IEnumerable<string> GetIniListings(GameRelease release)
+        public static IEnumerable<FileName> GetIniListings(GameRelease release)
         {
             return GetIniListings(release, Ini.GetTypicalPath(release));
         }
@@ -169,9 +179,9 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="release">GameRelease to query for</param>
         /// <param name="path">Path to the file containing INI data</param>
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-        public static IEnumerable<string> GetIniListings(GameRelease release, string path)
+        public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
         {
-            return GetIniListings(release, FileSystem.File.OpenRead(path));
+            return GetIniListings(release, FileSystem.File.OpenRead(path.Path));
         }
 
         /// <summary>
@@ -180,7 +190,7 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="release">GameRelease ini is for</param>
         /// <param name="iniStream">Stream containing INI data</param>
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
-        public static IEnumerable<string> GetIniListings(GameRelease release, Stream iniStream)
+        public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
         {
             // Release exists as parameter, in case future games need different handling
 
@@ -189,7 +199,9 @@ namespace Mutagen.Bethesda.Archives
             var basePath = data["Archive"];
             var str1 = basePath["sResourceArchiveList"]?.Split(", ");
             var str2 = basePath["sResourceArchiveList2"]?.Split(", ");
-            var ret = str1.EmptyIfNull().And(str2.EmptyIfNull()).ToList();
+            var ret = str1.EmptyIfNull().And(str2.EmptyIfNull())
+                .Select(x => new FileName(x))
+                .ToList();
             return ret;
         }
 
@@ -202,7 +214,7 @@ namespace Mutagen.Bethesda.Archives
         /// <param name="release">GameRelease to target</param>
         /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priorty later in the list</param>
         /// <returns>Comparer that orders Archives in priority order</returns>
-        private static IComparer<string>? GetPriorityOrderComparer(GameRelease release, IEnumerable<string>? listedArchiveOrdering = null)
+        private static IComparer<FileName>? GetPriorityOrderComparer(GameRelease release, IEnumerable<FileName>? listedArchiveOrdering = null)
         {
             return GetPriorityOrderComparer(listedArchiveOrdering ?? GetIniListings(release));
         }
@@ -213,15 +225,15 @@ namespace Mutagen.Bethesda.Archives
         /// </summary>
         /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priorty later in the list</param>
         /// <returns>Comparer that orders Archives in priority order</returns>
-        private static IComparer<string>? GetPriorityOrderComparer(IEnumerable<string> listedArchiveOrdering)
+        private static IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName> listedArchiveOrdering)
         {
             var archiveOrderingList = listedArchiveOrdering.ToList();
             if (archiveOrderingList.Count == 0) return null;
             archiveOrderingList.Reverse();
-            return Comparer<string>.Create((a, b) =>
+            return Comparer<FileName>.Create((a, b) =>
             {
-                var indexA = archiveOrderingList.IndexOf(Path.GetFileName(a), (x, y) => string.Equals(x, y, StringComparison.OrdinalIgnoreCase));
-                var indexB = archiveOrderingList.IndexOf(Path.GetFileName(b), (x, y) => string.Equals(x, y, StringComparison.OrdinalIgnoreCase));
+                var indexA = archiveOrderingList.IndexOf(a);
+                var indexB = archiveOrderingList.IndexOf(b);
                 if (indexA == -1 && indexB == -1) return 0;
                 if (indexA == -1) return 1;
                 if (indexB == -1) return -1;

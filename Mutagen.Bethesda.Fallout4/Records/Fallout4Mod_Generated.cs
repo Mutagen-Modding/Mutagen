@@ -4190,7 +4190,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static void WriteToBinary(
             this IFallout4ModGetter item,
-            string path,
+            FilePath path,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {

@@ -12173,7 +12173,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public static void WriteToBinary(
             this IOblivionModGetter item,
-            string path,
+            FilePath path,
             BinaryWriteParameters? param = null,
             GroupMask? importMask = null)
         {

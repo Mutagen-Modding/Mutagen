@@ -5,11 +5,11 @@ namespace Mutagen.Bethesda.Archives.Exceptions
 {
     public class ArchiveException : Exception
     {
-        public string? ArchiveFilePath { get; set; }
-        public string? InternalFolderAccessed { get; set; }
-        public string? InternalFileAccessed { get; set; }
+        public FilePath? ArchiveFilePath { get; set; }
+        public DirectoryPath? InternalFolderAccessed { get; set; }
+        public FilePath? InternalFileAccessed { get; set; }
 
-        private ArchiveException(string message, Exception ex, string? bsaFilePath, string? folderAccessed, string? fileAccessed)
+        private ArchiveException(string message, Exception ex, FilePath? bsaFilePath, DirectoryPath? folderAccessed, FilePath? fileAccessed)
             : base(message, ex)
         {
             ArchiveFilePath = bsaFilePath;
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Archives.Exceptions
             InternalFileAccessed = fileAccessed;
         }
 
-        public static ArchiveException FileError(string message, Exception ex, string bsaFilePath, string fileAccessed)
+        public static ArchiveException FileError(string message, Exception ex, FilePath bsaFilePath, FilePath fileAccessed)
         {
             if (ex is ArchiveException bsa) return bsa;
             return new ArchiveException(
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.Archives.Exceptions
                 fileAccessed: fileAccessed);
         }
 
-        public static ArchiveException FolderError(string message, Exception ex, string bsaFilePath, string folderAccessed)
+        public static ArchiveException FolderError(string message, Exception ex, FilePath bsaFilePath, DirectoryPath folderAccessed)
         {
             if (ex is ArchiveException bsa) return bsa;
             return new ArchiveException(
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.Archives.Exceptions
                 fileAccessed: null);
         }
 
-        public static ArchiveException OverallError(string message, Exception ex, string bsaFilePath)
+        public static ArchiveException OverallError(string message, Exception ex, FilePath bsaFilePath)
         {
             if (ex is ArchiveException bsa) return bsa;
             return new ArchiveException(
@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.Archives.Exceptions
 
         public override string ToString()
         {
-            return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed.Decorate(x => $"=>{x}")}{InternalFileAccessed.Decorate(x => $"=>{x}")}: {this.Message} {this.InnerException}{this.StackTrace}";
+            return $"{nameof(ArchiveException)} {ArchiveFilePath}{InternalFolderAccessed?.Path.Decorate(x => $"=>{x}")}{InternalFileAccessed?.Path.Decorate(x => $"=>{x}")}: {this.Message} {this.InnerException}{this.StackTrace}";
         }
     }
 }

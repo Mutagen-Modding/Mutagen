@@ -17,13 +17,13 @@ namespace Mutagen.Bethesda.Archives.Bsa
         internal readonly int _index;
         internal readonly int _overallIndex;
         internal readonly BsaFileNameBlock? _nameBlock;
-        internal readonly Lazy<string?> _name;
+        internal readonly Lazy<FileName?> _name;
         internal Lazy<(uint Size, uint OnDisk, uint Original)> _size;
 
         public ulong Hash => BinaryPrimitives.ReadUInt64LittleEndian(_headerData);
         protected uint RawSize => BinaryPrimitives.ReadUInt32LittleEndian(_headerData.Slice(0x8));
         public uint Offset => BinaryPrimitives.ReadUInt32LittleEndian(_headerData.Slice(0xC));
-        public string? Name => _name.Value;
+        public FileName? Name => _name.Value;
         public uint Size => _size.Value.Size;
 
         public bool FlipCompression => (RawSize & (0x1 << 30)) > 0;
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
             _headerData = data;
             _nameBlock = nameBlock;
             Folder = folderRecord;
-            _name = new Lazy<string?>(GetName, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+            _name = new Lazy<FileName?>(GetName, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
             // Will be replaced if CopyDataTo is called before value is created
             _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
             get
             {
                 if (Name == null) return string.Empty;
-                return string.IsNullOrEmpty(Folder.Path) ? Name : System.IO.Path.Combine(Folder.Path, Name);
+                return (Folder.Path?.Path.IsNullOrWhitespace() ?? true) ? Name.Value.String : System.IO.Path.Combine(Folder.Path.Value.Path, Name.Value.String);
             }
         }
 
@@ -116,7 +116,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
             }
         }
 
-        private string? GetName()
+        private FileName? GetName()
         {
             if (_nameBlock == null) return null;
             var names = _nameBlock.Names.Value;

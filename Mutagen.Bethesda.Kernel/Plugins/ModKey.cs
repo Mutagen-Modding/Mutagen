@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins
 {
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Plugins
         /// <summary>
         /// Convenience accessor to get the appropriate file name
         /// </summary>
-        public string FileName => this.ToString();
+        public FileName FileName => new FileName(this.ToString(), check: false);
 
         private static readonly char[] InvalidChars = Path.GetInvalidFileNameChars();
 
@@ -179,6 +180,31 @@ namespace Mutagen.Bethesda.Plugins
             return TryFromNameAndExtension(str, out modKey, out _);
         }
 
+        /// <summary>
+        /// Attempts to construct a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="fileName">FileName to parse</param>
+        /// <param name="modKey">ModKey if successfully converted</param>
+        /// <param name="errorReason">Reason for a failed conversion</param>
+        /// <returns>True if conversion successful</returns>
+        public static bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
+        {
+            return TryFromNameAndExtension(fileName, out modKey, out errorReason);
+        }
+
+        /// <summary>
+        /// Attempts to construct a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="fileName">FileName to parse</param>
+        /// <param name="modKey">ModKey if successfully converted</param>
+        /// <returns>True if conversion successful</returns>
+        public static bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModKey modKey)
+        {
+            return TryFromFileName(fileName, out modKey, out _);
+        }
+
         public static bool TryFromName(ReadOnlySpan<char> str, ModType type, [MaybeNullWhen(false)] out ModKey modKey, out string errorReason)
         {
             var invalidIndex = str.IndexOfAny(InvalidChars);
@@ -242,6 +268,18 @@ namespace Mutagen.Bethesda.Plugins
             throw new ArgumentException("Could not construct ModKey.");
         }
 
+        /// <summary>
+        /// Constructs a ModKey from a string:
+        ///   ModName.esp
+        /// </summary>
+        /// <param name="fileName">FileName to parse</param>
+        /// <returns>Converted ModKey</returns>
+        /// <exception cref="ArgumentException">If string malformed</exception>
+        public static ModKey FromFileName(FileName fileName)
+        {
+            return FromNameAndExtension(fileName.String);
+        }
+
         public static bool operator ==(ModKey? a, ModKey? b)
         {
             return EqualityComparer<ModKey?>.Default.Equals(a, b);
@@ -255,6 +293,16 @@ namespace Mutagen.Bethesda.Plugins
         public static implicit operator ModKey(string nameAndExtension)
         {
             return ModKey.FromNameAndExtension(nameAndExtension);
+        }
+
+        public static implicit operator ModKey(FileName fileName)
+        {
+            return ModKey.FromFileName(fileName);
+        }
+
+        public static implicit operator FileName(ModKey modKey)
+        {
+            return modKey.FileName;
         }
 
         #region Comparers
@@ -335,7 +383,7 @@ namespace Mutagen.Bethesda.Plugins
         private static readonly Comparer<ModKey> _byTypeComparer = Comparer<ModKey>.Create((x, y) => x.Type.CompareTo(y.Type));
         public static Comparer<ModKey> ByTypeComparer => _byTypeComparer;
 
-        private static readonly Comparer<ModKey> _alphabetical = Comparer<ModKey>.Create((x, y) => x.FileName.CompareTo(y.FileName));
+        private static readonly Comparer<ModKey> _alphabetical = Comparer<ModKey>.Create((x, y) => x.FileName.String.CompareTo(y.FileName.String));
         public static Comparer<ModKey> Alphabetical => _alphabetical;
         #endregion
     }

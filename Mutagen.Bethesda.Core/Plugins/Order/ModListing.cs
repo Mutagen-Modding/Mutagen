@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
@@ -100,11 +101,25 @@ namespace Mutagen.Bethesda.Plugins.Order
             return false;
         }
 
+        public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
+        {
+            return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
+        }
+
         public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
         {
             if (!TryFromString(str, enabledMarkerProcessing, out var listing))
             {
                 throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
+            }
+            return listing;
+        }
+
+        public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
+        {
+            if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
+            {
+                throw new ArgumentException($"Load order file had malformed line: {name}");
             }
             return listing;
         }

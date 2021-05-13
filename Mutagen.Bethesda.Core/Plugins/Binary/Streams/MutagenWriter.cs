@@ -45,19 +45,19 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         public bool IsLittleEndian => true;
 
         public MutagenWriter(
-            string path,
+            FilePath path,
             GameConstants constants)
         {
-            this.BaseStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            this.BaseStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
             this.Writer = new BinaryWriter(this.BaseStream);
             this.MetaData = new WritingBundle(constants);
         }
 
         public MutagenWriter(
-            string path,
+            FilePath path,
             WritingBundle meta)
         {
-            this.BaseStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            this.BaseStream = new FileStream(path.Path, FileMode.Create, FileAccess.Write);
             this.Writer = new BinaryWriter(this.BaseStream);
             this.MetaData = meta;
         }

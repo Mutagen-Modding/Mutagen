@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.Exceptions;
 using Mutagen.Bethesda.Plugins;
+using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -13,7 +14,7 @@ namespace Mutagen.Bethesda.Strings
     {
         private readonly Lazy<DictionaryBundle> _dictionaries;
 
-        public string DataPath { get; }
+        public DirectoryPath DataPath { get; }
         public ModKey ModKey { get; }
 
         class DictionaryBundle
@@ -41,19 +42,19 @@ namespace Mutagen.Bethesda.Strings
 
         public bool Empty => _dictionaries.Value.Empty;
 
-        private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, string dataPath, ModKey modKey)
+        private StringsFolderLookupOverlay(Lazy<DictionaryBundle> instantiator, DirectoryPath dataPath, ModKey modKey)
         {
             _dictionaries = instantiator;
             DataPath = dataPath;
             ModKey = modKey;
         }
 
-        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, string dataPath, StringsReadParameters? instructions)
+        public static StringsFolderLookupOverlay TypicalFactory(GameRelease release, ModKey modKey, DirectoryPath dataPath, StringsReadParameters? instructions)
         {
             var stringsFolderPath = instructions?.StringsFolderOverride;
             if (stringsFolderPath == null)
             {
-                stringsFolderPath = Path.Combine(dataPath, "Strings");
+                stringsFolderPath = Path.Combine(dataPath.Path, "Strings");
             }
             return new StringsFolderLookupOverlay(new Lazy<DictionaryBundle>(
                 isThreadSafe: true,
@@ -62,12 +63,12 @@ namespace Mutagen.Bethesda.Strings
                     var bundle = new DictionaryBundle();
                     if (stringsFolderPath.Value.Exists)
                     {
-                        var bsaEnumer = stringsFolderPath.Value.Info.EnumerateFiles($"{modKey.Name}*{StringsUtility.StringsFileExtension}");
+                        var bsaEnumer = stringsFolderPath.Value.EnumerateFiles(searchPattern: $"{modKey.Name}*{StringsUtility.StringsFileExtension}");
                         foreach (var file in bsaEnumer)
                         {
                             if (!StringsUtility.TryRetrieveInfoFromString(
                                 release.GetLanguageFormat(),
-                                file.Name, 
+                                file.Name.String, 
                                 out var type,
                                 out var lang, 
                                 out _))
@@ -75,7 +76,7 @@ namespace Mutagen.Bethesda.Strings
                                 continue;
                             }
                             var dict = bundle.Get(type);
-                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.FullName, type), LazyThreadSafetyMode.ExecutionAndPublication);
+                            dict[lang] = new Lazy<IStringsLookup>(() => new StringsLookupOverlay(file.Path, type), LazyThreadSafetyMode.ExecutionAndPublication);
                         }
                     }
                     foreach (var bsaFile in Archive.GetApplicableArchivePaths(release, dataPath, modKey, instructions?.BsaOrdering))

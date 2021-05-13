@@ -607,12 +607,12 @@ namespace Mutagen.Bethesda.Tests
             GameRelease release,
             ModKey modKey,
             IMutagenReadStream stream,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language,
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, null);
             var sourceDict = folderOverlay.Get(source);
             if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
@@ -649,18 +649,18 @@ namespace Mutagen.Bethesda.Tests
         public void ProcessStringsFiles(
             GameRelease release,
             ModKey modKey,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language,
             StringsSource source,
             bool strict,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder,
+            IEnumerable<FileName> bsaOrder,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, new StringsReadParameters()
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, new StringsReadParameters()
             {
                 BsaOrdering = bsaOrder
             });

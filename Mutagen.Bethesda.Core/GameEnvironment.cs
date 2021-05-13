@@ -3,6 +3,7 @@ using System.IO;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -24,7 +25,7 @@ namespace Mutagen.Bethesda
     {
         private readonly bool _dispose;
 
-        public string GameFolderPath { get; }
+        public DirectoryPath DataFolderPath { get; }
 
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
@@ -37,12 +38,12 @@ namespace Mutagen.Bethesda
         public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 
         public GameEnvironmentState(
-            string gameFolderPath,
+            DirectoryPath gameFolderPath,
             LoadOrder<IModListingGetter<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
-            GameFolderPath = gameFolderPath;
+            DataFolderPath = gameFolderPath;
             LoadOrder = loadOrder;
             LinkCache = linkCache;
             _dispose = dispose;
@@ -57,10 +58,10 @@ namespace Mutagen.Bethesda
 
         public static GameEnvironmentState<TModSetter, TModGetter> Construct(
             GameRelease release,
-            string gameFolderPath,
+            DirectoryPath dataFolder,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            var dataPath = Path.Combine(gameFolderPath, "Data");
+            var dataPath = Path.Combine(dataFolder.Path, "Data");
 
             var loadOrder = Mutagen.Bethesda.Plugins.Order.LoadOrder.Import<TModGetter>(
                 dataPath,
@@ -68,7 +69,7 @@ namespace Mutagen.Bethesda
                 release);
 
             return new GameEnvironmentState<TModSetter, TModGetter>(
-                gameFolderPath: gameFolderPath,
+                gameFolderPath: dataFolder,
                 loadOrder: loadOrder,
                 linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
                 dispose: true);

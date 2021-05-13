@@ -883,12 +883,12 @@ namespace Mutagen.Bethesda.Tests
 
         private async Task ProcessStringsFilesIndices(
             Func<IMutagenReadStream> streamGetter,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language, 
             StringsSource source, 
             ModKey modKey,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder)
+            IEnumerable<FileName> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)

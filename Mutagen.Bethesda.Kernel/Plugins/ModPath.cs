@@ -1,29 +1,30 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins
 {
     public class ModPath : IEquatable<ModPath>
     {
         public readonly ModKey ModKey;
-        public readonly string Path;
+        public readonly FilePath Path;
         public static readonly ModPath Empty = new ModPath(ModKey.Null, string.Empty);
 
-        public ModPath(ModKey modKey, string path)
+        public ModPath(ModKey modKey, FilePath path)
         {
             ModKey = modKey;
             Path = path;
         }
 
-        public static ModPath FromPath(string path)
+        public static ModPath FromPath(FilePath path)
         {
-            var modKey = ModKey.FromNameAndExtension(System.IO.Path.GetFileName(path));
+            var modKey = ModKey.FromFileName(path.Name);
             return new ModPath(modKey, path);
         }
 
-        public static bool TryFromPath(string path, [MaybeNullWhen(false)] out ModPath modPath)
+        public static bool TryFromPath(FilePath path, [MaybeNullWhen(false)] out ModPath modPath)
         {
-            if (!ModKey.TryFromNameAndExtension(System.IO.Path.GetFileName(path), out var modKey))
+            if (!ModKey.TryFromFileName(path.Name, out var modKey))
             {
                 modPath = default;
                 return false;
@@ -37,7 +38,17 @@ namespace Mutagen.Bethesda.Plugins
             return FromPath(str);
         }
 
+        public static implicit operator ModPath(FilePath filePath)
+        {
+            return FromPath(filePath);
+        }
+
         public static implicit operator string(ModPath p)
+        {
+            return p.Path.Path;
+        }
+
+        public static implicit operator FilePath(ModPath p)
         {
             return p.Path;
         }
@@ -49,7 +60,7 @@ namespace Mutagen.Bethesda.Plugins
 
         public override string ToString()
         {
-            if (string.IsNullOrWhiteSpace(Path))
+            if (string.IsNullOrWhiteSpace(Path.Path))
             {
                 return ModKey.ToString();
             }
@@ -68,7 +79,7 @@ namespace Mutagen.Bethesda.Plugins
         {
             if (other == null) return false;
             if (!ModKey.Equals(other.ModKey)) return false;
-            if (string.Equals(Path, other.Path, StringComparison.OrdinalIgnoreCase)) return false;
+            if (Path.Equals(other.Path)) return false;
             return true;
         }
 
@@ -76,7 +87,7 @@ namespace Mutagen.Bethesda.Plugins
         {
             HashCode hash = new HashCode();
             hash.Add(ModKey);
-            hash.Add(Path.GetHashCode(StringComparison.OrdinalIgnoreCase));
+            hash.Add(Path);
             return hash.ToHashCode();
         }
     }

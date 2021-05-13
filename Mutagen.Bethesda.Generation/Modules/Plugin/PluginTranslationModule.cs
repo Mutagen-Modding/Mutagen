@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             this.MinorAPIs.Add(
                 new TranslationModuleAPI(
                     new MethodAPI(
-                        majorAPI: new APILine[] { new APILine("Path", $"string path") },
+                        majorAPI: new APILine[] { new APILine("Path", $"{nameof(FilePath)} path") },
                         customAPI: new CustomMethodAPI[]
                         {
                             CustomMethodAPI.FactoryPublic(gameRelease)
