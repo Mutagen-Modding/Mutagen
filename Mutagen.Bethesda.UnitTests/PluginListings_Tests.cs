@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(Utility.PluginModKey, item.ModKey);
             item = ModListing.FromString($"{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
-            Assert.False(item.Ghosted);
+            Assert.True(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
         }
 
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Equal(Utility.PluginModKey, item.ModKey);
             item = ModListing.FromString($"*{Utility.PluginModKey.FileName}.ghost", enabledMarkerProcessing: true);
             Assert.False(item.Enabled);
-            Assert.False(item.Ghosted);
+            Assert.True(item.Ghosted);
             Assert.Equal(Utility.PluginModKey, item.ModKey);
         }
 
