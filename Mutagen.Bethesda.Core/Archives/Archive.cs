@@ -89,26 +89,13 @@ namespace Mutagen.Bethesda.Archives
 
         /// <summary>
         /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
-        /// Orders the results to an Archive load order driven by the ini
-        /// </summary>
-        /// <param name="release">GameRelease to query for</param>
-        /// <param name="dataFolderPath">Folder to query within</param>
-        /// <param name="modKey">ModKey to query about</param>
-        /// <returns></returns>
-        public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey)
-        {
-            return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release));
-        }
-
-        /// <summary>
-        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
         /// <param name="modKey">ModKey to query about</param>
         /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
         /// <returns></returns>
-        public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey, IEnumerable<string> archiveOrdering)
+        public static IEnumerable<string> GetApplicableArchivePaths(GameRelease release, string dataFolderPath, ModKey modKey, IEnumerable<string>? archiveOrdering)
         {
             return GetApplicableArchivePaths(release, dataFolderPath, modKey, GetPriorityOrderComparer(release, archiveOrdering));
         }
