@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Archives.Ba2
             _realSize = reader.ReadUInt32();
             _align = reader.ReadUInt32();
         }
-
+        
         public string Path { get; internal set; }
 
         public uint Size => _realSize;
@@ -380,11 +380,9 @@ namespace Mutagen.Bethesda.Archives.Ba2
             fs.Seek((long)_offset, SeekOrigin.Begin);
             uint len = Compressed ? _size : _realSize;
 
-            fs.SetLength(fs.Position + len);
-
             if (!Compressed)
             {
-                return fs;
+                return new FramedStream(fs, fs.Position + len);
             }
             else
             {
@@ -401,7 +399,7 @@ namespace Mutagen.Bethesda.Archives.Ba2
         {
             using var s = AsStream();
             byte[] ret = new byte[s.Remaining()];
-            s.Write(ret);
+            s.Read(ret);
             return ret;
         }
 
