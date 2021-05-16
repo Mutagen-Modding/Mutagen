@@ -38,28 +38,27 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public FileSyncedLoadOrderVM LoadOrderVM { get; }
 
-        public MainVM()
+    public MainVM()
+    {
+        var gameRelease = SkyrimRelease.SkyrimSE;
+        var env = GameEnvironment.Typical.Skyrim(gameRelease, LinkCachePreferences.OnlyIdentifiers())
+            .DisposeWith(this);
+        LinkCache = env.LinkCache;
+        LoadOrder = env.LoadOrder;
+        ScopedTypes = typeof(IArmorGetter).AsEnumerable();
+        LateSetPickerVM = new LateSetPickerVM(this);
+        Reflection = new ReflectionSettingsVM(
+            ReflectionSettingsParameters.CreateFrom(
+                new TestSettings(),
+                env.LoadOrder.Select(x => new ModListingVM(x.Value, env.DataFolderPath.Path)),
+                env.LinkCache));
+        LoadOrderVM = new FileSyncedLoadOrderVM()
         {
-            var gameRelease = SkyrimRelease.SkyrimSE;
-            var env = GameEnvironment.Typical.Skyrim(gameRelease, LinkCachePreferences.OnlyIdentifiers())
-                .DisposeWith(this);
-            LinkCache = env.LinkCache;
-            LoadOrder = env.LoadOrder;
-            ScopedTypes = typeof(IArmorGetter).AsEnumerable();
-            LateSetPickerVM = new LateSetPickerVM(this);
-            Reflection = new ReflectionSettingsVM(
-                ReflectionSettingsParameters.CreateFrom(
-                    new TestSettings(),
-                    env.LoadOrder.Select(x => new LoadOrderEntryVM(x.Value, env.DataFolderPath.Path)),
-                    env.LinkCache));
-            LoadOrderVM = new FileSyncedLoadOrderVM()
-            {
-                DataFolderPath = env.DataFolderPath.Path,
-                LoadOrderFilePath = env.LoadOrderFilePath.Path,
-                CreationClubFilePath = env.CreationKitLoadOrderFilePath,
-                
-
-            };
-        }
+            DataFolderPath = env.DataFolderPath.Path,
+            LoadOrderFilePath = env.LoadOrderFilePath.Path,
+            CreationClubFilePath = env.CreationKitLoadOrderFilePath?.Path ?? string.Empty,
+            GameRelease = gameRelease.ToGameRelease(),
+        };
+    }
     }
 }

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 {
     public record ReflectionSettingsParameters(
         Assembly Assembly,
-        IObservable<IChangeSet<LoadOrderEntryVM>> DetectedLoadOrder,
+        IObservable<IChangeSet<ModListingVM>> DetectedLoadOrder,
         IObservable<ILinkCache> LinkCache,
         Type TargetType,
         object? DefaultVal,
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         SettingsNodeVM? Parent)
     {
         public static ReflectionSettingsParameters FromType(
-            IObservable<IChangeSet<LoadOrderEntryVM>> detectedLoadOrder,
+            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache,
             Type type,
             object? defaultVal = null)
@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         }
 
         public static ReflectionSettingsParameters FromType<TType>(
-            IObservable<IChangeSet<LoadOrderEntryVM>> detectedLoadOrder,
+            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache,
             TType? defaultVal = null)
             where TType : class
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
-            IObservable<IChangeSet<LoadOrderEntryVM>> detectedLoadOrder,
+            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache)
             where TType : class
         {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         }
 
         public static ReflectionSettingsParameters FromType<TType>(
-            IEnumerable<LoadOrderEntryVM> detectedLoadOrder,
+            IEnumerable<ModListingVM> detectedLoadOrder,
             ILinkCache linkCache,
             TType? defaultVal = null)
             where TType : class
@@ -70,7 +70,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
-            IEnumerable<LoadOrderEntryVM> detectedLoadOrder,
+            IEnumerable<ModListingVM> detectedLoadOrder,
             ILinkCache linkCache)
             where TType : class
         {
