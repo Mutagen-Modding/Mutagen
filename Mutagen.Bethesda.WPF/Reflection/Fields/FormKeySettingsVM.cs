@@ -8,7 +8,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
     public class FormKeySettingsVM : BasicSettingsVM<FormKey>
     {
         public FormKeySettingsVM(FieldMeta fieldMeta, object? defaultVal)
-            : base(fieldMeta, defaultVal is FormKey form ? StripOrigin(form) : null)
+            : base(fieldMeta, TryStripOrigin(defaultVal))
         {
         }
 
@@ -63,6 +63,16 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         public static FormKey StripOrigin(FormKey formKey)
         {
             return FormKey.Factory(formKey.ToString());
+        }
+
+        public static FormKey? TryStripOrigin(object? o)
+        {
+            if (o == null) return null;
+            if (FormKey.TryFactory(o.ToString(), out var form))
+            {
+                return form;
+            }
+            return null;
         }
 
         public override void WrapUp()
