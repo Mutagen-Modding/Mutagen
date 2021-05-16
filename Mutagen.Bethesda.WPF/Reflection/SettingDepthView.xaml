@@ -9,6 +9,13 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+    <local:SettingDepthViewBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Reflection/Fields/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </local:SettingDepthViewBase.Resources>
     <ItemsControl x:Name="ParentSettingList">
         <ItemsControl.ItemTemplate>
             <DataTemplate>

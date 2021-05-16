@@ -1,8 +1,10 @@
 using Newtonsoft.Json.Linq;
 using Noggog.WPF;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 using System;
 using System.ComponentModel;
+using System.Reactive.Linq;
 using System.Text.Json;
 
 namespace Mutagen.Bethesda.WPF.Reflection.Fields
@@ -30,7 +32,8 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         [Reactive]
         public bool IsSelected { get; set; }
 
-        public virtual string DisplayName => Value?.ToString() ?? "Name";
+        private readonly ObservableAsPropertyHelper<string> _DisplayName;
+        public string DisplayName => _DisplayName.Value;
 
         public BasicSettingsVM(FieldMeta fieldMeta, object? defaultVal)
             : base(fieldMeta)
@@ -45,6 +48,9 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                 Value = default!;
                 DefaultValue = default!;
             }
+            _DisplayName = this.WhenAnyValue(x => x.Value)
+                .Select(x => x?.ToString() ?? "Name")
+                .ToGuiProperty(this, nameof(DisplayName), string.Empty, deferSubscription: true);
         }
 
         public override void Import(JsonElement property, Action<string> logger)
