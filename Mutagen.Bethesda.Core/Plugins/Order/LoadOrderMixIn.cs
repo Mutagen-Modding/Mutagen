@@ -78,5 +78,13 @@ namespace Mutagen.Bethesda
             }
             throw new MissingModException(modKey);
         }
+
+        public static ILoadOrderGetter<TListing> ToLoadOrder<TListing>(this IEnumerable<TListing> listings)
+            where TListing : IModListingGetter
+        {
+            var ret = new LoadOrder<TListing>();
+            ret.Add(listings);
+            return ret;
+        }
     }
 }
