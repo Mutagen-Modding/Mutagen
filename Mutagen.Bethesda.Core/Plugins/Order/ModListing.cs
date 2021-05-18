@@ -138,11 +138,11 @@ namespace Mutagen.Bethesda.Plugins.Order
     /// Class associating a ModKey with a Mod object that may or may not exist.
     /// </summary>
     [DebuggerDisplay("{ToString()}")]
-    public record ModListing<TMod> : ModListing, IModListingGetter<TMod>
+    public record ModListing<TMod> : ModListing, IModListing<TMod>
         where TMod : class, IModGetter
     {
         /// <inheritdoc />
-        public TMod? Mod { get; init; }
+        public TMod? Mod { get; set; }
 
         private ModListing(ModKey key, TMod? mod, bool enabled, string? ghostSuffix = null)
         {
@@ -203,6 +203,15 @@ namespace Mutagen.Bethesda.Plugins.Order
         TMod? Mod { get; }
     }
 
+    public interface IModListing<TMod> : IModListingGetter<TMod>
+        where TMod : class, IModGetter
+    {
+        /// <summary>
+        /// Mod object
+        /// </summary>
+        new TMod? Mod { get; set; }
+    }
+
     public interface IModListingGetter : IModKeyed
     {
         /// <summary>
@@ -223,5 +232,20 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// the mods differently depending on the context
         /// </summary>
         string? GhostSuffix { get; }
+    }
+
+    public interface IModListing : IModListingGetter
+    {
+        /// <summary>
+        /// Whether the listing is enabled in the load order
+        /// </summary>
+        new bool Enabled { get; set; }
+
+        /// <summary>
+        /// What file suffix is used if ghosted.  This is done by modifying the file type to be anything abnormal.<br/>
+        /// This is the same as disabling a mod as far as the game is concerned, but also is a hint to modmanagers to treat 
+        /// the mods differently depending on the context
+        /// </summary>
+        new string? GhostSuffix { get; set; }
     }
 }
