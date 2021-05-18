@@ -32,8 +32,9 @@ namespace Mutagen.Bethesda
         {
             return ObservableListEx.Sort(e, ModListing.GetComparer<TListing>(ModKey.ByTypeComparer));
         }
-        public static bool TryGetIfEnabled<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out IModListingGetter<TMod> item)
-            where TMod : class, IModGetter
+        
+        public static bool TryGetIfEnabled<TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TListing item)
+            where TListing : IModListingGetter
         {
             if (loadOrder.TryGetValue(modKey, out var listing)
                 && listing.Enabled)
@@ -46,8 +47,8 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static IModListingGetter<TMod> GetIfEnabled<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey)
-            where TMod : class, IModGetter
+        public static TListing GetIfEnabled<TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey)
+            where TListing : IModListingGetter
         {
             if (TryGetIfEnabled(loadOrder, modKey, out var listing))
             {
@@ -56,8 +57,9 @@ namespace Mutagen.Bethesda
             throw new MissingModException(modKey);
         }
 
-        public static bool TryGetIfEnabledAndExists<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
+        public static bool TryGetIfEnabledAndExists<TMod, TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
             where TMod : class, IModGetter
+            where TListing : IModListingGetter<TMod>
         {
             if (!TryGetIfEnabled(loadOrder, modKey, out var listing))
             {
@@ -69,10 +71,11 @@ namespace Mutagen.Bethesda
             return item != null;
         }
 
-        public static TMod GetIfEnabledAndExists<TMod>(this LoadOrder<IModListingGetter<TMod>> loadOrder, ModKey modKey)
+        public static TMod GetIfEnabledAndExists<TMod, TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey)
             where TMod : class, IModGetter
+            where TListing : IModListingGetter<TMod>
         {
-            if (TryGetIfEnabledAndExists(loadOrder, modKey, out var mod))
+            if (TryGetIfEnabledAndExists<TMod, TListing>(loadOrder, modKey, out var mod))
             {
                 return mod;
             }
