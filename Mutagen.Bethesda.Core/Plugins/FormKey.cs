@@ -321,7 +321,6 @@ namespace Mutagen.Bethesda.Plugins
             Comparer<FormKey>? notOnLoadOrderFallback = null) =>
             new ModKeyListFormKeyComparer(loadOrder, matchingModKeyFallback: matchingModKeyFallback, notOnLoadOrderFallback: notOnLoadOrderFallback);
 
-
         /// <summary>
         /// Constructs a comparer that sorts FormKeys according to a load order.
         /// If FormKeys are from the same mod, then alphabetical sorting will be used, unless an override is specified.
@@ -336,6 +335,21 @@ namespace Mutagen.Bethesda.Plugins
             Comparer<FormKey>? matchingModKeyFallback = null,
             Comparer<FormKey>? notOnLoadOrderFallback = null) =>
             new ModKeyListFormKeyComparer(loadOrder.ToList(), matchingModKeyFallback: matchingModKeyFallback, notOnLoadOrderFallback: notOnLoadOrderFallback);
+
+        /// <summary>
+        /// Constructs a comparer that sorts FormKeys according to a load order.
+        /// If FormKeys are from the same mod, then alphabetical sorting will be used, unless an override is specified.
+        /// </summary>
+        /// <param name="loadOrder">Load order to refer to for sorting</param>
+        /// <param name="matchingModKeyFallback">Comparer to use when FormKeys from the same mod.  Alphabetical is default.</param>
+        /// <param name="notOnLoadOrderFallback">Comparer to use when FormKeys not on the load order. Default is to throw an exception</param>
+        /// <returns>Comparer to use</returns>
+        /// <exception cref="ArgumentOutOfRangeException">A FormKey not on the load order is queried, and no fallback specified.</exception>
+        public static Comparer<FormKey> LoadOrderComparer(
+            ILoadOrderGetter loadOrder,
+            Comparer<FormKey>? matchingModKeyFallback = null,
+            Comparer<FormKey>? notOnLoadOrderFallback = null) =>
+            new ModKeyListFormKeyComparer(loadOrder.ListedOrder.ToList(), matchingModKeyFallback: matchingModKeyFallback, notOnLoadOrderFallback: notOnLoadOrderFallback);
 
         private class ModKeyListFormKeyComparer : Comparer<FormKey>
         {
