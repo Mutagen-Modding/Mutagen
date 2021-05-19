@@ -126,15 +126,25 @@ namespace Mutagen.Bethesda.Skyrim
                                     case APerkEntryPointEffect.FunctionType.MultiplyValue:
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                        if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
-                                        if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
+                                        float? f;
+                                        if (epft == null && epfd == null)
                                         {
-                                            throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                            f = null;
+                                        }
+                                        else
+                                        {
+                                            if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
+                                            if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
+                                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
+                                            {
+                                                throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                            }
+
+                                            f = epfd.Value.Float();
                                         }
                                         entryPointEffect = new PerkEntryPointModifyValue()
                                         {
-                                            Value = epfd.Value.Float(),
+                                            Value = f,
                                             Modification = func switch
                                             {
                                                 APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
@@ -379,21 +389,26 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var paramType = effect switch
                         {
-                            PerkEntryPointModifyValue modVal => APerkEntryPointEffect.ParameterType.Float,
-                            PerkEntryPointAddRangeToValue modVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkEntryPointModifyActorValue modActorVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkEntryPointAbsoluteValue absVal => APerkEntryPointEffect.ParameterType.None,
-                            PerkEntryPointAddLeveledItem levItem => APerkEntryPointEffect.ParameterType.LeveledItem,
-                            PerkEntryPointAddActivateChoice activateChoice => APerkEntryPointEffect.ParameterType.SpellWithStrings,
-                            PerkEntryPointSelectSpell spell => APerkEntryPointEffect.ParameterType.Spell,
-                            PerkEntryPointSelectText txt => APerkEntryPointEffect.ParameterType.String,
-                            PerkEntryPointSetText ltxt => APerkEntryPointEffect.ParameterType.LString,
+                            PerkEntryPointModifyValue _ => APerkEntryPointEffect.ParameterType.Float,
+                            PerkEntryPointAddRangeToValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointModifyActorValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointAbsoluteValue _ => APerkEntryPointEffect.ParameterType.None,
+                            PerkEntryPointAddLeveledItem _ => APerkEntryPointEffect.ParameterType.LeveledItem,
+                            PerkEntryPointAddActivateChoice _ => APerkEntryPointEffect.ParameterType.SpellWithStrings,
+                            PerkEntryPointSelectSpell _ => APerkEntryPointEffect.ParameterType.Spell,
+                            PerkEntryPointSelectText _ => APerkEntryPointEffect.ParameterType.String,
+                            PerkEntryPointSetText _ => APerkEntryPointEffect.ParameterType.LString,
                             _ => throw new NotImplementedException()
                         };
+                        if (effect is not PerkEntryPointModifyValue modValEpft
+                            || modValEpft.Value.HasValue)
+                        {
                         using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
                         {
                             writer.Write((byte)paramType);
                         }
+                        }
+                        
                         if (effect is PerkEntryPointAddActivateChoice choice)
                         {
                             if (choice.ButtonLabel != null)
@@ -408,9 +423,12 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (effect)
                         {
                             case PerkEntryPointModifyValue modVal:
-                                using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                if (modVal.Value.TryGet(out var f))
                                 {
-                                    writer.Write(modVal.Value);
+                                    using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                    {
+                                        writer.Write(f);
+                                    }
                                 }
                                 break;
                             case PerkEntryPointAddRangeToValue range:

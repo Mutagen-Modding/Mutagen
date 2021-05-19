@@ -53,7 +53,7 @@
   <Object name="PerkEntryPointModifyValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="1d49c96a-ffbd-42f5-8420-24ced8b5991e" ID="417">
     <Fields>
       <Enum name="Modification" enumName="PerkEntryPointModifyValue.ModificationType" />
-      <Float name="Value" recordType="EPFD" nullable="False" />
+      <Float name="Value" recordType="EPFD" nullable="True" />
     </Fields>
   </Object>
   <Object name="PerkEntryPointAddRangeToValue" objType="Subrecord" baseClass="APerkEntryPointEffect" GUID="a626d85f-ad59-47fc-b686-15e424b8ec6f" ID="418">
