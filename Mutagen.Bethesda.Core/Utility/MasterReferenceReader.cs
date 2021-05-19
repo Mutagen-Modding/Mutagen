@@ -116,9 +116,9 @@ namespace Mutagen.Bethesda.Internals
             return FromStream(stream);
         }
 
-        public static MasterReferenceReader FromStream(Stream stream, ModKey modKey, GameRelease release)
+        public static MasterReferenceReader FromStream(Stream stream, ModKey modKey, GameRelease release, bool disposeStream = true)
         {
-            using var interf = new MutagenInterfaceReadStream(new BinaryReadStream(stream), new ParsingBundle(release, masterReferences: null!));
+            using var interf = new MutagenInterfaceReadStream(new BinaryReadStream(stream), new ParsingBundle(release, masterReferences: null!), disposeStream: disposeStream);
             return FromStream(interf);
         }
 

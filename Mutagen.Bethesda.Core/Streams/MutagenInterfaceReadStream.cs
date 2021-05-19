@@ -11,6 +11,7 @@ namespace Mutagen.Bethesda
     public class MutagenInterfaceReadStream : IMutagenReadStream
     {
         private readonly IBinaryReadStream _readStream;
+        private readonly bool _disposeStream;
 
         /// <inheritdoc />
         public long OffsetReference { get; }
@@ -23,9 +24,11 @@ namespace Mutagen.Bethesda
         public MutagenInterfaceReadStream(
             IBinaryReadStream stream,
             ParsingBundle metaData,
-            long offsetReference = 0)
+            long offsetReference = 0,
+            bool disposeStream = true)
         {
             _readStream = stream;
+            _disposeStream = disposeStream;
             this.MetaData = metaData;
             this.OffsetReference = offsetReference;
         }
@@ -57,7 +60,13 @@ namespace Mutagen.Bethesda
         public Stream BaseStream => _readStream.BaseStream;
 
         /// <inheritdoc />
-        public void Dispose() => _readStream.Dispose();
+        public void Dispose()
+        {
+            if (_disposeStream)
+            {
+                _readStream.Dispose();
+            }
+        }
 
         /// <inheritdoc />
         public int Get(byte[] buffer, int targetOffset, int amount) => _readStream.Get(buffer, targetOffset, amount);
