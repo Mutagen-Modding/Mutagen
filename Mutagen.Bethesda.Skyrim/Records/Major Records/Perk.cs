@@ -301,6 +301,12 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     effect.Rank = rank;
                     effect.Priority = priority;
+                    if (stream.TryReadSubrecordFrame(RecordTypes.EPFT, out var epftFrame)
+                        && epftFrame.ContentLength != 1
+                        && epftFrame.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)
+                    {
+                        throw new ArgumentException($"Encountered an unexpected epft frame.");
+                    }
                     stream.TryReadSubrecordFrame(RecordTypes.PRKF, out var _);
                     yield return effect;
                 }
@@ -403,10 +409,10 @@ namespace Mutagen.Bethesda.Skyrim
                         if (effect is not PerkEntryPointModifyValue modValEpft
                             || modValEpft.Value.HasValue)
                         {
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
-                        {
-                            writer.Write((byte)paramType);
-                        }
+                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
+                            {
+                                writer.Write((byte)paramType);
+                            }
                         }
                         
                         if (effect is PerkEntryPointAddActivateChoice choice)
