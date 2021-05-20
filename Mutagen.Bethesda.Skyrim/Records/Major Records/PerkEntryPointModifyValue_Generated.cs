@@ -54,7 +54,9 @@ namespace Mutagen.Bethesda.Skyrim
         public PerkEntryPointModifyValue.ModificationType Modification { get; set; } = default;
         #endregion
         #region Value
-        public Single Value { get; set; } = default;
+        public Single? Value { get; set; }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        Single? IPerkEntryPointModifyValueGetter.Value => this.Value;
         #endregion
 
         #region To String
@@ -459,7 +461,7 @@ namespace Mutagen.Bethesda.Skyrim
         IPerkEntryPointModifyValueGetter
     {
         new PerkEntryPointModifyValue.ModificationType Modification { get; set; }
-        new Single Value { get; set; }
+        new Single? Value { get; set; }
     }
 
     public partial interface IPerkEntryPointModifyValueGetter :
@@ -469,7 +471,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         static new ILoquiRegistration Registration => PerkEntryPointModifyValue_Registration.Instance;
         PerkEntryPointModifyValue.ModificationType Modification { get; }
-        Single Value { get; }
+        Single? Value { get; }
 
     }
 
@@ -854,9 +856,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             {
                 fg.AppendItem(item.Modification, "Modification");
             }
-            if (printMask?.Value ?? true)
+            if ((printMask?.Value ?? true)
+                && item.Value.TryGet(out var ValueItem))
             {
-                fg.AppendItem(item.Value, "Value");
+                fg.AppendItem(ValueItem, "Value");
             }
         }
         
@@ -944,7 +947,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             var hash = new HashCode();
             hash.Add(item.Modification);
-            hash.Add(item.Value);
+            if (item.Value.TryGet(out var Valueitem))
+            {
+                hash.Add(Valueitem);
+            }
             hash.Add(base.GetHashCode());
             return hash.ToHashCode();
         }
@@ -1148,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Value,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EPFD));
@@ -1295,7 +1301,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public PerkEntryPointModifyValue.ModificationType Modification => (PerkEntryPointModifyValue.ModificationType)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x2, 0x4));
         #region Value
         private int? _ValueLocation;
-        public Single Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ValueLocation.Value, _package.MetaData.Constants).Float() : default;
+        public Single? Value => _ValueLocation.HasValue ? HeaderTranslation.ExtractSubrecordMemory(_data, _ValueLocation.Value, _package.MetaData.Constants).Float() : default(Single?);
         #endregion
         partial void CustomFactoryEnd(
             OverlayStream stream,
