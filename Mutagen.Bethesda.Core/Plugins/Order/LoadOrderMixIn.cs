@@ -6,6 +6,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
+using Noggog;
 
 namespace Mutagen.Bethesda
 {
@@ -33,7 +34,7 @@ namespace Mutagen.Bethesda
             return ObservableListEx.Sort(e, ModListing.GetComparer<TListing>(ModKey.ByTypeComparer));
         }
         
-        public static bool TryGetIfEnabled<TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TListing item)
+        public static bool TryGetIfEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TListing item)
             where TListing : IModListingGetter
         {
             if (loadOrder.TryGetValue(modKey, out var listing)
@@ -47,7 +48,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static TListing GetIfEnabled<TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey)
+        public static TListing GetIfEnabled<TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
             where TListing : IModListingGetter
         {
             if (TryGetIfEnabled(loadOrder, modKey, out var listing))
@@ -57,7 +58,7 @@ namespace Mutagen.Bethesda
             throw new MissingModException(modKey);
         }
 
-        public static bool TryGetIfEnabledAndExists<TMod, TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
+        public static bool TryGetIfEnabledAndExists<TMod, TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
             where TMod : class, IModGetter
             where TListing : IModListingGetter<TMod>
         {
@@ -71,7 +72,7 @@ namespace Mutagen.Bethesda
             return item != null;
         }
 
-        public static TMod GetIfEnabledAndExists<TMod, TListing>(this LoadOrder<TListing> loadOrder, ModKey modKey)
+        public static TMod GetIfEnabledAndExists<TMod, TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
             where TMod : class, IModGetter
             where TListing : IModListingGetter<TMod>
         {

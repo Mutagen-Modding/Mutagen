@@ -364,7 +364,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
         /// This may be unapplicable to some games with only one release, but should still be passed in.
         /// </param>
-        public static LoadOrder<IModListingGetter<TMod>> Import<TMod>(
+        public static ILoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
             GameRelease gameRelease)
@@ -384,7 +384,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
         /// This may be unapplicable to some games with only one release, but should still be passed in.
         /// </param>
-        public static LoadOrder<IModListingGetter<TMod>> Import<TMod>(
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
             GameRelease gameRelease)
@@ -402,7 +402,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of mod keys to import</param>
         /// <param name="factory">Func to use to create a new mod from a path</param>
-        public static LoadOrder<IModListingGetter<TMod>> Import<TMod>(
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
             Func<ModPath, TMod> factory)
@@ -420,7 +420,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="dataFolder">Path data folder containing mods</param>
         /// <param name="loadOrder">Unique list of listings to import</param>
         /// <param name="factory">Func to use to create a new mod from a path</param>
-        public static LoadOrder<IModListingGetter<TMod>> Import<TMod>(
+        public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
             Func<ModPath, TMod> factory)
@@ -448,7 +448,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                         throw RecordException.Enrich(ex, listing.ModKey);
                     }
                 });
-                return new LoadOrder<IModListingGetter<TMod>>(results
+                return new LoadOrder<IModListing<TMod>>(results
                     .OrderBy(i => i.ModIndex)
                     .Select(item =>
                     {
@@ -538,10 +538,12 @@ namespace Mutagen.Bethesda.Plugins.Order
         bool ContainsKey(ModKey key);
     }
 
-    public interface ILoadOrderGetter<TListing> : ILoadOrderGetter, IReadOnlyList<KeyValuePair<ModKey, TListing>>, IReadOnlyDictionary<ModKey, TListing>, IDisposable
+    public interface ILoadOrderGetter<out TListing> : ILoadOrderGetter, IReadOnlyList<Noggog.IKeyValue<TListing, ModKey>>, IReadOnlyCache<TListing, ModKey>
         where TListing : IModKeyed
     {
-        bool TryGetIndex(int index, [MaybeNullWhen(false)] out TListing result);
+        new TListing this[int index] { get; }
+        
+        TListing? TryGetIndex(int index);
 
         /// <summary>
         /// Listings in the order they were listed
@@ -564,15 +566,55 @@ namespace Mutagen.Bethesda.Plugins.Order
         new bool ContainsKey(ModKey key);
     }
 
+    public interface ILoadOrder<TListing> : ILoadOrderGetter<TListing>
+        where TListing : IModKeyed
+    {
+        /// <summary>
+        /// Adds an item to the end of the load order
+        /// </summary>
+        /// <param name="item">Item to put at end of load order</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        void Add(TListing item);
+
+        /// <summary>
+        /// Adds items to the end of the load order
+        /// </summary>
+        /// <param name="items">Items to put at end of load order</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        void Add(IEnumerable<TListing> items);
+
+        /// <summary>
+        /// Adds an item at the given index in load order, with the given ModKey
+        /// </summary>
+        /// <param name="item">Item to put at end of load order</param>
+        /// <param name="index">Index to insert at</param>
+        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        void Add(TListing item, int index);
+
+        /// <summary>
+        /// Clears load order of all items
+        /// </summary>
+        void Clear();
+
+        bool RemoveKey(ModKey modKey);
+
+        void RemoveAt(int index);
+
+        void Set(TListing listing);
+
+        void Set(IEnumerable<TListing> items);
+    }
+
     /// <summary>
     /// A container for objects with in a specific load order, that are associated with ModKeys.
     /// LoadOrder does not need to be disposed for proper use, but rather can optionally be disposed of which will dispose any contained items that implement IDisposable
     /// </summary>
-    public class LoadOrder<TListing> : ILoadOrderGetter, ILoadOrderGetter<TListing>
+    public class LoadOrder<TListing> : ILoadOrder<TListing>
         where TListing : IModKeyed
     {
-        private readonly List<ItemContainer> _byLoadOrder = new List<ItemContainer>();
-        private readonly Dictionary<ModKey, ItemContainer> _byModKey = new Dictionary<ModKey, ItemContainer>();
+        private readonly List<ItemContainer> _byLoadOrder = new();
+        private readonly Dictionary<ModKey, ItemContainer> _byModKey = new();
+        private readonly bool _disposeItems;
 
         /// <inheritdoc />
         public int Count => _byLoadOrder.Count;
@@ -580,10 +622,10 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <inheritdoc />
         public TListing this[int index] => _byLoadOrder[index].Item;
 
+        IEnumerable<TListing> IReadOnlyCache<TListing, ModKey>.Items => ListedOrder;
+
         /// <inheritdoc />
         public IEnumerable<ModKey> Keys => _byModKey.Keys;
-
-        IEnumerable<TListing> IReadOnlyDictionary<ModKey, TListing>.Values => _byLoadOrder.Select(i => i.Item);
 
         /// <inheritdoc />
         public IEnumerable<TListing> ListedOrder => _byLoadOrder.Select(i => i.Item);
@@ -595,24 +637,26 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         IEnumerable<ModKey> ILoadOrderGetter.PriorityOrder => _byLoadOrder.Select(x => x.Item.ModKey).Reverse();
 
-        KeyValuePair<ModKey, TListing> IReadOnlyList<KeyValuePair<ModKey, TListing>>.this[int index]
+        Noggog.IKeyValue<TListing, ModKey> IReadOnlyList<Noggog.IKeyValue<TListing, ModKey>>.this[int index]
         {
             get
             {
                 var cont = _byLoadOrder[index];
-                return new KeyValuePair<ModKey, TListing>(cont.Item.ModKey, cont.Item);
+                return new KeyValue<TListing, ModKey>(cont.Item.ModKey, cont.Item);
             }
         }
 
         /// <inheritdoc />
         public TListing this[ModKey key] => _byModKey[key].Item;
 
-        public LoadOrder()
+        public LoadOrder(bool disposeItems = true)
         {
+            _disposeItems = disposeItems;
         }
 
-        public LoadOrder(IEnumerable<TListing> items)
+        public LoadOrder(IEnumerable<TListing> items, bool disposeItems = true)
         {
+            _disposeItems = disposeItems;
             int index = 0;
             _byLoadOrder.AddRange(items.Select(i => new ItemContainer(i, index++)));
             foreach (var item in _byLoadOrder)
@@ -629,7 +673,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
 
         /// <summary>
-        /// Attempts to retrive an item given a ModKey
+        /// Attempts to retrieve an item given a ModKey
         /// </summary>
         /// <param name="key">ModKey to query for</param>
         /// <param name="value">Result reference to the item</param>
@@ -645,33 +689,36 @@ namespace Mutagen.Bethesda.Plugins.Order
             return false;
         }
 
-        bool IReadOnlyDictionary<ModKey, TListing>.TryGetValue(ModKey key, out TListing value)
+        /// <summary>
+        /// Attempts to retrieve an item given a ModKey
+        /// </summary>
+        /// <param name="key">ModKey to query for</param>
+        /// <returns>Result reference to the item, or null if not found</returns>
+        public TListing? TryGetValue(ModKey key)
         {
-            return this.TryGetValue(key, out value!);
+            if (_byModKey.TryGetValue(key, out var container))
+            {
+                return container.Item;
+            }
+            return default;
         }
 
         /// <summary>
-        /// Attempts to retrive an item given an index
+        /// Attempts to retrieve an item given an index
         /// </summary>
         /// <param name="index">Index to retrieve</param>
-        /// <param name="result">Reference to the item</param>
-        /// <returns>True if index in range</returns>
-        public bool TryGetIndex(int index, [MaybeNullWhen(false)] out TListing result)
+        /// <returns>TryGet result of the item</returns>
+        public TListing? TryGetIndex(int index)
         {
             if (!_byLoadOrder.InRange(index))
             {
-                result = default!;
-                return false;
+                return default;
             }
-            result = _byLoadOrder[index].Item;
-            return true;
+
+            return _byLoadOrder[index].Item;
         }
 
-        /// <summary>
-        /// Adds an item to the end of the load order
-        /// </summary>
-        /// <param name="item">Item to put at end of load order</param>
-        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        /// <inheritdoc />
         public void Add(TListing item)
         {
             var index = _byLoadOrder.Count;
@@ -687,11 +734,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             _byLoadOrder.Add(container);
         }
 
-        /// <summary>
-        /// Adds items to the end of the load order
-        /// </summary>
-        /// <param name="items">Items to put at end of load order</param>
-        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        /// <inheritdoc />
         public void Add(IEnumerable<TListing> items)
         {
             foreach (var item in items)
@@ -700,12 +743,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             }
         }
 
-        /// <summary>
-        /// Adds an item at the given index in load order, with the given ModKey
-        /// </summary>
-        /// <param name="item">Item to put at end of load order</param>
-        /// <param name="index">Index to insert at</param>
-        /// <exception cref="ArgumentException">If an item with same ModKey exists already</exception>
+        /// <inheritdoc />
         public void Add(TListing item, int index)
         {
             if (!_byLoadOrder.InRange(index))
@@ -748,13 +786,71 @@ namespace Mutagen.Bethesda.Plugins.Order
             return container.Index;
         }
 
-        /// <summary>
-        /// Clears load order of all items
-        /// </summary>
+        /// <inheritdoc />
         public void Clear()
         {
+            Dispose();
             this._byLoadOrder.Clear();
             this._byModKey.Clear();
+        }
+
+        public bool RemoveKey(ModKey key)
+        {
+            if (!_byModKey.TryGetValue(key, out var registry)) return false;
+            _byLoadOrder.RemoveAt(registry.Index);
+            for (int i = registry.Index; i < _byLoadOrder.Count; i++)
+            {
+                _byLoadOrder[i].Index--;
+            }
+
+            _byModKey.Remove(key);
+            return true;
+        }
+
+        public void RemoveAt(int index)
+        {
+            var item = _byLoadOrder[index];
+            _byLoadOrder.RemoveAt(index);
+            _byModKey.Remove(item.Item.ModKey);
+            for (int i = index; i < _byLoadOrder.Count; i++)
+            {
+                _byLoadOrder[i].Index--;
+            }
+
+            if (_disposeItems && item.Item is IDisposable disp)
+            {
+                disp.Dispose();
+            }
+        }
+
+        public void Set(TListing listing)
+        {
+            if (!_byModKey.TryGetValue(listing.ModKey, out var existing))
+            {
+                Add(listing);
+                return;
+            }
+
+            var old = existing.Item;
+            existing.Item = listing;
+
+            if (_disposeItems && old is IDisposable disp)
+            {
+                disp.Dispose();
+            }
+        }
+
+        public void Set(IEnumerable<TListing> items)
+        {
+            foreach (var item in items)
+            {
+                Set(item);
+            }
+        }
+
+        IEnumerator<Noggog.IKeyValue<TListing, ModKey>> IEnumerable<Noggog.IKeyValue<TListing, ModKey>>.GetEnumerator()
+        {
+            return ListedOrder.Select(x => new KeyValue<TListing, ModKey>(x.ModKey, x)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
@@ -764,6 +860,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// </summary>
         public void Dispose()
         {
+            if (!_disposeItems) return;
             foreach (var item in _byLoadOrder)
             {
                 if (item.Item is IDisposable disp)
@@ -773,17 +870,17 @@ namespace Mutagen.Bethesda.Plugins.Order
             }
         }
 
-        public IEnumerator<KeyValuePair<ModKey, TListing>> GetEnumerator()
+        public IEnumerator<TListing> GetEnumerator()
         {
             foreach (var item in _byLoadOrder)
             {
-                yield return new KeyValuePair<ModKey, TListing>(item.Item.ModKey, item.Item);
+                yield return item.Item;
             }
         }
 
         private class ItemContainer
         {
-            public readonly TListing Item;
+            public TListing Item;
             public int Index;
 
             public ItemContainer(TListing item, int index)

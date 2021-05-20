@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this LoadOrder<IOblivionModGetter> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this ILoadOrderGetter<IOblivionModGetter> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IOblivionMod, IOblivionModGetter>();
         }
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this LoadOrder<IModListingGetter<IOblivionModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToImmutableLinkCache(this ILoadOrderGetter<IModListingGetter<IOblivionModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<IOblivionMod, IOblivionModGetter>();
         }
@@ -90,7 +90,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
-            this LoadOrder<IOblivionModGetter> immutableBaseCache,
+            this ILoadOrderGetter<IOblivionModGetter> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<IOblivionMod, IOblivionModGetter>(mutableMods);
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<IOblivionMod, IOblivionModGetter> ToMutableLinkCache(
-            this LoadOrder<IModListingGetter<IOblivionModGetter>> immutableBaseCache,
+            this ILoadOrderGetter<IModListingGetter<IOblivionModGetter>> immutableBaseCache,
             params IOblivionMod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<IOblivionMod, IOblivionModGetter>(mutableMods);

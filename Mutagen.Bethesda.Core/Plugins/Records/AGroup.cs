@@ -151,6 +151,15 @@ namespace Mutagen.Bethesda.Plugins.Records
                 this._package = package;
             }
 
+            public T? TryGetValue(FormKey key)
+            {
+                if (_locs.TryGetValue(key, out var loc))
+                {
+                    return ConstructWrapper(loc);
+                }
+                return default;
+            }
+
             public T this[FormKey key]
             {
                 get
@@ -175,15 +184,6 @@ namespace Mutagen.Bethesda.Plugins.Records
                 }
                 value = default;
                 return false;
-            }
-
-            public T? TryGetValue(FormKey key)
-            {
-                if (_locs.TryGetValue(key, out var loc))
-                {
-                    return ConstructWrapper(loc);
-                }
-                return default;
             }
 
             public int Count => this._locs.Count;

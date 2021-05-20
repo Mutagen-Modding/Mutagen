@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<TMajor> WinningOverrides<TMod, TMajor>(
-            this LoadOrder<TMod> loadOrder,
+            this ILoadOrderGetter<TMod> loadOrder,
             bool includeDeletedRecords = false)
             where TMod : class, IModGetter
             where TMajor : class, IMajorRecordCommonGetter
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<IMajorRecordCommonGetter> WinningOverrides<TMod>(
-            this LoadOrder<TMod> loadOrder, 
+            this ILoadOrderGetter<TMod> loadOrder, 
             Type type,
             bool includeDeletedRecords = false)
             where TMod : class, IModGetter
@@ -201,7 +201,7 @@ namespace Mutagen.Bethesda
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<IModContext<TMod, TModGetter, TSetter, TGetter>> WinningOverrideContexts<TMod, TModGetter, TSetter, TGetter>(
-            this LoadOrder<TModGetter> loadOrder,
+            this ILoadOrderGetter<TModGetter> loadOrder,
             ILinkCache linkCache,
             bool includeDeletedRecords = false)
             where TMod : class, IMod, TModGetter
@@ -234,7 +234,7 @@ namespace Mutagen.Bethesda
         /// <param name="includeDeletedRecords">Whether to include deleted records in the output</param>
         /// <returns>Enumerable of the most overridden version of each record of the given type, optionally including deleted ones</returns>
         public static IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> WinningOverrideContexts<TMod, TModGetter>(
-            this LoadOrder<TModGetter> loadOrder,
+            this ILoadOrderGetter<TModGetter> loadOrder,
             ILinkCache linkCache,
             Type type,
             bool includeDeletedRecords = false)

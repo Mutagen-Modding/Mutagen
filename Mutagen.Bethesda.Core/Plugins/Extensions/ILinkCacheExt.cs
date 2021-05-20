@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
-            this LoadOrder<IModGetter> loadOrder,
+            this ILoadOrderGetter<IModGetter> loadOrder,
             LinkCachePreferences? prefs = null)
         {
             return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder, prefs ?? LinkCachePreferences.Default);
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
-            this LoadOrder<IModListingGetter<IModGetter>> loadOrder,
+            this ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
             LinkCachePreferences? prefs = null)
         {
             return new ImmutableLoadOrderLinkCache(
@@ -139,7 +139,7 @@ namespace Mutagen.Bethesda
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<TModGetter> loadOrder,
+            this ILoadOrderGetter<TModGetter> loadOrder,
             LinkCachePreferences? prefs = null)
             where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod, TModGetter>
@@ -157,7 +157,7 @@ namespace Mutagen.Bethesda
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static ImmutableLoadOrderLinkCache<TMod, TModGetter> ToImmutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<IModListingGetter<TModGetter>> loadOrder,
+            this ILoadOrderGetter<IModListingGetter<TModGetter>> loadOrder,
             LinkCachePreferences? prefs = null)
             where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod, TModGetter>
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<TModGetter> immutableBaseCache,
+            this ILoadOrderGetter<TModGetter> immutableBaseCache,
             params TMod[] mutableMods)
             where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod, TModGetter>
@@ -235,7 +235,7 @@ namespace Mutagen.Bethesda
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<TMod, TModGetter> ToMutableLinkCache<TMod, TModGetter>(
-            this LoadOrder<IModListingGetter<TModGetter>> immutableBaseCache,
+            this ILoadOrderGetter<IModListingGetter<TModGetter>> immutableBaseCache,
             params TMod[] mutableMods)
             where TMod : class, IContextMod<TMod, TModGetter>, TModGetter
             where TModGetter : class, IContextGetterMod<TMod, TModGetter>

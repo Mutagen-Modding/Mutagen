@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -87,6 +88,20 @@ namespace Mutagen.Bethesda
         public static IEnumerable<IModListingGetter> AsListings(this IEnumerable<ModKey> loadOrder, bool markEnabled = true)
         {
             return loadOrder.Select(x => new ModListing(x, markEnabled));
+        }
+
+        public static bool TryGetIndex<TListing>(this ILoadOrderGetter<TListing> loadOrder, int index, [MaybeNullWhen(false)] out TListing listing)
+            where TListing : IModKeyed
+        {
+            var result = loadOrder.TryGetIndex(index);
+            if (result == null)
+            {
+                listing = default;
+                return false;
+            }
+
+            listing = result;
+            return true;
         }
     }
 }

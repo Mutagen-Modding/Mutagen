@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
         /// </summary>
-        public LoadOrder<IModListingGetter<TModGetter>> LoadOrder { get; }
+        public ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
 
         /// <summary>
         /// Convenience Link Cache to use created from the provided Load Order object
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda
             DirectoryPath dataFolderPath,
             FilePath loadOrderFilePath,
             FilePath? creationKitLoadOrderFilePath,
-            LoadOrder<IModListingGetter<TModGetter>> loadOrder,
+            ILoadOrder<IModListing<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
