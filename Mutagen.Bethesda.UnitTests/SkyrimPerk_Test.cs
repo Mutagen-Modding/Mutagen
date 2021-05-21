@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.UnitTests
                 0x08, 0x00, 0x00, 0x00, 0x50, 0x41, 0x0A, 0xD7, 0x23, 0x3C, 0x50, 0x52, 0x4B, 0x46, 0x00, 0x00
             };
 
-            var reader = new MutagenBinaryReadStream(new MemoryStream(b), ModKey.Null, GameRelease.SkyrimSE);
+            var reader = new MutagenBinaryReadStream(new MemoryStream(b), ModKey.Null, GameRelease.SkyrimSE, dispose: false);
             var frame = new MutagenFrame(reader);
             var perk = Perk.CreateFromBinary(frame);
             perk.Effects.Should().HaveCount(2);
