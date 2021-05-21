@@ -58,9 +58,8 @@ namespace Mutagen.Bethesda
             throw new MissingModException(modKey);
         }
 
-        public static bool TryGetIfEnabledAndExists<TMod, TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
+        public static bool TryGetIfEnabledAndExists<TMod>(this ILoadOrderGetter<IModListingGetter<TMod>> loadOrder, ModKey modKey, [MaybeNullWhen(false)] out TMod item)
             where TMod : class, IModGetter
-            where TListing : IModListingGetter<TMod>
         {
             if (!TryGetIfEnabled(loadOrder, modKey, out var listing))
             {
@@ -72,11 +71,10 @@ namespace Mutagen.Bethesda
             return item != null;
         }
 
-        public static TMod GetIfEnabledAndExists<TMod, TListing>(this ILoadOrderGetter<TListing> loadOrder, ModKey modKey)
+        public static TMod GetIfEnabledAndExists<TMod>(this ILoadOrderGetter<IModListingGetter<TMod>> loadOrder, ModKey modKey)
             where TMod : class, IModGetter
-            where TListing : IModListingGetter<TMod>
         {
-            if (TryGetIfEnabledAndExists<TMod, TListing>(loadOrder, modKey, out var mod))
+            if (TryGetIfEnabledAndExists<TMod>(loadOrder, modKey, out var mod))
             {
                 return mod;
             }

@@ -543,7 +543,7 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         new TListing this[int index] { get; }
         
-        TListing? TryGetIndex(int index);
+        TListing? TryGetAtIndex(int index);
 
         /// <summary>
         /// Listings in the order they were listed
@@ -564,6 +564,13 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// Whether the load order contains a listing with the given key
         /// </summary>
         new bool ContainsKey(ModKey key);
+
+        /// <summary>
+        /// Locates index of an item with given key
+        /// </summary>
+        /// <param name="key">Key to query</param>
+        /// <returns>Index of item on list with key. -1 if not located</returns>
+        int IndexOf(ModKey key);
     }
 
     public interface ILoadOrder<TListing> : ILoadOrderGetter<TListing>
@@ -708,7 +715,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// </summary>
         /// <param name="index">Index to retrieve</param>
         /// <returns>TryGet result of the item</returns>
-        public TListing? TryGetIndex(int index)
+        public TListing? TryGetAtIndex(int index)
         {
             if (!_byLoadOrder.InRange(index))
             {
@@ -772,11 +779,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return IndexOf(key) != -1;
         }
 
-        /// <summary>
-        /// Locates index of an item with given key
-        /// </summary>
-        /// <param name="key">Key to query</param>
-        /// <returns>Index of item on list with key. -1 if not located</returns>
+        /// <inheritdoc />
         public int IndexOf(ModKey key)
         {
             if (!_byModKey.TryGetValue(key, out var container))

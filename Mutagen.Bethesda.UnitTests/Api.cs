@@ -253,5 +253,11 @@ namespace Api
         {
             Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(Utility.PluginModKey);
         }
+
+        public static void LoadOrderOnlyEnabledAndExisting()
+        {
+            ILoadOrderGetter<IModListing<ISkyrimMod>>? lo = null!;
+            IModListing<ISkyrimMod>[]? test = lo?.PriorityOrder.OnlyEnabledAndExisting().ToArray();
+        }
     }
 }

@@ -22,19 +22,7 @@ namespace Mutagen.Bethesda
         }
 
         /// <summary>
-        /// Filters listings to only include ones that are enabled
-        /// </summary>
-        /// <param name="loadOrder">Listings to filter</param>
-        /// <returns>Listings that are enabled</returns>
-        public static IEnumerable<TListing> OnlyEnabled<TListing, TMod>(this IEnumerable<TListing> loadOrder)
-            where TListing : IModListingGetter<TMod>
-            where TMod : class, IModGetter
-        {
-            return loadOrder.Where(x => x.Enabled);
-        }
-
-        /// <summary>
-        /// Filters listings to only include ones whos mods exist
+        /// Filters listings to only include ones where the mod objects exist
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that have mods that exist</returns>
@@ -51,9 +39,8 @@ namespace Mutagen.Bethesda
         /// </summary>
         /// <param name="loadOrder">Listings to filter</param>
         /// <returns>Listings that are enabled and have mods that exist</returns>
-        public static IEnumerable<TListing> OnlyEnabledAndExisting<TListing, TMod>(this IEnumerable<TListing> loadOrder)
-            where TListing : IModListingGetter<TMod>
-            where TMod : class, IModGetter
+        public static IEnumerable<TListing> OnlyEnabledAndExisting<TListing>(this IEnumerable<TListing> loadOrder)
+            where TListing : IModListingGetter<IModGetter>
         {
             return loadOrder
                 .Where(x => x.Enabled && x.Mod != null);
@@ -93,7 +80,7 @@ namespace Mutagen.Bethesda
         public static bool TryGetIndex<TListing>(this ILoadOrderGetter<TListing> loadOrder, int index, [MaybeNullWhen(false)] out TListing listing)
             where TListing : IModKeyed
         {
-            var result = loadOrder.TryGetIndex(index);
+            var result = loadOrder.TryGetAtIndex(index);
             if (result == null)
             {
                 listing = default;
