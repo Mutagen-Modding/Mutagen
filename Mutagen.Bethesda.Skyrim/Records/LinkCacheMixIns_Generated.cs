@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Cache.Implementations;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -36,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this LoadOrder<ISkyrimModGetter> loadOrder)
+        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this ILoadOrderGetter<ISkyrimModGetter> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
         }
@@ -49,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this LoadOrder<IModListing<ISkyrimModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this ILoadOrderGetter<IModListingGetter<ISkyrimModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
         }
@@ -62,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// </summary>
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this IEnumerable<IModListing<ISkyrimModGetter>> loadOrder)
+        public static ImmutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToImmutableLinkCache(this IEnumerable<IModListingGetter<ISkyrimModGetter>> loadOrder)
         {
             return loadOrder.ToImmutableLinkCache<ISkyrimMod, ISkyrimModGetter>();
         }
@@ -88,7 +90,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
-            this LoadOrder<ISkyrimModGetter> immutableBaseCache,
+            this ILoadOrderGetter<ISkyrimModGetter> immutableBaseCache,
             params ISkyrimMod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<ISkyrimMod, ISkyrimModGetter>(mutableMods);
@@ -102,7 +104,7 @@ namespace Mutagen.Bethesda.Skyrim
         /// <param name="mutableMods">Set of mods to place at the end of the load order, which are allowed to be modified afterwards</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
         public static MutableLoadOrderLinkCache<ISkyrimMod, ISkyrimModGetter> ToMutableLinkCache(
-            this LoadOrder<IModListing<ISkyrimModGetter>> immutableBaseCache,
+            this ILoadOrderGetter<IModListingGetter<ISkyrimModGetter>> immutableBaseCache,
             params ISkyrimMod[] mutableMods)
         {
             return immutableBaseCache.ToMutableLinkCache<ISkyrimMod, ISkyrimModGetter>(mutableMods);

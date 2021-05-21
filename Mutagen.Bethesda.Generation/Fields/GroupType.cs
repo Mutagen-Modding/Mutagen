@@ -1,8 +1,4 @@
 using Loqui.Generation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Noggog;
@@ -24,7 +20,7 @@ namespace Mutagen.Bethesda.Generation
             gen.Add(new XAttribute("TypeToSpecify", "T"));
             dir.Add(gen);
             this.ThisConstruction = true;
-            this.CustomData[Mutagen.Bethesda.Internals.Constants.EdidLinked] = node.GetAttribute<bool>(Mutagen.Bethesda.Internals.Constants.EdidLinked, false);
+            this.CustomData[Plugins.Internals.Constants.EdidLinked] = node.GetAttribute<bool>(Plugins.Internals.Constants.EdidLinked, false);
             return base.Load(convert, requireName);
         }
     }

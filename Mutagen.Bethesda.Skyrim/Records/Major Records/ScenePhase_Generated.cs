@@ -8,8 +8,19 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -64,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> StartConditions
         {
             get => this._StartConditions;
-            protected set => this._StartConditions = value;
+            init => this._StartConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -78,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> CompletionConditions
         {
             get => this._CompletionConditions;
-            protected set => this._CompletionConditions = value;
+            init => this._CompletionConditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -728,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ScenePhase_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScenePhaseSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -767,7 +778,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1118,7 +1131,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1346,7 +1359,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScenePhaseGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScenePhaseGetter obj)
         {
             foreach (var item in obj.StartConditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1576,39 +1589,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ScenePhaseBinaryWriteTranslation Instance = new ScenePhaseBinaryWriteTranslation();
 
-        static partial void WriteBinaryStartConditionsCustom(
-            MutagenWriter writer,
-            IScenePhaseGetter item);
-
-        public static void WriteBinaryStartConditions(
-            MutagenWriter writer,
-            IScenePhaseGetter item)
-        {
-            WriteBinaryStartConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryCompletionConditionsCustom(
-            MutagenWriter writer,
-            IScenePhaseGetter item);
-
-        public static void WriteBinaryCompletionConditions(
-            MutagenWriter writer,
-            IScenePhaseGetter item)
-        {
-            WriteBinaryCompletionConditionsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IScenePhaseGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0),
@@ -1634,11 +1621,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EditorWidth,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
             using (HeaderExport.Subrecord(writer, RecordTypes.HNAM)) { }
+        }
+
+        public static partial void WriteBinaryStartConditionsCustom(
+            MutagenWriter writer,
+            IScenePhaseGetter item);
+
+        public static void WriteBinaryStartConditions(
+            MutagenWriter writer,
+            IScenePhaseGetter item)
+        {
+            WriteBinaryStartConditionsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCompletionConditionsCustom(
+            MutagenWriter writer,
+            IScenePhaseGetter item);
+
+        public static void WriteBinaryCompletionConditions(
+            MutagenWriter writer,
+            IScenePhaseGetter item)
+        {
+            WriteBinaryCompletionConditionsCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1704,8 +1717,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAM0:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ScenePhase_FieldIndex.Name;
                 }
@@ -1757,11 +1770,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryStartConditionsCustom(
+        public static partial void FillBinaryStartConditionsCustom(
             MutagenFrame frame,
             IScenePhase item);
 
-        static partial void FillBinaryCompletionConditionsCustom(
+        public static partial void FillBinaryCompletionConditionsCustom(
             MutagenFrame frame,
             IScenePhase item);
 
@@ -1792,7 +1805,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ScenePhaseBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScenePhaseGetter
     {
         #region Common Routing
@@ -1814,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScenePhaseCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScenePhaseBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -1,13 +1,15 @@
 using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
+using Noggog;
+using Noggog.Streams;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Ba2
+namespace Mutagen.Bethesda.Archives.Ba2
 {
     class Ba2Reader : IArchiveReader
     {
@@ -21,8 +23,8 @@ namespace Mutagen.Bethesda.Ba2
 
         public bool HasNameTable => _nameTableOffset > 0;
 
-        public Ba2Reader(string filename)
-            : this(() => File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public Ba2Reader(FilePath filename)
+            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 
@@ -147,6 +149,17 @@ namespace Mutagen.Bethesda.Ba2
 
         public uint HeaderSize => DDS.HeaderSizeForFormat((DXGI_FORMAT)_format);
 
+        public Stream AsStream()
+        {
+            // ToDo
+            // Optimize to be more streamy, rather than frontload into memory
+            var ret = new byte[Size];
+            var memStream = new MemoryStream(ret);
+            CopyDataTo(memStream);
+            memStream.Position = 0;
+            return memStream;
+        }
+
         public void CopyDataTo(Stream output)
         {
             var bw = new BinaryWriter(output);
@@ -179,36 +192,22 @@ namespace Mutagen.Bethesda.Ba2
             }
         }
 
-        public async ValueTask CopyDataToAsync(Stream output)
+        public byte[] GetBytes()
         {
-            var bw = new BinaryWriter(output);
+            var ret = new byte[Size];
+            var memStream = new MemoryStream(ret);
+            CopyDataTo(memStream);
+            return ret;
+        }
 
-            WriteHeader(bw);
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
 
-            using var fs = _bsa._streamFactory();
-            using var br = new BinaryReader(fs);
-            foreach (var chunk in _chunks)
-            {
-                var full = new byte[chunk._fullSz];
-                var isCompressed = chunk._packSz != 0;
-
-                br.BaseStream.Seek((long)chunk._offset, SeekOrigin.Begin);
-
-                if (!isCompressed)
-                {
-                    await br.BaseStream.ReadAsync(full, 0, full.Length);
-                }
-                else
-                {
-                    byte[] compressed = new byte[chunk._packSz];
-                    await br.BaseStream.ReadAsync(compressed, 0, compressed.Length);
-                    var inflater = new Inflater();
-                    inflater.SetInput(compressed);
-                    inflater.Inflate(full);
-                }
-
-                await bw.BaseStream.WriteAsync(full, 0, full.Length);
-            }
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
         }
 
         private void WriteHeader(BinaryWriter bw)
@@ -369,55 +368,48 @@ namespace Mutagen.Bethesda.Ba2
             _realSize = reader.ReadUInt32();
             _align = reader.ReadUInt32();
         }
-
+        
         public string Path { get; internal set; }
 
         public uint Size => _realSize;
 
-        public void CopyDataTo(Stream output)
+        public Stream AsStream()
         {
-            using var fs = _bsa._streamFactory();
+            var fs = _bsa._streamFactory();
             fs.Seek((long)_offset, SeekOrigin.Begin);
             uint len = Compressed ? _size : _realSize;
 
-            var bytes = new byte[len];
-            fs.Read(bytes, 0, (int)len);
-
             if (!Compressed)
             {
-                output.Write(bytes, 0, bytes.Length);
+                return new FramedStream(fs, fs.Position + len);
             }
             else
             {
-                var uncompressed = new byte[_realSize];
-                var inflater = new Inflater();
-                inflater.SetInput(bytes);
-                inflater.Inflate(uncompressed);
-                output.Write(uncompressed, 0, uncompressed.Length);
+                return new FramedStream(
+                    new InflaterInputStream(fs)
+                    {
+                        IsStreamOwner = true
+                    }, 
+                    _realSize);
             }
         }
 
-        public async ValueTask CopyDataToAsync(Stream output)
+        public byte[] GetBytes()
         {
-            using var fs = _bsa._streamFactory();
-            fs.Seek((long)_offset, SeekOrigin.Begin);
-            uint len = Compressed ? _size : _realSize;
+            using var s = AsStream();
+            byte[] ret = new byte[s.Remaining()];
+            s.Read(ret);
+            return ret;
+        }
 
-            var bytes = new byte[len];
-            fs.Read(bytes, 0, (int)len);
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
 
-            if (!Compressed)
-            {
-                await output.WriteAsync(bytes, 0, bytes.Length);
-            }
-            else
-            {
-                var uncompressed = new byte[_realSize];
-                var inflater = new Inflater();
-                inflater.SetInput(bytes);
-                inflater.Inflate(uncompressed);
-                await output.WriteAsync(uncompressed, 0, uncompressed.Length);
-            }
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
         }
     }
 }

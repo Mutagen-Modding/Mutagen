@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -426,7 +436,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Condition_Registration.TriggeringRecordType;
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -906,7 +916,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionGetter obj)
         {
             yield break;
         }
@@ -1030,7 +1040,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ConditionBinaryWriteTranslation Instance = new ConditionBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
+        public static void WriteEmbedded(
+            IConditionGetter item,
+            MutagenWriter writer)
+        {
+            ConditionBinaryWriteTranslation.WriteBinaryFlags(
+                writer: writer,
+                item: item);
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown1);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
             MutagenWriter writer,
             IConditionGetter item);
 
@@ -1043,18 +1065,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded(
-            IConditionGetter item,
-            MutagenWriter writer)
-        {
-            ConditionBinaryWriteTranslation.WriteBinaryFlags(
-                writer: writer,
-                item: item);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown1);
-        }
-
         public virtual void Write(
             MutagenWriter writer,
             IConditionGetter item,
@@ -1063,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.CTDA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1095,10 +1105,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ConditionBinaryCreateTranslation.FillBinaryFlagsCustom(
                 frame: frame,
                 item: item);
-            item.Unknown1 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unknown1 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             ICondition item);
 
@@ -1129,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ConditionBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IConditionGetter
     {
         #region Common Routing
@@ -1151,7 +1161,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ConditionBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

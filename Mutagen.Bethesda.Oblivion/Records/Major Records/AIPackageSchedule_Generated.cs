@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -514,7 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -848,7 +858,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.PSDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1007,7 +1017,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIPackageScheduleGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIPackageScheduleGetter obj)
         {
             yield break;
         }
@@ -1143,11 +1153,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageScheduleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Month>.Instance.Write(
+            EnumBinaryTranslation<Month, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Month,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Weekday>.Instance.Write(
+            EnumBinaryTranslation<Weekday, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.DayOfWeek,
                 length: 1);
@@ -1164,7 +1174,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PSDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1193,8 +1203,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageSchedule item,
             MutagenFrame frame)
         {
-            item.Month = EnumBinaryTranslation<Month>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.DayOfWeek = EnumBinaryTranslation<Weekday>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Month = EnumBinaryTranslation<Month, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.DayOfWeek = EnumBinaryTranslation<Weekday, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Day = frame.ReadUInt8();
             item.Time = frame.ReadUInt8();
             item.Duration = frame.ReadInt32();
@@ -1227,7 +1241,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AIPackageScheduleBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAIPackageScheduleGetter
     {
         #region Common Routing

@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Inis;
+using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
 using Xunit;
 
@@ -29,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests
         {
             foreach (var release in EnumExt.GetValues<GameRelease>())
             {
-                Mutagen.Bethesda.Binary.GameConstants.Get(release);
+                Plugins.Meta.GameConstants.Get(release);
             }
         }
 

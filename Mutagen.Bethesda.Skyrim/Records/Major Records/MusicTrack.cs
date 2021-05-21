@@ -1,10 +1,6 @@
-using Mutagen.Bethesda.Binary;
-using Noggog;
-using System;
-using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {

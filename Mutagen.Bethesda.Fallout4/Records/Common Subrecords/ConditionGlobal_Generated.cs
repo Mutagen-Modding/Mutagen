@@ -10,6 +10,16 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -391,7 +401,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ConditionGlobal_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionGlobalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -428,7 +438,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -734,7 +746,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.CTDA)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -915,7 +927,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionGlobalGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1080,7 +1092,23 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ConditionGlobalBinaryWriteTranslation Instance = new ConditionGlobalBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
+        public static void WriteEmbedded(
+            IConditionGlobalGetter item,
+            MutagenWriter writer)
+        {
+            ConditionBinaryWriteTranslation.WriteEmbedded(
+                item: item,
+                writer: writer);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.ComparisonValue);
+            var DataItem = item.Data;
+            ((ConditionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
+                item: DataItem,
+                writer: writer);
+        }
+
+        public static partial void CustomBinaryEndExport(
             MutagenWriter writer,
             IConditionGlobalGetter obj);
         public static void CustomBinaryEndExportInternal(
@@ -1091,22 +1119,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 writer: writer,
                 obj: obj);
         }
-        public static void WriteEmbedded(
-            IConditionGlobalGetter item,
-            MutagenWriter writer)
-        {
-            ConditionBinaryWriteTranslation.WriteEmbedded(
-                item: item,
-                writer: writer);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.ComparisonValue);
-            var DataItem = item.Data;
-            ((ConditionDataBinaryWriteTranslation)((IBinaryItem)DataItem).BinaryWriteTranslator).Write(
-                item: DataItem,
-                writer: writer);
-        }
-
         public void Write(
             MutagenWriter writer,
             IConditionGlobalGetter item,
@@ -1115,7 +1127,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.CTDA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1161,14 +1173,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ConditionBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.ComparisonValue.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.ComparisonValue.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Data = Mutagen.Bethesda.Fallout4.ConditionData.CreateFromBinary(frame: frame);
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IConditionGlobal obj);
         public static void CustomBinaryEndImportPublic(
@@ -1211,7 +1220,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionGlobalCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ConditionGlobalBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

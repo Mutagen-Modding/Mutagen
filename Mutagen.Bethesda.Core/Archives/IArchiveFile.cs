@@ -1,11 +1,8 @@
+using Noggog;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Archives
 {
     public interface IArchiveFile
     {
@@ -20,13 +17,27 @@ namespace Mutagen.Bethesda
         uint Size { get; }
 
         /// <summary>
-        /// Copies this entry to the given stream
+        /// Retrieves the data and returns it as a new array of bytes
         /// </summary>
-        void CopyDataTo(Stream output);
+        /// <returns>New array of bytes containing data</returns>
+        byte[] GetBytes();
 
         /// <summary>
-        /// Copies this entry to the given stream
+        /// Retrieves the data and returns it as a readonly span that may be part of a larger memory block
         /// </summary>
-        ValueTask CopyDataToAsync(Stream output);
+        /// <returns>span containing data that may be part of a larger memory block</returns>
+        ReadOnlySpan<byte> GetSpan();
+
+        /// <summary>
+        /// Retrieves the data and returns it as a readonly span that may be part of a larger memory block
+        /// </summary>
+        /// <returns>span containing data that may be part of a larger memory block</returns>
+        ReadOnlyMemorySlice<byte> GetMemorySlice();
+
+        /// <summary>
+        /// Retrieves the data as a Stream
+        /// </summary>
+        /// <returns>File data as a Stream</returns>
+        Stream AsStream();
     }
 }

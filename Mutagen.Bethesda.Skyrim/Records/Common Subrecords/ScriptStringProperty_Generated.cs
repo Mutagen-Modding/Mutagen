@@ -8,8 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -378,7 +387,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -673,7 +684,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -839,7 +850,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptStringPropertyGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptStringPropertyGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -984,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Data,
                 binaryType: StringBinaryType.PrependLengthUShort);
@@ -1035,8 +1046,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Data = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+            item.Data = StringBinaryTranslation.Instance.Parse(
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
 

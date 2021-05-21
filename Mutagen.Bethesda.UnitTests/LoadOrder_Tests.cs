@@ -1,7 +1,8 @@
 using DynamicData;
 using FluentAssertions;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -87,15 +88,15 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(7);
-            results.Should().Equal(new LoadOrderListing[]
+            results.Should().Equal(new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, enabled: true),
-                new LoadOrderListing(Utility.MasterModKey, enabled: true),
-                new LoadOrderListing(Utility.MasterModKey2, enabled: false),
-                new LoadOrderListing(Utility.LightMasterModKey3, enabled: true),
-                new LoadOrderListing(Utility.LightMasterModKey4, enabled: false),
-                new LoadOrderListing(Utility.PluginModKey, enabled: true),
-                new LoadOrderListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(Utility.LightMasterModKey, enabled: true),
+                new ModListing(Utility.MasterModKey, enabled: true),
+                new ModListing(Utility.MasterModKey2, enabled: false),
+                new ModListing(Utility.LightMasterModKey3, enabled: true),
+                new ModListing(Utility.LightMasterModKey4, enabled: false),
+                new ModListing(Utility.PluginModKey, enabled: true),
+                new ModListing(Utility.PluginModKey2, enabled: false),
             });
         }
 
@@ -130,14 +131,14 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(6);
-            results.Should().Equal(new LoadOrderListing[]
+            results.Should().Equal(new ModListing[]
             {
-                new LoadOrderListing(Utility.MasterModKey, enabled: true),
-                new LoadOrderListing(Utility.MasterModKey2, enabled: false),
-                new LoadOrderListing(Utility.LightMasterModKey3, enabled: true),
-                new LoadOrderListing(Utility.LightMasterModKey4, enabled: false),
-                new LoadOrderListing(Utility.PluginModKey, enabled: true),
-                new LoadOrderListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(Utility.MasterModKey, enabled: true),
+                new ModListing(Utility.MasterModKey2, enabled: false),
+                new ModListing(Utility.LightMasterModKey3, enabled: true),
+                new ModListing(Utility.LightMasterModKey4, enabled: false),
+                new ModListing(Utility.PluginModKey, enabled: true),
+                new ModListing(Utility.PluginModKey2, enabled: false),
             });
         }
 
@@ -163,10 +164,10 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: null)
                 .ToList();
             results.Should().HaveCount(2);
-            results.Should().Equal(new LoadOrderListing[]
+            results.Should().Equal(new ModListing[]
             {
-                new LoadOrderListing(Utility.MasterModKey, enabled: true),
-                new LoadOrderListing(Utility.PluginModKey, enabled: true),
+                new ModListing(Utility.MasterModKey, enabled: true),
+                new ModListing(Utility.PluginModKey, enabled: true),
             });
         }
 
@@ -215,16 +216,16 @@ namespace Mutagen.Bethesda.UnitTests
                     creationClubFilePath: cccPath)
                 .ToList();
             results.Should().HaveCount(8);
-            results.Should().Equal(new LoadOrderListing[]
+            results.Should().Equal(new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey2, enabled: true),
-                new LoadOrderListing(Utility.LightMasterModKey, enabled: true),
-                new LoadOrderListing(Utility.MasterModKey, enabled: true),
-                new LoadOrderListing(Utility.MasterModKey2, enabled: false),
-                new LoadOrderListing(Utility.LightMasterModKey3, enabled: true),
-                new LoadOrderListing(Utility.LightMasterModKey4, enabled: false),
-                new LoadOrderListing(Utility.PluginModKey, enabled: true),
-                new LoadOrderListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(Utility.LightMasterModKey2, enabled: true),
+                new ModListing(Utility.LightMasterModKey, enabled: true),
+                new ModListing(Utility.MasterModKey, enabled: true),
+                new ModListing(Utility.MasterModKey2, enabled: false),
+                new ModListing(Utility.LightMasterModKey3, enabled: true),
+                new ModListing(Utility.LightMasterModKey4, enabled: false),
+                new ModListing(Utility.PluginModKey, enabled: true),
+                new ModListing(Utility.PluginModKey2, enabled: false),
             });
         }
 
@@ -318,7 +319,7 @@ namespace Mutagen.Bethesda.UnitTests
             });
 
             // Does not respect just data folder modification
-            // Since LoadOrderListing doesn't specify whether data folder is present
+            // Since ModListing doesn't specify whether data folder is present
             // Data folder is just used for Timestamp alignment for Oblivion
             File.Delete(Path.Combine(dataFolderPath, Utility.MasterModKey2.FileName));
             await Task.Delay(1000);
@@ -629,11 +630,11 @@ namespace Mutagen.Bethesda.UnitTests
             LoadOrder.Write(
                 path,
                 GameRelease.Oblivion,
-                new LoadOrderListing[]
+                new ModListing[]
                 {
-                    new LoadOrderListing(Utility.PluginModKey, false),
-                    new LoadOrderListing(Utility.PluginModKey2, true),
-                    new LoadOrderListing(Utility.PluginModKey3, false),
+                    new ModListing(Utility.PluginModKey, false),
+                    new ModListing(Utility.PluginModKey2, true),
+                    new ModListing(Utility.PluginModKey3, false),
                 });
             var lines = File.ReadAllLines(path).ToList();
             Assert.Single(lines);
@@ -648,11 +649,11 @@ namespace Mutagen.Bethesda.UnitTests
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
-                new LoadOrderListing[]
+                new ModListing[]
                 {
-                    new LoadOrderListing(Utility.PluginModKey, false),
-                    new LoadOrderListing(Utility.PluginModKey2, true),
-                    new LoadOrderListing(Utility.PluginModKey3, false),
+                    new ModListing(Utility.PluginModKey, false),
+                    new ModListing(Utility.PluginModKey2, true),
+                    new ModListing(Utility.PluginModKey3, false),
                 });
             var lines = File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
@@ -669,11 +670,11 @@ namespace Mutagen.Bethesda.UnitTests
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
-                new LoadOrderListing[]
+                new ModListing[]
                 {
-                    new LoadOrderListing(Utility.Skyrim, true),
-                    new LoadOrderListing(Utility.PluginModKey, true),
-                    new LoadOrderListing(Utility.PluginModKey2, false),
+                    new ModListing(Utility.Skyrim, true),
+                    new ModListing(Utility.PluginModKey, true),
+                    new ModListing(Utility.PluginModKey2, false),
                 },
                 removeImplicitMods: true);
             var lines = File.ReadAllLines(path).ToList();
@@ -690,11 +691,11 @@ namespace Mutagen.Bethesda.UnitTests
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
-                new LoadOrderListing[]
+                new ModListing[]
                 {
-                    new LoadOrderListing(Utility.Skyrim, true),
-                    new LoadOrderListing(Utility.PluginModKey, true),
-                    new LoadOrderListing(Utility.PluginModKey2, false),
+                    new ModListing(Utility.Skyrim, true),
+                    new ModListing(Utility.PluginModKey, true),
+                    new ModListing(Utility.PluginModKey2, false),
                 },
                 removeImplicitMods: false);
             var lines = File.ReadAllLines(path).ToList();
@@ -708,7 +709,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMod_Empty()
         {
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMod(Utility.LightMasterModKey)
                 .Should().BeFalse();
         }
@@ -716,11 +717,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMod_Typical()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMod(Utility.LightMasterModKey)
@@ -739,11 +740,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMod_Enabled()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMod(Utility.LightMasterModKey, enabled: true)
@@ -768,7 +769,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_EmptyListings()
         {
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
                 .Should().BeFalse();
         }
@@ -776,7 +777,7 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_EmptyInput()
         {
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods()
                 .Should().BeTrue();
         }
@@ -784,11 +785,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Single()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMods(Utility.LightMasterModKey)
@@ -807,11 +808,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Typical()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
@@ -827,10 +828,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Enabled_EmptyListings()
         {
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods(true, Utility.LightMasterModKey, Utility.LightMasterModKey2)
                 .Should().BeFalse();
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods(false, Utility.LightMasterModKey, Utility.LightMasterModKey2)
                 .Should().BeFalse();
         }
@@ -838,10 +839,10 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Enabled_EmptyInput()
         {
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods(true)
                 .Should().BeTrue();
-            Enumerable.Empty<LoadOrderListing>()
+            Enumerable.Empty<ModListing>()
                 .HasMods(false)
                 .Should().BeTrue();
         }
@@ -849,11 +850,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Enabled_Single()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMods(true, Utility.LightMasterModKey)
@@ -884,11 +885,11 @@ namespace Mutagen.Bethesda.UnitTests
         [Fact]
         public void HasMods_Enabled_Typical()
         {
-            var listings = new LoadOrderListing[]
+            var listings = new ModListing[]
             {
-                new LoadOrderListing(Utility.LightMasterModKey, true),
-                new LoadOrderListing(Utility.LightMasterModKey2, false),
-                new LoadOrderListing(Utility.LightMasterModKey3, true),
+                new ModListing(Utility.LightMasterModKey, true),
+                new ModListing(Utility.LightMasterModKey2, false),
+                new ModListing(Utility.LightMasterModKey3, true),
             };
             listings
                 .HasMods(

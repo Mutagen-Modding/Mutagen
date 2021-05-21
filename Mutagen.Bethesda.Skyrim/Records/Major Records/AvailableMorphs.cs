@@ -1,9 +1,9 @@
-using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.Internals.AvailableMorphsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
+            public static partial void FillBinaryParseCustom(MutagenFrame frame, IAvailableMorphs item)
             {
                 FillBinaryParse(frame, item);
             }
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryParseCustom(MutagenWriter writer, IAvailableMorphsGetter item)
+            public static partial void WriteBinaryParseCustom(MutagenWriter writer, IAvailableMorphsGetter item)
             {
                 WriteMorph(writer, MorphEnum.Nose, item.Nose);
                 WriteMorph(writer, MorphEnum.Brow, item.Brow);

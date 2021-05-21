@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim
 {

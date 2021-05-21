@@ -1,10 +1,11 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 
 namespace Mutagen.Bethesda.UnitTests
 {

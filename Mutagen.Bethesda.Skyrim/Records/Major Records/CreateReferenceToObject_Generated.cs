@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -484,7 +494,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = CreateReferenceToObject_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreateReferenceToObjectSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum ALCADataType
@@ -527,7 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -861,7 +873,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1021,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreateReferenceToObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICreateReferenceToObjectGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Object);
             yield break;
@@ -1165,19 +1177,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALCO));
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ALCA)))
             {
                 writer.Write(item.AliasIndex);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Write(
+                EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Create,
                     length: 2);
             }
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Level>.Instance.Write(
+            EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Level,
                 length: 4,
@@ -1237,10 +1249,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreateReferenceToObject_FieldIndex.Object) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Object.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)CreateReferenceToObject_FieldIndex.Object;
                 }
                 case RecordTypeInts.ALCA:
@@ -1248,13 +1257,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.AliasIndex = dataFrame.ReadInt16();
-                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Create = EnumBinaryTranslation<CreateReferenceToObject.CreateEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     return (int)CreateReferenceToObject_FieldIndex.Create;
                 }
                 case RecordTypeInts.ALCL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Level = EnumBinaryTranslation<Level>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Level = EnumBinaryTranslation<Level, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)CreateReferenceToObject_FieldIndex.Level;
                 }
                 default:
@@ -1289,7 +1302,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CreateReferenceToObjectBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICreateReferenceToObjectGetter
     {
         #region Common Routing
@@ -1311,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CreateReferenceToObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreateReferenceToObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

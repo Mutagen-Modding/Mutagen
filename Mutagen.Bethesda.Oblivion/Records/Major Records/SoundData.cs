@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Mutagen.Bethesda.Binary;
-using Loqui.Internal;
-using System.Reactive.Linq;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -72,18 +68,18 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class SoundDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
+            public static partial void WriteBinaryMinimumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MinimumAttenuationDistance / SoundData.MinAttenuationDistanceMultiplier);
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: val);
             }
 
-            static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
+            public static partial void WriteBinaryMaximumAttenuationDistanceCustom(MutagenWriter writer, ISoundDataInternalGetter item)
             {
                 var val = (byte)(item.MaximumAttenuationDistance / SoundData.MaxAttenuationDistanceMultiplier);
-                ByteBinaryTranslation.Instance.Write(
+                ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: val);
             }
@@ -91,20 +87,20 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class SoundDataBinaryCreateTranslation
         {
-            static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
+            public static partial void FillBinaryMinimumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
-                if (ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
                     item: out var b))
                 {
                     item.MinimumAttenuationDistance = (ushort)(b * SoundData.MinAttenuationDistanceMultiplier);
                 }
             }
 
-            static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
+            public static partial void FillBinaryMaximumAttenuationDistanceCustom(MutagenFrame frame, ISoundDataInternal item)
             {
-                if (ByteBinaryTranslation.Instance.Parse(
-                    frame: frame,
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
                     item: out var b))
                 {
                     item.MaximumAttenuationDistance = (ushort)(b * SoundData.MaxAttenuationDistanceMultiplier);

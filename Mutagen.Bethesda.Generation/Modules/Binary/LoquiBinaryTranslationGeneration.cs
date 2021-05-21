@@ -1,21 +1,23 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class LoquiBinaryTranslationGeneration : BinaryTranslationGeneration
     {
         public const string AsyncOverrideKey = "AsyncOverride";
 
-        public string ModNickname;
+        public string TranslationTerm;
         public override bool DoErrorMasks => false;
         public override bool IsAsync(TypeGeneration gen, bool read)
         {
@@ -51,9 +53,9 @@ namespace Mutagen.Bethesda.Generation
             }
         }
 
-        public LoquiBinaryTranslationGeneration(string modNickname)
+        public LoquiBinaryTranslationGeneration(string translationTerm)
         {
-            this.ModNickname = modNickname;
+            this.TranslationTerm = translationTerm;
         }
 
         public override async Task GenerateWrite(
@@ -105,11 +107,11 @@ namespace Mutagen.Bethesda.Generation
                         string line;
                         if (loquiGen.TargetObjectGeneration != null)
                         {
-                            line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                            line = $"(({this.Module.TranslationWriteClassName(loquiGen.TargetObjectGeneration)})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                         }
                         else
                         {
-                            line = $"(({this.Module.TranslationWriteInterface})(({nameof(IBinaryItem)}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
+                            line = $"(({this.Module.TranslationWriteInterface})(({Module.TranslationItemInterface}){itemAccessor}).{this.Module.TranslationWriteItemMember})";
                         }
                         using (var args = new ArgsWrapper(fg, $"{line}.Write{loquiGen.GetGenericTypes(true, MaskType.Normal)}"))
                         {
@@ -171,7 +173,7 @@ namespace Mutagen.Bethesda.Generation
                 if (loqui.Singleton)
                 {
                     using (var args = new ArgsWrapper(fg,
-                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{ModNickname}"))
+                        $"{Loqui.Generation.Utility.Await(this.IsAsync(typeGen, read: true))}{itemAccessor}.{this.Module.CopyInFromPrefix}{TranslationTerm}"))
                     {
                         args.Add($"frame: {frameAccessor}");
                         args.Add($"recordTypeConverter: null");
@@ -287,7 +289,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 if (objGen.GetObjectType() == ObjectType.Mod)
                 {
-                    return $"{nameof(BinaryOverlay)}.{nameof(BinaryOverlay.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
+                    return $"{nameof(PluginBinaryOverlay)}.{nameof(PluginBinaryOverlay.LockExtractMemory)}({accessor}, {positionStr}, {lenStr})";
                 }
                 else
                 {

@@ -8,6 +8,8 @@ using System.Xml.Linq;
 using Mutagen.Bethesda.Binary;
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Generation
 {
@@ -15,6 +17,18 @@ namespace Mutagen.Bethesda.Generation
     {
         public StringBinaryType BinaryType;
         public StringsSource? Translated;
+
+        public override IEnumerable<string> GetRequiredNamespaces()
+        {
+            foreach (var ns in base.GetRequiredNamespaces())
+            {
+                yield return ns;
+            }
+            if (Translated != null)
+            {
+                yield return "Mutagen.Bethesda.Strings";
+            }
+        }
 
         public override string TypeName(bool getter, bool needsCovariance = false)
         {

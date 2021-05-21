@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObject> Objects
         {
             get => this._Objects;
-            protected set => this._Objects = value;
+            init => this._Objects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -86,7 +86,7 @@ namespace Mutagen.Bethesda.Pex
         public String[] UserFlags
         {
             get => this._UserFlags;
-            protected set => this._UserFlags = value;
+            init => this._UserFlags = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

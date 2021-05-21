@@ -1,12 +1,12 @@
-﻿using Loqui;
+using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class PercentBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<double>
     {
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Generation
             using (var args = new ArgsWrapper(fg,
                 $"{item} = {nameof(PercentBinaryTranslation)}.Parse"))
             {
-                args.Add($"frame: {reader}");
+                args.Add($"reader: {reader}");
                 args.Add($"integerType: {nameof(FloatIntegerType)}.{percType.IntegerType}");
             }
             return true;

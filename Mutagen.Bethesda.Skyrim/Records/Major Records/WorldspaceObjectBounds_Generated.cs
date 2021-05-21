@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -417,7 +426,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -747,7 +758,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -877,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceObjectBoundsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceObjectBoundsGetter obj)
         {
             yield break;
         }
@@ -997,7 +1008,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static WorldspaceObjectBoundsBinaryWriteTranslation Instance = new WorldspaceObjectBoundsBinaryWriteTranslation();
 
-        static partial void WriteBinaryMinCustom(
+        public static void WriteRecordTypes(
+            IWorldspaceObjectBoundsGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMin(
+                writer: writer,
+                item: item);
+            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMax(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMinCustom(
             MutagenWriter writer,
             IWorldspaceObjectBoundsGetter item);
 
@@ -1010,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryMaxCustom(
+        public static partial void WriteBinaryMaxCustom(
             MutagenWriter writer,
             IWorldspaceObjectBoundsGetter item);
 
@@ -1019,19 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceObjectBoundsGetter item)
         {
             WriteBinaryMaxCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IWorldspaceObjectBoundsGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMin(
-                writer: writer,
-                item: item);
-            WorldspaceObjectBoundsBinaryWriteTranslation.WriteBinaryMax(
                 writer: writer,
                 item: item);
         }
@@ -1103,11 +1114,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryMinCustom(
+        public static partial void FillBinaryMinCustom(
             MutagenFrame frame,
             IWorldspaceObjectBounds item);
 
-        static partial void FillBinaryMaxCustom(
+        public static partial void FillBinaryMaxCustom(
             MutagenFrame frame,
             IWorldspaceObjectBounds item);
 
@@ -1138,7 +1149,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WorldspaceObjectBoundsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWorldspaceObjectBoundsGetter
     {
         #region Common Routing

@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -385,7 +395,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = APerkEntryPointEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEntryPointEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => APerkEntryPointEffectCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APerkEntryPointEffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -881,7 +891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAPerkEntryPointEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAPerkEntryPointEffectGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1023,19 +1033,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static APerkEntryPointEffectBinaryWriteTranslation Instance = new APerkEntryPointEffectBinaryWriteTranslation();
 
-        static partial void WriteBinaryFunctionParametersCustom(
-            MutagenWriter writer,
-            IAPerkEntryPointEffectGetter item);
-
-        public static void WriteBinaryFunctionParameters(
-            MutagenWriter writer,
-            IAPerkEntryPointEffectGetter item)
-        {
-            WriteBinaryFunctionParametersCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IAPerkEntryPointEffectGetter item,
             MutagenWriter writer)
@@ -1043,7 +1040,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Write(
+            EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.EntryPoint,
                 length: 1);
@@ -1060,6 +1057,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
             APerkEntryPointEffectBinaryWriteTranslation.WriteBinaryFunctionParameters(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFunctionParametersCustom(
+            MutagenWriter writer,
+            IAPerkEntryPointEffectGetter item);
+
+        public static void WriteBinaryFunctionParameters(
+            MutagenWriter writer,
+            IAPerkEntryPointEffectGetter item)
+        {
+            WriteBinaryFunctionParametersCustom(
                 writer: writer,
                 item: item);
         }
@@ -1113,7 +1123,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.EntryPoint = EnumBinaryTranslation<APerkEntryPointEffect.EntryType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.PerkConditionTabCount = frame.ReadUInt8();
         }
 
@@ -1147,7 +1159,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFunctionParametersCustom(
+        public static partial void FillBinaryFunctionParametersCustom(
             MutagenFrame frame,
             IAPerkEntryPointEffect item);
 
@@ -1183,7 +1195,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => APerkEntryPointEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => APerkEntryPointEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => APerkEntryPointEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

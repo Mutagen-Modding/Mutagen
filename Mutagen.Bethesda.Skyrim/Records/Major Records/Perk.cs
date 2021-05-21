@@ -1,12 +1,13 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -55,8 +56,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     Unknown = dataFrame.Content.Slice(5, 3).ToArray(),
                                 };
                                 effect.Conditions.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                        frame: new MutagenFrame(stream),
+                                    ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                        reader: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -70,8 +71,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     Ability = new FormLink<ISpellGetter>(FormKeyBinaryTranslation.Instance.Parse(dataFrame.Content, stream.MetaData.MasterReferences!)),
                                 };
                                 effect.Conditions.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                        frame: new MutagenFrame(stream),
+                                    ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                        reader: new MutagenFrame(stream),
                                         transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                         {
                                             return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -83,8 +84,8 @@ namespace Mutagen.Bethesda.Skyrim
                                 var entryPt = (APerkEntryPointEffect.EntryType)dataFrame.Content[0];
                                 var func = (APerkEntryPointEffect.FunctionType)dataFrame.Content[1];
                                 var tabCount = dataFrame.Content[2];
-                                var conditions = Mutagen.Bethesda.Binary.ListBinaryTranslation<PerkCondition>.Instance.Parse(
-                                    frame: new MutagenFrame(stream),
+                                var conditions = ListBinaryTranslation<PerkCondition>.Instance.Parse(
+                                    reader: new MutagenFrame(stream),
                                     transl: (MutagenFrame r, out PerkCondition listSubItem) =>
                                     {
                                         return LoquiBinaryTranslation<PerkCondition>.Instance.Parse(
@@ -126,15 +127,25 @@ namespace Mutagen.Bethesda.Skyrim
                                     case APerkEntryPointEffect.FunctionType.MultiplyValue:
                                         if (epf2.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF2, $"{nameof(PerkEntryPointModifyValue)} had EPF2 unexpectedly");
                                         if (epf3.HasValue) stream.MetaData.ReportIssue(RecordTypes.EPF3, $"{nameof(PerkEntryPointModifyValue)} had EPF3 unexpectedly");
-                                        if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
-                                        if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
-                                        if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
+                                        float? f;
+                                        if (epft == null && epfd == null)
                                         {
-                                            throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                            f = null;
+                                        }
+                                        else
+                                        {
+                                            if (!epft.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFT record");
+                                            if (!epfd.HasValue) throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected EPFD record");
+                                            if (epft.Value[0] != (byte)APerkEntryPointEffect.ParameterType.Float)
+                                            {
+                                                throw new ArgumentException($"{nameof(PerkEntryPointModifyValue)} did not have expected parameter type flag: {epft.Value[0]}");
+                                            }
+
+                                            f = epfd.Value.Float();
                                         }
                                         entryPointEffect = new PerkEntryPointModifyValue()
                                         {
-                                            Value = epfd.Value.Float(),
+                                            Value = f,
                                             Modification = func switch
                                             {
                                                 APerkEntryPointEffect.FunctionType.SetValue => PerkEntryPointModifyValue.ModificationType.Set,
@@ -291,12 +302,18 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     effect.Rank = rank;
                     effect.Priority = priority;
+                    if (stream.TryReadSubrecordFrame(RecordTypes.EPFT, out var epftFrame)
+                        && epftFrame.ContentLength != 1
+                        && epftFrame.Content[0] != (byte)APerkEntryPointEffect.ParameterType.None)
+                    {
+                        throw new ArgumentException($"Encountered an unexpected epft frame.");
+                    }
                     stream.TryReadSubrecordFrame(RecordTypes.PRKF, out var _);
                     yield return effect;
                 }
             }
 
-            static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
+            public static partial void FillBinaryEffectsCustom(MutagenFrame frame, IPerkInternal item)
             {
                 item.Effects.SetTo(ParseEffects(frame.Reader));
             }
@@ -309,7 +326,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.Conditions, writer);
             }
 
-            static partial void WriteBinaryEffectsCustom(MutagenWriter writer, IPerkGetter item)
+            public static partial void WriteBinaryEffectsCustom(MutagenWriter writer, IPerkGetter item)
             {
                 foreach (var effect in item.Effects)
                 {
@@ -371,7 +388,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 throw new NotImplementedException();
                         }
                     }
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPerkConditionGetter>.Instance.Write(
+                    ListBinaryTranslation<IPerkConditionGetter>.Instance.Write(
                         writer,
                         effect.Conditions,
                         (w, i) => i.WriteToBinary(w));
@@ -379,21 +396,26 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         var paramType = effect switch
                         {
-                            PerkEntryPointModifyValue modVal => APerkEntryPointEffect.ParameterType.Float,
-                            PerkEntryPointAddRangeToValue modVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkEntryPointModifyActorValue modActorVal => APerkEntryPointEffect.ParameterType.FloatFloat,
-                            PerkEntryPointAbsoluteValue absVal => APerkEntryPointEffect.ParameterType.None,
-                            PerkEntryPointAddLeveledItem levItem => APerkEntryPointEffect.ParameterType.LeveledItem,
-                            PerkEntryPointAddActivateChoice activateChoice => APerkEntryPointEffect.ParameterType.SpellWithStrings,
-                            PerkEntryPointSelectSpell spell => APerkEntryPointEffect.ParameterType.Spell,
-                            PerkEntryPointSelectText txt => APerkEntryPointEffect.ParameterType.String,
-                            PerkEntryPointSetText ltxt => APerkEntryPointEffect.ParameterType.LString,
+                            PerkEntryPointModifyValue _ => APerkEntryPointEffect.ParameterType.Float,
+                            PerkEntryPointAddRangeToValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointModifyActorValue _ => APerkEntryPointEffect.ParameterType.FloatFloat,
+                            PerkEntryPointAbsoluteValue _ => APerkEntryPointEffect.ParameterType.None,
+                            PerkEntryPointAddLeveledItem _ => APerkEntryPointEffect.ParameterType.LeveledItem,
+                            PerkEntryPointAddActivateChoice _ => APerkEntryPointEffect.ParameterType.SpellWithStrings,
+                            PerkEntryPointSelectSpell _ => APerkEntryPointEffect.ParameterType.Spell,
+                            PerkEntryPointSelectText _ => APerkEntryPointEffect.ParameterType.String,
+                            PerkEntryPointSetText _ => APerkEntryPointEffect.ParameterType.LString,
                             _ => throw new NotImplementedException()
                         };
-                        using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
+                        if (effect is not PerkEntryPointModifyValue modValEpft
+                            || modValEpft.Value.HasValue)
                         {
-                            writer.Write((byte)paramType);
+                            using (HeaderExport.Subrecord(writer, RecordTypes.EPFT))
+                            {
+                                writer.Write((byte)paramType);
+                            }
                         }
+                        
                         if (effect is PerkEntryPointAddActivateChoice choice)
                         {
                             if (choice.ButtonLabel != null)
@@ -408,9 +430,12 @@ namespace Mutagen.Bethesda.Skyrim
                         switch (effect)
                         {
                             case PerkEntryPointModifyValue modVal:
-                                using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                if (modVal.Value.TryGet(out var f))
                                 {
-                                    writer.Write(modVal.Value);
+                                    using (HeaderExport.Subrecord(writer, RecordTypes.EPFD))
+                                    {
+                                        writer.Write(f);
+                                    }
                                 }
                                 break;
                             case PerkEntryPointAddRangeToValue range:

@@ -1,9 +1,8 @@
-﻿using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -11,7 +10,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ImageSpaceDepthOfFieldBinaryCreateTranslation
         {
-            static partial void FillBinaryBlurRadiusCustom(MutagenFrame frame, IImageSpaceDepthOfField item)
+            public static partial void FillBinaryBlurRadiusCustom(MutagenFrame frame, IImageSpaceDepthOfField item)
             {
                 ParseSkyBlurRadius(frame.ReadUInt16(), out var radius, out var sky);
                 item.BlurRadius = radius;
@@ -90,11 +89,15 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new NotImplementedException();
                 }
             }
+
+            public static partial void FillBinarySkyCustom(MutagenFrame frame, IImageSpaceDepthOfField item)
+            {
+            }
         }
 
         public partial class ImageSpaceDepthOfFieldBinaryWriteTranslation
         {
-            static partial void WriteBinaryBlurRadiusCustom(MutagenWriter writer, IImageSpaceDepthOfFieldGetter item)
+            public static partial void WriteBinaryBlurRadiusCustom(MutagenWriter writer, IImageSpaceDepthOfFieldGetter item)
             {
                 writer.Write(GetBlurSkyValue(item));
             }
@@ -131,6 +134,10 @@ namespace Mutagen.Bethesda.Skyrim
                         _ => throw new NotImplementedException(),
                     };
                 }
+            }
+
+            public static partial void WriteBinarySkyCustom(MutagenWriter writer, IImageSpaceDepthOfFieldGetter item)
+            {
             }
         }
 

@@ -1,8 +1,8 @@
 using BenchmarkDotNet.Attributes;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
     {
         static byte[] bytes = new byte[] { 1, 2, 3 };
         static MutagenFrame frame = new MutagenFrame(new MutagenMemoryReadStream(bytes, new ParsingBundle(GameRelease.Oblivion, masterReferences: null!)));
-        static ByteBinaryTranslation transl = Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance;
+        static ByteBinaryTranslation<MutagenFrame, MutagenWriter> transl = ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance;
 
         [Benchmark]
         public byte Direct()
@@ -23,8 +23,8 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public byte TranslationInstance()
         {
             frame.Position = 0;
-            if (Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.Parse(
-                frame: frame,
+            if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
                 item: out Byte MarksmanParse))
             {
                 return MarksmanParse;
@@ -39,14 +39,14 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public byte ParseValue()
         {
             frame.Position = 0;
-            return Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.ParseValue(frame);
+            return ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
         }
 
         [Benchmark]
         public byte InstanceDirect()
         {
             frame.Position = 0;
-            return transl.ParseValue(frame);
+            return transl.Parse(frame);
         }
 
         [Benchmark]

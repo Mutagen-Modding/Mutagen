@@ -1,8 +1,11 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
-using System;
-using System.Collections.Generic;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -33,12 +36,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GroupBinaryWriteTranslation
         {
-            static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+            public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item)
                 where T : class, ISkyrimMajorRecordGetter, IBinaryItem
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }
@@ -46,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinaryContainedRecordTypeParseCustom(
+            public static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
                 IGroup<T> item)
             {

@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -429,7 +439,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ANavigationMesh_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshSetterCommon.Instance.RemapLinks(this, mapping);
         public ANavigationMesh(
             FormKey formKey,
@@ -471,6 +481,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ANavigationMesh>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -1102,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANavigationMeshGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IANavigationMeshGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1361,32 +1376,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static ANavigationMeshBinaryWriteTranslation Instance = new ANavigationMeshBinaryWriteTranslation();
 
-        static partial void WriteBinaryLengthLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshGetter item);
-
-        public static void WriteBinaryLengthLogic(
-            MutagenWriter writer,
-            IANavigationMeshGetter item)
-        {
-            WriteBinaryLengthLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryDataLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshGetter item);
-
-        public static void WriteBinaryDataLogic(
-            MutagenWriter writer,
-            IANavigationMeshGetter item)
-        {
-            WriteBinaryDataLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IANavigationMeshGetter item,
             MutagenWriter writer,
@@ -1402,18 +1391,44 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMeshBinaryWriteTranslation.WriteBinaryDataLogic(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ONAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NNAM,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
+        }
+
+        public static partial void WriteBinaryLengthLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshGetter item);
+
+        public static void WriteBinaryLengthLogic(
+            MutagenWriter writer,
+            IANavigationMeshGetter item)
+        {
+            WriteBinaryLengthLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryDataLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshGetter item);
+
+        public static void WriteBinaryDataLogic(
+            MutagenWriter writer,
+            IANavigationMeshGetter item)
+        {
+            WriteBinaryDataLogicCustom(
+                writer: writer,
+                item: item);
         }
 
         public virtual void Write(
@@ -1424,7 +1439,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1513,19 +1528,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ONAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ONAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.ONAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ANavigationMesh_FieldIndex.ONAM;
                 }
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.PNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ANavigationMesh_FieldIndex.PNAM;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NNAM = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.NNAM = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ANavigationMesh_FieldIndex.NNAM;
                 }
                 default:
@@ -1538,11 +1553,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryLengthLogicCustom(
+        public static partial void FillBinaryLengthLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
-        static partial void FillBinaryDataLogicCustom(
+        public static partial void FillBinaryDataLogicCustom(
             MutagenFrame frame,
             IANavigationMeshInternal item);
 
@@ -1578,7 +1593,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ANavigationMeshBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1694,6 +1709,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ANavigationMesh>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

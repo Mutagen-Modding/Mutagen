@@ -26,11 +26,11 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extensions\GameCategoryExt.cs" />
-    <Compile Include="ModInstantiator.cs" />
-    <Compile Include="WarmupAll_Generated.cs" />
-    <Compile Include="Records\ProtocolDefinition_All.cs" />
-    <Compile Include="Utility\GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Plugins\Records\Internals\GameCategoryExt.cs" />
+    <Compile Include="Plugins\Records\ModInstantiator.cs" />
+    <Compile Include="Plugins\Records\ProtocolDefinition_All.cs" />
+    <Compile Include="Plugins\Utility\GameEnvironmentMixIn_Generated.cs" />
+    <Compile Include="Plugins\WarmupAll_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.15.0" />
@@ -38,9 +38,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.13.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.13.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.0">
+    <PackageReference Include="Loqui" Version="2.16.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.16.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

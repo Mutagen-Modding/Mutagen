@@ -1,13 +1,8 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -62,7 +57,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class AIPackageDataBinaryCreateTranslation
         {
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageData item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IAIPackageData item)
             {
                 if (frame.Remaining == 8)
                 {
@@ -81,20 +76,28 @@ namespace Mutagen.Bethesda.Oblivion
                     throw new ArgumentException($"Odd length for general AI field: {frame.Remaining}");
                 }
             }
+
+            public static partial void FillBinaryTypeCustom(MutagenFrame frame, IAIPackageData item)
+            {
+            }
         }
 
         public partial class AIPackageDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IAIPackageDataGetter item)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Flag>.Instance.Write(
+                EnumBinaryTranslation<AIPackage.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<AIPackage.Types>.Instance.Write(
+                EnumBinaryTranslation<AIPackage.Types, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Type,
                     length: 4);
+            }
+
+            public static partial void WriteBinaryTypeCustom(MutagenWriter writer, IAIPackageDataGetter item)
+            {
             }
         }
 

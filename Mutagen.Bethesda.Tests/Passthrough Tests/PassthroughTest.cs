@@ -1,16 +1,20 @@
-using Loqui;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Processing;
+using Mutagen.Bethesda.Archives;
+using Mutagen.Bethesda.Pex;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Processing;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
 using Noggog;
-using Noggog.Extensions;
 using Noggog.Streams.Binary;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
@@ -291,6 +295,37 @@ namespace Mutagen.Bethesda.Tests
                 }
                 System.Console.WriteLine("Direct equals matched.");
             });
+        }
+
+        public Test TestPex()
+        {
+            return TestBattery.RunTest("Pex", GameRelease, Target, async (output) =>
+            {
+                IEnumerable<FileName> bsas;
+                if (Implicits.Get(GameRelease).BaseMasters.Contains(FilePath.ModKey))
+                {
+                    bsas = Archive.GetIniListings(GameRelease).ToList();
+                }
+                else
+                {
+                    bsas = new FileName($"{FilePath.ModKey.Name}.{Archive.GetExtension(GameRelease)}").AsEnumerable();
+                }
+                foreach (var bsa in bsas)
+                {
+                    var archive = Archive.CreateReader(GameRelease, Path.Combine(Path.GetDirectoryName(FilePath)!, bsa.String));
+                    foreach (var file in archive.Files)
+                    {
+                        if (!Path.GetExtension(file.Path).Equals(".pex", StringComparison.OrdinalIgnoreCase)) continue;
+                        TestPex(GameRelease, file.GetMemorySlice());
+                    }
+                }
+            });
+        }
+
+        public void TestPex(GameRelease release, ReadOnlyMemorySlice<byte> bytes)
+        {
+            var memStream = new BinaryMemoryReadStream(bytes);
+            PexFile.CreateFromStream(memStream, release.ToCategory());
         }
 
         public static PassthroughTest Factory(TestingSettings settings, TargetGroup group, Target target)

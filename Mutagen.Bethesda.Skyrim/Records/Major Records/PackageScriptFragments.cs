@@ -1,9 +1,8 @@
-﻿using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.Internals.PackageScriptFragmentsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -20,11 +19,11 @@ namespace Mutagen.Bethesda.Skyrim
                 OnChange = 0x04,
             }
 
-            static partial void FillBinaryFlagsParseCustom(MutagenFrame frame, IPackageScriptFragments item)
+            public static partial void FillBinaryFlagsParseCustom(MutagenFrame frame, IPackageScriptFragments item)
             {
                 var flag = (Flag)frame.ReadUInt8();
-                item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                     frame: frame,
+                item.FileName = StringBinaryTranslation.Instance.Parse(
+                     reader: frame,
                      stringBinaryType: StringBinaryType.PrependLengthUShort);
                 if (flag.HasFlag(Flag.OnBegin))
                 {
@@ -43,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageScriptFragmentsBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsParseCustom(MutagenWriter writer, IPackageScriptFragmentsGetter item)
+            public static partial void WriteBinaryFlagsParseCustom(MutagenWriter writer, IPackageScriptFragmentsGetter item)
             {
                 var begin = item.OnBegin;
                 var end = item.OnEnd;
@@ -62,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
                     flag |= Flag.OnChange;
                 }
                 writer.Write((byte)flag);
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FileName,
                     binaryType: StringBinaryType.PrependLengthUShort);

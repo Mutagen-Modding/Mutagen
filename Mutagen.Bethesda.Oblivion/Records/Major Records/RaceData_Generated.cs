@@ -10,6 +10,14 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -768,7 +776,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1128,7 +1138,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.DATA)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1351,7 +1361,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceDataGetter obj)
         {
             yield break;
         }
@@ -1667,12 +1677,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Height,
-                transl: FloatBinaryTranslation.Instance.Write);
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             GenderedItemBinaryTranslation.Write(
                 writer: writer,
                 item: item.Weight,
-                transl: FloatBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1686,7 +1696,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1723,13 +1733,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.SkillBoost5 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.SkillBoost6 = Mutagen.Bethesda.Oblivion.SkillBoost.CreateFromBinary(frame: frame);
             item.Unused = frame.ReadInt32();
-            item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+            item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
-                transl: FloatBinaryTranslation.Instance.Parse);
-            item.Weight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+            item.Weight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                 frame: frame,
-                transl: FloatBinaryTranslation.Instance.Parse);
-            item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+            item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
         }
 
     }
@@ -1759,7 +1771,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RaceDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRaceDataGetter
     {
         #region Common Routing

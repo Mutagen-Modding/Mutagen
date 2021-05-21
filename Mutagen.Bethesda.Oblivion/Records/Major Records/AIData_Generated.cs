@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -607,7 +615,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -953,7 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.AIDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1142,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIDataGetter obj)
         {
             yield break;
         }
@@ -1294,11 +1304,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             writer.Write(item.Confidence);
             writer.Write(item.EnergyLevel);
             writer.Write(item.Responsibility);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Write(
+            EnumBinaryTranslation<Npc.BuySellServiceFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BuySellServices,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Teaches,
                 length: 1);
@@ -1314,7 +1324,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.AIDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1347,8 +1357,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.Confidence = frame.ReadUInt8();
             item.EnergyLevel = frame.ReadUInt8();
             item.Responsibility = frame.ReadUInt8();
-            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Teaches = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.BuySellServices = EnumBinaryTranslation<Npc.BuySellServiceFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Teaches = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.MaximumTrainingLevel = frame.ReadUInt8();
             item.Unused = frame.ReadInt16();
         }
@@ -1380,7 +1394,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AIDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAIDataGetter
     {
         #region Common Routing

@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -48,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardFootsteps
         {
             get => this._WalkForwardFootsteps;
-            protected set => this._WalkForwardFootsteps = value;
+            init => this._WalkForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -62,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardFootsteps
         {
             get => this._RunForwardFootsteps;
-            protected set => this._RunForwardFootsteps = value;
+            init => this._RunForwardFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -76,7 +86,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps
         {
             get => this._WalkForwardAlternateFootsteps;
-            protected set => this._WalkForwardAlternateFootsteps = value;
+            init => this._WalkForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -90,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> RunForwardAlternateFootsteps
         {
             get => this._RunForwardAlternateFootsteps;
-            protected set => this._RunForwardAlternateFootsteps = value;
+            init => this._RunForwardAlternateFootsteps = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -104,7 +114,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFootstepGetter>> WalkForwardAlternateFootsteps2
         {
             get => this._WalkForwardAlternateFootsteps2;
-            protected set => this._WalkForwardAlternateFootsteps2 = value;
+            init => this._WalkForwardAlternateFootsteps2 = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -884,7 +894,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = FootstepSet_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => FootstepSetSetterCommon.Instance.RemapLinks(this, mapping);
         public FootstepSet(
             FormKey formKey,
@@ -926,6 +936,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<FootstepSet>.ToString(this);
         }
 
         #region Equals and Hash
@@ -983,7 +998,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1331,7 +1348,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IFootstepSetInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IFootstepSetInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1675,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFootstepSetGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFootstepSetGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -2018,19 +2035,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static FootstepSetBinaryWriteTranslation Instance = new FootstepSetBinaryWriteTranslation();
 
-        static partial void WriteBinaryCountCustom(
-            MutagenWriter writer,
-            IFootstepSetGetter item);
-
-        public static void WriteBinaryCount(
-            MutagenWriter writer,
-            IFootstepSetGetter item)
-        {
-            WriteBinaryCountCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IFootstepSetGetter item,
             MutagenWriter writer)
@@ -2054,6 +2058,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryCountCustom(
+            MutagenWriter writer,
+            IFootstepSetGetter item);
+
+        public static void WriteBinaryCount(
+            MutagenWriter writer,
+            IFootstepSetGetter item)
+        {
+            WriteBinaryCountCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IFootstepSetGetter item,
@@ -2062,7 +2079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.FSTS),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2160,7 +2177,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryCountCustom(
+        public static partial void FillBinaryCountCustom(
             MutagenFrame frame,
             IFootstepSetInternal item);
 
@@ -2196,7 +2213,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => FootstepSetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => FootstepSetBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2235,7 +2252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new FootstepSetBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2309,6 +2326,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<FootstepSet>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

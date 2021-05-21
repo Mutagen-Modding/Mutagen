@@ -1,9 +1,5 @@
 using BenchmarkDotNet.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
@@ -18,27 +14,27 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [Benchmark]
         public FormKey ParseFormKey()
         {
-            Bethesda.FormKey.TryFactory(OblivionFormKey, out var formKey);
+            FormKey.TryFactory(OblivionFormKey, out var formKey);
             return formKey;
         }
 
         [Benchmark]
         public ModKey ParseModKey()
         {
-            Bethesda.ModKey.TryFromNameAndExtension(OblivionMaster, out var modKey);
+            ModKey.TryFromNameAndExtension(OblivionMaster, out var modKey);
             return modKey;
         }
 
         [Benchmark]
         public FormID ParseFormID()
         {
-            return Bethesda.FormID.Factory(IDString);
+            return FormID.Factory(IDString);
         }
 
         [Benchmark]
         public FormID ParseFormID0x()
         {
-            return Bethesda.FormID.Factory(IDString0x);
+            return FormID.Factory(IDString0x);
         }
     }
 }

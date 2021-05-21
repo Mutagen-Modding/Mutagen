@@ -1,12 +1,14 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
-using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -40,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -84,7 +86,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.EDID
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -137,7 +139,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.DATA,
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),
@@ -194,7 +196,7 @@ namespace Mutagen.Bethesda.UnitTests
                 RecordTypes.DATA,
             };
             var stream = new OverlayStream(data.ToArray(), new ParsingBundle(GameConstants.Oblivion, masterReferences: null!));
-            var pos = BinaryOverlay.ParseRecordLocationsByCount(
+            var pos = PluginBinaryOverlay.ParseRecordLocationsByCount(
                 stream,
                 3,
                 triggers.ToGetter(),

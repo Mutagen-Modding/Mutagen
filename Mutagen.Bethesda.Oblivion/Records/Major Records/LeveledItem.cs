@@ -1,12 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -14,14 +10,14 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class LeveledItemBinaryCreateTranslation
         {
-            static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
+            public static partial void FillBinaryVestigialCustom(MutagenFrame frame, ILeveledItemInternal item)
             {
                 var rec = HeaderTranslation.ReadNextSubrecordType(frame.Reader, out var length);
                 if (length != 1)
                 {
                     throw new ArgumentException($"Unexpected length: {length}");
                 }
-                if (ByteBinaryTranslation.Instance.Parse(
+                if (ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                     frame,
                     out var parseVal)
                     && parseVal > 0)
@@ -32,6 +28,13 @@ namespace Mutagen.Bethesda.Oblivion
                     }
                     item.Flags |= LeveledFlag.CalculateForEachItemInCount;
                 }
+            }
+        }
+
+        public partial class LeveledItemBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryVestigialCustom(MutagenWriter writer, ILeveledItemGetter item)
+            {
             }
         }
 

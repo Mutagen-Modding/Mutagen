@@ -8,8 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -52,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IndexedScriptFragment> Fragments
         {
             get => this._Fragments;
-            protected set => this._Fragments = value;
+            init => this._Fragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -535,7 +543,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -857,7 +867,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1013,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkScriptFragmentsGetter obj)
         {
             yield break;
         }
@@ -1162,11 +1172,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FileName,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IIndexedScriptFragmentGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IIndexedScriptFragmentGetter>.Instance.Write(
                 writer: writer,
                 items: item.Fragments,
                 countLengthLength: 2,
@@ -1212,13 +1222,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Unknown = frame.ReadInt8();
-            item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+            item.FileName = StringBinaryTranslation.Instance.Parse(
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
             item.Fragments.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IndexedScriptFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
-                    frame: frame,
+                    reader: frame,
                     transl: IndexedScriptFragment.TryCreateFromBinary));
         }
 
@@ -1249,7 +1259,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PerkScriptFragmentsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPerkScriptFragmentsGetter
     {
         #region Common Routing

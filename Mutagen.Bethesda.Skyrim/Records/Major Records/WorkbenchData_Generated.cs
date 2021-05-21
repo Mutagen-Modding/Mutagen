@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -423,7 +431,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -745,7 +755,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.WBDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -878,7 +888,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorkbenchDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorkbenchDataGetter obj)
         {
             yield break;
         }
@@ -1002,11 +1012,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<WorkbenchData.Type>.Instance.Write(
+            EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.BenchType,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Skill>.Instance.Write(
+            EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 ((int?)item.UsesSkill) ?? -1,
                 length: 1);
@@ -1020,7 +1030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.WBDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1049,9 +1059,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorkbenchData item,
             MutagenFrame frame)
         {
-            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.BenchType = EnumBinaryTranslation<WorkbenchData.Type, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             if (frame.Complete) return;
-            item.UsesSkill = EnumBinaryTranslation<Skill>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.UsesSkill = EnumBinaryTranslation<Skill, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
         }
 
     }
@@ -1081,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WorkbenchDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWorkbenchDataGetter
     {
         #region Common Routing

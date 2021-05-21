@@ -1,16 +1,9 @@
-using Loqui;
-using Loqui.Internal;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Fallout4.Internals;
-using Noggog;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -61,16 +54,23 @@ namespace Mutagen.Bethesda.Fallout4
 
     namespace Internals
     {
+        public partial class GlobalBinaryCreateTranslation
+        {
+            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            {
+            }
+        }
+
         public partial class GlobalBinaryWriteTranslation
         {
-            static partial void WriteBinaryTypeCharCustom(
+            public static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
                 if (item is not IGlobalFloatGetter f
                     || !f.NoTypeDeclaration)
                 {
-                    Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
+                    CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.TypeChar,
                         header: RecordTypes.FNAM);

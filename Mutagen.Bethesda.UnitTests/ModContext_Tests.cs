@@ -1,8 +1,10 @@
 using FluentAssertions;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System.Linq;
 using Xunit;
+using Mutagen.Bethesda.Plugins.Cache;
 
 namespace Mutagen.Bethesda.UnitTests
 {

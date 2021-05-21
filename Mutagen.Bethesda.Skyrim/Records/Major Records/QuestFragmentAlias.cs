@@ -1,8 +1,7 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -10,7 +9,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestFragmentAliasBinaryCreateTranslation
         {
-            static partial void FillBinaryPropertyCustom(MutagenFrame frame, IQuestFragmentAlias item)
+            public static partial void FillBinaryPropertyCustom(MutagenFrame frame, IQuestFragmentAlias item)
             {
                 // Preparse object format
                 var pos = frame.Position;
@@ -23,7 +22,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Property = obj;
             }
 
-            static partial void FillBinaryScriptsCustom(MutagenFrame frame, IQuestFragmentAlias item)
+            public static partial void FillBinaryScriptsCustom(MutagenFrame frame, IQuestFragmentAlias item)
             {
                 item.Scripts.AddRange(AVirtualMachineAdapterBinaryCreateTranslation.ReadEntries(frame, item.ObjectFormat));
             }
@@ -31,12 +30,12 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class QuestFragmentAliasBinaryWriteTranslation
         {
-            static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IQuestFragmentAliasGetter item)
+            public static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IQuestFragmentAliasGetter item)
             {
                 AVirtualMachineAdapterBinaryWriteTranslation.WriteScripts(writer, item.ObjectFormat, item.Scripts);
             }
 
-            static partial void WriteBinaryPropertyCustom(MutagenWriter writer, IQuestFragmentAliasGetter item)
+            public static partial void WriteBinaryPropertyCustom(MutagenWriter writer, IQuestFragmentAliasGetter item)
             {
                 AVirtualMachineAdapterBinaryWriteTranslation.WriteObject(writer, item.Property, item.ObjectFormat);
             }

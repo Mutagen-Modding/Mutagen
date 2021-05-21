@@ -1,12 +1,9 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
@@ -21,7 +18,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType RDSD = new RecordType("RDSD");
         public static readonly RecordType RDMD = new RecordType("RDMD");
 
-        static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
+        public static partial void FillBinaryRegionAreaLogicCustom(MutagenFrame frame, IRegionInternal item)
         {
             var rdat = HeaderTranslation.GetNextSubrecordType(frame.Reader, out var rdatType);
             while (rdat.Equals(RecordTypes.RDAT))
@@ -114,7 +111,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class RegionBinaryWriteTranslation
     {
-        static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
+        public static partial void WriteBinaryRegionAreaLogicCustom(MutagenWriter writer, IRegionGetter item)
         {
             item.Objects?.WriteToBinary(writer);
             item.Weather?.WriteToBinary(writer);

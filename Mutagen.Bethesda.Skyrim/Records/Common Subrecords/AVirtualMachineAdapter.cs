@@ -1,8 +1,10 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -45,7 +47,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
+            public static partial void FillBinaryScriptsCustom(MutagenFrame frame, IAVirtualMachineAdapter item)
             {
                 item.Scripts.AddRange(ReadEntries(frame, item.ObjectFormat));
             }
@@ -104,13 +106,13 @@ namespace Mutagen.Bethesda.Skyrim
                     case 2:
                         obj.Unused = frame.ReadUInt16();
                         obj.Alias = frame.ReadInt16();
-                        obj.Object.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                        obj.Object.FormKey = FormLinkBinaryTranslation.Instance.Parse(
+                            reader: frame,
                             defaultVal: FormKey.Null);
                         break;
                     case 1:
-                        obj.Object.FormKey = Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
+                        obj.Object.FormKey = FormLinkBinaryTranslation.Instance.Parse(
+                            reader: frame,
                             defaultVal: FormKey.Null);
                         obj.Alias = frame.ReadInt16();
                         obj.Unused = frame.ReadUInt16();
@@ -195,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
+            public static partial void WriteBinaryScriptsCustom(MutagenWriter writer, IAVirtualMachineAdapterGetter item)
             {
                 WriteScripts(writer, item.ObjectFormat, item.Scripts);
             }

@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -462,7 +472,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -798,7 +810,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -954,7 +966,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRankGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRankGetter obj)
         {
             yield break;
         }
@@ -1089,7 +1101,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Number,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -1100,13 +1112,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 femaleMarker: RecordTypes.FNAM,
                 transl: (MutagenWriter subWriter, ITranslatedStringGetter? subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+                    StringBinaryTranslation.Instance.WriteNullable(
                         writer: subWriter,
                         item: subItem,
                         binaryType: StringBinaryType.NullTerminate,
                         source: StringsSource.Normal);
                 });
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InsigniaUnused,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM),
@@ -1170,14 +1182,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.FNAM:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.Title) return ParseResult.Stop;
-                    item.Title = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<TranslatedString>(
+                    item.Title = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<TranslatedString>(
                         frame: frame,
                         maleMarker: RecordTypes.MNAM,
                         femaleMarker: RecordTypes.FNAM,
                         skipMarker: false,
                         transl: (MutagenFrame r, out TranslatedString genSubItem) =>
                         {
-                            return Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
+                            return StringBinaryTranslation.Instance.Parse(
                                 r,
                                 item: out genSubItem,
                                 parseWhole: false,
@@ -1190,8 +1202,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Rank_FieldIndex.InsigniaUnused) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InsigniaUnused = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.InsigniaUnused = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Rank_FieldIndex.InsigniaUnused;
                 }
@@ -1227,7 +1239,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class RankBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRankGetter
     {
         #region Common Routing

@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -459,6 +468,11 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        public override string ToString()
+        {
+            return MajorRecordPrinter<DamageTypeIndexed>.ToString(this);
+        }
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -514,7 +528,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -844,7 +860,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IDamageTypeIndexedInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IDamageTypeIndexedInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1129,7 +1145,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDamageTypeIndexedGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDamageTypeIndexedGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1433,11 +1449,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Write(
                 writer: writer,
                 items: item.DamageTypes,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: UInt32BinaryTranslation.Instance.Write);
+                transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1448,7 +1464,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DMGT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1544,9 +1560,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.DamageTypes = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<UInt32>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: UInt32BinaryTranslation.Instance.Parse)
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<UInt32>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<UInt32>();
                     return (int)DamageTypeIndexed_FieldIndex.DamageTypes;
                 }
@@ -1626,7 +1642,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new DamageTypeIndexedBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1705,6 +1721,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<DamageTypeIndexed>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

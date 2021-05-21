@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -484,7 +492,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -814,7 +824,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.XPRM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -963,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlacedPrimitiveGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlacedPrimitiveGetter obj)
         {
             yield break;
         }
@@ -1091,7 +1101,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PlacedPrimitiveBinaryWriteTranslation Instance = new PlacedPrimitiveBinaryWriteTranslation();
 
-        static partial void WriteBinaryBoundsCustom(
+        public static void WriteEmbedded(
+            IPlacedPrimitiveGetter item,
+            MutagenWriter writer)
+        {
+            PlacedPrimitiveBinaryWriteTranslation.WriteBinaryBounds(
+                writer: writer,
+                item: item);
+            ColorBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Color,
+                binaryType: ColorBinaryType.NoAlphaFloat);
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.Unknown);
+            EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4);
+        }
+
+        public static partial void WriteBinaryBoundsCustom(
             MutagenWriter writer,
             IPlacedPrimitiveGetter item);
 
@@ -1104,26 +1134,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded(
-            IPlacedPrimitiveGetter item,
-            MutagenWriter writer)
-        {
-            PlacedPrimitiveBinaryWriteTranslation.WriteBinaryBounds(
-                writer: writer,
-                item: item);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Color,
-                binaryType: ColorBinaryType.NoAlphaFloat);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Unknown);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Write(
-                writer,
-                item.Type,
-                length: 4);
-        }
-
         public void Write(
             MutagenWriter writer,
             IPlacedPrimitiveGetter item,
@@ -1132,7 +1142,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.XPRM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1165,11 +1175,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Color = frame.ReadColor(ColorBinaryType.NoAlphaFloat);
-            item.Unknown = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Unknown = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Type = EnumBinaryTranslation<PlacedPrimitive.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
-        static partial void FillBinaryBoundsCustom(
+        public static partial void FillBinaryBoundsCustom(
             MutagenFrame frame,
             IPlacedPrimitive item);
 
@@ -1200,7 +1212,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlacedPrimitiveBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPlacedPrimitiveGetter
     {
         #region Common Routing

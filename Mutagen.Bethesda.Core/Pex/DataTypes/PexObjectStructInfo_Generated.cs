@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectStructInfoMember> Members
         {
             get => this._Members;
-            protected set => this._Members = value;
+            init => this._Members = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

@@ -1,8 +1,6 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -20,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ArmorBinaryCreateTranslation
         {
-            static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorInternal item)
+            public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IArmorInternal item)
             {
                 item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
             }
@@ -28,7 +26,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ArmorBinaryWriteTranslation
         {
-            static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IArmorGetter item)
+            public static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IArmorGetter item)
             {
                 if (item.BodyTemplate.TryGet(out var templ))
                 {

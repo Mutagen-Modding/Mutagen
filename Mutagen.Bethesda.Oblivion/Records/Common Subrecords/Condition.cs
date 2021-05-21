@@ -1,12 +1,8 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -55,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                 return (CompareOperator)((Mask & b) >> 4);
             }
 
-            static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item)
+            public static partial void FillBinaryInitialParserCustom(MutagenFrame frame, ICondition item)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);
@@ -65,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ConditionBinaryWriteTranslation
         {
-            static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item)
+            public static partial void WriteBinaryInitialParserCustom(MutagenWriter writer, IConditionGetter item)
             {
                 byte b = (byte)item.Flags;
                 b |= (byte)(((int)(item.CompareOperator) * 16) & ConditionBinaryCreateTranslation.Mask);

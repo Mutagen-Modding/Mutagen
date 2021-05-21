@@ -2,16 +2,13 @@ using Loqui;
 using Noggog;
 using Loqui.Generation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Net.WebSockets;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class DictBinaryTranslationGeneration : BinaryTranslationGeneration
     {
@@ -109,7 +106,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
+                    $"{this.NamespacePrefix}{term}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: true)}>.Instance.Write"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"items: {itemAccessor}{(binaryType == DictBinaryType.EnumMap ? null : ".Items")}");
@@ -181,20 +178,20 @@ namespace Mutagen.Bethesda.Generation
             var term = binaryType == DictBinaryType.EnumMap ? "Dict" : "List";
 
             using (var args = new ArgsWrapper(fg,
-                $"{Loqui.Generation.Utility.Await(isAsync)}{this.Namespace}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
+                $"{Loqui.Generation.Utility.Await(isAsync)}{this.NamespacePrefix}{term}{(isAsync ? "Async" : null)}BinaryTranslation<{dict.ValueTypeGen.TypeName(getter: false)}>.Instance.Parse{(binaryType == DictBinaryType.EnumMap ? $"<{dict.KeyTypeGen.TypeName(false)}>" : null)}",
                 suffixLine: Loqui.Generation.Utility.ConfigAwait(isAsync)))
             {
                 switch (binaryType)
                 {
                     case DictBinaryType.SubTrigger:
-                        args.AddPassArg($"frame");
+                        args.Add($"reader: {Module.ReaderMemberName}");
                         args.Add($"triggeringRecord: {subData.TriggeringRecordSetAccessor}");
                         break;
                     case DictBinaryType.Trigger:
-                        args.Add($"frame: frame.Spawn(long)");
+                        args.Add($"reader: {Module.ReaderMemberName}.Spawn(long)");
                         break;
                     case DictBinaryType.EnumMap:
-                        args.AddPassArg($"frame");
+                        args.Add($"reader: {Module.ReaderMemberName}");
                         break;
                     default:
                         throw new NotImplementedException();

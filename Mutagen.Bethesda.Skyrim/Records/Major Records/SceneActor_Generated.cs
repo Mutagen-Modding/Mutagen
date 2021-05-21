@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -456,7 +465,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -779,7 +790,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -927,7 +938,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISceneActorGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneActorGetter obj)
         {
             yield break;
         }
@@ -1056,16 +1067,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.Write(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.ID,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SceneActor.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<SceneActor.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LNAM));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.WriteNullable(
+            EnumBinaryTranslation<SceneActor.BehaviorFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.BehaviorFlags,
                 length: 4,
@@ -1128,13 +1139,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.LNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<SceneActor.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<SceneActor.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneActor_FieldIndex.Flags;
                 }
                 case RecordTypeInts.DNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.BehaviorFlags = EnumBinaryTranslation<SceneActor.BehaviorFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)SceneActor_FieldIndex.BehaviorFlags;
                 }
                 default:
@@ -1169,7 +1184,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SceneActorBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISceneActorGetter
     {
         #region Common Routing

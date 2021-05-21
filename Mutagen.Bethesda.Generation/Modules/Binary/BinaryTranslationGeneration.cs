@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public abstract class BinaryTranslationGeneration : TranslationGeneration
     {
         public BinaryTranslationModule Module;
-        public string Namespace => Module.Namespace;
+        public virtual string Namespace => "Mutagen.Bethesda.Plugins.Binary.Translations.";
+        public virtual bool NeedsNamespacePrefix => true;
+        public string NamespacePrefix => NeedsNamespacePrefix ? Namespace : string.Empty;
         public virtual bool DoErrorMasks => this.Module.DoErrorMasks;
 
         public delegate TryGet<string> ParamTest(

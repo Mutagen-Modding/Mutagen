@@ -5,10 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
-using Microsoft.VisualBasic.CompilerServices;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class BooleanBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<bool>
     {
@@ -99,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
             {
                 var data = typeGen.GetFieldData();
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}BooleanBinaryTranslation.Instance.WriteAsMarker"))
+                    $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.WriteAsMarker"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");

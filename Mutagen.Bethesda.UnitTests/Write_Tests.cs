@@ -1,9 +1,10 @@
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests
@@ -169,13 +170,13 @@ namespace Mutagen.Bethesda.UnitTests
             Assert.Throws<MissingModException>(() =>
             {
                 mod.WriteToBinary(
-                   tmp.File.Path,
+                   tmp.File,
                    new BinaryWriteParameters()
                    {
                        ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
                        MastersListContent = BinaryWriteParameters.MastersListContentOption.Iterate,
                        MastersListOrdering = new BinaryWriteParameters.MastersListOrderingByLoadOrder(
-                           Constants.Skyrim.AsEnumerable())
+                           Skyrim.Constants.Skyrim.AsEnumerable())
                    });
             });
         }

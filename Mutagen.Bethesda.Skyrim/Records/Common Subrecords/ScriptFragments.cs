@@ -1,9 +1,8 @@
-﻿using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.Internals.ScriptFragmentsBinaryCreateTranslation;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -19,11 +18,11 @@ namespace Mutagen.Bethesda.Skyrim
                 OnEnd = 0x02,
             }
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IScriptFragments item)
             {
                 var flag = (Flag)frame.ReadUInt8();
-                item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                     frame: frame,
+                item.FileName = StringBinaryTranslation.Instance.Parse(
+                     reader: frame,
                      stringBinaryType: StringBinaryType.PrependLengthUShort);
                 if (flag.HasFlag(Flag.OnBegin))
                 {
@@ -38,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ScriptFragmentsBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IScriptFragmentsGetter item)
             {
                 var begin = item.OnBegin;
                 var end = item.OnEnd;
@@ -52,7 +51,7 @@ namespace Mutagen.Bethesda.Skyrim
                     flag |= Flag.OnEnd;
                 }
                 writer.Write((byte)flag);
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.FileName,
                     binaryType: StringBinaryType.PrependLengthUShort);

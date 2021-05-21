@@ -1,10 +1,9 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -30,12 +29,12 @@ namespace Mutagen.Bethesda.Skyrim
             public const byte SkillFlag = 0x01;
             public const byte SpellFlag = 0x04;
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, IBookInternal item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, IBookInternal item)
             {
                 item.Flags = (Book.Flag)frame.ReadUInt8();
             }
 
-            static partial void FillBinaryTeachesCustom(MutagenFrame frame, IBookInternal item)
+            public static partial void FillBinaryTeachesCustom(MutagenFrame frame, IBookInternal item)
             {
                 if ((((int)item.Flags) & SpellFlag) > 0)
                 {
@@ -63,7 +62,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class BookBinaryWriteTranslation
         {
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IBookGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IBookGetter item)
             {
                 byte flags = (byte)item.Flags;
                 switch (item.Teaches)
@@ -82,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
                 writer.Write(flags);
             }
 
-            static partial void WriteBinaryTeachesCustom(MutagenWriter writer, IBookGetter item)
+            public static partial void WriteBinaryTeachesCustom(MutagenWriter writer, IBookGetter item)
             {
                 switch (item.Teaches)
                 {

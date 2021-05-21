@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -646,7 +654,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -996,7 +1006,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.CSFL)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1195,7 +1205,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICombatStyleFlightGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICombatStyleFlightGetter obj)
         {
             yield break;
         }
@@ -1351,36 +1361,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleFlightGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.HoverChance);
             if (!item.Versioning.HasFlag(CombatStyleFlight.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DiveBombChance);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.GroundAttackChance);
                 if (!item.Versioning.HasFlag(CombatStyleFlight.VersioningBreaks.Break1))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.HoverTime);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.GroundAttackTime);
                     if (!item.Versioning.HasFlag(CombatStyleFlight.VersioningBreaks.Break2))
                     {
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.PerchAttackChance);
-                        Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                        FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                             writer: writer,
                             item: item.PerchAttackTime);
                         if (!item.Versioning.HasFlag(CombatStyleFlight.VersioningBreaks.Break3))
                         {
-                            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                                 writer: writer,
                                 item: item.FlyingAttackChance);
                         }
@@ -1397,7 +1407,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.CSFL),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1426,34 +1436,34 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleFlight item,
             MutagenFrame frame)
         {
-            item.HoverChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HoverChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleFlight.VersioningBreaks.Break0;
                 return;
             }
-            item.DiveBombChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.GroundAttackChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DiveBombChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GroundAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleFlight.VersioningBreaks.Break1;
                 return;
             }
-            item.HoverTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.GroundAttackTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.HoverTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.GroundAttackTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleFlight.VersioningBreaks.Break2;
                 return;
             }
-            item.PerchAttackChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.PerchAttackTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.PerchAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.PerchAttackTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= CombatStyleFlight.VersioningBreaks.Break3;
                 return;
             }
-            item.FlyingAttackChance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FlyingAttackChance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1483,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CombatStyleFlightBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICombatStyleFlightGetter
     {
         #region Common Routing

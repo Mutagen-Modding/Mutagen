@@ -1,10 +1,11 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -12,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NavigationMapInfoBinaryCreateTranslation
         {
-            static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
+            public static partial void FillBinaryIslandCustom(MutagenFrame frame, INavigationMapInfo item)
             {
                 if (frame.ReadUInt8() > 0)
                 {
@@ -20,7 +21,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
+            public static partial void FillBinaryParentParseLogicCustom(MutagenFrame frame, INavigationMapInfo item)
             {
                 if (item.ParentWorldspace.IsNull)
                 {
@@ -28,14 +29,14 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else
                 {
-                    item.ParentWorldspaceCoord = P2Int16BinaryTranslation.Instance.Parse(frame);
+                    item.ParentWorldspaceCoord = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(frame);
                 }
             }
         }
 
         public partial class NavigationMapInfoBinaryWriteTranslation
         {
-            static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+            public static partial void WriteBinaryIslandCustom(MutagenWriter writer, INavigationMapInfoGetter item)
             {
                 if (item.Island.TryGet(out var island))
                 {
@@ -48,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
+            public static partial void WriteBinaryParentParseLogicCustom(MutagenWriter writer, INavigationMapInfoGetter item)
             {
                 if (item.ParentWorldspace.IsNull)
                 {
@@ -56,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 else
                 {
-                    P2Int16BinaryTranslation.Instance.Write(writer, item.ParentWorldspaceCoord);
+                    P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(writer, item.ParentWorldspaceCoord);
                 }
             }
         }

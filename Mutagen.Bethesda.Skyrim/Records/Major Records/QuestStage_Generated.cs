@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -55,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestLogEntry> LogEntries
         {
             get => this._LogEntries;
-            protected set => this._LogEntries = value;
+            init => this._LogEntries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -564,7 +574,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = QuestStage_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestStageSetterCommon.Instance.RemapLinks(this, mapping);
         [Flags]
         public enum INDXDataType
@@ -607,7 +617,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -941,7 +953,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1118,7 +1130,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestStageGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestStageGetter obj)
         {
             foreach (var item in obj.LogEntries.SelectMany(f => f.ContainedFormLinks))
             {
@@ -1288,13 +1300,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.INDX)))
             {
                 writer.Write(item.Index);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestStage.Flag>.Instance.Write(
+                EnumBinaryTranslation<QuestStage.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
                 writer.Write(item.Unknown);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IQuestLogEntryGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IQuestLogEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.LogEntries,
                 transl: (MutagenWriter subWriter, IQuestLogEntryGetter subItem, RecordTypeConverter? conv) =>
@@ -1362,7 +1374,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Index = dataFrame.ReadUInt16();
-                    item.Flags = EnumBinaryTranslation<QuestStage.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<QuestStage.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     item.Unknown = dataFrame.ReadUInt8();
                     return (int)QuestStage_FieldIndex.Unknown;
                 }
@@ -1375,8 +1389,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.QNAM:
                 {
                     item.LogEntries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<QuestLogEntry>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: QuestLogEntry_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: QuestLogEntry.TryCreateFromBinary));
@@ -1414,7 +1428,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestStageBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestStageGetter
     {
         #region Common Routing
@@ -1436,7 +1450,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestStageCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestStageBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

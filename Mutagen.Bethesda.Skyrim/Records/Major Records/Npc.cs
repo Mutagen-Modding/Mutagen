@@ -1,9 +1,7 @@
-using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -20,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class NpcBinaryCreateTranslation
         {
-            static partial void FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
+            public static partial void FillBinaryDataMarkerCustom(MutagenFrame frame, INpcInternal item)
             {
                 // Skip marker
                 frame.ReadSubrecordFrame();
@@ -29,7 +27,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class NpcBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataMarkerCustom(MutagenWriter writer, INpcGetter item)
+            public static partial void WriteBinaryDataMarkerCustom(MutagenWriter writer, INpcGetter item)
             {
                 using var header = HeaderExport.Subrecord(writer, RecordTypes.DATA);
             }

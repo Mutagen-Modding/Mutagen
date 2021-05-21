@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -27,7 +21,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class PlacedObjectBinaryCreateTranslation
         {
-            static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item)
+            public static partial void FillBinaryOpenByDefaultCustom(MutagenFrame frame, IPlacedObjectInternal item)
             {
                 item.OpenByDefault = true;
                 frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
@@ -36,7 +30,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class PlacedObjectBinaryWriteTranslation
         {
-            static partial void WriteBinaryOpenByDefaultCustom(MutagenWriter writer, IPlacedObjectGetter item)
+            public static partial void WriteBinaryOpenByDefaultCustom(MutagenWriter writer, IPlacedObjectGetter item)
             {
                 if (item.OpenByDefault)
                 {

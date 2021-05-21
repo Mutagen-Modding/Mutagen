@@ -1,9 +1,10 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using static Mutagen.Bethesda.Skyrim.FaceFxPhonemes;
 
 namespace Mutagen.Bethesda.Skyrim

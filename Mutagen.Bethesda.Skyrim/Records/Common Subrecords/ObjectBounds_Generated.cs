@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +429,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -743,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.OBND)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -872,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IObjectBoundsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IObjectBoundsGetter obj)
         {
             yield break;
         }
@@ -996,10 +1006,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBoundsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.First);
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Second);
         }
@@ -1012,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.OBND),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1041,8 +1051,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IObjectBounds item,
             MutagenFrame frame)
         {
-            item.First = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Second = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.First = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Second = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1072,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ObjectBoundsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IObjectBoundsGetter
     {
         #region Common Routing
@@ -1108,8 +1118,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Int16 First => P3Int16BinaryTranslation.Read(_data.Slice(0x0, 0x6));
-        public P3Int16 Second => P3Int16BinaryTranslation.Read(_data.Slice(0x6, 0x6));
+        public P3Int16 First => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x6));
+        public P3Int16 Second => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x6, 0x6));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -541,7 +549,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -875,7 +885,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1044,7 +1054,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestScriptFragmentGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestScriptFragmentGetter obj)
         {
             yield break;
         }
@@ -1188,11 +1198,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.Unknown);
             writer.Write(item.StageIndex);
             writer.Write(item.Unknown2);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ScriptName,
                 binaryType: StringBinaryType.PrependLengthUShort);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FragmentName,
                 binaryType: StringBinaryType.PrependLengthUShort);
@@ -1233,11 +1243,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.Unknown = frame.ReadInt16();
             item.StageIndex = frame.ReadInt32();
             item.Unknown2 = frame.ReadInt8();
-            item.ScriptName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+            item.ScriptName = StringBinaryTranslation.Instance.Parse(
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
-            item.FragmentName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                frame: frame,
+            item.FragmentName = StringBinaryTranslation.Instance.Parse(
+                reader: frame,
                 stringBinaryType: StringBinaryType.PrependLengthUShort);
         }
 
@@ -1268,7 +1278,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestScriptFragmentBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestScriptFragmentGetter
     {
         #region Common Routing

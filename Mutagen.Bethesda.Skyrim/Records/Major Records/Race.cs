@@ -1,12 +1,11 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -80,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public const int NumBipedObjectNames = 32;
 
-            static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
+            public static partial void FillBinaryExtraNAM2Custom(MutagenFrame frame, IRaceInternal item)
             {
                 if (frame.Complete) return;
                 if (frame.TryGetSubrecord(Race.NAM2, out var subHeader))
@@ -90,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
+            public static partial void FillBinaryBipedObjectNamesCustom(MutagenFrame frame, IRaceInternal item)
             {
                 for (int i = 0; i < NumBipedObjectNames; i++)
                 {
@@ -104,11 +103,11 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+            public static partial void FillBinaryFaceFxPhonemesListingParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-            static partial void FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
+            public static partial void FillBinaryFaceFxPhonemesRawParsingCustom(MutagenFrame frame, IRaceInternal item) => FaceFxPhonemesBinaryCreateTranslation.ParseFaceFxPhonemes(frame, item.FaceFxPhonemes);
 
-            static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceInternal item)
+            public static partial void FillBinaryFlags2Custom(MutagenFrame frame, IRaceInternal item)
             {
                 // Clear out upper flags
                 item.Flags &= ((Race.Flag)0x00000000FFFFFFFF);
@@ -119,7 +118,7 @@ namespace Mutagen.Bethesda.Skyrim
                 item.Flags |= ((Race.Flag)flags2);
             }
 
-            static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item)
+            public static partial void FillBinaryBodyTemplateCustom(MutagenFrame frame, IRaceInternal item)
             {
                 item.BodyTemplate = BodyTemplateBinaryCreateTranslation.Parse(frame);
             }
@@ -163,7 +162,7 @@ namespace Mutagen.Bethesda.Skyrim
             void BipedObjectNamesCustomParse(OverlayStream stream, int finalPos, int offset)
             {
                 _bipedObjectNamesLoc = (ushort)(stream.Position - offset);
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
+                PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.NAME);
             }
 
             partial void FaceFxPhonemesListingParsingCustomParse(OverlayStream stream, int offset)
@@ -177,8 +176,8 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     _faceFxPhonemesLoc = (ushort)(stream.Position - offset);
                 }
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHTN);
-                UtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHWT);
+                PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHTN);
+                PluginUtilityTranslation.SkipPastAll(stream, _package.MetaData.Constants, RecordTypes.PHWT);
             }
 
             private FaceFxPhonemes GetFaceFx()
@@ -217,7 +216,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class RaceBinaryWriteTranslation
         {
-            static partial void WriteBinaryExtraNAM2Custom(MutagenWriter writer, IRaceGetter item)
+            public static partial void WriteBinaryExtraNAM2Custom(MutagenWriter writer, IRaceGetter item)
             {
                 if (item.ExportingExtraNam2)
                 {
@@ -225,7 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
+            public static partial void WriteBinaryBipedObjectNamesCustom(MutagenWriter writer, IRaceGetter item)
             {
                 var bipedObjs = item.BipedObjectNames;
                 for (int i = 0; i < RaceBinaryCreateTranslation.NumBipedObjectNames; i++)
@@ -245,21 +244,21 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(MutagenWriter writer, IRaceGetter item) => FaceFxPhonemesBinaryWriteTranslation.WriteFaceFxPhonemes(writer, item.FaceFxPhonemes);
+            public static partial void WriteBinaryFaceFxPhonemesListingParsingCustom(MutagenWriter writer, IRaceGetter item) => FaceFxPhonemesBinaryWriteTranslation.WriteFaceFxPhonemes(writer, item.FaceFxPhonemes);
 
-            static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(MutagenWriter writer, IRaceGetter item)
+            public static partial void WriteBinaryFaceFxPhonemesRawParsingCustom(MutagenWriter writer, IRaceGetter item)
             {
                 // Handled by Listing section
             }
 
-            static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IRaceGetter item)
+            public static partial void WriteBinaryFlags2Custom(MutagenWriter writer, IRaceGetter item)
             {
                 ulong flags = (ulong)item.Flags;
                 flags >>= 32;
                 writer.Write((uint)flags);
             }
 
-            static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IRaceGetter item)
+            public static partial void WriteBinaryBodyTemplateCustom(MutagenWriter writer, IRaceGetter item)
             {
                 if (item.BodyTemplate.TryGet(out var templ))
                 {

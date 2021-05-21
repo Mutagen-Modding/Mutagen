@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -458,7 +466,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -789,7 +799,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.RDAT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -928,7 +938,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionDataHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionDataHeaderGetter obj)
         {
             yield break;
         }
@@ -1071,11 +1081,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Write(
+            EnumBinaryTranslation<RegionData.RegionDataType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.DataType,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Write(
+            EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
@@ -1091,7 +1101,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.RDAT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1120,8 +1130,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataHeaderInternal item,
             MutagenFrame frame)
         {
-            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.DataType = EnumBinaryTranslation<RegionData.RegionDataType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.Flags = EnumBinaryTranslation<RegionData.RegionDataFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Priority = frame.ReadUInt8();
             frame.SetPosition(frame.Position + 2);
         }
@@ -1153,7 +1167,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RegionDataHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRegionDataHeaderGetter
     {
         #region Common Routing

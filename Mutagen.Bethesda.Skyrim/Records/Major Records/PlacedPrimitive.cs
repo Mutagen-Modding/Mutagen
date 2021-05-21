@@ -1,8 +1,5 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -21,7 +18,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PlacedPrimitiveBinaryCreateTranslation
         {
-            static partial void FillBinaryBoundsCustom(MutagenFrame frame, IPlacedPrimitive item)
+            public static partial void FillBinaryBoundsCustom(MutagenFrame frame, IPlacedPrimitive item)
             {
                 item.Bounds = new P3Float(
                     frame.ReadFloat() * 2,
@@ -32,7 +29,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PlacedPrimitiveBinaryWriteTranslation
         {
-            static partial void WriteBinaryBoundsCustom(MutagenWriter writer, IPlacedPrimitiveGetter item)
+            public static partial void WriteBinaryBoundsCustom(MutagenWriter writer, IPlacedPrimitiveGetter item)
             {
                 var bounds = item.Bounds;
                 writer.Write(bounds.X / 2);

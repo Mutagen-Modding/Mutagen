@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -298,7 +308,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ADamageType_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ADamageTypeSetterCommon.Instance.RemapLinks(this, mapping);
         public ADamageType(FormKey formKey)
         {
@@ -333,6 +343,11 @@ namespace Mutagen.Bethesda.Fallout4
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ADamageType>.ToString(this);
         }
 
         #region Equals and Hash
@@ -897,7 +912,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IADamageTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IADamageTypeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1123,7 +1138,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static ADamageTypeBinaryWriteTranslation Instance = new ADamageTypeBinaryWriteTranslation();
 
-        static partial void WriteBinaryCustomLogicCustom(
+        public static partial void WriteBinaryCustomLogicCustom(
             MutagenWriter writer,
             IADamageTypeGetter item);
 
@@ -1144,7 +1159,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DMGT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1203,7 +1218,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         public new readonly static ADamageTypeBinaryCreateTranslation Instance = new ADamageTypeBinaryCreateTranslation();
 
         public override RecordType RecordType => throw new ArgumentException();
-        static partial void FillBinaryCustomLogicCustom(
+        public static partial void FillBinaryCustomLogicCustom(
             MutagenFrame frame,
             IADamageTypeInternal item);
 
@@ -1239,7 +1254,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ADamageTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ADamageTypeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1287,6 +1302,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ADamageType>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

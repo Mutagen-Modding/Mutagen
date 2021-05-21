@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -515,7 +525,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = EffectData_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => EffectDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EffectDataCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => EffectDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -554,7 +564,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -894,7 +906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.EFIT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1063,7 +1075,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEffectDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEffectDataGetter obj)
         {
             yield break;
         }
@@ -1203,17 +1215,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.MagicEffect);
             writer.Write(item.Magnitude);
             writer.Write(item.Area);
             writer.Write(item.Duration);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Effect.EffectType>.Instance.Write(
+            EnumBinaryTranslation<Effect.EffectType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValueExtended>.Instance.Write(
+            EnumBinaryTranslation<ActorValueExtended, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ActorValue,
                 length: 4);
@@ -1227,7 +1239,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.EFIT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1256,15 +1268,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectData item,
             MutagenFrame frame)
         {
-            item.MagicEffect.SetTo(
-                Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: RecordType.Null));
+            item.MagicEffect.SetTo(RecordTypeBinaryTranslation.Instance.Parse(reader: frame));
             item.Magnitude = frame.ReadUInt32();
             item.Area = frame.ReadUInt32();
             item.Duration = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<Effect.EffectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ActorValue = EnumBinaryTranslation<ActorValueExtended>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Effect.EffectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ActorValue = EnumBinaryTranslation<ActorValueExtended, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1294,7 +1307,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class EffectDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IEffectDataGetter
     {
         #region Common Routing
@@ -1316,7 +1329,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => EffectDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => EffectDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => EffectDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

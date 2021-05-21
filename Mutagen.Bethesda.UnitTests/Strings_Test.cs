@@ -1,10 +1,10 @@
-using Mutagen.Bethesda.Binary;
-using System;
-using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Strings;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

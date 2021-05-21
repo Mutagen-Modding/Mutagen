@@ -1,13 +1,16 @@
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using RecordTypes = Mutagen.Bethesda.Oblivion.Internals.RecordTypes;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -103,7 +106,7 @@ namespace Mutagen.Bethesda.Tests
                     writer.Write((ushort)(existingLen - 7));
                 }
                 this._Instructions.SetSubstitution(
-                    loc: fileOffset + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                    loc: fileOffset + Plugins.Internals.Constants.HeaderLength,
                     sub: lenData);
             }
 
@@ -451,7 +454,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x02)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -463,7 +466,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x56)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x54, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -475,7 +478,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x2A)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x28, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(
@@ -487,7 +490,7 @@ namespace Mutagen.Bethesda.Tests
                 if (len == 0x3E)
                 {
                     this._Instructions.SetSubstitution(
-                        loc: fileOffset + dataLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                        loc: fileOffset + dataLoc + Plugins.Internals.Constants.HeaderLength,
                         sub: new byte[] { 0x3C, 0 });
                     this._Instructions.SetRemove(
                         section: RangeInt64.FactoryFromLength(

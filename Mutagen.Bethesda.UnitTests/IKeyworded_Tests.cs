@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System;

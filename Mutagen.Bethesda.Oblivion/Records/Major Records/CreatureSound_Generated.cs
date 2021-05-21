@@ -10,6 +10,16 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -51,7 +61,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<SoundItem> Sounds
         {
             get => this._Sounds;
-            protected set => this._Sounds = value;
+            init => this._Sounds = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -472,7 +482,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CreatureSoundSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -511,7 +521,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -845,7 +857,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -996,7 +1008,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreatureSoundGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICreatureSoundGetter obj)
         {
             foreach (var item in obj.Sounds.SelectMany(f => f.ContainedFormLinks))
             {
@@ -1145,12 +1157,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.WriteNullable(
+            EnumBinaryTranslation<CreatureSound.CreatureSoundType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.SoundType,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CSDT));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ISoundItemGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ISoundItemGetter>.Instance.Write(
                 writer: writer,
                 items: item.Sounds,
                 transl: (MutagenWriter subWriter, ISoundItemGetter subItem, RecordTypeConverter? conv) =>
@@ -1213,7 +1225,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.SoundType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SoundType = EnumBinaryTranslation<CreatureSound.CreatureSoundType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)CreatureSound_FieldIndex.SoundType;
                 }
                 case RecordTypeInts.CSDI:
@@ -1221,8 +1235,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)CreatureSound_FieldIndex.Sounds) return ParseResult.Stop;
                     item.Sounds.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<SoundItem>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<SoundItem>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: SoundItem_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: SoundItem.TryCreateFromBinary));
@@ -1260,7 +1274,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureSoundBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICreatureSoundGetter
     {
         #region Common Routing
@@ -1282,7 +1296,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CreatureSoundCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CreatureSoundBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

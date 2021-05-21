@@ -1,10 +1,11 @@
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation
@@ -120,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
         {
             var objType = objGen.GetObjectData().ObjectType;
             if (objType.HasValue) return objType.Value;
-            throw new ArgumentException($"Object {objGen.Name} did not have object type defined.");
+            return ObjectType.Subrecord;
         }
 
         public static bool IsListGroup(this ObjectGeneration obj)

@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -58,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<LeveledItemEntry> Entries
         {
             get => this._Entries;
-            protected set => this._Entries = value;
+            init => this._Entries = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -490,7 +500,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LeveledItem_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LeveledItemSetterCommon.Instance.RemapLinks(this, mapping);
         public LeveledItem(FormKey formKey)
         {
@@ -515,6 +525,11 @@ namespace Mutagen.Bethesda.Oblivion
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<LeveledItem>.ToString(this);
         }
 
         #region Equals and Hash
@@ -572,7 +587,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -909,7 +926,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ILeveledItemInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1171,7 +1188,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILeveledItemGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILeveledItemGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1435,19 +1452,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static LeveledItemBinaryWriteTranslation Instance = new LeveledItemBinaryWriteTranslation();
 
-        static partial void WriteBinaryVestigialCustom(
-            MutagenWriter writer,
-            ILeveledItemGetter item);
-
-        public static void WriteBinaryVestigial(
-            MutagenWriter writer,
-            ILeveledItemGetter item)
-        {
-            WriteBinaryVestigialCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             ILeveledItemGetter item,
             MutagenWriter writer,
@@ -1457,16 +1461,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteBinaryTranslation.Instance.WriteNullable(
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.ChanceNone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLD));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<LeveledFlag>.Instance.WriteNullable(
+            EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LVLF));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILeveledItemEntryGetter>.Instance.Write(
                 writer: writer,
                 items: item.Entries,
                 transl: (MutagenWriter subWriter, ILeveledItemEntryGetter subItem, RecordTypeConverter? conv) =>
@@ -1482,6 +1486,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryVestigialCustom(
+            MutagenWriter writer,
+            ILeveledItemGetter item);
+
+        public static void WriteBinaryVestigial(
+            MutagenWriter writer,
+            ILeveledItemGetter item)
+        {
+            WriteBinaryVestigialCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             ILeveledItemGetter item,
@@ -1490,7 +1507,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.LVLI),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1580,14 +1597,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.LVLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<LeveledFlag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<LeveledFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)LeveledItem_FieldIndex.Flags;
                 }
                 case RecordTypeInts.LVLO:
                 {
                     item.Entries.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LeveledItemEntry>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RecordTypes.LVLO,
                             recordTypeConverter: recordTypeConverter,
                             transl: LeveledItemEntry.TryCreateFromBinary));
@@ -1610,7 +1629,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryVestigialCustom(
+        public static partial void FillBinaryVestigialCustom(
             MutagenFrame frame,
             ILeveledItemInternal item);
 
@@ -1646,7 +1665,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LeveledItemCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LeveledItemBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1697,7 +1716,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new LeveledItemBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1798,6 +1817,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<LeveledItem>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

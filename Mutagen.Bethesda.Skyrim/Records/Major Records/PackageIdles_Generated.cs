@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -51,7 +61,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IIdleAnimationGetter>> Animations
         {
             get => this._Animations;
-            protected set => this._Animations = value;
+            init => this._Animations = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -499,7 +509,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PackageIdles_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageIdlesSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -538,7 +548,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -864,7 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1021,7 +1033,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageIdlesGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageIdlesGetter obj)
         {
             foreach (var item in obj.Animations)
             {
@@ -1164,7 +1176,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageIdlesBinaryWriteTranslation Instance = new PackageIdlesBinaryWriteTranslation();
 
-        static partial void WriteBinaryTimerSettingCustom(
+        public static void WriteRecordTypes(
+            IPackageIdlesGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 1,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
+            PackageIdlesBinaryWriteTranslation.WriteBinaryTimerSetting(
+                writer: writer,
+                item: item);
+            PackageIdlesBinaryWriteTranslation.WriteBinaryAnimations(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryTimerSettingCustom(
             MutagenWriter writer,
             IPackageIdlesGetter item);
 
@@ -1177,7 +1207,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryAnimationsCustom(
+        public static partial void WriteBinaryAnimationsCustom(
             MutagenWriter writer,
             IPackageIdlesGetter item);
 
@@ -1186,24 +1216,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageIdlesGetter item)
         {
             WriteBinaryAnimationsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IPackageIdlesGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PackageIdles.Types>.Instance.Write(
-                writer,
-                item.Type,
-                length: 1,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLF));
-            PackageIdlesBinaryWriteTranslation.WriteBinaryTimerSetting(
-                writer: writer,
-                item: item);
-            PackageIdlesBinaryWriteTranslation.WriteBinaryAnimations(
                 writer: writer,
                 item: item);
         }
@@ -1258,7 +1270,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageIdles_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<PackageIdles.Types>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<PackageIdles.Types, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)PackageIdles_FieldIndex.Type;
                 }
                 case RecordTypeInts.IDLT:
@@ -1281,11 +1295,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryTimerSettingCustom(
+        public static partial void FillBinaryTimerSettingCustom(
             MutagenFrame frame,
             IPackageIdles item);
 
-        static partial void FillBinaryAnimationsCustom(
+        public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
             IPackageIdles item);
 
@@ -1316,7 +1330,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PackageIdlesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPackageIdlesGetter
     {
         #region Common Routing
@@ -1338,7 +1352,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageIdlesCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageIdlesBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

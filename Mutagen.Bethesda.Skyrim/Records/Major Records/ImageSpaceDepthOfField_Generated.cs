@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -582,7 +590,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -924,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1103,7 +1113,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IImageSpaceDepthOfFieldGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IImageSpaceDepthOfFieldGetter obj)
         {
             yield break;
         }
@@ -1244,43 +1254,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ImageSpaceDepthOfFieldBinaryWriteTranslation Instance = new ImageSpaceDepthOfFieldBinaryWriteTranslation();
 
-        static partial void WriteBinaryBlurRadiusCustom(
-            MutagenWriter writer,
-            IImageSpaceDepthOfFieldGetter item);
-
-        public static void WriteBinaryBlurRadius(
-            MutagenWriter writer,
-            IImageSpaceDepthOfFieldGetter item)
-        {
-            WriteBinaryBlurRadiusCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinarySkyCustom(
-            MutagenWriter writer,
-            IImageSpaceDepthOfFieldGetter item);
-
-        public static void WriteBinarySky(
-            MutagenWriter writer,
-            IImageSpaceDepthOfFieldGetter item)
-        {
-            WriteBinarySkyCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IImageSpaceDepthOfFieldGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Strength);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Distance);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Range);
             if (!item.Versioning.HasFlag(ImageSpaceDepthOfField.VersioningBreaks.Break0))
@@ -1295,6 +1279,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public static partial void WriteBinaryBlurRadiusCustom(
+            MutagenWriter writer,
+            IImageSpaceDepthOfFieldGetter item);
+
+        public static void WriteBinaryBlurRadius(
+            MutagenWriter writer,
+            IImageSpaceDepthOfFieldGetter item)
+        {
+            WriteBinaryBlurRadiusCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinarySkyCustom(
+            MutagenWriter writer,
+            IImageSpaceDepthOfFieldGetter item);
+
+        public static void WriteBinarySky(
+            MutagenWriter writer,
+            IImageSpaceDepthOfFieldGetter item)
+        {
+            WriteBinarySkyCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IImageSpaceDepthOfFieldGetter item,
@@ -1303,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1332,9 +1342,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceDepthOfField item,
             MutagenFrame frame)
         {
-            item.Strength = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Distance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Range = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Strength = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Distance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Range = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= ImageSpaceDepthOfField.VersioningBreaks.Break0;
@@ -1349,11 +1359,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryBlurRadiusCustom(
+        public static partial void FillBinaryBlurRadiusCustom(
             MutagenFrame frame,
             IImageSpaceDepthOfField item);
 
-        static partial void FillBinarySkyCustom(
+        public static partial void FillBinarySkyCustom(
             MutagenFrame frame,
             IImageSpaceDepthOfField item);
 
@@ -1384,7 +1394,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ImageSpaceDepthOfFieldBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IImageSpaceDepthOfFieldGetter
     {
         #region Common Routing

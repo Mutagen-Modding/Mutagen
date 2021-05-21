@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -572,7 +580,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -910,7 +920,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1089,7 +1099,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavmeshTriangleGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavmeshTriangleGetter obj)
         {
             yield break;
         }
@@ -1233,13 +1243,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangleGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Write(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Vertices);
             writer.Write(item.EdgeLink_0_1);
             writer.Write(item.EdgeLink_1_2);
             writer.Write(item.EdgeLink_2_0);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Write(
+            EnumBinaryTranslation<NavmeshTriangle.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 2);
@@ -1277,11 +1287,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangle item,
             MutagenFrame frame)
         {
-            item.Vertices = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.Vertices = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.EdgeLink_0_1 = frame.ReadInt16();
             item.EdgeLink_1_2 = frame.ReadInt16();
             item.EdgeLink_2_0 = frame.ReadInt16();
-            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Flags = EnumBinaryTranslation<NavmeshTriangle.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.CoverFlags = frame.ReadUInt16();
         }
 
@@ -1312,7 +1324,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavmeshTriangleBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavmeshTriangleGetter
     {
         #region Common Routing
@@ -1348,7 +1360,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P3Int16 Vertices => P3Int16BinaryTranslation.Read(_data.Slice(0x0, 0x6));
+        public P3Int16 Vertices => P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x6));
         public Int16 EdgeLink_0_1 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x6, 0x2));
         public Int16 EdgeLink_1_2 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0x8, 0x2));
         public Int16 EdgeLink_2_0 => BinaryPrimitives.ReadInt16LittleEndian(_data.Slice(0xA, 0x2));

@@ -1,13 +1,13 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using Noggog.Utility;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Tests
             AlignmentRules alignmentRules,
             TempFolder temp)
         {
-            var interest = new Mutagen.Bethesda.RecordInterest(alignmentRules.Alignments.Keys)
+            var interest = new RecordInterest(alignmentRules.Alignments.Keys)
             {
                 EmptyMeansInterested = false
             };

@@ -100,6 +100,10 @@ namespace Mutagen.Bethesda.Tests
                     {
                         yield return passthroughTest.TestEquality();
                     }
+                    if (settings.TestPex)
+                    {
+                        yield return passthroughTest.TestPex();
+                    }
                 }
             }
 

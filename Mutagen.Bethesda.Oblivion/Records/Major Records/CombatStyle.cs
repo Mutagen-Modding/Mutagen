@@ -1,15 +1,6 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -34,7 +25,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class CombatStyleDataBinaryCreateTranslation
         {
-            static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, ICombatStyleData item)
+            public static partial void FillBinarySecondaryFlagsCustom(MutagenFrame frame, ICombatStyleData item)
             {
                 int flags = frame.ReadInt32();
                 var otherFlag = (CombatStyle.Flag)(flags << 8);
@@ -44,7 +35,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class CombatStyleDataBinaryWriteTranslation
         {
-            static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleDataGetter item)
+            public static partial void WriteBinarySecondaryFlagsCustom(MutagenWriter writer, ICombatStyleDataGetter item)
             {
                 int flags = (int)item.Flags;
                 flags >>= 8;

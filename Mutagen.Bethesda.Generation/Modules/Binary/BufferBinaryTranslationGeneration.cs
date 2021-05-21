@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class BufferBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public override bool NeedsNamespacePrefix => false;
+
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
-            return $"ByteArrayBinaryTranslation.Instance";
+            return $"ByteArrayBinaryTranslation<{Module.ReaderClass}, {Module.WriterClass}>.Instance";
         }
 
         public override async Task GenerateCopyIn(
@@ -63,7 +65,7 @@ namespace Mutagen.Bethesda.Generation
         {
             BufferType zero = typeGen as BufferType;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}ByteArrayBinaryTranslation.Instance.Write"))
+                $"{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write"))
             {
                 args.Add($"writer: {writerAccessor}");
                 if (zero.Static)

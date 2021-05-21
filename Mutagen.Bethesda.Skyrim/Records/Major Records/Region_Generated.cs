@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -64,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<RegionArea> RegionAreas
         {
             get => this._RegionAreas;
-            protected set => this._RegionAreas = value;
+            init => this._RegionAreas = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -774,7 +784,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Region_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionSetterCommon.Instance.RemapLinks(this, mapping);
         public Region(
             FormKey formKey,
@@ -816,6 +826,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Region>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -878,7 +893,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1252,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IRegionInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IRegionInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1620,7 +1637,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -2068,19 +2085,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static RegionBinaryWriteTranslation Instance = new RegionBinaryWriteTranslation();
 
-        static partial void WriteBinaryRegionAreaLogicCustom(
-            MutagenWriter writer,
-            IRegionGetter item);
-
-        public static void WriteBinaryRegionAreaLogic(
-            MutagenWriter writer,
-            IRegionGetter item)
-        {
-            WriteBinaryRegionAreaLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IRegionGetter item,
             MutagenWriter writer,
@@ -2090,15 +2094,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapColor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RCLR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Worldspace,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IRegionAreaGetter>.Instance.Write(
                 writer: writer,
                 items: item.RegionAreas,
                 transl: (MutagenWriter subWriter, IRegionAreaGetter subItem, RecordTypeConverter? conv) =>
@@ -2114,6 +2118,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryRegionAreaLogicCustom(
+            MutagenWriter writer,
+            IRegionGetter item);
+
+        public static void WriteBinaryRegionAreaLogic(
+            MutagenWriter writer,
+            IRegionGetter item)
+        {
+            WriteBinaryRegionAreaLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IRegionGetter item,
@@ -2122,7 +2139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.REGN),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2212,18 +2229,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Worldspace.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Worldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Region_FieldIndex.Worldspace;
                 }
                 case RecordTypeInts.RPLI:
                 case RecordTypeInts.RPLD:
                 {
                     item.RegionAreas.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<RegionArea>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<RegionArea>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RegionArea_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: RegionArea.TryCreateFromBinary));
@@ -2246,7 +2260,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryRegionAreaLogicCustom(
+        public static partial void FillBinaryRegionAreaLogicCustom(
             MutagenFrame frame,
             IRegionInternal item);
 
@@ -2282,7 +2296,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RegionBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2331,7 +2345,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new RegionBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2425,6 +2439,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Region>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

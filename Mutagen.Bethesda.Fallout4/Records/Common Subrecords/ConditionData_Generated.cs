@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -680,7 +690,7 @@ namespace Mutagen.Bethesda.Fallout4
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ConditionDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -719,7 +729,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1077,7 +1089,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1304,7 +1316,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IConditionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IConditionDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.ParameterOneRecord);
             yield return FormLinkInformation.Factory(obj.ParameterTwoRecord);
@@ -1462,7 +1474,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static ConditionDataBinaryWriteTranslation Instance = new ConditionDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParameterParsingCustom(
+        public static void WriteEmbedded(
+            IConditionDataGetter item,
+            MutagenWriter writer)
+        {
+            EnumBinaryTranslation<Condition.FunctionType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Function,
+                length: 2);
+            writer.Write(item.Unknown2);
+            ConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParameterParsingCustom(
             MutagenWriter writer,
             IConditionDataGetter item);
 
@@ -1471,20 +1497,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionDataGetter item)
         {
             WriteBinaryParameterParsingCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IConditionDataGetter item,
-            MutagenWriter writer)
-        {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Condition.FunctionType>.Instance.Write(
-                writer,
-                item.Function,
-                length: 2);
-            writer.Write(item.Unknown2);
-            ConditionDataBinaryWriteTranslation.WriteBinaryParameterParsing(
                 writer: writer,
                 item: item);
         }
@@ -1520,14 +1532,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionData item,
             MutagenFrame frame)
         {
-            item.Function = EnumBinaryTranslation<Condition.FunctionType>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.Function = EnumBinaryTranslation<Condition.FunctionType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.Unknown2 = frame.ReadUInt16();
             ConditionDataBinaryCreateTranslation.FillBinaryParameterParsingCustom(
                 frame: frame,
                 item: item);
         }
 
-        static partial void FillBinaryParameterParsingCustom(
+        public static partial void FillBinaryParameterParsingCustom(
             MutagenFrame frame,
             IConditionData item);
 
@@ -1558,7 +1572,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class ConditionDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IConditionDataGetter
     {
         #region Common Routing
@@ -1580,7 +1594,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ConditionDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ConditionDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

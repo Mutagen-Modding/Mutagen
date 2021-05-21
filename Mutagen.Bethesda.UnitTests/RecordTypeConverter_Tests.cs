@@ -1,8 +1,7 @@
-﻿using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using System;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Internals;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests

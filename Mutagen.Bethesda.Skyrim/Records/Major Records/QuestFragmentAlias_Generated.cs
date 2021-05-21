@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -59,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScriptEntry> Scripts
         {
             get => this._Scripts;
-            protected set => this._Scripts = value;
+            init => this._Scripts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -543,7 +553,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestFragmentAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -582,7 +592,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -912,7 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1078,7 +1090,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestFragmentAliasGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestFragmentAliasGetter obj)
         {
             foreach (var item in obj.Property.ContainedFormLinks)
             {
@@ -1253,7 +1265,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestFragmentAliasBinaryWriteTranslation Instance = new QuestFragmentAliasBinaryWriteTranslation();
 
-        static partial void WriteBinaryPropertyCustom(
+        public static void WriteEmbedded(
+            IQuestFragmentAliasGetter item,
+            MutagenWriter writer)
+        {
+            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryProperty(
+                writer: writer,
+                item: item);
+            writer.Write(item.Version);
+            writer.Write(item.ObjectFormat);
+            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryScripts(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryPropertyCustom(
             MutagenWriter writer,
             IQuestFragmentAliasGetter item);
 
@@ -1266,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryScriptsCustom(
+        public static partial void WriteBinaryScriptsCustom(
             MutagenWriter writer,
             IQuestFragmentAliasGetter item);
 
@@ -1275,20 +1301,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestFragmentAliasGetter item)
         {
             WriteBinaryScriptsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IQuestFragmentAliasGetter item,
-            MutagenWriter writer)
-        {
-            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryProperty(
-                writer: writer,
-                item: item);
-            writer.Write(item.Version);
-            writer.Write(item.ObjectFormat);
-            QuestFragmentAliasBinaryWriteTranslation.WriteBinaryScripts(
                 writer: writer,
                 item: item);
         }
@@ -1334,11 +1346,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryPropertyCustom(
+        public static partial void FillBinaryPropertyCustom(
             MutagenFrame frame,
             IQuestFragmentAlias item);
 
-        static partial void FillBinaryScriptsCustom(
+        public static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
             IQuestFragmentAlias item);
 
@@ -1369,7 +1381,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestFragmentAliasBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestFragmentAliasGetter
     {
         #region Common Routing
@@ -1391,7 +1403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestFragmentAliasCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestFragmentAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

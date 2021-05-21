@@ -1,6 +1,7 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using System;
 using System.Collections.Generic;
 using System.Text;

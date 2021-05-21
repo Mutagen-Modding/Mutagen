@@ -1,6 +1,6 @@
 using DynamicData;
 using FluentAssertions;
-using Noggog.Utility;
+using Mutagen.Bethesda.Plugins.Order;
 using System;
 using System.IO;
 using System.Linq;
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests
                     dataPath: dataPath)
                 .ToList();
             results.Should().HaveCount(1);
-            results[0].Should().BeEquivalentTo(new LoadOrderListing(Utility.LightMasterModKey, enabled: true));
+            results[0].Should().BeEquivalentTo(new ModListing(Utility.LightMasterModKey, enabled: true));
         }
 
         [Fact]

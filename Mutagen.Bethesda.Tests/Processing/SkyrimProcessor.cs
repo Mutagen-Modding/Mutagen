@@ -4,9 +4,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 
 namespace Mutagen.Bethesda.Tests
@@ -17,7 +23,7 @@ namespace Mutagen.Bethesda.Tests
 
         private Dictionary<(ModKey ModKey, StringsSource Source), HashSet<uint>> _knownDeadKeys = new()
         {
-            { (Constants.Update, StringsSource.Normal), new() { 34 } }
+            { (Skyrim.Constants.Update, StringsSource.Normal), new() { 34 } }
         };
 
         public SkyrimProcessor(GameRelease release, bool multithread) 
@@ -80,7 +86,7 @@ namespace Mutagen.Bethesda.Tests
             var pos = initialPos - majorFrame.HeaderLength;
             while (pos < majorFrame.Content.Length)
             {
-                var positions = UtilityTranslation.FindNextSubrecords(
+                var positions = PluginUtilityTranslation.FindNextSubrecords(
                     majorFrame.Content.Slice(pos),
                     majorFrame.Meta,
                     out var lenParsed,
@@ -144,7 +150,7 @@ namespace Mutagen.Bethesda.Tests
             MajorRecordFrame majorFrame,
             long fileOffset)
         {
-            var rdat = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT, navigateToContent: false);
+            var rdat = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.RDAT, navigateToContent: false);
             if (rdat == null) return;
 
             // Order RDATs by index
@@ -154,7 +160,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 var rdatHeader = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(rdat.Value));
                 var index = BinaryPrimitives.ReadUInt32LittleEndian(rdatHeader.Content);
-                var nextRdat = UtilityTranslation.FindFirstSubrecord(
+                var nextRdat = PluginUtilityTranslation.FindFirstSubrecord(
                     majorFrame.Content,
                     majorFrame.Meta,
                     RecordTypes.RDAT,
@@ -262,7 +268,7 @@ namespace Mutagen.Bethesda.Tests
                     RecordTypes.ALST,
                     RecordTypes.ALLS
                 };
-                var locs = UtilityTranslation.FindAllOfSubrecords(
+                var locs = PluginUtilityTranslation.FindAllOfSubrecords(
                     majorFrame.Content,
                     majorFrame.Meta,
                     targets.ToGetter(),
@@ -352,7 +358,7 @@ namespace Mutagen.Bethesda.Tests
             out ushort objectFormat,
             out int processed)
         {
-            vmadPos = UtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
+            vmadPos = PluginUtilityTranslation.FindFirstSubrecord(frame.Content, Meta, RecordTypes.VMAD);
             if (vmadPos == null)
             {
                 processed = 0;
@@ -515,7 +521,7 @@ namespace Mutagen.Bethesda.Tests
             // Reorder Idle subrecords
 
             // Reorder data values
-            var xnamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
+            var xnamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.XNAM);
             if (xnamPos == null)
             {
                 throw new ArgumentException();
@@ -529,7 +535,7 @@ namespace Mutagen.Bethesda.Tests
 
             if (count == 0) return;
 
-            var anamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
+            var anamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content, majorFrame.Meta, RecordTypes.ANAM);
             RecordType pldt = new RecordType("PLDT");
             RecordType ptda = new RecordType("PTDA");
             RecordType pdto = new RecordType("PDTO");
@@ -546,7 +552,7 @@ namespace Mutagen.Bethesda.Tests
                 while (anamPos.HasValue && anamPos.Value < xnamPos.Value)
                 {
                     var anamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(anamPos.Value));
-                    var recs = UtilityTranslation.FindNextSubrecords(
+                    var recs = PluginUtilityTranslation.FindNextSubrecords(
                         majorFrame.Content.Slice(anamPos.Value + anamRecord.TotalLength),
                         majorFrame.Meta,
                         out var _,
@@ -601,7 +607,7 @@ namespace Mutagen.Bethesda.Tests
                     anamPos = anamPos.Value + anamRecord.TotalLength + recs[0];
                 }
 
-                var unamLocs = UtilityTranslation.ParseRepeatingSubrecord(
+                var unamLocs = PluginUtilityTranslation.ParseRepeatingSubrecord(
                     majorFrame.Content.Slice(curLoc),
                     majorFrame.Meta,
                     unam,
@@ -641,7 +647,7 @@ namespace Mutagen.Bethesda.Tests
             }
 
             // Reorder inputs
-            var unamPos = UtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
+            var unamPos = PluginUtilityTranslation.FindFirstSubrecord(majorFrame.Content.Slice(xnamPos.Value), majorFrame.Meta, unam);
             if (!unamPos.HasValue) return;
             unamPos += xnamPos.Value;
             var writeLoc = fileOffset + majorFrame.HeaderLength + unamPos.Value;
@@ -649,7 +655,7 @@ namespace Mutagen.Bethesda.Tests
             while (unamPos.HasValue)
             {
                 var unamRecord = majorFrame.Meta.SubrecordFrame(majorFrame.Content.Slice(unamPos.Value));
-                var recs = UtilityTranslation.FindNextSubrecords(
+                var recs = PluginUtilityTranslation.FindNextSubrecords(
                     majorFrame.Content.Slice(unamPos.Value + unamRecord.TotalLength),
                     majorFrame.Meta,
                     out var _,
@@ -800,7 +806,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return t;
             }
-            var bsaOrder = Archive.GetTypicalOrder(GameRelease).ToList();
+            var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
@@ -877,12 +883,12 @@ namespace Mutagen.Bethesda.Tests
 
         private async Task ProcessStringsFilesIndices(
             Func<IMutagenReadStream> streamGetter,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language, 
             StringsSource source, 
             ModKey modKey,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder)
+            IEnumerable<FileName> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)

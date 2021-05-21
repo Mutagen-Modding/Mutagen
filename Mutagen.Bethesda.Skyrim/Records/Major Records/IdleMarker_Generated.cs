@@ -6,11 +6,22 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -598,7 +609,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = IdleMarker_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => IdleMarkerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IdleMarkerCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => IdleMarkerSetterCommon.Instance.RemapLinks(this, mapping);
         public IdleMarker(
             FormKey formKey,
@@ -640,6 +651,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<IdleMarker>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -702,7 +718,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1079,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IIdleMarkerInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IIdleMarkerInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1372,7 +1390,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IIdleMarkerGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IIdleMarkerGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1697,32 +1715,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static IdleMarkerBinaryWriteTranslation Instance = new IdleMarkerBinaryWriteTranslation();
 
-        static partial void WriteBinaryAnimationCountCustom(
-            MutagenWriter writer,
-            IIdleMarkerGetter item);
-
-        public static void WriteBinaryAnimationCount(
-            MutagenWriter writer,
-            IIdleMarkerGetter item)
-        {
-            WriteBinaryAnimationCountCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryAnimationsCustom(
-            MutagenWriter writer,
-            IIdleMarkerGetter item);
-
-        public static void WriteBinaryAnimations(
-            MutagenWriter writer,
-            IIdleMarkerGetter item)
-        {
-            WriteBinaryAnimationsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IIdleMarkerGetter item,
             MutagenWriter writer,
@@ -1737,7 +1729,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<IdleMarker.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<IdleMarker.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 1,
@@ -1745,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IdleMarkerBinaryWriteTranslation.WriteBinaryAnimationCount(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.IdleTimer,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.IDLT));
@@ -1761,6 +1753,32 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public static partial void WriteBinaryAnimationCountCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimationCount(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryAnimationsCustom(
+            MutagenWriter writer,
+            IIdleMarkerGetter item);
+
+        public static void WriteBinaryAnimations(
+            MutagenWriter writer,
+            IIdleMarkerGetter item)
+        {
+            WriteBinaryAnimationsCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IIdleMarkerGetter item,
@@ -1769,7 +1787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.IDLM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1858,7 +1876,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.IDLF:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<IdleMarker.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<IdleMarker.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)IdleMarker_FieldIndex.Flags;
                 }
                 case RecordTypeInts.IDLC:
@@ -1871,7 +1891,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.IDLT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTimer = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.IdleTimer = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)IdleMarker_FieldIndex.IdleTimer;
                 }
                 case RecordTypeInts.IDLA:
@@ -1898,11 +1918,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAnimationCountCustom(
+        public static partial void FillBinaryAnimationCountCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
 
-        static partial void FillBinaryAnimationsCustom(
+        public static partial void FillBinaryAnimationsCustom(
             MutagenFrame frame,
             IIdleMarkerInternal item);
 
@@ -1938,7 +1958,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => IdleMarkerCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => IdleMarkerCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => IdleMarkerBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2000,7 +2020,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new IdleMarkerBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2107,6 +2127,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<IdleMarker>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

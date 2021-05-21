@@ -17,28 +17,27 @@
   <ItemGroup>
     <EmbeddedResource Remove="Archives\Ba2\**" />
     <EmbeddedResource Remove="Properties\**" />
-    <EmbeddedResource Remove="Translations\Binary\WriteParameters\**" />
     <None Remove="Archives\Ba2\**" />
     <None Remove="Properties\**" />
-    <None Remove="Translations\Binary\WriteParameters\**" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" Version="1.15.0" />
-    <PackageReference Include="DynamicData" Version="7.1.1" />
+    <PackageReference Include="DynamicData" Version="7.1.16" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-    <PackageReference Include="Loqui" Version="2.13.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.13.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.0">
+    <PackageReference Include="Loqui" Version="2.16.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.16.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SharpZipLib" Version="1.3.1" />
+    <PackageReference Include="SharpZipLib" Version="1.3.2" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.33" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -72,22 +71,44 @@
     <Compile Include="Archives\Bsa\BsaUtility.cs" />
     <Compile Include="Archives\Bsa\BsaVersionType.cs" />
     <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
+    <Compile Include="Archives\Exceptions\BsaException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
-    <Compile Include="Enums\ColorBinaryType.cs" />
-    <Compile Include="Enums\FloatIntegerType.cs" />
-    <Compile Include="Enums\Language.cs" />
-    <Compile Include="Enums\ModHeaderCommonFlag.cs" />
-    <Compile Include="Enums\Quadrant.cs" />
-    <Compile Include="Enums\StringsLanguageFormat.cs" />
-    <Compile Include="Enums\StringsFileFormat.cs" />
-    <Compile Include="Enums\StringsSource.cs" />
-    <Compile Include="Exceptions\BsaException.cs" />
-    <Compile Include="Exceptions\MissingModException.cs" />
-    <Compile Include="Exceptions\MissingRecordException.cs" />
-    <Compile Include="Exceptions\RecordCollisionException.cs" />
-    <Compile Include="Exceptions\RecordException.cs" />
-    <Compile Include="Exceptions\SubrecordException.cs" />
+    <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
+    <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
+    <Compile Include="Plugins\Extensions\ModContextExt.cs" />
+    <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
+    <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
+    <Compile Include="Strings\Language.cs" />
+    <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Binary\Translations\TypicalBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Order\TypedLoadOrderAccess.cs" />
+    <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\CharBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\DoubleBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\EnumBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\FloatBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\FloatIntegerType.cs" />
+    <Compile Include="Translations\Binary\Int16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\Int32BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\Int64BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\Int8BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\ListBinaryTranslation.cs" />
+    <Compile Include="Plugins\Records\ModHeaderCommonFlag.cs" />
+    <Compile Include="Plugins\Records\Quadrant.cs" />
+    <Compile Include="Strings\StringsLanguageFormat.cs" />
+    <Compile Include="Strings\StringsFileFormat.cs" />
+    <Compile Include="Strings\StringsSource.cs" />
+    <Compile Include="Plugins\Exceptions\MissingModException.cs" />
+    <Compile Include="Plugins\Exceptions\MissingRecordException.cs" />
+    <Compile Include="Plugins\Exceptions\RecordCollisionException.cs" />
+    <Compile Include="Plugins\Exceptions\RecordException.cs" />
+    <Compile Include="Plugins\Exceptions\SubrecordException.cs" />
     <Compile Include="Extensions\IGroupMixIns.cs" />
     <Compile Include="Extensions\DuplicateFromMixIn.cs" />
     <Compile Include="Extensions\EnumerableExt.cs" />
@@ -100,54 +121,53 @@
     <Compile Include="Extensions\RemoveExt.cs" />
     <Compile Include="Extensions\LoadOrderExt.cs" />
     <Compile Include="Extensions\GameReleaseExt.cs" />
-    <Compile Include="Implicits\ImplicitRecordFormKeys.cs" />
-    <Compile Include="Implicits\ImplicitListings.cs" />
-    <Compile Include="Implicits\ImplicitBaseMasters.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitRecordFormKeys.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitListings.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitBaseMasters.cs" />
     <Compile Include="Ini\Ini.cs" />
-    <Compile Include="Interfaces\Aspect\IKeywordCommon.cs" />
-    <Compile Include="Interfaces\IGameSettingCommon.cs" />
-    <Compile Include="Interfaces\IGroup.cs" />
-    <Compile Include="Interfaces\Aspect\IKeyworded.cs" />
-    <Compile Include="Interfaces\ILinkInterfaceMapping.cs" />
-    <Compile Include="Interfaces\IMajorRecordCommon.cs" />
-    <Compile Include="Interfaces\IMajorRecordContextEnumerable.cs" />
-    <Compile Include="Interfaces\IMajorRecordEnumerable.cs" />
-    <Compile Include="Interfaces\IMajorRecordIdentifier.cs" />
-    <Compile Include="Interfaces\IMod.cs" />
-    <Compile Include="Interfaces\IContextGetterMod.cs" />
-    <Compile Include="Interfaces\IModHeaderCommon.cs" />
-    <Compile Include="Interfaces\IModKeyed.cs" />
-    <Compile Include="Interfaces\Aspect\INamed.cs" />
-    <Compile Include="Interfaces\Aspect\INamedRequired.cs" />
-    <Compile Include="Interfaces\Aspect\ITranslatedNamed.cs" />
-    <Compile Include="Interfaces\Aspect\ITranslatedNamedRequired.cs" />
-    <Compile Include="Interfaces\IMapsToGetter.cs" />
-    <Compile Include="Interfaces\LinkInterfaceMapping.cs" />
+    <Compile Include="Plugins\Aspects\IKeywordCommon.cs" />
+    <Compile Include="Plugins\Records\IGameSettingCommon.cs" />
+    <Compile Include="Plugins\Records\IGroup.cs" />
+    <Compile Include="Plugins\Aspects\IKeyworded.cs" />
+    <Compile Include="Plugins\Records\Internals\ILinkInterfaceMapping.cs" />
+    <Compile Include="Plugins\Records\IMajorRecordCommon.cs" />
+    <Compile Include="Plugins\Records\IMajorRecordContextEnumerable.cs" />
+    <Compile Include="Plugins\Records\IMajorRecordEnumerable.cs" />
+    <Compile Include="Plugins\Records\IMajorRecordIdentifier.cs" />
+    <Compile Include="Plugins\Records\IMod.cs" />
+    <Compile Include="Plugins\Records\IContextGetterMod.cs" />
+    <Compile Include="Plugins\Records\IModHeaderCommon.cs" />
+    <Compile Include="Plugins\IModKeyed.cs" />
+    <Compile Include="Plugins\Aspects\INamed.cs" />
+    <Compile Include="Plugins\Aspects\INamedRequired.cs" />
+    <Compile Include="Plugins\Aspects\ITranslatedNamed.cs" />
+    <Compile Include="Plugins\Aspects\ITranslatedNamedRequired.cs" />
+    <Compile Include="Plugins\Records\Internals\IMapsToGetter.cs" />
+    <Compile Include="Plugins\Records\Internals\LinkInterfaceMapping.cs" />
     <Compile Include="IsExternalInit.cs" />
-    <Compile Include="Interfaces\Aspect\IWeightValue.cs" />
-    <Compile Include="Links\Cache\ImmutableModLinkCache.cs" />
-    <Compile Include="Links\Cache\LinkCacheItem.cs" />
-    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceOnlyIdentifiers.cs" />
-    <Compile Include="Links\Cache\Preferences\LinkCachePreferenceWholeRecord.cs" />
-    <Compile Include="Links\FormLinkInformation.cs" />
-    <Compile Include="Links\FormLinkNullable.cs" />
-    <Compile Include="Links\IFormLink.cs" />
-    <Compile Include="Links\Cache\ILinkCache.cs" />
-    <Compile Include="Links\Cache\ImmutableLoadOrderLinkCache.cs" />
-    <Compile Include="Links\Cache\Preferences\LinkCachePreferences.cs" />
-    <Compile Include="Links\Cache\MutableModLinkCache.cs" />
-    <Compile Include="Links\Cache\MutableLoadOrderLinkCache.cs" />
-    <Compile Include="Links\FormLinkTypelessComparer.cs" />
-    <Compile Include="Load Order\CreationClubListings.cs" />
-    <Compile Include="Load Order\LoadOrder.cs" />
+    <Compile Include="Plugins\Aspects\IWeightValue.cs" />
+    <Compile Include="Plugins\Cache\Implementations\ImmutableModLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Implementations\LinkCacheItem.cs" />
+    <Compile Include="Plugins\Cache\LinkCachePreferenceOnlyIdentifiers.cs" />
+    <Compile Include="Plugins\Cache\LinkCachePreferenceWholeRecord.cs" />
+    <Compile Include="Plugins\Internals\FormLinkInformation.cs" />
+    <Compile Include="Plugins\FormLinkNullable.cs" />
+    <Compile Include="Plugins\IFormLink.cs" />
+    <Compile Include="Plugins\Cache\ILinkCache.cs" />
+    <Compile Include="Plugins\Cache\Implementations\ImmutableLoadOrderLinkCache.cs" />
+    <Compile Include="Plugins\Cache\LinkCachePreferences.cs" />
+    <Compile Include="Plugins\Cache\Implementations\MutableModLinkCache.cs" />
+    <Compile Include="Plugins\Cache\Implementations\MutableLoadOrderLinkCache.cs" />
+    <Compile Include="Plugins\FormLinkTypelessComparer.cs" />
+    <Compile Include="Plugins\Order\CreationClubListings.cs" />
+    <Compile Include="Plugins\Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
-    <Compile Include="Load Order\LoadOrderListing.cs" />
-    <Compile Include="Load Order\LoadOrderTimestampComparer.cs" />
-    <Compile Include="Load Order\PluginListings.cs" />
-    <Compile Include="Persistence\IPersistentFormKeyAllocator.cs" />
-    <Compile Include="Persistence\ISharedFormKeyAllocator.cs" />
-    <Compile Include="Persistence\TextFileSharedFormKeyAllocator.cs" />
-    <Compile Include="Implicits\Implicits.cs" />
+    <Compile Include="Plugins\Order\LoadOrderTimestampComparer.cs" />
+    <Compile Include="Plugins\Order\PluginListings.cs" />
+    <Compile Include="Plugins\Allocators\IPersistentFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Allocators\ISharedFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Allocators\TextFileSharedFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Implicit\Implicits.cs" />
     <Compile Include="Pex\DataTypes\DebugInfo.cs">
       <DependentUpon>DebugInfo.xml</DependentUpon>
     </Compile>
@@ -174,148 +194,137 @@
     <Compile Include="Pex\PexWriteMeta.cs" />
     <Compile Include="Pex\PexWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Records\RecordTypeInts.cs" />
-    <Compile Include="Records\RecordTypes.cs" />
-    <Compile Include="Streams\WritingBundle.cs" />
-    <Compile Include="Streams\ParsingBundle.cs" />
-    <Compile Include="String Lookup\IStringsLookup.cs" />
-    <Compile Include="String Lookup\ITranslatedString.cs" />
-    <Compile Include="String Lookup\IStringsFolderLookup.cs" />
-    <Compile Include="String Lookup\StringsInstructions.cs" />
-    <Compile Include="String Lookup\StringsFolderLookupOverlay.cs" />
-    <Compile Include="String Lookup\StringsUtility.cs" />
-    <Compile Include="String Lookup\StringsWriter.cs" />
-    <Compile Include="String Lookup\TranslatedString.cs" />
-    <Compile Include="Structs\FormID.cs" />
-    <Compile Include="Structs\FormKey.cs" />
-    <Compile Include="Structs\ModIndex.cs" />
-    <Compile Include="Structs\RecordType.cs" />
-    <Compile Include="Structs\TypedLoadOrderAccess.cs" />
+    <Compile Include="Plugins\Binary\Headers\GroupHeader.cs" />
+    <Compile Include="Plugins\Binary\Headers\HeaderExt.cs" />
+    <Compile Include="Plugins\Binary\Headers\MajorRecordHeader.cs" />
+    <Compile Include="Plugins\Binary\Headers\ModHeader.cs" />
+    <Compile Include="Plugins\Binary\Headers\StreamHeaderMixIn.cs" />
+    <Compile Include="Plugins\Binary\Headers\SubrecordHeader.cs" />
+    <Compile Include="Plugins\Binary\Headers\VariableHeader.cs" />
+    <Compile Include="Plugins\Internals\RecordTypeInts.cs" />
+    <Compile Include="Plugins\Internals\RecordTypes.cs" />
+    <Compile Include="Plugins\Binary\Streams\WritingBundle.cs" />
+    <Compile Include="Plugins\Binary\Streams\ParsingBundle.cs" />
+    <Compile Include="Strings\IStringsLookup.cs" />
+    <Compile Include="Strings\ITranslatedString.cs" />
+    <Compile Include="Strings\IStringsFolderLookup.cs" />
+    <Compile Include="Strings\StringsInstructions.cs" />
+    <Compile Include="Strings\StringsFolderLookupOverlay.cs" />
+    <Compile Include="Strings\StringsUtility.cs" />
+    <Compile Include="Strings\StringsWriter.cs" />
+    <Compile Include="Strings\TranslatedString.cs" />
+    <Compile Include="Plugins\FormID.cs" />
+    <Compile Include="Plugins\FormKey.cs" />
+    <Compile Include="Plugins\ModIndex.cs" />
+    <Compile Include="Plugins\RecordType.cs" />
     <Compile Include="TestingPermissions.cs" />
-    <Compile Include="Interfaces\IFormVersionGetter.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\FormVersionGetter.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\OverlayStream.cs" />
-    <Compile Include="Translations\Binary\ExtraLengthHeaderExport.cs" />
-    <Compile Include="Translations\Binary\Fields\DictBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\PercentBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Headers\HeaderExt.cs" />
-    <Compile Include="Translations\Binary\Headers\GroupConstants.cs" />
-    <Compile Include="Translations\Binary\Headers\StreamHeaderMixIn.cs" />
-    <Compile Include="Translations\Binary\ModHeaderWriteLogic.cs" />
-    <Compile Include="Translations\Binary\ParseResult.cs" />
-    <Compile Include="Translations\XML\TranslatedStringXmlTranslation.cs" />
-    <Compile Include="Structs\ModContext.cs" />
-    <Compile Include="Utility\GameEnvironment.cs" />
-    <Compile Include="Utility\MajorRecordTypePrinter.cs" />
-    <Compile Include="Utility\ModInstantiator.cs" />
-    <Compile Include="Utility\RecordInfoCache.cs" />
-    <Compile Include="Persistence\TextFileFormKeyAllocator.cs" />
-    <Compile Include="Records\AMod.cs" />
-    <Compile Include="Persistence\SimpleFormKeyAllocator.cs" />
-    <Compile Include="Streams\MutagenInterfaceReadStream.cs" />
-    <Compile Include="Translations\Binary\BinaryWriteParameters.cs" />
-    <Compile Include="Utility\MajorRecordInstantiator.cs" />
-    <Compile Include="Enums\StringBinaryType.cs" />
-    <Compile Include="Persistence\IFormKeyAllocator.cs" />
-    <Compile Include="Records\GenderedItem.cs" />
-    <Compile Include="Records\AListGroup.cs" />
-    <Compile Include="Records\ProtocolDefinition_Bethesda.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayArrayHelper.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayFactoryPackage.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayList.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\BinaryOverlayNumberedList.cs" />
-    <Compile Include="Translations\Binary\Binary Overlay\GenderedItemBinaryOverlay.cs" />
-    <Compile Include="Records\AGroup.cs" />
-    <Compile Include="Translations\Binary\BinaryOverlay.cs" />
-    <Compile Include="Translations\Binary\CompositeReadStream.cs" />
-    <Compile Include="Translations\Binary\GlobalCustomParsing.cs" />
-    <Compile Include="Translations\Binary\Fields\GenderedItemBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Headers\GroupHeader.cs" />
-    <Compile Include="Translations\Binary\Headers\MajorRecordHeader.cs" />
-    <Compile Include="Translations\Binary\Headers\MajorRecordConstants.cs" />
-    <Compile Include="Translations\Binary\Headers\ModHeader.cs" />
-    <Compile Include="Translations\Binary\Headers\RecordConstants.cs" />
-    <Compile Include="Translations\Binary\Headers\SubrecordHeader.cs" />
-    <Compile Include="Translations\Binary\Headers\VariableHeader.cs" />
-    <Compile Include="Translations\Binary\Fields\LoquiBinaryOverlayTranslation.cs" />
-    <Compile Include="Translations\Binary\Headers\GameConstants.cs" />
-    <Compile Include="Processing\BinaryFileProcessor.cs" />
-    <Compile Include="Processing\ModRecordAligner.cs" />
-    <Compile Include="Translations\Binary\BinaryStringUtility.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Extensions\IBinaryStreamExt.cs" />
-    <Compile Include="Streams\IMutagenReadStream.cs" />
-    <Compile Include="Links\EDIDLink.cs" />
-    <Compile Include="Links\FormLink.cs" />
-    <Compile Include="Links\IEDIDLink.cs" />
-    <Compile Include="Links\ILink.cs" />
-    <Compile Include="Links\IFormLinkContainerGetter.cs" />
-    <Compile Include="Utility\MasterReferenceReader.cs" />
-    <Compile Include="Processing\ModDecompressor.cs" />
-    <Compile Include="Load Order\ModListing.cs" />
-    <Compile Include="Processing\ModRecordSorter.cs" />
-    <Compile Include="Enums\ObjectType.cs" />
-    <Compile Include="Utility\RecordInterest.cs" />
-    <Compile Include="Utility\RecordLocator.cs" />
-    <Compile Include="Records\MajorRecord.cs">
-      <DependentUpon>MajorRecord.xml</DependentUpon>
-    </Compile>
-    <Compile Include="Translations\Binary\RecordTypeConverter.cs" />
-    <Compile Include="Streams\MutagenBinaryReadStream.cs" />
-    <Compile Include="Streams\MutagenMemoryReadStream.cs" />
-    <Compile Include="Translations\Binary\Fields\BooleanBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\ByteArrayBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\ByteBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\CharBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\ColorBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\IBinaryItem.cs" />
-    <Compile Include="Translations\Binary\Fields\ListBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\DateTimeBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\DoubleBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\EnumBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\FilePathBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\FloatBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\FormKeyBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\FormLinkBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\HeaderExport.cs" />
-    <Compile Include="Translations\Binary\HeaderTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\Int16BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\Int32BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\Int64BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\Int8BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\LoquiBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\ModKeyBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\MutagenFrame.cs" />
-    <Compile Include="Streams\MutagenWriter.cs" />
-    <Compile Include="Translations\Binary\Fields\P2FloatBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P3Int16BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P2Int16BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P3IntBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P2IntBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P3FloatBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\P3UInt16BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\PrimitiveBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\RecordTypeBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\StringBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\TypicalBinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\UInt16BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\UInt32BinaryTranslation.cs" />
-    <Compile Include="Translations\Binary\Fields\UInt64BinaryTranslation.cs" />
+    <Compile Include="Plugins\Records\IFormVersionGetter.cs" />
+    <Compile Include="Plugins\Binary\Overlay\FormVersionGetter.cs" />
+    <Compile Include="Plugins\Binary\Overlay\OverlayStream.cs" />
+    <Compile Include="Plugins\Binary\Translations\ExtraLengthHeaderExport.cs" />
+    <Compile Include="Plugins\Binary\Translations\DictBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\PercentBinaryTranslation.cs" />
+    <Compile Include="Plugins\Meta\GroupConstants.cs" />
+    <Compile Include="Plugins\Binary\Translations\ModHeaderWriteLogic.cs" />
+    <Compile Include="Plugins\Binary\Translations\ParseResult.cs" />
+    <Compile Include="Plugins\Xml\TranslatedStringXmlTranslation.cs" />
+    <Compile Include="Plugins\Cache\ModContext.cs" />
+    <Compile Include="Translations\Binary\P2FloatBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P2Int16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P2IntBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P3FloatBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P3Int16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P3IntBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\P3UInt16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\PrimitiveBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\TypicalBinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\UInt16BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\UInt32BinaryTranslation.cs" />
+    <Compile Include="Translations\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\UtilityTranslation.cs" />
-    <Compile Include="Translations\Folder\FolderTranslation.cs" />
-    <Compile Include="Translations\XML\RecordTypeXmlTranslation.cs" />
-    <Compile Include="Translations\XML\FormKeyXmlTranslation.cs" />
-    <Compile Include="Translations\Folder\IXmlFolderItem.cs" />
-    <Compile Include="Translations\Folder\LoquiXmlFolderTranslation.cs" />
-    <Compile Include="Translations\XML\ModKeyXmlTranslation.cs" />
-    <Compile Include="String Lookup\StringsLookupOverlay.cs" />
-    <Compile Include="Records\MajorRecord_Generated.cs">
+    <Compile Include="GameEnvironment.cs" />
+    <Compile Include="Plugins\Utility\MajorRecordPrinter.cs" />
+    <Compile Include="Plugins\Records\ModInstantiator.cs" />
+    <Compile Include="Plugins\Utility\RecordTypeInfoCacheReader.cs" />
+    <Compile Include="Plugins\Allocators\TextFileFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Records\AMod.cs" />
+    <Compile Include="Plugins\Allocators\SimpleFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Binary\Streams\MutagenInterfaceReadStream.cs" />
+    <Compile Include="Plugins\Binary\BinaryWriteParameters.cs" />
+    <Compile Include="Plugins\Utility\MajorRecordInstantiator.cs" />
+    <Compile Include="Plugins\Binary\Translations\StringBinaryType.cs" />
+    <Compile Include="Plugins\Allocators\IFormKeyAllocator.cs" />
+    <Compile Include="Plugins\Records\GenderedItem.cs" />
+    <Compile Include="Plugins\Binary\Overlay\AListGroupOverlay.cs" />
+    <Compile Include="Plugins\Records\ProtocolDefinition_Bethesda.cs" />
+    <Compile Include="Plugins\Binary\Overlay\BinaryOverlayArrayHelper.cs" />
+    <Compile Include="Plugins\Binary\Overlay\BinaryOverlayFactoryPackage.cs" />
+    <Compile Include="Plugins\Binary\Overlay\BinaryOverlayList.cs" />
+    <Compile Include="Plugins\Binary\Overlay\BinaryOverlayNumberedList.cs" />
+    <Compile Include="Plugins\Binary\Overlay\GenderedItemBinaryOverlay.cs" />
+    <Compile Include="Plugins\Records\AGroup.cs" />
+    <Compile Include="Plugins\Binary\Overlay\PluginBinaryOverlay.cs" />
+    <Compile Include="Plugins\Binary\Streams\CompositeReadStream.cs" />
+    <Compile Include="Plugins\Binary\Translations\GlobalCustomParsing.cs" />
+    <Compile Include="Plugins\Binary\Translations\GenderedItemBinaryTranslation.cs" />
+    <Compile Include="Plugins\Meta\MajorRecordConstants.cs" />
+    <Compile Include="Plugins\Meta\RecordConstants.cs" />
+    <Compile Include="Plugins\Binary\Translations\LoquiBinaryOverlayTranslation.cs" />
+    <Compile Include="Plugins\Meta\GameConstants.cs" />
+    <Compile Include="Plugins\Binary\Processing\BinaryFileProcessor.cs" />
+    <Compile Include="Plugins\Binary\Processing\ModRecordAligner.cs" />
+    <Compile Include="Plugins\Binary\Translations\BinaryStringUtility.cs" />
+    <Compile Include="Plugins\Internals\Constants.cs" />
+    <Compile Include="Extensions\IBinaryStreamExt.cs" />
+    <Compile Include="Plugins\Binary\Streams\IMutagenReadStream.cs" />
+    <Compile Include="Plugins\EDIDLink.cs" />
+    <Compile Include="Plugins\FormLink.cs" />
+    <Compile Include="Plugins\IEDIDLink.cs" />
+    <Compile Include="Plugins\ILink.cs" />
+    <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
+    <Compile Include="Plugins\Utility\MasterReferenceReader.cs" />
+    <Compile Include="Plugins\Binary\Processing\ModDecompressor.cs" />
+    <Compile Include="Plugins\Order\ModListing.cs" />
+    <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />
+    <Compile Include="Plugins\Records\Internals\ObjectType.cs" />
+    <Compile Include="Plugins\Utility\RecordInterest.cs" />
+    <Compile Include="Plugins\Utility\RecordLocator.cs" />
+    <Compile Include="Plugins\Records\MajorRecord.cs">
       <DependentUpon>MajorRecord.xml</DependentUpon>
     </Compile>
-    <Compile Include="Records\MasterReference_Generated.cs">
+    <Compile Include="Plugins\Binary\Streams\RecordTypeConverter.cs" />
+    <Compile Include="Plugins\Binary\Streams\MutagenBinaryReadStream.cs" />
+    <Compile Include="Plugins\Binary\Streams\MutagenMemoryReadStream.cs" />
+    <Compile Include="Plugins\Binary\Translations\ColorBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\IBinaryItem.cs" />
+    <Compile Include="Plugins\Binary\Translations\ListBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\DateTimeBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\EnumBinaryTranslationExt.cs" />
+    <Compile Include="Plugins\Binary\Translations\FilePathBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\FormKeyBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\FormLinkBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\HeaderExport.cs" />
+    <Compile Include="Plugins\Binary\Translations\HeaderTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\LoquiBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\ModKeyBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Streams\MutagenFrame.cs" />
+    <Compile Include="Plugins\Binary\Streams\MutagenWriter.cs" />
+    <Compile Include="Plugins\Binary\Translations\RecordTypeBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\StringBinaryTranslation.cs" />
+    <Compile Include="Plugins\Binary\Translations\UtilityTranslation.cs" />
+    <Compile Include="Plugins\Xml\FolderTranslation.cs" />
+    <Compile Include="Plugins\Xml\RecordTypeXmlTranslation.cs" />
+    <Compile Include="Plugins\Xml\FormKeyXmlTranslation.cs" />
+    <Compile Include="Plugins\Xml\IXmlFolderItem.cs" />
+    <Compile Include="Plugins\Xml\LoquiXmlFolderTranslation.cs" />
+    <Compile Include="Plugins\Xml\ModKeyXmlTranslation.cs" />
+    <Compile Include="Strings\StringsLookupOverlay.cs" />
+    <Compile Include="Plugins\Records\MajorRecord_Generated.cs">
+      <DependentUpon>MajorRecord.xml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\Records\MasterReference_Generated.cs">
       <DependentUpon>MasterReference.xml</DependentUpon>
     </Compile>
-    <Compile Include="Extensions\GameCategoryHelper_Generated.cs" />
     <Compile Include="Pex\DataTypes\DebugInfo_Generated.cs">
       <DependentUpon>DebugInfo.xml</DependentUpon>
     </Compile>
@@ -365,6 +374,16 @@
     <Compile Include="Pex\DataTypes\PexObjectFunctionInstruction_Generated.cs">
       <DependentUpon>PexObject.xml</DependentUpon>
     </Compile>
+    <Compile Include="Plugins\Records\RecordTypes_Generated.cs" />
+    <Compile Include="Plugins\Records\RecordTypeInts_Generated.cs" />
+    <Compile Include="Plugins\Extensions\GameCategoryHelper_Generated.cs" />
+    <Compile Include="WPF\Reflection\Attributes\Ignore.cs" />
+    <Compile Include="WPF\Reflection\Attributes\JsonDiskName.cs" />
+    <Compile Include="WPF\Reflection\Attributes\MaintainOrder.cs" />
+    <Compile Include="WPF\Reflection\Attributes\ObjectNameMember.cs" />
+    <Compile Include="WPF\Reflection\Attributes\SettingName.cs" />
+    <Compile Include="WPF\Reflection\Attributes\StaticEnumDictionary.cs" />
+    <Compile Include="WPF\Reflection\Attributes\Tooltip.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Kernel\Mutagen.Bethesda.Kernel.csproj" />

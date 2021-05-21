@@ -1,10 +1,11 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -47,12 +48,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestBinaryCreateTranslation
         {
-            static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
+            public static partial void FillBinaryDialogConditionsCustom(MutagenFrame frame, IQuestInternal item)
             {
                 ConditionBinaryCreateTranslation.FillConditionsList(item.DialogConditions, frame);
             }
 
-            static partial void FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
+            public static partial void FillBinaryUnusedConditionsLogicCustom(MutagenFrame frame, IQuestInternal item)
             {
                 var nextHeader = frame.ReadSubrecordFrame();
                 if (nextHeader.RecordType != RecordTypes.NEXT
@@ -63,7 +64,7 @@ namespace Mutagen.Bethesda.Skyrim
                 ConditionBinaryCreateTranslation.FillConditionsList(item.UnusedConditions, frame);
             }
 
-            static partial void FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
+            public static partial void FillBinaryNextAliasIDCustom(MutagenFrame frame, IQuestInternal item)
             {
                 // Skip
                 frame.ReadSubrecordFrame();
@@ -72,18 +73,18 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class QuestBinaryWriteTranslation
         {
-            static partial void WriteBinaryDialogConditionsCustom(MutagenWriter writer, IQuestGetter item)
+            public static partial void WriteBinaryDialogConditionsCustom(MutagenWriter writer, IQuestGetter item)
             {
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.DialogConditions, writer);
             }
 
-            static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
+            public static partial void WriteBinaryUnusedConditionsLogicCustom(MutagenWriter writer, IQuestGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NEXT)) { }
                 ConditionBinaryWriteTranslation.WriteConditionsList(item.UnusedConditions, writer);
             }
 
-            static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
+            public static partial void WriteBinaryNextAliasIDCustom(MutagenWriter writer, IQuestGetter item)
             {
                 var aliases = item.Aliases;
                 using (HeaderExport.Subrecord(writer, RecordTypes.ANAM))

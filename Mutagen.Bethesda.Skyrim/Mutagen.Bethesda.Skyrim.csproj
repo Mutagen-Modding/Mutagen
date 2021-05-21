@@ -24,6 +24,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Remove="Pex\**" />
+    <None Remove="Pex\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Enums\ActorValue.cs" />
     <Compile Include="Enums\Agression.cs" />
@@ -58,7 +62,6 @@
     <Compile Include="Extensions\IPlacedExt.cs" />
     <Compile Include="Extensions\ModContextExt.cs" />
     <Compile Include="Interfaces\IAmbientColorsCommon.cs" />
-    <Compile Include="Interfaces\IBoundableEquipment.cs" />
     <Compile Include="Interfaces\IConstructible.cs" />
     <Compile Include="Interfaces\IHarvestable.cs" />
     <Compile Include="Interfaces\IHasIcons.cs" />
@@ -2074,24 +2077,22 @@
     <Compile Include="Interfaces\IConstructible_Generated.cs" />
     <Compile Include="Interfaces\ISpellRecord_Generated.cs" />
     <Compile Include="ImplicitsMixIn_Generated.cs" />
+    <Compile Include="Interfaces\IBindableEquipment_Generated.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.13.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.13.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.0">
+    <PackageReference Include="Loqui" Version="2.16.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.16.0" />
+    <PackageReference Include="NuGetizer" Version="0.6.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pex\" />
   </ItemGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.skyrim&quot;" />

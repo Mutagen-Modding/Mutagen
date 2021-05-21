@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -49,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -84,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Byte> DataInputIndices
         {
             get => this._DataInputIndices;
-            protected set => this._DataInputIndices = value;
+            init => this._DataInputIndices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -120,7 +130,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SliceList<byte> Unknown
         {
             get => this._Unknown;
-            protected set => this._Unknown = value;
+            init => this._Unknown = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -905,7 +915,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PackageBranch_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PackageBranchSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -944,7 +954,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1294,7 +1306,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1577,7 +1589,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageBranchGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageBranchGetter obj)
         {
             foreach (var item in obj.Conditions.WhereCastable<IConditionGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1844,30 +1856,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageBranchBinaryWriteTranslation Instance = new PackageBranchBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsOverrideCustom(
-            MutagenWriter writer,
-            IPackageBranchGetter item);
-
-        public static void WriteBinaryFlagsOverride(
-            MutagenWriter writer,
-            IPackageBranchGetter item)
-        {
-            WriteBinaryFlagsOverrideCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IPackageBranchGetter item,
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.BranchType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ANAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
@@ -1890,29 +1889,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ProcedureType,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PackageBranch.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<PackageBranch.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Byte>.Instance.WritePerItem(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Byte>.Instance.WritePerItem(
                 writer: writer,
                 items: item.DataInputIndices,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
-                transl: ByteBinaryTranslation.Instance.Write);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             PackageBranchBinaryWriteTranslation.WriteBinaryFlagsOverride(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
                 writer: writer,
                 items: item.Unknown,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
-                transl: ByteArrayBinaryTranslation.Instance.Write);
+                transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+        }
+
+        public static partial void WriteBinaryFlagsOverrideCustom(
+            MutagenWriter writer,
+            IPackageBranchGetter item);
+
+        public static void WriteBinaryFlagsOverride(
+            MutagenWriter writer,
+            IPackageBranchGetter item)
+        {
+            WriteBinaryFlagsOverrideCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1965,8 +1977,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)PackageBranch_FieldIndex.BranchType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.BranchType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.BranchType = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)PackageBranch_FieldIndex.BranchType;
                 }
@@ -1974,8 +1986,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CITC:
                 {
                     item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1992,24 +2004,26 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ProcedureType = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.ProcedureType = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)PackageBranch_FieldIndex.ProcedureType;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<PackageBranch.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<PackageBranch.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)PackageBranch_FieldIndex.Flags;
                 }
                 case RecordTypeInts.PKC2:
                 {
                     item.DataInputIndices.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Byte>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Byte>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PKC2),
-                            transl: ByteBinaryTranslation.Instance.Parse));
+                            transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.DataInputIndices;
                 }
                 case RecordTypeInts.PFO2:
@@ -2022,10 +2036,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PFOR:
                 {
                     item.Unknown.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.PFOR),
-                            transl: ByteArrayBinaryTranslation.Instance.Parse));
+                            transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)PackageBranch_FieldIndex.Unknown;
                 }
                 default:
@@ -2033,7 +2047,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryFlagsOverrideCustom(
+        public static partial void FillBinaryFlagsOverrideCustom(
             MutagenFrame frame,
             IPackageBranch item);
 
@@ -2064,7 +2078,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PackageBranchBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPackageBranchGetter
     {
         #region Common Routing
@@ -2086,7 +2100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PackageBranchCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PackageBranchBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

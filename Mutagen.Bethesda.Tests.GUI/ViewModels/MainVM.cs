@@ -45,7 +45,10 @@ namespace Mutagen.Bethesda.Tests.GUI
         public bool TestCopyIn { get; set; }
 
         [Reactive]
-        public bool TestEquals{ get; set; }
+        public bool TestEquals { get; set; }
+
+        [Reactive]
+        public bool TestPex { get; set; }
 
         [Reactive]
         public bool CacheReuseAny { get; set; }
@@ -178,6 +181,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             this.TestImport = settings.PassthroughSettings.TestImport;
             this.TestOverlay = settings.PassthroughSettings.TestBinaryOverlay;
             this.TestEquals = settings.TestEquality;
+            this.TestPex = settings.TestPex;
 
             this.CacheAlignment = settings.PassthroughSettings.CacheReuse.ReuseAlignment;
             this.CacheDecompression = settings.PassthroughSettings.CacheReuse.ReuseDecompression;
@@ -221,6 +225,7 @@ namespace Mutagen.Bethesda.Tests.GUI
             settings.PassthroughSettings.TestBinaryOverlay = this.TestOverlay;
             settings.PassthroughSettings.TestCopyIn = this.TestCopyIn;
             settings.TestEquality = this.TestEquals;
+            settings.TestPex = this.TestPex;
 
             settings.PassthroughSettings.CacheReuse.ReuseDecompression = this.CacheDecompression;
             settings.PassthroughSettings.CacheReuse.ReuseAlignment = this.CacheAlignment;

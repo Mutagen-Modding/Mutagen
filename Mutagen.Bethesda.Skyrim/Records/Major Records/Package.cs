@@ -1,13 +1,12 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.WebSockets;
-using System.Resources;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -111,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
             public const string TopicKey = "Topic";
             public const string ObjectListKey = "ObjectList";
 
-            static partial void FillBinaryPackageTemplateCustom(MutagenFrame frame, IPackageInternal item)
+            public static partial void FillBinaryPackageTemplateCustom(MutagenFrame frame, IPackageInternal item)
             {
                 var pkcuRecord = frame.ReadSubrecordFrame();
                 if (pkcuRecord.Content.Length != 12)
@@ -318,13 +317,13 @@ namespace Mutagen.Bethesda.Skyrim
                 stream.Position = end;
             }
 
-            static partial void FillBinaryXnamMarkerCustom(MutagenFrame frame, IPackageInternal item)
+            public static partial void FillBinaryXnamMarkerCustom(MutagenFrame frame, IPackageInternal item)
             {
                 // Skip marker
                 item.XnamMarker = frame.ReadSubrecordFrame().Content.ToArray();
                 item.ProcedureTree.SetTo(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<PackageBranch>.Instance.Parse(
-                        frame: frame.SpawnAll(),
+                    ListBinaryTranslation<PackageBranch>.Instance.Parse(
+                        reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.ANAM,
                         transl: (MutagenFrame r, out PackageBranch listSubItem, RecordTypeConverter? conv) =>
                         {
@@ -366,7 +365,7 @@ namespace Mutagen.Bethesda.Skyrim
             public static readonly RecordType PNAM = new RecordType("PNAM");
             public static readonly RecordType TPIC = new RecordType("TPIC");
 
-            static partial void WriteBinaryPackageTemplateCustom(MutagenWriter writer, IPackageGetter item)
+            public static partial void WriteBinaryPackageTemplateCustom(MutagenWriter writer, IPackageGetter item)
             {
                 var data = item.Data;
                 long jumpbackPos;
@@ -470,7 +469,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryXnamMarkerCustom(MutagenWriter writer, IPackageGetter item)
+            public static partial void WriteBinaryXnamMarkerCustom(MutagenWriter writer, IPackageGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.XNAM)) 
                 {
@@ -526,6 +525,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             FormLink<IPackageGetter> _packageTemplate = null!;
             public FormLink<IPackageGetter> GetPackageTemplateCustom() => _packageTemplate;
+
+            partial void PackageTemplateCustomParse(OverlayStream stream, long finalPos, int offset)
+            {
+            }
 
             private void PackageTemplateCustomParse(
                 OverlayStream stream,

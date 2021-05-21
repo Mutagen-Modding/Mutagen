@@ -1,10 +1,8 @@
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Oblivion;
-using Noggog;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -12,7 +10,7 @@ namespace Mutagen.Bethesda.Tests
     {
         public static async Task Oblivion_FlattenMod(TestingSettings testingSettings)
         {
-            List<LoadOrderListing> loadOrderListing = new List<LoadOrderListing>()
+            List<ModListing> loadOrderListing = new List<ModListing>()
             {
                 new ModKey("Oblivion", ModType.Master),
                 new ModKey("Knights", ModType.Plugin)

@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -9,14 +7,14 @@ namespace Mutagen.Bethesda.Fallout4
         [Flags]
         public enum Fallout4MajorRecordFlag
         {
-            ESM = Mutagen.Bethesda.Internals.Constants.MasterFlag,
+            ESM = Plugins.Internals.Constants.MasterFlag,
             NotPlayable = 0x0000_0004,
-            Deleted = Mutagen.Bethesda.Internals.Constants.DeletedFlag,
-            InitiallyDisabled = Mutagen.Bethesda.Internals.Constants.InitiallyDisabled,
-            Ignored = Mutagen.Bethesda.Internals.Constants.Ignored,
+            Deleted = Plugins.Internals.Constants.DeletedFlag,
+            InitiallyDisabled = Plugins.Internals.Constants.InitiallyDisabled,
+            Ignored = Plugins.Internals.Constants.Ignored,
             VisibleWhenDistant = 0x00008000,
             Dangerous_OffLimits_InteriorCell = 0x00020000,
-            Compressed = Mutagen.Bethesda.Internals.Constants.CompressedFlag,
+            Compressed = Plugins.Internals.Constants.CompressedFlag,
             CantWait = 0x00080000,
         }
 

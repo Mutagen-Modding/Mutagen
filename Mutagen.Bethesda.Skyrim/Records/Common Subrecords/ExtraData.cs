@@ -1,10 +1,10 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Utility;
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ExtraDataBinaryCreateTranslation
         {
-            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordInfoCache cache, MasterReferenceReader masters)
+            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, MasterReferenceReader masters)
             {
                 FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
                 FormKey formKey = FormKey.Factory(masters, form.Raw);
@@ -49,7 +49,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
+            public static partial void FillBinaryOwnerCustom(MutagenFrame frame, IExtraData item)
             {
                 item.Owner = GetBinaryOwner(frame.ReadSpan(8), frame.MetaData.RecordInfoCache!, frame.MetaData.MasterReferences!);
             }
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ExtraDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryOwnerCustom(MutagenWriter writer, IExtraDataGetter item)
+            public static partial void WriteBinaryOwnerCustom(MutagenWriter writer, IExtraDataGetter item)
             {
                 switch (item.Owner)
                 {

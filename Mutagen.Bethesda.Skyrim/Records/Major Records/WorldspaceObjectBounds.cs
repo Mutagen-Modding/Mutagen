@@ -1,8 +1,9 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -10,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceObjectBoundsBinaryCreateTranslation
         {
-            static partial void FillBinaryMaxCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
+            public static partial void FillBinaryMaxCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
             {
                 var subHeader = frame.ReadSubrecord();
                 if (subHeader.ContentLength != 8)
@@ -22,7 +23,7 @@ namespace Mutagen.Bethesda.Skyrim
                     frame.ReadFloat() / 4096f);
             }
 
-            static partial void FillBinaryMinCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
+            public static partial void FillBinaryMinCustom(MutagenFrame frame, IWorldspaceObjectBounds item)
             {
                 var subHeader = frame.ReadSubrecord();
                 if (subHeader.ContentLength != 8)
@@ -37,7 +38,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WorldspaceObjectBoundsBinaryWriteTranslation
         {
-            static partial void WriteBinaryMaxCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
+            public static partial void WriteBinaryMaxCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NAM9))
                 {
@@ -47,7 +48,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryMinCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
+            public static partial void WriteBinaryMinCustom(MutagenWriter writer, IWorldspaceObjectBoundsGetter item)
             {
                 using (HeaderExport.Subrecord(writer, RecordTypes.NAM0))
                 {

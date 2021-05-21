@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -81,7 +91,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ATopicReference> Topics
         {
             get => this._Topics;
-            protected set => this._Topics = value;
+            init => this._Topics = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -587,7 +597,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Patrol_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PatrolCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PatrolCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PatrolSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -626,7 +636,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -961,7 +973,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1146,7 +1158,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPatrolGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPatrolGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Idle);
             foreach (var item in obj.Topics.WhereCastable<IATopicReferenceGetter, IFormLinkContainerGetter>()
@@ -1318,7 +1330,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PatrolBinaryWriteTranslation Instance = new PatrolBinaryWriteTranslation();
 
-        static partial void WriteBinaryPatrolScriptMarkerCustom(
+        public static void WriteRecordTypes(
+            IPatrolGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.IdleTime,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.XPRD));
+            PatrolBinaryWriteTranslation.WriteBinaryPatrolScriptMarker(
+                writer: writer,
+                item: item);
+            FormLinkBinaryTranslation.Instance.Write(
+                writer: writer,
+                item: item.Idle,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SCHR,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
+                writer: writer,
+                item: item.SCTX,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
+            PatrolBinaryWriteTranslation.WriteBinaryTopics(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryPatrolScriptMarkerCustom(
             MutagenWriter writer,
             IPatrolGetter item);
 
@@ -1331,7 +1372,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void WriteBinaryTopicsCustom(
+        public static partial void WriteBinaryTopicsCustom(
             MutagenWriter writer,
             IPatrolGetter item);
 
@@ -1340,35 +1381,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPatrolGetter item)
         {
             WriteBinaryTopicsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IPatrolGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.IdleTime,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.XPRD));
-            PatrolBinaryWriteTranslation.WriteBinaryPatrolScriptMarker(
-                writer: writer,
-                item: item);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.Idle,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.INAM));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SCHR,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
-                writer: writer,
-                item: item.SCTX,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX));
-            PatrolBinaryWriteTranslation.WriteBinaryTopics(
                 writer: writer,
                 item: item);
         }
@@ -1423,7 +1435,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Patrol_FieldIndex.IdleTime) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.IdleTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.IdleTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Patrol_FieldIndex.IdleTime;
                 }
                 case RecordTypeInts.XPPA:
@@ -1436,22 +1448,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.INAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Idle.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Idle.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Patrol_FieldIndex.Idle;
                 }
                 case RecordTypeInts.SCHR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCHR = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SCHR = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Patrol_FieldIndex.SCHR;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SCTX = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SCTX = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Patrol_FieldIndex.SCTX;
                 }
                 case RecordTypeInts.PDTO:
@@ -1466,11 +1475,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryPatrolScriptMarkerCustom(
+        public static partial void FillBinaryPatrolScriptMarkerCustom(
             MutagenFrame frame,
             IPatrol item);
 
-        static partial void FillBinaryTopicsCustom(
+        public static partial void FillBinaryTopicsCustom(
             MutagenFrame frame,
             IPatrol item);
 
@@ -1501,7 +1510,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PatrolBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPatrolGetter
     {
         #region Common Routing
@@ -1523,7 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PatrolCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PatrolCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PatrolBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

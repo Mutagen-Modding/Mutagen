@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -57,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P3Float> Vertices
         {
             get => this._Vertices;
-            protected set => this._Vertices = value;
+            init => this._Vertices = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshTriangle> Triangles
         {
             get => this._Triangles;
-            protected set => this._Triangles = value;
+            init => this._Triangles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +95,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<EdgeLink> EdgeLinks
         {
             get => this._EdgeLinks;
-            protected set => this._EdgeLinks = value;
+            init => this._EdgeLinks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,7 +109,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DoorTriangle> DoorTriangles
         {
             get => this._DoorTriangles;
-            protected set => this._DoorTriangles = value;
+            init => this._DoorTriangles = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1049,7 +1059,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ANavigationMeshDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1724,7 +1734,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IANavigationMeshDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IANavigationMeshDataGetter obj)
         {
             foreach (var item in obj.EdgeLinks.SelectMany(f => f.ContainedFormLinks))
             {
@@ -1965,45 +1975,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static ANavigationMeshDataBinaryWriteTranslation Instance = new ANavigationMeshDataBinaryWriteTranslation();
 
-        static partial void WriteBinaryParentLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryParentLogic(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryParentLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryCoverTrianglesLogicCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryCoverTrianglesLogic(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryCoverTrianglesLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryNavmeshGridCustom(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item);
-
-        public static void WriteBinaryNavmeshGrid(
-            MutagenWriter writer,
-            IANavigationMeshDataGetter item)
-        {
-            WriteBinaryNavmeshGridCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IANavigationMeshDataGetter item,
             MutagenWriter writer)
@@ -2013,12 +1984,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryParentLogic(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Write(
                 writer: writer,
                 items: item.Vertices,
                 countLengthLength: 4,
-                transl: P3FloatBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
+                transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.Triangles,
                 countLengthLength: 4,
@@ -2030,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEdgeLinkGetter>.Instance.Write(
                 writer: writer,
                 items: item.EdgeLinks,
                 countLengthLength: 4,
@@ -2042,7 +2013,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDoorTriangleGetter>.Instance.Write(
                 writer: writer,
                 items: item.DoorTriangles,
                 countLengthLength: 4,
@@ -2058,19 +2029,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.NavmeshGridDivisor);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceX);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxDistanceY);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
             ANavigationMeshDataBinaryWriteTranslation.WriteBinaryNavmeshGrid(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParentLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryParentLogic(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryParentLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryCoverTrianglesLogicCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryCoverTrianglesLogic(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryCoverTrianglesLogicCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryNavmeshGridCustom(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item);
+
+        public static void WriteBinaryNavmeshGrid(
+            MutagenWriter writer,
+            IANavigationMeshDataGetter item)
+        {
+            WriteBinaryNavmeshGridCustom(
                 writer: writer,
                 item: item);
         }
@@ -2112,47 +2122,47 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 frame: frame,
                 item: item);
             item.Vertices.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P3Float>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P3Float>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
-                    transl: P3FloatBinaryTranslation.Instance.Parse));
+                    reader: frame,
+                    transl: P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
             item.Triangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: NavmeshTriangle.TryCreateFromBinary));
             item.EdgeLinks.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<EdgeLink>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<EdgeLink>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: EdgeLink.TryCreateFromBinary));
             item.DoorTriangles.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DoorTriangle>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: DoorTriangle.TryCreateFromBinary));
             ANavigationMeshDataBinaryCreateTranslation.FillBinaryCoverTrianglesLogicCustom(
                 frame: frame,
                 item: item);
             item.NavmeshGridDivisor = frame.ReadUInt32();
-            item.MaxDistanceX = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxDistanceY = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Min = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.MaxDistanceX = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MaxDistanceY = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Min = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Max = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             ANavigationMeshDataBinaryCreateTranslation.FillBinaryNavmeshGridCustom(
                 frame: frame,
                 item: item);
         }
 
-        static partial void FillBinaryParentLogicCustom(
+        public static partial void FillBinaryParentLogicCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        static partial void FillBinaryCoverTrianglesLogicCustom(
+        public static partial void FillBinaryCoverTrianglesLogicCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
-        static partial void FillBinaryNavmeshGridCustom(
+        public static partial void FillBinaryNavmeshGridCustom(
             MutagenFrame frame,
             IANavigationMeshData item);
 
@@ -2183,7 +2193,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class ANavigationMeshDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IANavigationMeshDataGetter
     {
         #region Common Routing
@@ -2205,7 +2215,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => ANavigationMeshDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => ANavigationMeshDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2228,7 +2238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             int offset);
         #endregion
         #region Vertices
-        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation.Read(s));
+        public IReadOnlyList<P3Float> Vertices => BinaryOverlayList.FactoryByCountLength<P3Float>(_data.Slice(0x10), _package, 12, countLength: 4, (s, p) => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
         protected int VerticesEndingPos;
         #endregion
         #region Triangles

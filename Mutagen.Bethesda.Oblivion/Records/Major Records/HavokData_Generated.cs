@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -452,7 +460,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -778,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.HNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -917,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHavokDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHavokDataGetter obj)
         {
             yield break;
         }
@@ -1045,7 +1055,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<HavokData.MaterialType>.Instance.Write(
+            EnumBinaryTranslation<HavokData.MaterialType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Material,
                 length: 1);
@@ -1061,7 +1071,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1090,7 +1100,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokData item,
             MutagenFrame frame)
         {
-            item.Material = EnumBinaryTranslation<HavokData.MaterialType>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Material = EnumBinaryTranslation<HavokData.MaterialType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Friction = frame.ReadUInt8();
             item.Restitution = frame.ReadUInt8();
         }
@@ -1122,7 +1134,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class HavokDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IHavokDataGetter
     {
         #region Common Routing

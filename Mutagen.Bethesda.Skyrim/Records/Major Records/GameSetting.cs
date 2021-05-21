@@ -1,11 +1,7 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reactive.Linq;
-using Noggog;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Skyrim
 {

@@ -1,14 +1,8 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -43,6 +37,13 @@ namespace Mutagen.Bethesda.Oblivion
 
     namespace Internals
     {
+        public partial class ScriptFieldsBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryMetadataSummaryOldCustom(MutagenWriter writer, IScriptFieldsGetter item)
+            {
+            }
+        }
+
         public partial class ScriptFieldsBinaryCreateTranslation
         {
             private readonly static RecordTypeConverter metaConverter = new RecordTypeConverter(
@@ -50,7 +51,7 @@ namespace Mutagen.Bethesda.Oblivion
                     new RecordType("SCHR"),
                     new RecordType("SCHD")));
 
-            static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
+            public static partial void FillBinaryMetadataSummaryOldCustom(MutagenFrame frame, IScriptFields item)
             {
                 item.MetadataSummary.CopyInFromBinary(
                     frame: frame,

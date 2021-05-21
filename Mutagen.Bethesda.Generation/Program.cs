@@ -1,5 +1,7 @@
 using Loqui;
 using Loqui.Generation;
+using Mutagen.Bethesda.Generation.Modules;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
 using System;
 using System.IO;
 using System.Linq;
@@ -14,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "throw RecordException.Factory(e, obj.ModKey)";
+            string testString = "protected set => this._Attacks = value;";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>
@@ -53,8 +55,8 @@ namespace Mutagen.Bethesda.Generation
             gen.Namespaces.Add("Mutagen.Bethesda.Internals");
             gen.MaskModule.AddTypeAssociation<FormLinkType>(MaskModule.TypicalField);
             gen.MaskModule.AddTypeAssociation<GenderedType>(new GenderedItemMaskGeneration());
-            gen.GenerationModules.Add(new MutagenModule());
-            gen.Add(new BinaryTranslationModule(gen));
+            gen.GenerationModules.Add(new PluginModule());
+            gen.Add(new PluginTranslationModule(gen));
             gen.AddTypeAssociation<FormLinkType>("FormLink");
             gen.AddTypeAssociation<FormIDType>("FormID");
             gen.AddTypeAssociation<FormKeyType>("FormKey");
@@ -81,13 +83,13 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("Bethesda"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Records"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda.Core/Plugins/Records"))
                 {
-                    DefaultNamespace = "Mutagen.Bethesda",
+                    DefaultNamespace = "Mutagen.Bethesda.Plugins.Records",
                     DoGeneration = ShouldRun("All")
                 });
             bethesdaProto.AddProjectToModify(
-                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../Mutagen.Bethesda.Core.csproj")));
+                new FileInfo(Path.Combine(bethesdaProto.GenerationFolder.FullName, "../../Mutagen.Bethesda.Core.csproj")));
 
             if (ShouldRun("All"))
             {
@@ -95,12 +97,12 @@ namespace Mutagen.Bethesda.Generation
                 new ProtocolGeneration(
                     gen,
                     new ProtocolKey("All"),
-                    new DirectoryInfo("../../../../Mutagen.Bethesda/Records"))
+                    new DirectoryInfo("../../../../Mutagen.Bethesda/Plugins/Records"))
                 {
                     DefaultNamespace = "Mutagen.Bethesda",
                 });
                 proto.AddProjectToModify(
-                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../Mutagen.Bethesda.csproj")));
+                    new FileInfo(Path.Combine(proto.GenerationFolder.FullName, "../../Mutagen.Bethesda.csproj")));
             }
 
             if (ShouldRun("Oblivion"))

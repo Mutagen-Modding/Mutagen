@@ -1,15 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class CustomLogicTranslationGeneration : BinaryTranslationGeneration
     {
@@ -89,7 +86,7 @@ namespace Mutagen.Bethesda.Generation
             if (!isAsync)
             {
                 using (var args = new FunctionWrapper(fg,
-                    $"static partial void FillBinary{field.Name}Custom")
+                    $"public static partial void FillBinary{field.Name}Custom")
                 {
                     SemiColon = true
                 })
@@ -108,7 +105,7 @@ namespace Mutagen.Bethesda.Generation
             bool isAsync)
         {
             using (var args = new FunctionWrapper(fg,
-                $"static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
+                $"public static partial void WriteBinary{field.Name}Custom{obj.GetGenericTypes(MaskType.Normal)}"))
             {
                 args.Wheres.AddRange(obj.GenerateWhereClauses(LoquiInterfaceType.IGetter, defs: obj.Generics));
                 args.SemiColon = true;
@@ -233,7 +230,7 @@ namespace Mutagen.Bethesda.Generation
 
         public override async Task GenerateWrapperRecordTypeParse(
             FileGeneration fg, 
-            ObjectGeneration objGen, 
+            ObjectGeneration objGen,  
             TypeGeneration typeGen, 
             Accessor locationAccessor, 
             Accessor packageAccessor, 

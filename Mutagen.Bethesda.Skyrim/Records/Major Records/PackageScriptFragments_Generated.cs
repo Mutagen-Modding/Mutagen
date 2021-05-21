@@ -8,8 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -556,7 +564,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -886,7 +896,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1069,7 +1079,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageScriptFragmentsGetter obj)
         {
             yield break;
         }
@@ -1267,7 +1277,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static PackageScriptFragmentsBinaryWriteTranslation Instance = new PackageScriptFragmentsBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsParseCustom(
+        public static void WriteEmbedded(
+            IPackageScriptFragmentsGetter item,
+            MutagenWriter writer)
+        {
+            writer.Write(item.Unknown);
+            PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFlagsParseCustom(
             MutagenWriter writer,
             IPackageScriptFragmentsGetter item);
 
@@ -1276,16 +1296,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageScriptFragmentsGetter item)
         {
             WriteBinaryFlagsParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        public static void WriteEmbedded(
-            IPackageScriptFragmentsGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Unknown);
-            PackageScriptFragmentsBinaryWriteTranslation.WriteBinaryFlagsParse(
                 writer: writer,
                 item: item);
         }
@@ -1327,7 +1337,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryFlagsParseCustom(
+        public static partial void FillBinaryFlagsParseCustom(
             MutagenFrame frame,
             IPackageScriptFragments item);
 
@@ -1358,7 +1368,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PackageScriptFragmentsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPackageScriptFragmentsGetter
     {
         #region Common Routing

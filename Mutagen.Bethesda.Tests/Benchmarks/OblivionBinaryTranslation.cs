@@ -1,14 +1,12 @@
 using BenchmarkDotNet.Attributes;
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks

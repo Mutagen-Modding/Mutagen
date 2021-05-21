@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -700,7 +708,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1058,7 +1068,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.AIDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1277,7 +1287,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAIDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAIDataGetter obj)
         {
             yield break;
         }
@@ -1437,24 +1447,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Aggression>.Instance.Write(
+            EnumBinaryTranslation<Aggression, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Aggression,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Confidence>.Instance.Write(
+            EnumBinaryTranslation<Confidence, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Confidence,
                 length: 1);
             writer.Write(item.EnergyLevel);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Responsibility>.Instance.Write(
+            EnumBinaryTranslation<Responsibility, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Responsibility,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Mood>.Instance.Write(
+            EnumBinaryTranslation<Mood, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Mood,
                 length: 1);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Assistance>.Instance.Write(
+            EnumBinaryTranslation<Assistance, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Assistance,
                 length: 1);
@@ -1473,7 +1483,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.AIDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1502,12 +1512,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAIData item,
             MutagenFrame frame)
         {
-            item.Aggression = EnumBinaryTranslation<Aggression>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Confidence = EnumBinaryTranslation<Confidence>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Aggression = EnumBinaryTranslation<Aggression, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Confidence = EnumBinaryTranslation<Confidence, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.EnergyLevel = frame.ReadUInt8();
-            item.Responsibility = EnumBinaryTranslation<Responsibility>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Mood = EnumBinaryTranslation<Mood>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Assistance = EnumBinaryTranslation<Assistance>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Responsibility = EnumBinaryTranslation<Responsibility, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Mood = EnumBinaryTranslation<Mood, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Assistance = EnumBinaryTranslation<Assistance, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.AggroRadiusBehavior = frame.ReadBoolean();
             item.Unused = frame.ReadUInt8();
             item.Warn = frame.ReadUInt32();
@@ -1542,7 +1562,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class AIDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAIDataGetter
     {
         #region Common Routing

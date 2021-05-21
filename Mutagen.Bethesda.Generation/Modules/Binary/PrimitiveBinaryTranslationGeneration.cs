@@ -1,15 +1,16 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class PrimitiveBinaryTranslationGeneration<T> : BinaryTranslationGeneration
     {
@@ -24,10 +25,13 @@ namespace Mutagen.Bethesda.Generation
         public CustomWriteAction CustomWrite;
         public delegate bool CustomWrapperAction(FileGeneration fg, ObjectGeneration objGen, TypeGeneration typeGen, Accessor data, Accessor passedLen);
         public CustomWrapperAction CustomWrapper;
+        public override bool NeedsNamespacePrefix => false;
+        public override string Namespace => "Mutagen.Bethesda.Translations.Binary.";
+        public virtual bool NeedsGenerics => true;
 
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
-            return $"{Typename(typeGen)}BinaryTranslation.Instance";
+            return $"{Typename(typeGen)}BinaryTranslation{(NeedsGenerics ? $"<{Module.ReaderClass}, {Module.WriterClass}>" : null)}.Instance";
         }
 
         public PrimitiveBinaryTranslationGeneration(int? expectedLen, string typeName = null, bool? nullable = null)
@@ -62,7 +66,7 @@ namespace Mutagen.Bethesda.Generation
             if (data.HasTrigger || !PreferDirectTranslation)
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                    $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Write{(typeGen.Nullable ? "Nullable" : null)}"))
                 {
                     args.Add($"writer: {writerAccessor}");
                     args.Add($"item: {ItemWriteAccess(typeGen, itemAccessor)}");
@@ -116,7 +120,7 @@ namespace Mutagen.Bethesda.Generation
 
             bool hasCustom = false;
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
+            extraArgs.Add($"reader: {frameAccessor}{(fieldData.HasTrigger ? ".SpawnWithLength(contentLength)" : "")}");
             foreach (var writeParam in this.AdditionalCopyInParams)
             {
                 var get = writeParam(
@@ -142,7 +146,7 @@ namespace Mutagen.Bethesda.Generation
                     {
                         FG = fg,
                         TypeGen = typeGen,
-                        TranslatorLine = $"{this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance",
+                        TranslatorLine = $"{this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}",
                         MaskAccessor = errorMaskAccessor,
                         ItemAccessor = itemAccessor,
                         TranslationMaskAccessor = null,
@@ -185,7 +189,7 @@ namespace Mutagen.Bethesda.Generation
                     fg.AppendLine("r.Position += Constants.SUBRECORD_LENGTH;");
                 }
                 using (var args = new ArgsWrapper(fg,
-                    $"{outItemAccessor} = {this.Namespace}{this.Typename(typeGen)}BinaryTranslation.Instance.Parse"))
+                    $"{outItemAccessor} = {this.NamespacePrefix}{this.GetTranslatorInstance(typeGen, getter: true)}.Parse"))
                 {
                     args.Add(nodeAccessor.Access);
                     if (this.DoErrorMasks)
@@ -223,6 +227,7 @@ namespace Mutagen.Bethesda.Generation
             string passedLengthAccessor,
             DataType dataType = null)
         {
+            passedLengthAccessor ??= "0x0";
             var data = typeGen.GetFieldData();
             switch (data.BinaryOverlayFallback)
             {

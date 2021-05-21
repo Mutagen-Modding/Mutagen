@@ -1,8 +1,6 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
