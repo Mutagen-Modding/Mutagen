@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
     public interface ILinkCache : IDisposable
     {
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -56,7 +56,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -75,7 +75,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(string editorId, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false. <br />
@@ -132,7 +132,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false. <br />
@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(string editorId, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, params Type[] types);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false. <br />
@@ -174,7 +174,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false. <br />
@@ -195,7 +195,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolve(string editorId, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will throw a MissingRecordException.<br />
@@ -212,7 +212,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(FormKey formKey);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will throw a MissingRecordException.<br />
@@ -229,7 +229,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(string editorId);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
         /// </summary>
@@ -248,7 +248,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given type, it will be seen as not a match.
         /// </summary>
@@ -267,7 +267,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(string editorId, Type type);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from one of the given types, it will be seen as not a match.<br />
         /// <br />
@@ -289,7 +289,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(FormKey formKey, params Type[] types);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from one of the given types, it will be seen as not a match.<br />
         /// <br />
@@ -311,7 +311,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(string editorId, params Type[] types);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from one of the given types, it will be seen as not a match.<br />
         /// <br />
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from one of the given types, it will be seen as not a match.<br />
         /// <br />
@@ -355,7 +355,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IMajorRecordCommonGetter Resolve(string editorId, IEnumerable<Type> types);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// Retrieves the winning record that matches the FormKey relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
@@ -375,7 +375,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.
+        /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
@@ -441,7 +441,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey);
 
         /// <summary>
-        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning EditorID that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -456,7 +456,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -471,7 +471,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey);
 
         /// <summary>
-        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning EditorID that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -489,7 +489,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -507,7 +507,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(string editorId, Type type, [MaybeNullWhen(false)] out FormKey formKey);
 
         /// <summary>
-        /// Retrieves the EditorID that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning EditorID that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -526,7 +526,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -545,7 +545,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -563,7 +563,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, params Type[] types);
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -581,7 +581,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(string editorId, [MaybeNullWhen(false)] out FormKey formKey, params Type[] types);
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -599,7 +599,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId);
 
         /// <summary>
-        /// Retrieves the FormKey that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -688,7 +688,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         where TMod : class, TModGetter, IMod
     {
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
@@ -700,7 +700,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// NOTE:  This call is much slower than the alternative that uses generics, as all records in the entire mod must be
         /// processed, rather than being able to scope the search to a specific area.
@@ -712,7 +712,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveContext(string editorId, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -731,7 +731,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -750,7 +750,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -768,7 +768,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will return false.
@@ -786,7 +786,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         bool TryResolveContext(string editorId, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the cache was attached to.<br/>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will not be returned, and 
         /// the function will throw a MissingRecordException.<br />
@@ -803,7 +803,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the cache was attached to.<br/>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the cache was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will not be returned, and 
         /// the function will throw a MissingRecordException.<br />
@@ -820,7 +820,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given type, it will be seen as not a match.
         /// </summary>
@@ -839,7 +839,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.<br/>
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given type, it will be seen as not a match.
         /// </summary>
@@ -858,7 +858,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(string editorId, Type type);
 
         /// <summary>
-        /// Retrieves the record that matches the FormKey relative to the source the package was attached to.
+        /// Retrieves the winning record context that matches the FormKey relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
@@ -880,7 +880,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
         /// <summary>
-        /// Retrieves the record that matches the EditorID relative to the source the package was attached to.
+        /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.
         /// <br/>
         /// If a record exists that matches the EditorID, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
