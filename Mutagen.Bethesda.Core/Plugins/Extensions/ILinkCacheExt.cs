@@ -34,11 +34,12 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
-            this ILoadOrderGetter<IModGetter> loadOrder,
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache<TMod>(
+            this ILoadOrderGetter<TMod> loadOrder,
             LinkCachePreferences? prefs = null)
+            where TMod : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder, prefs ?? LinkCachePreferences.Default);
+            return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder, GameCategoryHelper.FromModType<TMod>(), prefs ?? LinkCachePreferences.Default);
         }
 
         /// <summary>
@@ -50,14 +51,16 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
-            this ILoadOrderGetter<IModListingGetter<IModGetter>> loadOrder,
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache<TMod>(
+            this ILoadOrderGetter<IModListingGetter<TMod>> loadOrder,
             LinkCachePreferences? prefs = null)
+            where TMod : class, IModGetter
         {
             return new ImmutableLoadOrderLinkCache(
-                loadOrder
-                    .Select(listing => listing.Value.Mod)
+                loadOrder.ListedOrder
+                    .Select(listing => listing.Mod)
                     .NotNull(),
+                GameCategoryHelper.FromModType<TMod>(),
                 prefs ?? LinkCachePreferences.Default);
         }
 
@@ -70,14 +73,16 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">LoadOrder to construct the package relative to</param>
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache(
-            this IEnumerable<IModListingGetter<IModGetter>> loadOrder,
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache<TMod>(
+            this IEnumerable<IModListingGetter<TMod>> loadOrder,
             LinkCachePreferences? prefs = null)
+            where TMod : class, IModGetter
         {
             return new ImmutableLoadOrderLinkCache(
                 loadOrder
                     .Select(listing => listing.Mod)
                     .NotNull(),
+                GameCategoryHelper.FromModType<TMod>(),
                 prefs ?? LinkCachePreferences.Default);
         }
 
@@ -90,11 +95,15 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache ToImmutableLinkCache(
-            this IEnumerable<IModGetter> loadOrder,
+        public static ImmutableLoadOrderLinkCache ToImmutableLinkCache<TMod>(
+            this IEnumerable<TMod> loadOrder,
             LinkCachePreferences? prefs = null)
+            where TMod : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache(loadOrder, prefs ?? LinkCachePreferences.Default);
+            return new ImmutableLoadOrderLinkCache(
+                loadOrder, 
+                GameCategoryHelper.FromModType<TMod>(),
+                prefs ?? LinkCachePreferences.Default);
         }
 
         /// <summary>
