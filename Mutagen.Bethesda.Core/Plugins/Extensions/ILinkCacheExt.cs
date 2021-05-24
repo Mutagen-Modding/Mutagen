@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda
         /// <param name="loadOrder">Enumerable of mods to construct the package relative to</param>
         /// <param name="prefs">Caching preferences</param>
         /// <returns>LinkPackage attached to given LoadOrder</returns>
-        public static ImmutableLoadOrderLinkCache ToImmutableLinkCache<TMod>(
+        public static ImmutableLoadOrderLinkCache ToUntypedImmutableLinkCache<TMod>(
             this IEnumerable<TMod> loadOrder,
             LinkCachePreferences? prefs = null)
             where TMod : class, IModGetter
