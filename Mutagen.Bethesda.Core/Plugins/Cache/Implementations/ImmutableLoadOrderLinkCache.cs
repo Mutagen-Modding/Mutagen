@@ -206,22 +206,9 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<TMajor> ResolveAll<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordCommonGetter
-        {
-            return ResolveAll(editorId, typeof(TMajor)).Cast<TMajor>();
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
             return _formKeyCache.ResolveAll(formKey, formKey.ModKey, type).Select(i => i.Record);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
-        {
-            return _editorIdCache.ResolveAll(editorId, default(ModKey?), type).Select(i => i.Record);
         }
 
         /// <inheritdoc />
@@ -229,13 +216,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
         {
             return ResolveAll(formKey, typeof(IMajorRecordCommonGetter));
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId)
-        {
-            return ResolveAll(editorId, typeof(IMajorRecordCommonGetter));
         }
 
         /// <inheritdoc />
@@ -963,15 +943,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(string editorId)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            return ResolveAllContexts(editorId, typeof(TMajorGetter))
-                .Select(c => c.AsType<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter, TMajor, TMajorGetter>());
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
         {
             // Break early if no content
@@ -984,29 +955,10 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
-        {
-            // Break early if no content
-            if (!_hasAny || string.IsNullOrWhiteSpace(editorId))
-            {
-                return Enumerable.Empty<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>>();
-            }
-
-            return _editorIdContextCache.ResolveAllContexts(editorId, default(ModKey?), type);
-        }
-
-        /// <inheritdoc />
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
         {
             return ResolveAllContexts(formKey, typeof(IMajorRecordCommonGetter));
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
-        {
-            return ResolveAllContexts(editorId, typeof(IMajorRecordCommonGetter));
         }
     }
 

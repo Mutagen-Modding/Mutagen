@@ -204,28 +204,9 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<TMajor> ResolveAll<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordCommonGetter
-        {
-            if (TryResolve<TMajor>(editorId, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
             if (TryResolve(formKey, type, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
-        {
-            if (TryResolve(editorId, type, out var rec))
             {
                 yield return rec;
             }
@@ -236,16 +217,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey)
         {
             if (TryResolve(formKey, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId)
-        {
-            if (TryResolve(editorId, out var rec))
             {
                 yield return rec;
             }
@@ -791,29 +762,9 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(string editorId)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            if (TryResolveContext<TMajor, TMajorGetter>(editorId, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
         {
             if (TryResolveContext(formKey, type, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
-        {
-            if (TryResolveContext(editorId, type, out var rec))
             {
                 yield return rec;
             }
@@ -824,16 +775,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey)
         {
             if (TryResolveContext(formKey, out var rec))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
-        {
-            if (TryResolveContext(editorId, out var rec))
             {
                 yield return rec;
             }

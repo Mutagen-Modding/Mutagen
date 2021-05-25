@@ -361,23 +361,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<TMajor> ResolveAll<TMajor>(string editorId)
-            where TMajor : class, IMajorRecordCommonGetter
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolve<TMajor>(editorId, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAll<TMajor>(editorId))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type)
         {
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
@@ -388,22 +371,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
                 }
             }
             foreach (var rec in WrappedImmutableCache.ResolveAll(formKey, type))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId, Type type)
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolve(editorId, type, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAll(editorId, type))
             {
                 yield return rec;
             }
@@ -421,23 +388,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
                 }
             }
             foreach (var rec in WrappedImmutableCache.ResolveAll(formKey))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IMajorRecordCommonGetter> ResolveAll(string editorId)
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolve(editorId, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAll(editorId))
             {
                 yield return rec;
             }
@@ -462,24 +412,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
         }
 
         /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(string editorId)
-            where TMajor : class, IMajorRecordCommon, TMajorGetter
-            where TMajorGetter : class, IMajorRecordCommonGetter
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolveContext<TMajor, TMajorGetter>(editorId, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAllContexts<TMajor, TMajorGetter>(editorId))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
         public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type)
         {
             for (int i = _mutableMods.Count - 1; i >= 0; i--)
@@ -490,22 +422,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
                 }
             }
             foreach (var rec in WrappedImmutableCache.ResolveAllContexts(formKey, type))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId, Type type)
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolveContext(editorId, type, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAllContexts(editorId, type))
             {
                 yield return rec;
             }
@@ -523,23 +439,6 @@ namespace Mutagen.Bethesda.Cache.Implementations
                 }
             }
             foreach (var rec in WrappedImmutableCache.ResolveAllContexts(formKey))
-            {
-                yield return rec;
-            }
-        }
-
-        /// <inheritdoc />
-        [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        public IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(string editorId)
-        {
-            for (int i = _mutableMods.Count - 1; i >= 0; i--)
-            {
-                if (_mutableMods[i].TryResolveContext(editorId, out var majorRec))
-                {
-                    yield return majorRec;
-                }
-            }
-            foreach (var rec in WrappedImmutableCache.ResolveAllContexts(editorId))
             {
                 yield return rec;
             }
