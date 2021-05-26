@@ -19,9 +19,10 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
@@ -47,6 +48,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
         /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -54,7 +56,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, Type type, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>
@@ -82,6 +84,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="editorId">Out parameter containing the EditorID if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
@@ -90,7 +93,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId)
+        bool TryResolveIdentifier<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -157,6 +160,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="editorId">EditorID to look for</param>
         /// <param name="types">The types of Major Records to look up</param>
         /// <param name="formKey">Out parameter containing the FormKey if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -164,7 +168,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId);
+        bool TryResolveIdentifier(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out string? editorId, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the FormKey that matches the winning EditorID relative to the source the package was attached to.<br/>

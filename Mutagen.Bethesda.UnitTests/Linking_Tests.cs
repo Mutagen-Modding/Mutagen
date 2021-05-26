@@ -1316,6 +1316,93 @@ namespace Mutagen.Bethesda.UnitTests
         [Theory]
         [InlineData(LinkCacheTestTypes.Identifiers)]
         [InlineData(LinkCacheTestTypes.WholeRecord)]
+        public void LoadOrder_OriginatingTarget(LinkCacheTestTypes cacheType)
+        {
+            var prototype1 = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var prototype2 = new SkyrimMod(new ModKey("Dummy2", ModType.Master), SkyrimRelease.SkyrimLE);
+            var overriddenRec = prototype1.ObjectEffects.AddNew("EditorID1");
+            var overrideRec = overriddenRec.DeepCopy();
+            overrideRec.EditorID = "EditorID1";
+            prototype2.ObjectEffects.RecordCache.Set(overrideRec);
+            using var disp1 = ConvertMod(prototype1, out var mod1);
+            using var disp2 = ConvertMod(prototype2, out var mod2);
+            var loadOrder = new LoadOrder<ISkyrimModGetter>
+            {
+                mod1,
+                mod2
+            };
+            var (style, package) = GetLinkCache(loadOrder, cacheType);
+
+            // Test query successes
+
+            // Do linked interfaces first, as this tests a specific edge case
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IEffectRecordGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IMajorRecordCommonGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<ISkyrimMajorRecordGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+
+            WrapPotentialThrow(cacheType, style, () =>
+            {
+                Assert.True(package.TryResolve<IObjectEffectGetter>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                rec.EditorID.Should().Be(overriddenRec.EditorID);
+            });
+
+            if (ReadOnly)
+            {
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var _, ResolveTarget.Origin));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var _, ResolveTarget.Origin));
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.False(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var _, ResolveTarget.Origin));
+                });
+            }
+            else
+            {
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IObjectEffect>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                    rec.EditorID.Should().Be(overriddenRec.EditorID);
+                });
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<ObjectEffect>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                    rec.EditorID.Should().Be(overriddenRec.EditorID);
+                });
+
+                WrapPotentialThrow(cacheType, style, () =>
+                {
+                    Assert.True(package.TryResolve<IEffectRecord>(overriddenRec.FormKey, out var rec, ResolveTarget.Origin));
+                    rec.EditorID.Should().Be(overriddenRec.EditorID);
+                });
+            }
+        }
+
+        [Theory]
+        [InlineData(LinkCacheTestTypes.Identifiers)]
+        [InlineData(LinkCacheTestTypes.WholeRecord)]
         public void LoadOrder_ReadOnlyMechanics(LinkCacheTestTypes cacheType)
         {
             var wrapper = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);

@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda.Plugins.Cache
 {
     /// <summary>
-    /// An interface for retriving records given a FormKey.
+    /// An interface for retrieving records
     /// </summary>
     public interface ILinkCache : IIdentifierLinkCache
     {
@@ -20,9 +19,10 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+        bool TryResolve(FormKey formKey, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -44,6 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>True if a matching record was found</returns>
         /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
         /// <exception cref="ArgumentException">
@@ -52,7 +53,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec)
+        bool TryResolve<TMajor>(FormKey formKey, [MaybeNullWhen(false)] out TMajor majorRec, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -83,6 +84,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -90,7 +92,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+        bool TryResolve(FormKey formKey, Type type, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -164,6 +166,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="types">The types of Major Record to look up</param>
         /// <param name="majorRec">Out parameter containing the record if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -171,7 +174,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec);
+        bool TryResolve(FormKey formKey, IEnumerable<Type> types, [MaybeNullWhen(false)] out IMajorRecordCommonGetter majorRec, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -204,12 +207,13 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="MissingRecordException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IMajorRecordCommonGetter Resolve(FormKey formKey);
+        IMajorRecordCommonGetter Resolve(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the cache was attached to.<br/>
@@ -235,6 +239,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -245,7 +250,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IMajorRecordCommonGetter Resolve(FormKey formKey, Type type);
+        IMajorRecordCommonGetter Resolve(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -320,6 +325,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="types">The types of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -330,7 +336,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types);
+        IMajorRecordCommonGetter Resolve(FormKey formKey, IEnumerable<Type> types, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record that matches the EditorID relative to the source the package was attached to.<br/>
@@ -360,6 +366,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
         /// <returns>Matching record</returns>
         /// <exception cref="ArgumentException">
@@ -371,7 +378,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        TMajor Resolve<TMajor>(FormKey formKey)
+        TMajor Resolve<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -400,6 +407,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <typeparam name="TMajor">The type of Major Record to look up</typeparam>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
@@ -408,7 +416,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
-        IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey)
+        IEnumerable<TMajor> ResolveAll<TMajor>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommonGetter;
 
         /// <summary>
@@ -418,6 +426,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -425,7 +434,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
-        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type);
+        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Iterates all records that match the FormKey relative to the source the package was attached to.<br />
@@ -436,9 +445,10 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>Enumerable of all located records that match the FormKey in the cache</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey);
+        IEnumerable<IMajorRecordCommonGetter> ResolveAll(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Queries and caches all winning overrides of the given type within the cache
@@ -487,9 +497,10 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>True if a matching record was found</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -511,6 +522,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>True if a matching record was found</returns>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
@@ -518,7 +530,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - Major Record Types that are not part of this game type.  (Querying for Oblivion records on a Skyrim mod)<br/>
         ///   - A setter type is requested from a getter only object.
         /// </exception>
-        bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec)
+        bool TryResolveContext<TMajor, TMajorGetter>(FormKey formKey, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, TMajor, TMajorGetter> majorRec, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
@@ -550,6 +562,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
         /// <param name="majorRec">Out parameter containing the record with context if successful</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -557,7 +570,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>True if a matching record was found</returns>
-        bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec);
+        bool TryResolveContext(FormKey formKey, Type type, [MaybeNullWhen(false)] out IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> majorRec, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -587,12 +600,13 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="MissingRecordException">
         /// When the FormKey cannot be found under the attached cache.<br/>
         /// </exception>
         /// <returns>Matching record with context</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the cache was attached to.<br/>
@@ -618,6 +632,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -628,7 +643,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type);
+        IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter> ResolveContext(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Retrieves the winning record context that matches the EditorID relative to the source the package was attached to.<br/>
@@ -655,6 +670,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// If a record exists that matches the FormKey, but does not inherit from the given generic, it will be seen as not a match.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <typeparam name="TMajor">The setter type of Major Record to look up</typeparam>
         /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
         /// <returns>Matching record with context</returns>
@@ -667,7 +683,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// <exception cref="MissingRecordException">
         /// When the FormKey having the specified Major Record type cannot be found under the attached cache.<br/>
         /// </exception>
-        IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey)
+        IModContext<TMod, TModGetter, TMajor, TMajorGetter> ResolveContext<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
@@ -699,6 +715,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// If attached to a load order, many records may be returned, depending on how many mods overrode the FormKey.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <typeparam name="TMajor">The setter type of Major Record to look up</typeparam>
         /// <typeparam name="TMajorGetter">The getter type of Major Record to look up</typeparam>
         /// <exception cref="ArgumentException">
@@ -708,7 +725,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-        IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey)
+        IEnumerable<IModContext<TMod, TModGetter, TMajor, TMajorGetter>> ResolveAllContexts<TMajor, TMajorGetter>(FormKey formKey, ResolveTarget target = ResolveTarget.Winner)
             where TMajor : class, IMajorRecordCommon, TMajorGetter
             where TMajorGetter : class, IMajorRecordCommonGetter;
 
@@ -719,6 +736,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
         /// <param name="type">The type of Major Record to look up</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <exception cref="ArgumentException">
         /// An unexpected TMajor type will throw an exception.<br/>
         /// Unexpected types include:<br/>
@@ -726,7 +744,7 @@ namespace Mutagen.Bethesda.Plugins.Cache
         ///   - A setter type is requested from a getter only object.
         /// </exception>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
-        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type);
+        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, Type type, ResolveTarget target = ResolveTarget.Winner);
 
         /// <summary>
         /// Iterates all record contexts that match the FormKey relative to the source the package was attached to.<br />
@@ -737,8 +755,9 @@ namespace Mutagen.Bethesda.Plugins.Cache
         /// processed, rather than being able to scope the search to a specific area.
         /// </summary>
         /// <param name="formKey">FormKey to look for</param>
+        /// <param name="target">Resolution target to look up</param>
         /// <returns>Enumerable of all located record contexts that match the FormKey in the cache</returns>
         [Obsolete("This call is not as optimized as its generic typed counterpart.  Use as a last resort.")]
-        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey);
+        IEnumerable<IModContext<TMod, TModGetter, IMajorRecordCommon, IMajorRecordCommonGetter>> ResolveAllContexts(FormKey formKey, ResolveTarget target = ResolveTarget.Winner);
     }
 }
