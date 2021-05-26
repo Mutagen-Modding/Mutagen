@@ -114,14 +114,13 @@ namespace Mutagen.Bethesda.Archives
 
         /// <summary>
         /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
-        /// Orders the results to an Archive load order driven by the ini unless specified otherwise
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
         /// <param name="modKey">ModKey to query about</param>
         /// <param name="archiveOrdering">How to order the archive paths.  Null for no ordering</param>
         /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
-        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering = null)
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
         {
             var iniListedArchives = GetIniListings(release).ToHashSet();
             var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}")

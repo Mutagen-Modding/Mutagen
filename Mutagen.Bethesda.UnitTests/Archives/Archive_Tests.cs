@@ -132,11 +132,25 @@ sResourceArchiveList=SomeExplicitListing.bsa, SomeExplicitListing2.bsa") }
         public void IsApplicable_MatchesDespiteNameHavingDelimiter()
         {
             var release = GameRelease.Fallout4;
-            var modKey = ModKey.FromNameAndExtension($"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)} - ExtraTitleNonsense.esp");
+            var name = "SomeName - ExtraTitleNonsense";
+            var modKey = ModKey.FromNameAndExtension($"{name}.esp");
             Archive.IsApplicable(
-                release,
-                modKey,
-                $"{Path.GetFileNameWithoutExtension(modKey.FileName)}{Archive.GetExtension(release)}")
+                    release,
+                    modKey,
+                    $"{name}{Archive.GetExtension(release)}")
+                .Should().BeTrue();
+        }
+
+        [Fact]
+        public void ModNameIncludesSpecialSuffix()
+        {
+            var release = GameRelease.Fallout4;
+            var name = $"SomeName - Textures";
+            var modKey = ModKey.FromNameAndExtension($"{name}.esp");
+            Archive.IsApplicable(
+                    release,
+                    modKey,
+                    $"{name}{Archive.GetExtension(release)}")
                 .Should().BeTrue();
         }
 
