@@ -14,6 +14,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using DynamicData.Kernel;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
@@ -281,43 +282,47 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Select(x => x == null ? ErrorResponse.Success : ErrorResponse.Fail(x));
             return Observable.Create<IChangeSet<IModListingGetter>>((observer) =>
             {
-                CompositeDisposable disp = new CompositeDisposable();
-                SourceList<IModListingGetter> list = new SourceList<IModListingGetter>();
+                CompositeDisposable disp = new();
+                SourceList<IModListingGetter> list = new();
                 disp.Add(listingsChanged
                     .StartWith(Unit.Default)
                     .Throttle(TimeSpan.FromMilliseconds(150))
-                    .Subscribe(_ =>
+                    .Select(_ =>
                     {
-                        // Try three times, in case things locked
-                        for (int i = 0; i < 3; i++)
-                        {
-                            try
+                        return Observable.Return(Unit.Default)
+                            .Do(_ =>
                             {
-                                // Short circuit if not subscribed anymore
-                                if (disp.IsDisposed) return;
+                                try
+                                {
+                                    // Short circuit if not subscribed anymore
+                                    if (disp.IsDisposed) return;
 
-                                var refreshedListings = GetListings(
-                                    game,
-                                    loadOrderFilePath,
-                                    cccLoadOrderFilePath,
-                                    dataFolderPath,
-                                    throwOnMissingMods).ToArray();
-                                // ToDo
-                                // Upgrade to SetTo mechanics.
-                                // SourceLists' EditDiff seems weird
-                                list.Clear();
-                                list.AddRange(refreshedListings);
-                                stateSubj.OnNext(null);
-                            }
-                            catch (Exception ex)
-                            {
-                                // Short circuit if not subscribed anymore
-                                if (disp.IsDisposed) return;
+                                    var refreshedListings = GetListings(
+                                        game,
+                                        loadOrderFilePath,
+                                        cccLoadOrderFilePath,
+                                        dataFolderPath,
+                                        throwOnMissingMods).ToArray();
+                                    // ToDo
+                                    // Upgrade to SetTo mechanics.
+                                    // SourceLists' EditDiff seems weird
+                                    list.Clear();
+                                    list.AddRange(refreshedListings);
+                                    stateSubj.OnNext(null);
+                                }
+                                catch (Exception ex)
+                                {
+                                    // Short circuit if not subscribed anymore
+                                    if (disp.IsDisposed) return;
 
-                                stateSubj.OnNext(ex);
-                            }
-                        }
-                    }));
+                                    stateSubj.OnNext(ex);
+                                    throw;
+                                }
+                            })
+                            .RetryWithBackOff<Unit, Exception>((_, times) => TimeSpan.FromMilliseconds(Math.Min(times * 250, 5000)));
+                    })
+                    .Switch()
+                    .Subscribe());
                 list.Connect()
                     .Subscribe(observer);
                 return disp;
