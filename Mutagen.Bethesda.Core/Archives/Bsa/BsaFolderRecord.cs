@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
         private int _prevFileCount;
         internal BsaFileNameBlock? FileNameBlock;
         public int Index { get; }
-        public DirectoryPath? Path { get; private set; }
+        public string? Path { get; private set; }
 
         public IReadOnlyCollection<IArchiveFile> Files => _files.Value;
 

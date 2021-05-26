@@ -5,7 +5,7 @@ namespace Mutagen.Bethesda.Archives
 {
     public interface IArchiveFolder
     {
-        DirectoryPath? Path { get; }
+        string? Path { get; }
         IReadOnlyCollection<IArchiveFile> Files { get; }
     }
 }

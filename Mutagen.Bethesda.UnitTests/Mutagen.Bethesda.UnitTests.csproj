@@ -48,5 +48,13 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Update="Archive\Archive_Tests.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+  </ItemGroup>
 
 </Project>

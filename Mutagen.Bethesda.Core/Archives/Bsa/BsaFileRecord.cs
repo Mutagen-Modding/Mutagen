@@ -2,10 +2,10 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.IO;
-using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
 using Noggog.Streams;
+using Noggog;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
             get
             {
                 if (Name == null) return string.Empty;
-                return (Folder.Path?.Path.IsNullOrWhitespace() ?? true) ? Name.Value.String : System.IO.Path.Combine(Folder.Path.Value.Path, Name.Value.String);
+                return Folder.Path.IsNullOrWhitespace() ? Name.Value.String : System.IO.Path.Combine(Folder.Path, Name.Value.String);
             }
         }
 

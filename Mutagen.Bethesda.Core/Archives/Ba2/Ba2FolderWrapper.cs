@@ -8,9 +8,9 @@ namespace Mutagen.Bethesda.Archives.Ba2
     {
         public IReadOnlyCollection<IArchiveFile> Files { get; }
 
-        public DirectoryPath? Path { get; }
+        public string? Path { get; }
 
-        public Ba2FolderWrapper(DirectoryPath path, IEnumerable<IArchiveFile> files)
+        public Ba2FolderWrapper(string path, IEnumerable<IArchiveFile> files)
         {
             Path = path;
             Files = files.ToList();
