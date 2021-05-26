@@ -104,7 +104,14 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         new bool UsingLocalization { get; set; }
 
-        void SetAllocator(IFormKeyAllocator allocator);
+        /// <summary>
+        /// Assigns a new allocator to the mod.  This will be used whenever a new FormKey is requested from the mod.
+        /// </summary>
+        /// <param name="allocator">Allocator to use</param>
+        /// <typeparam name="TAlloc">Allocator type</typeparam>
+        /// <returns>The same Allocator given is returned</returns>
+        TAlloc SetAllocator<TAlloc>(TAlloc allocator)
+            where TAlloc : IFormKeyAllocator;
     }
 
     /// <summary>

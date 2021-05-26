@@ -14,14 +14,10 @@ namespace Mutagen.Bethesda.Plugins.Records
     [DebuggerDisplay("{GameRelease} {ModKey.ToString()}")]
     public abstract class AMod : IMod
     {
-        /// <summary> 
-        /// The key associated with the mod 
-        /// </summary> 
+        /// <inheritdoc />
         public ModKey ModKey { get; }
 
-        /// <summary> 
-        /// The game release associated with the mod 
-        /// </summary> 
+        /// <inheritdoc />
         public abstract GameRelease GameRelease { get; }
 
         private IFormKeyAllocator _allocator;
@@ -77,29 +73,25 @@ namespace Mutagen.Bethesda.Plugins.Records
         public IMask<bool> GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => throw new NotImplementedException();
         #endregion
 
-        /// <summary> 
-        /// Requests a new unused FormKey from the alloctor specified in the mod's construction 
-        /// </summary> 
-        /// <returns>An unused FormKey</returns> 
+        /// <inheritdoc />
         public FormKey GetNextFormKey()
         {
             return _allocator.GetNextFormKey();
         }
 
-        /// <summary> 
-        /// Requests a new unused FormKey from the alloctor specified in the mod's construction 
-        /// </summary> 
-        /// <param name="editorID">The target EditorID that may potentially be used for synchronization</param> 
-        /// <returns>An unused FormKey</returns> 
+        /// <inheritdoc />
         public FormKey GetNextFormKey(string? editorID)
         {
             if (editorID == null) return GetNextFormKey();
             return _allocator.GetNextFormKey(editorID);
         }
 
-        public void SetAllocator(IFormKeyAllocator allocator)
+        /// <inheritdoc />
+        public TAlloc SetAllocator<TAlloc>(TAlloc allocator)
+            where TAlloc : IFormKeyAllocator
         {
             _allocator = allocator;
+            return allocator;
         }
     }
 }

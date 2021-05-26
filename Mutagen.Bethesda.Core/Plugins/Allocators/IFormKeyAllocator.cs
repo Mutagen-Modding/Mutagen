@@ -55,6 +55,9 @@ namespace Mutagen.Bethesda.Plugins.Allocators
         /// Requests a new unused FormKey, given an EditorID to be used for syncronization purposes.
         /// The EditorID can be used to provide Persistence syncronization by the implementation.
         /// </summary>
+        /// <param name="editorID">The target EditorID that may potentially be used for synchronization.</br>
+        /// Null if no syncronization desired.
+        /// </param> 
         /// <returns>An unused FormKey</returns>
         FormKey GetNextFormKey(string? editorID);
     }

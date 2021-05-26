@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
 
         /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existance
+        /// Attempts to locate the path to a game's load order file, and ensure existence
         /// </summary>
         /// <param name="game">Game to locate for</param>
         /// <param name="path">Path to load order file if it was located</param>
@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
 
         /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existance
+        /// Attempts to locate the path to a game's load order file, and ensure existence
         /// </summary>
         /// <param name="game">Game to locate for</param>
         /// <returns>Path to load order file if it was located</returns>
@@ -64,7 +64,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// </summary>
         /// <param name="stream">Stream to read from</param>
         /// <param name="game">Game type</param>
-        /// <returns>List of modkeys representing a load order</returns>
+        /// <returns>List of ModKeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
         public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
         {
@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="game">Game type</param>
         /// <param name="dataPath">Path to game's data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
+        /// <returns>Enumerable of ModKeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<IModListingGetter> ListingsFromPath(
             GameRelease game,
@@ -114,7 +114,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <param name="pluginTextPath">Path of plugin list</param>
         /// <param name="dataPath">Path to game's data folder</param>
         /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
+        /// <returns>Enumerable of ModKeys representing a load order</returns>
         /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
         public static IEnumerable<IModListingGetter> ListingsFromPath(
             FilePath pluginTextPath,
