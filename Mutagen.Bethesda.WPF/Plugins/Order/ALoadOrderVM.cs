@@ -1,5 +1,6 @@
 using System.Collections;
 using DynamicData.Binding;
+using Mutagen.Bethesda.Plugins.Order;
 using Noggog.WPF;
 using ReactiveUI.Fody.Helpers;
 
@@ -13,6 +14,7 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order
     }
 
     public abstract class ALoadOrderVM<TEntryVM> : ViewModel, ILoadOrderVM
+        where TEntryVM : IModListingGetter
     {
         [Reactive]
         public bool ShowDisabled { get; set; }

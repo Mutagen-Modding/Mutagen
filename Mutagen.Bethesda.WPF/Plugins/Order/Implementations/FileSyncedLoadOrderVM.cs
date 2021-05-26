@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reactive;
 using Noggog;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -5,13 +9,13 @@ using DynamicData;
 using System.Reactive.Linq;
 using Noggog.WPF;
 using DynamicData.Binding;
+using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
 {
-    public class FileSyncedLoadOrderVM : ALoadOrderVM<ModListingVM>
+    public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
     {
-        [Reactive]
-        public string LoadOrderFilePath { get; set; } = string.Empty;
+        public string LoadOrderFilePath { get; } = string.Empty;
 
         [Reactive]
         public string DataFolderPath { get; set; } = string.Empty;
@@ -25,14 +29,15 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
         [Reactive]
         public GameRelease GameRelease { get; set; }
 
-        public override IObservableCollection<ModListingVM> LoadOrder { get; }
+        public override IObservableCollection<FileSyncedLoadOrderListingVM> LoadOrder { get; }
 
-        public FileSyncedLoadOrderVM()
+        public FileSyncedLoadOrderVM(FilePath loadOrderFilePath)
         {
+            LoadOrderFilePath = loadOrderFilePath;
+            
             var lo = Mutagen.Bethesda.Plugins.Order.LoadOrder.GetLiveLoadOrder(
                 this.WhenAnyValue(x => x.GameRelease),
-                this.WhenAnyValue(x => x.LoadOrderFilePath)
-                    .Select(x => new FilePath(x)),
+                Observable.Return(loadOrderFilePath),
                 this.WhenAnyValue(x => x.DataFolderPath)
                     .Select(x => new DirectoryPath(x)),
                 out var state,
@@ -42,9 +47,52 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
             _State = state
                 .ToGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
 
-            LoadOrder = lo
-                .Transform(x => new ModListingVM(x, this.DataFolderPath))
+            var loadOrder = lo
+                .Transform(x => new FileSyncedLoadOrderListingVM(this, x))
+                .PublishRefCount();
+            
+            LoadOrder = loadOrder
                 .ToObservableCollection(this);
+
+            // When listings change, resave to file
+            Observable.Merge(
+                    loadOrder
+                        .AutoRefresh(x => x.Enabled)
+                        .Transform(x => x.Enabled, transformOnRefresh: true)
+                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .QueryWhenChanged(x => x)
+                        .Unit(),
+                    loadOrder
+                        .AutoRefresh(x => x.GhostSuffix)
+                        .Transform(x => x.GhostSuffix ?? string.Empty, transformOnRefresh: true)
+                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .QueryWhenChanged(x => x)
+                        .Unit())
+                .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                .Select(x => LoadOrder.Select(x => new ModListing(x.ModKey, x.Enabled, x.GhostSuffix)).ToArray())
+                .DistinctUntilChanged(new SequenceEqualityComparer())
+                .Subscribe(x =>
+                {
+                    Mutagen.Bethesda.Plugins.Order.LoadOrder.Write(
+                        LoadOrderFilePath,
+                        GameRelease,
+                        LoadOrder);
+                });
+        }
+
+        class SequenceEqualityComparer : IEqualityComparer<ModListing[]>
+        {
+            public bool Equals(ModListing[]? x, ModListing[]? y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (x == null || y == null) return false;
+                return x.SequenceEqual(y);
+            }
+
+            public int GetHashCode(ModListing[] obj)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

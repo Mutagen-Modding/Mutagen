@@ -50,12 +50,11 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
         Reflection = new ReflectionSettingsVM(
             ReflectionSettingsParameters.CreateFrom(
                 new TestSettings(),
-                env.LoadOrder.Select(x => new ModListingVM(x.Value, env.DataFolderPath.Path)),
+                env.LoadOrder.ListedOrder,
                 env.LinkCache));
-        LoadOrderVM = new FileSyncedLoadOrderVM()
+        LoadOrderVM = new FileSyncedLoadOrderVM(env.LoadOrderFilePath)
         {
             DataFolderPath = env.DataFolderPath.Path,
-            LoadOrderFilePath = env.LoadOrderFilePath.Path,
             CreationClubFilePath = env.CreationKitLoadOrderFilePath?.Path ?? string.Empty,
             GameRelease = gameRelease.ToGameRelease(),
         };

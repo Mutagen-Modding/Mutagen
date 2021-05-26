@@ -6,12 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reflection;
+using Mutagen.Bethesda.Plugins.Order;
 
 namespace Mutagen.Bethesda.WPF.Reflection
 {
     public record ReflectionSettingsParameters(
         Assembly Assembly,
-        IObservable<IChangeSet<ModListingVM>> DetectedLoadOrder,
+        IObservable<IChangeSet<IModListingGetter>> DetectedLoadOrder,
         IObservable<ILinkCache> LinkCache,
         Type TargetType,
         object? DefaultVal,
@@ -19,7 +20,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         SettingsNodeVM? Parent)
     {
         public static ReflectionSettingsParameters FromType(
-            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
+            IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache,
             Type type,
             object? defaultVal = null)
@@ -39,7 +40,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         }
 
         public static ReflectionSettingsParameters FromType<TType>(
-            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
+            IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache,
             TType? defaultVal = null)
             where TType : class
@@ -49,7 +50,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
-            IObservable<IChangeSet<ModListingVM>> detectedLoadOrder,
+            IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
             IObservable<ILinkCache> linkCache)
             where TType : class
         {
@@ -57,7 +58,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         }
 
         public static ReflectionSettingsParameters FromType<TType>(
-            IEnumerable<ModListingVM> detectedLoadOrder,
+            IEnumerable<IModListingGetter> detectedLoadOrder,
             ILinkCache linkCache,
             TType? defaultVal = null)
             where TType : class
@@ -70,7 +71,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
-            IEnumerable<ModListingVM> detectedLoadOrder,
+            IEnumerable<IModListingGetter> detectedLoadOrder,
             ILinkCache linkCache)
             where TType : class
         {

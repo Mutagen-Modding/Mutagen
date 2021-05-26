@@ -165,7 +165,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                 case "String":
                     return new StringSettingsVM(meta, param.DefaultVal);
                 case "ModKey":
-                    return new ModKeySettingsVM(param.DetectedLoadOrder.Transform(x => x.Listing.ModKey), meta, param.DefaultVal);
+                    return new ModKeySettingsVM(param.DetectedLoadOrder.Transform(x => x.ModKey), meta, param.DefaultVal);
                 case "FormKey":
                     return new FormKeySettingsVM(meta, param.DefaultVal);
                 case "Array`1":

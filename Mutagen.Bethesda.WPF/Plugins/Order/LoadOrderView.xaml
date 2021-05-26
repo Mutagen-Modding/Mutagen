@@ -31,7 +31,7 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <CheckBox Margin="4,0,0,0" Content="{Binding Listing.ModKey}" />
+                    <local:LoadOrderListingView Margin="4,0,0,0" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

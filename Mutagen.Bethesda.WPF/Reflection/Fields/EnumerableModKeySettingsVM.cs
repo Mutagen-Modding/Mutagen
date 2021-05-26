@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                 }
             }
             return new EnumerableModKeySettingsVM(
-                param.DetectedLoadOrder.Transform(x => x.Listing.ModKey),
+                param.DetectedLoadOrder.Transform(x => x.ModKey),
                 fieldMeta,
                 defaultKeys);
         }
