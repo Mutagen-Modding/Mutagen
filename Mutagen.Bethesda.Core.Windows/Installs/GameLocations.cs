@@ -1,4 +1,3 @@
-using Mutagen.Bethesda.GameLocation;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using GameFinder;
 using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.GOG;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Installs
 {
     public static class GameLocations
     {
@@ -101,69 +100,76 @@ namespace Mutagen.Bethesda
             throw new Exception($"Data folder for {release} cannot be found automatically");
         }
 
-        internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games = new Dictionary<GameRelease, GameMetaData>
-        {
-            {
-                GameRelease.Oblivion, new GameMetaData(
-                    GameRelease.Oblivion,
-                    NexusName: "oblivion",
-                    NexusGameId: 101,
-                    SteamId: 22330,
-                    GogId: 1458058109,
-                    RequiredFiles: new string[]
-                    {
-                        "oblivion.exe"
-                    })
-            },
-            {
-                GameRelease.SkyrimLE, new GameMetaData(
-                    GameRelease.SkyrimLE,
-                    NexusName: "skyrim",
-                    NexusGameId: 110,
-                    SteamId: 72850,
-                    GogId: null,
-                    RequiredFiles: new string[]
-                    {
-                        "tesv.exe"
-                    })
-            },
-            {
-                GameRelease.SkyrimSE, new GameMetaData(
-                    GameRelease.SkyrimSE,
-                    NexusName: "skyrimspecialedition",
-                    NexusGameId: 1704,
-                    SteamId: 489830,
-                    GogId: null,
-                    RequiredFiles: new string[]
-                    {
-                        "SkyrimSE.exe"
-                    })
-            },
-            {
-                GameRelease.Fallout4, new GameMetaData(
-                    GameRelease.Fallout4,
-                    NexusName: "fallout4",
-                    NexusGameId: 1151,
-                    SteamId: 377160,
-                    GogId: null,
-                    RequiredFiles: new string[]
-                    {
-                        "Fallout4.exe"
-                    })
-            },
-            {
-                GameRelease.SkyrimVR, new GameMetaData(
-                    GameRelease.SkyrimVR,
-                    NexusName: "skyrimspecialedition",
-                    NexusGameId: 1704,
-                    SteamId: 611670,
-                    GogId: null,
-                    RequiredFiles: new string[]
-                    {
-                        "SkyrimVR.exe"
-                    })
-            }
-        };
+        internal static IReadOnlyDictionary<GameRelease, GameMetaData> Games { get; }
 
+        static GameLocations()
+        {
+            var games = new Dictionary<GameRelease, GameMetaData>
+            {
+                {
+                    GameRelease.Oblivion, new GameMetaData(
+                        GameRelease.Oblivion,
+                        NexusName: "oblivion",
+                        NexusGameId: 101,
+                        SteamId: 22330,
+                        GogId: 1458058109,
+                        RequiredFiles: new string[]
+                        {
+                            "oblivion.exe"
+                        })
+                },
+                {
+                    GameRelease.SkyrimLE, new GameMetaData(
+                        GameRelease.SkyrimLE,
+                        NexusName: "skyrim",
+                        NexusGameId: 110,
+                        SteamId: 72850,
+                        GogId: null,
+                        RequiredFiles: new string[]
+                        {
+                            "tesv.exe"
+                        })
+                },
+                {
+                    GameRelease.SkyrimSE, new GameMetaData(
+                        GameRelease.SkyrimSE,
+                        NexusName: "skyrimspecialedition",
+                        NexusGameId: 1704,
+                        SteamId: 489830,
+                        GogId: null,
+                        RequiredFiles: new string[]
+                        {
+                            "SkyrimSE.exe"
+                        })
+                },
+                {
+                    GameRelease.Fallout4, new GameMetaData(
+                        GameRelease.Fallout4,
+                        NexusName: "fallout4",
+                        NexusGameId: 1151,
+                        SteamId: 377160,
+                        GogId: null,
+                        RequiredFiles: new string[]
+                        {
+                            "Fallout4.exe"
+                        })
+                },
+                {
+                    GameRelease.SkyrimVR, new GameMetaData(
+                        GameRelease.SkyrimVR,
+                        NexusName: "skyrimspecialedition",
+                        NexusGameId: 1704,
+                        SteamId: 611670,
+                        GogId: null,
+                        RequiredFiles: new string[]
+                        {
+                            "SkyrimVR.exe"
+                        })
+                }
+            };
+            games[GameRelease.EnderalLE] = games[GameRelease.SkyrimLE];
+            games[GameRelease.EnderalSE] = games[GameRelease.SkyrimSE];
+            Games = games;
+        }
     }
 }
