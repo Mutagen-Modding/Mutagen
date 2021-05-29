@@ -7,6 +7,7 @@ using System.Linq;
 using GameFinder;
 using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.GOG;
+using Microsoft.Win32;
 
 namespace Mutagen.Bethesda.Installs
 {
@@ -39,6 +40,12 @@ namespace Mutagen.Bethesda.Installs
 
         private static IEnumerable<DirectoryPath> InternalGetGameFolders(GameRelease release)
         {
+            if (TryGetGameFolderFromRegistry(release, out var regisPath)
+                && regisPath.Exists)
+            {
+                yield return regisPath;
+            }
+            
             var steamHandler = _steamHandler.Value;
             if (steamHandler.Succeeded)
             {
@@ -55,6 +62,36 @@ namespace Mutagen.Bethesda.Installs
                 {
                     yield return game.Path;
                 }
+            }
+        }
+
+        public static bool TryGetGameFolderFromRegistry(GameRelease release,
+            [MaybeNullWhen(false)] out DirectoryPath path)
+        {
+            try
+            {
+                var key = Games[release].RegistryKey;
+                using var regKey = Registry.LocalMachine.OpenSubKey(key);
+                if (regKey == null)
+                {
+                    path = default;
+                    return false;
+                }
+
+                var regRes = RegistryHelper.GetStringValueFromRegistry(regKey, "installed path");
+                if (regRes.Failed)
+                {
+                    path = default;
+                    return false;
+                }
+            
+                path = regRes.Value;
+                return true;
+            }
+            catch (Exception)
+            {
+                path = default;
+                return false;
             }
         }
         
@@ -113,6 +150,7 @@ namespace Mutagen.Bethesda.Installs
                         NexusGameId: 101,
                         SteamId: 22330,
                         GogId: 1458058109,
+                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Oblivion",
                         RequiredFiles: new string[]
                         {
                             "oblivion.exe"
@@ -125,6 +163,7 @@ namespace Mutagen.Bethesda.Installs
                         NexusGameId: 110,
                         SteamId: 72850,
                         GogId: null,
+                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim",
                         RequiredFiles: new string[]
                         {
                             "tesv.exe"
@@ -137,6 +176,7 @@ namespace Mutagen.Bethesda.Installs
                         NexusGameId: 1704,
                         SteamId: 489830,
                         GogId: null,
+                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim Special Edition",
                         RequiredFiles: new string[]
                         {
                             "SkyrimSE.exe"
@@ -149,6 +189,7 @@ namespace Mutagen.Bethesda.Installs
                         NexusGameId: 1151,
                         SteamId: 377160,
                         GogId: null,
+                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Fallout4",
                         RequiredFiles: new string[]
                         {
                             "Fallout4.exe"
@@ -161,6 +202,7 @@ namespace Mutagen.Bethesda.Installs
                         NexusGameId: 1704,
                         SteamId: 611670,
                         GogId: null,
+                        RegistryKey: @"SOFTWARE\WOW6432Node\Bethesda Softworks\Skyrim VR",
                         RequiredFiles: new string[]
                         {
                             "SkyrimVR.exe"
