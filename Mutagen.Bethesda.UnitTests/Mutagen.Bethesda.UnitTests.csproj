@@ -39,23 +39,17 @@
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pex" />
-  </ItemGroup>
   
   <ItemGroup>
-    <Content Include="Pex\files\**">
+    <Content Include="Pex\Files\*">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="Archive\Archive_Tests.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Content Include="Plugins\Records\Files\*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

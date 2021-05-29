@@ -12,8 +12,9 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.UnitTests.Plugins.Cache;
 
-namespace Api
+namespace Mutagen.Bethesda.UnitTests.Api
 {
     /// <summary>
     /// Some tests that are less about testing correct functionality, and more confirming
