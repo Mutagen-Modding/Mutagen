@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using GameFinder;
 using GameFinder.StoreHandlers.Steam;
 using GameFinder.StoreHandlers.GOG;
@@ -25,42 +23,56 @@ namespace Mutagen.Bethesda
             try
             {
                 var storeHandler = new TStoreHandler();
-                var res = storeHandler.FindAllGames();
-                return !res
-                    ? ErrorResponse.Fail("Unable to find all Games!").BubbleFailure<TStoreHandler>()
-                    : GetResponse<TStoreHandler>.Succeed(storeHandler);
+                storeHandler.FindAllGames();
+                return storeHandler;
             }
             catch (Exception e)
             {
                 return ErrorResponse.Fail(e).BubbleFailure<TStoreHandler>();
             }
         }
-        
-        public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
-        {
-            path = default;
 
+        public static IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
+        {
+            return InternalGetGameFolders(release)
+                .Distinct();
+        }
+
+        private static IEnumerable<DirectoryPath> InternalGetGameFolders(GameRelease release)
+        {
             var steamHandler = _steamHandler.Value;
             if (steamHandler.Succeeded)
             {
-                var game = steamHandler.Value.Games.FirstOrDefault(x => x.ID.Equals(Games[release].SteamId));
-                if (game == null) return false;
-                path = game.Path;
-                return true;
+                foreach (var game in steamHandler.Value.Games.Where(x => x.ID.Equals(Games[release].SteamId)))
+                {
+                    yield return game.Path;
+                }
             }
             
             var gogHandler = _gogHandler.Value;
             if (gogHandler.Succeeded)
             {
-                var game = gogHandler.Value.Games.FirstOrDefault(x => x.GameID.Equals(Games[release].GogId));
-                if (game == null) return false;
-                path = game.Path;
-                return true;
+                foreach (var game in gogHandler.Value.Games.Where(x => x.GameID.Equals(Games[release].GogId)))
+                {
+                    yield return game.Path;
+                }
             }
-            return false;
+        }
+        
+        public static bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+        {
+            var p = GetGameFolders(release).Select<DirectoryPath, DirectoryPath?>(x => x).FirstOrDefault();
+            if (p == null)
+            {
+                path = default;
+                return false;
+            }
+
+            path = p.Value;
+            return true;
         }
 
-        public static string GetGameFolder(GameRelease release)
+        public static DirectoryPath GetGameFolder(GameRelease release)
         {
             if (TryGetGameFolder(release, out var path))
             {
@@ -69,7 +81,7 @@ namespace Mutagen.Bethesda
             throw new Exception($"Game folder for {release} cannot be found automatically");
         }
 
-        public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out string path)
+        public static bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
         {
             if (TryGetGameFolder(release, out path))
             {
@@ -80,7 +92,7 @@ namespace Mutagen.Bethesda
             return false;
         }
 
-        public static string GetDataFolder(GameRelease release)
+        public static DirectoryPath GetDataFolder(GameRelease release)
         {
             if (TryGetDataFolder(release, out var path))
             {
