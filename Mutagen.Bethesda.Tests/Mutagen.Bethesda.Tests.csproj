@@ -17,16 +17,16 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Loqui" Version="2.16.0" />
+    <PackageReference Include="Loqui" Version="2.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.16.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.2">
+    <PackageReference Include="Noggog.CSharpExt" Version="2.17.0" />
+    <PackageReference Include="NuGetizer" Version="0.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
