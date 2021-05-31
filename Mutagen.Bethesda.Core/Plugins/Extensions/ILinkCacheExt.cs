@@ -39,7 +39,7 @@ namespace Mutagen.Bethesda
             LinkCachePreferences? prefs = null)
             where TMod : class, IModGetter
         {
-            return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder, GameCategoryHelper.FromModType<TMod>(), prefs ?? LinkCachePreferences.Default);
+            return new ImmutableLoadOrderLinkCache(loadOrder.ListedOrder, GameCategoryHelper.TryFromModType<TMod>(), prefs ?? LinkCachePreferences.Default);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda
                 loadOrder.ListedOrder
                     .Select(listing => listing.Mod)
                     .NotNull(),
-                GameCategoryHelper.FromModType<TMod>(),
+                GameCategoryHelper.TryFromModType<TMod>(),
                 prefs ?? LinkCachePreferences.Default);
         }
 
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda
                 loadOrder
                     .Select(listing => listing.Mod)
                     .NotNull(),
-                GameCategoryHelper.FromModType<TMod>(),
+                GameCategoryHelper.TryFromModType<TMod>(),
                 prefs ?? LinkCachePreferences.Default);
         }
 
@@ -102,7 +102,7 @@ namespace Mutagen.Bethesda
         {
             return new ImmutableLoadOrderLinkCache(
                 loadOrder, 
-                GameCategoryHelper.FromModType<TMod>(),
+                GameCategoryHelper.TryFromModType<TMod>(),
                 prefs ?? LinkCachePreferences.Default);
         }
 

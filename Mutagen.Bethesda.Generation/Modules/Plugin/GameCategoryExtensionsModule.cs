@@ -35,6 +35,17 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     }
                     using (new BraceWrapper(fg))
                     {
+                        fg.AppendLine("return TryFromModType<TMod>() ?? throw new ArgumentException($\"Unknown game type for: {typeof(TMod).Name}\");");
+                    }
+                    fg.AppendLine();
+                    
+                    using (var args = new FunctionWrapper(fg,
+                        $"public static {nameof(GameCategory)}? TryFromModType<TMod>"))
+                    {
+                        args.Wheres.Add($"where TMod : {nameof(IModGetter)}");
+                    }
+                    using (new BraceWrapper(fg))
+                    {
                         fg.AppendLine("switch (typeof(TMod).Name)");
                         using (new BraceWrapper(fg))
                         {
@@ -51,7 +62,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             fg.AppendLine("default:");
                             using (new BraceWrapper(fg))
                             {
-                                fg.AppendLine("throw new ArgumentException($\"Unknown game type for: {typeof(TMod).Name}\");");
+                                fg.AppendLine("return null;");
                             }
                         }
                     }

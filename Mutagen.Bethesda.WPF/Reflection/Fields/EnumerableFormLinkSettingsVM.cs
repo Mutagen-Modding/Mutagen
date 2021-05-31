@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         public ObservableCollection<FormKeyItemViewModel> Values { get; } = new ObservableCollection<FormKeyItemViewModel>();
 
         private FormKey[] _defaultVal;
-        private readonly IObservable<ILinkCache> _linkCacheObs;
+        private readonly IObservable<ILinkCache?> _linkCacheObs;
         private readonly ObservableAsPropertyHelper<ILinkCache?> _LinkCache;
         private readonly string _typeName;
         public ILinkCache? LinkCache => _LinkCache.Value;
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         public IEnumerable<Type> ScopedTypes { get; private set; } = Enumerable.Empty<Type>();
 
         public EnumerableFormLinkSettingsVM(
-            IObservable<ILinkCache> linkCache,
+            IObservable<ILinkCache?> linkCache,
             FieldMeta fieldMeta,
             string typeName,
             IEnumerable<FormKey> defaultVal)
