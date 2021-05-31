@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Cache.Implementations
         /// <inheritdoc />
         public IReadOnlyList<IModGetter> PriorityOrder => _priorityOrder;
 
-        public ImmutableLoadOrderLinkCache(IEnumerable<IModGetter> loadOrder, GameCategory gameCategory, LinkCachePreferences? prefs)
+        public ImmutableLoadOrderLinkCache(IEnumerable<IModGetter> loadOrder, GameCategory? gameCategory, LinkCachePreferences? prefs)
         {
             prefs ??= LinkCachePreferences.Default;
             this._listedOrder = loadOrder.ToList();
@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Cache.Implementations
             var firstMod = _listedOrder.FirstOrDefault();
             this._hasAny = firstMod != null;
             this._simple = prefs is LinkCachePreferenceOnlyIdentifiers;
-            this._gameCategory = gameCategory;
+            this._gameCategory = gameCategory ?? firstMod?.GameRelease.ToCategory() ?? throw new ArgumentException($"Could not get {nameof(GameCategory)} via generic type or first mod");
             this._linkInterfaces = LinkInterfaceMapping.InterfaceToObjectTypes(_gameCategory);
             this._formKeyCache = new ImmutableLoadOrderLinkCacheCategory<FormKey>(
                 this,
@@ -896,7 +896,7 @@ namespace Mutagen.Bethesda.Cache.Implementations
         /// </summary>
         /// <param name="loadOrder">LoadOrder to resolve against when linking</param>
         public ImmutableLoadOrderLinkCache(IEnumerable<TModGetter> loadOrder, LinkCachePreferences prefs)
-            : base(loadOrder, GameCategoryHelper.FromModType<TModGetter>(), prefs)
+            : base(loadOrder, GameCategoryHelper.TryFromModType<TModGetter>(), prefs)
         {
             this._listedOrder = loadOrder.ToList();
             this._formKeyContextCache = new ImmutableLoadOrderLinkCacheContextCategory<TMod, TModGetter, FormKey>(

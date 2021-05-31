@@ -8,6 +8,12 @@ namespace Mutagen.Bethesda
         public static GameCategory FromModType<TMod>()
             where TMod : IModGetter
         {
+            return TryFromModType<TMod>() ?? throw new ArgumentException($"Unknown game type for: {typeof(TMod).Name}");
+        }
+        
+        public static GameCategory? TryFromModType<TMod>()
+            where TMod : IModGetter
+        {
             switch (typeof(TMod).Name)
             {
                 case "IOblivionMod":
@@ -21,7 +27,7 @@ namespace Mutagen.Bethesda
                     return GameCategory.Fallout4;
                 default:
                 {
-                    throw new ArgumentException($"Unknown game type for: {typeof(TMod).Name}");
+                    return null;
                 }
             }
         }
