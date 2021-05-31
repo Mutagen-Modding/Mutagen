@@ -1,9 +1,11 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -22,12 +24,12 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageIdlesBinaryCreateTranslation
         {
-            static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
+            public static partial void FillBinaryTimerSettingCustom(MutagenFrame frame, IPackageIdles item)
             {
                 FillBinaryAnimationsCustom(frame, item);
             }
 
-            static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
+            public static partial void FillBinaryAnimationsCustom(MutagenFrame frame, IPackageIdles item)
             {
                 byte? count = null;
                 for (int i = 0; i < 3; i++)
@@ -48,16 +50,16 @@ namespace Mutagen.Bethesda.Skyrim
                         if (count == null)
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
-                                    frame: frame,
+                                ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
+                                    reader: frame,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
                         }
                         else
                         {
                             item.Animations.SetTo(
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
-                                    frame: frame,
+                                ListBinaryTranslation<IFormLinkGetter<IdleAnimation>>.Instance.Parse(
+                                    reader: frame,
                                     amount: count.Value,
                                     triggeringRecord: RecordTypes.IDLA,
                                     transl: FormLinkBinaryTranslation.Instance.Parse));
@@ -82,7 +84,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageIdlesBinaryWriteTranslation
         {
-            static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
+            public static partial void WriteBinaryAnimationsCustom(MutagenWriter writer, IPackageIdlesGetter item)
             {
                 var anims = item.Animations;
                 using (HeaderExport.Subrecord(writer, RecordTypes.IDLC))
@@ -99,11 +101,15 @@ namespace Mutagen.Bethesda.Skyrim
                 {
                     foreach (var anim in anims)
                     {
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                        FormLinkBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: anim);
                     }
                 }
+            }
+
+            public static partial void WriteBinaryTimerSettingCustom(MutagenWriter writer, IPackageIdlesGetter item)
+            {
             }
         }
 
@@ -113,6 +119,10 @@ namespace Mutagen.Bethesda.Skyrim
 
             private float _timerSetting;
             public Single GetTimerSettingCustom() => _timerSetting;
+
+            partial void TimerSettingCustomParse(OverlayStream stream, long finalPos, int offset)
+            {
+            }
 
             partial void AnimationsCustomParse(
                 OverlayStream stream,

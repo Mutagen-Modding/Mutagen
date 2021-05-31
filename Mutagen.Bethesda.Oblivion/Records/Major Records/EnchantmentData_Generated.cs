@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -483,7 +491,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -813,7 +823,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.ENIT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -962,7 +972,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IEnchantmentDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IEnchantmentDataGetter obj)
         {
             yield break;
         }
@@ -1094,13 +1104,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Write(
+            EnumBinaryTranslation<Enchantment.EnchantmentType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
             writer.Write(item.ChargeAmount);
             writer.Write(item.EnchantCost);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Enchantment.Flag>.Instance.Write(
+            EnumBinaryTranslation<Enchantment.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1114,7 +1124,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ENIT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1143,10 +1153,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnchantmentData item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<Enchantment.EnchantmentType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.ChargeAmount = frame.ReadUInt32();
             item.EnchantCost = frame.ReadUInt32();
-            item.Flags = EnumBinaryTranslation<Enchantment.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Enchantment.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1176,7 +1190,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class EnchantmentDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IEnchantmentDataGetter
     {
         #region Common Routing

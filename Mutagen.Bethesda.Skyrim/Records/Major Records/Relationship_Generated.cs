@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -547,7 +557,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Relationship_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RelationshipSetterCommon.Instance.RemapLinks(this, mapping);
         public Relationship(
             FormKey formKey,
@@ -589,6 +599,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Relationship>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -655,7 +670,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1017,7 +1034,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IRelationshipInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IRelationshipInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1296,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRelationshipGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRelationshipGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1575,22 +1592,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Parent);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Child);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Relationship.RankType>.Instance.Write(
+                EnumBinaryTranslation<Relationship.RankType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Rank,
                     length: 2);
                 writer.Write(item.Unknown);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Relationship.Flag>.Instance.Write(
+                EnumBinaryTranslation<Relationship.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 1);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.AssociationType);
             }
@@ -1604,7 +1621,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.RELA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1689,21 +1706,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Parent.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.Child.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.Rank = EnumBinaryTranslation<Relationship.RankType>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Child.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.Rank = EnumBinaryTranslation<Relationship.RankType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     item.Unknown = dataFrame.ReadUInt8();
-                    item.Flags = EnumBinaryTranslation<Relationship.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.AssociationType.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Flags = EnumBinaryTranslation<Relationship.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.AssociationType.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Relationship_FieldIndex.AssociationType;
                 }
                 default:
@@ -1748,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RelationshipCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RelationshipBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1815,7 +1827,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new RelationshipBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1887,6 +1899,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Relationship>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

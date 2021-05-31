@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +430,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -751,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -889,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPartGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPartGetter obj)
         {
             yield break;
         }
@@ -1014,12 +1025,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Part.PartTypeEnum>.Instance.WriteNullable(
+            EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.PartType,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM0));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM1),
@@ -1076,15 +1087,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.PartType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PartType = EnumBinaryTranslation<Part.PartTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.PartType = EnumBinaryTranslation<Part.PartTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Part_FieldIndex.PartType;
                 }
                 case RecordTypeInts.NAM1:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)Part_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.FileName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Part_FieldIndex.FileName;
                 }
@@ -1120,7 +1133,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PartBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPartGetter
     {
         #region Common Routing

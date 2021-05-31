@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     class BsaReader : IArchiveReader
     {
@@ -15,7 +15,6 @@ namespace Mutagen.Bethesda.Bsa
         private readonly uint _folderRecordOffset;
         private readonly Lazy<BsaFolderRecord[]> _folders;
         private readonly Lazy<Dictionary<string, BsaFolderRecord>> _foldersByName;
-        private readonly string _magic = string.Empty;
         private readonly Func<Stream> _streamGetter;
 
         public uint FolderCount { get; }
@@ -50,8 +49,8 @@ namespace Mutagen.Bethesda.Bsa
             }
         }
 
-        public BsaReader(string filename)
-            : this(() => File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public BsaReader(FilePath filename)
+            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 
@@ -65,7 +64,6 @@ namespace Mutagen.Bethesda.Bsa
             if (fourcc != "BSA\0")
                 throw new InvalidDataException("Archive is not a BSA");
 
-            _magic = fourcc;
             HeaderType = (BsaVersionType)rdr.ReadUInt32();
             _folderRecordOffset = rdr.ReadUInt32();
             ArchiveFlags = (BsaArchiveFlags)rdr.ReadUInt32();
@@ -125,10 +123,11 @@ namespace Mutagen.Bethesda.Bsa
             {
                 throw new ArgumentException("Cannot get folders by name if the BSA does not have folder names.");
             }
-            var ret = new Dictionary<string, BsaFolderRecord>();
+            var ret = new Dictionary<string, BsaFolderRecord>(StringComparer.OrdinalIgnoreCase);
             foreach (var folder in _folders.Value)
             {
-                ret.Add(folder.Path!, folder);
+                if (folder.Path == null) continue;
+                ret.Add(folder.Path, folder);
             }
             return ret;
         }

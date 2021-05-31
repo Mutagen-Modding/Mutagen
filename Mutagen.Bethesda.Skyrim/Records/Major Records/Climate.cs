@@ -1,9 +1,6 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -24,7 +21,7 @@ namespace Mutagen.Bethesda.Skyrim
             public const byte MasserFlag = 64;
             public const byte SecundaFlag = 128;
 
-            static partial void FillBinaryMoonAndPhaseLengthCustom(MutagenFrame frame, IClimateInternal item)
+            public static partial void FillBinaryMoonAndPhaseLengthCustom(MutagenFrame frame, IClimateInternal item)
             {
                 var raw = frame.ReadUInt8();
                 item.PhaseLength = (byte)(raw % 64);
@@ -42,7 +39,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ClimateBinaryWriteTranslation
         {
-            static partial void WriteBinaryMoonAndPhaseLengthCustom(MutagenWriter writer, IClimateGetter item)
+            public static partial void WriteBinaryMoonAndPhaseLengthCustom(MutagenWriter writer, IClimateGetter item)
             {
                 var raw = item.PhaseLength;
                 if (item.Moons.HasFlag(Climate.Moon.Masser))

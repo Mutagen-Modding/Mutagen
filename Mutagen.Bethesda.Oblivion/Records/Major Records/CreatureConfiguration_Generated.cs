@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -576,7 +584,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -918,7 +928,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.ACBS)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1097,7 +1107,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICreatureConfigurationGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICreatureConfigurationGetter obj)
         {
             yield break;
         }
@@ -1241,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureConfigurationGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Write(
+            EnumBinaryTranslation<Creature.CreatureFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1261,7 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ACBS),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1290,7 +1300,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureConfiguration item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Creature.CreatureFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Creature.CreatureFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.BaseSpellPoints = frame.ReadUInt16();
             item.Fatigue = frame.ReadUInt16();
             item.BarterGold = frame.ReadUInt16();
@@ -1326,7 +1338,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CreatureConfigurationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICreatureConfigurationGetter
     {
         #region Common Routing

@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -391,7 +401,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = QuestTargetData_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestTargetDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestTargetDataCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestTargetDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -430,7 +440,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -755,7 +767,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.QSTA)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -884,7 +896,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestTargetDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestTargetDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Target);
             yield break;
@@ -1009,10 +1021,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Target);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestTarget.Flag>.Instance.Write(
+            EnumBinaryTranslation<QuestTarget.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1026,7 +1038,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.QSTA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1055,11 +1067,10 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestTargetData item,
             MutagenFrame frame)
         {
-            item.Target.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
-            item.Flags = EnumBinaryTranslation<QuestTarget.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Target.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Flags = EnumBinaryTranslation<QuestTarget.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1089,7 +1100,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class QuestTargetDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestTargetDataGetter
     {
         #region Common Routing
@@ -1111,7 +1122,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestTargetDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestTargetDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestTargetDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

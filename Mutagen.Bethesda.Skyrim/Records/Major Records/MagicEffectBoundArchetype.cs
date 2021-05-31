@@ -1,16 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Skyrim
 {
     public partial class MagicEffectBoundArchetype
     {
-        public FormLink<IBoundableEquipment> Association => new FormLink<IBoundableEquipment>(this.AssociationKey);
+        public FormLink<IBindableEquipmentGetter> Association => this.AssociationKey.AsLink<IBindableEquipmentGetter>();
+
+        IFormLink<IBindableEquipmentGetter> IMagicEffectBoundArchetype.Association => this.Association;
+        IFormLinkGetter<IBindableEquipmentGetter> IMagicEffectBoundArchetypeGetter.Association => this.Association;
 
         public MagicEffectBoundArchetype()
             : base(TypeEnum.Bound)
         {
+        }
+    }
+
+    public partial interface IMagicEffectBoundArchetype
+    {
+        new IFormLink<IBindableEquipmentGetter> Association { get; }
+    }
+
+    public partial interface IMagicEffectBoundArchetypeGetter
+    {
+        IFormLinkGetter<IBindableEquipmentGetter> Association { get; }
+    }
+
+    namespace Internals
+    {
+        public partial class MagicEffectBoundArchetypeBinaryOverlay
+        {
+            public IFormLinkGetter<IBindableEquipmentGetter> Association => this.AssociationKey.AsLink<IBindableEquipmentGetter>();
         }
     }
 }

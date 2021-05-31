@@ -9,6 +9,15 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -514,7 +523,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -850,7 +861,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.DATA)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1009,7 +1020,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAmmunitionDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAmmunitionDataGetter obj)
         {
             yield break;
         }
@@ -1145,15 +1156,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Speed);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Write(
+            EnumBinaryTranslation<AmmunitionData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
             writer.Write(item.Value);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Weight);
             writer.Write(item.Damage);
@@ -1167,7 +1178,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DATA),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1196,10 +1207,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionData item,
             MutagenFrame frame)
         {
-            item.Speed = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Speed = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<AmmunitionData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.Value = frame.ReadUInt32();
-            item.Weight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Weight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Damage = frame.ReadUInt16();
         }
 
@@ -1230,7 +1243,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class AmmunitionDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAmmunitionDataGetter
     {
         #region Common Routing

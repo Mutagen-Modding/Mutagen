@@ -1,8 +1,9 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -10,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageEventBinaryCreateTranslation
         {
-            static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPackageEvent item)
+            public static partial void FillBinaryTopicsCustom(MutagenFrame frame, IPackageEvent item)
             {
                 item.Topics.SetTo(ATopicReferenceBinaryCreateTranslation.Factory(frame));
             }
@@ -18,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageEventBinaryWriteTranslation
         {
-            static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPackageEventGetter item)
+            public static partial void WriteBinaryTopicsCustom(MutagenWriter writer, IPackageEventGetter item)
             {
                 ATopicReferenceBinaryWriteTranslation.Write(writer, item.Topics);
             }

@@ -10,6 +10,14 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -450,7 +458,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -770,7 +780,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.SNDX)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -960,7 +970,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISoundDataExtendedGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISoundDataExtendedGetter obj)
         {
             yield break;
         }
@@ -1131,32 +1141,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public new readonly static SoundDataExtendedBinaryWriteTranslation Instance = new SoundDataExtendedBinaryWriteTranslation();
 
-        static partial void WriteBinaryStopTimeCustom(
-            MutagenWriter writer,
-            ISoundDataExtendedInternalGetter item);
-
-        public static void WriteBinaryStopTime(
-            MutagenWriter writer,
-            ISoundDataExtendedInternalGetter item)
-        {
-            WriteBinaryStopTimeCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryStartTimeCustom(
-            MutagenWriter writer,
-            ISoundDataExtendedInternalGetter item);
-
-        public static void WriteBinaryStartTime(
-            MutagenWriter writer,
-            ISoundDataExtendedInternalGetter item)
-        {
-            WriteBinaryStartTimeCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             ISoundDataExtendedInternalGetter item,
             MutagenWriter writer)
@@ -1164,7 +1148,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundDataBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            FloatBinaryTranslation.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.StaticAttenuation,
                 integerType: FloatIntegerType.UShort,
@@ -1177,6 +1161,32 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryStopTimeCustom(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item);
+
+        public static void WriteBinaryStopTime(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item)
+        {
+            WriteBinaryStopTimeCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryStartTimeCustom(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item);
+
+        public static void WriteBinaryStartTime(
+            MutagenWriter writer,
+            ISoundDataExtendedInternalGetter item)
+        {
+            WriteBinaryStartTimeCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             ISoundDataExtendedInternalGetter item,
@@ -1185,7 +1195,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.SNDX),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1228,8 +1238,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             SoundDataBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.StaticAttenuation = FloatBinaryTranslation.Parse(
-                frame: frame,
+            item.StaticAttenuation = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01);
             SoundDataExtendedBinaryCreateTranslation.FillBinaryStopTimeCustom(
@@ -1240,11 +1250,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        static partial void FillBinaryStopTimeCustom(
+        public static partial void FillBinaryStopTimeCustom(
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
 
-        static partial void FillBinaryStartTimeCustom(
+        public static partial void FillBinaryStartTimeCustom(
             MutagenFrame frame,
             ISoundDataExtendedInternal item);
 
@@ -1292,7 +1302,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public Single StaticAttenuation => FloatBinaryTranslation.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single StaticAttenuation => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x8, 0x2), FloatIntegerType.UShort, 0.01);
         public Single StopTime => GetStopTimeCustom(location: 0xA);
         public Single StartTime => GetStartTimeCustom(location: 0xB);
         partial void CustomFactoryEnd(

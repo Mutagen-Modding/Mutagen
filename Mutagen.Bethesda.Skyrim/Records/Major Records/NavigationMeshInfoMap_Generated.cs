@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -53,7 +63,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavigationMapInfo> MapInfos
         {
             get => this._MapInfos;
-            protected set => this._MapInfos = value;
+            init => this._MapInfos = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -544,7 +554,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMeshInfoMap_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMeshInfoMapSetterCommon.Instance.RemapLinks(this, mapping);
         public NavigationMeshInfoMap(
             FormKey formKey,
@@ -586,6 +596,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<NavigationMeshInfoMap>.ToString(this);
         }
 
         #region Equals and Hash
@@ -643,7 +658,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -984,7 +1001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<INavigationMeshInfoMapInternal>(
+            PluginUtilityTranslation.MajorRecordParse<INavigationMeshInfoMapInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1266,7 +1283,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationMeshInfoMapGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMeshInfoMapGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1579,11 +1596,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.NavMeshVersion,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NVER));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavigationMapInfoGetter>.Instance.Write(
                 writer: writer,
                 items: item.MapInfos,
                 transl: (MutagenWriter subWriter, INavigationMapInfoGetter subItem, RecordTypeConverter? conv) =>
@@ -1601,7 +1618,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NVSI,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NVSI));
@@ -1615,7 +1632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.NAVI),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1705,8 +1722,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVMI:
                 {
                     item.MapInfos.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavigationMapInfo>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RecordTypes.NVMI,
                             recordTypeConverter: recordTypeConverter,
                             transl: NavigationMapInfo.TryCreateFromBinary));
@@ -1720,7 +1737,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NVSI:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.NVSI = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.NVSI = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)NavigationMeshInfoMap_FieldIndex.NVSI;
                 }
                 default:
@@ -1765,7 +1782,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMeshInfoMapCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => NavigationMeshInfoMapBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1812,7 +1829,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new NavigationMeshInfoMapBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1908,6 +1925,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<NavigationMeshInfoMap>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

@@ -1,13 +1,7 @@
-using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -23,7 +17,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class ScriptMetaSummaryBinaryCreateTranslation
         {
-            static partial void FillBinaryCompiledSizeCustom(MutagenFrame frame, IScriptMetaSummary item)
+            public static partial void FillBinaryCompiledSizeCustom(MutagenFrame frame, IScriptMetaSummary item)
             {
                 frame.Position += 4;
             }
@@ -31,9 +25,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class ScriptMetaSummaryBinaryWriteTranslation
         {
-            static partial void WriteBinaryCompiledSizeCustom(MutagenWriter writer, IScriptMetaSummaryGetter item)
+            public static partial void WriteBinaryCompiledSizeCustom(MutagenWriter writer, IScriptMetaSummaryGetter item)
             {
-                Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.CompiledSize);
             }

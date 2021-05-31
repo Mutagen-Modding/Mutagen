@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -621,7 +631,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => CriticalDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -660,7 +670,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1013,7 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.CRDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1212,7 +1224,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICriticalDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICriticalDataGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Effect);
             yield break;
@@ -1368,14 +1380,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             writer.Write(item.Damage);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.PercentMult);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CriticalData.Flag>.Instance.Write(
+            EnumBinaryTranslation<CriticalData.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
             if (writer.MetaData.FormVersion!.Value >= 44)
@@ -1384,7 +1396,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if (!item.Versioning.HasFlag(CriticalData.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.Effect);
                 if (writer.MetaData.FormVersion!.Value >= 44)
@@ -1402,7 +1414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.CRDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1433,9 +1445,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         {
             item.Damage = frame.ReadUInt16();
             item.Unused = frame.ReadInt16();
-            item.PercentMult = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<CriticalData.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.PercentMult = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<CriticalData.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused3 = frame.ReadInt32();
@@ -1445,10 +1459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item.Versioning |= CriticalData.VersioningBreaks.Break0;
                 return;
             }
-            item.Effect.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Effect.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             if (frame.MetaData.FormVersion!.Value >= 44)
             {
                 item.Unused4 = frame.ReadInt32();
@@ -1482,7 +1493,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CriticalDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICriticalDataGetter
     {
         #region Common Routing
@@ -1504,7 +1515,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => CriticalDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => CriticalDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

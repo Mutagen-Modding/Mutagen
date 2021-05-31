@@ -8,8 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -399,7 +407,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -697,7 +707,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.VMAD)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -873,7 +883,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAdapterGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1033,19 +1043,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static PerkAdapterBinaryWriteTranslation Instance = new PerkAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryScriptFragmentsCustom(
-            MutagenWriter writer,
-            IPerkAdapterGetter item);
-
-        public static void WriteBinaryScriptFragments(
-            MutagenWriter writer,
-            IPerkAdapterGetter item)
-        {
-            WriteBinaryScriptFragmentsCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IPerkAdapterGetter item,
             MutagenWriter writer)
@@ -1058,6 +1055,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryScriptFragmentsCustom(
+            MutagenWriter writer,
+            IPerkAdapterGetter item);
+
+        public static void WriteBinaryScriptFragments(
+            MutagenWriter writer,
+            IPerkAdapterGetter item)
+        {
+            WriteBinaryScriptFragmentsCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IPerkAdapterGetter item,
@@ -1066,7 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.VMAD),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1115,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryScriptFragmentsCustom(
+        public static partial void FillBinaryScriptFragmentsCustom(
             MutagenFrame frame,
             IPerkAdapter item);
 

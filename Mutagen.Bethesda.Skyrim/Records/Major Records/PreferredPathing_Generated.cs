@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -46,7 +56,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshSet> NavmeshSets
         {
             get => this._NavmeshSets;
-            protected set => this._NavmeshSets = value;
+            init => this._NavmeshSets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -60,7 +70,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<NavmeshNode> NavmeshTree
         {
             get => this._NavmeshTree;
-            protected set => this._NavmeshTree = value;
+            init => this._NavmeshTree = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -557,7 +567,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PreferredPathing_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PreferredPathingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -596,7 +606,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -922,7 +934,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.NVPP)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1085,7 +1097,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPreferredPathingGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPreferredPathingGetter obj)
         {
             foreach (var item in obj.NavmeshSets.SelectMany(f => f.ContainedFormLinks))
             {
@@ -1257,7 +1269,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPreferredPathingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshSetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshSetGetter>.Instance.Write(
                 writer: writer,
                 items: item.NavmeshSets,
                 countLengthLength: 4,
@@ -1269,7 +1281,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<INavmeshNodeGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<INavmeshNodeGetter>.Instance.Write(
                 writer: writer,
                 items: item.NavmeshTree,
                 countLengthLength: 4,
@@ -1291,7 +1303,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.NVPP),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1321,14 +1333,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.NavmeshSets.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshSet>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: NavmeshSet.TryCreateFromBinary));
             item.NavmeshTree.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<NavmeshNode>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: NavmeshNode.TryCreateFromBinary));
         }
 
@@ -1359,7 +1371,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PreferredPathingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPreferredPathingGetter
     {
         #region Common Routing
@@ -1381,7 +1393,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PreferredPathingCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PreferredPathingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

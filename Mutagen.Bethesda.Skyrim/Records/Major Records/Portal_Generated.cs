@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -397,7 +407,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PortalSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -436,7 +446,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -758,7 +770,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -887,7 +899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPortalGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPortalGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Origin);
             yield return FormLinkInformation.Factory(obj.Destination);
@@ -1013,10 +1025,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPortalGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Origin);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Destination);
         }
@@ -1052,14 +1064,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPortal item,
             MutagenFrame frame)
         {
-            item.Origin.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
-            item.Destination.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Origin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Destination.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1089,7 +1095,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PortalBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPortalGetter
     {
         #region Common Routing
@@ -1111,7 +1117,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PortalCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PortalBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

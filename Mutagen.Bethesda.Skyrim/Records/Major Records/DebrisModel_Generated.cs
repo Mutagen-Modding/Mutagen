@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -537,7 +546,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -868,7 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1032,7 +1043,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDebrisModelGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisModelGetter obj)
         {
             yield break;
         }
@@ -1185,19 +1196,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
                 writer.Write(item.Percentage);
-                Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+                StringBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ModelFilename,
                     binaryType: StringBinaryType.NullTerminate);
                 if (!item.DATADataTypeState.HasFlag(DebrisModel.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Binary.EnumBinaryTranslation<DebrisModel.Flag>.Instance.Write(
+                    EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                         writer,
                         item.Flags,
                         length: 1);
                 }
             }
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TextureFileHashes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MODT));
@@ -1258,8 +1269,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.Percentage = dataFrame.ReadUInt8();
-                    item.ModelFilename = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                    item.ModelFilename = StringBinaryTranslation.Instance.Parse(
+                        reader: dataFrame,
                         stringBinaryType: StringBinaryType.NullTerminate,
                         parseWhole: false);
                     if (dataFrame.Complete)
@@ -1267,13 +1278,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         item.DATADataTypeState |= DebrisModel.DATADataType.Break0;
                         return (int)DebrisModel_FieldIndex.ModelFilename;
                     }
-                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
+                    item.Flags = EnumBinaryTranslation<DebrisModel.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
                     return (int)DebrisModel_FieldIndex.Flags;
                 }
                 case RecordTypeInts.MODT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TextureFileHashes = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.TextureFileHashes = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DebrisModel_FieldIndex.TextureFileHashes;
                 }
                 default:
@@ -1308,7 +1321,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class DebrisModelBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IDebrisModelGetter
     {
         #region Common Routing

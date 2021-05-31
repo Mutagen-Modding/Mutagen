@@ -6,11 +6,23 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -70,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -727,7 +739,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = LoadScreen_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LoadScreenSetterCommon.Instance.RemapLinks(this, mapping);
         public LoadScreen(
             FormKey formKey,
@@ -769,6 +781,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<LoadScreen>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -831,7 +848,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1210,7 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ILoadScreenInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ILoadScreenInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1558,7 +1577,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILoadScreenGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILoadScreenGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1908,13 +1927,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
@@ -1925,15 +1944,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.LoadingScreenNif,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM));
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialScale,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.WriteNullable(
+            P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialRotation,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM));
@@ -1947,11 +1966,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         recordTypeConverter: recordTypeConverter);
                 }
             }
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.WriteNullable(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.InitialTranslationOffset,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CameraPath,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.MOD2),
@@ -1966,7 +1985,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.LSCR),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2057,8 +2076,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)LoadScreen_FieldIndex.Description;
@@ -2066,8 +2085,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 {
                     item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -2076,22 +2095,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LoadingScreenNif.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.LoadingScreenNif.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)LoadScreen_FieldIndex.LoadingScreenNif;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.InitialScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialScale;
                 }
                 case RecordTypeInts.RNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialRotation = Mutagen.Bethesda.Binary.P3Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.InitialRotation = P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialRotation;
                 }
                 case RecordTypeInts.ONAM:
@@ -2103,14 +2119,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InitialTranslationOffset = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.InitialTranslationOffset = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)LoadScreen_FieldIndex.InitialTranslationOffset;
                 }
                 case RecordTypeInts.MOD2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CameraPath = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.CameraPath = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)LoadScreen_FieldIndex.CameraPath;
                 }
@@ -2156,7 +2172,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LoadScreenCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LoadScreenBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2193,12 +2209,12 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InitialRotation
         private int? _InitialRotationLocation;
-        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
+        public P3Int16? InitialRotation => _InitialRotationLocation.HasValue ? P3Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialRotationLocation.Value, _package.MetaData.Constants)) : default(P3Int16?);
         #endregion
         public IInt16MinMaxGetter? RotationOffsetConstraints { get; private set; }
         #region InitialTranslationOffset
         private int? _InitialTranslationOffsetLocation;
-        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
+        public P3Float? InitialTranslationOffset => _InitialTranslationOffsetLocation.HasValue ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _InitialTranslationOffsetLocation.Value, _package.MetaData.Constants)) : default(P3Float?);
         #endregion
         #region CameraPath
         private int? _CameraPathLocation;
@@ -2225,7 +2241,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new LoadScreenBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2349,6 +2365,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<LoadScreen>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

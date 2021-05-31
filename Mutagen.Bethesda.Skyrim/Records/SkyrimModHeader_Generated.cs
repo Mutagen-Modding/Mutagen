@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -99,7 +108,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
-            protected set => this._MasterReferences = value;
+            init => this._MasterReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -961,7 +970,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = SkyrimModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => SkyrimModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1000,7 +1009,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1373,7 +1384,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
-            UtilityTranslation.RecordParse(
+            PluginUtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1682,7 +1693,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkyrimModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISkyrimModHeaderGetter obj)
         {
             if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
             {
@@ -1932,24 +1943,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static SkyrimModHeaderBinaryWriteTranslation Instance = new SkyrimModHeaderBinaryWriteTranslation();
 
-        static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            ISkyrimModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            ISkyrimModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             ISkyrimModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<SkyrimModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1969,20 +1967,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: StatsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
@@ -1990,25 +1988,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             SkyrimModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISkyrimMajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INTV,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INCC,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            ISkyrimModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            ISkyrimModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -2019,7 +2030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 WriteEmbedded(
                     item: item,
@@ -2052,7 +2063,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<SkyrimModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<SkyrimModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
             item.FormVersion = frame.ReadUInt16();
@@ -2078,28 +2091,28 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.TypeOffsets = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkyrimModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Deleted = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)SkyrimModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Author = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SkyrimModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)SkyrimModHeader_FieldIndex.Description;
                 }
@@ -2120,8 +2133,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISkyrimMajorRecordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ISkyrimMajorRecordGetter>>();
                     return (int)SkyrimModHeader_FieldIndex.OverriddenForms;
@@ -2144,7 +2157,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryMasterReferencesCustom(
+        public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
             ISkyrimModHeader item);
 
@@ -2175,7 +2188,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class SkyrimModHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISkyrimModHeaderGetter
     {
         #region Common Routing
@@ -2197,7 +2210,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => SkyrimModHeaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => SkyrimModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

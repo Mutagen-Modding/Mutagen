@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -42,7 +52,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         static Group()
         {
-            T_RecordType = UtilityTranslation.GetRecordType<T>();
+            T_RecordType = PluginUtilityTranslation.GetRecordType<T>();
         }
 
         #region Type
@@ -95,7 +105,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType T_RecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => GroupSetterCommon<T>.Instance.RemapLinks(this, mapping);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
@@ -168,7 +178,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -859,7 +871,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.GroupParse(
+            PluginUtilityTranslation.GroupParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1019,7 +1031,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGroupGetter<T> obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGroupGetter<T> obj)
         {
             foreach (var item in obj.RecordCache.Items.WhereCastable<T, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1241,7 +1253,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static GroupBinaryWriteTranslation Instance = new GroupBinaryWriteTranslation();
 
-        static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+        public static void WriteEmbedded<T>(
+            IGroupGetter<T> item,
+            MutagenWriter writer)
+            where T : class, IOblivionMajorRecordGetter, IBinaryItem
+        {
+            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
+                writer: writer,
+                item: item);
+            EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4);
+            writer.Write(item.LastModified);
+        }
+
+        public static void WriteRecordTypes<T>(
+            IGroupGetter<T> item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+            where T : class, IOblivionMajorRecordGetter, IBinaryItem
+        {
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Write(
+                writer: writer,
+                items: item.RecordCache.Items,
+                transl: (MutagenWriter r, T dictSubItem) =>
+                {
+                    if (dictSubItem.TryGet(out var Item))
+                    {
+                        ((OblivionMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
+                            item: Item,
+                            writer: r);
+                    }
+                });
+        }
+
+        public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
             MutagenWriter writer,
             IGroupGetter<T> item)
             where T : class, IOblivionMajorRecordGetter, IBinaryItem;
@@ -1256,41 +1303,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded<T>(
-            IGroupGetter<T> item,
-            MutagenWriter writer)
-            where T : class, IOblivionMajorRecordGetter, IBinaryItem
-        {
-            GroupBinaryWriteTranslation.WriteBinaryContainedRecordTypeParse(
-                writer: writer,
-                item: item);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<GroupTypeEnum>.Instance.Write(
-                writer,
-                item.Type,
-                length: 4);
-            writer.Write(item.LastModified);
-        }
-
-        public static void WriteRecordTypes<T>(
-            IGroupGetter<T> item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-            where T : class, IOblivionMajorRecordGetter, IBinaryItem
-        {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Write(
-                writer: writer,
-                items: item.RecordCache.Items,
-                transl: (MutagenWriter r, T dictSubItem) =>
-                {
-                    if (dictSubItem.TryGet(out var Item))
-                    {
-                        ((OblivionMajorRecordBinaryWriteTranslation)((IBinaryItem)Item).BinaryWriteTranslator).Write(
-                            item: Item,
-                            writer: r);
-                    }
-                });
-        }
-
         public void Write<T>(
             MutagenWriter writer,
             IGroupGetter<T> item,
@@ -1300,7 +1312,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.GRUP),
-                type: Mutagen.Bethesda.Binary.ObjectType.Group))
+                type: ObjectType.Group))
             {
                 WriteEmbedded(
                     item: item,
@@ -1334,7 +1346,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             GroupBinaryCreateTranslation<T>.FillBinaryContainedRecordTypeParseCustom(
                 frame: frame,
                 item: item);
-            item.Type = EnumBinaryTranslation<GroupTypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<GroupTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.LastModified = frame.ReadInt32();
         }
 
@@ -1352,8 +1366,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 default:
                     if (nextRecordType.Equals(Group<T>.T_RecordType))
                     {
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<T>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<T>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: Group<T>.T_RecordType,
                             item: item.RecordCache,
                             transl: LoquiBinaryTranslation<T>.Instance.Parse);
@@ -1364,7 +1378,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryContainedRecordTypeParseCustom(
+        public static partial void FillBinaryContainedRecordTypeParseCustom(
             MutagenFrame frame,
             IGroup<T> item);
 
@@ -1418,7 +1432,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => GroupCommon<T>.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]

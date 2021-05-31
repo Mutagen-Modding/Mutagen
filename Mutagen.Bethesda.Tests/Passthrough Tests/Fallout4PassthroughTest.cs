@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
-using static Mutagen.Bethesda.Tests.ModRecordAligner;
 
 namespace Mutagen.Bethesda.Tests
 {

@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -71,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -504,7 +514,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AStoryManagerNodeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AStoryManagerNodeCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AStoryManagerNodeSetterCommon.Instance.RemapLinks(this, mapping);
         public AStoryManagerNode(
             FormKey formKey,
@@ -546,6 +556,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<AStoryManagerNode>.ToString(this);
         }
 
         #region Equals and Hash
@@ -1188,7 +1203,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAStoryManagerNodeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAStoryManagerNodeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1468,15 +1483,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Parent,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PreviousSibling,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Conditions,
                 counterType: RecordTypes.CITC,
@@ -1568,27 +1583,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Parent.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Parent.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AStoryManagerNode_FieldIndex.Parent;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PreviousSibling.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.PreviousSibling.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)AStoryManagerNode_FieldIndex.PreviousSibling;
                 }
                 case RecordTypeInts.CTDA:
                 case RecordTypeInts.CITC:
                 {
                     item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.ParsePerItem(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.CITC,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
@@ -1638,7 +1647,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => AStoryManagerNodeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => AStoryManagerNodeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => AStoryManagerNodeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -1739,6 +1748,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<AStoryManagerNode>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

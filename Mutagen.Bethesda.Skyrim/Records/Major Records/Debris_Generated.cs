@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -48,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DebrisModel> Models
         {
             get => this._Models;
-            protected set => this._Models = value;
+            init => this._Models = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -468,6 +477,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Debris>.ToString(this);
+        }
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -523,7 +537,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -848,7 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IDebrisInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IDebrisInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1084,7 +1100,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDebrisGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDebrisGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1345,7 +1361,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IDebrisModelGetter>.Instance.Write(
                 writer: writer,
                 items: item.Models,
                 transl: (MutagenWriter subWriter, IDebrisModelGetter subItem, RecordTypeConverter? conv) =>
@@ -1366,7 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DEBR),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1450,8 +1466,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     item.Models.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<DebrisModel>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<DebrisModel>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RecordTypes.DATA,
                             recordTypeConverter: recordTypeConverter,
                             transl: DebrisModel.TryCreateFromBinary));
@@ -1533,7 +1549,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new DebrisBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1609,6 +1625,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Debris>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

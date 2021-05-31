@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -57,7 +67,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScriptEntry> Scripts
         {
             get => this._Scripts;
-            protected set => this._Scripts = value;
+            init => this._Scripts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -507,7 +517,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = AVirtualMachineAdapter_Registration.TriggeringRecordType;
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => AVirtualMachineAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1005,7 +1015,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAVirtualMachineAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAVirtualMachineAdapterGetter obj)
         {
             foreach (var item in obj.Scripts.WhereCastable<IScriptEntryGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1154,7 +1164,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static AVirtualMachineAdapterBinaryWriteTranslation Instance = new AVirtualMachineAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryScriptsCustom(
+        public static void WriteEmbedded(
+            IAVirtualMachineAdapterGetter item,
+            MutagenWriter writer)
+        {
+            writer.Write(item.Version);
+            writer.Write(item.ObjectFormat);
+            AVirtualMachineAdapterBinaryWriteTranslation.WriteBinaryScripts(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryScriptsCustom(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item);
 
@@ -1167,17 +1188,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded(
-            IAVirtualMachineAdapterGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Version);
-            writer.Write(item.ObjectFormat);
-            AVirtualMachineAdapterBinaryWriteTranslation.WriteBinaryScripts(
-                writer: writer,
-                item: item);
-        }
-
         public virtual void Write(
             MutagenWriter writer,
             IAVirtualMachineAdapterGetter item,
@@ -1186,7 +1196,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.VMAD),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1222,7 +1232,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryScriptsCustom(
+        public static partial void FillBinaryScriptsCustom(
             MutagenFrame frame,
             IAVirtualMachineAdapter item);
 
@@ -1253,7 +1263,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class AVirtualMachineAdapterBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAVirtualMachineAdapterGetter
     {
         #region Common Routing
@@ -1275,7 +1285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => AVirtualMachineAdapterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => AVirtualMachineAdapterBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

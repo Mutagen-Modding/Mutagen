@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -479,7 +487,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -833,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.Combine(BodyTemplate_Registration.Get(frame.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -982,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IBodyTemplateGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyTemplateGetter obj)
         {
             yield break;
         }
@@ -1114,20 +1124,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObjectFlag>.Instance.Write(
+            EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.FirstPersonFlags,
                 length: 4);
             if (writer.MetaData.FormVersion!.Value < 44)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Write(
+                EnumBinaryTranslation<BodyTemplate.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
             }
             if (writer.MetaData.FormVersion!.Value >= 22)
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ArmorType>.Instance.Write(
+                EnumBinaryTranslation<ArmorType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ArmorType,
                     length: 4);
@@ -1142,7 +1152,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.Combine(BodyTemplate_Registration.Get(writer.MetaData.FormVersion)).ConvertToCustom(RecordTypes.BODT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1171,14 +1181,20 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBodyTemplate item,
             MutagenFrame frame)
         {
-            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.FirstPersonFlags = EnumBinaryTranslation<BipedObjectFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             if (frame.MetaData.FormVersion!.Value < 44)
             {
-                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.Flags = EnumBinaryTranslation<BodyTemplate.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
             }
             if (frame.MetaData.FormVersion!.Value >= 22)
             {
-                item.ArmorType = EnumBinaryTranslation<ArmorType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+                item.ArmorType = EnumBinaryTranslation<ArmorType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                    reader: frame,
+                    length: 4);
             }
         }
 
@@ -1209,7 +1225,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class BodyTemplateBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBodyTemplateGetter
     {
         #region Common Routing

@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins;
+
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public class RecordTypes

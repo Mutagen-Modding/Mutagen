@@ -8,8 +8,19 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -165,7 +176,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Condition> Conditions
         {
             get => this._Conditions;
-            protected set => this._Conditions = value;
+            init => this._Conditions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -264,7 +275,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<ISpellGetter>> Spells
         {
             get => this._Spells;
-            protected set => this._Spells = value;
+            init => this._Spells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -278,7 +289,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IFactionGetter>> Factions
         {
             get => this._Factions;
-            protected set => this._Factions = value;
+            init => this._Factions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -292,7 +303,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IPackageGetter>> PackageData
         {
             get => this._PackageData;
-            protected set => this._PackageData = value;
+            init => this._PackageData = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1769,7 +1780,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAliasSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1808,7 +1819,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -2272,7 +2285,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -2788,7 +2801,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestAliasGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAliasGetter obj)
         {
             if (obj.SpecificLocation.FormKeyNullable.HasValue)
             {
@@ -3315,32 +3328,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static QuestAliasBinaryWriteTranslation Instance = new QuestAliasBinaryWriteTranslation();
 
-        static partial void WriteBinaryIDParseCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryIDParse(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryIDParseCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryEndCustom(
-            MutagenWriter writer,
-            IQuestAliasGetter item);
-
-        public static void WriteBinaryEnd(
-            MutagenWriter writer,
-            IQuestAliasGetter item)
-        {
-            WriteBinaryEndCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestAliasGetter item,
             MutagenWriter writer)
@@ -3355,29 +3342,29 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             QuestAliasBinaryWriteTranslation.WriteBinaryIDParse(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALID),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<QuestAlias.Flag>.Instance.WriteNullable(
+            EnumBinaryTranslation<QuestAlias.Flag, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Flags,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FNAM));
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.AliasIndexToForceIntoWhenFilled,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFI));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpecificLocation,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFL));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ForcedReference,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.UniqueActor,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALUA));
@@ -3416,7 +3403,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IConditionGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IConditionGetter>.Instance.Write(
                 writer: writer,
                 items: item.Conditions,
                 transl: (MutagenWriter subWriter, IConditionGetter subItem, RecordTypeConverter? conv) =>
@@ -3427,7 +3414,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
@@ -3435,11 +3422,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IContainerEntryGetter>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Items,
                 counterType: RecordTypes.COCT,
@@ -3452,61 +3439,87 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SpectatorOverridePackageList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SPOR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.ObserveDeadBodyOverridePackageList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.OCOR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.GuardWarnOverridePackageList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.GWOR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CombatOverridePackageList,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ECOR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DisplayName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ALDN));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Spells,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.ALSP));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Factions,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IFactionGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.ALFC));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PackageData,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IPackageGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.ALPC));
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.VoiceTypes,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VTCK));
             QuestAliasBinaryWriteTranslation.WriteBinaryEnd(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryIDParseCustom(
+            MutagenWriter writer,
+            IQuestAliasGetter item);
+
+        public static void WriteBinaryIDParse(
+            MutagenWriter writer,
+            IQuestAliasGetter item)
+        {
+            WriteBinaryIDParseCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryEndCustom(
+            MutagenWriter writer,
+            IQuestAliasGetter item);
+
+        public static void WriteBinaryEnd(
+            MutagenWriter writer,
+            IQuestAliasGetter item)
+        {
+            WriteBinaryEndCustom(
                 writer: writer,
                 item: item);
         }
@@ -3572,15 +3585,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALID:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)QuestAlias_FieldIndex.Name;
                 }
                 case RecordTypeInts.FNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<QuestAlias.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<QuestAlias.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)QuestAlias_FieldIndex.Flags;
                 }
                 case RecordTypeInts.ALFI:
@@ -3592,28 +3607,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALFL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpecificLocation.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.SpecificLocation.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.SpecificLocation;
                 }
                 case RecordTypeInts.ALFR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ForcedReference.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.ForcedReference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.ForcedReference;
                 }
                 case RecordTypeInts.ALUA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.UniqueActor.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.UniqueActor.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.UniqueActor;
                 }
                 case RecordTypeInts.ALFA:
@@ -3659,8 +3665,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 {
                     item.Conditions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Condition>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Condition>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: Condition_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Condition.TryCreateFromBinary));
@@ -3670,8 +3676,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -3683,8 +3689,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.COCT:
                 {
                     item.Items = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ContainerEntry>.Instance.ParsePerItem(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: RecordTypes.COCT,
                             triggeringRecord: RecordTypes.CNTO,
@@ -3696,53 +3702,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.SPOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SpectatorOverridePackageList.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.SpectatorOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.SpectatorOverridePackageList;
                 }
                 case RecordTypeInts.OCOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.ObserveDeadBodyOverridePackageList.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.ObserveDeadBodyOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.ObserveDeadBodyOverridePackageList;
                 }
                 case RecordTypeInts.GWOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.GuardWarnOverridePackageList.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.GuardWarnOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.GuardWarnOverridePackageList;
                 }
                 case RecordTypeInts.ECOR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CombatOverridePackageList.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.CombatOverridePackageList.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.CombatOverridePackageList;
                 }
                 case RecordTypeInts.ALDN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DisplayName.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.DisplayName.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.DisplayName;
                 }
                 case RecordTypeInts.ALSP:
                 {
                     item.Spells.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALSP),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.Spells;
@@ -3750,8 +3741,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALFC:
                 {
                     item.Factions.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFactionGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALFC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.Factions;
@@ -3759,8 +3750,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ALPC:
                 {
                     item.PackageData.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IPackageGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.ALPC),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)QuestAlias_FieldIndex.PackageData;
@@ -3768,10 +3759,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.VTCK:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VoiceTypes.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.VoiceTypes.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)QuestAlias_FieldIndex.VoiceTypes;
                 }
                 case RecordTypeInts.ALED:
@@ -3786,11 +3774,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryIDParseCustom(
+        public static partial void FillBinaryIDParseCustom(
             MutagenFrame frame,
             IQuestAlias item);
 
-        static partial void FillBinaryEndCustom(
+        public static partial void FillBinaryEndCustom(
             MutagenFrame frame,
             IQuestAlias item);
 
@@ -3821,7 +3809,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class QuestAliasBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IQuestAliasGetter
     {
         #region Common Routing
@@ -3843,7 +3831,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAliasCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => QuestAliasBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

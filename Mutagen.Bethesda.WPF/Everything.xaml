@@ -1,9 +1,6 @@
-<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:Mutagen.Bethesda.WPF">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Converters/Converters.xaml" />
-        <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Controls/Controls.xaml" />
+        <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Plugins/Converters/Converters.xaml" />
+        <ResourceDictionary Source="/Mutagen.Bethesda.WPF;component/Plugins/Controls.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

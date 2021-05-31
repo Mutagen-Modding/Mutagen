@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -358,7 +368,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PerkAbilityEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PerkAbilityEffectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -395,7 +405,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -694,7 +706,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -865,7 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkAbilityEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkAbilityEffectGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1011,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Ability);
         }
@@ -1065,10 +1077,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Ability.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Ability.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1103,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => PerkAbilityEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => PerkAbilityEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

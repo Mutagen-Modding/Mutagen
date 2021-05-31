@@ -1,23 +1,25 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Noggog;
 using System.Threading.Tasks;
-using Mutagen.Bethesda.Internals;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Meta;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class EnumBinaryTranslationGeneration : BinaryTranslationGeneration
     {
+        public override bool NeedsNamespacePrefix => false;
+
         public override string GetTranslatorInstance(TypeGeneration typeGen, bool getter)
         {
             var eType = typeGen as EnumType;
-            return $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance";
+            return $"EnumBinaryTranslation<{eType.NoNullTypeName}, {Module.ReaderClass}, {Module.WriterClass}>.Instance";
         }
 
         public override bool AllowDirectWrite(
@@ -42,7 +44,7 @@ namespace Mutagen.Bethesda.Generation
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             var nullable = typeGen.Nullable && eType.NullableFallbackInt == null;
             using (var args = new ArgsWrapper(fg,
-                $"{Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Write{(nullable ? "Nullable" : null)}"))
+                $"{NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Write{(nullable ? "Nullable" : null)}"))
             {
                 args.Add(writerAccessor.Access);
                 if (eType.NullableFallbackInt == null)
@@ -90,12 +92,13 @@ namespace Mutagen.Bethesda.Generation
                 {
                     FG = fg,
                     TypeGen = typeGen,
-                    TranslatorLine = $"EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance",
+                    TranslatorLine = GetTranslatorInstance(typeGen, getter: true),
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
                     IndexAccessor = typeGen.IndexEnumInt,
-                    ExtraArgs = $"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : $".SpawnWithLength({eType.ByteLength})")}".AsEnumerable(),
+                    ExtraArgs = $"reader: {frameAccessor}".AsEnumerable()
+                        .And($"length: {(data.HasTrigger ? "contentLength" : eType.ByteLength.ToString())}"),
                     SkipErrorMask = !this.DoErrorMasks
                 });
         }
@@ -122,9 +125,9 @@ namespace Mutagen.Bethesda.Generation
             else
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"{retAccessor}{this.Namespace}EnumBinaryTranslation<{eType.NoNullTypeName}>.Instance.Parse"))
+                    $"{retAccessor}{this.NamespacePrefix}{GetTranslatorInstance(typeGen, getter: true)}.Parse"))
                 {
-                    args.Add($"frame: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
+                    args.Add($"reader: {nodeAccessor}.SpawnWithLength({eType.ByteLength})");
                     if (asyncMode == AsyncMode.Off)
                     {
                         args.Add($"item: out {outItemAccessor}");

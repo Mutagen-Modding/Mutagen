@@ -1,10 +1,12 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -173,7 +175,7 @@ namespace Mutagen.Bethesda.Skyrim
             public const byte HasImageSpaceFlag = 0x40;
             public const byte HasLightingTemplateFlag = 0x80;
 
-            static partial void FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
+            public static partial void FillBinaryBoundDataCustom(MutagenFrame frame, IPlacedObjectInternal item)
             {
                 var header = frame.ReadSubrecordFrame();
                 if (header.Content.Length != 4)
@@ -204,7 +206,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PlacedObjectBinaryWriteTranslation
         {
-            static partial void WriteBinaryBoundDataCustom(MutagenWriter writer, IPlacedObjectGetter item)
+            public static partial void WriteBinaryBoundDataCustom(MutagenWriter writer, IPlacedObjectGetter item)
             {
                 var lightingTemplate = item.LightingTemplate;
                 var imageSpace = item.ImageSpace;

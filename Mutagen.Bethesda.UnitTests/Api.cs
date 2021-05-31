@@ -5,10 +5,16 @@ using Mutagen.Bethesda;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
-using Constants = Mutagen.Bethesda.Internals.Constants;
+using Constants = Mutagen.Bethesda.Plugins.Internals.Constants;
 using Mutagen.Bethesda.UnitTests;
+using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.UnitTests.Plugins.Cache;
 
-namespace Api
+namespace Mutagen.Bethesda.UnitTests.Api
 {
     /// <summary>
     /// Some tests that are less about testing correct functionality, and more confirming
@@ -101,7 +107,7 @@ namespace Api
         [Fact]
         public static void TypeSolidifier()
         {
-            IEnumerable<IModListing<ISkyrimModGetter>> listings = Enumerable.Empty<IModListing<ISkyrimModGetter>>();
+            IEnumerable<IModListingGetter<ISkyrimModGetter>> listings = Enumerable.Empty<IModListingGetter<ISkyrimModGetter>>();
             IEnumerable<IAmmunitionGetter> ammun = listings.Ammunition().WinningOverrides();
             IEnumerable<IPlacedGetter> placed = listings.IPlaced().WinningOverrides();
             IEnumerable<IModContext<ISkyrimMod, ISkyrimModGetter, ICell, ICellGetter>> cells = listings.Cell().WinningContextOverrides(linkCache: null!);
@@ -247,6 +253,12 @@ namespace Api
         public static void ImplicitsApi()
         {
             Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(Utility.PluginModKey);
+        }
+
+        public static void LoadOrderOnlyEnabledAndExisting()
+        {
+            ILoadOrderGetter<IModListing<ISkyrimMod>>? lo = null!;
+            IModListing<ISkyrimMod>[]? test = lo?.PriorityOrder.OnlyEnabledAndExisting().ToArray();
         }
     }
 }

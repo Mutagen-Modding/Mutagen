@@ -1,11 +1,10 @@
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Core;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -52,11 +51,11 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class OblivionModHeaderBinaryCreateTranslation
         {
-            static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
+            public static partial void FillBinaryMasterReferencesCustom(MutagenFrame frame, IOblivionModHeader item)
             {
                 item.MasterReferences.SetTo(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<MasterReference>.Instance.Parse(
-                        frame: frame.SpawnAll(),
+                    ListBinaryTranslation<MasterReference>.Instance.Parse(
+                        reader: frame.SpawnAll(),
                         triggeringRecord: RecordTypes.MAST,
                         transl: MasterReference.TryCreateFromBinary));
                 frame.MetaData.MasterReferences.SetTo(item.MasterReferences);
@@ -65,9 +64,9 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class OblivionModHeaderBinaryWriteTranslation
         {
-            static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IOblivionModHeaderGetter item)
+            public static partial void WriteBinaryMasterReferencesCustom(MutagenWriter writer, IOblivionModHeaderGetter item)
             {
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
+                ListBinaryTranslation<IMasterReferenceGetter>.Instance.Write(
                     writer: writer,
                     items: item.MasterReferences,
                     transl: (MutagenWriter subWriter, IMasterReferenceGetter subItem, RecordTypeConverter? conv) =>

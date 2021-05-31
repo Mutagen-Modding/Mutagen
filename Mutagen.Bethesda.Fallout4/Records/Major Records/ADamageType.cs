@@ -1,9 +1,6 @@
 using Mutagen.Bethesda.Binary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -43,6 +40,20 @@ namespace Mutagen.Bethesda.Fallout4
                 {
                     return  DamageTypeIndexedBinaryOverlay.DamageTypeIndexedFactory(stream, package, recordTypeConverter);
                 }
+            }
+        }
+
+        public partial class ADamageTypeBinaryCreateTranslation
+        {
+            public static partial void FillBinaryCustomLogicCustom(MutagenFrame frame, IADamageTypeInternal item)
+            {
+            }
+        }
+
+        public partial class ADamageTypeBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryCustomLogicCustom(MutagenWriter writer, IADamageTypeGetter item)
+            {
             }
         }
     }

@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -581,7 +589,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -923,7 +933,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.MNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1102,7 +1112,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceMapGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMapGetter obj)
         {
             yield break;
         }
@@ -1247,24 +1257,24 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMapGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.UsableDimensions);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.NorthwestCellCoords);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SoutheastCellCoords);
             if (!item.Versioning.HasFlag(WorldspaceMap.VersioningBreaks.Break0))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CameraMinHeight);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CameraMaxHeight);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.CameraInitialPitch);
             }
@@ -1278,7 +1288,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1307,17 +1317,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMap item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.NorthwestCellCoords = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.SoutheastCellCoords = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.UsableDimensions = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.NorthwestCellCoords = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.SoutheastCellCoords = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             if (frame.Complete)
             {
                 item.Versioning |= WorldspaceMap.VersioningBreaks.Break0;
                 return;
             }
-            item.CameraMinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.CameraMaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.CameraInitialPitch = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.CameraMinHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CameraMaxHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CameraInitialPitch = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1347,7 +1357,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WorldspaceMapBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWorldspaceMapGetter
     {
         #region Common Routing
@@ -1384,9 +1394,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public WorldspaceMap.VersioningBreaks Versioning { get; private set; }
-        public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
-        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
-        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
+        public P2Int16 NorthwestCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
+        public P2Int16 SoutheastCellCoords => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4));
         public Single CameraMinHeight => _data.Slice(0x10, 0x4).Float();
         public Single CameraMaxHeight => _data.Slice(0x14, 0x4).Float();
         public Single CameraInitialPitch => _data.Slice(0x18, 0x4).Float();

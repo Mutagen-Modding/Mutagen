@@ -1,5 +1,5 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Pex;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.IO;

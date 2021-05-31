@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -135,6 +136,23 @@ namespace Mutagen.Bethesda.Skyrim
             Spell = 5,
             String = 6,
             LString = 7,
+        }
+    }
+
+    namespace Internals
+    {
+        partial class APerkEntryPointEffectBinaryCreateTranslation
+        {
+            public static partial void FillBinaryFunctionParametersCustom(MutagenFrame frame, IAPerkEntryPointEffect item)
+            {
+            }
+        }
+
+        partial class APerkEntryPointEffectBinaryWriteTranslation
+        {
+            public static partial void WriteBinaryFunctionParametersCustom(MutagenWriter writer, IAPerkEntryPointEffectGetter item)
+            {
+            }
         }
     }
 }

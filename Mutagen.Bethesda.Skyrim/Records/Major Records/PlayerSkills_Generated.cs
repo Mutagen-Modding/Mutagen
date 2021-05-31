@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -862,7 +870,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1212,7 +1222,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.DNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1447,7 +1457,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPlayerSkillsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPlayerSkillsGetter obj)
         {
             yield break;
         }
@@ -1599,23 +1609,23 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillValues,
-                transl: ByteBinaryTranslation.Instance.Write);
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Write(
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Write(
                 writer: writer,
                 items: item.SkillOffsets,
-                transl: ByteBinaryTranslation.Instance.Write);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             writer.Write(item.Health);
             writer.Write(item.Magicka);
             writer.Write(item.Stamina);
             writer.Write(item.Unused);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FarAwayModelDistance);
             writer.Write(item.GearedUpWeapons);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unused2);
         }
@@ -1628,7 +1638,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1657,21 +1667,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkills item,
             MutagenFrame frame)
         {
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                reader: frame,
                 item: item.SkillValues,
-                transl: ByteBinaryTranslation.Instance.Parse);
-            Mutagen.Bethesda.Binary.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
-                frame: frame,
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+            Mutagen.Bethesda.Plugins.Binary.Translations.DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
+                reader: frame,
                 item: item.SkillOffsets,
-                transl: ByteBinaryTranslation.Instance.Parse);
+                transl: ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
             item.Health = frame.ReadUInt16();
             item.Magicka = frame.ReadUInt16();
             item.Stamina = frame.ReadUInt16();
             item.Unused = frame.ReadUInt16();
-            item.FarAwayModelDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FarAwayModelDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.GearedUpWeapons = frame.ReadUInt8();
-            item.Unused2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.Unused2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1701,7 +1711,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PlayerSkillsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPlayerSkillsGetter
     {
         #region Common Routing
@@ -1741,13 +1751,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public IReadOnlyDictionary<Skill, Byte> SkillValues => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data, _package.MetaData)),
             new Dictionary<Skill, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         #region SkillOffsets
         public IReadOnlyDictionary<Skill, Byte> SkillOffsets => DictBinaryTranslation<Byte>.Instance.Parse<Skill>(
             new MutagenFrame(new MutagenMemoryReadStream(_data.Slice(0x12), _package.MetaData)),
             new Dictionary<Skill, Byte>(),
-            ByteBinaryTranslation.Instance.Parse);
+            ByteBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
         #endregion
         public UInt16 Health => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x24, 0x2));
         public UInt16 Magicka => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x26, 0x2));

@@ -8,8 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -423,7 +432,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -730,7 +741,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -963,7 +974,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPerkEntryPointModifyValueGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPerkEntryPointModifyValueGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1128,7 +1139,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Write(
+            EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Modification,
                 length: 4);
@@ -1143,7 +1154,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Value,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.EPFD));
@@ -1209,7 +1220,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             APerkEntryPointEffectBinaryCreateTranslation.FillBinaryStructs(
                 item: item,
                 frame: frame);
-            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Modification = EnumBinaryTranslation<PerkEntryPointModifyValue.ModificationType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
         public static ParseResult FillBinaryRecordTypes(
@@ -1227,7 +1240,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.EPFD:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Value = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Value = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)PerkEntryPointModifyValue_FieldIndex.Value;
                 }
                 default:

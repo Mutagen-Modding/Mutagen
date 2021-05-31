@@ -10,6 +10,14 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -367,7 +375,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -658,7 +668,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -820,7 +830,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationObjectTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationObjectTypeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -962,7 +972,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectTypeGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetObjectType>.Instance.Write(
+            EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Type,
                 length: 4);
@@ -1010,7 +1020,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectType item,
             MutagenFrame frame)
         {
-            item.Type = EnumBinaryTranslation<TargetObjectType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<TargetObjectType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }

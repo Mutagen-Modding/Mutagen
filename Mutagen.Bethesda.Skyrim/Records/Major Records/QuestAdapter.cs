@@ -1,10 +1,9 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -12,7 +11,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class QuestAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryFragmentCountCustom(MutagenFrame frame, IQuestAdapter item)
+            public static partial void FillBinaryFragmentCountCustom(MutagenFrame frame, IQuestAdapter item)
             {
                 var count = frame.ReadUInt16();
                 item.FileName = StringBinaryTranslation.Instance.Parse(frame, stringBinaryType: StringBinaryType.PrependLengthUShort);
@@ -36,11 +35,23 @@ namespace Mutagen.Bethesda.Skyrim
                             return true;
                         }));
             }
+
+            public static partial void FillBinaryAliasesCustom(MutagenFrame frame, IQuestAdapter item)
+            {
+            }
+
+            public static partial void FillBinaryFileNameCustom(MutagenFrame frame, IQuestAdapter item)
+            {
+            }
+
+            public static partial void FillBinaryFragmentsCustom(MutagenFrame frame, IQuestAdapter item)
+            {
+            }
         }
 
         public partial class QuestAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryFragmentCountCustom(MutagenWriter writer, IQuestAdapterGetter item)
+            public static partial void WriteBinaryFragmentCountCustom(MutagenWriter writer, IQuestAdapterGetter item)
             {
                 var frags = item.Fragments;
                 writer.Write(checked((ushort)frags.Count));
@@ -61,6 +72,18 @@ namespace Mutagen.Bethesda.Skyrim
                     {
                         subItem.WriteToBinary(subWriter);
                     });
+            }
+
+            public static partial void WriteBinaryAliasesCustom(MutagenWriter writer, IQuestAdapterGetter item)
+            {
+            }
+
+            public static partial void WriteBinaryFileNameCustom(MutagenWriter writer, IQuestAdapterGetter item)
+            {
+            }
+
+            public static partial void WriteBinaryFragmentsCustom(MutagenWriter writer, IQuestAdapterGetter item)
+            {
             }
         }
 

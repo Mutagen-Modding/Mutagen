@@ -1,11 +1,13 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion
@@ -14,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class DialogTopicBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IDialogTopicInternal obj)
             {
                 try
                 {
@@ -33,8 +35,8 @@ namespace Mutagen.Bethesda.Oblivion
                         return;
                     }
                     frame.Reader.Position += groupMeta.HeaderLength;
-                    obj.Items.SetTo(Mutagen.Bethesda.Binary.ListBinaryTranslation<DialogItem>.Instance.Parse(
-                        frame: frame.SpawnWithLength(groupMeta.ContentLength),
+                    obj.Items.SetTo(ListBinaryTranslation<DialogItem>.Instance.Parse(
+                        reader: frame.SpawnWithLength(groupMeta.ContentLength),
                         transl: (MutagenFrame r, RecordType header, out DialogItem listItem) =>
                         {
                             return LoquiBinaryTranslation<DialogItem>.Instance.Parse(
@@ -51,7 +53,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class DialogTopicBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IDialogTopicGetter obj)
             {
                 try
                 {
@@ -64,7 +66,7 @@ namespace Mutagen.Bethesda.Oblivion
                             obj.FormKey);
                         writer.Write((int)GroupTypeEnum.TopicChildren);
                         writer.Write(obj.Timestamp);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
+                        ListBinaryTranslation<IDialogItemGetter>.Instance.Write(
                             writer: writer,
                             items: items,
                             transl: (MutagenWriter subWriter, IDialogItemGetter subItem) =>

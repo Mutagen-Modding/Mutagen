@@ -6,11 +6,21 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -92,7 +102,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<BaseLayer> Layers
         {
             get => this._Layers;
-            protected set => this._Layers = value;
+            init => this._Layers = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -695,7 +705,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Landscape_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LandscapeSetterCommon.Instance.RemapLinks(this, mapping);
         public Landscape(FormKey formKey)
         {
@@ -720,6 +730,11 @@ namespace Mutagen.Bethesda.Oblivion
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Landscape>.ToString(this);
         }
 
         #region Equals and Hash
@@ -777,7 +792,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1127,7 +1144,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ILandscapeInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ILandscapeInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1445,7 +1462,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILandscapeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILandscapeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1788,23 +1805,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DATA,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DATA));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexNormals,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VNML));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexHeightMap,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VHGT));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.VertexColors,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.VCLR));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IBaseLayerGetter>.Instance.Write(
                 writer: writer,
                 items: item.Layers,
                 transl: (MutagenWriter subWriter, IBaseLayerGetter subItem, RecordTypeConverter? conv) =>
@@ -1815,13 +1832,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Textures,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.VTEX),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ILandTextureGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -1835,7 +1852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.LAND),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1919,33 +1936,33 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DATA = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.DATA = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Landscape_FieldIndex.DATA;
                 }
                 case RecordTypeInts.VNML:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexNormals = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.VertexNormals = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Landscape_FieldIndex.VertexNormals;
                 }
                 case RecordTypeInts.VHGT:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexHeightMap = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.VertexHeightMap = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Landscape_FieldIndex.VertexHeightMap;
                 }
                 case RecordTypeInts.VCLR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.VertexColors = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.VertexColors = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Landscape_FieldIndex.VertexColors;
                 }
                 case RecordTypeInts.BTXT:
                 case RecordTypeInts.ATXT:
                 {
                     item.Layers.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<BaseLayer>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<BaseLayer>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: BaseLayer_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out BaseLayer listSubItem, RecordTypeConverter? conv) =>
@@ -1974,8 +1991,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.Textures = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ILandTextureGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<ILandTextureGetter>>();
                     return (int)Landscape_FieldIndex.Textures;
@@ -2022,7 +2039,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => LandscapeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => LandscapeBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2074,7 +2091,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new LandscapeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2194,6 +2211,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Landscape>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

@@ -1,13 +1,8 @@
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Fallout4
 {
@@ -37,14 +32,14 @@ namespace Mutagen.Bethesda.Fallout4
     {
         public partial class GlobalIntBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGlobalIntInternal item)
             {
             }
         }
 
         public partial class GlobalIntBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGlobalIntGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.FLTV))

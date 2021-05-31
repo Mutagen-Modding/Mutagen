@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -331,6 +340,11 @@ namespace Mutagen.Bethesda.Fallout4
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Global>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -906,7 +920,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IGlobalGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IGlobalGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1132,19 +1146,6 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public new readonly static GlobalBinaryWriteTranslation Instance = new GlobalBinaryWriteTranslation();
 
-        static partial void WriteBinaryTypeCharCustom(
-            MutagenWriter writer,
-            IGlobalGetter item);
-
-        public static void WriteBinaryTypeChar(
-            MutagenWriter writer,
-            IGlobalGetter item)
-        {
-            WriteBinaryTypeCharCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IGlobalGetter item,
             MutagenWriter writer,
@@ -1159,6 +1160,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryTypeCharCustom(
+            MutagenWriter writer,
+            IGlobalGetter item);
+
+        public static void WriteBinaryTypeChar(
+            MutagenWriter writer,
+            IGlobalGetter item)
+        {
+            WriteBinaryTypeCharCustom(
+                writer: writer,
+                item: item);
+        }
+
         public virtual void Write(
             MutagenWriter writer,
             IGlobalGetter item,
@@ -1167,7 +1181,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.GLOB),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1256,7 +1270,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
 
-        static partial void FillBinaryTypeCharCustom(
+        public static partial void FillBinaryTypeCharCustom(
             MutagenFrame frame,
             IGlobalInternal item);
 
@@ -1368,6 +1382,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Global>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

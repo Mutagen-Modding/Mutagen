@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -474,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WeatherVolumetricLighting_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WeatherVolumetricLightingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -513,7 +523,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -849,7 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.HNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -998,7 +1010,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWeatherVolumetricLightingGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWeatherVolumetricLightingGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Sunrise);
             yield return FormLinkInformation.Factory(obj.Day);
@@ -1134,16 +1146,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherVolumetricLightingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunrise);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Day);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Sunset);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Night);
         }
@@ -1156,7 +1168,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.HNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1185,22 +1197,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherVolumetricLighting item,
             MutagenFrame frame)
         {
-            item.Sunrise.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
-            item.Day.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
-            item.Sunset.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
-            item.Night.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Sunrise.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Day.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Sunset.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+            item.Night.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
         }
 
     }
@@ -1230,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WeatherVolumetricLightingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWeatherVolumetricLightingGetter
     {
         #region Common Routing
@@ -1252,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WeatherVolumetricLightingCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WeatherVolumetricLightingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

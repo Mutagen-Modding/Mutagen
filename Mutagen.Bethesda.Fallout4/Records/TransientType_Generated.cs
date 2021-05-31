@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -48,7 +58,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>> Links
         {
             get => this._Links;
-            protected set => this._Links = value;
+            init => this._Links = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -468,7 +478,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = TransientType_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TransientTypeSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -507,7 +517,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -832,7 +844,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.TNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -978,7 +990,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITransientTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITransientTypeGetter obj)
         {
             foreach (var item in obj.Links)
             {
@@ -1122,12 +1134,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenWriter writer)
         {
             writer.Write(item.FormType);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.Links,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -1141,7 +1153,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1172,8 +1184,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         {
             item.FormType = frame.ReadUInt32();
             item.Links.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
-                    frame: frame,
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
         }
 
@@ -1204,7 +1216,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class TransientTypeBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITransientTypeGetter
     {
         #region Common Routing
@@ -1226,7 +1238,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TransientTypeCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TransientTypeBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

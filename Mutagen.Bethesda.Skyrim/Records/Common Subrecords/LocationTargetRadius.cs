@@ -1,8 +1,8 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryTargetCustom(MutagenFrame frame, ILocationTargetRadius item)
+            public static partial void FillBinaryTargetCustom(MutagenFrame frame, ILocationTargetRadius item)
             {
                 item.Target = GetLocationTarget(frame);
             }
@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class LocationTargetRadiusBinaryWriteTranslation
         {
-            static partial void WriteBinaryTargetCustom(MutagenWriter writer, ILocationTargetRadiusGetter item)
+            public static partial void WriteBinaryTargetCustom(MutagenWriter writer, ILocationTargetRadiusGetter item)
             {
                 var target = item.Target;
                 switch (target)

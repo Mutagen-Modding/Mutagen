@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<DebugFunction> Functions
         {
             get => this._Functions;
-            protected set => this._Functions = value;
+            init => this._Functions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<DebugPropertyGroup> PropertyGroups
         {
             get => this._PropertyGroups;
-            protected set => this._PropertyGroups = value;
+            init => this._PropertyGroups = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<DebugStructOrder> StructOrders
         {
             get => this._StructOrders;
-            protected set => this._StructOrders = value;
+            init => this._StructOrders = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

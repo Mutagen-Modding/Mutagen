@@ -2,7 +2,7 @@ using Noggog;
 using System;
 using System.IO;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     class BsaFileNameBlock
     {

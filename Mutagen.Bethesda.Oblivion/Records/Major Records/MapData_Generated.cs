@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -452,7 +460,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -778,7 +788,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.MNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -917,7 +927,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMapDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMapDataGetter obj)
         {
             yield break;
         }
@@ -1045,13 +1055,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.UsableDimensions);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesNWCell);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellCoordinatesSECell);
         }
@@ -1064,7 +1074,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.MNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1093,9 +1103,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapData item,
             MutagenFrame frame)
         {
-            item.UsableDimensions = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesNWCell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.CellCoordinatesSECell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.UsableDimensions = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellCoordinatesNWCell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellCoordinatesSECell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1125,7 +1135,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class MapDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMapDataGetter
     {
         #region Common Routing
@@ -1161,9 +1171,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int UsableDimensions => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
-        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation.Read(_data.Slice(0x8, 0x4));
-        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation.Read(_data.Slice(0xC, 0x4));
+        public P2Int UsableDimensions => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
+        public P2Int16 CellCoordinatesNWCell => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0x4));
+        public P2Int16 CellCoordinatesSECell => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0xC, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

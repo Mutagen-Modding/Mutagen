@@ -1,9 +1,11 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -11,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class FootstepSetBinaryCreateTranslation
         {
-            static partial void FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item)
+            public static partial void FillBinaryCountCustom(MutagenFrame frame, IFootstepSetInternal item)
             {
                 var counts = GetListCounts(frame);
 
@@ -58,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class FootstepSetBinaryWriteTranslation
         {
-            static partial void WriteBinaryCountCustom(MutagenWriter writer, IFootstepSetGetter item)
+            public static partial void WriteBinaryCountCustom(MutagenWriter writer, IFootstepSetGetter item)
             {
                 var walkForwardFootsteps = item.WalkForwardFootsteps;
 

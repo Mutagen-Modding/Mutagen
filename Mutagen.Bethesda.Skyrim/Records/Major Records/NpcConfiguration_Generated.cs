@@ -8,8 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -705,7 +713,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1063,7 +1073,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.ACBS)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1282,7 +1292,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INpcConfigurationGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INpcConfigurationGetter obj)
         {
             yield break;
         }
@@ -1456,32 +1466,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NpcConfigurationBinaryWriteTranslation Instance = new NpcConfigurationBinaryWriteTranslation();
 
-        static partial void WriteBinaryFlagsCustom(
-            MutagenWriter writer,
-            INpcConfigurationGetter item);
-
-        public static void WriteBinaryFlags(
-            MutagenWriter writer,
-            INpcConfigurationGetter item)
-        {
-            WriteBinaryFlagsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryLevelCustom(
-            MutagenWriter writer,
-            INpcConfigurationGetter item);
-
-        public static void WriteBinaryLevel(
-            MutagenWriter writer,
-            INpcConfigurationGetter item)
-        {
-            WriteBinaryLevelCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             INpcConfigurationGetter item,
             MutagenWriter writer)
@@ -1498,12 +1482,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             writer.Write(item.CalcMaxLevel);
             writer.Write(item.SpeedMultiplier);
             writer.Write(item.DispositionBase);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Write(
+            EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.TemplateFlags,
                 length: 2);
             writer.Write(item.HealthOffset);
             writer.Write(item.BleedoutOverride);
+        }
+
+        public static partial void WriteBinaryFlagsCustom(
+            MutagenWriter writer,
+            INpcConfigurationGetter item);
+
+        public static void WriteBinaryFlags(
+            MutagenWriter writer,
+            INpcConfigurationGetter item)
+        {
+            WriteBinaryFlagsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryLevelCustom(
+            MutagenWriter writer,
+            INpcConfigurationGetter item);
+
+        public static void WriteBinaryLevel(
+            MutagenWriter writer,
+            INpcConfigurationGetter item)
+        {
+            WriteBinaryLevelCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1514,7 +1524,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ACBS),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1555,16 +1565,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CalcMaxLevel = frame.ReadInt16();
             item.SpeedMultiplier = frame.ReadInt16();
             item.DispositionBase = frame.ReadInt16();
-            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
+            item.TemplateFlags = EnumBinaryTranslation<NpcConfiguration.TemplateFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
             item.HealthOffset = frame.ReadInt16();
             item.BleedoutOverride = frame.ReadInt16();
         }
 
-        static partial void FillBinaryFlagsCustom(
+        public static partial void FillBinaryFlagsCustom(
             MutagenFrame frame,
             INpcConfiguration item);
 
-        static partial void FillBinaryLevelCustom(
+        public static partial void FillBinaryLevelCustom(
             MutagenFrame frame,
             INpcConfiguration item);
 
@@ -1595,7 +1607,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NpcConfigurationBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INpcConfigurationGetter
     {
         #region Common Routing

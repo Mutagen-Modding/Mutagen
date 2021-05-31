@@ -25,12 +25,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Noggog.WPF" Version="2.13.0" />
-    <PackageReference Include="NuGetizer" Version="0.6.0">
+    <PackageReference Include="Noggog.WPF" Version="2.17.0" />
+    <PackageReference Include="NuGetizer" Version="0.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI.Fody" Version="13.2.2" />
+    <PackageReference Include="ReactiveUI.Fody" Version="13.3.2" />
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.1.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.10.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +41,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="Converters\Converters.xaml">
+    <Page Update="Plugins\Converters\Converters.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Plugins\Order\Implementations\ReadOnlyModListingVM.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

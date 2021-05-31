@@ -23,8 +23,8 @@ namespace Mutagen.Bethesda.Skyrim
             Loqui.Initialization.SpinUp(
                 new ProtocolDefinition_Bethesda(),
                 new ProtocolDefinition_Skyrim());
-            Mutagen.Bethesda.Core.LinkInterfaceMapping.AutomaticRegistration = false;
-            Mutagen.Bethesda.Core.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
+            Plugins.Records.Internals.LinkInterfaceMapping.AutomaticRegistration = false;
+            Plugins.Records.Internals.LinkInterfaceMapping.Register(new Mutagen.Bethesda.Skyrim.Internals.LinkInterfaceMapping());
             InitCustom();
         }
         static partial void InitCustom();

@@ -1,8 +1,6 @@
-using Mutagen.Bethesda.Binary;
-using System;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Translations.Binary;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
@@ -10,9 +8,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public static float GetArmorValue(ushort i) => i / 100f;
 
-        static partial void FillBinaryArmorValueCustom(MutagenFrame frame, IArmorData item)
+        public static partial void FillBinaryArmorValueCustom(MutagenFrame frame, IArmorData item)
         {
-            if (UInt16BinaryTranslation.Instance.Parse(
+            if (UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                 frame,
                 out var val))
             {
@@ -23,9 +21,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class ArmorDataBinaryWriteTranslation
     {
-        static partial void WriteBinaryArmorValueCustom(MutagenWriter writer, IArmorDataGetter item)
+        public static partial void WriteBinaryArmorValueCustom(MutagenWriter writer, IArmorDataGetter item)
         {
-            UInt16BinaryTranslation.Instance.Write(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 (ushort)(item.ArmorValue * 100));
         }

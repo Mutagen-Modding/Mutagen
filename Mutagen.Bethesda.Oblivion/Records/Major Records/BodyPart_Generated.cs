@@ -9,6 +9,15 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +430,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -751,7 +762,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -889,7 +900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IBodyPartGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IBodyPartGetter obj)
         {
             yield break;
         }
@@ -1014,12 +1025,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.BodyIndex>.Instance.WriteNullable(
+            EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.Index,
                 length: 4,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INDX));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Icon,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
@@ -1076,15 +1087,17 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Index) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Index = EnumBinaryTranslation<Race.BodyIndex>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Index = EnumBinaryTranslation<Race.BodyIndex, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)BodyPart_FieldIndex.Index;
                 }
                 case RecordTypeInts.ICON:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)BodyPart_FieldIndex.Icon) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Icon = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Icon = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)BodyPart_FieldIndex.Icon;
                 }
@@ -1120,7 +1133,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class BodyPartBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IBodyPartGetter
     {
         #region Common Routing

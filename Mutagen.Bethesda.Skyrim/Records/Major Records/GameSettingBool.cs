@@ -1,10 +1,9 @@
 using System;
 using System.Buffers.Binary;
-using System.Collections.Generic;
-using System.Text;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda.Skyrim
@@ -18,7 +17,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class GameSettingBoolBinaryCreateTranslation
         {
-            static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
+            public static partial void FillBinaryDataCustom(MutagenFrame frame, IGameSettingBoolInternal item)
             {
                 var subFrame = frame.ReadSubrecordFrame();
                 item.Data = (bool)(BinaryPrimitives.ReadUInt32LittleEndian(subFrame.Content) != 0);
@@ -27,7 +26,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class GameSettingBoolBinaryWriteTranslation
         {
-            static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item)
+            public static partial void WriteBinaryDataCustom(MutagenWriter writer, IGameSettingBoolGetter item)
             {
                 if (!item.Data.TryGet(out var data)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.DATA))

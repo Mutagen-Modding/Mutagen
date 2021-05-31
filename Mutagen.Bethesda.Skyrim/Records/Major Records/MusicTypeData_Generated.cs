@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +429,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -743,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.PNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -872,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMusicTypeDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMusicTypeDataGetter obj)
         {
             yield break;
         }
@@ -997,7 +1007,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer)
         {
             writer.Write(item.Priority);
-            FloatBinaryTranslation.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DuckingDecibel,
                 integerType: FloatIntegerType.UShort,
@@ -1012,7 +1022,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1042,8 +1052,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame)
         {
             item.Priority = frame.ReadUInt16();
-            item.DuckingDecibel = FloatBinaryTranslation.Parse(
-                frame: frame,
+            item.DuckingDecibel = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
                 integerType: FloatIntegerType.UShort,
                 multiplier: 0.01);
         }
@@ -1075,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class MusicTypeDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IMusicTypeDataGetter
     {
         #region Common Routing
@@ -1112,7 +1122,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         public UInt16 Priority => BinaryPrimitives.ReadUInt16LittleEndian(_data.Slice(0x0, 0x2));
-        public Single DuckingDecibel => FloatBinaryTranslation.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.01);
+        public Single DuckingDecibel => FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(_data.Slice(0x2, 0x2), FloatIntegerType.UShort, 0.01);
         partial void CustomFactoryEnd(
             OverlayStream stream,
             int finalPos,

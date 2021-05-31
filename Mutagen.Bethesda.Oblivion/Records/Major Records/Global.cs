@@ -1,16 +1,9 @@
-using Loqui;
-using Loqui.Internal;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
-using Noggog;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -54,14 +47,21 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GlobalBinaryWriteTranslation
         {
-            static partial void WriteBinaryTypeCharCustom(
+            public static partial void WriteBinaryTypeCharCustom(
                 MutagenWriter writer,
                 IGlobalGetter item)
             {
-                Mutagen.Bethesda.Binary.CharBinaryTranslation.Instance.Write(
+                CharBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.TypeChar,
                     header: RecordTypes.FNAM);
+            }
+        }
+
+        public partial class GlobalBinaryCreateTranslation
+        {
+            public static partial void FillBinaryTypeCharCustom(MutagenFrame frame, IGlobalInternal item)
+            {
             }
         }
 

@@ -6,11 +6,23 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -125,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<DialogResponses> Responses
         {
             get => this._Responses;
-            protected set => this._Responses = value;
+            init => this._Responses = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -814,7 +826,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = DialogTopic_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => DialogTopicSetterCommon.Instance.RemapLinks(this, mapping);
         public DialogTopic(
             FormKey formKey,
@@ -856,6 +868,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<DialogTopic>.ToString(this);
         }
 
         [DebuggerStepThrough]
@@ -951,7 +968,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1629,7 +1648,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IDialogTopicInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IDialogTopicInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1982,7 +2001,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IDialogTopicGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IDialogTopicGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -2494,30 +2513,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static DialogTopicBinaryWriteTranslation Instance = new DialogTopicBinaryWriteTranslation();
 
-        static partial void WriteBinaryResponseCountCustom(
-            MutagenWriter writer,
-            IDialogTopicGetter item);
-
-        public static void WriteBinaryResponseCount(
-            MutagenWriter writer,
-            IDialogTopicGetter item)
-        {
-            WriteBinaryResponseCountCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IDialogTopicGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IDialogTopicGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             IDialogTopicGetter item,
             MutagenWriter writer)
@@ -2536,41 +2531,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Priority,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.PNAM),
                 multiplier: 50f);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Branch,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.BNAM));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Quest,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.QNAM));
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.TopicFlags,
                     length: 1);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Category,
                     length: 1);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Write(
+                EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Subtype,
                     length: 2);
             }
-            Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Write(
+            RecordTypeBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.SubtypeName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM));
@@ -2579,6 +2574,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
+        public static partial void WriteBinaryResponseCountCustom(
+            MutagenWriter writer,
+            IDialogTopicGetter item);
+
+        public static void WriteBinaryResponseCount(
+            MutagenWriter writer,
+            IDialogTopicGetter item)
+        {
+            WriteBinaryResponseCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IDialogTopicGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IDialogTopicGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IDialogTopicGetter item,
@@ -2587,7 +2606,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.DIAL),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2674,8 +2693,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)DialogTopic_FieldIndex.Name;
@@ -2683,42 +2702,42 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.PNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Priority = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Priority = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         multiplier: 50f);
                     return (int)DialogTopic_FieldIndex.Priority;
                 }
                 case RecordTypeInts.BNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Branch.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Branch.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogTopic_FieldIndex.Branch;
                 }
                 case RecordTypeInts.QNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Quest.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Quest.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)DialogTopic_FieldIndex.Quest;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(1));
-                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(2));
+                    item.TopicFlags = EnumBinaryTranslation<DialogTopic.TopicFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Category = EnumBinaryTranslation<DialogTopic.CategoryEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 1);
+                    item.Subtype = EnumBinaryTranslation<DialogTopic.SubtypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 2);
                     return (int)DialogTopic_FieldIndex.Subtype;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SubtypeName = Mutagen.Bethesda.Binary.RecordTypeBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.SubtypeName = RecordTypeBinaryTranslation.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)DialogTopic_FieldIndex.SubtypeName;
                 }
                 case RecordTypeInts.TIFC:
@@ -2738,11 +2757,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryResponseCountCustom(
+        public static partial void FillBinaryResponseCountCustom(
             MutagenFrame frame,
             IDialogTopicInternal item);
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IDialogTopicInternal obj);
         public static void CustomBinaryEndImportPublic(
@@ -2785,7 +2804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => DialogTopicCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -2880,7 +2899,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var origStream = stream;
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new DialogTopicBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2988,6 +3007,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<DialogTopic>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

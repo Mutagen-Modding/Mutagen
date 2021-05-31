@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -55,7 +65,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<P2Int16> Coordinates
         {
             get => this._Coordinates;
-            protected set => this._Coordinates = value;
+            init => this._Coordinates = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -474,7 +484,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => LocationCoordinateSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -513,7 +523,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -834,7 +846,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -980,7 +992,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ILocationCoordinateGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ILocationCoordinateGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Location);
             yield break;
@@ -1118,15 +1130,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinateGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Location);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Write(
                 writer: writer,
                 items: item.Coordinates,
                 transl: (MutagenWriter subWriter, P2Int16 subItem) =>
                 {
-                    Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+                    P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         swapCoords: true);
@@ -1164,16 +1176,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCoordinate item,
             MutagenFrame frame)
         {
-            item.Location.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Coordinates.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Int16>.Instance.Parse(
-                    frame: frame,
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Int16>.Instance.Parse(
+                    reader: frame,
                     transl: (MutagenFrame r, out P2Int16 listSubItem) =>
                     {
-                        listSubItem = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(
+                        listSubItem = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                             r,
                             swapCoords: true);
                         return true;
@@ -1207,7 +1216,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class LocationCoordinateBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ILocationCoordinateGetter
     {
         #region Common Routing
@@ -1229,7 +1238,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => LocationCoordinateCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => LocationCoordinateBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1246,7 +1255,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLinkGetter<IComplexLocationGetter> Location => new FormLink<IComplexLocationGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         #region Coordinates
-        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation.Read(s, swapCoords: true));
+        public IReadOnlyList<P2Int16> Coordinates => BinaryOverlayList.FactoryByStartIndex<P2Int16>(_data.Slice(0x4), _package, 4, (s, p) => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s, swapCoords: true));
         protected int CoordinatesEndingPos;
         #endregion
         partial void CustomFactoryEnd(

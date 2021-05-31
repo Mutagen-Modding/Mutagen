@@ -1,5 +1,9 @@
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
@@ -30,7 +34,7 @@ namespace Mutagen.Bethesda.Tests
             {
                 yield return t;
             }
-            var bsaOrder = Archive.GetTypicalOrder(GameRelease).ToList();
+            var bsaOrder = Archive.GetIniListings(GameRelease).ToList();
             foreach (var source in EnumExt.GetValues<StringsSource>())
             {
                 yield return TaskExt.Run(DoMultithreading, () =>
@@ -91,7 +95,7 @@ namespace Mutagen.Bethesda.Tests
             StringsSource source, 
             ModKey modKey,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder)
+            IEnumerable<FileName> bsaOrder)
         {
             using var stream = streamGetter();
             switch (source)

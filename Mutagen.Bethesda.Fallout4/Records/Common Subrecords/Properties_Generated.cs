@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -45,7 +53,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<Single> PropertyList
         {
             get => this._PropertyList;
-            protected set => this._PropertyList = value;
+            init => this._PropertyList = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -468,7 +476,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -786,7 +796,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.PRPS)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -922,7 +932,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPropertiesGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPropertiesGetter obj)
         {
             yield break;
         }
@@ -1055,10 +1065,10 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IPropertiesGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Write(
                 writer: writer,
                 items: item.PropertyList,
-                transl: FloatBinaryTranslation.Instance.Write);
+                transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1069,7 +1079,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PRPS),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1099,9 +1109,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame)
         {
             item.PropertyList.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Single>.Instance.Parse(
-                    frame: frame,
-                    transl: FloatBinaryTranslation.Instance.Parse));
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Single>.Instance.Parse(
+                    reader: frame,
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }
@@ -1131,7 +1141,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class PropertiesBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPropertiesGetter
     {
         #region Common Routing

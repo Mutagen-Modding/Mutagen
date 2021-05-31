@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -55,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<Int16> Points
         {
             get => this._Points;
-            protected set => this._Points = value;
+            init => this._Points = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -475,7 +485,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = PointToReferenceMapping_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => PointToReferenceMappingSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -514,7 +524,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -839,7 +851,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.PGRL)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -985,7 +997,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPointToReferenceMappingGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPointToReferenceMappingGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Reference);
             yield break;
@@ -1123,13 +1135,13 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMappingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Reference);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Write(
                 writer: writer,
                 items: item.Points,
-                transl: Int16BinaryTranslation.Instance.Write);
+                transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1140,7 +1152,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PGRL),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1169,14 +1181,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPointToReferenceMapping item,
             MutagenFrame frame)
         {
-            item.Reference.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Reference.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Points.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<Int16>.Instance.Parse(
-                    frame: frame,
-                    transl: Int16BinaryTranslation.Instance.Parse));
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Int16>.Instance.Parse(
+                    reader: frame,
+                    transl: Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
         }
 
     }
@@ -1206,7 +1215,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class PointToReferenceMappingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPointToReferenceMappingGetter
     {
         #region Common Routing
@@ -1228,7 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => PointToReferenceMappingCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => PointToReferenceMappingBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

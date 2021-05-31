@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +430,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -751,7 +762,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -889,7 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFindMatchingRefNearAliasGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFindMatchingRefNearAliasGetter obj)
         {
             yield break;
         }
@@ -1009,7 +1020,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static FindMatchingRefNearAliasBinaryWriteTranslation Instance = new FindMatchingRefNearAliasBinaryWriteTranslation();
 
-        static partial void WriteBinaryAliasIndexCustom(
+        public static void WriteRecordTypes(
+            IFindMatchingRefNearAliasGetter item,
+            MutagenWriter writer,
+            RecordTypeConverter? recordTypeConverter)
+        {
+            FindMatchingRefNearAliasBinaryWriteTranslation.WriteBinaryAliasIndex(
+                writer: writer,
+                item: item);
+            EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
+                writer,
+                item.Type,
+                length: 4,
+                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALNT));
+        }
+
+        public static partial void WriteBinaryAliasIndexCustom(
             MutagenWriter writer,
             IFindMatchingRefNearAliasGetter item);
 
@@ -1020,21 +1046,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryAliasIndexCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteRecordTypes(
-            IFindMatchingRefNearAliasGetter item,
-            MutagenWriter writer,
-            RecordTypeConverter? recordTypeConverter)
-        {
-            FindMatchingRefNearAliasBinaryWriteTranslation.WriteBinaryAliasIndex(
-                writer: writer,
-                item: item);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.WriteNullable(
-                writer,
-                item.Type,
-                length: 4,
-                header: recordTypeConverter.ConvertToCustom(RecordTypes.ALNT));
         }
 
         public void Write(
@@ -1095,7 +1106,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)FindMatchingRefNearAlias_FieldIndex.Type) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Type = EnumBinaryTranslation<FindMatchingRefNearAlias.TypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)FindMatchingRefNearAlias_FieldIndex.Type;
                 }
                 default:
@@ -1103,7 +1116,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void FillBinaryAliasIndexCustom(
+        public static partial void FillBinaryAliasIndexCustom(
             MutagenFrame frame,
             IFindMatchingRefNearAlias item);
 
@@ -1134,7 +1147,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class FindMatchingRefNearAliasBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFindMatchingRefNearAliasGetter
     {
         #region Common Routing

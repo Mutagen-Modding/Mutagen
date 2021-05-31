@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -460,7 +468,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -786,7 +796,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.MHDT)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -925,7 +935,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceMaxHeightGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceMaxHeightGetter obj)
         {
             yield break;
         }
@@ -1053,13 +1063,13 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Min);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Max);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CellData);
         }
@@ -1072,7 +1082,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.MHDT),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1101,9 +1111,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeight item,
             MutagenFrame frame)
         {
-            item.Min = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Max = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
-            item.CellData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame);
+            item.Min = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Max = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.CellData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1133,7 +1143,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WorldspaceMaxHeightBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWorldspaceMaxHeightGetter
     {
         #region Common Routing
@@ -1169,8 +1179,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int16 Min => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
-        public P2Int16 Max => P2Int16BinaryTranslation.Read(_data.Slice(0x4, 0x4));
+        public P2Int16 Min => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 Max => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x4, 0x4));
         #region CellData
         public ReadOnlyMemorySlice<Byte> CellData => _data.Span.Slice(0x8).ToArray();
         protected int CellDataEndingPos;

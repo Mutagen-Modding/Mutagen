@@ -1,10 +1,12 @@
-using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Text;
 using static Mutagen.Bethesda.Fallout4.Condition;
 
 namespace Mutagen.Bethesda.Fallout4
@@ -973,7 +975,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item)
+            public static partial void FillBinaryFlagsCustom(MutagenFrame frame, ICondition item)
             {
                 byte b = frame.ReadUInt8();
                 item.Flags = GetFlag(b);
@@ -1015,7 +1017,7 @@ namespace Mutagen.Bethesda.Fallout4
                 }
             }
 
-            static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
+            public static partial void WriteBinaryFlagsCustom(MutagenWriter writer, IConditionGetter item)
             {
                 writer.Write(GetFlagWriteByte(item.Flags, item.CompareOperator));
             }
@@ -1108,7 +1110,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionGlobalBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionGlobal obj)
             {
                 ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
             }
@@ -1116,7 +1118,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionGlobalBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionGlobalGetter obj)
             {
                 ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
             }
@@ -1124,7 +1126,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionFloatBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IConditionFloat obj)
             {
                 ConditionBinaryCreateTranslation.CustomStringImports(frame, obj.Data);
             }
@@ -1132,7 +1134,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionFloatBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IConditionFloatGetter obj)
             {
                 ConditionBinaryWriteTranslation.CustomStringExports(writer, obj.Data);
             }
@@ -1140,7 +1142,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionDataBinaryCreateTranslation
         {
-            static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IConditionData item)
+            public static partial void FillBinaryParameterParsingCustom(MutagenFrame frame, IConditionData item)
             {
                 item.ParameterOneNumber = frame.ReadInt32();
                 item.ParameterTwoNumber = frame.ReadInt32();
@@ -1154,7 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         public partial class ConditionDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IConditionDataGetter item)
+            public static partial void WriteBinaryParameterParsingCustom(MutagenWriter writer, IConditionDataGetter item)
             {
                 var paramTypes = Condition.GetParameterTypes((ushort)item.Function);
                 switch (paramTypes.First.GetCategory())

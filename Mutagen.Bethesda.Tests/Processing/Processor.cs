@@ -1,7 +1,13 @@
-using Microsoft.VisualBasic;
 using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Headers;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Utility;
 using System;
@@ -9,10 +15,10 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Tests
 {
@@ -306,7 +312,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: refLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                loc: refLoc + Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -323,7 +329,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[4];
             BinaryPrimitives.WriteUInt32LittleEndian(lenData.AsSpan(), (ushort)(frame.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: refLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                loc: refLoc + Constants.HeaderLength,
                 sub: lenData);
         }
 
@@ -348,7 +354,7 @@ namespace Mutagen.Bethesda.Tests
             byte[] lenData = new byte[2];
             BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(majorMeta.ContentLength + amount));
             this._Instructions.SetSubstitution(
-                loc: recordLoc + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                loc: recordLoc + Constants.HeaderLength,
                 sub: lenData);
 
             if (subRecordLoc != null)
@@ -358,7 +364,7 @@ namespace Mutagen.Bethesda.Tests
                 lenData = new byte[2];
                 BinaryPrimitives.WriteUInt16LittleEndian(lenData.AsSpan(), (ushort)(subMeta.ContentLength + amount));
                 this._Instructions.SetSubstitution(
-                    loc: subRecordLoc.Value + Mutagen.Bethesda.Internals.Constants.HeaderLength,
+                    loc: subRecordLoc.Value + Constants.HeaderLength,
                     sub: lenData);
             }
         }
@@ -488,7 +494,7 @@ namespace Mutagen.Bethesda.Tests
                     pos += subRec.TotalLength;
                     continue;
                 }
-                var passedLen = UtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
+                var passedLen = PluginUtilityTranslation.SkipPastAll(frame.Content.Slice(pos), frame.Meta, containedType, out var numPassed);
                 // Found contained record
                 if (!prevWasCounter)
                 {
@@ -601,12 +607,12 @@ namespace Mutagen.Bethesda.Tests
             GameRelease release,
             ModKey modKey,
             IMutagenReadStream stream,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language,
             StringsSource source,
             params AStringsAlignment[] recordTypes)
         {
-            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, null);
+            var folderOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, null);
             var sourceDict = folderOverlay.Get(source);
             if (!sourceDict.TryGetValue(language, out var overlay)) return ListExt.Empty<KeyValuePair<uint, uint>>();
             var ret = new List<KeyValuePair<uint, uint>>();
@@ -623,7 +629,7 @@ namespace Mutagen.Bethesda.Tests
             stream.Position = 0;
             var locs = RecordLocator.GetFileLocations(
                 stream,
-                interest: new Mutagen.Bethesda.RecordInterest(dict.Keys));
+                interest: new RecordInterest(dict.Keys));
 
             uint newIndex = 1;
             foreach (var rec in locs.ListedRecords)
@@ -643,18 +649,18 @@ namespace Mutagen.Bethesda.Tests
         public void ProcessStringsFiles(
             GameRelease release,
             ModKey modKey,
-            DirectoryInfo dataFolder,
+            DirectoryPath dataFolder,
             Language language,
             StringsSource source,
             bool strict,
             HashSet<uint> knownDeadKeys,
-            IEnumerable<string> bsaOrder,
+            IEnumerable<FileName> bsaOrder,
             IReadOnlyList<KeyValuePair<uint, uint>> reindexing)
         {
             if (reindexing.Count == 0) return;
 
             var outFolder = Path.Combine(this.TempFolder.Dir.Path, "Strings/Processed");
-            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder.FullName, new StringsReadParameters()
+            var stringsOverlay = StringsFolderLookupOverlay.TypicalFactory(release, modKey, dataFolder, new StringsReadParameters()
             {
                 BsaOrdering = bsaOrder
             });
@@ -796,17 +802,17 @@ namespace Mutagen.Bethesda.Tests
             ICollection<RecordType> locationsToMove,
             bool enforcePast = false)
         {
-            var offender = UtilityTranslation.FindFirstSubrecord(
+            var offender = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 recordTypes: offendingIndices.ToGetter());
             if (offender == null) return false;
-            var limit = UtilityTranslation.FindFirstSubrecord(
+            var limit = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content,
                 majorFrame.Meta,
                 recordTypes: offendingLimits.ToGetter());
             if (limit == null) return false;
-            long? locToMove = UtilityTranslation.FindFirstSubrecord(
+            long? locToMove = PluginUtilityTranslation.FindFirstSubrecord(
                 majorFrame.Content.Slice(enforcePast ? offender.Value : 0),
                 majorFrame.Meta,
                 recordTypes: locationsToMove.ToGetter());

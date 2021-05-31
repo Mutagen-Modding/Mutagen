@@ -10,6 +10,16 @@ using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -58,7 +68,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<LocalVariable> LocalVariables
         {
             get => this._LocalVariables;
-            protected set => this._LocalVariables = value;
+            init => this._LocalVariables = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -72,7 +82,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<AScriptReference> References
         {
             get => this._References;
-            protected set => this._References = value;
+            init => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -659,7 +669,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptFieldsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -698,7 +708,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1042,7 +1054,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1244,7 +1256,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptFieldsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptFieldsGetter obj)
         {
             foreach (var item in obj.References.WhereCastable<IAScriptReferenceGetter, IFormLinkContainerGetter>()
                 .SelectMany((f) => f.ContainedFormLinks))
@@ -1444,19 +1456,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptFieldsBinaryWriteTranslation Instance = new ScriptFieldsBinaryWriteTranslation();
 
-        static partial void WriteBinaryMetadataSummaryOldCustom(
-            MutagenWriter writer,
-            IScriptFieldsGetter item);
-
-        public static void WriteBinaryMetadataSummaryOld(
-            MutagenWriter writer,
-            IScriptFieldsGetter item)
-        {
-            WriteBinaryMetadataSummaryOldCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteRecordTypes(
             IScriptFieldsGetter item,
             MutagenWriter writer,
@@ -1470,16 +1469,16 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: MetadataSummaryItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.CompiledScript,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCDA));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.SourceCode,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCTX),
                 binaryType: StringBinaryType.Plain);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILocalVariableGetter>.Instance.Write(
                 writer: writer,
                 items: item.LocalVariables,
                 transl: (MutagenWriter subWriter, ILocalVariableGetter subItem, RecordTypeConverter? conv) =>
@@ -1490,7 +1489,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IAScriptReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.References,
                 transl: (MutagenWriter subWriter, IAScriptReferenceGetter subItem, RecordTypeConverter? conv) =>
@@ -1501,6 +1500,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
+        }
+
+        public static partial void WriteBinaryMetadataSummaryOldCustom(
+            MutagenWriter writer,
+            IScriptFieldsGetter item);
+
+        public static void WriteBinaryMetadataSummaryOld(
+            MutagenWriter writer,
+            IScriptFieldsGetter item)
+        {
+            WriteBinaryMetadataSummaryOldCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -1568,14 +1580,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCDA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CompiledScript = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.CompiledScript = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)ScriptFields_FieldIndex.CompiledScript;
                 }
                 case RecordTypeInts.SCTX:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.SourceCode = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.SourceCode = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.Plain);
                     return (int)ScriptFields_FieldIndex.SourceCode;
                 }
@@ -1583,8 +1595,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCVR:
                 {
                     item.LocalVariables.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<LocalVariable>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LocalVariable>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: LocalVariable_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: LocalVariable.TryCreateFromBinary));
@@ -1594,8 +1606,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.SCRO:
                 {
                     item.References.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<AScriptReference>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<AScriptReference>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: AScriptReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: (MutagenFrame r, RecordType header, out AScriptReference listSubItem, RecordTypeConverter? conv) =>
@@ -1625,7 +1637,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryMetadataSummaryOldCustom(
+        public static partial void FillBinaryMetadataSummaryOldCustom(
             MutagenFrame frame,
             IScriptFields item);
 
@@ -1656,7 +1668,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptFieldsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScriptFieldsGetter
     {
         #region Common Routing
@@ -1678,7 +1690,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptFieldsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => ScriptFieldsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

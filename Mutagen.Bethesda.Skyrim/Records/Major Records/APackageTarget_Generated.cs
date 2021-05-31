@@ -8,7 +8,17 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -349,7 +359,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => APackageTargetCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => APackageTargetCommon.Instance.GetContainedFormLinks(this);
         public virtual void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => APackageTargetSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -800,7 +810,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAPackageTargetGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAPackageTargetGetter obj)
         {
             yield break;
         }
@@ -916,7 +926,17 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static APackageTargetBinaryWriteTranslation Instance = new APackageTargetBinaryWriteTranslation();
 
-        static partial void WriteBinaryDataParseCustom(
+        public static void WriteEmbedded(
+            IAPackageTargetGetter item,
+            MutagenWriter writer)
+        {
+            APackageTargetBinaryWriteTranslation.WriteBinaryDataParse(
+                writer: writer,
+                item: item);
+            writer.Write(item.CountOrDistance, length: 4);
+        }
+
+        public static partial void WriteBinaryDataParseCustom(
             MutagenWriter writer,
             IAPackageTargetGetter item);
 
@@ -927,16 +947,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             WriteBinaryDataParseCustom(
                 writer: writer,
                 item: item);
-        }
-
-        public static void WriteEmbedded(
-            IAPackageTargetGetter item,
-            MutagenWriter writer)
-        {
-            APackageTargetBinaryWriteTranslation.WriteBinaryDataParse(
-                writer: writer,
-                item: item);
-            writer.Write(item.CountOrDistance, length: 4);
         }
 
         public virtual void Write(
@@ -976,7 +986,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             item.CountOrDistance = frame.ReadInt32();
         }
 
-        static partial void FillBinaryDataParseCustom(
+        public static partial void FillBinaryDataParseCustom(
             MutagenFrame frame,
             IAPackageTarget item);
 
@@ -1007,7 +1017,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class APackageTargetBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IAPackageTargetGetter
     {
         #region Common Routing
@@ -1029,7 +1039,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public virtual IEnumerable<FormLinkInformation> ContainedFormLinks => APackageTargetCommon.Instance.GetContainedFormLinks(this);
+        public virtual IEnumerable<IFormLinkGetter> ContainedFormLinks => APackageTargetCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected virtual object BinaryWriteTranslator => APackageTargetBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

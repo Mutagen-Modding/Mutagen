@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -49,7 +59,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceReference> References
         {
             get => this._References;
-            protected set => this._References = value;
+            init => this._References = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -471,7 +481,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = WorldspaceGridReference_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceGridReferenceSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -510,7 +520,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -835,7 +847,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.RNAM)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -981,7 +993,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceGridReferenceGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceGridReferenceGetter obj)
         {
             foreach (var item in obj.References.SelectMany(f => f.ContainedFormLinks))
             {
@@ -1129,10 +1141,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReferenceGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Write(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.GridPosition);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.References,
                 countLengthLength: 4,
@@ -1154,7 +1166,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.RNAM),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1183,11 +1195,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGridReference item,
             MutagenFrame frame)
         {
-            item.GridPosition = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame);
+            item.GridPosition = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.References.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceReference>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: WorldspaceReference.TryCreateFromBinary));
         }
 
@@ -1218,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class WorldspaceGridReferenceBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IWorldspaceGridReferenceGetter
     {
         #region Common Routing
@@ -1240,7 +1252,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceGridReferenceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => WorldspaceGridReferenceBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1255,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int16 GridPosition => P2Int16BinaryTranslation.Read(_data.Slice(0x0, 0x4));
+        public P2Int16 GridPosition => P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x4));
         #region References
         public IReadOnlyList<IWorldspaceReferenceGetter> References => BinaryOverlayList.FactoryByCountLength<WorldspaceReferenceBinaryOverlay>(_data.Slice(0x4), _package, 8, countLength: 4, (s, p) => WorldspaceReferenceBinaryOverlay.WorldspaceReferenceFactory(s, p));
         protected int ReferencesEndingPos;

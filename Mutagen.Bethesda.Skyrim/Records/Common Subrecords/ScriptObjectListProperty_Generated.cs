@@ -8,8 +8,19 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -47,7 +58,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScriptObjectProperty> Objects
         {
             get => this._Objects;
-            protected set => this._Objects = value;
+            init => this._Objects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -432,7 +443,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectListPropertyCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptObjectListPropertyCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ScriptObjectListPropertySetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -469,7 +480,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -767,7 +780,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -950,7 +963,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptObjectListPropertyGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptObjectListPropertyGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1119,7 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptPropertyBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScriptObjectPropertyGetter>.Instance.Write(
                 writer: writer,
                 items: item.Objects,
                 countLengthLength: 4,
@@ -1179,9 +1192,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.Objects.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScriptObjectProperty>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: ScriptObjectProperty.TryCreateFromBinary));
         }
 
@@ -1217,7 +1230,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ScriptObjectListPropertyCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ScriptObjectListPropertyCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ScriptObjectListPropertyBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

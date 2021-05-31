@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -553,7 +561,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -891,7 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.PFO2)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1060,7 +1070,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IPackageFlagsOverrideGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IPackageFlagsOverrideGetter obj)
         {
             yield break;
         }
@@ -1200,27 +1210,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverrideGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SetFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Flag>.Instance.Write(
+            EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ClearFlags,
                 length: 4);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.SetInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.InterruptFlag>.Instance.Write(
+            EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.ClearInterruptFlags,
                 length: 2);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Package.Speed>.Instance.Write(
+            EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.PreferredSpeed,
                 length: 1);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown);
         }
@@ -1233,7 +1243,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.PFO2),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1262,12 +1272,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageFlagsOverride item,
             MutagenFrame frame)
         {
-            item.SetFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.ClearFlags = EnumBinaryTranslation<Package.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
-            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag>.Instance.Parse(frame: frame.SpawnWithLength(2));
-            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed>.Instance.Parse(frame: frame.SpawnWithLength(1));
-            item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(3));
+            item.SetFlags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.ClearFlags = EnumBinaryTranslation<Package.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
+            item.SetInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.ClearInterruptFlags = EnumBinaryTranslation<Package.InterruptFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 2);
+            item.PreferredSpeed = EnumBinaryTranslation<Package.Speed, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
+            item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(3));
         }
 
     }
@@ -1297,7 +1317,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class PackageFlagsOverrideBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IPackageFlagsOverrideGetter
     {
         #region Common Routing

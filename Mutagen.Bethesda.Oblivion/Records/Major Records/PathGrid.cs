@@ -1,14 +1,11 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Loqui;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 
 namespace Mutagen.Bethesda.Oblivion.Internals
@@ -19,7 +16,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public static readonly RecordType PGRR = new RecordType("PGRR");
         public const int POINT_LEN = 16;
 
-        static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
+        public static partial void FillBinaryPointToPointConnectionsCustom(MutagenFrame frame, IPathGridInternal item)
         {
             FillBinaryPointToPointConnections(frame, item);
         }
@@ -47,7 +44,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 {
                     case 0x47414750: //"PGAG":
                         frame.Reader.Position += subMeta.HeaderLength;
-                        if (Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(
+                        if (ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
                            frame.SpawnWithLength(subMeta.ContentLength, checkFraming: false),
                            item: out var unknownBytes))
                         {
@@ -107,7 +104,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
     public partial class PathGridBinaryWriteTranslation
     {
-        static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item)
+        public static partial void WriteBinaryPointToPointConnectionsCustom(MutagenWriter writer, IPathGridGetter item)
         {
             if (!item.PointToPointConnections.TryGet(out var ptToPt)) return;
 

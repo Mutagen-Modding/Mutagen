@@ -1,11 +1,15 @@
 using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -38,7 +42,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class CellBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, ICellInternal obj)
             {
                 CustomBinaryEnd(frame, obj);
             }
@@ -110,8 +114,8 @@ namespace Mutagen.Bethesda.Skyrim
                 obj.PersistentTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.PersistentUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
                 obj.Persistent.AddRange(
-                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
-                        frame: frame,
+                    ListBinaryTranslation<IPlaced>.Instance.Parse(
+                        reader: frame,
                         transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                         {
                             switch (header.TypeInt)
@@ -198,8 +202,8 @@ namespace Mutagen.Bethesda.Skyrim
                 }
                 obj.TemporaryTimestamp = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.LastModifiedData);
                 obj.TemporaryUnknownGroupData = BinaryPrimitives.ReadInt32LittleEndian(groupMeta.HeaderData.Slice(groupMeta.HeaderData.Length - 4));
-                var items = Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlaced>.Instance.Parse(
-                    frame: frame,
+                var items = ListBinaryTranslation<IPlaced>.Instance.Parse(
+                    reader: frame,
                     transl: (MutagenFrame r, RecordType header, out IPlaced placed) =>
                     {
                         switch (header.TypeInt)
@@ -249,7 +253,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class CellBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, ICellGetter obj)
             {
                 try
                 {
@@ -259,7 +263,7 @@ namespace Mutagen.Bethesda.Skyrim
                         && (obj.Temporary?.Count ?? 0) == 0
                         && navMeshes.Count == 0
                         && landscape == null) return;
-                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
@@ -269,7 +273,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write(obj.UnknownGroupData);
                         if (obj.Persistent?.Count > 0)
                         {
-                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                             {
                                 FormKeyBinaryTranslation.Instance.Write(
                                     writer,
@@ -277,7 +281,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 writer.Write((int)GroupTypeEnum.CellPersistentChildren);
                                 writer.Write(obj.PersistentTimestamp);
                                 writer.Write(obj.PersistentUnknownGroupData);
-                                Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                     writer: writer,
                                     items: obj.Persistent,
                                     transl: WritePlaced);
@@ -287,7 +291,7 @@ namespace Mutagen.Bethesda.Skyrim
                             || navMeshes.Count > 0
                             || landscape != null)
                         {
-                            using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                            using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                             {
                                 FormKeyBinaryTranslation.Instance.Write(
                                     writer,
@@ -302,7 +306,7 @@ namespace Mutagen.Bethesda.Skyrim
                                 }
                                 if (obj.Temporary != null)
                                 {
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<IPlacedGetter>.Instance.Write(
+                                    ListBinaryTranslation<IPlacedGetter>.Instance.Write(
                                         writer: writer,
                                         items: obj.Temporary,
                                         transl: WritePlaced);
@@ -393,7 +397,7 @@ namespace Mutagen.Bethesda.Skyrim
                 bool insideWorldspace)
             {
                 var origStream = stream;
-                stream = UtilityTranslation.DecompressStream(stream);
+                stream = PluginUtilityTranslation.DecompressStream(stream);
                 var ret = new CellBinaryOverlay(
                     bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                     package: package)
@@ -554,10 +558,6 @@ namespace Mutagen.Bethesda.Skyrim
                                                 }
                                                 break;
                                             case RecordTypeInts.LAND:
-                                                if (_landscapeLocation.HasValue)
-                                                {
-                                                    throw new ArgumentException("Second landscape parsed.");
-                                                }
                                                 _landscapeLocation = checked((int)stream.Position);
                                                 stream.Position += (int)majorMeta.TotalLength;
                                                 break;

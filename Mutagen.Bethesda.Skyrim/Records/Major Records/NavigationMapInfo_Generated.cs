@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -65,7 +75,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo
         {
             get => this._MergedTo;
-            protected set => this._MergedTo = value;
+            init => this._MergedTo = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -79,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IANavigationMeshGetter>> PreferredMerges
         {
             get => this._PreferredMerges;
-            protected set => this._PreferredMerges = value;
+            init => this._PreferredMerges = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -93,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<LinkedDoor> LinkedDoors
         {
             get => this._LinkedDoors;
-            protected set => this._LinkedDoors = value;
+            init => this._LinkedDoors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -985,7 +995,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = NavigationMapInfo_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => NavigationMapInfoSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1024,7 +1034,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1394,7 +1406,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.NVMI)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1682,7 +1694,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(INavigationMapInfoGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(INavigationMapInfoGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.NavigationMesh);
             foreach (var item in obj.MergedTo)
@@ -1929,65 +1941,39 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public readonly static NavigationMapInfoBinaryWriteTranslation Instance = new NavigationMapInfoBinaryWriteTranslation();
 
-        static partial void WriteBinaryIslandCustom(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item);
-
-        public static void WriteBinaryIsland(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item)
-        {
-            WriteBinaryIslandCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryParentParseLogicCustom(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item);
-
-        public static void WriteBinaryParentParseLogic(
-            MutagenWriter writer,
-            INavigationMapInfoGetter item)
-        {
-            WriteBinaryParentParseLogicCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             INavigationMapInfoGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.NavigationMesh);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+            P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
             writer.Write(item.PreferredMergesFlag);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.MergedTo,
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Write(
                 writer: writer,
                 items: item.PreferredMerges,
                 countLengthLength: 4,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IANavigationMeshGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ILinkedDoorGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ILinkedDoorGetter>.Instance.Write(
                 writer: writer,
                 items: item.LinkedDoors,
                 countLengthLength: 4,
@@ -2003,10 +1989,36 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 writer: writer,
                 item: item);
             writer.Write(item.Unknown2);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.ParentWorldspace);
             NavigationMapInfoBinaryWriteTranslation.WriteBinaryParentParseLogic(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryIslandCustom(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item);
+
+        public static void WriteBinaryIsland(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item)
+        {
+            WriteBinaryIslandCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryParentParseLogicCustom(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item);
+
+        public static void WriteBinaryParentParseLogic(
+            MutagenWriter writer,
+            INavigationMapInfoGetter item)
+        {
+            WriteBinaryParentParseLogicCustom(
                 writer: writer,
                 item: item);
         }
@@ -2019,7 +2031,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.NVMI),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -2048,47 +2060,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfo item,
             MutagenFrame frame)
         {
-            item.NavigationMesh.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.NavigationMesh.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.Unknown = frame.ReadInt32();
-            item.Point = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Point = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.PreferredMergesFlag = frame.ReadUInt32();
             item.MergedTo.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.PreferredMerges.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IANavigationMeshGetter>>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: FormLinkBinaryTranslation.Instance.Parse));
             item.LinkedDoors.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<LinkedDoor>.Instance.Parse(
                     amount: frame.ReadInt32(),
-                    frame: frame,
+                    reader: frame,
                     transl: LinkedDoor.TryCreateFromBinary));
             if (frame.Complete) return;
             NavigationMapInfoBinaryCreateTranslation.FillBinaryIslandCustom(
                 frame: frame,
                 item: item);
             item.Unknown2 = frame.ReadInt32();
-            item.ParentWorldspace.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.ParentWorldspace.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             NavigationMapInfoBinaryCreateTranslation.FillBinaryParentParseLogicCustom(
                 frame: frame,
                 item: item);
         }
 
-        static partial void FillBinaryIslandCustom(
+        public static partial void FillBinaryIslandCustom(
             MutagenFrame frame,
             INavigationMapInfo item);
 
-        static partial void FillBinaryParentParseLogicCustom(
+        public static partial void FillBinaryParentParseLogicCustom(
             MutagenFrame frame,
             INavigationMapInfo item);
 
@@ -2119,7 +2125,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class NavigationMapInfoBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         INavigationMapInfoGetter
     {
         #region Common Routing
@@ -2141,7 +2147,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => NavigationMapInfoCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => NavigationMapInfoBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -2158,7 +2164,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public IFormLinkGetter<IANavigationMeshGetter> NavigationMesh => new FormLink<IANavigationMeshGetter>(FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(_data.Span.Slice(0x0, 0x4))));
         public Int32 Unknown => BinaryPrimitives.ReadInt32LittleEndian(_data.Slice(0x4, 0x4));
-        public P3Float Point => P3FloatBinaryTranslation.Read(_data.Slice(0x8, 0xC));
+        public P3Float Point => P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x8, 0xC));
         public UInt32 PreferredMergesFlag => BinaryPrimitives.ReadUInt32LittleEndian(_data.Slice(0x14, 0x4));
         #region MergedTo
         public IReadOnlyList<IFormLinkGetter<IANavigationMeshGetter>> MergedTo => BinaryOverlayList.FactoryByCountLength<IFormLinkGetter<IANavigationMeshGetter>>(_data.Slice(0x18), _package, 4, countLength: 4, (s, p) => new FormLink<IANavigationMeshGetter>(FormKey.Factory(p.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(s))));

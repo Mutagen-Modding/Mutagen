@@ -6,11 +6,22 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -67,7 +78,7 @@ namespace Mutagen.Bethesda.Skyrim
         public SliceList<byte> DNAMs
         {
             get => this._DNAMs;
-            protected set => this._DNAMs = value;
+            init => this._DNAMs = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -832,7 +843,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = MaterialObject_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => MaterialObjectSetterCommon.Instance.RemapLinks(this, mapping);
         public MaterialObject(
             FormKey formKey,
@@ -874,6 +885,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<MaterialObject>.ToString(this);
         }
 
         [Flags]
@@ -938,7 +954,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1320,7 +1338,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IMaterialObjectInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IMaterialObjectInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1674,7 +1692,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IMaterialObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IMaterialObjectGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -2019,40 +2037,40 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ReadOnlyMemorySlice<Byte>>.Instance.WritePerItem(
                 writer: writer,
                 items: item.DNAMs,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                transl: ByteArrayBinaryTranslation.Instance.Write);
+                transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FalloffScale);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FalloffBias);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.NoiseUvScale);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.MaterialUvScale);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ProjectionVector);
                 if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.NormalDampener);
                     if (!item.DATADataTypeState.HasFlag(MaterialObject.DATADataType.Break1))
                     {
-                        Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+                        ColorBinaryTranslation.Instance.Write(
                             writer: writer,
                             item: item.SinglePassColor,
                             binaryType: ColorBinaryType.NoAlphaFloat);
-                        Mutagen.Bethesda.Binary.EnumBinaryTranslation<MaterialObject.Flag>.Instance.Write(
+                        EnumBinaryTranslation<MaterialObject.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                             writer,
                             item.Flags,
                             length: 4);
@@ -2073,7 +2091,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.MATO),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2164,41 +2182,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DNAM:
                 {
                     item.DNAMs.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<MemorySlice<Byte>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.DNAM),
-                            transl: ByteArrayBinaryTranslation.Instance.Parse));
+                            transl: ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse));
                     return (int)MaterialObject_FieldIndex.DNAMs;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.FalloffScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FalloffBias = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.NoiseUvScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.MaterialUvScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ProjectionVector = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.FalloffScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FalloffBias = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.NoiseUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.MaterialUvScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ProjectionVector = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break0;
                         return (int)MaterialObject_FieldIndex.ProjectionVector;
                     }
-                    item.NormalDampener = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.NormalDampener = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break1;
                         return (int)MaterialObject_FieldIndex.NormalDampener;
                     }
                     item.SinglePassColor = dataFrame.ReadColor(ColorBinaryType.NoAlphaFloat);
-                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<MaterialObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= MaterialObject.DATADataType.Break2;
                         return (int)MaterialObject_FieldIndex.Flags;
                     }
-                    item.HasSnow = Mutagen.Bethesda.Binary.BooleanBinaryTranslation.Instance.Parse(
-                        frame: dataFrame,
+                    item.HasSnow = BooleanBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
                         byteLength: 4);
                     return (int)MaterialObject_FieldIndex.HasSnow;
                 }
@@ -2244,7 +2264,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => MaterialObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => MaterialObjectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2284,7 +2304,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #region ProjectionVector
         private int _ProjectionVectorLocation => _DATALocation!.Value + 0x10;
         private bool _ProjectionVector_IsSet => _DATALocation.HasValue;
-        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
+        public P3Float ProjectionVector => _ProjectionVector_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_ProjectionVectorLocation, 12)) : default;
         #endregion
         #region NormalDampener
         private int _NormalDampenerLocation => _DATALocation!.Value + 0x1C;
@@ -2327,7 +2347,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new MaterialObjectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2434,6 +2454,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<MaterialObject>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

@@ -1,7 +1,5 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -9,7 +7,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class PackageAdapterBinaryCreateTranslation
         {
-            static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IPackageAdapter item)
+            public static partial void FillBinaryScriptFragmentsCustom(MutagenFrame frame, IPackageAdapter item)
             {
                 item.ScriptFragments = Mutagen.Bethesda.Skyrim.PackageScriptFragments.CreateFromBinary(frame: frame);
             }
@@ -17,7 +15,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class PackageAdapterBinaryWriteTranslation
         {
-            static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IPackageAdapterGetter item)
+            public static partial void WriteBinaryScriptFragmentsCustom(MutagenWriter writer, IPackageAdapterGetter item)
             {
                 if (!item.ScriptFragments.TryGet(out var frags)) return;
                 frags.WriteToBinary(writer);

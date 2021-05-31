@@ -1,9 +1,9 @@
-using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class APlacedTrapBinaryCreateTranslation
         {
-            static partial void FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
+            public static partial void FillBinaryTrapFormCustom(MutagenFrame frame, IAPlacedTrapInternal item)
             {
                 var subRec = frame.ReadSubrecordFrame();
                 if (subRec.Content.Length != 4)
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class APlacedTrapBinaryWriteTranslation
         {
-            static partial void WriteBinaryTrapFormCustom(MutagenWriter writer, IAPlacedTrapGetter item)
+            public static partial void WriteBinaryTrapFormCustom(MutagenWriter writer, IAPlacedTrapGetter item)
             {
                 using var header = HeaderExport.Subrecord(writer, RecordTypes.NAME);
                 switch (item)

@@ -1,3 +1,5 @@
+using Mutagen.Bethesda.Plugins;
+
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public class RecordTypes

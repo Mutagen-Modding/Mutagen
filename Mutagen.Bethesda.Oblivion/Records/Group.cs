@@ -1,20 +1,11 @@
-using Loqui;
-using Mutagen.Bethesda.Binary;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Mutagen.Bethesda.Internals;
 using Noggog;
-using Loqui.Internal;
-using System.Collections;
-using Noggog.Utility;
-using Mutagen.Bethesda.Folder;
-using Loqui.Xml;
-using Mutagen.Bethesda.Oblivion.Internals;
-using System.Xml.Linq;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Translations.Binary;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -45,12 +36,12 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class GroupBinaryWriteTranslation
         {
-            static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
+            public static partial void WriteBinaryContainedRecordTypeParseCustom<T>(
                 MutagenWriter writer,
                 IGroupGetter<T> item)
                 where T : class, IOblivionMajorRecordGetter, IBinaryItem
             {
-                Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.Write(
+                Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     GroupRecordTypeGetter<T>.GRUP_RECORD_TYPE.TypeInt);
             }
@@ -58,7 +49,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class GroupBinaryCreateTranslation<T>
         {
-            static partial void FillBinaryContainedRecordTypeParseCustom(
+            public static partial void FillBinaryContainedRecordTypeParseCustom(
                 MutagenFrame frame,
                 IGroup<T> item)
             {

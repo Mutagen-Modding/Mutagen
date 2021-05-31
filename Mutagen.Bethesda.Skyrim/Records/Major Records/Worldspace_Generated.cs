@@ -6,11 +6,23 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -48,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceGridReference> LargeReferences
         {
             get => this._LargeReferences;
-            protected set => this._LargeReferences = value;
+            init => this._LargeReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -315,7 +327,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<WorldspaceBlock> SubCells
         {
             get => this._SubCells;
-            protected set => this._SubCells = value;
+            init => this._SubCells = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1664,7 +1676,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Worldspace_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => WorldspaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Worldspace(
             FormKey formKey,
@@ -1706,6 +1718,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Worldspace>.ToString(this);
         }
 
         [DebuggerStepThrough]
@@ -1802,7 +1819,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -2773,7 +2792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IWorldspaceInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -3429,7 +3448,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IWorldspaceGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IWorldspaceGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -5379,17 +5398,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static WorldspaceBinaryWriteTranslation Instance = new WorldspaceBinaryWriteTranslation();
 
-        static partial void CustomBinaryEndExport(
-            MutagenWriter writer,
-            IWorldspaceGetter obj);
-        public static void CustomBinaryEndExportInternal(
-            MutagenWriter writer,
-            IWorldspaceGetter obj)
-        {
-            CustomBinaryEndExport(
-                writer: writer,
-                obj: obj);
-        }
         public static void WriteEmbedded(
             IWorldspaceGetter item,
             MutagenWriter writer)
@@ -5408,7 +5416,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceGridReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IWorldspaceGridReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.LargeReferences,
                 transl: (MutagenWriter subWriter, IWorldspaceGridReferenceGetter subItem, RecordTypeConverter? conv) =>
@@ -5426,25 +5434,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.Normal);
-            Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.WriteNullable(
+            P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.FixedDimensionsCenterCell,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WCTR));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.InteriorLighting,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.LTMP));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.EncounterZone,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XEZN));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Location,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XLCN));
@@ -5455,19 +5463,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Climate,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Water,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM2));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWater,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM3));
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.LodWaterHeight,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAM4));
@@ -5478,7 +5486,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.MapImage,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ICON),
@@ -5502,11 +5510,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: MapOffsetItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.WriteNullable(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.DistantLodMultiplier,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NAMA));
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Worldspace.Flag>.Instance.Write(
+            EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1,
@@ -5518,42 +5526,53 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Music,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.ZNAM));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.CanopyShadow,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.NNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterNoiseTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodDiffuseTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.HdLodNormalTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.UNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.WaterEnvironmentMap,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.XWEM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.OffsetData,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST),
                 overflowRecord: RecordTypes.XXXX);
         }
 
+        public static partial void CustomBinaryEndExport(
+            MutagenWriter writer,
+            IWorldspaceGetter obj);
+        public static void CustomBinaryEndExportInternal(
+            MutagenWriter writer,
+            IWorldspaceGetter obj)
+        {
+            CustomBinaryEndExport(
+                writer: writer,
+                obj: obj);
+        }
         public void Write(
             MutagenWriter writer,
             IWorldspaceGetter item,
@@ -5562,7 +5581,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.WRLD),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -5649,8 +5668,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.RNAM:
                 {
                     item.LargeReferences.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<WorldspaceGridReference>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RecordTypes.RNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: WorldspaceGridReference.TryCreateFromBinary));
@@ -5664,8 +5683,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.Name;
@@ -5673,34 +5692,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.WCTR:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FixedDimensionsCenterCell = Mutagen.Bethesda.Binary.P2Int16BinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.FixedDimensionsCenterCell = P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.FixedDimensionsCenterCell;
                 }
                 case RecordTypeInts.LTMP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InteriorLighting.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.InteriorLighting.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.InteriorLighting;
                 }
                 case RecordTypeInts.XEZN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.EncounterZone.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.EncounterZone.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.EncounterZone;
                 }
                 case RecordTypeInts.XLCN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Location.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Location.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.Location;
                 }
                 case RecordTypeInts.WNAM:
@@ -5713,34 +5723,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Climate.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Climate.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.Climate;
                 }
                 case RecordTypeInts.NAM2:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Water.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Water.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.Water;
                 }
                 case RecordTypeInts.NAM3:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWater.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.LodWater.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.LodWater;
                 }
                 case RecordTypeInts.NAM4:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.LodWaterHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.LodWaterHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.LodWaterHeight;
                 }
                 case RecordTypeInts.DNAM:
@@ -5751,8 +5752,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ICON:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MapImage = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.MapImage = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.MapImage;
                 }
@@ -5776,13 +5777,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.NAMA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DistantLodMultiplier = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.DistantLodMultiplier = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.DistantLodMultiplier;
                 }
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<Worldspace.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<Worldspace.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)Worldspace_FieldIndex.Flags;
                 }
                 case RecordTypeInts.NAM0:
@@ -5796,49 +5799,46 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.ZNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Music.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Music.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Worldspace_FieldIndex.Music;
                 }
                 case RecordTypeInts.NNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.CanopyShadow = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.CanopyShadow = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.CanopyShadow;
                 }
                 case RecordTypeInts.XNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterNoiseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.WaterNoiseTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.WaterNoiseTexture;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodDiffuseTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.HdLodDiffuseTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.HdLodDiffuseTexture;
                 }
                 case RecordTypeInts.UNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.HdLodNormalTexture = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.HdLodNormalTexture = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.HdLodNormalTexture;
                 }
                 case RecordTypeInts.XWEM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.WaterEnvironmentMap = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.WaterEnvironmentMap = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Worldspace_FieldIndex.WaterEnvironmentMap;
                 }
@@ -5851,7 +5851,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                         contentLength = checked((int)BinaryPrimitives.ReadUInt32LittleEndian(overflowHeader.Content));
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.OffsetData = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.OffsetData = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Worldspace_FieldIndex.OffsetData;
                 }
                 default:
@@ -5864,7 +5864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
-        static partial void CustomBinaryEndImport(
+        public static partial void CustomBinaryEndImport(
             MutagenFrame frame,
             IWorldspaceInternal obj);
         public static void CustomBinaryEndImportPublic(
@@ -5907,7 +5907,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => WorldspaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerStepThrough]
         IEnumerable<IMajorRecordCommonGetter> IMajorRecordGetterEnumerable.EnumerateMajorRecords() => this.EnumerateMajorRecords();
         [DebuggerStepThrough]
@@ -5946,7 +5946,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region FixedDimensionsCenterCell
         private int? _FixedDimensionsCenterCellLocation;
-        public P2Int16? FixedDimensionsCenterCell => _FixedDimensionsCenterCellLocation.HasValue ? P2Int16BinaryTranslation.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _FixedDimensionsCenterCellLocation.Value, _package.MetaData.Constants)) : default(P2Int16?);
+        public P2Int16? FixedDimensionsCenterCell => _FixedDimensionsCenterCellLocation.HasValue ? P2Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(HeaderTranslation.ExtractSubrecordMemory(_data, _FixedDimensionsCenterCellLocation.Value, _package.MetaData.Constants)) : default(P2Int16?);
         #endregion
         #region InteriorLighting
         private int? _InteriorLightingLocation;
@@ -6030,7 +6030,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region OffsetData
         private int? _OffsetDataLocation;
-        public ReadOnlyMemorySlice<Byte>? OffsetData => UtilityTranslation.ReadByteArrayWithOverflow(
+        public ReadOnlyMemorySlice<Byte>? OffsetData => PluginUtilityTranslation.ReadByteArrayWithOverflow(
             _data,
             _package.MetaData.Constants,
             _OffsetDataLocation,
@@ -6062,7 +6062,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             RecordTypeConverter? recordTypeConverter = null)
         {
             var origStream = stream;
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new WorldspaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -6263,7 +6263,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.OFST:
                 case RecordTypeInts.XXXX:
                 {
-                    _OffsetDataLocation = UtilityTranslation.HandleOverlayRecordOverflow(
+                    _OffsetDataLocation = PluginUtilityTranslation.HandleOverlayRecordOverflow(
                         existingLoc: _OffsetDataLocation,
                         stream: stream,
                         offset: offset,
@@ -6293,6 +6293,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Worldspace>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

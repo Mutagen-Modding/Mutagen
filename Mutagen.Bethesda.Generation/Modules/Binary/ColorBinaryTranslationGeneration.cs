@@ -2,13 +2,16 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class ColorBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<Color>
     {
+        public override bool NeedsGenerics => false;
+
         public override async Task<int?> ExpectedLength(ObjectGeneration objGen, TypeGeneration typeGen)
         {
             switch (BinaryType(typeGen))

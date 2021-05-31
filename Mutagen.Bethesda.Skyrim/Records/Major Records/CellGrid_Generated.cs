@@ -8,7 +8,15 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -421,7 +429,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -743,7 +753,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.XCLC)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -872,7 +882,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellGridGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellGridGetter obj)
         {
             yield break;
         }
@@ -996,10 +1006,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGridGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Write(
+            P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Point);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<CellGrid.Flag>.Instance.Write(
+            EnumBinaryTranslation<CellGrid.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1013,7 +1023,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.XCLC),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1042,8 +1052,10 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGrid item,
             MutagenFrame frame)
         {
-            item.Point = Mutagen.Bethesda.Binary.P2IntBinaryTranslation.Instance.Parse(frame: frame);
-            item.Flags = EnumBinaryTranslation<CellGrid.Flag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Point = P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Flags = EnumBinaryTranslation<CellGrid.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
     }
@@ -1073,7 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class CellGridBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellGridGetter
     {
         #region Common Routing
@@ -1109,7 +1121,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 recordTypeConverter: recordTypeConverter);
         }
 
-        public P2Int Point => P2IntBinaryTranslation.Read(_data.Slice(0x0, 0x8));
+        public P2Int Point => P2IntBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x0, 0x8));
         public CellGrid.Flag Flags => (CellGrid.Flag)BinaryPrimitives.ReadInt32LittleEndian(_data.Span.Slice(0x8, 0x4));
         partial void CustomFactoryEnd(
             OverlayStream stream,

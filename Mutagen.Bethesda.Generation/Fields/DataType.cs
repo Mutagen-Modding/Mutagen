@@ -8,6 +8,8 @@ using Loqui;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Generation;
 using Noggog;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Generation
 {

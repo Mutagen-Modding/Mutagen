@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
 namespace Mutagen.Bethesda

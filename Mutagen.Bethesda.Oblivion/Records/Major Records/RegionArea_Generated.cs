@@ -9,6 +9,15 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -503,7 +512,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -833,7 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -985,7 +996,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionAreaGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionAreaGetter obj)
         {
             yield break;
         }
@@ -1132,15 +1143,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt32BinaryTranslation.Instance.WriteNullable(
+            UInt32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.EdgeFallOff,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.RPLI));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Write(
                 writer: writer,
                 items: item.RegionPoints,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.RPLD),
-                transl: P2FloatBinaryTranslation.Instance.Write);
+                transl: P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
         }
 
         public void Write(
@@ -1201,9 +1212,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                     if (lastParsed.HasValue && lastParsed.Value >= (int)RegionArea_FieldIndex.RegionPoints) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.RegionPoints = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<P2Float>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
-                            transl: P2FloatBinaryTranslation.Instance.Parse)
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<P2Float>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
+                            transl: P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse)
                         .CastExtendedList<P2Float>();
                     return (int)RegionArea_FieldIndex.RegionPoints;
                 }
@@ -1239,7 +1250,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RegionAreaBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRegionAreaGetter
     {
         #region Common Routing
@@ -1352,7 +1363,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                         mem: stream.RemainingMemory.Slice(0, subLen),
                         package: _package,
                         itemLength: 8,
-                        getter: (s, p) => P2FloatBinaryTranslation.Read(s));
+                        getter: (s, p) => P2FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(s));
                     stream.Position += subLen;
                     return (int)RegionArea_FieldIndex.RegionPoints;
                 }

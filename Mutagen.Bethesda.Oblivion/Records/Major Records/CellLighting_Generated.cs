@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -639,7 +647,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -989,7 +999,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.XCLL)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1188,7 +1198,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ICellLightingGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ICellLightingGetter obj)
         {
             yield break;
         }
@@ -1340,27 +1350,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellLightingGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.AmbientColor);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.DirectionalColor);
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.Write(
+            ColorBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.FogColor);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FogNear);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FogFar);
             writer.Write(item.DirectionalRotationXY);
             writer.Write(item.DirectionalRotationZ);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.DirectionalFade);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.FogClipDistance);
         }
@@ -1373,7 +1383,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.XCLL),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1405,12 +1415,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             item.AmbientColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.DirectionalColor = frame.ReadColor(ColorBinaryType.Alpha);
             item.FogColor = frame.ReadColor(ColorBinaryType.Alpha);
-            item.FogNear = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogFar = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.FogNear = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogFar = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.DirectionalRotationXY = frame.ReadInt32();
             item.DirectionalRotationZ = frame.ReadInt32();
-            item.DirectionalFade = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.FogClipDistance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.DirectionalFade = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.FogClipDistance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
         }
 
     }
@@ -1440,7 +1450,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class CellLightingBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ICellLightingGetter
     {
         #region Common Routing

@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -550,6 +559,11 @@ namespace Mutagen.Bethesda.Fallout4
             this.EditorID = editorID;
         }
 
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Transform>.ToString(this);
+        }
+
         [Flags]
         public enum DATADataType
         {
@@ -610,7 +624,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -955,7 +971,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<ITransformInternal>(
+            PluginUtilityTranslation.MajorRecordParse<ITransformInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1224,7 +1240,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITransformGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITransformGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1496,21 +1512,21 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordTypeConverter: recordTypeConverter);
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.DATA)))
             {
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Position);
-                Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Write(
+                P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Rotation);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Scale);
                 if (!item.DATADataTypeState.HasFlag(Transform.DATADataType.Break0))
                 {
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.ZoomMin);
-                    Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                    FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                         writer: writer,
                         item: item.ZoomMax);
                 }
@@ -1525,7 +1541,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.TRNS),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1610,16 +1626,16 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Position = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Rotation = Mutagen.Bethesda.Binary.P3FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Scale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.Position = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Rotation = P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Scale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     if (dataFrame.Complete)
                     {
                         item.DATADataTypeState |= Transform.DATADataType.Break0;
                         return (int)Transform_FieldIndex.Scale;
                     }
-                    item.ZoomMin = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ZoomMax = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ZoomMin = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ZoomMax = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     return (int)Transform_FieldIndex.ZoomMax;
                 }
                 default:
@@ -1681,12 +1697,12 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         #region Position
         private int _PositionLocation => _DATALocation!.Value;
         private bool _Position_IsSet => _DATALocation.HasValue;
-        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_PositionLocation, 12)) : default;
+        public P3Float Position => _Position_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_PositionLocation, 12)) : default;
         #endregion
         #region Rotation
         private int _RotationLocation => _DATALocation!.Value + 0xC;
         private bool _Rotation_IsSet => _DATALocation.HasValue;
-        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation.Read(_data.Slice(_RotationLocation, 12)) : default;
+        public P3Float Rotation => _Rotation_IsSet ? P3FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(_RotationLocation, 12)) : default;
         #endregion
         #region Scale
         private int _ScaleLocation => _DATALocation!.Value + 0x18;
@@ -1724,7 +1740,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new TransformBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1801,6 +1817,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Transform>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

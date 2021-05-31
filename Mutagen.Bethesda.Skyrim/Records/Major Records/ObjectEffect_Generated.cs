@@ -6,11 +6,23 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -145,7 +157,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<Effect> Effects
         {
             get => this._Effects;
-            protected set => this._Effects = value;
+            init => this._Effects = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -869,7 +881,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = ObjectEffect_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => ObjectEffectSetterCommon.Instance.RemapLinks(this, mapping);
         public ObjectEffect(
             FormKey formKey,
@@ -911,6 +923,11 @@ namespace Mutagen.Bethesda.Skyrim
                 mod.SkyrimRelease)
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ObjectEffect>.ToString(this);
         }
 
         [Flags]
@@ -973,7 +990,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1381,7 +1400,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IObjectEffectInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IObjectEffectInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1741,7 +1760,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IObjectEffectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IObjectEffectGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -2088,7 +2107,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: ObjectBoundsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
@@ -2097,37 +2116,37 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Subrecord(writer, recordTypeConverter.ConvertToCustom(RecordTypes.ENIT)))
             {
                 writer.Write(item.EnchantmentCost);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Write(
+                EnumBinaryTranslation<ObjectEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<CastType>.Instance.Write(
+                EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.CastType,
                     length: 4);
                 writer.Write(item.EnchantmentAmount);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<TargetType>.Instance.Write(
+                EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.TargetType,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Write(
+                EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.EnchantType,
                     length: 4);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ChargeTime);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.BaseEnchantment);
                 if (!item.ENITDataTypeState.HasFlag(ObjectEffect.ENITDataType.Break0))
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: writer,
                         item: item.WornRestrictions);
                 }
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IEffectGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IEffectGetter>.Instance.Write(
                 writer: writer,
                 items: item.Effects,
                 transl: (MutagenWriter subWriter, IEffectGetter subItem, RecordTypeConverter? conv) =>
@@ -2148,7 +2167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ENCH),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -2237,8 +2256,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.Normal,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)ObjectEffect_FieldIndex.Name;
@@ -2248,25 +2267,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
                     item.EnchantmentCost = dataFrame.ReadUInt32();
-                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.CastType = EnumBinaryTranslation<CastType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                    item.Flags = EnumBinaryTranslation<ObjectEffect.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.CastType = EnumBinaryTranslation<CastType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.EnchantmentAmount = dataFrame.ReadInt32();
-                    item.TargetType = EnumBinaryTranslation<TargetType>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.ChargeTime = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.BaseEnchantment.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.TargetType = EnumBinaryTranslation<TargetType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.EnchantType = EnumBinaryTranslation<ObjectEffect.EnchantTypeEnum, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.ChargeTime = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.BaseEnchantment.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     if (dataFrame.Complete)
                     {
                         item.ENITDataTypeState |= ObjectEffect.ENITDataType.Break0;
                         return (int)ObjectEffect_FieldIndex.BaseEnchantment;
                     }
-                    item.WornRestrictions.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.WornRestrictions.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)ObjectEffect_FieldIndex.WornRestrictions;
                 }
                 case RecordTypeInts.EFID:
@@ -2274,8 +2295,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.CTDA:
                 {
                     item.Effects.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<Effect>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<Effect>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: Effect_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: Effect.TryCreateFromBinary));
@@ -2323,7 +2344,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => ObjectEffectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => ObjectEffectBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -2422,7 +2443,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new ObjectEffectBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -2520,6 +2541,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<ObjectEffect>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

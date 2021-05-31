@@ -9,6 +9,16 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -863,7 +873,7 @@ namespace Mutagen.Bethesda.Oblivion
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => RegionObjectCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionObjectCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RegionObjectSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -902,7 +912,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1283,7 +1295,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1562,7 +1574,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRegionObjectGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRegionObjectGetter obj)
         {
             yield return FormLinkInformation.Factory(obj.Object);
             yield break;
@@ -1747,42 +1759,42 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionObjectGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+            FormLinkBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Object);
             writer.Write(item.ParentIndex);
             writer.Write(item.Unknown);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Density);
             writer.Write(item.Clustering);
             writer.Write(item.MinSlope);
             writer.Write(item.MaxSlope);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<RegionObject.Flag>.Instance.Write(
+            EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 1);
             writer.Write(item.RadiusWrtPercent);
             writer.Write(item.Radius);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MinHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.MaxHeight);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Sink);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SinkVariance);
-            Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.SizeVariance);
-            Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Write(
+            P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.AngleVariance);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Unknown2);
         }
@@ -1818,26 +1830,25 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionObject item,
             MutagenFrame frame)
         {
-            item.Object.SetTo(
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                    frame: frame,
-                    defaultVal: FormKey.Null));
+            item.Object.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
             item.ParentIndex = frame.ReadUInt16();
             item.Unknown = frame.ReadInt16();
-            item.Density = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
+            item.Density = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
             item.Clustering = frame.ReadUInt8();
             item.MinSlope = frame.ReadUInt8();
             item.MaxSlope = frame.ReadUInt8();
-            item.Flags = EnumBinaryTranslation<RegionObject.Flag>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Flags = EnumBinaryTranslation<RegionObject.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.RadiusWrtPercent = frame.ReadUInt16();
             item.Radius = frame.ReadUInt16();
-            item.MinHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.MaxHeight = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.Sink = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SinkVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.SizeVariance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: frame);
-            item.AngleVariance = Mutagen.Bethesda.Binary.P3UInt16BinaryTranslation.Instance.Parse(frame: frame);
-            item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(6));
+            item.MinHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.MaxHeight = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Sink = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.SinkVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.SizeVariance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.AngleVariance = P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame);
+            item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(6));
         }
 
     }
@@ -1867,7 +1878,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class RegionObjectBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IRegionObjectGetter
     {
         #region Common Routing
@@ -1889,7 +1900,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => RegionObjectCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => RegionObjectCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => RegionObjectBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1919,7 +1930,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         public Single Sink => _data.Slice(0x1C, 0x4).Float();
         public Single SinkVariance => _data.Slice(0x20, 0x4).Float();
         public Single SizeVariance => _data.Slice(0x24, 0x4).Float();
-        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation.Read(_data.Slice(0x28, 0x6));
+        public P3UInt16 AngleVariance => P3UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Read(_data.Slice(0x28, 0x6));
         public ReadOnlyMemorySlice<Byte> Unknown2 => _data.Span.Slice(0x2E, 0x6).ToArray();
         partial void CustomFactoryEnd(
             OverlayStream stream,

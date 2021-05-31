@@ -1,8 +1,8 @@
-using Mutagen.Bethesda.Binary;
-using Noggog;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -62,6 +62,9 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class APackageTargetBinaryCreateTranslation
         {
+            public static partial void FillBinaryDataParseCustom(MutagenFrame frame, IAPackageTarget item)
+            {
+            }
         }
 
         public partial class APackageTargetBinaryWriteTranslation
@@ -102,6 +105,10 @@ namespace Mutagen.Bethesda.Skyrim
                         throw new NotImplementedException();
                 }
                 writer.Write(item.CountOrDistance);
+            }
+
+            public static partial void WriteBinaryDataParseCustom(MutagenWriter writer, IAPackageTargetGetter item)
+            {
             }
         }
 

@@ -1,11 +1,13 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -67,7 +69,7 @@ namespace Mutagen.Bethesda.Skyrim
                 textures[layer] = BinaryStringUtility.ProcessWholeToZString(subRec.Content);
             }
 
-            static partial void FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryCloudAlphasCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudAlphas(frame, item.Clouds);
             }
@@ -87,7 +89,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryCloudColorsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudColors(frame, item.Clouds);
             }
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryCloudsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryCloudsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudYSpeeds(frame, item.Clouds);
             }
@@ -123,7 +125,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryCloudXSpeedsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryCloudXSpeeds(frame, item.Clouds);
             }
@@ -137,7 +139,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryDisabledCloudLayersCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 FillBinaryDisabledCloudLayers(frame, item.Clouds);
             }
@@ -155,9 +157,13 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryDirectionalAmbientLightingColorsCustom(MutagenFrame frame, IWeatherInternal item)
+            public static partial void FillBinaryDirectionalAmbientLightingColorsCustom(MutagenFrame frame, IWeatherInternal item)
             {
                 item.DirectionalAmbientLightingColors = GetBinaryDirectionalAmbientLightingColors(frame);
+            }
+
+            public static partial void FillBinaryCloudTexturesParseCustom(MutagenFrame frame, IWeatherInternal item)
+            {
             }
 
             public static WeatherAmbientColorSet GetBinaryDirectionalAmbientLightingColors(MutagenFrame frame)
@@ -211,7 +217,7 @@ namespace Mutagen.Bethesda.Skyrim
                 return (byte)Math.Round((f * 10 * 127) + 127);
             }
 
-            static partial void WriteBinaryCloudTexturesParseCustom(MutagenWriter writer, IWeatherGetter item)
+            public static partial void WriteBinaryCloudTexturesParseCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 var cloudTex = item.CloudTextures;
                 for (int i = 0; i < cloudTex.Length; i++)
@@ -224,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryCloudsCustom(MutagenWriter writer, IWeatherGetter item)
+            public static partial void WriteBinaryCloudsCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 bool HasAny(Span<float?> span)
                 {
@@ -326,8 +332,21 @@ namespace Mutagen.Bethesda.Skyrim
             }
 
             // Other partials handled in clouds custom ^
+            #region Unused
+            public static partial void WriteBinaryCloudAlphasCustom(MutagenWriter writer, IWeatherGetter item)
+            {
+            }
 
-            static partial void WriteBinaryDisabledCloudLayersCustom(MutagenWriter writer, IWeatherGetter item)
+            public static partial void WriteBinaryCloudColorsCustom(MutagenWriter writer, IWeatherGetter item)
+            {
+            }
+
+            public static partial void WriteBinaryCloudXSpeedsCustom(MutagenWriter writer, IWeatherGetter item)
+            {
+            }
+            #endregion
+
+            public static partial void WriteBinaryDisabledCloudLayersCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 var clouds = item.Clouds;
                 Span<bool?> enabled = stackalloc bool?[WeatherBinaryCreateTranslation.NumLayers];
@@ -354,7 +373,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(MutagenWriter writer, IWeatherGetter item)
+            public static partial void WriteBinaryDirectionalAmbientLightingColorsCustom(MutagenWriter writer, IWeatherGetter item)
             {
                 if (!item.DirectionalAmbientLightingColors.TryGet(out var colors)) return;
                 using (HeaderExport.Subrecord(writer, RecordTypes.DALC))

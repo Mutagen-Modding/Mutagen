@@ -1,7 +1,5 @@
-﻿using Noggog;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Mutagen.Bethesda.Plugins;
+using Noggog;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 

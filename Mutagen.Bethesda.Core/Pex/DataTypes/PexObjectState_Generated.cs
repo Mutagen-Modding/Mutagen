@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Pex
         public ExtendedList<PexObjectNamedFunction> Functions
         {
             get => this._Functions;
-            protected set => this._Functions = value;
+            init => this._Functions = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

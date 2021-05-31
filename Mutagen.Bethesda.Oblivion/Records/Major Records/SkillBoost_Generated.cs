@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -417,7 +425,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -735,7 +745,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -864,7 +874,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISkillBoostGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISkillBoostGetter obj)
         {
             yield break;
         }
@@ -988,7 +998,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoostGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ActorValue>.Instance.Write(
+            EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Skill,
                 length: 1);
@@ -1026,7 +1036,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillBoost item,
             MutagenFrame frame)
         {
-            item.Skill = EnumBinaryTranslation<ActorValue>.Instance.Parse(frame: frame.SpawnWithLength(1));
+            item.Skill = EnumBinaryTranslation<ActorValue, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 1);
             item.Boost = frame.ReadInt8();
         }
 
@@ -1057,7 +1069,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class SkillBoostBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ISkillBoostGetter
     {
         #region Common Routing

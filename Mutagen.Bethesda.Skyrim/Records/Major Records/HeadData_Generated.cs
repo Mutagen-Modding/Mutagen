@@ -8,8 +8,19 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -46,7 +57,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<HeadPartReference> HeadParts
         {
             get => this._HeadParts;
-            protected set => this._HeadParts = value;
+            init => this._HeadParts = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -71,7 +82,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<INpcGetter>> RacePresets
         {
             get => this._RacePresets;
-            protected set => this._RacePresets = value;
+            init => this._RacePresets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -85,7 +96,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<IColorRecordGetter>> AvailableHairColors
         {
             get => this._AvailableHairColors;
-            protected set => this._AvailableHairColors = value;
+            init => this._AvailableHairColors = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -99,7 +110,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<IFormLinkGetter<ITextureSetGetter>> FaceDetails
         {
             get => this._FaceDetails;
-            protected set => this._FaceDetails = value;
+            init => this._FaceDetails = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -123,7 +134,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<TintAssets> TintMasks
         {
             get => this._TintMasks;
-            protected set => this._TintMasks = value;
+            init => this._TintMasks = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1038,7 +1049,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => HeadDataSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1077,7 +1088,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1463,7 +1476,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1754,7 +1767,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IHeadDataGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IHeadDataGetter obj)
         {
             foreach (var item in obj.HeadParts.SelectMany(f => f.ContainedFormLinks))
             {
@@ -2063,7 +2076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IHeadPartReferenceGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IHeadPartReferenceGetter>.Instance.Write(
                 writer: writer,
                 items: item.HeadParts,
                 transl: (MutagenWriter subWriter, IHeadPartReferenceGetter subItem, RecordTypeConverter? conv) =>
@@ -2081,41 +2094,41 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Write(
                 writer: writer,
                 items: item.RacePresets,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<INpcGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AvailableHairColors,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IColorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM));
                 });
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Write(
                 writer: writer,
                 items: item.FaceDetails,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ITextureSetGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem,
                         header: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM));
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.DefaultFaceTexture,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DFTM));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintAssetsGetter>.Instance.Write(
                 writer: writer,
                 items: item.TintMasks,
                 transl: (MutagenWriter subWriter, ITintAssetsGetter subItem, RecordTypeConverter? conv) =>
@@ -2186,8 +2199,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.HeadParts) return ParseResult.Stop;
                     item.HeadParts.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<HeadPartReference>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: HeadPartReference_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: HeadPartReference.TryCreateFromBinary));
@@ -2203,8 +2216,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.RacePresets) return ParseResult.Stop;
                     item.RacePresets.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<INpcGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.RPRM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.RacePresets;
@@ -2213,8 +2226,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.AvailableHairColors) return ParseResult.Stop;
                     item.AvailableHairColors.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IColorRecordGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.AHCM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.AvailableHairColors;
@@ -2223,8 +2236,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.FaceDetails) return ParseResult.Stop;
                     item.FaceDetails.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ITextureSetGetter>>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.FTSM),
                             transl: FormLinkBinaryTranslation.Instance.Parse));
                     return (int)HeadData_FieldIndex.FaceDetails;
@@ -2233,10 +2246,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.DefaultFaceTexture) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.DefaultFaceTexture.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.DefaultFaceTexture.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)HeadData_FieldIndex.DefaultFaceTexture;
                 }
                 case RecordTypeInts.TINI:
@@ -2249,8 +2259,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)HeadData_FieldIndex.TintMasks) return ParseResult.Stop;
                     item.TintMasks.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<TintAssets>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintAssets>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: TintAssets_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintAssets.TryCreateFromBinary));
@@ -2296,7 +2306,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class HeadDataBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IHeadDataGetter
     {
         #region Common Routing
@@ -2318,7 +2328,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => HeadDataCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => HeadDataBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

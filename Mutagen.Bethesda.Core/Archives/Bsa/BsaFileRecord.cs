@@ -2,11 +2,12 @@ using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.IO;
-using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
+using Noggog.Streams;
+using Noggog;
 
-namespace Mutagen.Bethesda.Bsa
+namespace Mutagen.Bethesda.Archives.Bsa
 {
     class BsaFileRecord : IArchiveFile
     {
@@ -16,13 +17,13 @@ namespace Mutagen.Bethesda.Bsa
         internal readonly int _index;
         internal readonly int _overallIndex;
         internal readonly BsaFileNameBlock? _nameBlock;
-        internal readonly Lazy<string?> _name;
+        internal readonly Lazy<FileName?> _name;
         internal Lazy<(uint Size, uint OnDisk, uint Original)> _size;
 
         public ulong Hash => BinaryPrimitives.ReadUInt64LittleEndian(_headerData);
         protected uint RawSize => BinaryPrimitives.ReadUInt32LittleEndian(_headerData.Slice(0x8));
         public uint Offset => BinaryPrimitives.ReadUInt32LittleEndian(_headerData.Slice(0xC));
-        public string? Name => _name.Value;
+        public FileName? Name => _name.Value;
         public uint Size => _size.Value.Size;
 
         public bool FlipCompression => (RawSize & (0x1 << 30)) > 0;
@@ -42,7 +43,7 @@ namespace Mutagen.Bethesda.Bsa
             _headerData = data;
             _nameBlock = nameBlock;
             Folder = folderRecord;
-            _name = new Lazy<string?>(GetName, System.Threading.LazyThreadSafetyMode.PublicationOnly);
+            _name = new Lazy<FileName?>(GetName, System.Threading.LazyThreadSafetyMode.PublicationOnly);
 
             // Will be replaced if CopyDataTo is called before value is created
             _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(
@@ -60,7 +61,7 @@ namespace Mutagen.Bethesda.Bsa
             get
             {
                 if (Name == null) return string.Empty;
-                return string.IsNullOrEmpty(Folder.Path) ? Name : System.IO.Path.Combine(Folder.Path, Name);
+                return Folder.Path.IsNullOrWhitespace() ? Name.Value.String : System.IO.Path.Combine(Folder.Path, Name.Value.String);
             }
         }
 
@@ -73,9 +74,9 @@ namespace Mutagen.Bethesda.Bsa
             }
         }
 
-        public void CopyDataTo(Stream output)
+        public Stream AsStream()
         {
-            using var rdr = BSA.GetStream();
+            var rdr = BSA.GetStream();
             rdr.BaseStream.Position = Offset;
 
             (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
@@ -88,66 +89,34 @@ namespace Mutagen.Bethesda.Bsa
             {
                 if (Compressed && size.Size != size.OnDisk)
                 {
-                    using var r = LZ4Stream.Decode(rdr.BaseStream);
-                    r.CopyToLimit(output, size.Original);
+                    return new FramedStream(
+                        LZ4Stream.Decode(rdr.BaseStream),
+                        size.Original);
                 }
                 else
                 {
-                    rdr.BaseStream.CopyToLimit(output, size.OnDisk);
+                    return new FramedStream(rdr.BaseStream, size.OnDisk);
                 }
             }
             else
             {
                 if (Compressed)
                 {
-                    using var z = new InflaterInputStream(rdr.BaseStream);
-                    z.CopyToLimit(output, size.Original);
+                    return new FramedStream(
+                        new InflaterInputStream(rdr.BaseStream)
+                        {
+                            IsStreamOwner = true
+                        }, 
+                        size.Original);
                 }
                 else
                 {
-                    rdr.BaseStream.CopyToLimit(output, size.OnDisk);
+                    return new FramedStream(rdr.BaseStream, size.OnDisk);
                 }
             }
         }
 
-        public async ValueTask CopyDataToAsync(Stream output)
-        {
-            using var rdr = BSA.GetStream();
-            rdr.BaseStream.Position = Offset;
-
-            (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
-            if (!_size.IsValueCreated)
-            {
-                _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
-            }
-
-            if (BSA.HeaderType == BsaVersionType.SSE)
-            {
-                if (Compressed && size.Size != size.OnDisk)
-                {
-                    using var r = LZ4Stream.Decode(rdr.BaseStream);
-                    await r.CopyToLimitAsync(output, size.Original).ConfigureAwait(false);
-                }
-                else
-                {
-                    await rdr.BaseStream.CopyToLimitAsync(output, size.OnDisk).ConfigureAwait(false);
-                }
-            }
-            else
-            {
-                if (Compressed)
-                {
-                    await using var z = new InflaterInputStream(rdr.BaseStream);
-                    await z.CopyToLimitAsync(output, size.Original).ConfigureAwait(false);
-                }
-                else
-                {
-                    await rdr.BaseStream.CopyToLimitAsync(output, size.OnDisk).ConfigureAwait(false);
-                }
-            }
-        }
-
-        private string? GetName()
+        private FileName? GetName()
         {
             if (_nameBlock == null) return null;
             var names = _nameBlock.Names.Value;
@@ -196,6 +165,24 @@ namespace Mutagen.Bethesda.Bsa
             {
                 return (Size: onDiskSize, OnDisk: onDiskSize, Original: originalSize);
             }
+        }
+
+        public byte[] GetBytes()
+        {
+            using var s = AsStream();
+            byte[] ret = new byte[s.Remaining()];
+            s.Read(ret);
+            return ret;
+        }
+
+        public ReadOnlySpan<byte> GetSpan()
+        {
+            return GetBytes();
+        }
+
+        public ReadOnlyMemorySlice<byte> GetMemorySlice()
+        {
+            return GetBytes();
         }
     }
 }

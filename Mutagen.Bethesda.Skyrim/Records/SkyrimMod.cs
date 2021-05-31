@@ -7,6 +7,14 @@ using Mutagen.Bethesda.Internals;
 using Noggog;
 using System.IO;
 using System.Buffers.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins;
+using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -52,7 +60,7 @@ namespace Mutagen.Bethesda.Skyrim
                         gameConstants,
                         streams);
                 });
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -86,7 +94,7 @@ namespace Mutagen.Bethesda.Skyrim
                             streams);
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -129,7 +137,7 @@ namespace Mutagen.Bethesda.Skyrim
                         streams[(int)counter + 1] = trib;
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -189,7 +197,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var worldGroupTrib = new MemoryTributary();
                     var worldGroupWriter = new MutagenWriter(worldGroupTrib, bundle, dispose: false);
                     worldGroupWriter.Write(RecordTypes.GRUP.TypeInt);
-                    worldGroupWriter.Write(UtilityTranslation.Zeros.Slice(0, gameConstants.GroupConstants.LengthLength));
+                    worldGroupWriter.Write(Zeros.Slice(0, gameConstants.GroupConstants.LengthLength));
                     FormKeyBinaryTranslation.Instance.Write(
                         worldGroupWriter,
                         worldspace.FormKey);
@@ -216,7 +224,7 @@ namespace Mutagen.Bethesda.Skyrim
                     worldGroupWriter.Write((uint)(subStreams.NotNull().Select(s => s.Length).Sum()));
                     streams[worldspaceCounter + 1] = new CompositeReadStream(worldTrib.AsEnumerable().And(subStreams), resetPositions: true);
                 });
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -250,7 +258,7 @@ namespace Mutagen.Bethesda.Skyrim
                             streams);
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -293,7 +301,7 @@ namespace Mutagen.Bethesda.Skyrim
                         streams[(int)counter + 1] = trib;
                     });
                 }
-                UtilityTranslation.CompileSetGroupLength(streams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(streams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(streams, resetPositions: true);
             }
 
@@ -333,7 +341,7 @@ namespace Mutagen.Bethesda.Skyrim
                     }
                     subStreams[(int)counter + 1] = trib;
                 });
-                UtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
+                PluginUtilityTranslation.CompileSetGroupLength(subStreams, groupBytes);
                 streamDepositArray[targetIndex] = new CompositeReadStream(subStreams, resetPositions: true);
             }
 

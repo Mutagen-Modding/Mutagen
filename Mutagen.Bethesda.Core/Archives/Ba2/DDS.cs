@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Ba2
+namespace Mutagen.Bethesda.Archives.Ba2
 {
     /*
      * Copied from https://raw.githubusercontent.com/AlexxEG/BSA_Browser/master/Sharp.BSA.BA2/BA2Util/DDS.cs

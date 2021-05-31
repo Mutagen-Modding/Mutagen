@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
 
 namespace Mutagen.Bethesda
 {
@@ -76,11 +78,11 @@ namespace Mutagen.Bethesda
             }
 
             // Compile list of things to duplicate
-            HashSet<FormLinkInformation> identifiedLinks = new();
+            HashSet<IFormLinkGetter> identifiedLinks = new();
             HashSet<FormKey> passedLinks = new();
             var implicits = Implicits.Get(modToDuplicateInto.GameRelease);
 
-            void AddAllLinks(FormLinkInformation link)
+            void AddAllLinks(IFormLinkGetter link)
             {
                 if (link.FormKey.IsNull) return;
                 if (!passedLinks.Add(link.FormKey)) return;
@@ -124,7 +126,7 @@ namespace Mutagen.Bethesda
                 mapping[rec.Record.FormKey] = dup.FormKey;
 
                 // ToDo
-                // Move this out of loop, and remove off a new IEnumerable<FormLinkInformation> call
+                // Move this out of loop, and remove off a new IEnumerable<IFormLinkGetter> call
                 modToDuplicateInto.Remove(identifiedRec.FormKey, identifiedRec.Type);
             }
 

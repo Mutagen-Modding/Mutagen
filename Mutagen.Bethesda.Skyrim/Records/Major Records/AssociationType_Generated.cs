@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -464,6 +473,11 @@ namespace Mutagen.Bethesda.Skyrim
             this.EditorID = editorID;
         }
 
+        public override string ToString()
+        {
+            return MajorRecordPrinter<AssociationType>.ToString(this);
+        }
+
         #region Equals and Hash
         public override bool Equals(object? obj)
         {
@@ -519,7 +533,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -854,7 +870,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IAssociationTypeInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1109,7 +1125,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IAssociationTypeGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IAssociationTypeGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1382,7 +1398,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 maleMarker: RecordTypes.MCHT,
                 femaleMarker: RecordTypes.FCHT,
                 transl: StringBinaryTranslation.Instance.WriteNullable);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<AssociationType.Flag>.Instance.Write(
+            EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4,
@@ -1397,7 +1413,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.ASTP),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -1481,7 +1497,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MPRT:
                 case RecordTypeInts.FPRT:
                 {
-                    item.ParentTitle = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                    item.ParentTitle = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MPRT,
                         femaleMarker: RecordTypes.FPRT,
@@ -1492,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.MCHT:
                 case RecordTypeInts.FCHT:
                 {
-                    item.Title = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<String>(
+                    item.Title = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<String>(
                         frame: frame,
                         maleMarker: RecordTypes.MCHT,
                         femaleMarker: RecordTypes.FCHT,
@@ -1503,7 +1519,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case RecordTypeInts.DATA:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Flags = EnumBinaryTranslation<AssociationType.Flag>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Flags = EnumBinaryTranslation<AssociationType.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)AssociationType_FieldIndex.Flags;
                 }
                 default:
@@ -1593,7 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new AssociationTypeBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -1687,6 +1705,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<AssociationType>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

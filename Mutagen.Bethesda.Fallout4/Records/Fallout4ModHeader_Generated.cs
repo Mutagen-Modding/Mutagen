@@ -6,11 +6,20 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -99,7 +108,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
-            protected set => this._MasterReferences = value;
+            init => this._MasterReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -138,7 +147,7 @@ namespace Mutagen.Bethesda.Fallout4
         public ExtendedList<TransientType> TransientTypes
         {
             get => this._TransientTypes;
-            protected set => this._TransientTypes = value;
+            init => this._TransientTypes = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -1123,7 +1132,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4ModHeader_Registration.TriggeringRecordType;
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => Fallout4ModHeaderSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -1162,7 +1171,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1544,7 +1555,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
-            UtilityTranslation.RecordParse(
+            PluginUtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1894,7 +1905,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IFallout4ModHeaderGetter obj)
         {
             if (obj.OverriddenForms.TryGet(out var OverriddenFormsItem))
             {
@@ -2190,24 +2201,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
     {
         public readonly static Fallout4ModHeaderBinaryWriteTranslation Instance = new Fallout4ModHeaderBinaryWriteTranslation();
 
-        static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            IFallout4ModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            IFallout4ModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IFallout4ModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -2227,20 +2225,20 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: StatsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
@@ -2248,22 +2246,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             Fallout4ModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
                 writer: writer,
                 item: item);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.OverriddenForms,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.ONAM),
                 overflowRecord: RecordTypes.XXXX,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IFallout4MajorRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Screenshot,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SCRN));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITransientTypeGetter>.Instance.Write(
                 writer: writer,
                 items: item.TransientTypes,
                 transl: (MutagenWriter subWriter, ITransientTypeGetter subItem, RecordTypeConverter? conv) =>
@@ -2274,14 +2272,27 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                         writer: subWriter,
                         recordTypeConverter: conv);
                 });
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.INTV,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INTV));
-            Mutagen.Bethesda.Binary.Int32BinaryTranslation.Instance.WriteNullable(
+            Int32BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.INCC,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.INCC));
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IFallout4ModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IFallout4ModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
+                writer: writer,
+                item: item);
         }
 
         public void Write(
@@ -2292,7 +2303,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 WriteEmbedded(
                     item: item,
@@ -2325,7 +2336,9 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<Fallout4ModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
             item.FormVersion = frame.ReadUInt16();
@@ -2351,28 +2364,28 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.TypeOffsets = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Fallout4ModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Deleted = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Fallout4ModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Author = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Fallout4ModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Fallout4ModHeader_FieldIndex.Description;
                 }
@@ -2393,8 +2406,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     }
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.OverriddenForms = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IFallout4MajorRecordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IFallout4MajorRecordGetter>>();
                     return (int)Fallout4ModHeader_FieldIndex.OverriddenForms;
@@ -2402,14 +2415,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.SCRN:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Screenshot = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Screenshot = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Fallout4ModHeader_FieldIndex.Screenshot;
                 }
                 case RecordTypeInts.TNAM:
                 {
                     item.TransientTypes.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<TransientType>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TransientType>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: RecordTypes.TNAM,
                             recordTypeConverter: recordTypeConverter,
                             transl: TransientType.TryCreateFromBinary));
@@ -2418,7 +2431,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.INTV:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.INTV = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.INTV = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)Fallout4ModHeader_FieldIndex.INTV;
                 }
                 case RecordTypeInts.INCC:
@@ -2433,7 +2446,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
         }
 
-        static partial void FillBinaryMasterReferencesCustom(
+        public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
             IFallout4ModHeader item);
 
@@ -2464,7 +2477,7 @@ namespace Mutagen.Bethesda.Fallout4
 namespace Mutagen.Bethesda.Fallout4.Internals
 {
     public partial class Fallout4ModHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IFallout4ModHeaderGetter
     {
         #region Common Routing
@@ -2486,7 +2499,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => Fallout4ModHeaderCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => Fallout4ModHeaderBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

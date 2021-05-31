@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -56,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestScriptFragment> Fragments
         {
             get => this._Fragments;
-            protected set => this._Fragments = value;
+            init => this._Fragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -70,7 +80,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<QuestFragmentAlias> Aliases
         {
             get => this._Aliases;
-            protected set => this._Aliases = value;
+            init => this._Aliases = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -650,7 +660,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             Break0 = 1
         }
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => QuestAdapterSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -687,7 +697,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1004,7 +1016,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.VMAD)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1246,7 +1258,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IQuestAdapterGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IQuestAdapterGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -1446,58 +1458,6 @@ namespace Mutagen.Bethesda.Skyrim.Internals
     {
         public new readonly static QuestAdapterBinaryWriteTranslation Instance = new QuestAdapterBinaryWriteTranslation();
 
-        static partial void WriteBinaryFragmentCountCustom(
-            MutagenWriter writer,
-            IQuestAdapterGetter item);
-
-        public static void WriteBinaryFragmentCount(
-            MutagenWriter writer,
-            IQuestAdapterGetter item)
-        {
-            WriteBinaryFragmentCountCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryFileNameCustom(
-            MutagenWriter writer,
-            IQuestAdapterGetter item);
-
-        public static void WriteBinaryFileName(
-            MutagenWriter writer,
-            IQuestAdapterGetter item)
-        {
-            WriteBinaryFileNameCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryFragmentsCustom(
-            MutagenWriter writer,
-            IQuestAdapterGetter item);
-
-        public static void WriteBinaryFragments(
-            MutagenWriter writer,
-            IQuestAdapterGetter item)
-        {
-            WriteBinaryFragmentsCustom(
-                writer: writer,
-                item: item);
-        }
-
-        static partial void WriteBinaryAliasesCustom(
-            MutagenWriter writer,
-            IQuestAdapterGetter item);
-
-        public static void WriteBinaryAliases(
-            MutagenWriter writer,
-            IQuestAdapterGetter item)
-        {
-            WriteBinaryAliasesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IQuestAdapterGetter item,
             MutagenWriter writer)
@@ -1523,6 +1483,58 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
         }
 
+        public static partial void WriteBinaryFragmentCountCustom(
+            MutagenWriter writer,
+            IQuestAdapterGetter item);
+
+        public static void WriteBinaryFragmentCount(
+            MutagenWriter writer,
+            IQuestAdapterGetter item)
+        {
+            WriteBinaryFragmentCountCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFileNameCustom(
+            MutagenWriter writer,
+            IQuestAdapterGetter item);
+
+        public static void WriteBinaryFileName(
+            MutagenWriter writer,
+            IQuestAdapterGetter item)
+        {
+            WriteBinaryFileNameCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryFragmentsCustom(
+            MutagenWriter writer,
+            IQuestAdapterGetter item);
+
+        public static void WriteBinaryFragments(
+            MutagenWriter writer,
+            IQuestAdapterGetter item)
+        {
+            WriteBinaryFragmentsCustom(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryAliasesCustom(
+            MutagenWriter writer,
+            IQuestAdapterGetter item);
+
+        public static void WriteBinaryAliases(
+            MutagenWriter writer,
+            IQuestAdapterGetter item)
+        {
+            WriteBinaryAliasesCustom(
+                writer: writer,
+                item: item);
+        }
+
         public void Write(
             MutagenWriter writer,
             IQuestAdapterGetter item,
@@ -1531,7 +1543,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.VMAD),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1594,19 +1606,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item);
         }
 
-        static partial void FillBinaryFragmentCountCustom(
+        public static partial void FillBinaryFragmentCountCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryFileNameCustom(
+        public static partial void FillBinaryFileNameCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryFragmentsCustom(
+        public static partial void FillBinaryFragmentsCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
-        static partial void FillBinaryAliasesCustom(
+        public static partial void FillBinaryAliasesCustom(
             MutagenFrame frame,
             IQuestAdapter item);
 
@@ -1642,7 +1654,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => QuestAdapterCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => QuestAdapterBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(

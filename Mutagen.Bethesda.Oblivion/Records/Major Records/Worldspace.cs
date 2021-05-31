@@ -1,19 +1,13 @@
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Loqui;
-using Loqui.Internal;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
-using Noggog.Utility;
 
 namespace Mutagen.Bethesda.Oblivion
 {
@@ -33,7 +27,7 @@ namespace Mutagen.Bethesda.Oblivion
     {
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
             {
                 try
                 {
@@ -53,7 +47,7 @@ namespace Mutagen.Bethesda.Oblivion
 
                         road?.WriteToBinary(writer);
                         topCell?.WriteToBinary(writer);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                        ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                             writer: writer,
                             items: subCells,
                             transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>
@@ -71,7 +65,7 @@ namespace Mutagen.Bethesda.Oblivion
 
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
                 try
                 {
@@ -105,8 +99,8 @@ namespace Mutagen.Bethesda.Oblivion
                                 break;
                             case 0x50555247: // "GRUP":
                                 obj.SubCells.SetTo(
-                                    Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
-                                        frame: frame,
+                                    ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                        reader: frame,
                                         triggeringRecord: RecordTypes.GRUP,
                                         transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                                 break;
@@ -144,7 +138,7 @@ namespace Mutagen.Bethesda.Oblivion
                     var groupMeta = stream.GetGroup();
                     if (!groupMeta.IsGroup || groupMeta.GroupType != (int)GroupTypeEnum.WorldChildren) return;
 
-                    if (this.FormKey != FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
+                    if (this.FormKey != Mutagen.Bethesda.Plugins.FormKey.Factory(_package.MetaData.MasterReferences!, BinaryPrimitives.ReadUInt32LittleEndian(groupMeta.ContainedRecordTypeData)))
                     {
                         throw new ArgumentException("Cell children group did not match the FormID of the parent cell.");
                     }

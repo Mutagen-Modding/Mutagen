@@ -6,11 +6,19 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -93,7 +101,7 @@ namespace Mutagen.Bethesda.Oblivion
         public ExtendedList<MasterReference> MasterReferences
         {
             get => this._MasterReferences;
-            protected set => this._MasterReferences = value;
+            init => this._MasterReferences = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -755,7 +763,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -1105,7 +1115,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseRecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.TES4)));
-            UtilityTranslation.RecordParse(
+            PluginUtilityTranslation.RecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1338,7 +1348,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IOblivionModHeaderGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IOblivionModHeaderGetter obj)
         {
             yield break;
         }
@@ -1538,24 +1548,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static OblivionModHeaderBinaryWriteTranslation Instance = new OblivionModHeaderBinaryWriteTranslation();
 
-        static partial void WriteBinaryMasterReferencesCustom(
-            MutagenWriter writer,
-            IOblivionModHeaderGetter item);
-
-        public static void WriteBinaryMasterReferences(
-            MutagenWriter writer,
-            IOblivionModHeaderGetter item)
-        {
-            WriteBinaryMasterReferencesCustom(
-                writer: writer,
-                item: item);
-        }
-
         public static void WriteEmbedded(
             IOblivionModHeaderGetter item,
             MutagenWriter writer)
         {
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Write(
+            EnumBinaryTranslation<OblivionModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Write(
                 writer,
                 item.Flags,
                 length: 4);
@@ -1573,25 +1570,38 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: StatsItem,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.TypeOffsets,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.OFST));
-            Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+            ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.Deleted,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DELE));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Author,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.CNAM),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.SNAM),
                 binaryType: StringBinaryType.NullTerminate);
             OblivionModHeaderBinaryWriteTranslation.WriteBinaryMasterReferences(
+                writer: writer,
+                item: item);
+        }
+
+        public static partial void WriteBinaryMasterReferencesCustom(
+            MutagenWriter writer,
+            IOblivionModHeaderGetter item);
+
+        public static void WriteBinaryMasterReferences(
+            MutagenWriter writer,
+            IOblivionModHeaderGetter item)
+        {
+            WriteBinaryMasterReferencesCustom(
                 writer: writer,
                 item: item);
         }
@@ -1604,7 +1614,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.TES4),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 WriteEmbedded(
                     item: item,
@@ -1637,7 +1647,9 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModHeader item,
             MutagenFrame frame)
         {
-            item.Flags = EnumBinaryTranslation<OblivionModHeader.HeaderFlag>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Flags = EnumBinaryTranslation<OblivionModHeader.HeaderFlag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
             item.FormID = frame.ReadUInt32();
             item.Version = frame.ReadInt32();
         }
@@ -1661,28 +1673,28 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case RecordTypeInts.OFST:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.TypeOffsets = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.TypeOffsets = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)OblivionModHeader_FieldIndex.TypeOffsets;
                 }
                 case RecordTypeInts.DELE:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Deleted = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.Deleted = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: frame.SpawnWithLength(contentLength));
                     return (int)OblivionModHeader_FieldIndex.Deleted;
                 }
                 case RecordTypeInts.CNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Author = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Author = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)OblivionModHeader_FieldIndex.Author;
                 }
                 case RecordTypeInts.SNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)OblivionModHeader_FieldIndex.Description;
                 }
@@ -1699,7 +1711,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
         }
 
-        static partial void FillBinaryMasterReferencesCustom(
+        public static partial void FillBinaryMasterReferencesCustom(
             MutagenFrame frame,
             IOblivionModHeader item);
 
@@ -1730,7 +1742,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class OblivionModHeaderBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IOblivionModHeaderGetter
     {
         #region Common Routing

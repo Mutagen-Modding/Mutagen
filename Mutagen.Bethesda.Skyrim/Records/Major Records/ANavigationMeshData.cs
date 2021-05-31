@@ -1,11 +1,11 @@
-﻿using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ANavigationMeshDataBinaryCreateTranslation
         {
-            static partial void FillBinaryCoverTrianglesLogicCustom(MutagenFrame frame, IANavigationMeshData item)
+            public static partial void FillBinaryCoverTrianglesLogicCustom(MutagenFrame frame, IANavigationMeshData item)
             {
                 var count = frame.ReadInt32();
                 for (int i = 0; i < count; i++)
@@ -23,13 +23,13 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void FillBinaryParentLogicCustom(MutagenFrame frame, IANavigationMeshData item)
+            public static partial void FillBinaryParentLogicCustom(MutagenFrame frame, IANavigationMeshData item)
             {
                 // Handled in Navigation Mesh parent
                 frame.Position += 8;
             }
 
-            static partial void FillBinaryNavmeshGridCustom(MutagenFrame frame, IANavigationMeshData item)
+            public static partial void FillBinaryNavmeshGridCustom(MutagenFrame frame, IANavigationMeshData item)
             {
                 item.NavmeshGrid = frame.ReadRemainingBytes();
             }
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class ANavigationMeshDataBinaryWriteTranslation
         {
-            static partial void WriteBinaryCoverTrianglesLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+            public static partial void WriteBinaryCoverTrianglesLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
             {
                 var triangles = item.Triangles;
                 var indices = new List<short>();
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryParentLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+            public static partial void WriteBinaryParentLogicCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
             {
                 switch (item)
                 {
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Skyrim
                 }
             }
 
-            static partial void WriteBinaryNavmeshGridCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
+            public static partial void WriteBinaryNavmeshGridCustom(MutagenWriter writer, IANavigationMeshDataGetter item)
             {
                 writer.Write(item.NavmeshGrid);
             }

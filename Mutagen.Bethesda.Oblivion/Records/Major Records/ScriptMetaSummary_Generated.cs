@@ -9,6 +9,14 @@ using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Oblivion.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -514,7 +522,9 @@ namespace Mutagen.Bethesda.Oblivion
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -846,7 +856,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             frame = frame.SpawnWithFinalPosition(HeaderTranslation.ParseSubrecord(
                 frame.Reader,
                 recordTypeConverter.ConvertToCustom(RecordTypes.SCHR)));
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1005,7 +1015,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IScriptMetaSummaryGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IScriptMetaSummaryGetter obj)
         {
             yield break;
         }
@@ -1133,7 +1143,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
     {
         public readonly static ScriptMetaSummaryBinaryWriteTranslation Instance = new ScriptMetaSummaryBinaryWriteTranslation();
 
-        static partial void WriteBinaryCompiledSizeCustom(
+        public static void WriteEmbedded(
+            IScriptMetaSummaryGetter item,
+            MutagenWriter writer)
+        {
+            writer.Write(item.Unknown);
+            writer.Write(item.RefCount);
+            ScriptMetaSummaryBinaryWriteTranslation.WriteBinaryCompiledSize(
+                writer: writer,
+                item: item);
+            writer.Write(item.VariableCount);
+            EnumBinaryTranslation<ScriptFields.ScriptType, MutagenFrame, MutagenWriter>.Instance.Write(
+                writer,
+                item.Type,
+                length: 4);
+        }
+
+        public static partial void WriteBinaryCompiledSizeCustom(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item);
 
@@ -1146,22 +1172,6 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 item: item);
         }
 
-        public static void WriteEmbedded(
-            IScriptMetaSummaryGetter item,
-            MutagenWriter writer)
-        {
-            writer.Write(item.Unknown);
-            writer.Write(item.RefCount);
-            ScriptMetaSummaryBinaryWriteTranslation.WriteBinaryCompiledSize(
-                writer: writer,
-                item: item);
-            writer.Write(item.VariableCount);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Write(
-                writer,
-                item.Type,
-                length: 4);
-        }
-
         public void Write(
             MutagenWriter writer,
             IScriptMetaSummaryGetter item,
@@ -1170,7 +1180,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.SCHR),
-                type: Mutagen.Bethesda.Binary.ObjectType.Subrecord))
+                type: ObjectType.Subrecord))
             {
                 WriteEmbedded(
                     item: item,
@@ -1205,10 +1215,12 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 frame: frame,
                 item: item);
             item.VariableCount = frame.ReadUInt32();
-            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType>.Instance.Parse(frame: frame.SpawnWithLength(4));
+            item.Type = EnumBinaryTranslation<ScriptFields.ScriptType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                reader: frame,
+                length: 4);
         }
 
-        static partial void FillBinaryCompiledSizeCustom(
+        public static partial void FillBinaryCompiledSizeCustom(
             MutagenFrame frame,
             IScriptMetaSummary item);
 
@@ -1239,7 +1251,7 @@ namespace Mutagen.Bethesda.Oblivion
 namespace Mutagen.Bethesda.Oblivion.Internals
 {
     public partial class ScriptMetaSummaryBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         IScriptMetaSummaryGetter
     {
         #region Common Routing

@@ -41,11 +41,13 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                 {
                     ObjectMappings.GetOrAdd(obj.ProtoGen.Protocol).GetOrAdd(def).Add(obj);
                 }
+                obj.RequiredNamespaces.Add("Mutagen.Bethesda.Plugins.Aspects");
             }
         }
 
         public override async Task GenerateInField(ObjectGeneration obj, TypeGeneration tg, FileGeneration fg, LoquiInterfaceType type)
         {
+            bool hasAspects = false;
             using (new RegionWrapper(fg, "Aspects")
             {
                 AppendExtraLine = false,
@@ -59,6 +61,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                     def.FieldActions
                         .Where(x => x.Type == type && tg.Name == x.Name)
                         .ForEach(x => x.Actions(obj, tg, fg));
+                    hasAspects = true;
                 }
             }
         }

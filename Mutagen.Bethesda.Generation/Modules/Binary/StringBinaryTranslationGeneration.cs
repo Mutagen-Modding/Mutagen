@@ -1,18 +1,21 @@
 using Loqui;
 using Loqui.Generation;
-using Mutagen.Bethesda.Binary;
-using Mutagen.Bethesda.Internals;
-using Noggog;
+using Mutagen.Bethesda.Generation.Modules.Plugin;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Strings;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Mutagen.Bethesda.Generation
+namespace Mutagen.Bethesda.Generation.Modules.Binary
 {
     public class StringBinaryTranslationGeneration : PrimitiveBinaryTranslationGeneration<string>
     {
+        public override bool NeedsGenerics => false;
+
         public override bool AllowDirectParse(
             ObjectGeneration objGen,
             TypeGeneration typeGen,
@@ -50,7 +53,7 @@ namespace Mutagen.Bethesda.Generation
             var stringType = typeGen as Mutagen.Bethesda.Generation.StringType;
             var data = typeGen.CustomData[Constants.DataKey] as MutagenFieldData;
             using (var args = new ArgsWrapper(fg,
-                $"{this.Namespace}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
+                $"{this.NamespacePrefix}StringBinaryTranslation.Instance.Write{(typeGen.Nullable ? "Nullable" : null)}"))
             {
                 args.Add($"writer: {writerAccessor}");
                 args.Add($"item: {itemAccessor}");
@@ -95,7 +98,7 @@ namespace Mutagen.Bethesda.Generation
             }
 
             List<string> extraArgs = new List<string>();
-            extraArgs.Add($"frame: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
+            extraArgs.Add($"reader: {frameAccessor}{(data.HasTrigger ? ".SpawnWithLength(contentLength)" : null)}");
             if (str.Translated.HasValue)
             {
                 extraArgs.Add($"source: {nameof(StringsSource)}.{str.Translated.Value}");
@@ -118,7 +121,7 @@ namespace Mutagen.Bethesda.Generation
                 {
                     FG = fg,
                     TypeGen = typeGen,
-                    TranslatorLine = $"{this.Namespace}StringBinaryTranslation.Instance",
+                    TranslatorLine = $"{this.NamespacePrefix}StringBinaryTranslation.Instance",
                     MaskAccessor = errorMaskAccessor,
                     ItemAccessor = itemAccessor,
                     TranslationMaskAccessor = null,
@@ -151,7 +154,7 @@ namespace Mutagen.Bethesda.Generation
             var stringType = typeGen as StringType;
             var data = typeGen.GetFieldData();
             using (var args = new ArgsWrapper(fg,
-                $"{retAccessor}{this.Namespace}StringBinaryTranslation.Instance.Parse"))
+                $"{retAccessor}{this.NamespacePrefix}StringBinaryTranslation.Instance.Parse"))
             {
                 args.Add(nodeAccessor.Access);
                 if (this.DoErrorMasks)

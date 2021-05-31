@@ -8,8 +8,18 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -71,7 +81,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<TintPreset> Presets
         {
             get => this._Presets;
-            protected set => this._Presets = value;
+            init => this._Presets = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -576,7 +586,7 @@ namespace Mutagen.Bethesda.Skyrim
         #endregion
 
         #region Mutagen
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         public void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => TintAssetsSetterCommon.Instance.RemapLinks(this, mapping);
         #endregion
 
@@ -615,7 +625,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -966,7 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -1155,7 +1167,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITintAssetsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintAssetsGetter obj)
         {
             if (obj.PresetDefault.FormKeyNullable.HasValue)
             {
@@ -1320,25 +1332,25 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.FileName,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINT),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.WriteNullable(
+            EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer,
                 item.MaskType,
                 length: 2,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINP));
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.PresetDefault,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TIND));
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<ITintPresetGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ITintPresetGetter>.Instance.Write(
                 writer: writer,
                 items: item.Presets,
                 transl: (MutagenWriter subWriter, ITintPresetGetter subItem, RecordTypeConverter? conv) =>
@@ -1408,8 +1420,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.FileName) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.FileName = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.FileName = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)TintAssets_FieldIndex.FileName;
                 }
@@ -1417,17 +1429,16 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.MaskType) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType>.Instance.Parse(frame: frame.SpawnWithLength(contentLength));
+                    item.MaskType = EnumBinaryTranslation<TintAssets.TintMaskType, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
+                        length: contentLength);
                     return (int)TintAssets_FieldIndex.MaskType;
                 }
                 case RecordTypeInts.TIND:
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.PresetDefault) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.PresetDefault.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.PresetDefault.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)TintAssets_FieldIndex.PresetDefault;
                 }
                 case RecordTypeInts.TINC:
@@ -1436,8 +1447,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintAssets_FieldIndex.Presets) return ParseResult.Stop;
                     item.Presets.SetTo(
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<TintPreset>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<TintPreset>.Instance.Parse(
+                            reader: frame,
                             triggeringRecord: TintPreset_Registration.TriggeringRecordTypes,
                             recordTypeConverter: recordTypeConverter,
                             transl: TintPreset.TryCreateFromBinary));
@@ -1475,7 +1486,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class TintAssetsBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITintAssetsGetter
     {
         #region Common Routing
@@ -1497,7 +1508,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public IEnumerable<FormLinkInformation> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
+        public IEnumerable<IFormLinkGetter> ContainedFormLinks => TintAssetsCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected object BinaryWriteTranslator => TintAssetsBinaryWriteTranslation.Instance;
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

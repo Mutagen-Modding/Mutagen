@@ -1,12 +1,14 @@
-using Loqui;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Meta;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Noggog;
 using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Skyrim
 {
@@ -35,7 +37,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class WorldspaceBinaryCreateTranslation
         {
-            static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
+            public static partial void CustomBinaryEndImport(MutagenFrame frame, IWorldspaceInternal obj)
             {
                 try
                 {
@@ -77,8 +79,8 @@ namespace Mutagen.Bethesda.Skyrim
                                     break;
                                 case 0x50555247: // "GRUP":
                                     obj.SubCells.SetTo(
-                                        Mutagen.Bethesda.Binary.ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
-                                            frame: frame,
+                                        ListBinaryTranslation<WorldspaceBlock>.Instance.Parse(
+                                            reader: frame,
                                             triggeringRecord: RecordTypes.GRUP,
                                             transl: LoquiBinaryTranslation<WorldspaceBlock>.Instance.Parse));
                                     break;
@@ -101,7 +103,7 @@ namespace Mutagen.Bethesda.Skyrim
 
         public partial class WorldspaceBinaryWriteTranslation
         {
-            static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
+            public static partial void CustomBinaryEndExport(MutagenWriter writer, IWorldspaceGetter obj)
             {
                 try
                 {
@@ -109,7 +111,7 @@ namespace Mutagen.Bethesda.Skyrim
                     var subCells = obj.SubCells;
                     if (subCells?.Count == 0
                         && topCell == null) return;
-                    using (HeaderExport.Header(writer, RecordTypes.GRUP, Mutagen.Bethesda.Binary.ObjectType.Group))
+                    using (HeaderExport.Header(writer, RecordTypes.GRUP, ObjectType.Group))
                     {
                         FormKeyBinaryTranslation.Instance.Write(
                             writer,
@@ -119,7 +121,7 @@ namespace Mutagen.Bethesda.Skyrim
                         writer.Write(obj.SubCellsUnknown);
 
                         topCell?.WriteToBinary(writer);
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
+                        ListBinaryTranslation<IWorldspaceBlockGetter>.Instance.Write(
                             writer: writer,
                             items: subCells,
                             transl: (MutagenWriter subWriter, IWorldspaceBlockGetter subItem) =>

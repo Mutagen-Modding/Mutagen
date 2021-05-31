@@ -1,9 +1,9 @@
 using BenchmarkDotNet.Attributes;
-using Mutagen.Bethesda.Binary;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Meta;
 using Noggog;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {

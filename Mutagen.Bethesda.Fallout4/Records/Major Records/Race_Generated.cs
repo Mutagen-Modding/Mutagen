@@ -6,11 +6,23 @@
 #region Usings
 using Loqui;
 using Loqui.Internal;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Fallout4;
 using Mutagen.Bethesda.Fallout4.Internals;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
+using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Strings;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -2179,7 +2191,7 @@ namespace Mutagen.Bethesda.Fallout4
 
         #region Mutagen
         public static readonly RecordType GrupRecordType = Race_Registration.TriggeringRecordType;
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         public override void RemapLinks(IReadOnlyDictionary<FormKey, FormKey> mapping) => RaceSetterCommon.Instance.RemapLinks(this, mapping);
         public Race(FormKey formKey)
         {
@@ -2214,6 +2226,11 @@ namespace Mutagen.Bethesda.Fallout4
             : this(mod.GetNextFormKey(editorID))
         {
             this.EditorID = editorID;
+        }
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Race>.ToString(this);
         }
 
         public MajorFlag MajorFlags
@@ -2280,7 +2297,9 @@ namespace Mutagen.Bethesda.Fallout4
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -2842,7 +2861,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.MajorRecordParse<IRaceInternal>(
+            PluginUtilityTranslation.MajorRecordParse<IRaceInternal>(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -3599,7 +3618,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(IRaceGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(IRaceGetter obj)
         {
             foreach (var item in base.GetContainedFormLinks(obj))
             {
@@ -4183,22 +4202,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 item: item,
                 writer: writer,
                 recordTypeConverter: recordTypeConverter);
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.AnimationSound,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.STCP));
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.WriteNullable(
+            StringBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Name,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.FULL),
                 binaryType: StringBinaryType.NullTerminate);
-            Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Write(
+            StringBinaryTranslation.Instance.Write(
                 writer: writer,
                 item: item.Description,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.DESC),
                 binaryType: StringBinaryType.NullTerminate,
                 source: StringsSource.DL);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.ActorEffect,
                 counterType: RecordTypes.SPCT,
@@ -4207,11 +4226,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 subRecordPerItem: true,
                 transl: (MutagenWriter subWriter, IFormLinkGetter<ISpellRecordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
-            Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.WriteNullable(
+            FormLinkBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Skin,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.WNAM));
@@ -4222,7 +4241,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.WriteWithCounter(
                 writer: writer,
                 items: item.Keywords,
                 counterType: RecordTypes.KSIZ,
@@ -4230,7 +4249,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -4241,13 +4260,13 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                     writer: writer,
                     recordTypeConverter: recordTypeConverter);
             }
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Write(
                 writer: writer,
                 items: item.AttachParentSlots,
                 recordType: recordTypeConverter.ConvertToCustom(RecordTypes.APPR),
                 transl: (MutagenWriter subWriter, IFormLinkGetter<IKeywordGetter> subItem, RecordTypeConverter? conv) =>
                 {
-                    Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                    FormLinkBinaryTranslation.Instance.Write(
                         writer: subWriter,
                         item: subItem);
                 });
@@ -4256,107 +4275,107 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.Height,
-                    transl: FloatBinaryTranslation.Instance.Write);
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
                 GenderedItemBinaryTranslation.Write(
                     writer: writer,
                     item: item.DefaultWeight,
-                    transl: FloatBinaryTranslation.Instance.Write);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag>.Instance.Write(
+                    transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write);
+                EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags,
                     length: 4);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AccelerationRate);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.DecelerationRate);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Size>.Instance.Write(
+                EnumBinaryTranslation<Size, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Size,
                     length: 4);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.InjuredHealthPercent);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.ShieldBipedObject,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.BearddBipedObject,
                     length: 4);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.BodyBipedObject,
                     length: 4);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AimAngleTolerance);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.FlightRadius);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularAccelerationRate);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.AngularTolerance);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<Race.Flag2>.Instance.Write(
+                EnumBinaryTranslation<Race.Flag2, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.Flags2,
                     length: 4);
-                Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Write(
+                ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.Unknown2);
-                Mutagen.Bethesda.Binary.EnumBinaryTranslation<BipedObject>.Instance.Write(
+                EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Write(
                     writer,
                     item.PipboyBipedObject,
                     length: 4);
                 writer.Write(item.XPValue);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebrisScale);
                 writer.Write(item.SeverableDebrisCount);
                 writer.Write(item.SeverableDecalCount);
-                Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Write(
+                FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebrisScale);
                 writer.Write(item.ExplodableDebrisCount);
                 writer.Write(item.ExplodableDecalCount);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableExplosion);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableDebris);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.SeverableImpactDataSet);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableExplosion);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableDebris);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableImpactDataSet);
                 writer.Write(item.OnCrippleDebrisCount);
                 writer.Write(item.OnCrippleDecalCount);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OnCrippleExplosion);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OnCrippleDebris);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.OnCrippleImpactDataSet);
-                Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Write(
+                FormLinkBinaryTranslation.Instance.Write(
                     writer: writer,
                     item: item.ExplodableSubsegmentExplosion);
             }
@@ -4370,7 +4389,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             using (HeaderExport.Header(
                 writer: writer,
                 record: recordTypeConverter.ConvertToCustom(RecordTypes.RACE),
-                type: Mutagen.Bethesda.Binary.ObjectType.Record))
+                type: ObjectType.Record))
             {
                 try
                 {
@@ -4454,25 +4473,22 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.STCP:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.AnimationSound.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.AnimationSound.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.AnimationSound;
                 }
                 case RecordTypeInts.FULL:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Name = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Name = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Race_FieldIndex.Name;
                 }
                 case RecordTypeInts.DESC:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Description = Mutagen.Bethesda.Binary.StringBinaryTranslation.Instance.Parse(
-                        frame: frame.SpawnWithLength(contentLength),
+                    item.Description = StringBinaryTranslation.Instance.Parse(
+                        reader: frame.SpawnWithLength(contentLength),
                         source: StringsSource.DL,
                         stringBinaryType: StringBinaryType.NullTerminate);
                     return (int)Race_FieldIndex.Description;
@@ -4481,8 +4497,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.SPCT:
                 {
                     item.ActorEffect = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<ISpellRecordGetter>>.Instance.ParsePerItem(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPCT),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.SPLO),
@@ -4493,10 +4509,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.WNAM:
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.Skin.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.Skin.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.Skin;
                 }
                 case RecordTypeInts.BOD2:
@@ -4508,8 +4521,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 case RecordTypeInts.KSIZ:
                 {
                     item.Keywords = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame,
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame,
                             countLengthLength: 4,
                             countRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KSIZ),
                             triggeringRecord: recordTypeConverter.ConvertToCustom(RecordTypes.KWDA),
@@ -4526,8 +4539,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     item.AttachParentSlots = 
-                        Mutagen.Bethesda.Binary.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
-                            frame: frame.SpawnWithLength(contentLength),
+                        Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IFormLinkGetter<IKeywordGetter>>.Instance.Parse(
+                            reader: frame.SpawnWithLength(contentLength),
                             transl: FormLinkBinaryTranslation.Instance.Parse)
                         .CastExtendedList<IFormLinkGetter<IKeywordGetter>>();
                     return (int)Race_FieldIndex.AttachParentSlots;
@@ -4536,77 +4549,61 @@ namespace Mutagen.Bethesda.Fallout4.Internals
                 {
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
                     var dataFrame = frame.SpawnWithLength(contentLength);
-                    item.Height = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                    item.Height = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.DefaultWeight = Mutagen.Bethesda.Binary.GenderedItemBinaryTranslation.Parse<Single>(
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    item.DefaultWeight = Mutagen.Bethesda.Plugins.Binary.Translations.GenderedItemBinaryTranslation.Parse<Single>(
                         frame: frame,
-                        transl: FloatBinaryTranslation.Instance.Parse);
-                    item.Flags = EnumBinaryTranslation<Race.Flag>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.AccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.DecelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Size = EnumBinaryTranslation<Size>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Unknown = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(16));
-                    item.InjuredHealthPercent = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.ShieldBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.BearddBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.BodyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.AimAngleTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.FlightRadius = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.AngularAccelerationRate = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.AngularTolerance = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
-                    item.Flags2 = EnumBinaryTranslation<Race.Flag2>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
-                    item.Unknown2 = Mutagen.Bethesda.Binary.ByteArrayBinaryTranslation.Instance.Parse(frame: dataFrame.SpawnWithLength(72));
-                    item.PipboyBipedObject = EnumBinaryTranslation<BipedObject>.Instance.Parse(frame: dataFrame.SpawnWithLength(4));
+                        transl: FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse);
+                    item.Flags = EnumBinaryTranslation<Race.Flag, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.AccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.DecelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Size = EnumBinaryTranslation<Size, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Unknown = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(16));
+                    item.InjuredHealthPercent = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.ShieldBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.BearddBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.BodyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.AimAngleTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.FlightRadius = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularAccelerationRate = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.AngularTolerance = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
+                    item.Flags2 = EnumBinaryTranslation<Race.Flag2, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
+                    item.Unknown2 = ByteArrayBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame.SpawnWithLength(72));
+                    item.PipboyBipedObject = EnumBinaryTranslation<BipedObject, MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: dataFrame,
+                        length: 4);
                     item.XPValue = dataFrame.ReadInt16();
-                    item.SeverableDebrisScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.SeverableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.SeverableDebrisCount = dataFrame.ReadUInt8();
                     item.SeverableDecalCount = dataFrame.ReadUInt8();
-                    item.ExplodableDebrisScale = Mutagen.Bethesda.Binary.FloatBinaryTranslation.Instance.Parse(frame: dataFrame);
+                    item.ExplodableDebrisScale = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(reader: dataFrame);
                     item.ExplodableDebrisCount = dataFrame.ReadUInt8();
                     item.ExplodableDecalCount = dataFrame.ReadUInt8();
-                    item.SeverableExplosion.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.SeverableDebris.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.SeverableImpactDataSet.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableExplosion.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableDebris.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableImpactDataSet.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.SeverableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.SeverableImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     item.OnCrippleDebrisCount = dataFrame.ReadUInt8();
                     item.OnCrippleDecalCount = dataFrame.ReadUInt8();
-                    item.OnCrippleExplosion.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.OnCrippleDebris.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.OnCrippleImpactDataSet.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
-                    item.ExplodableSubsegmentExplosion.SetTo(
-                        Mutagen.Bethesda.Binary.FormLinkBinaryTranslation.Instance.Parse(
-                            frame: frame,
-                            defaultVal: FormKey.Null));
+                    item.OnCrippleExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.OnCrippleDebris.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.OnCrippleImpactDataSet.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
+                    item.ExplodableSubsegmentExplosion.SetTo(FormLinkBinaryTranslation.Instance.Parse(reader: frame));
                     return (int)Race_FieldIndex.ExplodableSubsegmentExplosion;
                 }
                 default:
@@ -4651,7 +4648,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
-        public override IEnumerable<FormLinkInformation> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
+        public override IEnumerable<IFormLinkGetter> ContainedFormLinks => RaceCommon.Instance.GetContainedFormLinks(this);
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         protected override object BinaryWriteTranslator => RaceBinaryWriteTranslation.Instance;
         void IBinaryItem.WriteToBinary(
@@ -4927,7 +4924,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             BinaryOverlayFactoryPackage package,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            stream = UtilityTranslation.DecompressStream(stream);
+            stream = PluginUtilityTranslation.DecompressStream(stream);
             var ret = new RaceBinaryOverlay(
                 bytes: HeaderTranslation.ExtractRecordMemory(stream.RemainingMemory, package.MetaData.Constants),
                 package: package);
@@ -5067,6 +5064,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return MajorRecordPrinter<Race>.ToString(this);
+        }
 
         #region Equals and Hash
         public override bool Equals(object? obj)

@@ -8,7 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Internals;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -488,7 +497,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -828,7 +839,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -994,7 +1005,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ITintLayerGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ITintLayerGetter obj)
         {
             yield break;
         }
@@ -1127,21 +1138,21 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenWriter writer,
             RecordTypeConverter? recordTypeConverter)
         {
-            Mutagen.Bethesda.Binary.UInt16BinaryTranslation.Instance.WriteNullable(
+            UInt16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Index,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINI));
-            Mutagen.Bethesda.Binary.ColorBinaryTranslation.Instance.WriteNullable(
+            ColorBinaryTranslation.Instance.WriteNullable(
                 writer: writer,
                 item: item.Color,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINC));
-            FloatBinaryTranslation.Write(
+            FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Write(
                 writer: writer,
                 item: item.InterpolationValue,
                 integerType: FloatIntegerType.UInt,
                 multiplier: 0.01,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TINV));
-            Mutagen.Bethesda.Binary.Int16BinaryTranslation.Instance.WriteNullable(
+            Int16BinaryTranslation<MutagenFrame, MutagenWriter>.Instance.WriteNullable(
                 writer: writer,
                 item: item.Preset,
                 header: recordTypeConverter.ConvertToCustom(RecordTypes.TIAS));
@@ -1211,8 +1222,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 {
                     if (lastParsed.HasValue && lastParsed.Value >= (int)TintLayer_FieldIndex.InterpolationValue) return ParseResult.Stop;
                     frame.Position += frame.MetaData.Constants.SubConstants.HeaderLength;
-                    item.InterpolationValue = FloatBinaryTranslation.Parse(
-                        frame: frame,
+                    item.InterpolationValue = FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.Parse(
+                        reader: frame,
                         integerType: FloatIntegerType.UInt,
                         multiplier: 0.01);
                     return (int)TintLayer_FieldIndex.InterpolationValue;
@@ -1256,7 +1267,7 @@ namespace Mutagen.Bethesda.Skyrim
 namespace Mutagen.Bethesda.Skyrim.Internals
 {
     public partial class TintLayerBinaryOverlay :
-        BinaryOverlay,
+        PluginBinaryOverlay,
         ITintLayerGetter
     {
         #region Common Routing
@@ -1302,7 +1313,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         #endregion
         #region InterpolationValue
         private int? _InterpolationValueLocation;
-        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 0.01) : default(Single?);
+        public Single? InterpolationValue => _InterpolationValueLocation.HasValue ? FloatBinaryTranslation<MutagenFrame, MutagenWriter>.Instance.GetFloat(HeaderTranslation.ExtractSubrecordMemory(_data, _InterpolationValueLocation.Value, _package.MetaData.Constants), FloatIntegerType.UInt, 0.01) : default(Single?);
         #endregion
         #region Preset
         private int? _PresetLocation;

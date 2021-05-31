@@ -8,8 +8,16 @@ using Loqui;
 using Loqui.Internal;
 using Mutagen.Bethesda.Binary;
 using Mutagen.Bethesda.Internals;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Streams;
+using Mutagen.Bethesda.Plugins.Binary.Translations;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.Internals;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Skyrim.Internals;
+using Mutagen.Bethesda.Translations.Binary;
 using Noggog;
 using System;
 using System.Buffers.Binary;
@@ -47,7 +55,7 @@ namespace Mutagen.Bethesda.Skyrim
         public ExtendedList<ScenePhaseFragment> PhaseFragments
         {
             get => this._PhaseFragments;
-            protected set => this._PhaseFragments = value;
+            init => this._PhaseFragments = value;
         }
         #region Interface Members
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
@@ -468,7 +476,9 @@ namespace Mutagen.Bethesda.Skyrim
             RecordTypeConverter? recordTypeConverter = null)
         {
             var startPos = frame.Position;
-            item = CreateFromBinary(frame, recordTypeConverter);
+            item = CreateFromBinary(
+                frame: frame,
+                recordTypeConverter: recordTypeConverter);
             return startPos != frame.Position;
         }
         #endregion
@@ -762,7 +772,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             MutagenFrame frame,
             RecordTypeConverter? recordTypeConverter = null)
         {
-            UtilityTranslation.SubrecordParse(
+            PluginUtilityTranslation.SubrecordParse(
                 record: item,
                 frame: frame,
                 recordTypeConverter: recordTypeConverter,
@@ -949,7 +959,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public IEnumerable<FormLinkInformation> GetContainedFormLinks(ISceneScriptFragmentsGetter obj)
+        public IEnumerable<IFormLinkGetter> GetContainedFormLinks(ISceneScriptFragmentsGetter obj)
         {
             yield break;
         }
@@ -1110,7 +1120,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ScriptFragmentsBinaryWriteTranslation.WriteEmbedded(
                 item: item,
                 writer: writer);
-            Mutagen.Bethesda.Binary.ListBinaryTranslation<IScenePhaseFragmentGetter>.Instance.Write(
+            Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<IScenePhaseFragmentGetter>.Instance.Write(
                 writer: writer,
                 items: item.PhaseFragments,
                 countLengthLength: 2,
@@ -1170,9 +1180,9 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 item: item,
                 frame: frame);
             item.PhaseFragments.SetTo(
-                Mutagen.Bethesda.Binary.ListBinaryTranslation<ScenePhaseFragment>.Instance.Parse(
+                Mutagen.Bethesda.Plugins.Binary.Translations.ListBinaryTranslation<ScenePhaseFragment>.Instance.Parse(
                     amount: frame.ReadUInt16(),
-                    frame: frame,
+                    reader: frame,
                     transl: ScenePhaseFragment.TryCreateFromBinary));
         }
 
