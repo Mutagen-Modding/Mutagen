@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
     public record ReflectionSettingsParameters(
         Assembly Assembly,
         IObservable<IChangeSet<IModListingGetter>> DetectedLoadOrder,
-        IObservable<ILinkCache> LinkCache,
+        IObservable<ILinkCache?> LinkCache,
         Type TargetType,
         object? DefaultVal,
         ReflectionSettingsVM MainVM,
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
     {
         public static ReflectionSettingsParameters FromType(
             IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
-            IObservable<ILinkCache> linkCache,
+            IObservable<ILinkCache?> linkCache,
             Type type,
             object? defaultVal = null)
         {
@@ -41,7 +41,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters FromType<TType>(
             IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
-            IObservable<ILinkCache> linkCache,
+            IObservable<ILinkCache?> linkCache,
             TType? defaultVal = null)
             where TType : class
         {
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
             IObservable<IChangeSet<IModListingGetter>> detectedLoadOrder,
-            IObservable<ILinkCache> linkCache)
+            IObservable<ILinkCache?> linkCache)
             where TType : class
         {
             return FromType(detectedLoadOrder, linkCache, defaultVal);
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
 
         public static ReflectionSettingsParameters FromType<TType>(
             IEnumerable<IModListingGetter> detectedLoadOrder,
-            ILinkCache linkCache,
+            ILinkCache? linkCache,
             TType? defaultVal = null)
             where TType : class
         {
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
         public static ReflectionSettingsParameters CreateFrom<TType>(
             TType defaultVal,
             IEnumerable<IModListingGetter> detectedLoadOrder,
-            ILinkCache linkCache)
+            ILinkCache? linkCache)
             where TType : class
         {
             return FromType(detectedLoadOrder, linkCache, defaultVal);

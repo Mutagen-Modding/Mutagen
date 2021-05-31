@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
     public class FormLinkSettingsVM : SettingsNodeVM, IBasicSettingsNodeVM
     {
         private readonly Type _targetType;
-        private readonly IObservable<ILinkCache> _linkCache;
+        private readonly IObservable<ILinkCache?> _linkCache;
         private FormKey _defaultVal;
 
         private readonly ObservableAsPropertyHelper<ILinkCache?> _LinkCache;
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
         private readonly ObservableAsPropertyHelper<string> _DisplayName;
         public string DisplayName => _DisplayName.Value;
 
-        public FormLinkSettingsVM(IObservable<ILinkCache> linkCache, FieldMeta fieldMeta, Type targetType, FormKey defaultVal) 
+        public FormLinkSettingsVM(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, FormKey defaultVal) 
             : base(fieldMeta)
         {
             _targetType = targetType;
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             base.WrapUp();
         }
 
-        public static FormLinkSettingsVM Factory(IObservable<ILinkCache> linkCache, FieldMeta fieldMeta, Type targetType, object? defaultVal)
+        public static FormLinkSettingsVM Factory(IObservable<ILinkCache?> linkCache, FieldMeta fieldMeta, Type targetType, object? defaultVal)
         {
             FormKey formKey = FormKey.Null;
             if (defaultVal != null)
