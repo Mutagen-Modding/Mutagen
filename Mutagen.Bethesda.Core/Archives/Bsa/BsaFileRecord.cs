@@ -181,7 +181,18 @@ namespace Mutagen.Bethesda.Archives.Bsa
                     Path);
             }
             byte[] ret = new byte[remaining];
-            s.Read(ret);
+            try
+            {
+                s.Read(ret);
+            }
+            catch (Exception e)
+            {
+                throw ArchiveException.Enrich(
+                    e,
+                    BSA.FilePath,
+                    Folder.Path,
+                    Path);
+            }
             return ret;
         }
 

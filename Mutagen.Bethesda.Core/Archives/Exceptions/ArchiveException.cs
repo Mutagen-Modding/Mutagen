@@ -136,6 +136,59 @@ namespace Mutagen.Bethesda.Archives.Exceptions
                 innerException: ex);
         }
 
+        public static ArchiveException Enrich(Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+        {
+            if (ex is ArchiveException archiveException)
+            {
+                if (archiveFilePath != null)
+                {
+                    archiveException.ArchiveFilePath = archiveFilePath;
+                }
+                if (folderAccessed != null)
+                {
+                    archiveException.InternalFolderAccessed = folderAccessed;
+                }
+                if (fileAccessed != null)
+                {
+                    archiveException.InternalFileAccessed = fileAccessed;
+                }
+                return archiveException;
+            }
+
+            return new ArchiveException(
+                archiveFilePath: archiveFilePath,
+                folderAccessed: folderAccessed,
+                fileAccessed: fileAccessed,
+                innerException: ex);
+        }
+
+        public static ArchiveException Enrich(string message, Exception ex, FilePath? archiveFilePath, string? folderAccessed, string? fileAccessed)
+        {
+            if (ex is ArchiveException archiveException)
+            {
+                if (archiveFilePath != null)
+                {
+                    archiveException.ArchiveFilePath = archiveFilePath;
+                }
+                if (folderAccessed != null)
+                {
+                    archiveException.InternalFolderAccessed = folderAccessed;
+                }
+                if (fileAccessed != null)
+                {
+                    archiveException.InternalFileAccessed = fileAccessed;
+                }
+                return archiveException;
+            }
+
+            return new ArchiveException(
+                archiveFilePath: archiveFilePath,
+                folderAccessed: folderAccessed,
+                fileAccessed: fileAccessed,
+                message: message,
+                innerException: ex);
+        }
+
         #endregion
 
         public override string ToString()
