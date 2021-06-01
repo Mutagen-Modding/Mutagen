@@ -22,11 +22,11 @@ namespace Mutagen.Bethesda.Archives.Bsa
         public uint TotalFileNameLength { get; }
         public uint TotalFolderNameLength { get; }
 
-        public BsaVersionType HeaderType { get; private set; }
+        public BsaVersionType HeaderType { get; }
 
-        public BsaArchiveFlags ArchiveFlags { get; private set; }
+        public BsaArchiveFlags ArchiveFlags { get; }
 
-        public BsaFileFlags FileFlags { get; private set; }
+        public BsaFileFlags FileFlags { get; }
 
         public IEnumerable<IArchiveFile> Files => _folders.Value.SelectMany(f => f.Files);
 
@@ -39,19 +39,22 @@ namespace Mutagen.Bethesda.Archives.Bsa
         public bool CompressedByDefault => ArchiveFlags.HasFlag(BsaArchiveFlags.Compressed);
 
         public bool Bit9Set => ArchiveFlags.HasFlag(BsaArchiveFlags.HasFileNameBlobs);
+        
+        public FilePath? FilePath { get; }
 
         public bool HasNameBlobs
         {
             get
             {
-                if (HeaderType == BsaVersionType.FO3 || HeaderType == BsaVersionType.SSE) return Bit9Set;
+                if (HeaderType is BsaVersionType.FO3 or BsaVersionType.SSE) return Bit9Set;
                 return false;
             }
         }
 
-        public BsaReader(FilePath filename)
-            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public BsaReader(FilePath path)
+            : this(() => File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
+            FilePath = path;
         }
 
         public BsaReader(Func<Stream> streamGetter)

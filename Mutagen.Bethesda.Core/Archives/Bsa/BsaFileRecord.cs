@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
 using Noggog.Streams;
 using Noggog;
+using Mutagen.Bethesda.Archives.Exceptions;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -170,7 +171,16 @@ namespace Mutagen.Bethesda.Archives.Bsa
         public byte[] GetBytes()
         {
             using var s = AsStream();
-            byte[] ret = new byte[s.Remaining()];
+            var remaining = s.Remaining();
+            if (remaining > int.MaxValue)
+            {
+                throw new ArchiveException(
+                    $"File claimed it was bigger than what a byte array can hold: {remaining} > {int.MaxValue}",
+                    BSA.FilePath,
+                    Folder.Path,
+                    Path);
+            }
+            byte[] ret = new byte[remaining];
             s.Read(ret);
             return ret;
         }
