@@ -71,7 +71,7 @@
     <Compile Include="Archives\Bsa\BsaUtility.cs" />
     <Compile Include="Archives\Bsa\BsaVersionType.cs" />
     <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
-    <Compile Include="Archives\Exceptions\BsaException.cs" />
+    <Compile Include="Archives\Exceptions\ArchiveException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
