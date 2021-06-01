@@ -15,8 +15,6 @@ namespace Mutagen.Bethesda.UnitTests.Archives
 {
     public class Archive_Tests
     {
-        public static FilePath TestBsa = new FilePath("../../../Archives/test.bsa");
-        
         private void SetUpIni()
         {
             Archive.FileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
@@ -208,16 +206,5 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
                 });
         }
         #endregion
-
-        [Fact]
-        public void TryGetFolder_CaseInsensitive()
-        {
-            var archive = Archive.CreateReader(GameRelease.SkyrimSE, TestBsa);
-            archive.TryGetFolder("derp\\some_FoldeR", out var folder)
-                .Should().BeTrue();
-            if (folder == null) throw new NullReferenceException();
-            folder.Files.Should().HaveCount(1);
-            folder.Files.First().Path.Should().Be("derp\\some_folder\\someotherfile.txt");
-        }
     }
 }
