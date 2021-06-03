@@ -88,6 +88,29 @@ namespace Mutagen.Bethesda.Archives
         }
 
         /// <summary>
+        /// Enumerates all Archives for a given release that are within a given dataFolderPath.
+        /// </summary>
+        /// <param name="release">GameRelease to query for</param>
+        /// <param name="dataFolderPath">Folder to query within</param>
+        /// <returns></returns>
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
+        {
+            return GetApplicableArchivePathsInternal(release, dataFolderPath, default(ModKey?), GetPriorityOrderComparer(release));
+        }
+
+        /// <summary>
+        /// Enumerates all Archives for a given release that are within a given dataFolderPath.
+        /// </summary>
+        /// <param name="release">GameRelease to query for</param>
+        /// <param name="dataFolderPath">Folder to query within</param>
+        /// <param name="archiveOrdering">Archive ordering overload.  Empty enumerable means no ordering.</param>
+        /// <returns></returns>
+        public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
+        {
+            return GetApplicableArchivePathsInternal(release, dataFolderPath, default(ModKey?), GetPriorityOrderComparer(release, archiveOrdering));
+        }
+
+        /// <summary>
         /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
         /// This call is intended to return Archives related to one specific mod.<br/>
         /// NOTE:  It is currently a bit experimental
@@ -128,18 +151,7 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
         {
-            var iniListedArchives = GetIniListings(release).ToHashSet();
-            var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}")
-                .Where(archive =>
-                {
-                    if (iniListedArchives.Contains(archive.Name)) return true;
-                    return IsApplicable(release, modKey, archive.Name);
-                });
-            if (archiveOrdering != null)
-            {
-                return ret.OrderBy(x => x.Name, archiveOrdering);
-            }
-            return ret;
+            return GetApplicableArchivePathsInternal(release, dataFolderPath, modKey, archiveOrdering);
         }
 
         /// <summary>
@@ -166,6 +178,26 @@ namespace Mutagen.Bethesda.Archives
             if (delimIndex == -1) return false;
 
             return modKey.Name.AsSpan().Equals(nameWithoutExt.Slice(0, delimIndex), StringComparison.OrdinalIgnoreCase);
+        }
+        
+        private static IEnumerable<FilePath> GetApplicableArchivePathsInternal(GameRelease release, DirectoryPath dataFolderPath, ModKey? modKey, IComparer<FileName>? archiveOrdering)
+        {
+            var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}");
+            if (modKey != null)
+            {
+                var iniListedArchives = GetIniListings(release).ToHashSet();
+                ret = ret
+                    .Where(archive =>
+                    {
+                        if (iniListedArchives.Contains(archive.Name)) return true;
+                        return IsApplicable(release, modKey.Value, archive.Name);
+                    });
+            }
+            if (archiveOrdering != null)
+            {
+                return ret.OrderBy(x => x.Name, archiveOrdering);
+            }
+            return ret;
         }
 
         /// <summary>
