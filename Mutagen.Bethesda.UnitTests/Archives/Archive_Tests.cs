@@ -80,6 +80,18 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         }
 
         [Fact]
+        public void GetApplicableArchivePaths_NullModKey()
+        {
+            SetUpIni();
+            using var temp = Utility.GetTempFolder(nameof(Archive_Tests));
+            File.WriteAllText(Path.Combine(temp.Dir.Path, SkyrimBsa), string.Empty);
+            File.WriteAllText(Path.Combine(temp.Dir.Path, SomeExplicitListingBsa), string.Empty);
+            File.WriteAllText(Path.Combine(temp.Dir.Path, MyModBsa), string.Empty);
+            var applicable = Archive.GetApplicableArchivePaths(GameRelease.SkyrimSE, temp.Dir.Path, ModKey.Null)
+                .Should().BeEmpty();
+        }
+
+        [Fact]
         public void GetApplicableArchivePaths_BaseMod_Unordered()
         {
             SetUpIni();

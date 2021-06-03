@@ -182,6 +182,11 @@ namespace Mutagen.Bethesda.Archives
         
         private static IEnumerable<FilePath> GetApplicableArchivePathsInternal(GameRelease release, DirectoryPath dataFolderPath, ModKey? modKey, IComparer<FileName>? archiveOrdering)
         {
+            if (modKey.HasValue && modKey.Value.IsNull)
+            {
+                return Enumerable.Empty<FilePath>();
+            }
+            
             var ret = dataFolderPath.EnumerateFiles(searchPattern: $"*{GetExtension(release)}");
             if (modKey != null)
             {
