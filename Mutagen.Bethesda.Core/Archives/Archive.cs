@@ -88,7 +88,9 @@ namespace Mutagen.Bethesda.Archives
         }
 
         /// <summary>
-        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
+        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
+        /// This call is intended to return Archives related to one specific mod.<br/>
+        /// NOTE:  It is currently a bit experimental
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
@@ -100,7 +102,9 @@ namespace Mutagen.Bethesda.Archives
         }
 
         /// <summary>
-        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
+        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
+        /// This call is intended to return Archives related to one specific mod.<br/>
+        /// NOTE:  It is currently a bit experimental
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
@@ -113,7 +117,9 @@ namespace Mutagen.Bethesda.Archives
         }
 
         /// <summary>
-        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.
+        /// Enumerates all applicable Archives for a given release and ModKey that are within a given dataFolderPath.<br/>
+        /// This call is intended to return Archives related to one specific mod.<br/>
+        /// NOTE:  It is currently a bit experimental
         /// </summary>
         /// <param name="release">GameRelease to query for</param>
         /// <param name="dataFolderPath">Folder to query within</param>
@@ -211,7 +217,7 @@ namespace Mutagen.Bethesda.Archives
         /// If no order is given, then the typical ordering driven by the Ini is used.
         /// </summary>
         /// <param name="release">GameRelease to target</param>
-        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priorty later in the list</param>
+        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priority later in the list</param>
         /// <returns>Comparer that orders Archives in priority order</returns>
         private static IComparer<FileName>? GetPriorityOrderComparer(GameRelease release, IEnumerable<FileName>? listedArchiveOrdering = null)
         {
@@ -222,7 +228,7 @@ namespace Mutagen.Bethesda.Archives
         /// Creates a comparer that orders Archives to priority order, based on a given listed ordering.
         /// Any Archive not present in the listed Archives will go last
         /// </summary>
-        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priorty later in the list</param>
+        /// <param name="listedArchiveOrdering">Listed order of Archives, with higher priority later in the list</param>
         /// <returns>Comparer that orders Archives in priority order</returns>
         private static IComparer<FileName>? GetPriorityOrderComparer(IEnumerable<FileName> listedArchiveOrdering)
         {
