@@ -109,19 +109,20 @@ namespace Mutagen.Bethesda.Strings
                                         }
                                         catch (Exception ex)
                                         {
-                                            throw ArchiveException.FolderError("String file from BSA failed to parse", ex, bsaFile, item.Path.ToString());
+                                            throw ArchiveException.EnrichWithFileAccessed("String file from BSA failed to parse", ex, item.Path);
                                         }
                                     }, LazyThreadSafetyMode.ExecutionAndPublication);
                                 }
                             }
                             catch (Exception ex)
+                                when (stringsFolder.Path != null)
                             {
-                                throw ArchiveException.FolderError("BSA folder failed to parse for string file", ex, bsaFile, stringsFolder.Path ?? string.Empty);
+                                throw ArchiveException.EnrichWithFolderAccessed("BSA folder failed to parse for string file", ex, stringsFolder.Path);
                             }
                         }
                         catch (Exception ex)
                         {
-                            throw ArchiveException.OverallError("BSA failed to parse for string file", ex, bsaFile);
+                            throw ArchiveException.EnrichWithArchivePath("BSA failed to parse for string file", ex, bsaFile);
                         }
                     }
                     return bundle;

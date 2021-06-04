@@ -6,6 +6,7 @@ using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using K4os.Compression.LZ4.Streams;
 using Noggog.Streams;
 using Noggog;
+using Mutagen.Bethesda.Archives.Exceptions;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -76,43 +77,54 @@ namespace Mutagen.Bethesda.Archives.Bsa
 
         public Stream AsStream()
         {
-            var rdr = BSA.GetStream();
-            rdr.BaseStream.Position = Offset;
-
-            (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
-            if (!_size.IsValueCreated)
+            try
             {
-                _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
-            }
+                var rdr = BSA.GetStream();
+                rdr.BaseStream.Position = Offset;
 
-            if (BSA.HeaderType == BsaVersionType.SSE)
-            {
-                if (Compressed && size.Size != size.OnDisk)
+                (uint Size, uint OnDisk, uint Original) size = ReadSize(rdr);
+                if (!_size.IsValueCreated)
                 {
-                    return new FramedStream(
-                        LZ4Stream.Decode(rdr.BaseStream),
-                        size.Original);
+                    _size = new Lazy<(uint Size, uint OnDisk, uint Original)>(value: size);
+                }
+
+                if (BSA.HeaderType == BsaVersionType.SSE)
+                {
+                    if (Compressed && size.Size != size.OnDisk)
+                    {
+                        return new FramedStream(
+                            LZ4Stream.Decode(rdr.BaseStream),
+                            size.Original);
+                    }
+                    else
+                    {
+                        return new FramedStream(rdr.BaseStream, size.OnDisk);
+                    }
                 }
                 else
                 {
-                    return new FramedStream(rdr.BaseStream, size.OnDisk);
+                    if (Compressed)
+                    {
+                        return new FramedStream(
+                            new InflaterInputStream(rdr.BaseStream)
+                            {
+                                IsStreamOwner = true
+                            }, 
+                            size.Original);
+                    }
+                    else
+                    {
+                        return new FramedStream(rdr.BaseStream, size.OnDisk);
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                if (Compressed)
-                {
-                    return new FramedStream(
-                        new InflaterInputStream(rdr.BaseStream)
-                        {
-                            IsStreamOwner = true
-                        }, 
-                        size.Original);
-                }
-                else
-                {
-                    return new FramedStream(rdr.BaseStream, size.OnDisk);
-                }
+                throw ArchiveException.Enrich(
+                    e,
+                    BSA.FilePath,
+                    Folder.Path,
+                    Path);
             }
         }
 
@@ -169,10 +181,30 @@ namespace Mutagen.Bethesda.Archives.Bsa
 
         public byte[] GetBytes()
         {
-            using var s = AsStream();
-            byte[] ret = new byte[s.Remaining()];
-            s.Read(ret);
-            return ret;
+            try
+            {
+                using var s = AsStream();
+                var remaining = s.Remaining();
+                if (remaining > int.MaxValue)
+                {
+                    throw new ArchiveException(
+                        $"File claimed it was bigger than what a byte array can hold: {remaining} > {int.MaxValue}",
+                        BSA.FilePath,
+                        Folder.Path,
+                        Path);
+                }
+                byte[] ret = new byte[remaining];
+                s.Read(ret);
+                return ret;
+            }
+            catch (Exception e)
+            {
+                throw ArchiveException.Enrich(
+                    e,
+                    BSA.FilePath,
+                    Folder.Path,
+                    Path);
+            }
         }
 
         public ReadOnlySpan<byte> GetSpan()
