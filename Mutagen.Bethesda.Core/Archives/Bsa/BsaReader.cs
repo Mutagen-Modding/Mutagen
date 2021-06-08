@@ -53,13 +53,18 @@ namespace Mutagen.Bethesda.Archives.Bsa
         }
 
         public BsaReader(FilePath path)
-            : this(() => File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            : this(() => File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read), path)
         {
-            FilePath = path;
         }
 
         public BsaReader(Func<Stream> streamGetter)
+            : this(streamGetter, pathHint: null)
         {
+        }
+
+        private BsaReader(Func<Stream> streamGetter, FilePath? pathHint)
+        {
+            FilePath = pathHint;
             _streamGetter = streamGetter;
             using var rdr = GetStream();
 
