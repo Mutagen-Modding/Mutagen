@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Mutagen.Bethesda.Archives.Exceptions;
 
 namespace Mutagen.Bethesda.Archives.Bsa
 {
@@ -65,7 +66,12 @@ namespace Mutagen.Bethesda.Archives.Bsa
             var fourcc = Encoding.ASCII.GetString(rdr.ReadBytes(4));
 
             if (fourcc != "BSA\0")
-                throw new InvalidDataException("Archive is not a BSA");
+            {
+                throw new ArchiveException(
+                    FilePath,
+                    fileAccessed: null, folderAccessed: null,
+                    message: "Archive is not a BSA");
+            }
 
             HeaderType = (BsaVersionType)rdr.ReadUInt32();
             _folderRecordOffset = rdr.ReadUInt32();
@@ -124,7 +130,10 @@ namespace Mutagen.Bethesda.Archives.Bsa
         {
             if (!HasFolderNames)
             {
-                throw new ArgumentException("Cannot get folders by name if the BSA does not have folder names.");
+                throw new ArchiveException(
+                    FilePath,
+                    fileAccessed: null, folderAccessed: null,
+                    message: "Cannot get folders by name if the BSA does not have folder names.");
             }
             var ret = new Dictionary<string, BsaFolderRecord>(StringComparer.OrdinalIgnoreCase);
             foreach (var folder in _folders.Value)
