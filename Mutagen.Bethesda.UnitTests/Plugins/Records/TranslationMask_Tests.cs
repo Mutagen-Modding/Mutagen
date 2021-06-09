@@ -117,5 +117,36 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             copy.Name!.String.Should().Be(Name);
             AssertHasDestructible(copy);
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OffOverallWithDefaultOnExcludesSubobject(bool npcOnOverall)
+        {
+            var rec = GetNpc();
+            var copy = rec.DeepCopy(new Npc.TranslationMask(defaultOn: true, onOverall: npcOnOverall)
+            {
+                Name = true,
+                Destructible = new Destructible.TranslationMask(defaultOn: true, onOverall: false)
+            });
+            copy.Name!.String.Should().Be(Name);
+            copy.Destructible.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OnOverallWithDefaultOfIncludesSubobject(bool npcOnOverall)
+        {
+            var rec = GetNpc();
+            var copy = rec.DeepCopy(new Npc.TranslationMask(defaultOn: true, onOverall: npcOnOverall)
+            {
+                Name = true,
+                Destructible = new Destructible.TranslationMask(defaultOn: false, onOverall: true)
+            });
+            copy.Name!.String.Should().Be(Name);
+            copy.Destructible.Should().NotBeNull();
+            copy.Destructible!.Stages.Should().BeEmpty();
+        }
     }
 }
