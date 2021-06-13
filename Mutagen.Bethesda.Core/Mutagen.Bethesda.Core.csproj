@@ -83,6 +83,7 @@
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
+    <Compile Include="Plugins\Order\PluginListingsRetriever.cs" />
     <Compile Include="Plugins\Order\TimestampAligner.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
