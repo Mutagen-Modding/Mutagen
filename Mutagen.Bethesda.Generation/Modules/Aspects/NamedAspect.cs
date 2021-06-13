@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         {
             FieldActions = new()
             {
-                (LoquiInterfaceType.Direct, "Name", (o, tg, fg) =>
+                new(LoquiInterfaceType.Direct, "Name", (o, tg, fg) =>
                 {
                     if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                     var isTransl = nameField.Translated.HasValue;
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
                         }
                     }
                 }),
-                (LoquiInterfaceType.IGetter, "Name", (o, tg, fg) =>
+                new(LoquiInterfaceType.IGetter, "Name", (o, tg, fg) =>
                 {
                     if (tg is not StringType nameField) throw new ArgumentException("Name is not a String", nameof(tg));
                     var isTransl = nameField.Translated.HasValue;

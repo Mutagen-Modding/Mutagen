@@ -1,9 +1,5 @@
 using Loqui.Generation;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
@@ -25,7 +21,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
 
             FieldActions = new()
             {
-                (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
+                new (LoquiInterfaceType.Direct, memberName, (o, tg, fg) =>
                 {
                     fg.AppendLine("[DebuggerBrowsable(DebuggerBrowsableState.Never)]");
                     fg.AppendLine($"I{loquiName}Getter? {interfaceName}Getter.{memberName} => this.{memberName};");
