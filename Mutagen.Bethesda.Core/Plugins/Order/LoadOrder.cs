@@ -23,81 +23,29 @@ namespace Mutagen.Bethesda.Plugins.Order
     /// </summary>
     public static class LoadOrder
     {
+        private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
+        
         #region Timestamps
-        /// <summary>
-        /// Returns whether given game needs timestamp alignment for its load order
-        /// </summary>
-        /// <param name="game">Game to check</param>
-        /// <returns>True if file located</returns>
-        public static bool NeedsTimestampAlignment(GameCategory game)
-        {
-            switch (game)
-            {
-                case GameCategory.Oblivion:
-                    return true;
-                case GameCategory.Skyrim:
-                    return false;
-                case GameCategory.Fallout4:
-                    return false;
-                default:
-                    throw new NotImplementedException();
-            }
-        }
 
-        /// <summary>
-        /// Constructs a load order from a list of mods and a data folder.
-        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
-        /// </summary>
-        /// <param name="incomingLoadOrder">Mods to include</param>
-        /// <param name="dataPath">Path to data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
-        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        /// <inheritdoc cref="ITimestampAligner"/>
+        public static bool NeedsTimestampAlignment(GameCategory game) => Aligner.NeedsTimestampAlignment(game);
+
+        /// <inheritdoc cref="ITimestampAligner"/>
         public static IEnumerable<IModListingGetter> AlignToTimestamps(
             IEnumerable<IModListingGetter> incomingLoadOrder,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var list = new List<(bool Enabled, ModKey ModKey, DateTime Write)>();
-            foreach (var key in incomingLoadOrder)
-            {
-                ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
-                if (!modPath.Path.Exists)
-                {
-                    if (throwOnMissingMods) throw new MissingModException(modPath);
-                    continue;
-                }
-                list.Add((key.Enabled, key.ModKey, File.GetLastWriteTime(modPath.Path.Path)));
-            }
-            var comp = new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList());
-            return list
-                .OrderBy(i => (i.ModKey, i.Write), comp)
-                .Select(i => new ModListing(i.ModKey, i.Enabled));
+            return Aligner.AlignToTimestamps(incomingLoadOrder, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
-        /// <summary>
-        /// Constructs a load order from a list of mods and a data folder.
-        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
-        /// </summary>
-        /// <param name="incomingLoadOrder">Mods and their write timestamps</param>
-        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
-        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        /// <inheritdoc cref="ITimestampAligner"/>
         public static IEnumerable<ModKey> AlignToTimestamps(IEnumerable<(ModKey ModKey, DateTime Write)> incomingLoadOrder)
         {
-            return incomingLoadOrder
-                .OrderBy(i => i, new LoadOrderTimestampComparer(incomingLoadOrder.Select(i => i.ModKey).ToList()))
-                .Select(i => i.ModKey);
+            return Aligner.AlignToTimestamps(incomingLoadOrder);
         }
 
-        /// <summary>
-        /// Modifies time stamps of files to match the given ordering
-        /// <param name="loadOrder">Order to conform files to</param>
-        /// <param name="dataPath">Path to data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <param name="startDate">Date to give the first file</param>
-        /// <param name="interval">Time interval to space between each file's date</param>
-        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        /// </summary>
+        /// <inheritdoc cref="ITimestampAligner"/>
         public static void AlignTimestamps(
             IEnumerable<ModKey> loadOrder,
             DirectoryPath dataPath,
@@ -105,19 +53,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             DateTime? startDate = null,
             TimeSpan? interval = null)
         {
-            startDate ??= DateTime.Today.AddDays(-1);
-            interval ??= TimeSpan.FromMinutes(1);
-            foreach (var mod in loadOrder)
-            {
-                ModPath modPath = new ModPath(mod, Path.Combine(dataPath.Path, mod.FileName));
-                if (!modPath.Path.Exists)
-                {
-                    if (throwOnMissingMods) throw new MissingModException(modPath);
-                    continue;
-                }
-                File.SetLastWriteTime(modPath.Path.Path, startDate.Value);
-                startDate = startDate.Value.Add(interval.Value);
-            }
+            Aligner.AlignTimestamps(
+                loadOrder,
+                dataPath,
+                throwOnMissingMods: throwOnMissingMods,
+                startDate: startDate,
+                interval: interval);
         }
         #endregion
 
