@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <LangVersion>Latest</LangVersion>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <PackageId>Mutagen.Bethesda.SourceGenerators</PackageId>
+        <Authors>Noggog</Authors>
+        <Company>Mutagen</Company>
+        <Product>Mutagen</Product>
+        <Description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains source generators to provide extra build-time functionality</Description>
+        <Copyright>2021</Copyright>
+        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Loqui" Version="2.21.0" GeneratePathProperty="true" />
+      <PackageReference Include="Loqui.Generation" Version="2.21.0" GeneratePathProperty="true" />
+      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.2" PrivateAssets="all" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.9.0" PrivateAssets="all" />
+      <PackageReference Include="Noggog.CSharpExt" Version="2.21.0" GeneratePathProperty="true" />
+        <PackageReference Include="GitInfo" Version="2.1.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+  <ItemGroup>
+    <!-- Package the generator in the analyzer directory of the nuget package -->
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+
+    <!-- Package the dependencies alongside the generator assembly -->
+    <None Include="$(PkgNoggog_CSharpExt)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgLoqui)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(PkgLoqui_Generation)\lib\netstandard2.0\*.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.sourcegenerators&quot;" />
+  </Target>
+    
+</Project>

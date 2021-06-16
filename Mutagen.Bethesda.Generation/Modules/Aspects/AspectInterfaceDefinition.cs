@@ -1,9 +1,7 @@
-using Loqui;
 using Loqui.Generation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
 {
@@ -11,7 +9,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
     {
         public AspectFieldInterfaceDefinition(string name) : base(name) { }
 
-        public List<(LoquiInterfaceType Type, string Name, Action<ObjectGeneration, TypeGeneration, FileGeneration> Actions)> FieldActions = new();
+        public List<FieldAction> FieldActions = new();
 
         public virtual IEnumerable<TypeGeneration> IdentifyFields(ObjectGeneration o) =>
             from field in o.Fields

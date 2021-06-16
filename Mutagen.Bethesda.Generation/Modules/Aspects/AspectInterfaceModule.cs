@@ -1,11 +1,8 @@
 using Loqui.Generation;
 using Noggog;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Loqui;
 
 namespace Mutagen.Bethesda.Generation.Modules.Aspects
