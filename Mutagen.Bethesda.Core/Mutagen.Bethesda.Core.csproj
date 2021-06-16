@@ -29,15 +29,15 @@
     </PackageReference>
     <PackageReference Include="ini-parser-netstandard" Version="2.5.2" />
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
-    <PackageReference Include="Loqui" Version="2.19.0.1-dev" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.19.0.1-dev" />
+    <PackageReference Include="Loqui" Version="2.21.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.21.0" />
     <PackageReference Include="NuGetizer" Version="0.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="SharpZipLib" Version="1.3.2" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
-    <PackageReference Include="System.IO.Abstractions" Version="13.2.33" />
+    <PackageReference Include="System.IO.Abstractions" Version="13.2.38" />
   </ItemGroup>
   <PropertyGroup>
     <PackageId>Mutagen.Bethesda.Core</PackageId>
@@ -74,6 +74,7 @@
     <Compile Include="Archives\Exceptions\ArchiveException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
+    <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />

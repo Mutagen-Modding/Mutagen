@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Aspects
         {
             FieldActions = new()
             {
-                (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, fg) =>
+                new (LoquiInterfaceType.Direct, "ObjectBounds", (o, tg, fg) =>
                 {
                     if (tg is not LoquiType field) throw new ArgumentException("ObjectBounds is not LoquiType", nameof(tg));
 
