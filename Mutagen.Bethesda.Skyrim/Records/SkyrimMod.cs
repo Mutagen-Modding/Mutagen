@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Skyrim
         {
             public static void WriteCellsParallel(
                 IListGroupGetter<ICellBlockGetter> group,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteBlocksParallel(
                 ICellBlockGetter block,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -100,7 +100,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteSubBlocksParallel(
                 ICellSubBlockGetter subBlock,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -143,7 +143,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteWorldspacesParallel(
                 IGroupGetter<IWorldspaceGetter> group,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -230,7 +230,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteBlocksParallel(
                 IWorldspaceBlockGetter block,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -264,7 +264,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteSubBlocksParallel(
                 IWorldspaceSubBlockGetter subBlock,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -307,7 +307,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteGroupParallel<T>(
                 IGroupGetter<T> group,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)
@@ -347,7 +347,7 @@ namespace Mutagen.Bethesda.Skyrim
 
             public static void WriteDialogTopicsParallel(
                 IGroupGetter<IDialogTopicGetter> group,
-                MasterReferenceReader masters,
+                IMasterReferenceReader masters,
                 int targetIndex,
                 GameConstants gameConstants,
                 Stream[] streamDepositArray)

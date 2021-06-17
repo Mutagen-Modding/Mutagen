@@ -4,35 +4,39 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
 {
     public class TextFileFormKeyAllocator_Tests : IPersistentFormKeyAllocator_Tests<TextFileFormKeyAllocator>
     {
-        protected override TextFileFormKeyAllocator CreateAllocator(IMod mod, string path)
+        protected override TextFileFormKeyAllocator CreateAllocator(IFileSystem fileSystem, IMod mod, string path)
         {
-            return new(mod, path, preload: true);
+            return new(mod, path, preload: true, fileSystem: fileSystem);
         }
 
-        protected override string ConstructTypicalPath()
+        protected override string ConstructTypicalPath(IFileSystem fileSystem)
         {
-            return tempFile.Value.File.Path;
+            return "C:/SomeFile";
         }
 
         [Fact]
         public void StaticExport()
         {
+            var fileSystem = new MockFileSystem();
+            var someFile = "C:/SomeFile";
             TextFileFormKeyAllocator.WriteToFile(
-                tempFile.Value.File.Path,
+                someFile,
                 new KeyValuePair<string, FormKey>[]
                 {
                     new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
                     new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
-                });
+                },
+                fileSystem);
 
-            var lines = File.ReadAllLines(tempFile.Value.File.Path);
+            var lines = fileSystem.File.ReadAllLines(someFile);
             Assert.Equal(
                 new string[]
                 {
@@ -47,9 +51,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void TypicalImport()
         {
-            using var file = tempFile.Value;
-            File.WriteAllLines(
-                file.File.Path,
+            var fileSystem = new MockFileSystem();
+            var someFile = "C:/SomeFile";
+            fileSystem.File.WriteAllLines(
+                someFile,
                 new string[]
                 {
                     Utility.Edid1,
@@ -58,7 +63,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                     Utility.Form2.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path);
+            using var allocator = new TextFileFormKeyAllocator(mod, someFile, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);
@@ -69,10 +74,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void FailedImportTruncatedFile()
         {
-            using var file = tempFile.Value;
+            var fileSystem = new MockFileSystem();
+            var someFile = "C:/SomeFile";
 
-            File.WriteAllLines(
-                file.File.Path,
+            fileSystem.File.WriteAllLines(
+                someFile,
                 new string[]
                 {
                     Utility.Edid1,
@@ -80,16 +86,17 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                     Utility.Edid2,
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem:fileSystem));
         }
 
         [Fact]
         public void FailedImportDuplicateFormKey()
         {
-            using var file = tempFile.Value;
+            var fileSystem = new MockFileSystem();
+            var someFile = "C:/SomeFile";
 
-            File.WriteAllLines(
-                file.File.Path,
+            fileSystem.File.WriteAllLines(
+                someFile,
                 new string[]
                 {
                     Utility.Edid1,
@@ -98,16 +105,17 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                     Utility.Form1.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem));
         }
 
         [Fact]
         public void FailedImportDuplicateEditorID()
         {
-            using var file = tempFile.Value;
+            var someFile = "C:/SomeFile";
 
-            File.WriteAllLines(
-                file.File.Path,
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllLines(
+                someFile,
                 new string[]
                 {
                     Utility.Edid1,
@@ -116,22 +124,24 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                     Utility.Form2.ID.ToString(),
                 });
             var mod = new OblivionMod(Utility.PluginModKey);
-            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, file.File.Path, preload: true));
+            Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem));
         }
 
         [Fact]
         public void TypicalReimport()
         {
-            using var file = tempFile.Value;
+            var fileSystem = new MockFileSystem();
+            var someFile = "C:/SomeFile";
             TextFileFormKeyAllocator.WriteToFile(
-                file.File.Path,
+                someFile,
                 new KeyValuePair<string, FormKey>[]
                 {
                     new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
                     new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
-                });
+                },
+                fileSystem);
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = new TextFileFormKeyAllocator(mod, file.File.Path, preload: true);
+            using var allocator = new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey(Utility.Edid1);
             Assert.Equal(Utility.PluginModKey, formID.ModKey);
             Assert.Equal(formID, Utility.Form1);

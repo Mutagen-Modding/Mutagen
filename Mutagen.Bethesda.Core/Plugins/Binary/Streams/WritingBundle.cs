@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <summary>
         /// Optional master references for easy access during write operations
         /// </summary>
-        public MasterReferenceReader? MasterReferences { get; set; }
+        public IMasterReferenceReader? MasterReferences { get; set; }
 
         /// <summary>
         /// Optional strings writer for easy access during write operations

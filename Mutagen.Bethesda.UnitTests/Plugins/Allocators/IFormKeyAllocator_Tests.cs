@@ -3,6 +3,8 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Data;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
@@ -10,7 +12,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
     public abstract class IFormKeyAllocator_Tests<TFormKeyAllocator>
         where TFormKeyAllocator : IFormKeyAllocator
     {
-        protected abstract TFormKeyAllocator CreateAllocator(IMod mod);
+        protected virtual IFileSystem GetFileSystem() => new MockFileSystem();
+        
+        protected abstract TFormKeyAllocator CreateAllocator(IFileSystem fileSystem, IMod mod);
 
         protected void DisposeFormKeyAllocator(IFormKeyAllocator allocator)
         {
@@ -21,10 +25,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void CanAllocateNewFormKey()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
             var nextID = ((IMod)mod).NextFormID;
 
-            var allocator = CreateAllocator(mod);
+            var allocator = CreateAllocator(fileSystem, mod);
 
             var formKey = allocator.GetNextFormKey();
             Assert.Equal(mod.ModKey, formKey.ModKey);
@@ -36,10 +41,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void CanAllocateNewFormKeyFromEditorID()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
             var nextID = ((IMod)mod).NextFormID;
 
-            var allocator = CreateAllocator(mod);
+            var allocator = CreateAllocator(fileSystem, mod);
 
             var formKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -52,9 +58,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void TwoAllocatedFormKeysAreDifferent()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            var allocator = CreateAllocator(mod);
+            var allocator = CreateAllocator(fileSystem, mod);
 
             var formKey1 = allocator.GetNextFormKey();
             var formKey2 = allocator.GetNextFormKey();
@@ -67,9 +74,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void TwoAllocatedFormKeysFromEditorIDsAreDifferent()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            var allocator = CreateAllocator(mod);
+            var allocator = CreateAllocator(fileSystem, mod);
 
             var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
             var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
@@ -83,8 +91,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void DuplicateAllocationThrows()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
-            var allocator = CreateAllocator(mod);
+            var allocator = CreateAllocator(fileSystem, mod);
 
             var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
 

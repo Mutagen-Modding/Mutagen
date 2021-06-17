@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Tests
         protected BinaryFileProcessor.ConfigConstructor _Instructions = new BinaryFileProcessor.ConfigConstructor();
         private Dictionary<long, uint> _lengthTracker = new Dictionary<long, uint>();
         protected byte _NumMasters;
-        protected MasterReferenceReader Masters;
+        protected IMasterReferenceCollection Masters;
         protected ParsingBundle Bundle;
         protected ModPath SourcePath;
         protected TempFolder TempFolder;

@@ -75,6 +75,22 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
+    <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\LightMasterLimitOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\MasterFlagOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\MastersListContentOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\MastersListOrderingByLoadOrder.cs" />
+    <Compile Include="Plugins\Binary\Parameters\MastersListOrderingEnumOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\MastersListOrderingOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\ModKeyOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\NextFormIDOption.cs" />
+    <Compile Include="Plugins\Binary\Parameters\RecordCountOption.cs" />
     <Compile Include="Plugins\Cache\IIdentifierLinkCache.cs" />
     <Compile Include="Plugins\Cache\ResolveTarget.cs" />
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
@@ -255,7 +271,6 @@
     <Compile Include="Plugins\Records\AMod.cs" />
     <Compile Include="Plugins\Allocators\SimpleFormKeyAllocator.cs" />
     <Compile Include="Plugins\Binary\Streams\MutagenInterfaceReadStream.cs" />
-    <Compile Include="Plugins\Binary\BinaryWriteParameters.cs" />
     <Compile Include="Plugins\Utility\MajorRecordInstantiator.cs" />
     <Compile Include="Plugins\Binary\Translations\StringBinaryType.cs" />
     <Compile Include="Plugins\Allocators\IFormKeyAllocator.cs" />

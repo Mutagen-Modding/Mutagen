@@ -1,7 +1,6 @@
 using Loqui;
 using Loqui.Generation;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -592,7 +592,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     $"public static void WriteGroupParallel<T>"))
                 {
                     args.Add("IGroupGetter<T> group");
-                    args.Add($"{nameof(MasterReferenceReader)} masters");
+                    args.Add($"{nameof(IMasterReferenceReader)} masters");
                     args.Add("int targetIndex");
                     if (objData.GameReleaseOptions != null)
                     {

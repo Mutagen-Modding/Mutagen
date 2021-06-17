@@ -4,7 +4,7 @@ using Noggog;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Loqui;
-using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {

@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.Plugins.Binary.Translations
 
         public FormKey Parse(
             ReadOnlySpan<byte> span,
-            MasterReferenceReader masterReferences)
+            IMasterReferenceReader masterReferences)
         {
             var id = BinaryPrimitives.ReadUInt32LittleEndian(span);
             return FormKey.Factory(masterReferences, id);

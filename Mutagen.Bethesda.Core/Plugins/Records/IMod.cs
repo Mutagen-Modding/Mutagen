@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using Mutagen.Bethesda.Plugins.Binary;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records
 {

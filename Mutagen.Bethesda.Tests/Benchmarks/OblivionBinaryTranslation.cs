@@ -2,12 +2,12 @@ using BenchmarkDotNet.Attributes;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Newtonsoft.Json;
 using Noggog;
 using Noggog.Utility;
 using System.IO;
 using System.Threading.Tasks;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Tests.Benchmarks
 {
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         public static MemoryStream DataOutput;
         public static BinaryWriteParameters WriteParametersNoCheck = new BinaryWriteParameters()
         {
-            MastersListContent = BinaryWriteParameters.MastersListContentOption.NoCheck,
+            MastersListContent = MastersListContentOption.NoCheck,
         };
 
         [GlobalSetup]

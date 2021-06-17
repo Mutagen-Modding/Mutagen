@@ -2,62 +2,32 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
-using Noggog.Utility;
 using System;
 using System.Collections.Concurrent;
-using System.Data;
-using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using Xunit;
+using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
 {
-
-    public class SQLiteFormKeyAllocator_Tests : ISharedFormKeyAllocator_Tests<SQLiteFormKeyAllocator>
-    {
-        protected override string ConstructTypicalPath()
-        {
-            return tempFile.Value.File.Path;
-        }
-
-        protected override SQLiteFormKeyAllocator CreateAllocator(IMod mod, string path)
-        {
-            return new(mod, path);
-        }
-
-        protected override SQLiteFormKeyAllocator CreateNamedAllocator(IMod mod, string path, string patcherName)
-        {
-            return new(mod, path, patcherName);
-        }
-    }
-
-    public abstract class IPersistentFormKeyAllocator_Tests<TFormKeyAllocator> : IFormKeyAllocator_Tests<TFormKeyAllocator>, IDisposable
+    public abstract class IPersistentFormKeyAllocator_Tests<TFormKeyAllocator> : IFormKeyAllocator_Tests<TFormKeyAllocator>
         where TFormKeyAllocator : BasePersistentFormKeyAllocator
     {
-        protected Lazy<TempFolder> tempFolder;
+        protected override TFormKeyAllocator CreateAllocator(IFileSystem fileSystem, IMod mod) => CreateAllocator(fileSystem, mod, ConstructTypicalPath(fileSystem));
 
-        protected Lazy<TempFile> tempFile;
+        protected abstract TFormKeyAllocator CreateAllocator(IFileSystem fileSystem, IMod mod, string path);
 
-        private bool disposedValue;
-
-        protected IPersistentFormKeyAllocator_Tests()
-        {
-            tempFolder = new(() => TempFolder.Factory());
-            tempFile = new(() => new TempFile(extraDirectoryPaths: Utility.TempFolderPath));
-        }
-
-        protected override TFormKeyAllocator CreateAllocator(IMod mod) => CreateAllocator(mod, ConstructTypicalPath());
-
-        protected abstract TFormKeyAllocator CreateAllocator(IMod mod, string path);
-
-        protected abstract string ConstructTypicalPath();
+        protected abstract string ConstructTypicalPath(IFileSystem fileSystem);
 
         [Fact]
         public void CanCommit()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            using var allocator = CreateAllocator(mod);
+            using var allocator = CreateAllocator(fileSystem, mod);
 
             allocator.Commit();
         }
@@ -65,9 +35,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void CanRollback()
         {
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
 
-            using var allocator = CreateAllocator(mod);
+            using var allocator = CreateAllocator(fileSystem, mod);
 
             allocator.Rollback();
         }
@@ -77,12 +48,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         {
             uint nextFormID = 123;
 
+            var fileSystem = GetFileSystem();
             FormKey expectedFormKey;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 expectedFormKey = allocator.GetNextFormKey();
 
@@ -93,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 var formKey = allocator.GetNextFormKey();
 
@@ -106,10 +78,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         {
             uint nextFormID = 123;
 
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
 
-            using var allocator = CreateAllocator(mod);
+            using var allocator = CreateAllocator(fileSystem, mod);
 
             var expectedFormKey = allocator.GetNextFormKey();
 
@@ -125,12 +98,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         {
             uint nextFormID = 123;
 
+            var fileSystem = GetFileSystem();
             FormKey expectedFormKey;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 expectedFormKey = allocator.GetNextFormKey(null);
 
@@ -141,7 +115,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
                 var mod = new OblivionMod(Utility.PluginModKey);
                 ((IMod)mod).NextFormID = nextFormID;
 
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 var formKey = allocator.GetNextFormKey(null);
 
@@ -154,10 +128,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         {
             uint nextFormID = 123;
 
+            var fileSystem = GetFileSystem();
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
 
-            using var allocator = CreateAllocator(mod);
+            using var allocator = CreateAllocator(fileSystem, mod);
 
             var expectedFormKey = allocator.GetNextFormKey(null);
 
@@ -171,10 +146,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void AllocatesSameFormKeyForEditorIDAfterLoad()
         {
+            var fileSystem = GetFileSystem();
             FormKey expectedFormKey;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -183,7 +159,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 var formKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -194,10 +170,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         //[Fact]
         public void AllocatesSameFormKeyForEditorIDAfterRollback()
         {
+            var fileSystem = GetFileSystem();
             uint nextFormID = 123;
             var mod = new OblivionMod(Utility.PluginModKey);
             ((IMod)mod).NextFormID = nextFormID;
-            using var allocator = CreateAllocator(mod);
+            using var allocator = CreateAllocator(fileSystem, mod);
 
             var expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
 
@@ -211,10 +188,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void OutOfOrderAllocationReturnsSameIdentifiers()
         {
+            var fileSystem = GetFileSystem();
             uint formID1, formID2;
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
                 var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
                 formID1 = formKey1.ID;
 
@@ -232,7 +210,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
 
             {
                 var mod = new OblivionMod(Utility.PluginModKey);
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
@@ -251,12 +229,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void ParallelAllocation()
         {
+            var fileSystem = GetFileSystem();
             var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
             var output1 = new ConcurrentDictionary<int, uint>();
 
             var mod = new OblivionMod(Utility.PluginModKey);
             {
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 void apply((int i, string s) x)
                 {
@@ -276,7 +255,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
             }
 
             {
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 void check((int i, string s) x)
                 {
@@ -296,12 +275,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void ParallelAllocationWithCommits()
         {
+            var fileSystem = GetFileSystem();
             var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
             var output1 = new ConcurrentDictionary<int, uint>();
 
             var mod = new OblivionMod(Utility.PluginModKey);
             {
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 void apply((int i, string s) x)
                 {
@@ -321,7 +301,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
             }
 
             {
-                using var allocator = CreateAllocator(mod);
+                using var allocator = CreateAllocator(fileSystem, mod);
 
                 void check((int i, string s) x)
                 {
@@ -341,48 +321,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Allocators
         [Fact]
         public void NonExistentEndpointProperlyConstructs()
         {
-            using var temp = Utility.GetTempFolder(this.GetType().Name, nameof(NonExistentEndpointProperlyConstructs));
+            var fileSystem = GetFileSystem();
+            var someFolder = "C:/SomeFolder";
+            fileSystem.Directory.CreateDirectory(someFolder);
             var mod = new OblivionMod(Utility.PluginModKey);
-            using var allocator = CreateAllocator(mod, Path.Combine(temp.Dir.Path, "DoesntExist"));
+            using var allocator = CreateAllocator(fileSystem, mod, Path.Combine(someFolder, "DoesntExist"));
         }
 
         [Fact]
         public void NonExistentParentDirThrows()
         {
-            using var temp = Utility.GetTempFolder(this.GetType().Name, nameof(NonExistentEndpointProperlyConstructs));
+            var fileSystem = GetFileSystem();
+            var someFolder = "C:/SomeFolder";
             var mod = new OblivionMod(Utility.PluginModKey);
             Assert.ThrowsAny<Exception>(() =>
             {
-                CreateAllocator(mod, Path.Combine(temp.Dir.Path, "DoesntExist", "AlsoDoesntExist"));
+                CreateAllocator(fileSystem, mod, Path.Combine(someFolder, "DoesntExist", "AlsoDoesntExist"));
             });
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    if (tempFile.IsValueCreated)
-                        tempFile.Value.Dispose();
-                    if (tempFolder.IsValueCreated)
-                        tempFile.Value.Dispose();
-                }
-                disposedValue = true;
-            }
-        }
-
-        ~IPersistentFormKeyAllocator_Tests()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

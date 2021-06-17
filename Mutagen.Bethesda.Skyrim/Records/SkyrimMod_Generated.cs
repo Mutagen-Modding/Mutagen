@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Internals;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Overlay;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Cache;
@@ -10812,7 +10813,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         
         public static void WriteGroupParallel<T>(
             IGroupGetter<T> group,
-            MasterReferenceReader masters,
+            IMasterReferenceReader masters,
             int targetIndex,
             GameConstants gameConstants,
             Stream[] streamDepositArray,

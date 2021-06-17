@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.Skyrim
     {
         public partial class ExtraDataBinaryCreateTranslation
         {
-            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, MasterReferenceReader masters)
+            public static OwnerTarget GetBinaryOwner(ReadOnlySpan<byte> span, RecordTypeInfoCacheReader cache, IMasterReferenceReader masters)
             {
                 FormID form = new FormID(BinaryPrimitives.ReadUInt32LittleEndian(span));
                 FormKey formKey = FormKey.Factory(masters, form.Raw);

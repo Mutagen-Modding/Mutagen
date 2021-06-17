@@ -10,6 +10,7 @@ using Noggog.Utility;
 using System;
 using System.Linq;
 using System.Reactive.Disposables;
+using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
@@ -3008,7 +3009,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
                 path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    ModKey = ModKeyOption.NoCheck,
                 });
             var overlay = SkyrimMod.CreateFromBinaryOverlay(path, SkyrimRelease.SkyrimLE);
             getter = overlay;
@@ -3063,7 +3064,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
                 path,
                 new BinaryWriteParameters()
                 {
-                    ModKey = BinaryWriteParameters.ModKeyOption.NoCheck,
+                    ModKey = ModKeyOption.NoCheck,
                 });
             var overlay = SkyrimMod.CreateFromBinaryOverlay(path, SkyrimRelease.SkyrimLE);
             getter = overlay;

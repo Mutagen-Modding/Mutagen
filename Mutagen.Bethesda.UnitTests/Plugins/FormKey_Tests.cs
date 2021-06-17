@@ -103,7 +103,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins
         #region BinaryTranslation
         public ModKey TargetModKey() => new ModKey("Master2", ModType.Master);
 
-        public MasterReferenceReader TypicalMasters() =>
+        public IMasterReferenceReader TypicalMasters() =>
             new MasterReferenceReader(
                 Utility.PluginModKey,
                 new List<IMasterReferenceGetter>()
