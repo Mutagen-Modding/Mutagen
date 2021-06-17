@@ -1,18 +1,15 @@
 using DynamicData;
-using Mutagen.Bethesda.Plugins.Exceptions;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using DynamicData.Kernel;
 
 namespace Mutagen.Bethesda.Plugins.Order
@@ -23,6 +20,11 @@ namespace Mutagen.Bethesda.Plugins.Order
     public static class LoadOrder
     {
         private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
+        private static OrderListings Orderer = new();
+        private static RetrieveListings Retriever = new(IFileSystemExt.DefaultFilesystem, Orderer);
+        private static ConstructLiveLoadOrder LiveLoadOrder = new(Retriever);
+        private static LoadOrderImporter Importer = new();
+        private static LoadOrderWriter Writer = new(IFileSystemExt.DefaultFilesystem);
         
         #region Timestamps
 
@@ -61,33 +63,16 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
         #endregion
 
-        /// <summary>
-        /// Returns a load order listing from the usual sources
-        /// </summary>
-        /// <param name="game">Game type</param>
-        /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
-        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        /// <exception cref="FileNotFoundException">If plugin file not located</exception>
-        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        /// <inheritdoc cref="IRetrieveListings"/>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            if (!PluginListings.TryGetListingsFile(game, out var path))
-            {
-                throw new FileNotFoundException("Could not locate plugins file");
-            }
-            return GetListings(
-                game: game,
-                pluginsFilePath: path,
-                creationClubFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataPath),
-                dataPath: dataPath,
-                throwOnMissingMods: throwOnMissingMods);
+            return Retriever.GetListings(game, dataPath, throwOnMissingMods);
         }
 
+        /// <inheritdoc cref="IRetrieveListings"/>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             FilePath pluginsFilePath,
@@ -95,79 +80,36 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            var listings = Enumerable.Empty<IModListingGetter>();
-            if (pluginsFilePath.Exists)
-            {
-                listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
-            }
-            var implicitListings = Implicits.Get(game).Listings
-                .Where(x => File.Exists(Path.Combine(dataPath.Path, x.FileName.String)))
-                .Select(x => new ModListing(x, enabled: true));
-            var ccListings = Enumerable.Empty<IModListingGetter>();
-            if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
-            {
-                ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
-            }
-
-            return OrderListings(
-                implicitListings: implicitListings,
-                pluginsListings: listings.Except(implicitListings),
-                creationClubListings: ccListings,
-                selector: x => x.ModKey);
+            return Retriever.GetListings(game, pluginsFilePath, creationClubFilePath, dataPath, throwOnMissingMods);
         }
 
+        /// <inheritdoc cref="IOrderListings"/>
         public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
         {
-            return e.OrderBy(e => selector(e).Type);
+            return Orderer.Order(e, selector);
         }
 
+        /// <inheritdoc cref="IOrderListings"/>
         public static IEnumerable<T> OrderListings<T>(
             IEnumerable<T> implicitListings,
             IEnumerable<T> pluginsListings,
             IEnumerable<T> creationClubListings,
             Func<T, ModKey> selector)
         {
-            var plugins = pluginsListings
-                .Select(selector)
-                .ToList();
-            return implicitListings
-                .Concat(
-                    OrderListings(creationClubListings
-                        .Select(x =>
-                        {
-                            if (selector(x).Type == ModType.Plugin)
-                            {
-                                throw new NotImplementedException("Creation Club does not support esp plugins.");
-                            }
-                            return x;
-                        })
-                        // If CC mod is on plugins list, refer to its ordering
-                        .OrderBy(selector, Comparer<ModKey>.Create((x, y) =>
-                        {
-                            var xIndex = plugins.IndexOf(x);
-                            var yIndex = plugins.IndexOf(y);
-                            if (xIndex == yIndex) return 0;
-                            return xIndex - yIndex;
-                        })), selector))
-                .Concat(pluginsListings)
-                .Distinct(selector);
+            return Orderer.Order(implicitListings, pluginsListings, creationClubListings, selector);
         }
 
+        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             bool throwOnMissingMods = true)
         {
-            return GetLiveLoadOrder(
-                game: game,
-                dataFolderPath: dataFolderPath,
-                loadOrderFilePath: PluginListings.GetListingsPath(game),
-                cccLoadOrderFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataFolderPath),
-                state: out state,
-                throwOnMissingMods: throwOnMissingMods);
+            return LiveLoadOrder.GetLiveLoadOrder(game, dataFolderPath, out state, throwOnMissingMods);
         }
 
+        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             IObservable<GameRelease> game,
             IObservable<DirectoryPath> dataFolderPath,
@@ -196,8 +138,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Switch();
         }
 
-        // ToDo
-        // Add scheduler for throttle
+        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,
@@ -269,6 +210,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             });
         }
 
+        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             IObservable<GameRelease> game,
             IObservable<FilePath> loadOrderFilePath,
@@ -301,162 +243,54 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Switch();
         }
 
-        /// <summary>
-        /// Constructs a load order filled with mods constructed
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of listings to import</param>
-        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
-        /// This may be unapplicable to some games with only one release, but should still be passed in.
-        /// </param>
+        /// <inheritdoc cref="ILoadOrderImporter"/>
         public static ILoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
             GameRelease gameRelease)
             where TMod : class, IModGetter
         {
-            return Import(
-                dataFolder,
-                loadOrder,
-                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+            return Importer.Import<TMod>(dataFolder, loadOrder, gameRelease);
         }
 
-        /// <summary>
-        /// Constructs a load order filled with mods constructed
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
-        /// This may be unapplicable to some games with only one release, but should still be passed in.
-        /// </param>
+        /// <inheritdoc cref="ILoadOrderImporter"/>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
             GameRelease gameRelease)
             where TMod : class, IModGetter
         {
-            return Import(
-                dataFolder,
-                loadOrder.Select(m => new ModListing(m, enabled: true)),
-                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+            return Importer.Import<TMod>(dataFolder, loadOrder, gameRelease);
         }
 
-        /// <summary>
-        /// Constructs a load order filled with mods constructed by given importer func
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of mod keys to import</param>
-        /// <param name="factory">Func to use to create a new mod from a path</param>
+        /// <inheritdoc cref="ILoadOrderImporter"/>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
             Func<ModPath, TMod> factory)
             where TMod : class, IModGetter
         {
-            return Import(
-                dataFolder,
-                loadOrder.Select(m => new ModListing(m, enabled: true)),
-                factory);
+            return Importer.Import<TMod>(dataFolder, loadOrder, factory);
         }
 
-        /// <summary>
-        /// Constructs a load order filled with mods constructed by given importer func
-        /// </summary>
-        /// <param name="dataFolder">Path data folder containing mods</param>
-        /// <param name="loadOrder">Unique list of listings to import</param>
-        /// <param name="factory">Func to use to create a new mod from a path</param>
+        /// <inheritdoc cref="ILoadOrderImporter"/>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
             Func<ModPath, TMod> factory)
             where TMod : class, IModGetter
         {
-            var loList = loadOrder.ToList();
-            var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
-            try
-            {
-                Parallel.ForEach(loList, (listing, state, modIndex) =>
-                {
-                    try
-                    {
-                        var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
-                        if (!modPath.Path.Exists)
-                        {
-                            results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
-                            return;
-                        }
-                        var mod = factory(modPath);
-                        results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Succeed(mod), listing.Enabled);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw RecordException.Enrich(ex, listing.ModKey);
-                    }
-                });
-                return new LoadOrder<IModListing<TMod>>(results
-                    .OrderBy(i => i.ModIndex)
-                    .Select(item =>
-                    {
-                        if (item.Mod.Succeeded)
-                        {
-                            return new ModListing<TMod>(item.Mod.Value, item.Enabled);
-                        }
-                        else
-                        {
-                            return ModListing<TMod>.CreateUnloaded(item.ModKey, item.Enabled);
-                        }
-                    }));
-            }
-            catch (Exception)
-            {
-                // We're aborting, but we still want to dispose any that were successful
-                foreach (var result in results)
-                {
-                    if (result.Mod.Value is IDisposable disp)
-                    {
-                        disp.Dispose();
-                    }
-                }
-                throw;
-            }
+            return Importer.Import<TMod>(dataFolder, loadOrder, factory);
         }
 
+        /// <inheritdoc cref="ILoadOrderWriter"/>
         public static void Write(
-            string path, 
+            FilePath path, 
             GameRelease release, 
             IEnumerable<IModListingGetter> loadOrder,
             bool removeImplicitMods = true)
         {
-            bool markers = PluginListings.HasEnabledMarkers(release);
-            var loadOrderList = loadOrder.ToList();
-            if (removeImplicitMods)
-            {
-                foreach (var implicitMod in Implicits.Get(release).Listings)
-                {
-                    if (loadOrderList.Count > 0
-                        && loadOrderList[0].ModKey == implicitMod
-                        && loadOrderList[0].Enabled)
-                    {
-                        loadOrderList.RemoveAt(0);
-                    }
-                }
-            }
-            File.WriteAllLines(path,
-                loadOrderList.Where(x =>
-                {
-                    return (markers || x.Enabled);
-                })
-                .Select(x =>
-                {
-                    if (x.Enabled && markers)
-                    {
-                        return $"*{x.ModKey.FileName}";
-                    }
-                    else
-                    {
-                        return x.ModKey.FileName.String;
-                    }
-                }));
+            Writer.Write(path, release, loadOrder, removeImplicitMods);
         }
     }
 

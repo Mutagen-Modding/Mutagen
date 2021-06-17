@@ -3,10 +3,8 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using Mutagen.Bethesda.Core.Plugins.Order;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {

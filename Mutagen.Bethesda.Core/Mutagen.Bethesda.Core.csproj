@@ -96,11 +96,16 @@
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
+    <Compile Include="Plugins\Order\ConstructLiveLoadOrder.cs" />
+    <Compile Include="Plugins\Order\LoadOrderImporter.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
+    <Compile Include="Plugins\Order\LoadOrderWriter.cs" />
+    <Compile Include="Plugins\Order\OrderListings.cs" />
     <Compile Include="Plugins\Order\PluginListingsRetriever.cs" />
+    <Compile Include="Plugins\Order\RetrieveListings.cs" />
     <Compile Include="Plugins\Order\TimestampAligner.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
