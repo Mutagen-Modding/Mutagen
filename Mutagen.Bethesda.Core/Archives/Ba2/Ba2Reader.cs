@@ -5,9 +5,10 @@ using Noggog.Streams;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Mutagen.Bethesda.Archives.Ba2
 {
@@ -23,8 +24,8 @@ namespace Mutagen.Bethesda.Archives.Ba2
 
         public bool HasNameTable => _nameTableOffset > 0;
 
-        public Ba2Reader(FilePath filename)
-            : this(() => File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+        public Ba2Reader(FilePath filename, IFileSystem? fileSystem = null)
+            : this(() => (fileSystem ?? IFileSystemExt.DefaultFilesystem).File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 

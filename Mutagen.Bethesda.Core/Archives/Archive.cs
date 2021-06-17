@@ -9,9 +9,10 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using Stream = System.IO.Stream;
+using StreamReader = System.IO.StreamReader;
 
 namespace Mutagen.Bethesda.Archives
 {
