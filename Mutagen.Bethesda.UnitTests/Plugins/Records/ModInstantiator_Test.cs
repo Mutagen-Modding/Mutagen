@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using Loqui;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
@@ -62,7 +63,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TDirect>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -72,7 +74,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TSetter>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TDirect>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }
@@ -82,7 +85,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var ret = ModInstantiatorReflection.GetImporter<TGetter>(Registration)(
                 ModPath,
-                Release);
+                Release,
+                default(IFileSystem?));
             Assert.IsType<TOverlay>(ret);
             Assert.Equal(ModPath.ModKey, ret.ModKey);
         }

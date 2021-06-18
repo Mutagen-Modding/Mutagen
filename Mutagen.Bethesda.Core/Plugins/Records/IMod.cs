@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Allocators;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 
 namespace Mutagen.Bethesda.Plugins.Records
@@ -43,7 +44,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
-        void WriteToBinary(string path, BinaryWriteParameters? param = null);
+        /// <param name="fileSystem">Optional filesystem substitution</param>
+        void WriteToBinary(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null);
 
         /// <summary>
         /// Exports to disk in Bethesda binary format.
@@ -52,7 +54,8 @@ namespace Mutagen.Bethesda.Plugins.Records
         /// </summary>
         /// <param name="path">Path to export to</param>
         /// <param name="param">Optional customization parameters</param>
-        void WriteToBinaryParallel(string path, BinaryWriteParameters? param = null);
+        /// <param name="fileSystem">Optional filesystem substitution</param>
+        void WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param = null, IFileSystem? fileSystem = null);
 
         /// <summary>
         /// Whether a mod supports localization features

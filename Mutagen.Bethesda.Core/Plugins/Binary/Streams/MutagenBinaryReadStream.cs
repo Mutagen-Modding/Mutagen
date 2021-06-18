@@ -1,6 +1,7 @@
 using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using System.IO;
+using System.IO.Abstractions;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams
 {
@@ -24,12 +25,14 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <param name="metaData">Bundle of all related metadata for parsing</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
+        /// <param name="fileSystem">FileSystem to read from</param>
         public MutagenBinaryReadStream(
             FilePath path,
             ParsingBundle metaData,
             int bufferSize = 4096,
-            long offsetReference = 0)
-            : base(path.Path, bufferSize)
+            long offsetReference = 0,
+            IFileSystem? fileSystem = null)
+            : base(fileSystem.GetOrDefault().File.OpenRead(path.Path), bufferSize)
         {
             this._path = path;
             this.MetaData = metaData;
@@ -43,15 +46,17 @@ namespace Mutagen.Bethesda.Plugins.Binary.Streams
         /// <param name="release">Game Release the stream is for</param>
         /// <param name="bufferSize">Size of internal buffer</param>
         /// <param name="offsetReference">Optional offset reference position to use</param>
+        /// <param name="fileSystem">FileSystem to read from</param>
         public MutagenBinaryReadStream(
             ModPath path,
             GameRelease release,
             int bufferSize = 4096,
-            long offsetReference = 0)
-            : base(path, bufferSize)
+            long offsetReference = 0,
+            IFileSystem? fileSystem = null)
+            : base(fileSystem.GetOrDefault().File.OpenRead(path), bufferSize)
         {
             this._path = path;
-            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromPath(path, release))
+            this.MetaData = new ParsingBundle(release, MasterReferenceReader.FromPath(path, release, fileSystem: fileSystem))
             {
                 ModKey = path.ModKey
             };

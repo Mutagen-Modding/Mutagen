@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Plugins.Utility
 
         public static MasterReferenceReader FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
         {
-            var fs = (fileSystem ?? IFileSystemExt.DefaultFilesystem).FileStream.Create(path, FileMode.Open);
+            var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Open, FileAccess.Read);
             using var stream = new MutagenBinaryReadStream(fs, new ParsingBundle(release, masterReferences: null!)
             {
                 ModKey = path.ModKey

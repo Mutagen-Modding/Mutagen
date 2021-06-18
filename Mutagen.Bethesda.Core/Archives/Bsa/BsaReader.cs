@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Archives.Bsa
         }
 
         public BsaReader(FilePath path, IFileSystem? fileSystem = null)
-            : this(() => (fileSystem ?? IFileSystemExt.DefaultFilesystem).File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read), path)
+            : this(() => fileSystem.GetOrDefault().File.Open(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read), path)
         {
         }
 

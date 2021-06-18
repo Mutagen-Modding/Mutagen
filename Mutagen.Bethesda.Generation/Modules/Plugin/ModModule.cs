@@ -11,6 +11,7 @@ using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -29,6 +30,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return "System.Collections.Concurrent";
                 yield return "System.Threading.Tasks";
                 yield return "System.IO";
+                yield return "System.IO.Abstractions";
             }
         }
 
@@ -60,8 +62,8 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             // Interfaces
             fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
             fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
-            fg.AppendLine($"void IModGetter.WriteToBinary(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinary(path, importMask: null, param: param);");
-            fg.AppendLine($"void IModGetter.WriteToBinaryParallel(string path, {nameof(BinaryWriteParameters)}? param) => this.WriteToBinaryParallel(path, param);");
+            fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
+            fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);");
             fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
 
             // Localization enabled member
@@ -403,6 +405,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 args.Add($"this {obj.Interface(getter: true, internalInterface: false)} item");
                 args.Add($"string path");
                 args.Add($"{nameof(BinaryWriteParameters)}? param = null");
+                args.Add($"{nameof(IFileSystem)}? fileSystem = null");
             }
             using (new BraceWrapper(fg))
             {
@@ -418,7 +421,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                     fg.AppendLine("bool disposeStrings = param.StringsWriter == null;");
                     fg.AppendLine($"param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter({gameReleaseStr}, modKey, Path.Combine(Path.GetDirectoryName(path)!, \"Strings\")) : null;");
                 }
-                fg.AppendLine("using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))");
+                fg.AppendLine("using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))");
                 using (new BraceWrapper(fg))
                 {
                     using (var args = new ArgsWrapper(fg,

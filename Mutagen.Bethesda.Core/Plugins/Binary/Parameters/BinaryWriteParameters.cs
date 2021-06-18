@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Utility;
+using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters
 {
@@ -79,10 +80,10 @@ namespace Mutagen.Bethesda.Plugins.Binary.Parameters
         /// <param name="path">Path to compare to</param>
         /// <returns>ModKey to use</returns>
         /// <exception cref="ArgumentException">If misaligned and set to ThrowIfMisaligned</exception>
-        public ModKey RunMasterMatch(IModGetter mod, string path)
+        public ModKey RunMasterMatch(IModGetter mod, FilePath path)
         {
             if (ModKey == ModKeyOption.NoCheck) return mod.ModKey;
-            if (!Plugins.ModKey.TryFromNameAndExtension(Path.GetFileName(path), out var pathModKey))
+            if (!Plugins.ModKey.TryFromNameAndExtension(path.Name, out var pathModKey))
             {
                 throw new ArgumentException($"Could not convert path to a ModKey to compare against: {Path.GetFileName(path)}");
             }

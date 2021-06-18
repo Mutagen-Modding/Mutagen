@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static OrderListings Orderer = new();
         private static RetrieveListings Retriever = new(IFileSystemExt.DefaultFilesystem, Orderer);
         private static ConstructLiveLoadOrder LiveLoadOrder = new(Retriever);
-        private static LoadOrderImporter Importer = new();
+        private static LoadOrderImporter Importer = new(IFileSystemExt.DefaultFilesystem);
         private static LoadOrderWriter Writer = new(IFileSystemExt.DefaultFilesystem);
         
         #region Timestamps

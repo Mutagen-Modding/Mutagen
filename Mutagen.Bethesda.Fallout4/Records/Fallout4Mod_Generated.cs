@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -903,8 +904,8 @@ namespace Mutagen.Bethesda.Fallout4
         public override GameRelease GameRelease => GameRelease.Fallout4;
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -1070,11 +1071,12 @@ namespace Mutagen.Bethesda.Fallout4
             ModPath path,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -1106,11 +1108,12 @@ namespace Mutagen.Bethesda.Fallout4
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -1210,11 +1213,13 @@ namespace Mutagen.Bethesda.Fallout4
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            IFileSystem? fileSystem = null)
         {
             return Fallout4ModBinaryOverlay.Fallout4ModFactory(
                 path: path,
-                stringsParam: stringsParam);
+                stringsParam: stringsParam,
+                fileSystem: fileSystem);
         }
 
         public static IFallout4ModDisposableGetter CreateFromBinaryOverlay(
@@ -1492,7 +1497,8 @@ namespace Mutagen.Bethesda.Fallout4
         public static void WriteToBinaryParallel(
             this IFallout4ModGetter item,
             string path,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
@@ -1500,7 +1506,7 @@ namespace Mutagen.Bethesda.Fallout4
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
             param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(GameRelease.Fallout4, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null;
-            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
                 Fallout4ModCommon.WriteParallel(
                     item: item,
@@ -1782,11 +1788,12 @@ namespace Mutagen.Bethesda.Fallout4
             ModPath path,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
-                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4))
+                using (var reader = new MutagenBinaryReadStream(path, GameRelease.Fallout4, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -4193,7 +4200,8 @@ namespace Mutagen.Bethesda.Fallout4
             this IFallout4ModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
@@ -4219,7 +4227,7 @@ namespace Mutagen.Bethesda.Fallout4
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
@@ -4282,8 +4290,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public GameRelease GameRelease => GameRelease.Fallout4;
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(Fallout4ModHeader.HeaderFlag.Localized);
@@ -4403,7 +4411,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
 
         public static Fallout4ModBinaryOverlay Fallout4ModFactory(
             ModPath path,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            IFileSystem? fileSystem = null)
         {
             var meta = new ParsingBundle(GameRelease.Fallout4, new MasterReferenceReader(path.ModKey))
             {
@@ -4411,7 +4420,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta);
+                metaData: meta,
+                fileSystem: fileSystem);
             try
             {
                 if (stream.Remaining < 12)

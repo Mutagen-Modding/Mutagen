@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Exceptions;
@@ -65,6 +66,13 @@ namespace Mutagen.Bethesda.Plugins.Order
 
     public class LoadOrderImporter : ILoadOrderImporter
     {
+        private readonly IFileSystem _fileSystem;
+
+        public LoadOrderImporter(IFileSystem fileSystem)
+        {
+            _fileSystem = fileSystem;
+        }
+        
         /// <inheritdoc />
         public ILoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
@@ -75,7 +83,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Import(
                 dataFolder,
                 loadOrder,
-                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease, _fileSystem));
         }
 
         /// <inheritdoc />
@@ -88,7 +96,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Import(
                 dataFolder,
                 loadOrder.Select(m => new ModListing(m, enabled: true)),
-                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease));
+                (modPath) => ModInstantiator<TMod>.Importer(modPath, gameRelease, _fileSystem));
         }
 
         /// <inheritdoc />
@@ -120,7 +128,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     try
                     {
                         var modPath = new ModPath(listing.ModKey, dataFolder.GetFile(listing.ModKey.FileName).Path);
-                        if (!modPath.Path.Exists)
+                        if (!_fileSystem.File.Exists(modPath.Path))
                         {
                             results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);
                             return;

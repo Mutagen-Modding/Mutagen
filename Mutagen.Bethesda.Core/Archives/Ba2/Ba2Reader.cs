@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Archives.Ba2
         public bool HasNameTable => _nameTableOffset > 0;
 
         public Ba2Reader(FilePath filename, IFileSystem? fileSystem = null)
-            : this(() => (fileSystem ?? IFileSystemExt.DefaultFilesystem).File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
+            : this(() => fileSystem.GetOrDefault().File.Open(filename.Path, FileMode.Open, FileAccess.Read, FileShare.Read))
         {
         }
 

@@ -35,6 +35,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -5246,8 +5247,8 @@ namespace Mutagen.Bethesda.Skyrim
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
         ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
-        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
         public override bool CanUseLocalization => true;
         public override bool UsingLocalization
@@ -6025,12 +6026,13 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease release,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -6064,12 +6066,13 @@ namespace Mutagen.Bethesda.Skyrim
             ErrorMaskBuilder? errorMask,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -6177,12 +6180,14 @@ namespace Mutagen.Bethesda.Skyrim
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
             ModPath path,
             SkyrimRelease release,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            IFileSystem? fileSystem = null)
         {
             return SkyrimModBinaryOverlay.SkyrimModFactory(
                 path: path,
                 stringsParam: stringsParam,
-                release: release);
+                release: release,
+                fileSystem: fileSystem);
         }
 
         public static ISkyrimModDisposableGetter CreateFromBinaryOverlay(
@@ -6672,7 +6677,8 @@ namespace Mutagen.Bethesda.Skyrim
         public static void WriteToBinaryParallel(
             this ISkyrimModGetter item,
             string path,
-            BinaryWriteParameters? param = null)
+            BinaryWriteParameters? param = null,
+            IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
@@ -6680,7 +6686,7 @@ namespace Mutagen.Bethesda.Skyrim
                 path: path);
             bool disposeStrings = param.StringsWriter == null;
             param.StringsWriter ??= EnumExt.HasFlag((int)item.ModHeader.Flags, (int)ModHeaderCommonFlag.Localized) ? new StringsWriter(item.GameRelease, modKey, Path.Combine(Path.GetDirectoryName(path)!, "Strings")) : null;
-            using (var stream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
                 SkyrimModCommon.WriteParallel(
                     item: item,
@@ -6965,12 +6971,13 @@ namespace Mutagen.Bethesda.Skyrim
             SkyrimRelease release,
             GroupMask? importMask = null,
             StringsReadParameters? stringsParam = null,
-            bool parallel = true)
+            bool parallel = true,
+            IFileSystem? fileSystem = null)
         {
             try
             {
                 var gameRelease = release.ToGameRelease();
-                using (var reader = new MutagenBinaryReadStream(path, gameRelease))
+                using (var reader = new MutagenBinaryReadStream(path, gameRelease, fileSystem: fileSystem))
                 {
                     var modKey = path.ModKey;
                     var frame = new MutagenFrame(reader);
@@ -23594,7 +23601,8 @@ namespace Mutagen.Bethesda.Skyrim
             this ISkyrimModGetter item,
             FilePath path,
             BinaryWriteParameters? param = null,
-            GroupMask? importMask = null)
+            GroupMask? importMask = null,
+            IFileSystem? fileSystem = null)
         {
             param ??= BinaryWriteParameters.Default;
             var modKey = param.RunMasterMatch(
@@ -23620,7 +23628,7 @@ namespace Mutagen.Bethesda.Skyrim
                     param: param,
                     modKey: modKey);
             }
-            using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var fs = fileSystem.GetOrDefault().FileStream.Create(path, FileMode.Create, FileAccess.Write))
             {
                 memStream.Position = 0;
                 memStream.CopyTo(fs);
@@ -23684,8 +23692,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
         IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
-        void IModGetter.WriteToBinary(string path, BinaryWriteParameters? param) => this.WriteToBinary(path, importMask: null, param: param);
-        void IModGetter.WriteToBinaryParallel(string path, BinaryWriteParameters? param) => this.WriteToBinaryParallel(path, param: param);
+        void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
+        void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;
         public bool CanUseLocalization => true;
         public bool UsingLocalization => this.ModHeader.Flags.HasFlag(SkyrimModHeader.HeaderFlag.Localized);
@@ -24315,7 +24323,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         public static SkyrimModBinaryOverlay SkyrimModFactory(
             ModPath path,
             SkyrimRelease release,
-            StringsReadParameters? stringsParam = null)
+            StringsReadParameters? stringsParam = null,
+            IFileSystem? fileSystem = null)
         {
             var meta = new ParsingBundle(release.ToGameRelease(), new MasterReferenceReader(path.ModKey))
             {
@@ -24323,7 +24332,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             };
             var stream = new MutagenBinaryReadStream(
                 path: path.Path,
-                metaData: meta);
+                metaData: meta,
+                fileSystem: fileSystem);
             try
             {
                 if (stream.Remaining < 12)
