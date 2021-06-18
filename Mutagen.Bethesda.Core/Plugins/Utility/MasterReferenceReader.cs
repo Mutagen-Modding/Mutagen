@@ -4,6 +4,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Utility
@@ -128,9 +129,10 @@ namespace Mutagen.Bethesda.Plugins.Utility
             throw new ArgumentException($"Could not map FormKey to a master index: {key}");
         }
 
-        public static MasterReferenceReader FromPath(ModPath path, GameRelease release)
+        public static MasterReferenceReader FromPath(ModPath path, GameRelease release, IFileSystem? fileSystem = null)
         {
-            using var stream = new MutagenBinaryReadStream(path, new ParsingBundle(release, masterReferences: null!)
+            var fs = (fileSystem ?? IFileSystemExt.DefaultFilesystem).FileStream.Create(path, FileMode.Open);
+            using var stream = new MutagenBinaryReadStream(fs, new ParsingBundle(release, masterReferences: null!)
             {
                 ModKey = path.ModKey
             });
