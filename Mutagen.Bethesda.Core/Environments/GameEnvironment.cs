@@ -5,7 +5,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
-namespace Mutagen.Bethesda
+namespace Mutagen.Bethesda.Environments
 {
     public class GameEnvironment
     {

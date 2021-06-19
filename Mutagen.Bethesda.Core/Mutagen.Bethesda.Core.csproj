@@ -78,6 +78,11 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\GetArchiveIniListings.cs" />
+    <Compile Include="Environments\GameEnvironment.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs">
@@ -279,7 +284,6 @@
     <Compile Include="Translations\Binary\UInt32BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\UInt64BinaryTranslation.cs" />
     <Compile Include="Translations\Binary\UtilityTranslation.cs" />
-    <Compile Include="GameEnvironment.cs" />
     <Compile Include="Plugins\Utility\MajorRecordPrinter.cs" />
     <Compile Include="Plugins\Records\ModInstantiator.cs" />
     <Compile Include="Plugins\Utility\RecordTypeInfoCacheReader.cs" />
