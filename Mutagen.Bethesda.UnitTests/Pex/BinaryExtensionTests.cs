@@ -2,9 +2,10 @@ using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Noggog;
 using System;
-using System.IO;
 using System.Text;
 using Xunit;
+using MemoryStream = System.IO.MemoryStream;
+using BinaryWriter = System.IO.BinaryWriter;
 
 namespace Mutagen.Bethesda.UnitTests.Pex
 {

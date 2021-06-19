@@ -8,8 +8,9 @@ using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using Xunit;
+using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary
 {
@@ -213,18 +214,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Binary
         [Fact]
         public void DisposedIfException()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(BinaryOverlay_Tests));
-            var modPath = Path.Combine(tmpFolder.Dir.Path, "Test.esp");
+            var fs = new MockFileSystem();
+            fs.Directory.CreateDirectory("C:/SomeFolder");
+            var modPath = Path.Combine("C:/SomeFolder", "Test.esp");
             try
             {
-                File.WriteAllText(modPath, "DERP");
-                var mod = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimLE);
+                fs.File.WriteAllText(modPath, "DERP");
+                var mod = SkyrimMod.CreateFromBinaryOverlay(modPath, SkyrimRelease.SkyrimLE, fileSystem: fs);
             }
             catch (ArgumentException)
             {
             }
             // Assert that file is released from wrapper's internal stream
-            File.Delete(modPath);
+            fs.File.Delete(modPath);
         }
         #endregion
     }

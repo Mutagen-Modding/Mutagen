@@ -2,8 +2,8 @@ using Mutagen.Bethesda.Plugins.Binary.Processing;
 using Noggog;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using Xunit;
+using MemoryStream = System.IO.MemoryStream;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Processing
 {

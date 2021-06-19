@@ -1,9 +1,10 @@
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Noggog;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
+using Stream = System.IO.Stream;
+using MemoryStream = System.IO.MemoryStream;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Streams
 {

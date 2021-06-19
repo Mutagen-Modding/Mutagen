@@ -3,9 +3,9 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using RecordTypes = Mutagen.Bethesda.Plugins.Records.Internals.RecordTypes;
 using System;
-using System.IO;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Records.Internals;
+using MemoryStream = System.IO.MemoryStream;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Binary.Headers
 {

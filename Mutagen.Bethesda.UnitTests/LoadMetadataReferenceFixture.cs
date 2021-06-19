@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using Microsoft.CodeAnalysis;
-using Noggog;
+using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests
 {

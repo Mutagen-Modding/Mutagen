@@ -3,9 +3,10 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Strings;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Xunit;
+using MemoryStream = System.IO.MemoryStream;
+using BinaryWriter = System.IO.BinaryWriter;
 
 namespace Mutagen.Bethesda.UnitTests.Strings
 {

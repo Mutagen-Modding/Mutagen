@@ -1,9 +1,9 @@
-﻿using System.IO;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
+using MemoryStream = System.IO.MemoryStream;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 {
