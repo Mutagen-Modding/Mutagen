@@ -1,20 +1,16 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mutagen.Bethesda.Binary;
-using System.Reactive.Linq;
 using Noggog;
-using Mutagen.Bethesda.Internals;
 using System.IO;
 using System.Buffers.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Binary.Translations;
-using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Masters;
 using static Mutagen.Bethesda.Translations.Binary.UtilityTranslation;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Plugins.Utility;
 
 namespace Mutagen.Bethesda.Oblivion
 {

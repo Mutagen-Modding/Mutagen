@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Skyrim
 {

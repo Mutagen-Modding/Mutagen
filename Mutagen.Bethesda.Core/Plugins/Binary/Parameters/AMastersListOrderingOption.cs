@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Parameters
 {

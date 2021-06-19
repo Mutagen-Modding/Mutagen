@@ -96,6 +96,12 @@
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
+    <Compile Include="Plugins\Masters\MasterReferenceReader.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
     <Compile Include="Plugins\Order\ConstructLiveLoadOrder.cs" />
     <Compile Include="Plugins\Order\LoadOrderImporter.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
@@ -307,7 +313,6 @@
     <Compile Include="Plugins\IEDIDLink.cs" />
     <Compile Include="Plugins\ILink.cs" />
     <Compile Include="Plugins\Records\IFormLinkContainerGetter.cs" />
-    <Compile Include="Plugins\Utility\MasterReferenceReader.cs" />
     <Compile Include="Plugins\Binary\Processing\ModDecompressor.cs" />
     <Compile Include="Plugins\Order\ModListing.cs" />
     <Compile Include="Plugins\Binary\Processing\ModRecordSorter.cs" />

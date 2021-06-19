@@ -7,7 +7,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 
-namespace Mutagen.Bethesda.Plugins.Utility
+namespace Mutagen.Bethesda.Plugins.Masters
 {
     /// <summary>
     /// A registry of master listings.

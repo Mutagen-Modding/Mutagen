@@ -6,7 +6,6 @@ using Mutagen.Bethesda.Plugins.Binary.Translations;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Records.Internals;
-using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using System;
@@ -16,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Generation.Modules.Plugin
 {
@@ -31,6 +31,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                 yield return "System.Threading.Tasks";
                 yield return "System.IO";
                 yield return "System.IO.Abstractions";
+                yield return "Mutagen.Bethesda.Plugins.Masters";
             }
         }
 

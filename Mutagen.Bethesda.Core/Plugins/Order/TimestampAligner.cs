@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             foreach (var key in incomingLoadOrder)
             {
                 ModPath modPath = new ModPath(key.ModKey, Path.Combine(dataPath.Path, key.ModKey.FileName));
-                if (!modPath.Path.Exists)
+                if (!_FileSystem.File.Exists(modPath.Path))
                 {
                     if (throwOnMissingMods) throw new MissingModException(modPath);
                     continue;

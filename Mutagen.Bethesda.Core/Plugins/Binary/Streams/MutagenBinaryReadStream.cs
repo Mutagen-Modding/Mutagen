@@ -2,6 +2,7 @@ using Mutagen.Bethesda.Plugins.Utility;
 using Noggog;
 using System.IO;
 using System.IO.Abstractions;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Plugins.Binary.Streams
 {

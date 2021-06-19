@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Utility;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins
 {

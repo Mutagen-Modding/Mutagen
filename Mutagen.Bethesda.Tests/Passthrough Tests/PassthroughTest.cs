@@ -1,12 +1,10 @@
 using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Pex;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Binary;
 using Mutagen.Bethesda.Plugins.Binary.Processing;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 using Mutagen.Bethesda.Plugins.Meta;
 using Mutagen.Bethesda.Plugins.Records;
-using Mutagen.Bethesda.Plugins.Utility;
 using Mutagen.Bethesda.Strings;
 using Noggog;
 using Noggog.Streams.Binary;
@@ -17,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Plugins.Masters;
 
 namespace Mutagen.Bethesda.Tests
 {
