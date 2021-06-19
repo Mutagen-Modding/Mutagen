@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
     <Compile Include="Plugins\Order\ConstructLiveLoadOrder.cs" />
+    <Compile Include="Plugins\Order\FindImplicitlyIncludedMods.cs" />
     <Compile Include="Plugins\Order\LoadOrderImporter.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
