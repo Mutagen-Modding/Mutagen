@@ -39,20 +39,18 @@ namespace Mutagen.Bethesda.Core.Plugins.Order
             while (toCheck.Count > 0)
             {
                 var key = toCheck.Dequeue();
-                var listing = listingToIndices[key];
-                if (referencedMasters.Add(listing.ModKey))
+                if (!referencedMasters.Add(key)) continue;
+                if (!listingToIndices.TryGetValue(key, out var listing)) continue;
+                if (!listing.Enabled)
                 {
-                    if (!listing.Enabled)
+                    yield return listing.ModKey;
+                }
+                var reader = _readerFactory.FromPath(Path.Combine(dataFolder, listing.ModKey.FileName), release);
+                foreach (var master in reader.Masters)
+                {
+                    if (!referencedMasters.Contains(master.Master))
                     {
-                        yield return listing.ModKey;
-                    }
-                    var reader = _readerFactory.FromPath(Path.Combine(dataFolder, listing.ModKey.FileName), release);
-                    foreach (var master in reader.Masters)
-                    {
-                        if (!referencedMasters.Contains(master.Master))
-                        {
-                            toCheck.Enqueue(master.Master);
-                        }
+                        toCheck.Enqueue(master.Master);
                     }
                 }
             }

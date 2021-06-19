@@ -164,5 +164,24 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 ModC,
                 ModD);
         }
+
+        [Fact]
+        public void UnlistedReference()
+        {
+            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC)));
+            var list = new List<IModListingGetter>()
+            {
+                new ModListing(ModA, true),
+                new ModListing(ModB, true),
+            };
+            var found = adder.Find(
+                    _Fixture.Inject.Create<GameRelease>(),
+                    _Fixture.Inject.Create<DirectoryPath>(),
+                    list)
+                .ToList();
+            found.Should().BeEmpty();
+        }
     }
 }
