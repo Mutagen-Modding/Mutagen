@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.UnitTests.Installs
         {
             foreach (var rel in EnumExt.GetValues<GameRelease>())
             {
-                GameLocations.Games.ContainsKey(rel)
+                GameLocator.Games.ContainsKey(rel)
                     .Should().BeTrue();
             }
         }
