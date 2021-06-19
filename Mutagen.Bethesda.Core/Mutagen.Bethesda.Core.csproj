@@ -89,7 +89,6 @@
     <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\TypicalBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Order\TypedLoadOrderAccess.cs" />
-    <Compile Include="TestFrameStream.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
