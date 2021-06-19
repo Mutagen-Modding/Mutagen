@@ -381,11 +381,11 @@ namespace Mutagen.Bethesda.Archives.Ba2
 
             if (!Compressed)
             {
-                return new FramedStream(fs, fs.Position + len);
+                return new TestFrameStream(fs, fs.Position + len);
             }
             else
             {
-                return new FramedStream(
+                return new TestFrameStream(
                     new InflaterInputStream(fs)
                     {
                         IsStreamOwner = true
