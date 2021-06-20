@@ -125,7 +125,7 @@
     <Compile Include="Plugins\Order\OrderListings.cs" />
     <Compile Include="Plugins\Order\PluginListingsProvider.cs" />
     <Compile Include="Plugins\Order\PluginPathProvider.cs" />
-    <Compile Include="Plugins\Order\RetrieveListings.cs" />
+    <Compile Include="Plugins\Order\LoadOrderListingsProvider.cs" />
     <Compile Include="Plugins\Order\TimestampAligner.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />

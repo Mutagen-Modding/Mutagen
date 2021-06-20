@@ -43,11 +43,11 @@ namespace Mutagen.Bethesda.Plugins.Order
 
     public class ConstructLiveLoadOrder : IConstructLiveLoadOrder
     {
-        private readonly IListingsProvider _listingsProvider;
+        private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
 
-        public ConstructLiveLoadOrder(IListingsProvider listingsProvider)
+        public ConstructLiveLoadOrder(ILoadOrderListingsProvider loadOrderListingsProvider)
         {
-            _listingsProvider = listingsProvider;
+            _loadOrderListingsProvider = loadOrderListingsProvider;
         }
         
         public IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
@@ -134,7 +134,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                                     // Short circuit if not subscribed anymore
                                     if (disp.IsDisposed) return;
 
-                                    var refreshedListings = _listingsProvider.GetListings(
+                                    var refreshedListings = _loadOrderListingsProvider.GetListings(
                                         game,
                                         loadOrderFilePath,
                                         cccLoadOrderFilePath,
