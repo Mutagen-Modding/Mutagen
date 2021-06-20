@@ -111,6 +111,9 @@
       <BuildAction>Compile</BuildAction>
     </Compile>
     <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
+    <Compile Include="Plugins\Order\CreationClubListingsProvider.cs" />
+    <Compile Include="Plugins\Order\CreationClubLiveLoadOrderProvider.cs" />
+    <Compile Include="Plugins\Order\CreationClubPathProvider.cs" />
     <Compile Include="Plugins\Order\ConstructLiveLoadOrder.cs" />
     <Compile Include="Plugins\Order\FindImplicitlyIncludedMods.cs" />
     <Compile Include="Plugins\Order\LoadOrderImporter.cs" />

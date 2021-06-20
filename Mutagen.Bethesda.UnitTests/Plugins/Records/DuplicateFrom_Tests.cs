@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 {
-    public class DuplicateFrom_Tests
+    public class DuplicateFrom_Tests : IClassFixture<LoquiUse>
     {
         [Fact]
         public void DoNothing()

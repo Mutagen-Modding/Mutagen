@@ -1,12 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Masters;
-using Mutagen.Bethesda.Plugins.Order;
 using Noggog;
 
-namespace Mutagen.Bethesda.Core.Plugins.Order
+namespace Mutagen.Bethesda.Plugins.Order
 {
     public interface IFindImplicitlyIncludedMods
     {
