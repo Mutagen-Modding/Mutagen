@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
         }
     }
 
-    public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>
+    public abstract class Linking_Abstract_Tests : IClassFixture<LinkingInit>, IClassFixture<LoquiUse>
     {
         public enum LinkCacheTestTypes
         {
