@@ -13,10 +13,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
     {
         private const string BaseFolder = "C:/BaseFolder";
 
-        private RetrieveListings GetRetriever(IFileSystem fs)
+        private ListingsProvider GetRetriever(IFileSystem fs)
         {
             var cccPathProvider = new CreationClubPathProvider(fs);
-            return new RetrieveListings(
+            return new ListingsProvider(
                 fs,
                 new OrderListings(),
                 new PluginListingsProvider(

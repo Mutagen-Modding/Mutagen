@@ -10,7 +10,7 @@ using FileNotFoundException = System.IO.FileNotFoundException;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface IRetrieveListings
+    public interface IListingsProvider
     {
         /// <summary>
         /// Returns a load order listing from the usual sources
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true);
     }
 
-    public class RetrieveListings : IRetrieveListings
+    public class ListingsProvider : IListingsProvider
     {
         private readonly IFileSystem _fileSystem;
         private readonly IOrderListings _orderListings;
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         private readonly ICreationClubPathProvider _cccPathProvider;
         private readonly ICreationClubListingsProvider _cccListingsProvider;
 
-        public RetrieveListings(
+        public ListingsProvider(
             IFileSystem fileSystem,
             IOrderListings orderListings,
             IPluginListingsProvider listingsRetriever, 

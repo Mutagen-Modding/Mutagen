@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
         private static OrderListings Orderer = new();
         private static readonly CreationClubPathProvider CccPathProvider = new(IFileSystemExt.DefaultFilesystem);
-        private static RetrieveListings Retriever = new(
+        private static ListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             Orderer,
             new PluginListingsProvider(
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
         #endregion
 
-        /// <inheritdoc cref="IRetrieveListings"/>
+        /// <inheritdoc cref="IListingsProvider"/>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             DirectoryPath dataPath,
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Retriever.GetListings(game, dataPath, throwOnMissingMods);
         }
 
-        /// <inheritdoc cref="IRetrieveListings"/>
+        /// <inheritdoc cref="IListingsProvider"/>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             FilePath pluginsFilePath,
