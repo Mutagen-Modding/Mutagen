@@ -7,7 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface IPluginListingsRetriever
+    public interface IPluginListingsProvider
     {
         string GetListingsPath(GameRelease game);
 
@@ -73,12 +73,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             GameRelease game);
     }
 
-    public class PluginListingsRetriever : IPluginListingsRetriever
+    public class PluginListingsProvider : IPluginListingsProvider
     {
         private readonly IFileSystem _FileSystem;
         private readonly ITimestampAligner _TimestampAligner;
 
-        public PluginListingsRetriever(
+        public PluginListingsProvider(
             IFileSystem fileSystem,
             ITimestampAligner timestampAligner)
         {

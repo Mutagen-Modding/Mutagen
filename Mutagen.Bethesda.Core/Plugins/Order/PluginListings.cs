@@ -10,35 +10,35 @@ namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class PluginListings
     {
-        private static PluginListingsRetriever Retriever = new(
+        private static PluginListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             new TimestampAligner(IFileSystemExt.DefaultFilesystem));
         
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static string GetListingsPath(GameRelease game)
         {
             return Retriever.GetListingsPath(game);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static bool TryGetListingsFile(GameRelease game, out FilePath path)
         {
             return Retriever.TryGetListingsFile(game, out path);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static FilePath GetListingsFile(GameRelease game)
         {
             return Retriever.GetListingsFile(game);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
         {
             return Retriever.ListingsFromStream(stream, game);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static IEnumerable<IModListingGetter> ListingsFromPath(
             GameRelease game,
             DirectoryPath dataPath,
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Retriever.ListingsFromPath(game, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static IEnumerable<IModListingGetter> ListingsFromPath(
             FilePath pluginTextPath,
             GameRelease game,
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Retriever.ListingsFromPath(pluginTextPath, game, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
-        /// <inheritdoc cref="IPluginListingsRetriever"/>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static IEnumerable<IModListingGetter> RawListingsFromPath(
             FilePath pluginTextPath,
             GameRelease game)

@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public async Task LiveLoadOrder()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -120,7 +120,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public async Task LiveLoadOrder_EnsureReaddRetainsOrder()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public async Task LiveLoadOrder_PluginsCCListingReorders()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
@@ -278,7 +278,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public async Task LiveLoadOrder_DontReorderPluginsFile()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrder_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrder_Tests));
             var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");

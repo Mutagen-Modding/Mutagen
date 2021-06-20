@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
-using Mutagen.Bethesda.Core.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Order;

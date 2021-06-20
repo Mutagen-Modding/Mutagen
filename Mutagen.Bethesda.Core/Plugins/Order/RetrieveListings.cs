@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Exceptions;
 using Noggog;
 using Path = System.IO.Path;
@@ -38,13 +39,22 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         private readonly IFileSystem _fileSystem;
         private readonly IOrderListings _orderListings;
+        private readonly IPluginListingsProvider _listingsRetriever;
+        private readonly ICreationClubPathProvider _cccPathProvider;
+        private readonly ICreationClubListingsProvider _cccListingsProvider;
 
         public RetrieveListings(
             IFileSystem fileSystem,
-            IOrderListings orderListings)
+            IOrderListings orderListings,
+            IPluginListingsProvider listingsRetriever, 
+            ICreationClubPathProvider cccPathProvider,
+            ICreationClubListingsProvider cccListingsProvider)
         {
             _fileSystem = fileSystem;
             _orderListings = orderListings;
+            _listingsRetriever = listingsRetriever;
+            _cccPathProvider = cccPathProvider;
+            _cccListingsProvider = cccListingsProvider;
         }
         
         /// <inheritdoc />
@@ -53,14 +63,14 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            if (!PluginListings.TryGetListingsFile(game, out var path))
+            if (!_listingsRetriever.TryGetListingsFile(game, out var path))
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             return GetListings(
                 game: game,
                 pluginsFilePath: path,
-                creationClubFilePath: CreationClubListings.GetListingsPath(game.ToCategory(), dataPath),
+                creationClubFilePath: _cccPathProvider.GetListingsPath(game.ToCategory(), dataPath),
                 dataPath: dataPath,
                 throwOnMissingMods: throwOnMissingMods);
         }
@@ -76,15 +86,15 @@ namespace Mutagen.Bethesda.Plugins.Order
             var listings = Enumerable.Empty<IModListingGetter>();
             if (pluginsFilePath.Exists)
             {
-                listings = PluginListings.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
+                listings = _listingsRetriever.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
             }
             var implicitListings = Implicits.Get(game).Listings
                 .Where(x => _fileSystem.File.Exists(Path.Combine(dataPath.Path, x.FileName.String)))
                 .Select(x => new ModListing(x, enabled: true));
             var ccListings = Enumerable.Empty<IModListingGetter>();
-            if (creationClubFilePath != null && creationClubFilePath.Value.Exists)
+            if (creationClubFilePath != null && _fileSystem.File.Exists(creationClubFilePath.Value))
             {
-                ccListings = CreationClubListings.ListingsFromPath(creationClubFilePath.Value, dataPath);
+                ccListings = _cccListingsProvider.GetListingsFromPath(creationClubFilePath.Value, dataPath);
             }
 
             return _orderListings.Order(
