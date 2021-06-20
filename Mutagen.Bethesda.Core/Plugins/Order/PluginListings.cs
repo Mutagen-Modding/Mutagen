@@ -4,17 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reactive;
-using System.Reactive.Linq;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class PluginListings
     {
-        private readonly static PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
-        private readonly static PluginListingsProvider Retriever = new(
+        private static readonly PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly PluginListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             PathProvider,
             new TimestampAligner(IFileSystemExt.DefaultFilesystem));
+        private static readonly PluginLiveLoadOrderProvider LiveLoadOrder = new(
+            IFileSystemExt.DefaultFilesystem,
+            Retriever,
+            PathProvider);
         
         /// <inheritdoc cref="IPluginListingsProvider"/>
         public static string GetListingsPath(GameRelease game)
@@ -67,6 +70,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Retriever.RawListingsFromPath(pluginTextPath, game);
         }
 
+        /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,
@@ -75,42 +79,24 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true,
             bool orderListings = true)
         {
-            var results = ObservableExt.WatchFile(loadOrderFilePath.Path)
-                .StartWith(Unit.Default)
-                .Select(_ =>
-                {
-                    try
-                    {
-                        var lo = ListingsFromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods);
-                        if (orderListings)
-                        {
-                            lo = lo.OrderListings();
-                        }
-                        return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Succeed(lo.AsObservableChangeSet());
-                    }
-                    catch (Exception ex)
-                    {
-                        return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Fail(ex);
-                    }
-                })
-                .Replay(1)
-                .RefCount();
-            state = results
-                .Select(r => (ErrorResponse)r);
-            return results
-                .Select(r =>
-                {
-                    return r.Value ?? Observable.Empty<IChangeSet<IModListingGetter>>();
-                })
-                .Switch();
+            return LiveLoadOrder.GetLiveLoadOrder(
+                game: game,
+                loadOrderFilePath: loadOrderFilePath,
+                dataFolderPath: dataFolderPath,
+                state: out state,
+                throwOnMissingMods: throwOnMissingMods,
+                orderListings: orderListings);
         }
 
+        /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
         public static IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath)
         {
-            return ObservableExt.WatchFile(loadOrderFilePath.Path);
+            return LiveLoadOrder.GetLoadOrderChanged(loadOrderFilePath);
         }
 
-        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(GetListingsPath(game));
+        /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
+        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game) =>
+            LiveLoadOrder.GetLoadOrderChanged(game);
 
         public static bool HasEnabledMarkers(GameRelease game)
         {

@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.IO;
+using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
@@ -8,7 +9,7 @@ using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class RetrieveListingsTests
+    public class ListingProviderTests
     {
         private const string BaseFolder = "C:/BaseFolder";
 
@@ -213,6 +214,31 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(Utility.PluginModKey, enabled: true),
                 new ModListing(Utility.PluginModKey2, enabled: false),
             });
+        }
+
+        [Fact]
+        public void FromPathMissingWithImplicit()
+        {
+            using var tmpFolder = Utility.GetTempFolder(nameof(ModListings_Tests));
+            using var file = File.Create(Path.Combine(tmpFolder.Dir.Path, "Skyrim.esm"));
+            var missingPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
+            LoadOrder.GetListings(
+                    pluginsFilePath: missingPath,
+                    creationClubFilePath: null,
+                    game: GameRelease.SkyrimSE,
+                    dataPath: tmpFolder.Dir.Path)
+                .Should().Equal(new ModListing("Skyrim.esm", true));
+            // var fs = new MockFileSystem();
+            // fs.Directory.CreateDirectory(BaseFolder);
+            // using var file = fs.File.Create(Path.Combine(BaseFolder, "Skyrim.esm"));
+            // var missingPath = Path.Combine(BaseFolder, "Plugins.txt");
+            // var listingsGetter = GetRetriever(fs);
+            // listingsGetter.GetListings(
+            //         pluginsFilePath: missingPath,
+            //         creationClubFilePath: null,
+            //         game: GameRelease.SkyrimSE,
+            //         dataPath: BaseFolder)
+            //     .Should().Equal(new ModListing("Skyrim.esm", true));
         }
     }
 }
