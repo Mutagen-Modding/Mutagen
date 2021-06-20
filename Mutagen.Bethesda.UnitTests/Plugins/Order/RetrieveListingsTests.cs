@@ -3,7 +3,6 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Plugins.Order;
 using Xunit;
 using Path = System.IO.Path;
 
@@ -15,12 +14,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         private ListingsProvider GetRetriever(IFileSystem fs)
         {
+            var pathProvider = new PluginPathProvider(fs);
             var cccPathProvider = new CreationClubPathProvider(fs);
             return new ListingsProvider(
                 fs,
                 new OrderListings(),
+                pathProvider,
                 new PluginListingsProvider(
                     fs,
+                    pathProvider,
                     new TimestampAligner(fs)),
                 cccPathProvider,
                 new CreationClubListingsProvider(fs, cccPathProvider));

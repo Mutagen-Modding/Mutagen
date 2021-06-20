@@ -9,24 +9,6 @@ namespace Mutagen.Bethesda.Plugins.Order
 {
     public interface IPluginListingsProvider
     {
-        string GetListingsPath(GameRelease game);
-
-        /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existence
-        /// </summary>
-        /// <param name="game">Game to locate for</param>
-        /// <param name="path">Path to load order file if it was located</param>
-        /// <returns>True if file located</returns>
-        bool TryGetListingsFile(GameRelease game, out FilePath path);
-
-        /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existence
-        /// </summary>
-        /// <param name="game">Game to locate for</param>
-        /// <returns>Path to load order file if it was located</returns>
-        /// <exception cref="FileNotFoundException">If expected plugin file did not exist</exception>
-        FilePath GetListingsFile(GameRelease game);
-
         /// <summary>
         /// Parses a stream to retrieve all ModKeys in expected plugin file format
         /// </summary>
@@ -76,13 +58,16 @@ namespace Mutagen.Bethesda.Plugins.Order
     public class PluginListingsProvider : IPluginListingsProvider
     {
         private readonly IFileSystem _FileSystem;
+        private readonly IPluginPathProvider _pluginPathProvider;
         private readonly ITimestampAligner _TimestampAligner;
 
         public PluginListingsProvider(
             IFileSystem fileSystem,
+            IPluginPathProvider pluginPathProvider,
             ITimestampAligner timestampAligner)
         {
             _FileSystem = fileSystem;
+            _pluginPathProvider = pluginPathProvider;
             _TimestampAligner = timestampAligner;
         }
         
@@ -97,32 +82,6 @@ namespace Mutagen.Bethesda.Plugins.Order
                 GameRelease.Fallout4 => "Fallout4/Plugins.txt",
                 _ => throw new NotImplementedException()
             };
-        }
-
-        /// <inheritdoc />
-        public string GetListingsPath(GameRelease game)
-        {
-            string pluginPath = GetRelativePluginsPath(game);
-            return Path.Combine(
-                Environment.GetEnvironmentVariable("LocalAppData")!,
-                pluginPath);
-        }
-
-        /// <inheritdoc />
-        public bool TryGetListingsFile(GameRelease game, out FilePath path)
-        {
-            path = new FilePath(GetListingsPath(game));
-            return _FileSystem.File.Exists(path);
-        }
-
-        /// <inheritdoc />
-        public FilePath GetListingsFile(GameRelease game)
-        {
-            if (TryGetListingsFile(game, out var path))
-            {
-                return path;
-            }
-            throw new FileNotFoundException($"Could not locate load order automatically.  Expected a file at: {path.Path}");
         }
 
         /// <inheritdoc />
@@ -150,7 +109,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true)
         {
             return ListingsFromPath(
-                pluginTextPath: GetListingsPath(game),
+                pluginTextPath: _pluginPathProvider.GetListingsPath(game),
                 game: game,
                 dataPath: dataPath,
                 throwOnMissingMods: throwOnMissingMods);

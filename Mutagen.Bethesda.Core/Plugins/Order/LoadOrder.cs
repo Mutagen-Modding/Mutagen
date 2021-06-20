@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -23,11 +22,14 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
         private static OrderListings Orderer = new();
         private static readonly CreationClubPathProvider CccPathProvider = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
         private static ListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             Orderer,
+            PathProvider,
             new PluginListingsProvider(
                 IFileSystemExt.DefaultFilesystem,
+                PathProvider,
                 new TimestampAligner(IFileSystemExt.DefaultFilesystem)),
             CccPathProvider,
             new CreationClubListingsProvider(
