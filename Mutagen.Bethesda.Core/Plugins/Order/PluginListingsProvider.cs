@@ -50,18 +50,18 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         private readonly IFileSystem _FileSystem;
         private readonly IPluginListingsParserFactory _parserFactory;
-        private readonly IPluginPathProviderFactory _pluginPathProviderFactory;
+        private readonly IPluginPathProvider _pathProvider;
         private readonly ITimestampAligner _TimestampAligner;
 
         public PluginListingsProvider(
             IFileSystem fileSystem,
             IPluginListingsParserFactory parserFactory,
-            IPluginPathProviderFactory pluginPathProviderFactory,
+            IPluginPathProvider pathProvider,
             ITimestampAligner timestampAligner)
         {
             _FileSystem = fileSystem;
             _parserFactory = parserFactory;
-            _pluginPathProviderFactory = pluginPathProviderFactory;
+            _pathProvider = pathProvider;
             _TimestampAligner = timestampAligner;
         }
 
@@ -72,7 +72,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true)
         {
             return ListingsFromPath(
-                pluginTextPath: _pluginPathProviderFactory.Create(game).GetListingsPath(),
+                pluginTextPath: _pathProvider.Get(game),
                 game: game,
                 dataPath: dataPath,
                 throwOnMissingMods: throwOnMissingMods);

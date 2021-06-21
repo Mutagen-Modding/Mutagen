@@ -9,35 +9,54 @@ namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class PluginListings
     {
-        private static readonly PluginPathProviderFactory PathProviderFactory = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly PluginPathProvider PathProvider = new();
         private static readonly ModListingParserFactory ModListingParserFactory = new();
         private static readonly PluginListingsParserFactory ParserFactory = new(ModListingParserFactory);
         private static readonly PluginListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             ParserFactory,
-            PathProviderFactory,
+            PathProvider,
             new TimestampAligner(IFileSystemExt.DefaultFilesystem));
         private static readonly PluginLiveLoadOrderProvider LiveLoadOrder = new(
             IFileSystemExt.DefaultFilesystem,
             Retriever,
-            PathProviderFactory);
+            PathProvider);
         
-        /// <inheritdoc cref="IPluginListingsProvider"/>
+        /// <summary>
+        /// Returns expected location of the plugin load order file
+        /// </summary>
+        /// <param name="game">Release to query</param>
+        /// <returns>Expected path to load order file</returns>
         public static string GetListingsPath(GameRelease game)
         {
-            return PathProviderFactory.Create(game).GetListingsPath();
+            return PathProvider.Get(game);
         }
 
-        /// <inheritdoc cref="IPluginListingsProvider"/>
+        /// <summary>
+        /// Attempts to locate the path to a game's load order file, and ensure existence
+        /// </summary>
+        /// <param name="game">Release to query</param>
+        /// <param name="path">Path to load order file if it was located</param>
+        /// <returns>True if file located</returns>
         public static bool TryGetListingsFile(GameRelease game, out FilePath path)
         {
-            return PathProviderFactory.Create(game).TryLocateListingsPath(out path);
+            path = new FilePath(PathProvider.Get(game));
+            return File.Exists(path);
         }
 
-        /// <inheritdoc cref="IPluginListingsProvider"/>
+        /// <summary>
+        /// Attempts to locate the path to a game's load order file, and ensure existence
+        /// </summary>
+        /// <param name="game">Release to query</param>
+        /// <returns>Path to load order file if it was located</returns>
+        /// <exception cref="FileNotFoundException">If expected plugin file did not exist</exception>
         public static FilePath GetListingsFile(GameRelease game)
         {
-            return PathProviderFactory.Create(game).LocateListingsPath();
+            if (TryGetListingsFile(game, out var path))
+            {
+                return path;
+            }
+            throw new FileNotFoundException($"Could not locate load order automatically.  Expected a file at: {path.Path}");
         }
 
         /// <summary>

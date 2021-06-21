@@ -38,7 +38,7 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         private readonly IFileSystem _fileSystem;
         private readonly IOrderListings _orderListings;
-        private readonly IPluginPathProviderFactory _pathProviderFactory;
+        private readonly IPluginPathProvider _pathProvider;
         private readonly IPluginListingsProvider _listingsRetriever;
         private readonly ICreationClubPathProvider _cccPathProvider;
         private readonly ICreationClubListingsProvider _cccListingsProvider;
@@ -46,14 +46,14 @@ namespace Mutagen.Bethesda.Plugins.Order
         public LoadOrderListingsProvider(
             IFileSystem fileSystem,
             IOrderListings orderListings,
-            IPluginPathProviderFactory pathProviderFactory,
+            IPluginPathProvider pathProvider,
             IPluginListingsProvider listingsRetriever, 
             ICreationClubPathProvider cccPathProvider,
             ICreationClubListingsProvider cccListingsProvider)
         {
             _fileSystem = fileSystem;
             _orderListings = orderListings;
-            _pathProviderFactory = pathProviderFactory;
+            _pathProvider = pathProvider;
             _listingsRetriever = listingsRetriever;
             _cccPathProvider = cccPathProvider;
             _cccListingsProvider = cccListingsProvider;
@@ -65,7 +65,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            if (!_pathProviderFactory.Create(game).TryLocateListingsPath(out var path))
+            var path = _pathProvider.Get(game);
+            if (!_fileSystem.File.Exists(path))
             {
                 throw new FileNotFoundException("Could not locate plugins file");
             }

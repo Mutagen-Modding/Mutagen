@@ -134,7 +134,6 @@
     <Compile Include="Plugins\Order\PluginLiveLoadOrderProvider.cs" />
     <Compile Include="Plugins\Order\PluginPathProvider.cs" />
     <Compile Include="Plugins\Order\LoadOrderListingsProvider.cs" />
-    <Compile Include="Plugins\Order\PluginPathProviderFactory.cs" />
     <Compile Include="Plugins\Order\TimestampAligner.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />

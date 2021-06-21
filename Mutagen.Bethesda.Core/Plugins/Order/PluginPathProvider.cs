@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.IO.Abstractions;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
@@ -10,37 +9,13 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <summary>
         /// Returns expected location of the plugin load order file
         /// </summary>
+        /// <param name="release">Release to query</param>
         /// <returns>Expected path to load order file</returns>
-        FilePath GetListingsPath();
-        
-        /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existence
-        /// </summary>
-        /// <returns>Path to load order file if it was located</returns>
-        /// <exception cref="FileNotFoundException">If expected plugin file did not exist</exception>
-        FilePath LocateListingsPath();
-        
-        /// <summary>
-        /// Attempts to locate the path to a game's load order file, and ensure existence
-        /// </summary>
-        /// <param name="path">Path to load order file if it was located</param>
-        /// <returns>True if file located</returns>
-        bool TryLocateListingsPath(out FilePath path);
+        FilePath Get(GameRelease release);
     }
 
     public class PluginPathProvider : IPluginPathProvider
     {
-        private readonly IFileSystem _fileSystem;
-        private readonly GameRelease _release;
-
-        public PluginPathProvider(
-            IFileSystem fileSystem,
-            GameRelease release)
-        {
-            _fileSystem = fileSystem;
-            _release = release;
-        }
-        
         private string GetRelativePluginsPath(GameRelease release)
         {
             return release switch
@@ -55,29 +30,12 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
 
         /// <inheritdoc />
-        public FilePath GetListingsPath()
+        public FilePath Get(GameRelease release)
         {
-            string pluginPath = GetRelativePluginsPath(_release);
+            string pluginPath = GetRelativePluginsPath(release);
             return Path.Combine(
                 Environment.GetEnvironmentVariable("LocalAppData")!,
                 pluginPath);
-        }
-
-        /// <inheritdoc />
-        public bool TryLocateListingsPath(out FilePath path)
-        {
-            path = new FilePath(GetListingsPath());
-            return _fileSystem.File.Exists(path);
-        }
-
-        /// <inheritdoc />
-        public FilePath LocateListingsPath()
-        {
-            if (TryLocateListingsPath(out var path))
-            {
-                return path;
-            }
-            throw new FileNotFoundException($"Could not locate load order automatically.  Expected a file at: {path.Path}");
         }
     }
 }

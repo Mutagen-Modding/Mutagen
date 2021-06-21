@@ -19,7 +19,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 fs,
                 new PluginListingsParserFactory(
                     new ModListingParserFactory()),
-                new PluginPathProviderFactory(fs),
+                new PluginPathProvider(),
                 new TimestampAligner(fs));
         }
 
