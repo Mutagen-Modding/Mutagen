@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void Typical()
         {
-            var parser = new Bethesda.Plugins.Order.PluginListingsParser(GameRelease.SkyrimSE, 
+            var parser = new Bethesda.Plugins.Order.PluginListingsParser( 
                 new ModListingParser(enabledMarkerProcessing: true));
             var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp
@@ -43,7 +43,7 @@ ModB.esp
         [Fact]
         public void CommentsWithNoEntry()
         {
-            var parser = new Bethesda.Plugins.Order.PluginListingsParser(GameRelease.SkyrimSE, 
+            var parser = new Bethesda.Plugins.Order.PluginListingsParser(
                 new ModListingParser(enabledMarkerProcessing: true));
             var result = parser.Parse(GetStream(@"*ModA.esm
 #ModB.esp
@@ -57,7 +57,7 @@ ModB.esp
         [Fact]
         public void CommentTrimming()
         {
-            var parser = new Bethesda.Plugins.Order.PluginListingsParser(GameRelease.SkyrimSE, 
+            var parser = new Bethesda.Plugins.Order.PluginListingsParser(
                 new ModListingParser(enabledMarkerProcessing: true));
             var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp#Hello

@@ -20,14 +20,11 @@ namespace Mutagen.Bethesda.Plugins.Order
 
     internal class PluginListingsParser : IPluginListingsParser
     {
-        private readonly GameRelease _release;
         private readonly IModListingParser _listingParser;
 
         public PluginListingsParser(
-            GameRelease release,
             IModListingParser listingParser)
         {
-            _release = release;
             _listingParser = listingParser;
         }
         

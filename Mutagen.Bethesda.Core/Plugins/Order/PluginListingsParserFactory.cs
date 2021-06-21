@@ -16,7 +16,7 @@
         
         public IPluginListingsParser Create(GameRelease release)
         {
-            return new PluginListingsParser(release, _modListingParserFactory.Create(release));
+            return new PluginListingsParser(_modListingParserFactory.Create(release));
         }
     }
 }
