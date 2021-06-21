@@ -79,13 +79,14 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\GetArchiveIniListings.cs" />
+    <Compile Include="Environments\DataDirectoryInjector.cs" />
     <Compile Include="Environments\GameEnvironment.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Environments\IDataDirectoryLocationProvider.cs" />
-    <Compile Include="Environments\IGameDirectoryLocationProvider.cs" />
+    <Compile Include="Environments\IDataDirectoryProvider.cs" />
+    <Compile Include="Environments\IGameDirectoryProvider.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs">
