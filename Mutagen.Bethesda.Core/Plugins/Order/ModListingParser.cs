@@ -1,15 +1,46 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
+    /// <summary>
+    /// Parses a single line or filename into a ModListing object
+    /// </summary>
     public interface IModListingParser
     {
+        /// <summary>
+        /// Attempts to convert from a string to a ModListing
+        /// </summary>
+        /// <param name="str">string to parse</param>
+        /// <param name="listing">ModListing from the string, if successful</param>
+        /// <returns>True if conversion successful</returns>
         bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModListing listing);
+        
+        /// <summary>
+        /// Attempts to convert from a FileName to a ModListing
+        /// </summary>
+        /// <param name="fileName">FileName to parse</param>
+        /// <param name="listing">ModListing from the FileName, if successful</param>
+        /// <returns>True if conversion successful</returns>
         bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModListing listing);
+        
+        /// <summary>
+        /// Converts from a string to a ModListing
+        /// </summary>
+        /// <param name="str">string to parse</param>
+        /// <returns>ModListing from the string</returns>
+        /// <exception cref="InvalidDataException">If string malformed</exception>
         ModListing FromString(ReadOnlySpan<char> str);
-        ModListing FromFileName(FileName name);
+        
+        /// <summary>
+        /// Converts from a FileName to a ModListing
+        /// </summary>
+        /// <param name="fileName">FileName to parse</param>
+        /// <returns>ModListing from the FileName</returns>
+        /// <exception cref="InvalidDataException">If FileName malformed</exception>
+        ModListing FromFileName(FileName fileName);
     }
 
     internal class ModListingParser : IModListingParser
@@ -21,6 +52,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             _enabledMarkerProcessing = enabledMarkerProcessing;
         }
         
+        /// <inheritdoc />
         public bool TryFromString(ReadOnlySpan<char> str, [MaybeNullWhen(false)] out ModListing listing)
         {
             str = str.Trim();
@@ -61,25 +93,28 @@ namespace Mutagen.Bethesda.Plugins.Order
             return false;
         }
 
+        /// <inheritdoc />
         public bool TryFromFileName(FileName fileName, [MaybeNullWhen(false)] out ModListing listing)
         {
             return TryFromString(fileName.String,  out listing);
         }
 
+        /// <inheritdoc />
         public ModListing FromString(ReadOnlySpan<char> str)
         {
             if (!TryFromString(str, out var listing))
             {
-                throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
+                throw new InvalidDataException($"Load order file had malformed line: {str.ToString()}");
             }
             return listing;
         }
 
+        /// <inheritdoc />
         public ModListing FromFileName(FileName name)
         {
             if (!TryFromFileName(name, out var listing))
             {
-                throw new ArgumentException($"Load order file had malformed line: {name}");
+                throw new InvalidDataException($"Load order file had malformed line: {name}");
             }
             return listing;
         }

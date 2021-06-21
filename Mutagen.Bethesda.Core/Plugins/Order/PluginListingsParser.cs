@@ -4,6 +4,9 @@ using System.IO;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
+    /// <summary>
+    /// Converts a stream into raw enumerable of ModListings
+    /// </summary>
     public interface IPluginListingsParser
     {
         /// <summary>
