@@ -80,20 +80,12 @@
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\GetArchiveIniListings.cs" />
     <Compile Include="Environments\DataDirectoryInjector.cs" />
-    <Compile Include="Environments\GameEnvironment.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Environments\GameEnvironment.cs" />
     <Compile Include="Environments\IDataDirectoryProvider.cs" />
     <Compile Include="Environments\IGameDirectoryProvider.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
-    <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
     <Compile Include="Plugins\Binary\Parameters\FormIDUniquenessOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\LightMasterLimitOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\MasterFlagOption.cs" />
@@ -109,17 +101,14 @@
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
-    <Compile Include="Plugins\Masters\MasterReferenceReader.cs">
-      <CodeLanguage>cs</CodeLanguage>
-      <DefaultPackFolder>content</DefaultPackFolder>
-      <BuildAction>Compile</BuildAction>
-    </Compile>
+    <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
     <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
     <Compile Include="Plugins\Order\CreationClubListingsProvider.cs" />
     <Compile Include="Plugins\Order\CreationClubLiveLoadOrderProvider.cs" />
     <Compile Include="Plugins\Order\CreationClubPathProvider.cs" />
     <Compile Include="Plugins\Order\ConstructLiveLoadOrder.cs" />
     <Compile Include="Plugins\Order\FindImplicitlyIncludedMods.cs" />
+    <Compile Include="Plugins\Order\Internals\TypedLoadOrderAccess.cs" />
     <Compile Include="Plugins\Order\LoadOrderImporter.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
@@ -140,7 +129,6 @@
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\TypicalBinaryTranslationExt.cs" />
-    <Compile Include="Plugins\Order\TypedLoadOrderAccess.cs" />
     <Compile Include="Translations\Binary\BooleanBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteArrayBinaryTranslation.cs" />
     <Compile Include="Translations\Binary\ByteBinaryTranslation.cs" />
