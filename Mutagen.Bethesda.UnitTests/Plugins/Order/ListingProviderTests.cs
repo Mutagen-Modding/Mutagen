@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
@@ -23,6 +23,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 pathProvider,
                 new PluginListingsProvider(
                     fs,
+                    new PluginListingsParserFactory(
+                        new ModListingParserFactory()),
                     pathProvider,
                     new TimestampAligner(fs)),
                 cccPathProvider,

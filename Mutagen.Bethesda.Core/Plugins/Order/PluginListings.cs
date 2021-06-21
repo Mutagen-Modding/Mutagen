@@ -10,8 +10,11 @@ namespace Mutagen.Bethesda.Plugins.Order
     public static class PluginListings
     {
         private static readonly PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly ModListingParserFactory ModListingParserFactory = new();
+        private static readonly PluginListingsParserFactory ParserFactory = new(ModListingParserFactory);
         private static readonly PluginListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
+            ParserFactory,
             PathProvider,
             new TimestampAligner(IFileSystemExt.DefaultFilesystem));
         private static readonly PluginLiveLoadOrderProvider LiveLoadOrder = new(
@@ -37,10 +40,16 @@ namespace Mutagen.Bethesda.Plugins.Order
             return PathProvider.LocateListingsPath(game);
         }
 
-        /// <inheritdoc cref="IPluginListingsProvider"/>
+        /// <summary>
+        /// Parses a stream to retrieve all ModKeys in expected plugin file format
+        /// </summary>
+        /// <param name="stream">Stream to read from</param>
+        /// <param name="game">Game type</param>
+        /// <returns>List of ModKeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
         public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
         {
-            return Retriever.ListingsFromStream(stream, game);
+            return ParserFactory.Create(game).Parse(stream);
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>

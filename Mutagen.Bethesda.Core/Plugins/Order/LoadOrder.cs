@@ -29,6 +29,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             PathProvider,
             new PluginListingsProvider(
                 IFileSystemExt.DefaultFilesystem,
+                new PluginListingsParserFactory(
+                    new ModListingParserFactory()),
                 PathProvider,
                 new TimestampAligner(IFileSystemExt.DefaultFilesystem)),
             CccPathProvider,

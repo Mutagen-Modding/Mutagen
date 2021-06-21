@@ -10,15 +10,6 @@ namespace Mutagen.Bethesda.Plugins.Order
     public interface IPluginListingsProvider
     {
         /// <summary>
-        /// Parses a stream to retrieve all ModKeys in expected plugin file format
-        /// </summary>
-        /// <param name="stream">Stream to read from</param>
-        /// <param name="game">Game type</param>
-        /// <returns>List of ModKeys representing a load order</returns>
-        /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
-        IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game);
-
-        /// <summary>
         /// Parses the typical plugins file to retrieve all ModKeys in expected plugin file format,
         /// Will order mods by timestamps if applicable
         /// Will add implicit base mods if applicable
@@ -58,48 +49,20 @@ namespace Mutagen.Bethesda.Plugins.Order
     public class PluginListingsProvider : IPluginListingsProvider
     {
         private readonly IFileSystem _FileSystem;
+        private readonly IPluginListingsParserFactory _parserFactory;
         private readonly IPluginPathProvider _pluginPathProvider;
         private readonly ITimestampAligner _TimestampAligner;
 
         public PluginListingsProvider(
             IFileSystem fileSystem,
+            IPluginListingsParserFactory parserFactory,
             IPluginPathProvider pluginPathProvider,
             ITimestampAligner timestampAligner)
         {
             _FileSystem = fileSystem;
+            _parserFactory = parserFactory;
             _pluginPathProvider = pluginPathProvider;
             _TimestampAligner = timestampAligner;
-        }
-        
-        private string GetRelativePluginsPath(GameRelease game)
-        {
-            return game switch
-            {
-                GameRelease.Oblivion => "Oblivion/Plugins.txt",
-                GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
-                GameRelease.SkyrimSE => "Skyrim Special Edition/Plugins.txt",
-                GameRelease.SkyrimVR => "Skyrim VR/Plugins.txt",
-                GameRelease.Fallout4 => "Fallout4/Plugins.txt",
-                _ => throw new NotImplementedException()
-            };
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
-        {
-            using var streamReader = new StreamReader(stream);
-            var enabledMarkerProcessing = PluginListings.HasEnabledMarkers(game);
-            while (!streamReader.EndOfStream)
-            {
-                var str = streamReader.ReadLine().AsSpan();
-                var commentIndex = str.IndexOf('#');
-                if (commentIndex != -1)
-                {
-                    str = str.Slice(0, commentIndex);
-                }
-                if (MemoryExtensions.IsWhiteSpace(str) || str.Length == 0) continue;
-                yield return ModListing.FromString(str, enabledMarkerProcessing);
-            }
         }
 
         /// <inheritdoc />
@@ -143,7 +106,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             using var stream = _FileSystem.FileStream.Create(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return ListingsFromStream(stream, game).ToList();
+            return _parserFactory.Create(game).Parse(stream).ToList();
         }
     }
 }

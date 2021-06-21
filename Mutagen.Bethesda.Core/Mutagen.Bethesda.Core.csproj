@@ -128,6 +128,8 @@
     <Compile Include="Plugins\Order\ModListingParser.cs" />
     <Compile Include="Plugins\Order\ModListingParserFactory.cs" />
     <Compile Include="Plugins\Order\OrderListings.cs" />
+    <Compile Include="Plugins\Order\PluginListingsParser.cs" />
+    <Compile Include="Plugins\Order\PluginListingsParserFactory.cs" />
     <Compile Include="Plugins\Order\PluginListingsProvider.cs" />
     <Compile Include="Plugins\Order\PluginLiveLoadOrderProvider.cs" />
     <Compile Include="Plugins\Order\PluginPathProvider.cs" />
