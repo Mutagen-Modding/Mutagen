@@ -125,6 +125,8 @@
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
     <Compile Include="Plugins\Order\LoadOrderWriter.cs" />
+    <Compile Include="Plugins\Order\ModListingParser.cs" />
+    <Compile Include="Plugins\Order\ModListingParserFactory.cs" />
     <Compile Include="Plugins\Order\OrderListings.cs" />
     <Compile Include="Plugins\Order\PluginListingsProvider.cs" />
     <Compile Include="Plugins\Order\PluginLiveLoadOrderProvider.cs" />

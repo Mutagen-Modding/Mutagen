@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
@@ -219,7 +219,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void FromPathMissingWithImplicit()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(ModListings_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(ListingProviderTests));
             using var file = File.Create(Path.Combine(tmpFolder.Dir.Path, "Skyrim.esm"));
             var missingPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.GetListings(

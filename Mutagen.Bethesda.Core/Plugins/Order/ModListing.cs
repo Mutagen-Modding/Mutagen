@@ -63,65 +63,22 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         public static bool TryFromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
-            str = str.Trim();
-            bool enabled = true;
-            if (enabledMarkerProcessing)
-            {
-                if (str[0] == '*')
-                {
-                    str = str[1..];
-                }
-                else
-                {
-                    enabled = false;
-                }
-            }
-            if (ModKey.TryFromNameAndExtension(str, out var key))
-            {
-                listing = new ModListing(key, enabled);
-                return true;
-            }
-
-            var periodIndex = str.LastIndexOf('.');
-            if (periodIndex == -1)
-            {
-                listing = default;
-                return false;
-            }
-            var ghostTerm = str.Slice(periodIndex + 1);
-            str = str.Slice(0, periodIndex);
-
-            if (ModKey.TryFromNameAndExtension(str, out key))
-            {
-                listing = CreateGhosted(key, ghostTerm.ToString());
-                return true;
-            }
-
-            listing = default;
-            return false;
+            return new ModListingParser(enabledMarkerProcessing).TryFromString(str, out listing);
         }
 
         public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
-            return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
+            return new ModListingParser(enabledMarkerProcessing).TryFromFileName(fileName, out listing);
         }
 
         public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
         {
-            if (!TryFromString(str, enabledMarkerProcessing, out var listing))
-            {
-                throw new ArgumentException($"Load order file had malformed line: {str.ToString()}");
-            }
-            return listing;
+            return new ModListingParser(enabledMarkerProcessing).FromString(str);
         }
 
         public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
         {
-            if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
-            {
-                throw new ArgumentException($"Load order file had malformed line: {name}");
-            }
-            return listing;
+            return new ModListingParser(enabledMarkerProcessing).FromFileName(name);
         }
 
         public static Comparer<ModListing> GetComparer(Comparer<ModKey> comparer) =>

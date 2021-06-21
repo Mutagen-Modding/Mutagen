@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public async Task Typical()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(ModListings_Tests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(PluginLiveLoadOrderTests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             File.WriteAllLines(path,
                 new string[]
