@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         private LoadOrderListingsProvider GetRetriever(IFileSystem fs)
         {
-            var pathProvider = new PluginPathProvider(fs);
+            var pathProvider = new PluginPathProviderFactory(fs);
             var cccPathProvider = new CreationClubPathProvider(fs);
             return new LoadOrderListingsProvider(
                 fs,

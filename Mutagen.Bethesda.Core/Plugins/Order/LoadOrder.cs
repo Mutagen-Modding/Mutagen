@@ -22,16 +22,16 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
         private static OrderListings Orderer = new();
         private static readonly CreationClubPathProvider CccPathProvider = new(IFileSystemExt.DefaultFilesystem);
-        private static readonly PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly PluginPathProviderFactory PathProviderFactory = new(IFileSystemExt.DefaultFilesystem);
         private static LoadOrderListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             Orderer,
-            PathProvider,
+            PathProviderFactory,
             new PluginListingsProvider(
                 IFileSystemExt.DefaultFilesystem,
                 new PluginListingsParserFactory(
                     new ModListingParserFactory()),
-                PathProvider,
+                PathProviderFactory,
                 new TimestampAligner(IFileSystemExt.DefaultFilesystem)),
             CccPathProvider,
             new CreationClubListingsProvider(

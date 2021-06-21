@@ -9,35 +9,35 @@ namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class PluginListings
     {
-        private static readonly PluginPathProvider PathProvider = new(IFileSystemExt.DefaultFilesystem);
+        private static readonly PluginPathProviderFactory PathProviderFactory = new(IFileSystemExt.DefaultFilesystem);
         private static readonly ModListingParserFactory ModListingParserFactory = new();
         private static readonly PluginListingsParserFactory ParserFactory = new(ModListingParserFactory);
         private static readonly PluginListingsProvider Retriever = new(
             IFileSystemExt.DefaultFilesystem,
             ParserFactory,
-            PathProvider,
+            PathProviderFactory,
             new TimestampAligner(IFileSystemExt.DefaultFilesystem));
         private static readonly PluginLiveLoadOrderProvider LiveLoadOrder = new(
             IFileSystemExt.DefaultFilesystem,
             Retriever,
-            PathProvider);
+            PathProviderFactory);
         
         /// <inheritdoc cref="IPluginListingsProvider"/>
         public static string GetListingsPath(GameRelease game)
         {
-            return PathProvider.GetListingsPath(game);
+            return PathProviderFactory.Create(game).GetListingsPath();
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
         public static bool TryGetListingsFile(GameRelease game, out FilePath path)
         {
-            return PathProvider.TryLocateListingsPath(game, out path);
+            return PathProviderFactory.Create(game).TryLocateListingsPath(out path);
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
         public static FilePath GetListingsFile(GameRelease game)
         {
-            return PathProvider.LocateListingsPath(game);
+            return PathProviderFactory.Create(game).LocateListingsPath();
         }
 
         /// <summary>

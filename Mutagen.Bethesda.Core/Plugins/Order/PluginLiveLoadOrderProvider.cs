@@ -25,16 +25,16 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         private readonly IFileSystem _fileSystem;
         private readonly IPluginListingsProvider _listingsProvider;
-        private readonly IPluginPathProvider _pathProvider;
+        private readonly IPluginPathProviderFactory _pathProviderFactory;
 
         public PluginLiveLoadOrderProvider(
             IFileSystem fileSystem,
             IPluginListingsProvider listingsProvider,
-            IPluginPathProvider pathProvider)
+            IPluginPathProviderFactory pathProviderFactory)
         {
             _fileSystem = fileSystem;
             _listingsProvider = listingsProvider;
-            _pathProvider = pathProvider;
+            _pathProviderFactory = pathProviderFactory;
         }
         
         public IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
@@ -80,6 +80,6 @@ namespace Mutagen.Bethesda.Plugins.Order
             return ObservableExt.WatchFile(loadOrderFilePath.Path);
         }
 
-        public IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(_pathProvider.GetListingsPath(game));
+        public IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(_pathProviderFactory.Create(game).GetListingsPath());
     }
 }
