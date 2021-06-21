@@ -6,6 +6,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>Mutagen.Bethesda</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>Mutagen.Bethesda.Core.xml</DocumentationFile>
