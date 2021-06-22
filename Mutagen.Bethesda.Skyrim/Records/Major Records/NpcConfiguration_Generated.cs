@@ -1217,8 +1217,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcConfigurationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
@@ -1233,7 +1232,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.Level) ?? true))
             {
-                if (!object.Equals(lhs.Level, rhs.Level)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Level, rhs.Level, out var lhsLevel, out var rhsLevel, out var isLevelEqual))
+                {
+                    if (!((ANpcLevelCommon)((IANpcLevelGetter)lhsLevel).CommonInstance()!).Equals(lhsLevel, rhsLevel, crystal?.GetSubCrystal((int)NpcConfiguration_FieldIndex.Level))) return false;
+                }
+                else if (!isLevelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NpcConfiguration_FieldIndex.CalcMinLevel) ?? true))
             {

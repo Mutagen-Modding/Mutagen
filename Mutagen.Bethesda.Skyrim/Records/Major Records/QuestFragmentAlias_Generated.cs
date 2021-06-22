@@ -1050,11 +1050,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestFragmentAliasGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Property) ?? true))
             {
-                if (!object.Equals(lhs.Property, rhs.Property)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Property, rhs.Property, out var lhsProperty, out var rhsProperty, out var isPropertyEqual))
+                {
+                    if (!((ScriptObjectPropertyCommon)((IScriptObjectPropertyGetter)lhsProperty).CommonInstance()!).Equals(lhsProperty, rhsProperty, crystal?.GetSubCrystal((int)QuestFragmentAlias_FieldIndex.Property))) return false;
+                }
+                else if (!isPropertyEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestFragmentAlias_FieldIndex.Version) ?? true))
             {

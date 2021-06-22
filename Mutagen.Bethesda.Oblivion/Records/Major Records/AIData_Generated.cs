@@ -1092,8 +1092,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AIData_FieldIndex.Aggression) ?? true))
             {
                 if (lhs.Aggression != rhs.Aggression) return false;

@@ -1076,8 +1076,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedTrapGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPlacedTrapGetter)lhs, (IAPlacedTrapGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PlacedTrap_FieldIndex.Projectile) ?? true))
             {

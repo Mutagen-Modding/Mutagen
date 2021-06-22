@@ -888,15 +888,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IContainerEntryGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Item) ?? true))
             {
-                if (!object.Equals(lhs.Item, rhs.Item)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Item, rhs.Item, out var lhsItem, out var rhsItem, out var isItemEqual))
+                {
+                    if (!((ContainerItemCommon)((IContainerItemGetter)lhsItem).CommonInstance()!).Equals(lhsItem, rhsItem, crystal?.GetSubCrystal((int)ContainerEntry_FieldIndex.Item))) return false;
+                }
+                else if (!isItemEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ContainerEntry_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ExtraDataCommon)((IExtraDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ContainerEntry_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             return true;
         }

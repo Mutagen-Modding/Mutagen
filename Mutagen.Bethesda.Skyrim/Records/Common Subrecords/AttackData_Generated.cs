@@ -1234,8 +1234,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AttackData_FieldIndex.DamageMult) ?? true))
             {
                 if (!lhs.DamageMult.EqualsWithin(rhs.DamageMult)) return false;

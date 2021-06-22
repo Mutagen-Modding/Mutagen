@@ -866,8 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEnableParentGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)EnableParent_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;

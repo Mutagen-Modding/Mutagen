@@ -1754,8 +1754,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICombatStyleGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.OffensiveMult) ?? true))
             {
@@ -1803,11 +1802,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Melee) ?? true))
             {
-                if (!object.Equals(lhs.Melee, rhs.Melee)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Melee, rhs.Melee, out var lhsMelee, out var rhsMelee, out var isMeleeEqual))
+                {
+                    if (!((CombatStyleMeleeCommon)((ICombatStyleMeleeGetter)lhsMelee).CommonInstance()!).Equals(lhsMelee, rhsMelee, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Melee))) return false;
+                }
+                else if (!isMeleeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.CloseRange) ?? true))
             {
-                if (!object.Equals(lhs.CloseRange, rhs.CloseRange)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CloseRange, rhs.CloseRange, out var lhsCloseRange, out var rhsCloseRange, out var isCloseRangeEqual))
+                {
+                    if (!((CombatStyleCloseRangeCommon)((ICombatStyleCloseRangeGetter)lhsCloseRange).CommonInstance()!).Equals(lhsCloseRange, rhsCloseRange, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.CloseRange))) return false;
+                }
+                else if (!isCloseRangeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.LongRangeStrafeMult) ?? true))
             {
@@ -1815,7 +1822,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flight) ?? true))
             {
-                if (!object.Equals(lhs.Flight, rhs.Flight)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Flight, rhs.Flight, out var lhsFlight, out var rhsFlight, out var isFlightEqual))
+                {
+                    if (!((CombatStyleFlightCommon)((ICombatStyleFlightGetter)lhsFlight).CommonInstance()!).Equals(lhsFlight, rhsFlight, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Flight))) return false;
+                }
+                else if (!isFlightEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Flags) ?? true))
             {

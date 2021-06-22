@@ -975,8 +975,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMessageButtonGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MessageButton_FieldIndex.Text) ?? true))
             {
                 if (!object.Equals(lhs.Text, rhs.Text)) return false;

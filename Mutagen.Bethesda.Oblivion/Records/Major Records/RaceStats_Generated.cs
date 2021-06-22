@@ -1084,8 +1084,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceStatsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RaceStats_FieldIndex.Strength) ?? true))
             {
                 if (lhs.Strength != rhs.Strength) return false;

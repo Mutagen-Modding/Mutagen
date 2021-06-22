@@ -1646,12 +1646,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImpactGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Impact_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Duration) ?? true))
             {
@@ -1687,7 +1690,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.Decal) ?? true))
             {
-                if (!object.Equals(lhs.Decal, rhs.Decal)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Decal, rhs.Decal, out var lhsDecal, out var rhsDecal, out var isDecalEqual))
+                {
+                    if (!((DecalCommon)((IDecalGetter)lhsDecal).CommonInstance()!).Equals(lhsDecal, rhsDecal, crystal?.GetSubCrystal((int)Impact_FieldIndex.Decal))) return false;
+                }
+                else if (!isDecalEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Impact_FieldIndex.TextureSet) ?? true))
             {

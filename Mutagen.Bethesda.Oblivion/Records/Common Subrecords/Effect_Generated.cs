@@ -898,15 +898,22 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IEffectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.ScriptEffect) ?? true))
             {
-                if (!object.Equals(lhs.ScriptEffect, rhs.ScriptEffect)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ScriptEffect, rhs.ScriptEffect, out var lhsScriptEffect, out var rhsScriptEffect, out var isScriptEffectEqual))
+                {
+                    if (!((ScriptEffectCommon)((IScriptEffectGetter)lhsScriptEffect).CommonInstance()!).Equals(lhsScriptEffect, rhsScriptEffect, crystal?.GetSubCrystal((int)Effect_FieldIndex.ScriptEffect))) return false;
+                }
+                else if (!isScriptEffectEqual) return false;
             }
             return true;
         }

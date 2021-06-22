@@ -844,8 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILocationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Location_FieldIndex.Position) ?? true))
             {
                 if (!lhs.Position.Equals(rhs.Position)) return false;

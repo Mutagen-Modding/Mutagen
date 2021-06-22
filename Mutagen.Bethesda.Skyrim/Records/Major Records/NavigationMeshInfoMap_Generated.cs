@@ -1200,8 +1200,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMeshInfoMapGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NavMeshVersion) ?? true))
             {
@@ -1213,7 +1212,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing) ?? true))
             {
-                if (!object.Equals(lhs.PreferredPathing, rhs.PreferredPathing)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.PreferredPathing, rhs.PreferredPathing, out var lhsPreferredPathing, out var rhsPreferredPathing, out var isPreferredPathingEqual))
+                {
+                    if (!((PreferredPathingCommon)((IPreferredPathingGetter)lhsPreferredPathing).CommonInstance()!).Equals(lhsPreferredPathing, rhsPreferredPathing, crystal?.GetSubCrystal((int)NavigationMeshInfoMap_FieldIndex.PreferredPathing))) return false;
+                }
+                else if (!isPreferredPathingEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMeshInfoMap_FieldIndex.NVSI) ?? true))
             {

@@ -2200,12 +2200,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAPlacedTrapGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EncounterZone) ?? true))
             {
@@ -2213,7 +2216,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Ownership) ?? true))
             {
-                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.HeadTrackingWeight) ?? true))
             {
@@ -2233,11 +2240,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.ActivateParents) ?? true))
             {
-                if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ActivateParents, rhs.ActivateParents, out var lhsActivateParents, out var rhsActivateParents, out var isActivateParentsEqual))
+                {
+                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.ActivateParents))) return false;
+                }
+                else if (!isActivateParentsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.EnableParent) ?? true))
             {
-                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Emittance) ?? true))
             {
@@ -2269,7 +2284,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)APlacedTrap_FieldIndex.Placement) ?? true))
             {
-                if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Placement, rhs.Placement, out var lhsPlacement, out var rhsPlacement, out var isPlacementEqual))
+                {
+                    if (!((PlacementCommon)((IPlacementGetter)lhsPlacement).CommonInstance()!).Equals(lhsPlacement, rhsPlacement, crystal?.GetSubCrystal((int)APlacedTrap_FieldIndex.Placement))) return false;
+                }
+                else if (!isPlacementEqual) return false;
             }
             return true;
         }

@@ -5403,235 +5403,462 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.ModHeader) ?? true))
             {
-                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ModHeader, rhs.ModHeader, out var lhsModHeader, out var rhsModHeader, out var isModHeaderEqual))
+                {
+                    if (!((OblivionModHeaderCommon)((IOblivionModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, crystal?.GetSubCrystal((int)OblivionMod_FieldIndex.ModHeader))) return false;
+                }
+                else if (!isModHeaderEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.GameSettings) ?? true))
             {
-                if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
+                {
+                    if (!object.Equals(lhsGameSettings, rhsGameSettings)) return false;
+                }
+                else if (!isGameSettingsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Globals) ?? true))
             {
-                if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Globals, rhs.Globals, out var lhsGlobals, out var rhsGlobals, out var isGlobalsEqual))
+                {
+                    if (!object.Equals(lhsGlobals, rhsGlobals)) return false;
+                }
+                else if (!isGlobalsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Classes) ?? true))
             {
-                if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Classes, rhs.Classes, out var lhsClasses, out var rhsClasses, out var isClassesEqual))
+                {
+                    if (!object.Equals(lhsClasses, rhsClasses)) return false;
+                }
+                else if (!isClassesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Factions) ?? true))
             {
-                if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Factions, rhs.Factions, out var lhsFactions, out var rhsFactions, out var isFactionsEqual))
+                {
+                    if (!object.Equals(lhsFactions, rhsFactions)) return false;
+                }
+                else if (!isFactionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Hairs) ?? true))
             {
-                if (!object.Equals(lhs.Hairs, rhs.Hairs)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Hairs, rhs.Hairs, out var lhsHairs, out var rhsHairs, out var isHairsEqual))
+                {
+                    if (!object.Equals(lhsHairs, rhsHairs)) return false;
+                }
+                else if (!isHairsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Eyes) ?? true))
             {
-                if (!object.Equals(lhs.Eyes, rhs.Eyes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Eyes, rhs.Eyes, out var lhsEyes, out var rhsEyes, out var isEyesEqual))
+                {
+                    if (!object.Equals(lhsEyes, rhsEyes)) return false;
+                }
+                else if (!isEyesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Races) ?? true))
             {
-                if (!object.Equals(lhs.Races, rhs.Races)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Races, rhs.Races, out var lhsRaces, out var rhsRaces, out var isRacesEqual))
+                {
+                    if (!object.Equals(lhsRaces, rhsRaces)) return false;
+                }
+                else if (!isRacesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Sounds) ?? true))
             {
-                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
+                {
+                    if (!object.Equals(lhsSounds, rhsSounds)) return false;
+                }
+                else if (!isSoundsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Skills) ?? true))
             {
-                if (!object.Equals(lhs.Skills, rhs.Skills)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Skills, rhs.Skills, out var lhsSkills, out var rhsSkills, out var isSkillsEqual))
+                {
+                    if (!object.Equals(lhsSkills, rhsSkills)) return false;
+                }
+                else if (!isSkillsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.MagicEffects) ?? true))
             {
-                if (!object.Equals(lhs.MagicEffects, rhs.MagicEffects)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MagicEffects, rhs.MagicEffects, out var lhsMagicEffects, out var rhsMagicEffects, out var isMagicEffectsEqual))
+                {
+                    if (!object.Equals(lhsMagicEffects, rhsMagicEffects)) return false;
+                }
+                else if (!isMagicEffectsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Scripts) ?? true))
             {
-                if (!object.Equals(lhs.Scripts, rhs.Scripts)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Scripts, rhs.Scripts, out var lhsScripts, out var rhsScripts, out var isScriptsEqual))
+                {
+                    if (!object.Equals(lhsScripts, rhsScripts)) return false;
+                }
+                else if (!isScriptsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LandTextures) ?? true))
             {
-                if (!object.Equals(lhs.LandTextures, rhs.LandTextures)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LandTextures, rhs.LandTextures, out var lhsLandTextures, out var rhsLandTextures, out var isLandTexturesEqual))
+                {
+                    if (!object.Equals(lhsLandTextures, rhsLandTextures)) return false;
+                }
+                else if (!isLandTexturesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Enchantments) ?? true))
             {
-                if (!object.Equals(lhs.Enchantments, rhs.Enchantments)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Enchantments, rhs.Enchantments, out var lhsEnchantments, out var rhsEnchantments, out var isEnchantmentsEqual))
+                {
+                    if (!object.Equals(lhsEnchantments, rhsEnchantments)) return false;
+                }
+                else if (!isEnchantmentsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Spells) ?? true))
             {
-                if (!object.Equals(lhs.Spells, rhs.Spells)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Spells, rhs.Spells, out var lhsSpells, out var rhsSpells, out var isSpellsEqual))
+                {
+                    if (!object.Equals(lhsSpells, rhsSpells)) return false;
+                }
+                else if (!isSpellsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Birthsigns) ?? true))
             {
-                if (!object.Equals(lhs.Birthsigns, rhs.Birthsigns)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Birthsigns, rhs.Birthsigns, out var lhsBirthsigns, out var rhsBirthsigns, out var isBirthsignsEqual))
+                {
+                    if (!object.Equals(lhsBirthsigns, rhsBirthsigns)) return false;
+                }
+                else if (!isBirthsignsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Activators) ?? true))
             {
-                if (!object.Equals(lhs.Activators, rhs.Activators)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Activators, rhs.Activators, out var lhsActivators, out var rhsActivators, out var isActivatorsEqual))
+                {
+                    if (!object.Equals(lhsActivators, rhsActivators)) return false;
+                }
+                else if (!isActivatorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AlchemicalApparatus) ?? true))
             {
-                if (!object.Equals(lhs.AlchemicalApparatus, rhs.AlchemicalApparatus)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AlchemicalApparatus, rhs.AlchemicalApparatus, out var lhsAlchemicalApparatus, out var rhsAlchemicalApparatus, out var isAlchemicalApparatusEqual))
+                {
+                    if (!object.Equals(lhsAlchemicalApparatus, rhsAlchemicalApparatus)) return false;
+                }
+                else if (!isAlchemicalApparatusEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Armors) ?? true))
             {
-                if (!object.Equals(lhs.Armors, rhs.Armors)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Armors, rhs.Armors, out var lhsArmors, out var rhsArmors, out var isArmorsEqual))
+                {
+                    if (!object.Equals(lhsArmors, rhsArmors)) return false;
+                }
+                else if (!isArmorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Books) ?? true))
             {
-                if (!object.Equals(lhs.Books, rhs.Books)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Books, rhs.Books, out var lhsBooks, out var rhsBooks, out var isBooksEqual))
+                {
+                    if (!object.Equals(lhsBooks, rhsBooks)) return false;
+                }
+                else if (!isBooksEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Clothes) ?? true))
             {
-                if (!object.Equals(lhs.Clothes, rhs.Clothes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Clothes, rhs.Clothes, out var lhsClothes, out var rhsClothes, out var isClothesEqual))
+                {
+                    if (!object.Equals(lhsClothes, rhsClothes)) return false;
+                }
+                else if (!isClothesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Containers) ?? true))
             {
-                if (!object.Equals(lhs.Containers, rhs.Containers)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Containers, rhs.Containers, out var lhsContainers, out var rhsContainers, out var isContainersEqual))
+                {
+                    if (!object.Equals(lhsContainers, rhsContainers)) return false;
+                }
+                else if (!isContainersEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Doors) ?? true))
             {
-                if (!object.Equals(lhs.Doors, rhs.Doors)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Doors, rhs.Doors, out var lhsDoors, out var rhsDoors, out var isDoorsEqual))
+                {
+                    if (!object.Equals(lhsDoors, rhsDoors)) return false;
+                }
+                else if (!isDoorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ingredients) ?? true))
             {
-                if (!object.Equals(lhs.Ingredients, rhs.Ingredients)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ingredients, rhs.Ingredients, out var lhsIngredients, out var rhsIngredients, out var isIngredientsEqual))
+                {
+                    if (!object.Equals(lhsIngredients, rhsIngredients)) return false;
+                }
+                else if (!isIngredientsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Lights) ?? true))
             {
-                if (!object.Equals(lhs.Lights, rhs.Lights)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Lights, rhs.Lights, out var lhsLights, out var rhsLights, out var isLightsEqual))
+                {
+                    if (!object.Equals(lhsLights, rhsLights)) return false;
+                }
+                else if (!isLightsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Miscellaneous) ?? true))
             {
-                if (!object.Equals(lhs.Miscellaneous, rhs.Miscellaneous)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Miscellaneous, rhs.Miscellaneous, out var lhsMiscellaneous, out var rhsMiscellaneous, out var isMiscellaneousEqual))
+                {
+                    if (!object.Equals(lhsMiscellaneous, rhsMiscellaneous)) return false;
+                }
+                else if (!isMiscellaneousEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Statics) ?? true))
             {
-                if (!object.Equals(lhs.Statics, rhs.Statics)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Statics, rhs.Statics, out var lhsStatics, out var rhsStatics, out var isStaticsEqual))
+                {
+                    if (!object.Equals(lhsStatics, rhsStatics)) return false;
+                }
+                else if (!isStaticsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Grasses) ?? true))
             {
-                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
+                {
+                    if (!object.Equals(lhsGrasses, rhsGrasses)) return false;
+                }
+                else if (!isGrassesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Trees) ?? true))
             {
-                if (!object.Equals(lhs.Trees, rhs.Trees)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Trees, rhs.Trees, out var lhsTrees, out var rhsTrees, out var isTreesEqual))
+                {
+                    if (!object.Equals(lhsTrees, rhsTrees)) return false;
+                }
+                else if (!isTreesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Flora) ?? true))
             {
-                if (!object.Equals(lhs.Flora, rhs.Flora)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Flora, rhs.Flora, out var lhsFlora, out var rhsFlora, out var isFloraEqual))
+                {
+                    if (!object.Equals(lhsFlora, rhsFlora)) return false;
+                }
+                else if (!isFloraEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Furniture) ?? true))
             {
-                if (!object.Equals(lhs.Furniture, rhs.Furniture)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Furniture, rhs.Furniture, out var lhsFurniture, out var rhsFurniture, out var isFurnitureEqual))
+                {
+                    if (!object.Equals(lhsFurniture, rhsFurniture)) return false;
+                }
+                else if (!isFurnitureEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weapons) ?? true))
             {
-                if (!object.Equals(lhs.Weapons, rhs.Weapons)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Weapons, rhs.Weapons, out var lhsWeapons, out var rhsWeapons, out var isWeaponsEqual))
+                {
+                    if (!object.Equals(lhsWeapons, rhsWeapons)) return false;
+                }
+                else if (!isWeaponsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Ammunitions) ?? true))
             {
-                if (!object.Equals(lhs.Ammunitions, rhs.Ammunitions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ammunitions, rhs.Ammunitions, out var lhsAmmunitions, out var rhsAmmunitions, out var isAmmunitionsEqual))
+                {
+                    if (!object.Equals(lhsAmmunitions, rhsAmmunitions)) return false;
+                }
+                else if (!isAmmunitionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Npcs) ?? true))
             {
-                if (!object.Equals(lhs.Npcs, rhs.Npcs)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Npcs, rhs.Npcs, out var lhsNpcs, out var rhsNpcs, out var isNpcsEqual))
+                {
+                    if (!object.Equals(lhsNpcs, rhsNpcs)) return false;
+                }
+                else if (!isNpcsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Creatures) ?? true))
             {
-                if (!object.Equals(lhs.Creatures, rhs.Creatures)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Creatures, rhs.Creatures, out var lhsCreatures, out var rhsCreatures, out var isCreaturesEqual))
+                {
+                    if (!object.Equals(lhsCreatures, rhsCreatures)) return false;
+                }
+                else if (!isCreaturesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledCreatures) ?? true))
             {
-                if (!object.Equals(lhs.LeveledCreatures, rhs.LeveledCreatures)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledCreatures, rhs.LeveledCreatures, out var lhsLeveledCreatures, out var rhsLeveledCreatures, out var isLeveledCreaturesEqual))
+                {
+                    if (!object.Equals(lhsLeveledCreatures, rhsLeveledCreatures)) return false;
+                }
+                else if (!isLeveledCreaturesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.SoulGems) ?? true))
             {
-                if (!object.Equals(lhs.SoulGems, rhs.SoulGems)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SoulGems, rhs.SoulGems, out var lhsSoulGems, out var rhsSoulGems, out var isSoulGemsEqual))
+                {
+                    if (!object.Equals(lhsSoulGems, rhsSoulGems)) return false;
+                }
+                else if (!isSoulGemsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Keys) ?? true))
             {
-                if (!object.Equals(lhs.Keys, rhs.Keys)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Keys, rhs.Keys, out var lhsKeys, out var rhsKeys, out var isKeysEqual))
+                {
+                    if (!object.Equals(lhsKeys, rhsKeys)) return false;
+                }
+                else if (!isKeysEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Potions) ?? true))
             {
-                if (!object.Equals(lhs.Potions, rhs.Potions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Potions, rhs.Potions, out var lhsPotions, out var rhsPotions, out var isPotionsEqual))
+                {
+                    if (!object.Equals(lhsPotions, rhsPotions)) return false;
+                }
+                else if (!isPotionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Subspaces) ?? true))
             {
-                if (!object.Equals(lhs.Subspaces, rhs.Subspaces)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Subspaces, rhs.Subspaces, out var lhsSubspaces, out var rhsSubspaces, out var isSubspacesEqual))
+                {
+                    if (!object.Equals(lhsSubspaces, rhsSubspaces)) return false;
+                }
+                else if (!isSubspacesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.SigilStones) ?? true))
             {
-                if (!object.Equals(lhs.SigilStones, rhs.SigilStones)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SigilStones, rhs.SigilStones, out var lhsSigilStones, out var rhsSigilStones, out var isSigilStonesEqual))
+                {
+                    if (!object.Equals(lhsSigilStones, rhsSigilStones)) return false;
+                }
+                else if (!isSigilStonesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledItems) ?? true))
             {
-                if (!object.Equals(lhs.LeveledItems, rhs.LeveledItems)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledItems, rhs.LeveledItems, out var lhsLeveledItems, out var rhsLeveledItems, out var isLeveledItemsEqual))
+                {
+                    if (!object.Equals(lhsLeveledItems, rhsLeveledItems)) return false;
+                }
+                else if (!isLeveledItemsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Weathers) ?? true))
             {
-                if (!object.Equals(lhs.Weathers, rhs.Weathers)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Weathers, rhs.Weathers, out var lhsWeathers, out var rhsWeathers, out var isWeathersEqual))
+                {
+                    if (!object.Equals(lhsWeathers, rhsWeathers)) return false;
+                }
+                else if (!isWeathersEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Climates) ?? true))
             {
-                if (!object.Equals(lhs.Climates, rhs.Climates)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Climates, rhs.Climates, out var lhsClimates, out var rhsClimates, out var isClimatesEqual))
+                {
+                    if (!object.Equals(lhsClimates, rhsClimates)) return false;
+                }
+                else if (!isClimatesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Regions) ?? true))
             {
-                if (!object.Equals(lhs.Regions, rhs.Regions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Regions, rhs.Regions, out var lhsRegions, out var rhsRegions, out var isRegionsEqual))
+                {
+                    if (!object.Equals(lhsRegions, rhsRegions)) return false;
+                }
+                else if (!isRegionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Cells) ?? true))
             {
-                if (!object.Equals(lhs.Cells, rhs.Cells)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Cells, rhs.Cells, out var lhsCells, out var rhsCells, out var isCellsEqual))
+                {
+                    if (!object.Equals(lhsCells, rhsCells)) return false;
+                }
+                else if (!isCellsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Worldspaces) ?? true))
             {
-                if (!object.Equals(lhs.Worldspaces, rhs.Worldspaces)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Worldspaces, rhs.Worldspaces, out var lhsWorldspaces, out var rhsWorldspaces, out var isWorldspacesEqual))
+                {
+                    if (!object.Equals(lhsWorldspaces, rhsWorldspaces)) return false;
+                }
+                else if (!isWorldspacesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.DialogTopics) ?? true))
             {
-                if (!object.Equals(lhs.DialogTopics, rhs.DialogTopics)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DialogTopics, rhs.DialogTopics, out var lhsDialogTopics, out var rhsDialogTopics, out var isDialogTopicsEqual))
+                {
+                    if (!object.Equals(lhsDialogTopics, rhsDialogTopics)) return false;
+                }
+                else if (!isDialogTopicsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Quests) ?? true))
             {
-                if (!object.Equals(lhs.Quests, rhs.Quests)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Quests, rhs.Quests, out var lhsQuests, out var rhsQuests, out var isQuestsEqual))
+                {
+                    if (!object.Equals(lhsQuests, rhsQuests)) return false;
+                }
+                else if (!isQuestsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.IdleAnimations) ?? true))
             {
-                if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!object.Equals(lhsIdleAnimations, rhsIdleAnimations)) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AIPackages) ?? true))
             {
-                if (!object.Equals(lhs.AIPackages, rhs.AIPackages)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AIPackages, rhs.AIPackages, out var lhsAIPackages, out var rhsAIPackages, out var isAIPackagesEqual))
+                {
+                    if (!object.Equals(lhsAIPackages, rhsAIPackages)) return false;
+                }
+                else if (!isAIPackagesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.CombatStyles) ?? true))
             {
-                if (!object.Equals(lhs.CombatStyles, rhs.CombatStyles)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CombatStyles, rhs.CombatStyles, out var lhsCombatStyles, out var rhsCombatStyles, out var isCombatStylesEqual))
+                {
+                    if (!object.Equals(lhsCombatStyles, rhsCombatStyles)) return false;
+                }
+                else if (!isCombatStylesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LoadScreens) ?? true))
             {
-                if (!object.Equals(lhs.LoadScreens, rhs.LoadScreens)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LoadScreens, rhs.LoadScreens, out var lhsLoadScreens, out var rhsLoadScreens, out var isLoadScreensEqual))
+                {
+                    if (!object.Equals(lhsLoadScreens, rhsLoadScreens)) return false;
+                }
+                else if (!isLoadScreensEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.LeveledSpells) ?? true))
             {
-                if (!object.Equals(lhs.LeveledSpells, rhs.LeveledSpells)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LeveledSpells, rhs.LeveledSpells, out var lhsLeveledSpells, out var rhsLeveledSpells, out var isLeveledSpellsEqual))
+                {
+                    if (!object.Equals(lhsLeveledSpells, rhsLeveledSpells)) return false;
+                }
+                else if (!isLeveledSpellsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.AnimatedObjects) ?? true))
             {
-                if (!object.Equals(lhs.AnimatedObjects, rhs.AnimatedObjects)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AnimatedObjects, rhs.AnimatedObjects, out var lhsAnimatedObjects, out var rhsAnimatedObjects, out var isAnimatedObjectsEqual))
+                {
+                    if (!object.Equals(lhsAnimatedObjects, rhsAnimatedObjects)) return false;
+                }
+                else if (!isAnimatedObjectsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.Waters) ?? true))
             {
-                if (!object.Equals(lhs.Waters, rhs.Waters)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Waters, rhs.Waters, out var lhsWaters, out var rhsWaters, out var isWatersEqual))
+                {
+                    if (!object.Equals(lhsWaters, rhsWaters)) return false;
+                }
+                else if (!isWatersEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionMod_FieldIndex.EffectShaders) ?? true))
             {
-                if (!object.Equals(lhs.EffectShaders, rhs.EffectShaders)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EffectShaders, rhs.EffectShaders, out var lhsEffectShaders, out var rhsEffectShaders, out var isEffectShadersEqual))
+                {
+                    if (!object.Equals(lhsEffectShaders, rhsEffectShaders)) return false;
+                }
+                else if (!isEffectShadersEqual) return false;
             }
             return true;
         }

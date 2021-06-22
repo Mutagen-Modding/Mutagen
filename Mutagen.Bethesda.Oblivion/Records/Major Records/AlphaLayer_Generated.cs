@@ -818,8 +818,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAlphaLayerGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IBaseLayerGetter)lhs, (IBaseLayerGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)AlphaLayer_FieldIndex.AlphaLayerData) ?? true))
             {

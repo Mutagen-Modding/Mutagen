@@ -7,9 +7,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    /// <summary>
-    /// Class associating a ModKey with a Mod object that may or may not exist.
-    /// </summary>
+    /// <inheritdoc cref="IModListingGetter" />
     [DebuggerDisplay("{ToString()}")]
     public record ModListing : IModListingGetter
     {
@@ -91,14 +89,12 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
     }
 
-    /// <summary>
-    /// Class associating a ModKey with a Mod object that may or may not exist.
-    /// </summary>
+    /// <inheritdoc cref="IModListingGetter{TMod}" />
     [DebuggerDisplay("{ToString()}")]
     public record ModListing<TMod> : ModListing, IModListing<TMod>
         where TMod : class, IModGetter
     {
-        /// <inheritdoc />
+        /// <inheritdoc cref="IModListing{TMod}.Mod" />
         public TMod? Mod { get; set; }
 
         private ModListing(ModKey key, TMod? mod, bool enabled, string ghostSuffix = "")
@@ -151,6 +147,12 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
     }
 
+    /// <summary>
+    /// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
+    /// the listing does not end with a typical ModKey suffix.<br/>
+    /// <br/>
+    /// The generic variant also includes an optional Mod object that may or may not exist.
+    /// </summary>
     public interface IModListingGetter<out TMod> : IModListingGetter, IDisposable
         where TMod : class, IModGetter
     {
@@ -160,6 +162,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         TMod? Mod { get; }
     }
 
+    /// <inheritdoc />
     public interface IModListing<TMod> : IModListingGetter<TMod>
         where TMod : class, IModGetter
     {
@@ -169,6 +172,10 @@ namespace Mutagen.Bethesda.Plugins.Order
         new TMod? Mod { get; set; }
     }
 
+    /// <summary>
+    /// A Mod Listing on a load order.  Can be enabled or disabled.  Can also be "ghosted" which means
+    /// the listing does not end with a typical ModKey suffix
+    /// </summary>
     public interface IModListingGetter : IModKeyed
     {
         /// <summary>
@@ -191,6 +198,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         string GhostSuffix { get; }
     }
 
+    /// <inheritdoc cref="IModListingGetter" />
     public interface IModListing : IModListingGetter
     {
         /// <summary>

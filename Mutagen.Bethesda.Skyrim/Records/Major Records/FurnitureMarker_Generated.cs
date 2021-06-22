@@ -982,15 +982,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFurnitureMarkerGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
             }
             if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.DisabledEntryPoints) ?? true))
             {
-                if (!object.Equals(lhs.DisabledEntryPoints, rhs.DisabledEntryPoints)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DisabledEntryPoints, rhs.DisabledEntryPoints, out var lhsDisabledEntryPoints, out var rhsDisabledEntryPoints, out var isDisabledEntryPointsEqual))
+                {
+                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsDisabledEntryPoints).CommonInstance()!).Equals(lhsDisabledEntryPoints, rhsDisabledEntryPoints, crystal?.GetSubCrystal((int)FurnitureMarker_FieldIndex.DisabledEntryPoints))) return false;
+                }
+                else if (!isDisabledEntryPointsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.MarkerKeyword) ?? true))
             {
@@ -998,7 +1001,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)FurnitureMarker_FieldIndex.EntryPoints) ?? true))
             {
-                if (!object.Equals(lhs.EntryPoints, rhs.EntryPoints)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EntryPoints, rhs.EntryPoints, out var lhsEntryPoints, out var rhsEntryPoints, out var isEntryPointsEqual))
+                {
+                    if (!((EntryPointsCommon)((IEntryPointsGetter)lhsEntryPoints).CommonInstance()!).Equals(lhsEntryPoints, rhsEntryPoints, crystal?.GetSubCrystal((int)FurnitureMarker_FieldIndex.EntryPoints))) return false;
+                }
+                else if (!isEntryPointsEqual) return false;
             }
             return true;
         }

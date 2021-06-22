@@ -1262,8 +1262,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
@@ -1306,7 +1305,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffectData_FieldIndex.SubData) ?? true))
             {
-                if (!object.Equals(lhs.SubData, rhs.SubData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SubData, rhs.SubData, out var lhsSubData, out var rhsSubData, out var isSubDataEqual))
+                {
+                    if (!((MagicEffectSubDataCommon)((IMagicEffectSubDataGetter)lhsSubData).CommonInstance()!).Equals(lhsSubData, rhsSubData, crystal?.GetSubCrystal((int)MagicEffectData_FieldIndex.SubData))) return false;
+                }
+                else if (!isSubDataEqual) return false;
             }
             return true;
         }

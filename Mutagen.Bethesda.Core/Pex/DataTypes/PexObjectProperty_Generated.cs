@@ -1045,8 +1045,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IPexObjectPropertyGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PexObjectProperty_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -1069,11 +1068,19 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectProperty_FieldIndex.ReadHandler) ?? true))
             {
-                if (!object.Equals(lhs.ReadHandler, rhs.ReadHandler)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ReadHandler, rhs.ReadHandler, out var lhsReadHandler, out var rhsReadHandler, out var isReadHandlerEqual))
+                {
+                    if (!((PexObjectFunctionCommon)((IPexObjectFunctionGetter)lhsReadHandler).CommonInstance()!).Equals(lhsReadHandler, rhsReadHandler, crystal?.GetSubCrystal((int)PexObjectProperty_FieldIndex.ReadHandler))) return false;
+                }
+                else if (!isReadHandlerEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectProperty_FieldIndex.WriteHandler) ?? true))
             {
-                if (!object.Equals(lhs.WriteHandler, rhs.WriteHandler)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.WriteHandler, rhs.WriteHandler, out var lhsWriteHandler, out var rhsWriteHandler, out var isWriteHandlerEqual))
+                {
+                    if (!((PexObjectFunctionCommon)((IPexObjectFunctionGetter)lhsWriteHandler).CommonInstance()!).Equals(lhsWriteHandler, rhsWriteHandler, crystal?.GetSubCrystal((int)PexObjectProperty_FieldIndex.WriteHandler))) return false;
+                }
+                else if (!isWriteHandlerEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectProperty_FieldIndex.RawUserFlags) ?? true))
             {

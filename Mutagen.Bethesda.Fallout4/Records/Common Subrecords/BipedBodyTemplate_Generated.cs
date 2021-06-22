@@ -806,8 +806,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IBipedBodyTemplateGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)BipedBodyTemplate_FieldIndex.FirstPersonFlags) ?? true))
             {
                 if (lhs.FirstPersonFlags != rhs.FirstPersonFlags) return false;

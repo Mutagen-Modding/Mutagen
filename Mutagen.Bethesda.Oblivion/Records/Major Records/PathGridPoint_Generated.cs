@@ -1033,8 +1033,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPathGridPointGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PathGridPoint_FieldIndex.Point) ?? true))
             {
                 if (!lhs.Point.Equals(rhs.Point)) return false;

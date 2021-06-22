@@ -906,8 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILayerHeaderGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LayerHeader_FieldIndex.Texture) ?? true))
             {
                 if (!lhs.Texture.Equals(rhs.Texture)) return false;

@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEffectDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)EffectData_FieldIndex.Magnitude) ?? true))
             {
                 if (!lhs.Magnitude.EqualsWithin(rhs.Magnitude)) return false;

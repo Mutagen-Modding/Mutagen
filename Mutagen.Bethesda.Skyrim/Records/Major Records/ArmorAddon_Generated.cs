@@ -1811,12 +1811,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IArmorAddonGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.BodyTemplate) ?? true))
             {
-                if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
+                {
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)ArmorAddon_FieldIndex.BodyTemplate))) return false;
+                }
+                else if (!isBodyTemplateEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ArmorAddon_FieldIndex.Race) ?? true))
             {

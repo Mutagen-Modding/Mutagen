@@ -844,8 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEntryPointsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)EntryPoints_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;

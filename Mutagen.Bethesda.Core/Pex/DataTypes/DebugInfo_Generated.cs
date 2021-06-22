@@ -1140,8 +1140,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IDebugInfoGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DebugInfo_FieldIndex.ModificationTime) ?? true))
             {
                 if (lhs.ModificationTime != rhs.ModificationTime) return false;

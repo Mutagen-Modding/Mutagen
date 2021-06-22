@@ -5459,8 +5459,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
@@ -5480,7 +5479,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BodyTemplate) ?? true))
             {
-                if (!object.Equals(lhs.BodyTemplate, rhs.BodyTemplate)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BodyTemplate, rhs.BodyTemplate, out var lhsBodyTemplate, out var rhsBodyTemplate, out var isBodyTemplateEqual))
+                {
+                    if (!((BodyTemplateCommon)((IBodyTemplateGetter)lhsBodyTemplate).CommonInstance()!).Equals(lhsBodyTemplate, rhsBodyTemplate, crystal?.GetSubCrystal((int)Race_FieldIndex.BodyTemplate))) return false;
+                }
+                else if (!isBodyTemplateEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
@@ -5488,31 +5491,59 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost0) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost0, rhs.SkillBoost0)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost0, rhs.SkillBoost0, out var lhsSkillBoost0, out var rhsSkillBoost0, out var isSkillBoost0Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost0).CommonInstance()!).Equals(lhsSkillBoost0, rhsSkillBoost0, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost0))) return false;
+                }
+                else if (!isSkillBoost0Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost1) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost1, rhs.SkillBoost1)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost1, rhs.SkillBoost1, out var lhsSkillBoost1, out var rhsSkillBoost1, out var isSkillBoost1Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost1).CommonInstance()!).Equals(lhsSkillBoost1, rhsSkillBoost1, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost1))) return false;
+                }
+                else if (!isSkillBoost1Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost2) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost2, rhs.SkillBoost2)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost2, rhs.SkillBoost2, out var lhsSkillBoost2, out var rhsSkillBoost2, out var isSkillBoost2Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost2).CommonInstance()!).Equals(lhsSkillBoost2, rhsSkillBoost2, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost2))) return false;
+                }
+                else if (!isSkillBoost2Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost3) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost3, rhs.SkillBoost3)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost3, rhs.SkillBoost3, out var lhsSkillBoost3, out var rhsSkillBoost3, out var isSkillBoost3Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost3).CommonInstance()!).Equals(lhsSkillBoost3, rhsSkillBoost3, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost3))) return false;
+                }
+                else if (!isSkillBoost3Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost4) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost4, rhs.SkillBoost4)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost4, rhs.SkillBoost4, out var lhsSkillBoost4, out var rhsSkillBoost4, out var isSkillBoost4Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost4).CommonInstance()!).Equals(lhsSkillBoost4, rhsSkillBoost4, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost4))) return false;
+                }
+                else if (!isSkillBoost4Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost5) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost5, rhs.SkillBoost5)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost5, rhs.SkillBoost5, out var lhsSkillBoost5, out var rhsSkillBoost5, out var isSkillBoost5Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost5).CommonInstance()!).Equals(lhsSkillBoost5, rhsSkillBoost5, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost5))) return false;
+                }
+                else if (!isSkillBoost5Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkillBoost6) ?? true))
             {
-                if (!object.Equals(lhs.SkillBoost6, rhs.SkillBoost6)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SkillBoost6, rhs.SkillBoost6, out var lhsSkillBoost6, out var rhsSkillBoost6, out var isSkillBoost6Equal))
+                {
+                    if (!((SkillBoostCommon)((ISkillBoostGetter)lhsSkillBoost6).CommonInstance()!).Equals(lhsSkillBoost6, rhsSkillBoost6, crystal?.GetSubCrystal((int)Race_FieldIndex.SkillBoost6))) return false;
+                }
+                else if (!isSkillBoost6Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Unknown) ?? true))
             {
@@ -5604,7 +5635,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.MountData) ?? true))
             {
-                if (!object.Equals(lhs.MountData, rhs.MountData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MountData, rhs.MountData, out var lhsMountData, out var rhsMountData, out var isMountDataEqual))
+                {
+                    if (!((MountDataCommon)((IMountDataGetter)lhsMountData).CommonInstance()!).Equals(lhsMountData, rhsMountData, crystal?.GetSubCrystal((int)Race_FieldIndex.MountData))) return false;
+                }
+                else if (!isMountDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SkeletalModel) ?? true))
             {
@@ -5708,7 +5743,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceFxPhonemes) ?? true))
             {
-                if (!object.Equals(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FaceFxPhonemes, rhs.FaceFxPhonemes, out var lhsFaceFxPhonemes, out var rhsFaceFxPhonemes, out var isFaceFxPhonemesEqual))
+                {
+                    if (!((FaceFxPhonemesCommon)((IFaceFxPhonemesGetter)lhsFaceFxPhonemes).CommonInstance()!).Equals(lhsFaceFxPhonemes, rhsFaceFxPhonemes, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceFxPhonemes))) return false;
+                }
+                else if (!isFaceFxPhonemesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BaseMovementDefaultWalk) ?? true))
             {

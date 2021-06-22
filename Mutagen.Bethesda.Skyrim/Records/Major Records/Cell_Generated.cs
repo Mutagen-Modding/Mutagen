@@ -3343,8 +3343,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
@@ -3356,11 +3355,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Grid) ?? true))
             {
-                if (!object.Equals(lhs.Grid, rhs.Grid)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Grid, rhs.Grid, out var lhsGrid, out var rhsGrid, out var isGridEqual))
+                {
+                    if (!((CellGridCommon)((ICellGridGetter)lhsGrid).CommonInstance()!).Equals(lhsGrid, rhsGrid, crystal?.GetSubCrystal((int)Cell_FieldIndex.Grid))) return false;
+                }
+                else if (!isGridEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
-                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Lighting, rhs.Lighting, out var lhsLighting, out var rhsLighting, out var isLightingEqual))
+                {
+                    if (!((CellLightingCommon)((ICellLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, crystal?.GetSubCrystal((int)Cell_FieldIndex.Lighting))) return false;
+                }
+                else if (!isLightingEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.OcclusionData) ?? true))
             {
@@ -3404,7 +3411,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.WaterVelocity) ?? true))
             {
-                if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.WaterVelocity, rhs.WaterVelocity, out var lhsWaterVelocity, out var rhsWaterVelocity, out var isWaterVelocityEqual))
+                {
+                    if (!((CellWaterVelocityCommon)((ICellWaterVelocityGetter)lhsWaterVelocity).CommonInstance()!).Equals(lhsWaterVelocity, rhsWaterVelocity, crystal?.GetSubCrystal((int)Cell_FieldIndex.WaterVelocity))) return false;
+                }
+                else if (!isWaterVelocityEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Water) ?? true))
             {
@@ -3412,7 +3423,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Ownership) ?? true))
             {
-                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)Cell_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.LockList) ?? true))
             {
@@ -3444,7 +3459,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
-                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Landscape, rhs.Landscape, out var lhsLandscape, out var rhsLandscape, out var isLandscapeEqual))
+                {
+                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, crystal?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
+                }
+                else if (!isLandscapeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.NavigationMeshes) ?? true))
             {

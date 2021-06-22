@@ -1132,8 +1132,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceHdrGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ImageSpaceHdr_FieldIndex.EyeAdaptSpeed) ?? true))
             {
                 if (!lhs.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed)) return false;

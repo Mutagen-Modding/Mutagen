@@ -914,8 +914,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILoadScreenLocationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LoadScreenLocation_FieldIndex.Direct) ?? true))
             {
                 if (!lhs.Direct.Equals(rhs.Direct)) return false;

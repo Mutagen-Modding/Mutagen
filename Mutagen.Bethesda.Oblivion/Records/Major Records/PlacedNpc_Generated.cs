@@ -1398,8 +1398,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IPlacedNpcGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
@@ -1415,11 +1414,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.DistantLODData) ?? true))
             {
-                if (!object.Equals(lhs.DistantLODData, rhs.DistantLODData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DistantLODData, rhs.DistantLODData, out var lhsDistantLODData, out var rhsDistantLODData, out var isDistantLODDataEqual))
+                {
+                    if (!((DistantLODDataCommon)((IDistantLODDataGetter)lhsDistantLODData).CommonInstance()!).Equals(lhsDistantLODData, rhsDistantLODData, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.DistantLODData))) return false;
+                }
+                else if (!isDistantLODDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
             {
-                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.MerchantContainer) ?? true))
             {
@@ -1439,7 +1446,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Location) ?? true))
             {
-                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((LocationCommon)((ILocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
             }
             return true;
         }

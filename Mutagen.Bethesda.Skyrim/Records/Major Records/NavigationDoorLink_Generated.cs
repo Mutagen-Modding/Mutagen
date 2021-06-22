@@ -906,8 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationDoorLinkGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NavigationDoorLink_FieldIndex.NavMesh) ?? true))
             {
                 if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;

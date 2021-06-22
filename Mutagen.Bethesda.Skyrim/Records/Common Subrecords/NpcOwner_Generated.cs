@@ -859,8 +859,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcOwnerGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOwnerTargetGetter)lhs, (IOwnerTargetGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)NpcOwner_FieldIndex.Npc) ?? true))
             {

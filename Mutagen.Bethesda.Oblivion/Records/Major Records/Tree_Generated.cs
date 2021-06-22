@@ -1259,12 +1259,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITreeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Tree_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Icon) ?? true))
             {
@@ -1276,11 +1279,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((TreeDataCommon)((ITreeDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Tree_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Tree_FieldIndex.BillboardDimensions) ?? true))
             {
-                if (!object.Equals(lhs.BillboardDimensions, rhs.BillboardDimensions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BillboardDimensions, rhs.BillboardDimensions, out var lhsBillboardDimensions, out var rhsBillboardDimensions, out var isBillboardDimensionsEqual))
+                {
+                    if (!((DimensionsCommon)((IDimensionsGetter)lhsBillboardDimensions).CommonInstance()!).Equals(lhsBillboardDimensions, rhsBillboardDimensions, crystal?.GetSubCrystal((int)Tree_FieldIndex.BillboardDimensions))) return false;
+                }
+                else if (!isBillboardDimensionsEqual) return false;
             }
             return true;
         }

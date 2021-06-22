@@ -906,8 +906,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGetEventDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionDataGetter)lhs, (IConditionDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)GetEventData_FieldIndex.EventFunction) ?? true))
             {

@@ -1392,8 +1392,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlayerSkillsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PlayerSkills_FieldIndex.SkillValues) ?? true))
             {
                 if (!lhs.SkillValues.SequenceEqualNullable(rhs.SkillValues)) return false;

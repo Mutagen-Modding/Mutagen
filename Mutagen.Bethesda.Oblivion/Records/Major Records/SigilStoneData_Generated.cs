@@ -895,8 +895,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISigilStoneDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SigilStoneData_FieldIndex.Uses) ?? true))
             {
                 if (lhs.Uses != rhs.Uses) return false;
