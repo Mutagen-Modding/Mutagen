@@ -55,9 +55,6 @@ namespace Mutagen.Bethesda.SourceGenerators.CustomAspectInterface
                 if (context.CancellationToken.IsCancellationRequested) return;
                 var interfaceSymbols = GetInterfaceTypeDictionary(context, customAspectReceiver);
 
-                if (context.CancellationToken.IsCancellationRequested) return;
-                var interfaceUsageDeclarations = GetInterfaceUsageDeclarations(context, customAspectReceiver, interfaceSymbols);
-
                 // Group things by namespace
                 if (context.CancellationToken.IsCancellationRequested) return;
                 var targets = new Dictionary<string, GenerationTarget>();
