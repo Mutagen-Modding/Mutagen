@@ -861,8 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshNodeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NavmeshNode_FieldIndex.NavMesh) ?? true))
             {
                 if (!lhs.NavMesh.Equals(rhs.NavMesh)) return false;

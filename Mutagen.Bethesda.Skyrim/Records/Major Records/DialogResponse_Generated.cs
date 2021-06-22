@@ -1382,8 +1382,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponseGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DialogResponse_FieldIndex.Emotion) ?? true))
             {
                 if (lhs.Emotion != rhs.Emotion) return false;

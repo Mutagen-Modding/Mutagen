@@ -891,8 +891,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IDebugStructOrderGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DebugStructOrder_FieldIndex.ObjectName) ?? true))
             {
                 if (!string.Equals(lhs.ObjectName, rhs.ObjectName)) return false;

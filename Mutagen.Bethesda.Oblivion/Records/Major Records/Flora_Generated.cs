@@ -1183,8 +1183,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFloraGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Name) ?? true))
             {
@@ -1192,7 +1191,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Flora_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.Script) ?? true))
             {
@@ -1204,7 +1207,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Flora_FieldIndex.SeasonalIngredientProduction) ?? true))
             {
-                if (!object.Equals(lhs.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.SeasonalIngredientProduction, rhs.SeasonalIngredientProduction, out var lhsSeasonalIngredientProduction, out var rhsSeasonalIngredientProduction, out var isSeasonalIngredientProductionEqual))
+                {
+                    if (!((SeasonalIngredientProductionCommon)((ISeasonalIngredientProductionGetter)lhsSeasonalIngredientProduction).CommonInstance()!).Equals(lhsSeasonalIngredientProduction, rhsSeasonalIngredientProduction, crystal?.GetSubCrystal((int)Flora_FieldIndex.SeasonalIngredientProduction))) return false;
+                }
+                else if (!isSeasonalIngredientProductionEqual) return false;
             }
             return true;
         }

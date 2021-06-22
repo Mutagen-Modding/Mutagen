@@ -866,8 +866,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRelationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Relation_FieldIndex.Faction) ?? true))
             {
                 if (!lhs.Faction.Equals(rhs.Faction)) return false;

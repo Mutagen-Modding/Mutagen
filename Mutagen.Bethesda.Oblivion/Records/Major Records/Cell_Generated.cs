@@ -2697,8 +2697,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Name) ?? true))
             {
@@ -2714,7 +2713,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Lighting) ?? true))
             {
-                if (!object.Equals(lhs.Lighting, rhs.Lighting)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Lighting, rhs.Lighting, out var lhsLighting, out var rhsLighting, out var isLightingEqual))
+                {
+                    if (!((CellLightingCommon)((ICellLightingGetter)lhsLighting).CommonInstance()!).Equals(lhsLighting, rhsLighting, crystal?.GetSubCrystal((int)Cell_FieldIndex.Lighting))) return false;
+                }
+                else if (!isLightingEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Regions) ?? true))
             {
@@ -2750,11 +2753,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.PathGrid) ?? true))
             {
-                if (!object.Equals(lhs.PathGrid, rhs.PathGrid)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.PathGrid, rhs.PathGrid, out var lhsPathGrid, out var rhsPathGrid, out var isPathGridEqual))
+                {
+                    if (!((PathGridCommon)((IPathGridGetter)lhsPathGrid).CommonInstance()!).Equals(lhsPathGrid, rhsPathGrid, crystal?.GetSubCrystal((int)Cell_FieldIndex.PathGrid))) return false;
+                }
+                else if (!isPathGridEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Landscape) ?? true))
             {
-                if (!object.Equals(lhs.Landscape, rhs.Landscape)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Landscape, rhs.Landscape, out var lhsLandscape, out var rhsLandscape, out var isLandscapeEqual))
+                {
+                    if (!((LandscapeCommon)((ILandscapeGetter)lhsLandscape).CommonInstance()!).Equals(lhsLandscape, rhsLandscape, crystal?.GetSubCrystal((int)Cell_FieldIndex.Landscape))) return false;
+                }
+                else if (!isLandscapeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Cell_FieldIndex.Timestamp) ?? true))
             {

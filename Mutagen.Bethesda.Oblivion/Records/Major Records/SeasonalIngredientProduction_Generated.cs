@@ -932,8 +932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISeasonalIngredientProductionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SeasonalIngredientProduction_FieldIndex.Spring) ?? true))
             {
                 if (lhs.Spring != rhs.Spring) return false;

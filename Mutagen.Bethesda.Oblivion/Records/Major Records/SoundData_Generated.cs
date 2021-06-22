@@ -953,8 +953,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataInternalGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SoundData_FieldIndex.MinimumAttenuationDistance) ?? true))
             {
                 if (lhs.MinimumAttenuationDistance != rhs.MinimumAttenuationDistance) return false;

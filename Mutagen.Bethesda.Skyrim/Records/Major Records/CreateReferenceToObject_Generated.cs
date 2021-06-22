@@ -988,8 +988,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICreateReferenceToObjectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)CreateReferenceToObject_FieldIndex.Object) ?? true))
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;

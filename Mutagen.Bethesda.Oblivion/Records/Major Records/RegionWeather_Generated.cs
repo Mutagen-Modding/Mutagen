@@ -915,8 +915,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionWeatherGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IRegionDataGetter)lhs, (IRegionDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)RegionWeather_FieldIndex.Weathers) ?? true))
             {

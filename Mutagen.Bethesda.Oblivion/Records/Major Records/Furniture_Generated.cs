@@ -1118,8 +1118,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFurnitureGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Name) ?? true))
             {
@@ -1127,7 +1126,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Furniture_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Furniture_FieldIndex.Script) ?? true))
             {

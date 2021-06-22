@@ -763,15 +763,18 @@ namespace Mutagen.Bethesda.Pex.Internals
             IPexObjectNamedFunctionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PexObjectNamedFunction_FieldIndex.FunctionName) ?? true))
             {
                 if (!string.Equals(lhs.FunctionName, rhs.FunctionName)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectNamedFunction_FieldIndex.Function) ?? true))
             {
-                if (!object.Equals(lhs.Function, rhs.Function)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Function, rhs.Function, out var lhsFunction, out var rhsFunction, out var isFunctionEqual))
+                {
+                    if (!((PexObjectFunctionCommon)((IPexObjectFunctionGetter)lhsFunction).CommonInstance()!).Equals(lhsFunction, rhsFunction, crystal?.GetSubCrystal((int)PexObjectNamedFunction_FieldIndex.Function))) return false;
+                }
+                else if (!isFunctionEqual) return false;
             }
             return true;
         }

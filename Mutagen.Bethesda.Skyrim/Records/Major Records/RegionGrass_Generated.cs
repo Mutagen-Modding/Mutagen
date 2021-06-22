@@ -861,8 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGrassGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RegionGrass_FieldIndex.Grass) ?? true))
             {
                 if (!lhs.Grass.Equals(rhs.Grass)) return false;

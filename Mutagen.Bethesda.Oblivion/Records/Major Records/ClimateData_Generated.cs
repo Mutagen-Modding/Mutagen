@@ -1053,8 +1053,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClimateDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ClimateData_FieldIndex.SunriseBegin) ?? true))
             {
                 if (lhs.SunriseBegin != rhs.SunriseBegin) return false;

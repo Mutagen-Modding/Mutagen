@@ -1229,8 +1229,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageEventGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PackageEvent_FieldIndex.Idle) ?? true))
             {
                 if (!lhs.Idle.Equals(rhs.Idle)) return false;

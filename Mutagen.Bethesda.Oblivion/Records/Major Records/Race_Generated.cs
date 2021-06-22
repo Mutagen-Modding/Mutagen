@@ -2228,8 +2228,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Name) ?? true))
             {
@@ -2249,7 +2248,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((RaceDataCommon)((IRaceDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Race_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Voices) ?? true))
             {
@@ -2293,7 +2296,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.FaceGenData) ?? true))
             {
-                if (!object.Equals(lhs.FaceGenData, rhs.FaceGenData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FaceGenData, rhs.FaceGenData, out var lhsFaceGenData, out var rhsFaceGenData, out var isFaceGenDataEqual))
+                {
+                    if (!((FaceGenDataCommon)((IFaceGenDataGetter)lhsFaceGenData).CommonInstance()!).Equals(lhsFaceGenData, rhsFaceGenData, crystal?.GetSubCrystal((int)Race_FieldIndex.FaceGenData))) return false;
+                }
+                else if (!isFaceGenDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.SNAM) ?? true))
             {

@@ -920,19 +920,30 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputChannelsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel0) ?? true))
             {
-                if (!object.Equals(lhs.Channel0, rhs.Channel0)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Channel0, rhs.Channel0, out var lhsChannel0, out var rhsChannel0, out var isChannel0Equal))
+                {
+                    if (!((SoundOutputChannelCommon)((ISoundOutputChannelGetter)lhsChannel0).CommonInstance()!).Equals(lhsChannel0, rhsChannel0, crystal?.GetSubCrystal((int)SoundOutputChannels_FieldIndex.Channel0))) return false;
+                }
+                else if (!isChannel0Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel1) ?? true))
             {
-                if (!object.Equals(lhs.Channel1, rhs.Channel1)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Channel1, rhs.Channel1, out var lhsChannel1, out var rhsChannel1, out var isChannel1Equal))
+                {
+                    if (!((SoundOutputChannelCommon)((ISoundOutputChannelGetter)lhsChannel1).CommonInstance()!).Equals(lhsChannel1, rhsChannel1, crystal?.GetSubCrystal((int)SoundOutputChannels_FieldIndex.Channel1))) return false;
+                }
+                else if (!isChannel1Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputChannels_FieldIndex.Channel2) ?? true))
             {
-                if (!object.Equals(lhs.Channel2, rhs.Channel2)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Channel2, rhs.Channel2, out var lhsChannel2, out var rhsChannel2, out var isChannel2Equal))
+                {
+                    if (!((SoundOutputChannelCommon)((ISoundOutputChannelGetter)lhsChannel2).CommonInstance()!).Equals(lhsChannel2, rhsChannel2, crystal?.GetSubCrystal((int)SoundOutputChannels_FieldIndex.Channel2))) return false;
+                }
+                else if (!isChannel2Equal) return false;
             }
             return true;
         }

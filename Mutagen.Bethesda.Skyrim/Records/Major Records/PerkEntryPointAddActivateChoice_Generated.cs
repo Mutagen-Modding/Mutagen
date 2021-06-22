@@ -970,8 +970,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkEntryPointAddActivateChoiceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPerkEntryPointEffectGetter)lhs, (IAPerkEntryPointEffectGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Spell) ?? true))
             {
@@ -983,7 +982,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags) ?? true))
             {
-                if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
+                {
+                    if (!((PerkScriptFlagCommon)((IPerkScriptFlagGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, crystal?.GetSubCrystal((int)PerkEntryPointAddActivateChoice_FieldIndex.Flags))) return false;
+                }
+                else if (!isFlagsEqual) return false;
             }
             return true;
         }

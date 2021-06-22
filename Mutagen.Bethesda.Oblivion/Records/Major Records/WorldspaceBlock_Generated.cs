@@ -1469,8 +1469,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceBlockGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WorldspaceBlock_FieldIndex.BlockNumberY) ?? true))
             {
                 if (lhs.BlockNumberY != rhs.BlockNumberY) return false;

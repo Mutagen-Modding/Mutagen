@@ -921,8 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITintPresetGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)TintPreset_FieldIndex.Color) ?? true))
             {
                 if (!lhs.Color.Equals(rhs.Color)) return false;

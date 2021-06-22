@@ -1235,8 +1235,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IConditionDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.Function) ?? true))
             {
                 if (lhs.Function != rhs.Function) return false;

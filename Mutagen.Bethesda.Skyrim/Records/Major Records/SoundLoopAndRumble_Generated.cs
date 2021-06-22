@@ -932,8 +932,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundLoopAndRumbleGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SoundLoopAndRumble_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;

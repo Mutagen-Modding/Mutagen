@@ -901,8 +901,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDoorTriangleGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DoorTriangle_FieldIndex.TriangleBeforeDoor) ?? true))
             {
                 if (lhs.TriangleBeforeDoor != rhs.TriangleBeforeDoor) return false;

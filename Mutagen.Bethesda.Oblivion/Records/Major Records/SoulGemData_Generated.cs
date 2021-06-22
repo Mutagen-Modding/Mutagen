@@ -855,8 +855,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoulGemDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SoulGemData_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;

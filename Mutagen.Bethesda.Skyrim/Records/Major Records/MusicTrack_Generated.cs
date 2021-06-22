@@ -1605,8 +1605,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMusicTrackGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.Type) ?? true))
             {
@@ -1630,7 +1629,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.LoopData) ?? true))
             {
-                if (!object.Equals(lhs.LoopData, rhs.LoopData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LoopData, rhs.LoopData, out var lhsLoopData, out var rhsLoopData, out var isLoopDataEqual))
+                {
+                    if (!((MusicTrackLoopDataCommon)((IMusicTrackLoopDataGetter)lhsLoopData).CommonInstance()!).Equals(lhsLoopData, rhsLoopData, crystal?.GetSubCrystal((int)MusicTrack_FieldIndex.LoopData))) return false;
+                }
+                else if (!isLoopDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MusicTrack_FieldIndex.CuePoints) ?? true))
             {

@@ -1169,8 +1169,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILandTextureGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.Icon) ?? true))
             {
@@ -1178,7 +1177,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.Havok) ?? true))
             {
-                if (!object.Equals(lhs.Havok, rhs.Havok)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Havok, rhs.Havok, out var lhsHavok, out var rhsHavok, out var isHavokEqual))
+                {
+                    if (!((HavokDataCommon)((IHavokDataGetter)lhsHavok).CommonInstance()!).Equals(lhsHavok, rhsHavok, crystal?.GetSubCrystal((int)LandTexture_FieldIndex.Havok))) return false;
+                }
+                else if (!isHavokEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LandTexture_FieldIndex.TextureSpecularExponent) ?? true))
             {

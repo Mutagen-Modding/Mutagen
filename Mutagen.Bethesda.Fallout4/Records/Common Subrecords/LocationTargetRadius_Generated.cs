@@ -899,11 +899,14 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationTargetRadiusGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Target) ?? true))
             {
-                if (!object.Equals(lhs.Target, rhs.Target)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
+                {
+                    if (!((ALocationTargetCommon)((IALocationTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, crystal?.GetSubCrystal((int)LocationTargetRadius_FieldIndex.Target))) return false;
+                }
+                else if (!isTargetEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LocationTargetRadius_FieldIndex.Radius) ?? true))
             {

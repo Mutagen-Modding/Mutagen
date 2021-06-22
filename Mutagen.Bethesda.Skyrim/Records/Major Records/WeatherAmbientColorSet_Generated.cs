@@ -969,23 +969,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAmbientColorSetGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunrise) ?? true))
             {
-                if (!object.Equals(lhs.Sunrise, rhs.Sunrise)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Sunrise, rhs.Sunrise, out var lhsSunrise, out var rhsSunrise, out var isSunriseEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunrise).CommonInstance()!).Equals(lhsSunrise, rhsSunrise, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunrise))) return false;
+                }
+                else if (!isSunriseEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Day) ?? true))
             {
-                if (!object.Equals(lhs.Day, rhs.Day)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Day, rhs.Day, out var lhsDay, out var rhsDay, out var isDayEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsDay).CommonInstance()!).Equals(lhsDay, rhsDay, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Day))) return false;
+                }
+                else if (!isDayEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Sunset) ?? true))
             {
-                if (!object.Equals(lhs.Sunset, rhs.Sunset)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Sunset, rhs.Sunset, out var lhsSunset, out var rhsSunset, out var isSunsetEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsSunset).CommonInstance()!).Equals(lhsSunset, rhsSunset, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Sunset))) return false;
+                }
+                else if (!isSunsetEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)WeatherAmbientColorSet_FieldIndex.Night) ?? true))
             {
-                if (!object.Equals(lhs.Night, rhs.Night)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Night, rhs.Night, out var lhsNight, out var rhsNight, out var isNightEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsNight).CommonInstance()!).Equals(lhsNight, rhsNight, crystal?.GetSubCrystal((int)WeatherAmbientColorSet_FieldIndex.Night))) return false;
+                }
+                else if (!isNightEqual) return false;
             }
             return true;
         }

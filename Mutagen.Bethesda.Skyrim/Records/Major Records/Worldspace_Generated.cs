@@ -3185,8 +3185,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LargeReferences) ?? true))
             {
@@ -3194,7 +3193,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MaxHeight) ?? true))
             {
-                if (!object.Equals(lhs.MaxHeight, rhs.MaxHeight)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MaxHeight, rhs.MaxHeight, out var lhsMaxHeight, out var rhsMaxHeight, out var isMaxHeightEqual))
+                {
+                    if (!((WorldspaceMaxHeightCommon)((IWorldspaceMaxHeightGetter)lhsMaxHeight).CommonInstance()!).Equals(lhsMaxHeight, rhsMaxHeight, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MaxHeight))) return false;
+                }
+                else if (!isMaxHeightEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
@@ -3218,7 +3221,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Parent) ?? true))
             {
-                if (!object.Equals(lhs.Parent, rhs.Parent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Parent, rhs.Parent, out var lhsParent, out var rhsParent, out var isParentEqual))
+                {
+                    if (!((WorldspaceParentCommon)((IWorldspaceParentGetter)lhsParent).CommonInstance()!).Equals(lhsParent, rhsParent, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.Parent))) return false;
+                }
+                else if (!isParentEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Climate) ?? true))
             {
@@ -3238,7 +3245,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.LandDefaults) ?? true))
             {
-                if (!object.Equals(lhs.LandDefaults, rhs.LandDefaults)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LandDefaults, rhs.LandDefaults, out var lhsLandDefaults, out var rhsLandDefaults, out var isLandDefaultsEqual))
+                {
+                    if (!((WorldspaceLandDefaultsCommon)((IWorldspaceLandDefaultsGetter)lhsLandDefaults).CommonInstance()!).Equals(lhsLandDefaults, rhsLandDefaults, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.LandDefaults))) return false;
+                }
+                else if (!isLandDefaultsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapImage) ?? true))
             {
@@ -3246,15 +3257,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.CloudModel) ?? true))
             {
-                if (!object.Equals(lhs.CloudModel, rhs.CloudModel)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CloudModel, rhs.CloudModel, out var lhsCloudModel, out var rhsCloudModel, out var isCloudModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsCloudModel).CommonInstance()!).Equals(lhsCloudModel, rhsCloudModel, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.CloudModel))) return false;
+                }
+                else if (!isCloudModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MapData, rhs.MapData, out var lhsMapData, out var rhsMapData, out var isMapDataEqual))
+                {
+                    if (!((WorldspaceMapCommon)((IWorldspaceMapGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
+                }
+                else if (!isMapDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapOffset) ?? true))
             {
-                if (!object.Equals(lhs.MapOffset, rhs.MapOffset)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MapOffset, rhs.MapOffset, out var lhsMapOffset, out var rhsMapOffset, out var isMapOffsetEqual))
+                {
+                    if (!((WorldspaceMapOffsetCommon)((IWorldspaceMapOffsetGetter)lhsMapOffset).CommonInstance()!).Equals(lhsMapOffset, rhsMapOffset, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapOffset))) return false;
+                }
+                else if (!isMapOffsetEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.DistantLodMultiplier) ?? true))
             {
@@ -3266,7 +3289,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.ObjectBounds) ?? true))
             {
-                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((WorldspaceObjectBoundsCommon)((IWorldspaceObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Music) ?? true))
             {
@@ -3298,7 +3325,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.TopCell, rhs.TopCell, out var lhsTopCell, out var rhsTopCell, out var isTopCellEqual))
+                {
+                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
+                }
+                else if (!isTopCellEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {

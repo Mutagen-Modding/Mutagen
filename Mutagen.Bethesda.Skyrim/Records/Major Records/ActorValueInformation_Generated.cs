@@ -1334,8 +1334,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IActorValueInformationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Name) ?? true))
             {
@@ -1355,7 +1354,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.Skill) ?? true))
             {
-                if (!object.Equals(lhs.Skill, rhs.Skill)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Skill, rhs.Skill, out var lhsSkill, out var rhsSkill, out var isSkillEqual))
+                {
+                    if (!((ActorValueSkillCommon)((IActorValueSkillGetter)lhsSkill).CommonInstance()!).Equals(lhsSkill, rhsSkill, crystal?.GetSubCrystal((int)ActorValueInformation_FieldIndex.Skill))) return false;
+                }
+                else if (!isSkillEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ActorValueInformation_FieldIndex.PerkTree) ?? true))
             {

@@ -1128,8 +1128,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILodGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Lod_FieldIndex.Level0) ?? true))
             {
                 if (!string.Equals(lhs.Level0, rhs.Level0)) return false;

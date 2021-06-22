@@ -971,8 +971,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IGlobalShortGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IGlobalGetter)lhs, (IGlobalGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)GlobalShort_FieldIndex.Data) ?? true))
             {

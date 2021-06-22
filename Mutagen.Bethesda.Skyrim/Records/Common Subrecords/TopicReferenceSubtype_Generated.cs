@@ -792,8 +792,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ITopicReferenceSubtypeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IATopicReferenceGetter)lhs, (IATopicReferenceGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)TopicReferenceSubtype_FieldIndex.Subtype) ?? true))
             {

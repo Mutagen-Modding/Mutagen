@@ -1187,8 +1187,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.ENAM) ?? true))
             {
@@ -1196,19 +1195,35 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Hdr) ?? true))
             {
-                if (!object.Equals(lhs.Hdr, rhs.Hdr)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Hdr, rhs.Hdr, out var lhsHdr, out var rhsHdr, out var isHdrEqual))
+                {
+                    if (!((ImageSpaceHdrCommon)((IImageSpaceHdrGetter)lhsHdr).CommonInstance()!).Equals(lhsHdr, rhsHdr, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Hdr))) return false;
+                }
+                else if (!isHdrEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Cinematic) ?? true))
             {
-                if (!object.Equals(lhs.Cinematic, rhs.Cinematic)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Cinematic, rhs.Cinematic, out var lhsCinematic, out var rhsCinematic, out var isCinematicEqual))
+                {
+                    if (!((ImageSpaceCinematicCommon)((IImageSpaceCinematicGetter)lhsCinematic).CommonInstance()!).Equals(lhsCinematic, rhsCinematic, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Cinematic))) return false;
+                }
+                else if (!isCinematicEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.Tint) ?? true))
             {
-                if (!object.Equals(lhs.Tint, rhs.Tint)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Tint, rhs.Tint, out var lhsTint, out var rhsTint, out var isTintEqual))
+                {
+                    if (!((ImageSpaceTintCommon)((IImageSpaceTintGetter)lhsTint).CommonInstance()!).Equals(lhsTint, rhsTint, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.Tint))) return false;
+                }
+                else if (!isTintEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ImageSpace_FieldIndex.DepthOfField) ?? true))
             {
-                if (!object.Equals(lhs.DepthOfField, rhs.DepthOfField)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DepthOfField, rhs.DepthOfField, out var lhsDepthOfField, out var rhsDepthOfField, out var isDepthOfFieldEqual))
+                {
+                    if (!((ImageSpaceDepthOfFieldCommon)((IImageSpaceDepthOfFieldGetter)lhsDepthOfField).CommonInstance()!).Equals(lhsDepthOfField, rhsDepthOfField, crystal?.GetSubCrystal((int)ImageSpace_FieldIndex.DepthOfField))) return false;
+                }
+                else if (!isDepthOfFieldEqual) return false;
             }
             return true;
         }

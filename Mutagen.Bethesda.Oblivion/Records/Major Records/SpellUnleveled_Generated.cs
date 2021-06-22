@@ -1130,12 +1130,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISpellUnleveledGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISpellGetter)lhs, (ISpellGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((SpellDataCommon)((ISpellDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SpellUnleveled_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SpellUnleveled_FieldIndex.Effects) ?? true))
             {

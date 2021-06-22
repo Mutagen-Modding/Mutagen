@@ -2348,59 +2348,110 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFallout4ModGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.ModHeader) ?? true))
             {
-                if (!object.Equals(lhs.ModHeader, rhs.ModHeader)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ModHeader, rhs.ModHeader, out var lhsModHeader, out var rhsModHeader, out var isModHeaderEqual))
+                {
+                    if (!((Fallout4ModHeaderCommon)((IFallout4ModHeaderGetter)lhsModHeader).CommonInstance()!).Equals(lhsModHeader, rhsModHeader, crystal?.GetSubCrystal((int)Fallout4Mod_FieldIndex.ModHeader))) return false;
+                }
+                else if (!isModHeaderEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.GameSettings) ?? true))
             {
-                if (!object.Equals(lhs.GameSettings, rhs.GameSettings)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.GameSettings, rhs.GameSettings, out var lhsGameSettings, out var rhsGameSettings, out var isGameSettingsEqual))
+                {
+                    if (!object.Equals(lhsGameSettings, rhsGameSettings)) return false;
+                }
+                else if (!isGameSettingsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Keywords) ?? true))
             {
-                if (!object.Equals(lhs.Keywords, rhs.Keywords)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Keywords, rhs.Keywords, out var lhsKeywords, out var rhsKeywords, out var isKeywordsEqual))
+                {
+                    if (!object.Equals(lhsKeywords, rhsKeywords)) return false;
+                }
+                else if (!isKeywordsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.LocationReferenceTypes) ?? true))
             {
-                if (!object.Equals(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LocationReferenceTypes, rhs.LocationReferenceTypes, out var lhsLocationReferenceTypes, out var rhsLocationReferenceTypes, out var isLocationReferenceTypesEqual))
+                {
+                    if (!object.Equals(lhsLocationReferenceTypes, rhsLocationReferenceTypes)) return false;
+                }
+                else if (!isLocationReferenceTypesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Actions) ?? true))
             {
-                if (!object.Equals(lhs.Actions, rhs.Actions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Actions, rhs.Actions, out var lhsActions, out var rhsActions, out var isActionsEqual))
+                {
+                    if (!object.Equals(lhsActions, rhsActions)) return false;
+                }
+                else if (!isActionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Transforms) ?? true))
             {
-                if (!object.Equals(lhs.Transforms, rhs.Transforms)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Transforms, rhs.Transforms, out var lhsTransforms, out var rhsTransforms, out var isTransformsEqual))
+                {
+                    if (!object.Equals(lhsTransforms, rhsTransforms)) return false;
+                }
+                else if (!isTransformsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Components) ?? true))
             {
-                if (!object.Equals(lhs.Components, rhs.Components)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Components, rhs.Components, out var lhsComponents, out var rhsComponents, out var isComponentsEqual))
+                {
+                    if (!object.Equals(lhsComponents, rhsComponents)) return false;
+                }
+                else if (!isComponentsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.TextureSets) ?? true))
             {
-                if (!object.Equals(lhs.TextureSets, rhs.TextureSets)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.TextureSets, rhs.TextureSets, out var lhsTextureSets, out var rhsTextureSets, out var isTextureSetsEqual))
+                {
+                    if (!object.Equals(lhsTextureSets, rhsTextureSets)) return false;
+                }
+                else if (!isTextureSetsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Globals) ?? true))
             {
-                if (!object.Equals(lhs.Globals, rhs.Globals)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Globals, rhs.Globals, out var lhsGlobals, out var rhsGlobals, out var isGlobalsEqual))
+                {
+                    if (!object.Equals(lhsGlobals, rhsGlobals)) return false;
+                }
+                else if (!isGlobalsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.DamageTypes) ?? true))
             {
-                if (!object.Equals(lhs.DamageTypes, rhs.DamageTypes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DamageTypes, rhs.DamageTypes, out var lhsDamageTypes, out var rhsDamageTypes, out var isDamageTypesEqual))
+                {
+                    if (!object.Equals(lhsDamageTypes, rhsDamageTypes)) return false;
+                }
+                else if (!isDamageTypesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Classes) ?? true))
             {
-                if (!object.Equals(lhs.Classes, rhs.Classes)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Classes, rhs.Classes, out var lhsClasses, out var rhsClasses, out var isClassesEqual))
+                {
+                    if (!object.Equals(lhsClasses, rhsClasses)) return false;
+                }
+                else if (!isClassesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.Factions) ?? true))
             {
-                if (!object.Equals(lhs.Factions, rhs.Factions)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Factions, rhs.Factions, out var lhsFactions, out var rhsFactions, out var isFactionsEqual))
+                {
+                    if (!object.Equals(lhsFactions, rhsFactions)) return false;
+                }
+                else if (!isFactionsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Fallout4Mod_FieldIndex.HeadParts) ?? true))
             {
-                if (!object.Equals(lhs.HeadParts, rhs.HeadParts)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.HeadParts, rhs.HeadParts, out var lhsHeadParts, out var rhsHeadParts, out var isHeadPartsEqual))
+                {
+                    if (!object.Equals(lhsHeadParts, rhsHeadParts)) return false;
+                }
+                else if (!isHeadPartsEqual) return false;
             }
             return true;
         }

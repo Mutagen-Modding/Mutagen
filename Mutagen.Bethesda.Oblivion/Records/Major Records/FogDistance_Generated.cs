@@ -932,8 +932,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IFogDistanceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)FogDistance_FieldIndex.DayNear) ?? true))
             {
                 if (!lhs.DayNear.EqualsWithin(rhs.DayNear)) return false;

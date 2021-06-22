@@ -2207,8 +2207,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWorldspaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IPlaceGetter)lhs, (IPlaceGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Name) ?? true))
             {
@@ -2232,7 +2231,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.MapData) ?? true))
             {
-                if (!object.Equals(lhs.MapData, rhs.MapData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MapData, rhs.MapData, out var lhsMapData, out var rhsMapData, out var isMapDataEqual))
+                {
+                    if (!((MapDataCommon)((IMapDataGetter)lhsMapData).CommonInstance()!).Equals(lhsMapData, rhsMapData, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.MapData))) return false;
+                }
+                else if (!isMapDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Flags) ?? true))
             {
@@ -2256,11 +2259,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.Road) ?? true))
             {
-                if (!object.Equals(lhs.Road, rhs.Road)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Road, rhs.Road, out var lhsRoad, out var rhsRoad, out var isRoadEqual))
+                {
+                    if (!((RoadCommon)((IRoadGetter)lhsRoad).CommonInstance()!).Equals(lhsRoad, rhsRoad, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.Road))) return false;
+                }
+                else if (!isRoadEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.TopCell) ?? true))
             {
-                if (!object.Equals(lhs.TopCell, rhs.TopCell)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.TopCell, rhs.TopCell, out var lhsTopCell, out var rhsTopCell, out var isTopCellEqual))
+                {
+                    if (!((CellCommon)((ICellGetter)lhsTopCell).CommonInstance()!).Equals(lhsTopCell, rhsTopCell, crystal?.GetSubCrystal((int)Worldspace_FieldIndex.TopCell))) return false;
+                }
+                else if (!isTopCellEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Worldspace_FieldIndex.SubCellsTimestamp) ?? true))
             {

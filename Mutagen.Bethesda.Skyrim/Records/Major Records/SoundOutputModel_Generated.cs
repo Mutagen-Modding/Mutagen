@@ -1268,12 +1268,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundOutputModelGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((SoundOutputDataCommon)((ISoundOutputDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.FNAM) ?? true))
             {
@@ -1293,11 +1296,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.OutputChannels) ?? true))
             {
-                if (!object.Equals(lhs.OutputChannels, rhs.OutputChannels)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OutputChannels, rhs.OutputChannels, out var lhsOutputChannels, out var rhsOutputChannels, out var isOutputChannelsEqual))
+                {
+                    if (!((SoundOutputChannelsCommon)((ISoundOutputChannelsGetter)lhsOutputChannels).CommonInstance()!).Equals(lhsOutputChannels, rhsOutputChannels, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.OutputChannels))) return false;
+                }
+                else if (!isOutputChannelsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundOutputModel_FieldIndex.Attenuation) ?? true))
             {
-                if (!object.Equals(lhs.Attenuation, rhs.Attenuation)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Attenuation, rhs.Attenuation, out var lhsAttenuation, out var rhsAttenuation, out var isAttenuationEqual))
+                {
+                    if (!((SoundOutputAttenuationCommon)((ISoundOutputAttenuationGetter)lhsAttenuation).CommonInstance()!).Equals(lhsAttenuation, rhsAttenuation, crystal?.GetSubCrystal((int)SoundOutputModel_FieldIndex.Attenuation))) return false;
+                }
+                else if (!isAttenuationEqual) return false;
             }
             return true;
         }

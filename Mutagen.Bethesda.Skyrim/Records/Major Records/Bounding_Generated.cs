@@ -1044,8 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBoundingGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Bounding_FieldIndex.Width) ?? true))
             {
                 if (!lhs.Width.EqualsWithin(rhs.Width)) return false;

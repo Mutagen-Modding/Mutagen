@@ -1156,8 +1156,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ITransformGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Transform_FieldIndex.Position) ?? true))
             {

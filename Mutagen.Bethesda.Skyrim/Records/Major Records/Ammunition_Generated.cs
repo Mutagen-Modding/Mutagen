@@ -1913,12 +1913,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAmmunitionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.ObjectBounds) ?? true))
             {
-                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Name) ?? true))
             {
@@ -1926,15 +1929,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.Destructible) ?? true))
             {
-                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Ammunition_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Ammunition_FieldIndex.PickUpSound) ?? true))
             {

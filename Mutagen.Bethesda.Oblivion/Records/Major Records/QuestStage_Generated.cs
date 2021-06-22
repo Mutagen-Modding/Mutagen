@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestStageGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Stage) ?? true))
             {
                 if (lhs.Stage != rhs.Stage) return false;

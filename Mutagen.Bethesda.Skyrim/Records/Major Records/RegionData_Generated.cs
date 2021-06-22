@@ -902,15 +902,22 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
             {
-                if (!object.Equals(lhs.Header, rhs.Header)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
+                {
+                    if (!((RegionDataHeaderCommon)((IRegionDataHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, crystal?.GetSubCrystal((int)RegionData_FieldIndex.Header))) return false;
+                }
+                else if (!isHeaderEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)RegionData_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)RegionData_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             return true;
         }

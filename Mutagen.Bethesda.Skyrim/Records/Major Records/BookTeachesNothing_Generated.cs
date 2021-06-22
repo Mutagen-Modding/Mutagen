@@ -787,8 +787,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IBookTeachesNothingGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IBookTeachTargetGetter)lhs, (IBookTeachTargetGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)BookTeachesNothing_FieldIndex.RawContent) ?? true))
             {

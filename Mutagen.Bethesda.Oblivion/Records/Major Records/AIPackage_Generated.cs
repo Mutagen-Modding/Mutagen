@@ -1265,24 +1265,39 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((AIPackageDataCommon)((IAIPackageDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Location) ?? true))
             {
-                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((AIPackageLocationCommon)((IAIPackageLocationGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Schedule) ?? true))
             {
-                if (!object.Equals(lhs.Schedule, rhs.Schedule)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Schedule, rhs.Schedule, out var lhsSchedule, out var rhsSchedule, out var isScheduleEqual))
+                {
+                    if (!((AIPackageScheduleCommon)((IAIPackageScheduleGetter)lhsSchedule).CommonInstance()!).Equals(lhsSchedule, rhsSchedule, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Schedule))) return false;
+                }
+                else if (!isScheduleEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Target) ?? true))
             {
-                if (!object.Equals(lhs.Target, rhs.Target)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
+                {
+                    if (!((AIPackageTargetCommon)((IAIPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, crystal?.GetSubCrystal((int)AIPackage_FieldIndex.Target))) return false;
+                }
+                else if (!isTargetEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AIPackage_FieldIndex.Conditions) ?? true))
             {

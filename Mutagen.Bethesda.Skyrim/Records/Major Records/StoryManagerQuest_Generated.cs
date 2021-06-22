@@ -927,8 +927,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IStoryManagerQuestGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuest_FieldIndex.Quest) ?? true))
             {
                 if (!lhs.Quest.Equals(rhs.Quest)) return false;

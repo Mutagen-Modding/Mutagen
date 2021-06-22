@@ -852,8 +852,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IQuestDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestData_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;

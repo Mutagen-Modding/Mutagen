@@ -975,8 +975,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAmmunitionDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AmmunitionData_FieldIndex.Speed) ?? true))
             {
                 if (!lhs.Speed.EqualsWithin(rhs.Speed)) return false;

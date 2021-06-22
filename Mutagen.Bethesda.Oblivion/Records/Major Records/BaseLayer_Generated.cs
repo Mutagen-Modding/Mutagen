@@ -851,11 +851,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IBaseLayerGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)BaseLayer_FieldIndex.Header) ?? true))
             {
-                if (!object.Equals(lhs.Header, rhs.Header)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
+                {
+                    if (!((LayerHeaderCommon)((ILayerHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, crystal?.GetSubCrystal((int)BaseLayer_FieldIndex.Header))) return false;
+                }
+                else if (!isHeaderEqual) return false;
             }
             return true;
         }

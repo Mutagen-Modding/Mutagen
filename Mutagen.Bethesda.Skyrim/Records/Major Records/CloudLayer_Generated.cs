@@ -1014,8 +1014,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICloudLayerGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Enabled) ?? true))
             {
                 if (lhs.Enabled != rhs.Enabled) return false;
@@ -1030,11 +1029,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Colors) ?? true))
             {
-                if (!object.Equals(lhs.Colors, rhs.Colors)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Colors, rhs.Colors, out var lhsColors, out var rhsColors, out var isColorsEqual))
+                {
+                    if (!((WeatherColorCommon)((IWeatherColorGetter)lhsColors).CommonInstance()!).Equals(lhsColors, rhsColors, crystal?.GetSubCrystal((int)CloudLayer_FieldIndex.Colors))) return false;
+                }
+                else if (!isColorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CloudLayer_FieldIndex.Alphas) ?? true))
             {
-                if (!object.Equals(lhs.Alphas, rhs.Alphas)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Alphas, rhs.Alphas, out var lhsAlphas, out var rhsAlphas, out var isAlphasEqual))
+                {
+                    if (!((WeatherAlphaCommon)((IWeatherAlphaGetter)lhsAlphas).CommonInstance()!).Equals(lhsAlphas, rhsAlphas, crystal?.GetSubCrystal((int)CloudLayer_FieldIndex.Alphas))) return false;
+                }
+                else if (!isAlphasEqual) return false;
             }
             return true;
         }

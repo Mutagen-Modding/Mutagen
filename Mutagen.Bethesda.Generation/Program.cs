@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "protected set => this._Attacks = value;";
+            string testString = "f (!((GroupCommon<T>)((IGroupGetter<T>)lhsGameSettings).CommonInstance(typeof(T))!).E";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

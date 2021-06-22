@@ -1730,8 +1730,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISoundDescriptorGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.CNAM) ?? true))
             {
@@ -1763,7 +1762,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.LoopAndRumble) ?? true))
             {
-                if (!object.Equals(lhs.LoopAndRumble, rhs.LoopAndRumble)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LoopAndRumble, rhs.LoopAndRumble, out var lhsLoopAndRumble, out var rhsLoopAndRumble, out var isLoopAndRumbleEqual))
+                {
+                    if (!((SoundLoopAndRumbleCommon)((ISoundLoopAndRumbleGetter)lhsLoopAndRumble).CommonInstance()!).Equals(lhsLoopAndRumble, rhsLoopAndRumble, crystal?.GetSubCrystal((int)SoundDescriptor_FieldIndex.LoopAndRumble))) return false;
+                }
+                else if (!isLoopAndRumbleEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SoundDescriptor_FieldIndex.PercentFrequencyShift) ?? true))
             {

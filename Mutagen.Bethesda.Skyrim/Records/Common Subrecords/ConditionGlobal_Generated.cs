@@ -879,8 +879,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionGlobalGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IConditionGetter)lhs, (IConditionGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.ComparisonValue) ?? true))
             {
@@ -888,7 +887,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ConditionGlobal_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ConditionDataCommon)((IConditionDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)ConditionGlobal_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             return true;
         }

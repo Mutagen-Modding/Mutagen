@@ -906,8 +906,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ITeleportDestinationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)TeleportDestination_FieldIndex.Destination) ?? true))
             {
                 if (!lhs.Destination.Equals(rhs.Destination)) return false;

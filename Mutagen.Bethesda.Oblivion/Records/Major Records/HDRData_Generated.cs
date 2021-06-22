@@ -1332,8 +1332,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHDRDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HDRData_FieldIndex.EyeAdaptSpeed) ?? true))
             {
                 if (!lhs.EyeAdaptSpeed.EqualsWithin(rhs.EyeAdaptSpeed)) return false;

@@ -2008,8 +2008,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IFactionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Name) ?? true))
             {
@@ -2049,7 +2048,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.CrimeValues) ?? true))
             {
-                if (!object.Equals(lhs.CrimeValues, rhs.CrimeValues)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CrimeValues, rhs.CrimeValues, out var lhsCrimeValues, out var rhsCrimeValues, out var isCrimeValuesEqual))
+                {
+                    if (!((CrimeValuesCommon)((ICrimeValuesGetter)lhsCrimeValues).CommonInstance()!).Equals(lhsCrimeValues, rhsCrimeValues, crystal?.GetSubCrystal((int)Faction_FieldIndex.CrimeValues))) return false;
+                }
+                else if (!isCrimeValuesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Ranks) ?? true))
             {
@@ -2065,11 +2068,19 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorValues) ?? true))
             {
-                if (!object.Equals(lhs.VendorValues, rhs.VendorValues)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VendorValues, rhs.VendorValues, out var lhsVendorValues, out var rhsVendorValues, out var isVendorValuesEqual))
+                {
+                    if (!((VendorValuesCommon)((IVendorValuesGetter)lhsVendorValues).CommonInstance()!).Equals(lhsVendorValues, rhsVendorValues, crystal?.GetSubCrystal((int)Faction_FieldIndex.VendorValues))) return false;
+                }
+                else if (!isVendorValuesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.VendorLocation) ?? true))
             {
-                if (!object.Equals(lhs.VendorLocation, rhs.VendorLocation)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VendorLocation, rhs.VendorLocation, out var lhsVendorLocation, out var rhsVendorLocation, out var isVendorLocationEqual))
+                {
+                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsVendorLocation).CommonInstance()!).Equals(lhsVendorLocation, rhsVendorLocation, crystal?.GetSubCrystal((int)Faction_FieldIndex.VendorLocation))) return false;
+                }
+                else if (!isVendorLocationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Faction_FieldIndex.Conditions) ?? true))
             {

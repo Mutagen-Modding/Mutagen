@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda
         {
             return TryFromModType<TMod>() ?? throw new ArgumentException($"Unknown game type for: {typeof(TMod).Name}");
         }
-        
+
         public static GameCategory? TryFromModType<TMod>()
             where TMod : IModGetter
         {

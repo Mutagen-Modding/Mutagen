@@ -924,8 +924,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeatherAlphaGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WeatherAlpha_FieldIndex.Sunrise) ?? true))
             {
                 if (!lhs.Sunrise.EqualsWithin(rhs.Sunrise)) return false;

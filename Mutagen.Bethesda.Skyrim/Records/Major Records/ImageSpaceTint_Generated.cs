@@ -853,8 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceTintGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ImageSpaceTint_FieldIndex.Amount) ?? true))
             {
                 if (!lhs.Amount.EqualsWithin(rhs.Amount)) return false;

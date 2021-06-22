@@ -806,8 +806,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMorphGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Morph_FieldIndex.Data) ?? true))
             {
                 if (!MemoryExtensions.SequenceEqual(lhs.Data.Span, rhs.Data.Span)) return false;

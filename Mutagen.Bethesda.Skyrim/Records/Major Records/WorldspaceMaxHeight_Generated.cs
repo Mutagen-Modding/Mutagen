@@ -900,8 +900,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceMaxHeightGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WorldspaceMaxHeight_FieldIndex.Min) ?? true))
             {
                 if (!lhs.Min.Equals(rhs.Min)) return false;

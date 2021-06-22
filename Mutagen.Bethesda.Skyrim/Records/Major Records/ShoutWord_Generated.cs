@@ -914,8 +914,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IShoutWordGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ShoutWord_FieldIndex.Word) ?? true))
             {
                 if (!lhs.Word.Equals(rhs.Word)) return false;
