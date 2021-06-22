@@ -1278,8 +1278,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             IMajorRecordGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MajorRecord_FieldIndex.MajorRecordFlagsRaw) ?? true))
             {
                 if (lhs.MajorRecordFlagsRaw != rhs.MajorRecordFlagsRaw) return false;

@@ -1295,8 +1295,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IPexFileGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.MajorVersion) ?? true))
             {
                 if (lhs.MajorVersion != rhs.MajorVersion) return false;
@@ -1327,7 +1326,11 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.DebugInfo) ?? true))
             {
-                if (!object.Equals(lhs.DebugInfo, rhs.DebugInfo)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DebugInfo, rhs.DebugInfo, out var lhsDebugInfo, out var rhsDebugInfo, out var isDebugInfoEqual))
+                {
+                    if (!((DebugInfoCommon)((IDebugInfoGetter)lhsDebugInfo).CommonInstance()!).Equals(lhsDebugInfo, rhsDebugInfo, crystal?.GetSubCrystal((int)PexFile_FieldIndex.DebugInfo))) return false;
+                }
+                else if (!isDebugInfoEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PexFile_FieldIndex.Objects) ?? true))
             {

@@ -1016,12 +1016,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellNavigationMeshGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IANavigationMeshGetter)lhs, (IANavigationMeshGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)CellNavigationMesh_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((CellNavigationMeshDataCommon)((ICellNavigationMeshDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)CellNavigationMesh_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             return true;
         }

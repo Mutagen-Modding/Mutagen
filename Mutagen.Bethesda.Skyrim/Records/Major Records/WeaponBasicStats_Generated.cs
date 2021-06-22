@@ -895,8 +895,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWeaponBasicStatsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WeaponBasicStats_FieldIndex.Value) ?? true))
             {
                 if (lhs.Value != rhs.Value) return false;

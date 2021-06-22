@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAnimationChangeThresholdsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AnimationChangeThresholds_FieldIndex.Directional) ?? true))
             {
                 if (!lhs.Directional.EqualsWithin(rhs.Directional)) return false;

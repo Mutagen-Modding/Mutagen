@@ -852,8 +852,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAlphaGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Alpha_FieldIndex.Cutoff) ?? true))
             {
                 if (lhs.Cutoff != rhs.Cutoff) return false;

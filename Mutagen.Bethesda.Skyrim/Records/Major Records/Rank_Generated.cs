@@ -922,8 +922,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRankGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Rank_FieldIndex.Number) ?? true))
             {
                 if (lhs.Number != rhs.Number) return false;

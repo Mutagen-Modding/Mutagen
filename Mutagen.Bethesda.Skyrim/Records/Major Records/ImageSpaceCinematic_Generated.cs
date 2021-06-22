@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IImageSpaceCinematicGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ImageSpaceCinematic_FieldIndex.Saturation) ?? true))
             {
                 if (!lhs.Saturation.EqualsWithin(rhs.Saturation)) return false;

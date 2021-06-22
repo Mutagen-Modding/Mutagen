@@ -895,15 +895,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRaceMovementTypeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.MovementType) ?? true))
             {
                 if (!lhs.MovementType.Equals(rhs.MovementType)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)RaceMovementType_FieldIndex.Overrides) ?? true))
             {
-                if (!object.Equals(lhs.Overrides, rhs.Overrides)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Overrides, rhs.Overrides, out var lhsOverrides, out var rhsOverrides, out var isOverridesEqual))
+                {
+                    if (!((SpeedOverridesCommon)((ISpeedOverridesGetter)lhsOverrides).CommonInstance()!).Equals(lhsOverrides, rhsOverrides, crystal?.GetSubCrystal((int)RaceMovementType_FieldIndex.Overrides))) return false;
+                }
+                else if (!isOverridesEqual) return false;
             }
             return true;
         }

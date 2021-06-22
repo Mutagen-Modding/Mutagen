@@ -804,8 +804,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)LocationCell_FieldIndex.Link) ?? true))
             {

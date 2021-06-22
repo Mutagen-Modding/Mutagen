@@ -4086,20 +4086,31 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Npc_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.ObjectBounds) ?? true))
             {
-                if (!object.Equals(lhs.ObjectBounds, rhs.ObjectBounds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ObjectBounds, rhs.ObjectBounds, out var lhsObjectBounds, out var rhsObjectBounds, out var isObjectBoundsEqual))
+                {
+                    if (!((ObjectBoundsCommon)((IObjectBoundsGetter)lhsObjectBounds).CommonInstance()!).Equals(lhsObjectBounds, rhsObjectBounds, crystal?.GetSubCrystal((int)Npc_FieldIndex.ObjectBounds))) return false;
+                }
+                else if (!isObjectBoundsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Configuration) ?? true))
             {
-                if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Configuration, rhs.Configuration, out var lhsConfiguration, out var rhsConfiguration, out var isConfigurationEqual))
+                {
+                    if (!((NpcConfigurationCommon)((INpcConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, crystal?.GetSubCrystal((int)Npc_FieldIndex.Configuration))) return false;
+                }
+                else if (!isConfigurationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Factions) ?? true))
             {
@@ -4127,7 +4138,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Destructible) ?? true))
             {
-                if (!object.Equals(lhs.Destructible, rhs.Destructible)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Destructible, rhs.Destructible, out var lhsDestructible, out var rhsDestructible, out var isDestructibleEqual))
+                {
+                    if (!((DestructibleCommon)((IDestructibleGetter)lhsDestructible).CommonInstance()!).Equals(lhsDestructible, rhsDestructible, crystal?.GetSubCrystal((int)Npc_FieldIndex.Destructible))) return false;
+                }
+                else if (!isDestructibleEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.WornArmor) ?? true))
             {
@@ -4171,7 +4186,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.AIData) ?? true))
             {
-                if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AIData, rhs.AIData, out var lhsAIData, out var rhsAIData, out var isAIDataEqual))
+                {
+                    if (!((AIDataCommon)((IAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, crystal?.GetSubCrystal((int)Npc_FieldIndex.AIData))) return false;
+                }
+                else if (!isAIDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Packages) ?? true))
             {
@@ -4195,7 +4214,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.PlayerSkills) ?? true))
             {
-                if (!object.Equals(lhs.PlayerSkills, rhs.PlayerSkills)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.PlayerSkills, rhs.PlayerSkills, out var lhsPlayerSkills, out var rhsPlayerSkills, out var isPlayerSkillsEqual))
+                {
+                    if (!((PlayerSkillsCommon)((IPlayerSkillsGetter)lhsPlayerSkills).CommonInstance()!).Equals(lhsPlayerSkills, rhsPlayerSkills, crystal?.GetSubCrystal((int)Npc_FieldIndex.PlayerSkills))) return false;
+                }
+                else if (!isPlayerSkillsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.HeadParts) ?? true))
             {
@@ -4231,7 +4254,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.Sound) ?? true))
             {
-                if (!object.Equals(lhs.Sound, rhs.Sound)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Sound, rhs.Sound, out var lhsSound, out var rhsSound, out var isSoundEqual))
+                {
+                    if (!((ANpcSoundDefinitionCommon)((IANpcSoundDefinitionGetter)lhsSound).CommonInstance()!).Equals(lhsSound, rhsSound, crystal?.GetSubCrystal((int)Npc_FieldIndex.Sound))) return false;
+                }
+                else if (!isSoundEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.DefaultOutfit) ?? true))
             {
@@ -4259,11 +4286,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceMorph) ?? true))
             {
-                if (!object.Equals(lhs.FaceMorph, rhs.FaceMorph)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FaceMorph, rhs.FaceMorph, out var lhsFaceMorph, out var rhsFaceMorph, out var isFaceMorphEqual))
+                {
+                    if (!((NpcFaceMorphCommon)((INpcFaceMorphGetter)lhsFaceMorph).CommonInstance()!).Equals(lhsFaceMorph, rhsFaceMorph, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceMorph))) return false;
+                }
+                else if (!isFaceMorphEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.FaceParts) ?? true))
             {
-                if (!object.Equals(lhs.FaceParts, rhs.FaceParts)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FaceParts, rhs.FaceParts, out var lhsFaceParts, out var rhsFaceParts, out var isFacePartsEqual))
+                {
+                    if (!((NpcFacePartsCommon)((INpcFacePartsGetter)lhsFaceParts).CommonInstance()!).Equals(lhsFaceParts, rhsFaceParts, crystal?.GetSubCrystal((int)Npc_FieldIndex.FaceParts))) return false;
+                }
+                else if (!isFacePartsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Npc_FieldIndex.TintLayers) ?? true))
             {

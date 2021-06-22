@@ -844,8 +844,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IInt16MinMaxGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Int16MinMax_FieldIndex.Min) ?? true))
             {
                 if (lhs.Min != rhs.Min) return false;

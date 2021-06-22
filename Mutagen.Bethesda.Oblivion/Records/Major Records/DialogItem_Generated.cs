@@ -1801,12 +1801,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDialogItemGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((DialogItemDataCommon)((IDialogItemDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Quest) ?? true))
             {
@@ -1838,7 +1841,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)DialogItem_FieldIndex.Script) ?? true))
             {
-                if (!object.Equals(lhs.Script, rhs.Script)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Script, rhs.Script, out var lhsScript, out var rhsScript, out var isScriptEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsScript).CommonInstance()!).Equals(lhsScript, rhsScript, crystal?.GetSubCrystal((int)DialogItem_FieldIndex.Script))) return false;
+                }
+                else if (!isScriptEqual) return false;
             }
             return true;
         }

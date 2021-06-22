@@ -1460,12 +1460,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILoadScreenGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.Description) ?? true))
             {
@@ -1489,7 +1492,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.RotationOffsetConstraints) ?? true))
             {
-                if (!object.Equals(lhs.RotationOffsetConstraints, rhs.RotationOffsetConstraints)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.RotationOffsetConstraints, rhs.RotationOffsetConstraints, out var lhsRotationOffsetConstraints, out var rhsRotationOffsetConstraints, out var isRotationOffsetConstraintsEqual))
+                {
+                    if (!((Int16MinMaxCommon)((IInt16MinMaxGetter)lhsRotationOffsetConstraints).CommonInstance()!).Equals(lhsRotationOffsetConstraints, rhsRotationOffsetConstraints, crystal?.GetSubCrystal((int)LoadScreen_FieldIndex.RotationOffsetConstraints))) return false;
+                }
+                else if (!isRotationOffsetConstraintsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LoadScreen_FieldIndex.InitialTranslationOffset) ?? true))
             {

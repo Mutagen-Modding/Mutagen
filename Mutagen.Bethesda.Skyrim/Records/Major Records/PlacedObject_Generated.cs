@@ -4415,12 +4415,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedObjectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Base) ?? true))
             {
@@ -4432,7 +4435,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Primitive) ?? true))
             {
-                if (!object.Equals(lhs.Primitive, rhs.Primitive)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Primitive, rhs.Primitive, out var lhsPrimitive, out var rhsPrimitive, out var isPrimitiveEqual))
+                {
+                    if (!((PlacedPrimitiveCommon)((IPlacedPrimitiveGetter)lhsPrimitive).CommonInstance()!).Equals(lhsPrimitive, rhsPrimitive, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Primitive))) return false;
+                }
+                else if (!isPrimitiveEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XORD) ?? true))
             {
@@ -4440,7 +4447,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.OcclusionPlane) ?? true))
             {
-                if (!object.Equals(lhs.OcclusionPlane, rhs.OcclusionPlane)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OcclusionPlane, rhs.OcclusionPlane, out var lhsOcclusionPlane, out var rhsOcclusionPlane, out var isOcclusionPlaneEqual))
+                {
+                    if (!((BoundingCommon)((IBoundingGetter)lhsOcclusionPlane).CommonInstance()!).Equals(lhsOcclusionPlane, rhsOcclusionPlane, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.OcclusionPlane))) return false;
+                }
+                else if (!isOcclusionPlaneEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Portals) ?? true))
             {
@@ -4448,7 +4459,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.RoomPortal) ?? true))
             {
-                if (!object.Equals(lhs.RoomPortal, rhs.RoomPortal)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.RoomPortal, rhs.RoomPortal, out var lhsRoomPortal, out var rhsRoomPortal, out var isRoomPortalEqual))
+                {
+                    if (!((BoundingCommon)((IBoundingGetter)lhsRoomPortal).CommonInstance()!).Equals(lhsRoomPortal, rhsRoomPortal, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.RoomPortal))) return false;
+                }
+                else if (!isRoomPortalEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Unknown) ?? true))
             {
@@ -4496,15 +4511,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LightData) ?? true))
             {
-                if (!object.Equals(lhs.LightData, rhs.LightData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LightData, rhs.LightData, out var lhsLightData, out var rhsLightData, out var isLightDataEqual))
+                {
+                    if (!((LightDataCommon)((ILightDataGetter)lhsLightData).CommonInstance()!).Equals(lhsLightData, rhsLightData, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.LightData))) return false;
+                }
+                else if (!isLightDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Alpha) ?? true))
             {
-                if (!object.Equals(lhs.Alpha, rhs.Alpha)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Alpha, rhs.Alpha, out var lhsAlpha, out var rhsAlpha, out var isAlphaEqual))
+                {
+                    if (!((AlphaCommon)((IAlphaGetter)lhsAlpha).CommonInstance()!).Equals(lhsAlpha, rhsAlpha, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Alpha))) return false;
+                }
+                else if (!isAlphaEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportDestination) ?? true))
             {
-                if (!object.Equals(lhs.TeleportDestination, rhs.TeleportDestination)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.TeleportDestination, rhs.TeleportDestination, out var lhsTeleportDestination, out var rhsTeleportDestination, out var isTeleportDestinationEqual))
+                {
+                    if (!((TeleportDestinationCommon)((ITeleportDestinationGetter)lhsTeleportDestination).CommonInstance()!).Equals(lhsTeleportDestination, rhsTeleportDestination, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.TeleportDestination))) return false;
+                }
+                else if (!isTeleportDestinationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.TeleportMessageBox) ?? true))
             {
@@ -4524,7 +4551,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.WaterVelocity) ?? true))
             {
-                if (!object.Equals(lhs.WaterVelocity, rhs.WaterVelocity)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.WaterVelocity, rhs.WaterVelocity, out var lhsWaterVelocity, out var rhsWaterVelocity, out var isWaterVelocityEqual))
+                {
+                    if (!((WaterVelocityCommon)((IWaterVelocityGetter)lhsWaterVelocity).CommonInstance()!).Equals(lhsWaterVelocity, rhsWaterVelocity, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.WaterVelocity))) return false;
+                }
+                else if (!isWaterVelocityEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.XCVL) ?? true))
             {
@@ -4552,7 +4583,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ActivateParents) ?? true))
             {
-                if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ActivateParents, rhs.ActivateParents, out var lhsActivateParents, out var rhsActivateParents, out var isActivateParentsEqual))
+                {
+                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.ActivateParents))) return false;
+                }
+                else if (!isActivateParentsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LeveledItemBaseObject) ?? true))
             {
@@ -4572,7 +4607,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Lock) ?? true))
             {
-                if (!object.Equals(lhs.Lock, rhs.Lock)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Lock, rhs.Lock, out var lhsLock, out var rhsLock, out var isLockEqual))
+                {
+                    if (!((LockDataCommon)((ILockDataGetter)lhsLock).CommonInstance()!).Equals(lhsLock, rhsLock, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Lock))) return false;
+                }
+                else if (!isLockEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.EncounterZone) ?? true))
             {
@@ -4580,7 +4619,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.NavigationDoorLink) ?? true))
             {
-                if (!object.Equals(lhs.NavigationDoorLink, rhs.NavigationDoorLink)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.NavigationDoorLink, rhs.NavigationDoorLink, out var lhsNavigationDoorLink, out var rhsNavigationDoorLink, out var isNavigationDoorLinkEqual))
+                {
+                    if (!((NavigationDoorLinkCommon)((INavigationDoorLinkGetter)lhsNavigationDoorLink).CommonInstance()!).Equals(lhsNavigationDoorLink, rhsNavigationDoorLink, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.NavigationDoorLink))) return false;
+                }
+                else if (!isNavigationDoorLinkEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LocationRefTypes) ?? true))
             {
@@ -4592,7 +4635,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Ownership) ?? true))
             {
-                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.ItemCount) ?? true))
             {
@@ -4608,7 +4655,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.EnableParent) ?? true))
             {
-                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.LinkedReferences) ?? true))
             {
@@ -4616,7 +4667,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Patrol) ?? true))
             {
-                if (!object.Equals(lhs.Patrol, rhs.Patrol)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Patrol, rhs.Patrol, out var lhsPatrol, out var rhsPatrol, out var isPatrolEqual))
+                {
+                    if (!((PatrolCommon)((IPatrolGetter)lhsPatrol).CommonInstance()!).Equals(lhsPatrol, rhsPatrol, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Patrol))) return false;
+                }
+                else if (!isPatrolEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Action) ?? true))
             {
@@ -4636,7 +4691,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.MapMarker) ?? true))
             {
-                if (!object.Equals(lhs.MapMarker, rhs.MapMarker)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MapMarker, rhs.MapMarker, out var lhsMapMarker, out var rhsMapMarker, out var isMapMarkerEqual))
+                {
+                    if (!((MapMarkerCommon)((IMapMarkerGetter)lhsMapMarker).CommonInstance()!).Equals(lhsMapMarker, rhsMapMarker, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.MapMarker))) return false;
+                }
+                else if (!isMapMarkerEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.AttachRef) ?? true))
             {
@@ -4648,7 +4707,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedObject_FieldIndex.Placement) ?? true))
             {
-                if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Placement, rhs.Placement, out var lhsPlacement, out var rhsPlacement, out var isPlacementEqual))
+                {
+                    if (!((PlacementCommon)((IPlacementGetter)lhsPlacement).CommonInstance()!).Equals(lhsPlacement, rhsPlacement, crystal?.GetSubCrystal((int)PlacedObject_FieldIndex.Placement))) return false;
+                }
+                else if (!isPlacementEqual) return false;
             }
             return true;
         }

@@ -834,8 +834,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkAbilityEffectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPerkEffectGetter)lhs, (IAPerkEffectGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PerkAbilityEffect_FieldIndex.Ability) ?? true))
             {

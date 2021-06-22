@@ -1044,8 +1044,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavmeshTriangleGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NavmeshTriangle_FieldIndex.Vertices) ?? true))
             {
                 if (!lhs.Vertices.Equals(rhs.Vertices)) return false;

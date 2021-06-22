@@ -992,8 +992,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILeveledItemEntryGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LeveledItemEntry_FieldIndex.Level) ?? true))
             {
                 if (lhs.Level != rhs.Level) return false;

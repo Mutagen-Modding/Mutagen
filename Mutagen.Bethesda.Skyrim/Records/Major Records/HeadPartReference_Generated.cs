@@ -877,8 +877,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHeadPartReferenceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HeadPartReference_FieldIndex.Number) ?? true))
             {
                 if (lhs.Number != rhs.Number) return false;

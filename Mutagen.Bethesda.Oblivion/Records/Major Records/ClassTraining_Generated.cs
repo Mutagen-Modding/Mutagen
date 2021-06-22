@@ -885,8 +885,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassTrainingGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ClassTraining_FieldIndex.TrainedSkill) ?? true))
             {
                 if (lhs.TrainedSkill != rhs.TrainedSkill) return false;

@@ -1067,8 +1067,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPreferredPathingGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PreferredPathing_FieldIndex.NavmeshSets) ?? true))
             {
                 if (!lhs.NavmeshSets.SequenceEqualNullable(rhs.NavmeshSets)) return false;

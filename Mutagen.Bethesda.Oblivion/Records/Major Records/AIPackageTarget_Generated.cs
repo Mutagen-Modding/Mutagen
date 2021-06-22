@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IAIPackageTargetGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AIPackageTarget_FieldIndex.ObjectType) ?? true))
             {
                 if (lhs.ObjectType != rhs.ObjectType) return false;

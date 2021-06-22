@@ -807,8 +807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScriptStringPropertyGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IScriptPropertyGetter)lhs, (IScriptPropertyGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)ScriptStringProperty_FieldIndex.Data) ?? true))
             {

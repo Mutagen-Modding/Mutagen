@@ -264,6 +264,18 @@ namespace Mutagen.Bethesda.Plugins
             return new FormLink<TMajorGetter>(this);
         }
 
+        public FormLinkNullable<TMajorGetter> AsNullableLink<TMajorGetter>()
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            return new FormLinkNullable<TMajorGetter>(this);
+        }
+
+        public IFormLinkNullableGetter<TMajorGetter> AsNullableLinkGetter<TMajorGetter>()
+            where TMajorGetter : class, IMajorRecordCommonGetter
+        {
+            return new FormLinkNullable<TMajorGetter>(this);
+        }
+
         public static bool operator ==(FormKey? a, FormKey? b)
         {
             return EqualityComparer<FormKey?>.Default.Equals(a, b);

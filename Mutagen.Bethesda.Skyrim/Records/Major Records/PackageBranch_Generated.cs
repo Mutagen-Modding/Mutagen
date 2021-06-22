@@ -1509,8 +1509,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageBranchGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.BranchType) ?? true))
             {
                 if (!string.Equals(lhs.BranchType, rhs.BranchType)) return false;
@@ -1521,7 +1520,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Root) ?? true))
             {
-                if (!object.Equals(lhs.Root, rhs.Root)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Root, rhs.Root, out var lhsRoot, out var rhsRoot, out var isRootEqual))
+                {
+                    if (!((PackageRootCommon)((IPackageRootGetter)lhsRoot).CommonInstance()!).Equals(lhsRoot, rhsRoot, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.Root))) return false;
+                }
+                else if (!isRootEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.ProcedureType) ?? true))
             {
@@ -1537,11 +1540,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverride) ?? true))
             {
-                if (!object.Equals(lhs.FlagsOverride, rhs.FlagsOverride)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FlagsOverride, rhs.FlagsOverride, out var lhsFlagsOverride, out var rhsFlagsOverride, out var isFlagsOverrideEqual))
+                {
+                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverride).CommonInstance()!).Equals(lhsFlagsOverride, rhsFlagsOverride, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverride))) return false;
+                }
+                else if (!isFlagsOverrideEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.FlagsOverrideUnused) ?? true))
             {
-                if (!object.Equals(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FlagsOverrideUnused, rhs.FlagsOverrideUnused, out var lhsFlagsOverrideUnused, out var rhsFlagsOverrideUnused, out var isFlagsOverrideUnusedEqual))
+                {
+                    if (!((PackageFlagsOverrideCommon)((IPackageFlagsOverrideGetter)lhsFlagsOverrideUnused).CommonInstance()!).Equals(lhsFlagsOverrideUnused, rhsFlagsOverrideUnused, crystal?.GetSubCrystal((int)PackageBranch_FieldIndex.FlagsOverrideUnused))) return false;
+                }
+                else if (!isFlagsOverrideUnusedEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageBranch_FieldIndex.Unknown) ?? true))
             {

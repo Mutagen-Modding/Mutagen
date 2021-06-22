@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IHavokDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HavokData_FieldIndex.Material) ?? true))
             {
                 if (lhs.Material != rhs.Material) return false;

@@ -864,8 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IFindMatchingRefNearAliasGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)FindMatchingRefNearAlias_FieldIndex.AliasIndex) ?? true))
             {
                 if (lhs.AliasIndex != rhs.AliasIndex) return false;

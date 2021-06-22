@@ -844,8 +844,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IInterCellPointGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)InterCellPoint_FieldIndex.PointID) ?? true))
             {
                 if (lhs.PointID != rhs.PointID) return false;

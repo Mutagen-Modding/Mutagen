@@ -1095,8 +1095,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWeaponDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WeaponData_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;

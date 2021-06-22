@@ -841,12 +841,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageDataLocationGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PackageDataLocation_FieldIndex.Location) ?? true))
             {
-                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((LocationTargetRadiusCommon)((ILocationTargetRadiusGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)PackageDataLocation_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
             }
             return true;
         }

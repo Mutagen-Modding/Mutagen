@@ -996,16 +996,23 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICombatStyleGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((CombatStyleDataCommon)((ICombatStyleDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)CombatStyle_FieldIndex.Advanced) ?? true))
             {
-                if (!object.Equals(lhs.Advanced, rhs.Advanced)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Advanced, rhs.Advanced, out var lhsAdvanced, out var rhsAdvanced, out var isAdvancedEqual))
+                {
+                    if (!((CombatStyleAdvancedCommon)((ICombatStyleAdvancedGetter)lhsAdvanced).CommonInstance()!).Equals(lhsAdvanced, rhsAdvanced, crystal?.GetSubCrystal((int)CombatStyle_FieldIndex.Advanced))) return false;
+                }
+                else if (!isAdvancedEqual) return false;
             }
             return true;
         }

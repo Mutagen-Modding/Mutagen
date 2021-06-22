@@ -1227,8 +1227,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IClassGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Name) ?? true))
             {
@@ -1244,7 +1243,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Properties) ?? true))
             {
-                if (!object.Equals(lhs.Properties, rhs.Properties)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Properties, rhs.Properties, out var lhsProperties, out var rhsProperties, out var isPropertiesEqual))
+                {
+                    if (!((PropertiesCommon)((IPropertiesGetter)lhsProperties).CommonInstance()!).Equals(lhsProperties, rhsProperties, crystal?.GetSubCrystal((int)Class_FieldIndex.Properties))) return false;
+                }
+                else if (!isPropertiesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Class_FieldIndex.Unknown) ?? true))
             {

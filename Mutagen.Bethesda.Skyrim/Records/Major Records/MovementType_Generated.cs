@@ -1522,8 +1522,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMovementTypeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.Name) ?? true))
             {
@@ -1575,7 +1574,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.AnimationChangeThresholds) ?? true))
             {
-                if (!object.Equals(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AnimationChangeThresholds, rhs.AnimationChangeThresholds, out var lhsAnimationChangeThresholds, out var rhsAnimationChangeThresholds, out var isAnimationChangeThresholdsEqual))
+                {
+                    if (!((AnimationChangeThresholdsCommon)((IAnimationChangeThresholdsGetter)lhsAnimationChangeThresholds).CommonInstance()!).Equals(lhsAnimationChangeThresholds, rhsAnimationChangeThresholds, crystal?.GetSubCrystal((int)MovementType_FieldIndex.AnimationChangeThresholds))) return false;
+                }
+                else if (!isAnimationChangeThresholdsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MovementType_FieldIndex.SPEDDataTypeState) ?? true))
             {

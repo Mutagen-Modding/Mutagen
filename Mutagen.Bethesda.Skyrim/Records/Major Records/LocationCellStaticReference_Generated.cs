@@ -957,8 +957,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellStaticReferenceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LocationCellStaticReference_FieldIndex.LocationRefType) ?? true))
             {
                 if (!lhs.LocationRefType.Equals(rhs.LocationRefType)) return false;

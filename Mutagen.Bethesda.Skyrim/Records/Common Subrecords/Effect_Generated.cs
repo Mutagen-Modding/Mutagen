@@ -1040,15 +1040,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IEffectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.BaseEffect) ?? true))
             {
                 if (!lhs.BaseEffect.Equals(rhs.BaseEffect)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((EffectDataCommon)((IEffectDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Effect_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Effect_FieldIndex.Conditions) ?? true))
             {

@@ -1271,8 +1271,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IOblivionModHeaderGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
@@ -1287,7 +1286,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.Stats) ?? true))
             {
-                if (!object.Equals(lhs.Stats, rhs.Stats)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Stats, rhs.Stats, out var lhsStats, out var rhsStats, out var isStatsEqual))
+                {
+                    if (!((ModStatsCommon)((IModStatsGetter)lhsStats).CommonInstance()!).Equals(lhsStats, rhsStats, crystal?.GetSubCrystal((int)OblivionModHeader_FieldIndex.Stats))) return false;
+                }
+                else if (!isStatsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)OblivionModHeader_FieldIndex.TypeOffsets) ?? true))
             {

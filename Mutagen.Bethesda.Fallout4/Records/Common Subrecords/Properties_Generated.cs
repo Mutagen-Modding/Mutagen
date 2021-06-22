@@ -907,8 +907,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IPropertiesGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Properties_FieldIndex.PropertyList) ?? true))
             {
                 if (!lhs.PropertyList.SequenceEqualNullable(rhs.PropertyList)) return false;

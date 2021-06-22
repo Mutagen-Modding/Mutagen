@@ -3320,8 +3320,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             IRaceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IFallout4MajorRecordGetter)lhs, (IFallout4MajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AnimationSound) ?? true))
             {
@@ -3345,7 +3344,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.BipedBodyTemplate) ?? true))
             {
-                if (!object.Equals(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.BipedBodyTemplate, rhs.BipedBodyTemplate, out var lhsBipedBodyTemplate, out var rhsBipedBodyTemplate, out var isBipedBodyTemplateEqual))
+                {
+                    if (!((BipedBodyTemplateCommon)((IBipedBodyTemplateGetter)lhsBipedBodyTemplate).CommonInstance()!).Equals(lhsBipedBodyTemplate, rhsBipedBodyTemplate, crystal?.GetSubCrystal((int)Race_FieldIndex.BipedBodyTemplate))) return false;
+                }
+                else if (!isBipedBodyTemplateEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Keywords) ?? true))
             {
@@ -3353,7 +3356,11 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.Properties) ?? true))
             {
-                if (!object.Equals(lhs.Properties, rhs.Properties)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Properties, rhs.Properties, out var lhsProperties, out var rhsProperties, out var isPropertiesEqual))
+                {
+                    if (!((PropertiesCommon)((IPropertiesGetter)lhsProperties).CommonInstance()!).Equals(lhsProperties, rhsProperties, crystal?.GetSubCrystal((int)Race_FieldIndex.Properties))) return false;
+                }
+                else if (!isPropertiesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Race_FieldIndex.AttachParentSlots) ?? true))
             {

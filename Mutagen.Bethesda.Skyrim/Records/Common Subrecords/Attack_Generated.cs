@@ -891,11 +891,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAttackGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackData) ?? true))
             {
-                if (!object.Equals(lhs.AttackData, rhs.AttackData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AttackData, rhs.AttackData, out var lhsAttackData, out var rhsAttackData, out var isAttackDataEqual))
+                {
+                    if (!((AttackDataCommon)((IAttackDataGetter)lhsAttackData).CommonInstance()!).Equals(lhsAttackData, rhsAttackData, crystal?.GetSubCrystal((int)Attack_FieldIndex.AttackData))) return false;
+                }
+                else if (!isAttackDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Attack_FieldIndex.AttackEvent) ?? true))
             {

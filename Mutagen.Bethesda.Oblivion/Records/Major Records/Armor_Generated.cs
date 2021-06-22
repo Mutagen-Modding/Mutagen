@@ -1567,8 +1567,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Name) ?? true))
             {
@@ -1588,15 +1587,27 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.ClothingFlags) ?? true))
             {
-                if (!object.Equals(lhs.ClothingFlags, rhs.ClothingFlags)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ClothingFlags, rhs.ClothingFlags, out var lhsClothingFlags, out var rhsClothingFlags, out var isClothingFlagsEqual))
+                {
+                    if (!((ClothingFlagsCommon)((IClothingFlagsGetter)lhsClothingFlags).CommonInstance()!).Equals(lhsClothingFlags, rhsClothingFlags, crystal?.GetSubCrystal((int)Armor_FieldIndex.ClothingFlags))) return false;
+                }
+                else if (!isClothingFlagsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleBipedModel) ?? true))
             {
-                if (!object.Equals(lhs.MaleBipedModel, rhs.MaleBipedModel)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MaleBipedModel, rhs.MaleBipedModel, out var lhsMaleBipedModel, out var rhsMaleBipedModel, out var isMaleBipedModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsMaleBipedModel).CommonInstance()!).Equals(lhsMaleBipedModel, rhsMaleBipedModel, crystal?.GetSubCrystal((int)Armor_FieldIndex.MaleBipedModel))) return false;
+                }
+                else if (!isMaleBipedModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleWorldModel) ?? true))
             {
-                if (!object.Equals(lhs.MaleWorldModel, rhs.MaleWorldModel)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MaleWorldModel, rhs.MaleWorldModel, out var lhsMaleWorldModel, out var rhsMaleWorldModel, out var isMaleWorldModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsMaleWorldModel).CommonInstance()!).Equals(lhsMaleWorldModel, rhsMaleWorldModel, crystal?.GetSubCrystal((int)Armor_FieldIndex.MaleWorldModel))) return false;
+                }
+                else if (!isMaleWorldModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.MaleIcon) ?? true))
             {
@@ -1604,11 +1615,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleBipedModel) ?? true))
             {
-                if (!object.Equals(lhs.FemaleBipedModel, rhs.FemaleBipedModel)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FemaleBipedModel, rhs.FemaleBipedModel, out var lhsFemaleBipedModel, out var rhsFemaleBipedModel, out var isFemaleBipedModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsFemaleBipedModel).CommonInstance()!).Equals(lhsFemaleBipedModel, rhsFemaleBipedModel, crystal?.GetSubCrystal((int)Armor_FieldIndex.FemaleBipedModel))) return false;
+                }
+                else if (!isFemaleBipedModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleWorldModel) ?? true))
             {
-                if (!object.Equals(lhs.FemaleWorldModel, rhs.FemaleWorldModel)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FemaleWorldModel, rhs.FemaleWorldModel, out var lhsFemaleWorldModel, out var rhsFemaleWorldModel, out var isFemaleWorldModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsFemaleWorldModel).CommonInstance()!).Equals(lhsFemaleWorldModel, rhsFemaleWorldModel, crystal?.GetSubCrystal((int)Armor_FieldIndex.FemaleWorldModel))) return false;
+                }
+                else if (!isFemaleWorldModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.FemaleIcon) ?? true))
             {
@@ -1616,7 +1635,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Armor_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((ArmorDataCommon)((IArmorDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Armor_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             return true;
         }

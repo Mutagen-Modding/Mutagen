@@ -960,8 +960,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ITransientTypeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)TransientType_FieldIndex.FormType) ?? true))
             {
                 if (lhs.FormType != rhs.FormType) return false;

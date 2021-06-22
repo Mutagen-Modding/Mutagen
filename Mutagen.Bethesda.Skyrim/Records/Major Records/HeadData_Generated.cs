@@ -1701,15 +1701,18 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IHeadDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.HeadParts) ?? true))
             {
                 if (!lhs.HeadParts.SequenceEqualNullable(rhs.HeadParts)) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.AvailableMorphs) ?? true))
             {
-                if (!object.Equals(lhs.AvailableMorphs, rhs.AvailableMorphs)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AvailableMorphs, rhs.AvailableMorphs, out var lhsAvailableMorphs, out var rhsAvailableMorphs, out var isAvailableMorphsEqual))
+                {
+                    if (!((AvailableMorphsCommon)((IAvailableMorphsGetter)lhsAvailableMorphs).CommonInstance()!).Equals(lhsAvailableMorphs, rhsAvailableMorphs, crystal?.GetSubCrystal((int)HeadData_FieldIndex.AvailableMorphs))) return false;
+                }
+                else if (!isAvailableMorphsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.RacePresets) ?? true))
             {
@@ -1733,7 +1736,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)HeadData_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)HeadData_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             return true;
         }

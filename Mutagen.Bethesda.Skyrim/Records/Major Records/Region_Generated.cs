@@ -1517,8 +1517,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.MapColor) ?? true))
             {
@@ -1534,27 +1533,51 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Objects) ?? true))
             {
-                if (!object.Equals(lhs.Objects, rhs.Objects)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Objects, rhs.Objects, out var lhsObjects, out var rhsObjects, out var isObjectsEqual))
+                {
+                    if (!((RegionObjectsCommon)((IRegionObjectsGetter)lhsObjects).CommonInstance()!).Equals(lhsObjects, rhsObjects, crystal?.GetSubCrystal((int)Region_FieldIndex.Objects))) return false;
+                }
+                else if (!isObjectsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Weather) ?? true))
             {
-                if (!object.Equals(lhs.Weather, rhs.Weather)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Weather, rhs.Weather, out var lhsWeather, out var rhsWeather, out var isWeatherEqual))
+                {
+                    if (!((RegionWeatherCommon)((IRegionWeatherGetter)lhsWeather).CommonInstance()!).Equals(lhsWeather, rhsWeather, crystal?.GetSubCrystal((int)Region_FieldIndex.Weather))) return false;
+                }
+                else if (!isWeatherEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Map) ?? true))
             {
-                if (!object.Equals(lhs.Map, rhs.Map)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Map, rhs.Map, out var lhsMap, out var rhsMap, out var isMapEqual))
+                {
+                    if (!((RegionMapCommon)((IRegionMapGetter)lhsMap).CommonInstance()!).Equals(lhsMap, rhsMap, crystal?.GetSubCrystal((int)Region_FieldIndex.Map))) return false;
+                }
+                else if (!isMapEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Land) ?? true))
             {
-                if (!object.Equals(lhs.Land, rhs.Land)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Land, rhs.Land, out var lhsLand, out var rhsLand, out var isLandEqual))
+                {
+                    if (!((RegionLandCommon)((IRegionLandGetter)lhsLand).CommonInstance()!).Equals(lhsLand, rhsLand, crystal?.GetSubCrystal((int)Region_FieldIndex.Land))) return false;
+                }
+                else if (!isLandEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Grasses) ?? true))
             {
-                if (!object.Equals(lhs.Grasses, rhs.Grasses)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Grasses, rhs.Grasses, out var lhsGrasses, out var rhsGrasses, out var isGrassesEqual))
+                {
+                    if (!((RegionGrassesCommon)((IRegionGrassesGetter)lhsGrasses).CommonInstance()!).Equals(lhsGrasses, rhsGrasses, crystal?.GetSubCrystal((int)Region_FieldIndex.Grasses))) return false;
+                }
+                else if (!isGrassesEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Region_FieldIndex.Sounds) ?? true))
             {
-                if (!object.Equals(lhs.Sounds, rhs.Sounds)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Sounds, rhs.Sounds, out var lhsSounds, out var rhsSounds, out var isSoundsEqual))
+                {
+                    if (!((RegionSoundsCommon)((IRegionSoundsGetter)lhsSounds).CommonInstance()!).Equals(lhsSounds, rhsSounds, crystal?.GetSubCrystal((int)Region_FieldIndex.Sounds))) return false;
+                }
+                else if (!isSoundsEqual) return false;
             }
             return true;
         }

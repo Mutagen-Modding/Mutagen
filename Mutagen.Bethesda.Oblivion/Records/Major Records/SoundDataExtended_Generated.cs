@@ -917,8 +917,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISoundDataExtendedInternalGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISoundDataInternalGetter)lhs, (ISoundDataInternalGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SoundDataExtended_FieldIndex.StaticAttenuation) ?? true))
             {

@@ -850,8 +850,7 @@ namespace Mutagen.Bethesda.Plugins.Records.Internals
             IMasterReferenceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MasterReference_FieldIndex.Master) ?? true))
             {
                 if (lhs.Master != rhs.Master) return false;

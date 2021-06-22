@@ -2710,8 +2710,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICreatureGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Name) ?? true))
             {
@@ -2719,7 +2718,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Model) ?? true))
             {
-                if (!object.Equals(lhs.Model, rhs.Model)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Model, rhs.Model, out var lhsModel, out var rhsModel, out var isModelEqual))
+                {
+                    if (!((ModelCommon)((IModelGetter)lhsModel).CommonInstance()!).Equals(lhsModel, rhsModel, crystal?.GetSubCrystal((int)Creature_FieldIndex.Model))) return false;
+                }
+                else if (!isModelEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Items) ?? true))
             {
@@ -2739,7 +2742,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Configuration) ?? true))
             {
-                if (!object.Equals(lhs.Configuration, rhs.Configuration)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Configuration, rhs.Configuration, out var lhsConfiguration, out var rhsConfiguration, out var isConfigurationEqual))
+                {
+                    if (!((CreatureConfigurationCommon)((ICreatureConfigurationGetter)lhsConfiguration).CommonInstance()!).Equals(lhsConfiguration, rhsConfiguration, crystal?.GetSubCrystal((int)Creature_FieldIndex.Configuration))) return false;
+                }
+                else if (!isConfigurationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Factions) ?? true))
             {
@@ -2755,7 +2762,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIData) ?? true))
             {
-                if (!object.Equals(lhs.AIData, rhs.AIData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.AIData, rhs.AIData, out var lhsAIData, out var rhsAIData, out var isAIDataEqual))
+                {
+                    if (!((CreatureAIDataCommon)((ICreatureAIDataGetter)lhsAIData).CommonInstance()!).Equals(lhsAIData, rhsAIData, crystal?.GetSubCrystal((int)Creature_FieldIndex.AIData))) return false;
+                }
+                else if (!isAIDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AIPackages) ?? true))
             {
@@ -2767,7 +2778,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((CreatureDataCommon)((ICreatureDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Creature_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Creature_FieldIndex.AttackReach) ?? true))
             {

@@ -787,8 +787,7 @@ namespace Mutagen.Bethesda.Fallout4.Internals
             ILocationObjectTypeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IALocationTargetGetter)lhs, (IALocationTargetGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)LocationObjectType_FieldIndex.Type) ?? true))
             {
