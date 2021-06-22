@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IDistantLODDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DistantLODData_FieldIndex.Unknown0) ?? true))
             {
                 if (!lhs.Unknown0.EqualsWithin(rhs.Unknown0)) return false;

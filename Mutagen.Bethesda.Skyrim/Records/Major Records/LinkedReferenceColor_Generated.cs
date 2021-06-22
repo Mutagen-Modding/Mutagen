@@ -853,8 +853,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILinkedReferenceColorGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LinkedReferenceColor_FieldIndex.Start) ?? true))
             {
                 if (!lhs.Start.ColorOnlyEquals(rhs.Start)) return false;

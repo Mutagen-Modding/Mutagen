@@ -2037,12 +2037,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IDialogResponsesGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((DialogResponsesAdapterCommon)((IDialogResponsesAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.DATA) ?? true))
             {
@@ -2050,7 +2053,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Flags) ?? true))
             {
-                if (!object.Equals(lhs.Flags, rhs.Flags)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Flags, rhs.Flags, out var lhsFlags, out var rhsFlags, out var isFlagsEqual))
+                {
+                    if (!((DialogResponseFlagsCommon)((IDialogResponseFlagsGetter)lhsFlags).CommonInstance()!).Equals(lhsFlags, rhsFlags, crystal?.GetSubCrystal((int)DialogResponses_FieldIndex.Flags))) return false;
+                }
+                else if (!isFlagsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)DialogResponses_FieldIndex.Topic) ?? true))
             {

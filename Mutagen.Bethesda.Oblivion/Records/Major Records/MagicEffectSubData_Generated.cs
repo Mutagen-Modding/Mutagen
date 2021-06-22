@@ -1093,8 +1093,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMagicEffectSubDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MagicEffectSubData_FieldIndex.EnchantEffect) ?? true))
             {
                 if (!lhs.EnchantEffect.Equals(rhs.EnchantEffect)) return false;

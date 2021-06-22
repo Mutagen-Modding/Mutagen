@@ -1205,11 +1205,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptFieldsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.MetadataSummary) ?? true))
             {
-                if (!object.Equals(lhs.MetadataSummary, rhs.MetadataSummary)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.MetadataSummary, rhs.MetadataSummary, out var lhsMetadataSummary, out var rhsMetadataSummary, out var isMetadataSummaryEqual))
+                {
+                    if (!((ScriptMetaSummaryCommon)((IScriptMetaSummaryGetter)lhsMetadataSummary).CommonInstance()!).Equals(lhsMetadataSummary, rhsMetadataSummary, crystal?.GetSubCrystal((int)ScriptFields_FieldIndex.MetadataSummary))) return false;
+                }
+                else if (!isMetadataSummaryEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScriptFields_FieldIndex.CompiledScript) ?? true))
             {

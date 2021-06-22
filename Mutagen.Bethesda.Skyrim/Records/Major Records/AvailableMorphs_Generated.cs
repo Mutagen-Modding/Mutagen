@@ -1012,23 +1012,38 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAvailableMorphsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Nose) ?? true))
             {
-                if (!object.Equals(lhs.Nose, rhs.Nose)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Nose, rhs.Nose, out var lhsNose, out var rhsNose, out var isNoseEqual))
+                {
+                    if (!((MorphCommon)((IMorphGetter)lhsNose).CommonInstance()!).Equals(lhsNose, rhsNose, crystal?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Nose))) return false;
+                }
+                else if (!isNoseEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Brow) ?? true))
             {
-                if (!object.Equals(lhs.Brow, rhs.Brow)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Brow, rhs.Brow, out var lhsBrow, out var rhsBrow, out var isBrowEqual))
+                {
+                    if (!((MorphCommon)((IMorphGetter)lhsBrow).CommonInstance()!).Equals(lhsBrow, rhsBrow, crystal?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Brow))) return false;
+                }
+                else if (!isBrowEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Eye) ?? true))
             {
-                if (!object.Equals(lhs.Eye, rhs.Eye)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Eye, rhs.Eye, out var lhsEye, out var rhsEye, out var isEyeEqual))
+                {
+                    if (!((MorphCommon)((IMorphGetter)lhsEye).CommonInstance()!).Equals(lhsEye, rhsEye, crystal?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Eye))) return false;
+                }
+                else if (!isEyeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)AvailableMorphs_FieldIndex.Lip) ?? true))
             {
-                if (!object.Equals(lhs.Lip, rhs.Lip)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Lip, rhs.Lip, out var lhsLip, out var rhsLip, out var isLipEqual))
+                {
+                    if (!((MorphCommon)((IMorphGetter)lhsLip).CommonInstance()!).Equals(lhsLip, rhsLip, crystal?.GetSubCrystal((int)AvailableMorphs_FieldIndex.Lip))) return false;
+                }
+                else if (!isLipEqual) return false;
             }
             return true;
         }

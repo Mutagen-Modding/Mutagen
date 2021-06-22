@@ -861,8 +861,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IWorldspaceReferenceGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)WorldspaceReference_FieldIndex.Reference) ?? true))
             {
                 if (!lhs.Reference.Equals(rhs.Reference)) return false;

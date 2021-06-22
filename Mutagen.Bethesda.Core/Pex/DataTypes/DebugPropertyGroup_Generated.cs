@@ -891,8 +891,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IDebugPropertyGroupGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)DebugPropertyGroup_FieldIndex.ObjectName) ?? true))
             {
                 if (!string.Equals(lhs.ObjectName, rhs.ObjectName)) return false;

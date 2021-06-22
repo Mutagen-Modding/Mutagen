@@ -1228,8 +1228,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IStoryManagerQuestNodeGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAStoryManagerNodeGetter)lhs, (IAStoryManagerNodeGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)StoryManagerQuestNode_FieldIndex.Flags) ?? true))
             {

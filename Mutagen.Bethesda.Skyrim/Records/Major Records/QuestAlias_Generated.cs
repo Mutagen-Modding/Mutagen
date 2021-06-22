@@ -2632,8 +2632,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestAliasGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.ID) ?? true))
             {
                 if (lhs.ID != rhs.ID) return false;
@@ -2668,23 +2667,43 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Location) ?? true))
             {
-                if (!object.Equals(lhs.Location, rhs.Location)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Location, rhs.Location, out var lhsLocation, out var rhsLocation, out var isLocationEqual))
+                {
+                    if (!((LocationAliasReferenceCommon)((ILocationAliasReferenceGetter)lhsLocation).CommonInstance()!).Equals(lhsLocation, rhsLocation, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.Location))) return false;
+                }
+                else if (!isLocationEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.External) ?? true))
             {
-                if (!object.Equals(lhs.External, rhs.External)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.External, rhs.External, out var lhsExternal, out var rhsExternal, out var isExternalEqual))
+                {
+                    if (!((ExternalAliasReferenceCommon)((IExternalAliasReferenceGetter)lhsExternal).CommonInstance()!).Equals(lhsExternal, rhsExternal, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.External))) return false;
+                }
+                else if (!isExternalEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.CreateReferenceToObject) ?? true))
             {
-                if (!object.Equals(lhs.CreateReferenceToObject, rhs.CreateReferenceToObject)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.CreateReferenceToObject, rhs.CreateReferenceToObject, out var lhsCreateReferenceToObject, out var rhsCreateReferenceToObject, out var isCreateReferenceToObjectEqual))
+                {
+                    if (!((CreateReferenceToObjectCommon)((ICreateReferenceToObjectGetter)lhsCreateReferenceToObject).CommonInstance()!).Equals(lhsCreateReferenceToObject, rhsCreateReferenceToObject, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.CreateReferenceToObject))) return false;
+                }
+                else if (!isCreateReferenceToObjectEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias) ?? true))
             {
-                if (!object.Equals(lhs.FindMatchingRefNearAlias, rhs.FindMatchingRefNearAlias)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FindMatchingRefNearAlias, rhs.FindMatchingRefNearAlias, out var lhsFindMatchingRefNearAlias, out var rhsFindMatchingRefNearAlias, out var isFindMatchingRefNearAliasEqual))
+                {
+                    if (!((FindMatchingRefNearAliasCommon)((IFindMatchingRefNearAliasGetter)lhsFindMatchingRefNearAlias).CommonInstance()!).Equals(lhsFindMatchingRefNearAlias, rhsFindMatchingRefNearAlias, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefNearAlias))) return false;
+                }
+                else if (!isFindMatchingRefNearAliasEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent) ?? true))
             {
-                if (!object.Equals(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.FindMatchingRefFromEvent, rhs.FindMatchingRefFromEvent, out var lhsFindMatchingRefFromEvent, out var rhsFindMatchingRefFromEvent, out var isFindMatchingRefFromEventEqual))
+                {
+                    if (!((FindMatchingRefFromEventCommon)((IFindMatchingRefFromEventGetter)lhsFindMatchingRefFromEvent).CommonInstance()!).Equals(lhsFindMatchingRefFromEvent, rhsFindMatchingRefFromEvent, crystal?.GetSubCrystal((int)QuestAlias_FieldIndex.FindMatchingRefFromEvent))) return false;
+                }
+                else if (!isFindMatchingRefFromEventEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)QuestAlias_FieldIndex.Conditions) ?? true))
             {

@@ -1421,8 +1421,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ICellSubBlockGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)CellSubBlock_FieldIndex.BlockNumber) ?? true))
             {
                 if (lhs.BlockNumber != rhs.BlockNumber) return false;

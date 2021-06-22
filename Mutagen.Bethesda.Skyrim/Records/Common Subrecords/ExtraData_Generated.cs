@@ -864,11 +864,14 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IExtraDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ExtraData_FieldIndex.Owner) ?? true))
             {
-                if (!object.Equals(lhs.Owner, rhs.Owner)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Owner, rhs.Owner, out var lhsOwner, out var rhsOwner, out var isOwnerEqual))
+                {
+                    if (!((OwnerTargetCommon)((IOwnerTargetGetter)lhsOwner).CommonInstance()!).Equals(lhsOwner, rhsOwner, crystal?.GetSubCrystal((int)ExtraData_FieldIndex.Owner))) return false;
+                }
+                else if (!isOwnerEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ExtraData_FieldIndex.ItemCondition) ?? true))
             {

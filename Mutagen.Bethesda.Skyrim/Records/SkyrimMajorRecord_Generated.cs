@@ -1226,8 +1226,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISkyrimMajorRecordGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IMajorRecordGetter)lhs, (IMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SkyrimMajorRecord_FieldIndex.FormVersion) ?? true))
             {

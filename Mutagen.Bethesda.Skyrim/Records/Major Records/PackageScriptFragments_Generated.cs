@@ -1025,8 +1025,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageScriptFragmentsGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.Unknown) ?? true))
             {
                 if (lhs.Unknown != rhs.Unknown) return false;
@@ -1037,15 +1036,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnBegin) ?? true))
             {
-                if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
+                {
+                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, crystal?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnBegin))) return false;
+                }
+                else if (!isOnBeginEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnEnd) ?? true))
             {
-                if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
+                {
+                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, crystal?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnEnd))) return false;
+                }
+                else if (!isOnEndEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PackageScriptFragments_FieldIndex.OnChange) ?? true))
             {
-                if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnChange, rhs.OnChange, out var lhsOnChange, out var rhsOnChange, out var isOnChangeEqual))
+                {
+                    if (!((ScriptFragmentCommon)((IScriptFragmentGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, crystal?.GetSubCrystal((int)PackageScriptFragments_FieldIndex.OnChange))) return false;
+                }
+                else if (!isOnChangeEqual) return false;
             }
             return true;
         }

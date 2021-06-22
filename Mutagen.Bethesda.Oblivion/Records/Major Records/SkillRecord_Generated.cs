@@ -1237,8 +1237,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ISkillRecordGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Skill) ?? true))
             {
@@ -1254,7 +1253,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((SkillDataCommon)((ISkillDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)SkillRecord_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)SkillRecord_FieldIndex.ApprenticeText) ?? true))
             {

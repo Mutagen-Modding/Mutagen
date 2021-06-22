@@ -919,8 +919,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ICellNavigationMeshDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IANavigationMeshDataGetter)lhs, (IANavigationMeshDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)CellNavigationMeshData_FieldIndex.UnusedWorldspaceParent) ?? true))
             {

@@ -1222,8 +1222,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IWaterGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Texture) ?? true))
             {
@@ -1247,11 +1246,19 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.Data) ?? true))
             {
-                if (!object.Equals(lhs.Data, rhs.Data)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Data, rhs.Data, out var lhsData, out var rhsData, out var isDataEqual))
+                {
+                    if (!((WaterDataCommon)((IWaterDataGetter)lhsData).CommonInstance()!).Equals(lhsData, rhsData, crystal?.GetSubCrystal((int)Water_FieldIndex.Data))) return false;
+                }
+                else if (!isDataEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Water_FieldIndex.RelatedWaters) ?? true))
             {
-                if (!object.Equals(lhs.RelatedWaters, rhs.RelatedWaters)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.RelatedWaters, rhs.RelatedWaters, out var lhsRelatedWaters, out var rhsRelatedWaters, out var isRelatedWatersEqual))
+                {
+                    if (!((RelatedWatersCommon)((IRelatedWatersGetter)lhsRelatedWaters).CommonInstance()!).Equals(lhsRelatedWaters, rhsRelatedWaters, crystal?.GetSubCrystal((int)Water_FieldIndex.RelatedWaters))) return false;
+                }
+                else if (!isRelatedWatersEqual) return false;
             }
             return true;
         }

@@ -1085,8 +1085,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestStageGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestStage_FieldIndex.Index) ?? true))
             {
                 if (lhs.Index != rhs.Index) return false;

@@ -1611,8 +1611,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INavigationMapInfoGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.NavigationMesh) ?? true))
             {
                 if (!lhs.NavigationMesh.Equals(rhs.NavigationMesh)) return false;
@@ -1643,7 +1642,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Island) ?? true))
             {
-                if (!object.Equals(lhs.Island, rhs.Island)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Island, rhs.Island, out var lhsIsland, out var rhsIsland, out var isIslandEqual))
+                {
+                    if (!((IslandDataCommon)((IIslandDataGetter)lhsIsland).CommonInstance()!).Equals(lhsIsland, rhsIsland, crystal?.GetSubCrystal((int)NavigationMapInfo_FieldIndex.Island))) return false;
+                }
+                else if (!isIslandEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)NavigationMapInfo_FieldIndex.Unknown2) ?? true))
             {

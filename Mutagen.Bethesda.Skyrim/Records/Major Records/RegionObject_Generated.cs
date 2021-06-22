@@ -1469,8 +1469,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IRegionObjectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RegionObject_FieldIndex.Object) ?? true))
             {
                 if (!lhs.Object.Equals(rhs.Object)) return false;

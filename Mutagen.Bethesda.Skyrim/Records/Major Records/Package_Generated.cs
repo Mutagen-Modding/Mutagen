@@ -2602,12 +2602,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((PackageAdapterCommon)((IPackageAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Package_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.Flags) ?? true))
             {
@@ -2675,7 +2678,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.IdleAnimations) ?? true))
             {
-                if (!object.Equals(lhs.IdleAnimations, rhs.IdleAnimations)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.IdleAnimations, rhs.IdleAnimations, out var lhsIdleAnimations, out var rhsIdleAnimations, out var isIdleAnimationsEqual))
+                {
+                    if (!((PackageIdlesCommon)((IPackageIdlesGetter)lhsIdleAnimations).CommonInstance()!).Equals(lhsIdleAnimations, rhsIdleAnimations, crystal?.GetSubCrystal((int)Package_FieldIndex.IdleAnimations))) return false;
+                }
+                else if (!isIdleAnimationsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.CombatStyle) ?? true))
             {
@@ -2707,15 +2714,27 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnBegin) ?? true))
             {
-                if (!object.Equals(lhs.OnBegin, rhs.OnBegin)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnBegin, rhs.OnBegin, out var lhsOnBegin, out var rhsOnBegin, out var isOnBeginEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnBegin).CommonInstance()!).Equals(lhsOnBegin, rhsOnBegin, crystal?.GetSubCrystal((int)Package_FieldIndex.OnBegin))) return false;
+                }
+                else if (!isOnBeginEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnEnd) ?? true))
             {
-                if (!object.Equals(lhs.OnEnd, rhs.OnEnd)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnEnd, rhs.OnEnd, out var lhsOnEnd, out var rhsOnEnd, out var isOnEndEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnEnd).CommonInstance()!).Equals(lhsOnEnd, rhsOnEnd, crystal?.GetSubCrystal((int)Package_FieldIndex.OnEnd))) return false;
+                }
+                else if (!isOnEndEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.OnChange) ?? true))
             {
-                if (!object.Equals(lhs.OnChange, rhs.OnChange)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.OnChange, rhs.OnChange, out var lhsOnChange, out var rhsOnChange, out var isOnChangeEqual))
+                {
+                    if (!((PackageEventCommon)((IPackageEventGetter)lhsOnChange).CommonInstance()!).Equals(lhsOnChange, rhsOnChange, crystal?.GetSubCrystal((int)Package_FieldIndex.OnChange))) return false;
+                }
+                else if (!isOnChangeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Package_FieldIndex.PKDTDataTypeState) ?? true))
             {

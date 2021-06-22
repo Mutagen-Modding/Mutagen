@@ -892,8 +892,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IMapDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)MapData_FieldIndex.UsableDimensions) ?? true))
             {
                 if (!lhs.UsableDimensions.Equals(rhs.UsableDimensions)) return false;

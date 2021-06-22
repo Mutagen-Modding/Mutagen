@@ -1658,8 +1658,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISceneActionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Type) ?? true))
             {
                 if (lhs.Type != rhs.Type) return false;
@@ -1726,7 +1725,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)SceneAction_FieldIndex.Unused) ?? true))
             {
-                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)SceneAction_FieldIndex.Unused))) return false;
+                }
+                else if (!isUnusedEqual) return false;
             }
             return true;
         }

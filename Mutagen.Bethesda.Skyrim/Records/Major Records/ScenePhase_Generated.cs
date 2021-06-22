@@ -1297,8 +1297,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IScenePhaseGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -1313,11 +1312,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused) ?? true))
             {
-                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused))) return false;
+                }
+                else if (!isUnusedEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.Unused2) ?? true))
             {
-                if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Unused2, rhs.Unused2, out var lhsUnused2, out var rhsUnused2, out var isUnused2Equal))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, crystal?.GetSubCrystal((int)ScenePhase_FieldIndex.Unused2))) return false;
+                }
+                else if (!isUnused2Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)ScenePhase_FieldIndex.EditorWidth) ?? true))
             {

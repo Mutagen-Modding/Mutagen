@@ -869,8 +869,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPortalGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Portal_FieldIndex.Origin) ?? true))
             {
                 if (!lhs.Origin.Equals(rhs.Origin)) return false;

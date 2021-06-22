@@ -864,8 +864,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPartGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)Part_FieldIndex.PartType) ?? true))
             {
                 if (lhs.PartType != rhs.PartType) return false;

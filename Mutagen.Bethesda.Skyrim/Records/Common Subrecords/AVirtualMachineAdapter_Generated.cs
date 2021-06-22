@@ -980,8 +980,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IAVirtualMachineAdapterGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)AVirtualMachineAdapter_FieldIndex.Version) ?? true))
             {
                 if (lhs.Version != rhs.Version) return false;

@@ -2521,12 +2521,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPlacedNpcGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Base) ?? true))
             {
@@ -2546,7 +2549,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Patrol) ?? true))
             {
-                if (!object.Equals(lhs.Patrol, rhs.Patrol)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Patrol, rhs.Patrol, out var lhsPatrol, out var rhsPatrol, out var isPatrolEqual))
+                {
+                    if (!((PatrolCommon)((IPatrolGetter)lhsPatrol).CommonInstance()!).Equals(lhsPatrol, rhsPatrol, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Patrol))) return false;
+                }
+                else if (!isPatrolEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LevelModifier) ?? true))
             {
@@ -2574,11 +2581,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.ActivateParents) ?? true))
             {
-                if (!object.Equals(lhs.ActivateParents, rhs.ActivateParents)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ActivateParents, rhs.ActivateParents, out var lhsActivateParents, out var rhsActivateParents, out var isActivateParentsEqual))
+                {
+                    if (!((ActivateParentsCommon)((IActivateParentsGetter)lhsActivateParents).CommonInstance()!).Equals(lhsActivateParents, rhsActivateParents, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.ActivateParents))) return false;
+                }
+                else if (!isActivateParentsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.LinkedReferenceColor) ?? true))
             {
-                if (!object.Equals(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.LinkedReferenceColor, rhs.LinkedReferenceColor, out var lhsLinkedReferenceColor, out var rhsLinkedReferenceColor, out var isLinkedReferenceColorEqual))
+                {
+                    if (!((LinkedReferenceColorCommon)((ILinkedReferenceColorGetter)lhsLinkedReferenceColor).CommonInstance()!).Equals(lhsLinkedReferenceColor, rhsLinkedReferenceColor, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.LinkedReferenceColor))) return false;
+                }
+                else if (!isLinkedReferenceColorEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.PersistentLocation) ?? true))
             {
@@ -2610,11 +2625,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.EnableParent) ?? true))
             {
-                if (!object.Equals(lhs.EnableParent, rhs.EnableParent)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.EnableParent, rhs.EnableParent, out var lhsEnableParent, out var rhsEnableParent, out var isEnableParentEqual))
+                {
+                    if (!((EnableParentCommon)((IEnableParentGetter)lhsEnableParent).CommonInstance()!).Equals(lhsEnableParent, rhsEnableParent, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.EnableParent))) return false;
+                }
+                else if (!isEnableParentEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Ownership) ?? true))
             {
-                if (!object.Equals(lhs.Ownership, rhs.Ownership)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Ownership, rhs.Ownership, out var lhsOwnership, out var rhsOwnership, out var isOwnershipEqual))
+                {
+                    if (!((OwnershipCommon)((IOwnershipGetter)lhsOwnership).CommonInstance()!).Equals(lhsOwnership, rhsOwnership, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Ownership))) return false;
+                }
+                else if (!isOwnershipEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Emittance) ?? true))
             {
@@ -2634,7 +2657,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PlacedNpc_FieldIndex.Placement) ?? true))
             {
-                if (!object.Equals(lhs.Placement, rhs.Placement)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Placement, rhs.Placement, out var lhsPlacement, out var rhsPlacement, out var isPlacementEqual))
+                {
+                    if (!((PlacementCommon)((IPlacementGetter)lhsPlacement).CommonInstance()!).Equals(lhsPlacement, rhsPlacement, crystal?.GetSubCrystal((int)PlacedNpc_FieldIndex.Placement))) return false;
+                }
+                else if (!isPlacementEqual) return false;
             }
             return true;
         }

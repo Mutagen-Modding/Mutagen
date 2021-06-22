@@ -859,8 +859,7 @@ namespace Mutagen.Bethesda.Pex.Internals
             IPexObjectVariableGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.Name) ?? true))
             {
                 if (!string.Equals(lhs.Name, rhs.Name)) return false;
@@ -875,7 +874,11 @@ namespace Mutagen.Bethesda.Pex.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PexObjectVariable_FieldIndex.VariableData) ?? true))
             {
-                if (!object.Equals(lhs.VariableData, rhs.VariableData)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VariableData, rhs.VariableData, out var lhsVariableData, out var rhsVariableData, out var isVariableDataEqual))
+                {
+                    if (!((PexObjectVariableDataCommon)((IPexObjectVariableDataGetter)lhsVariableData).CommonInstance()!).Equals(lhsVariableData, rhsVariableData, crystal?.GetSubCrystal((int)PexObjectVariable_FieldIndex.VariableData))) return false;
+                }
+                else if (!isVariableDataEqual) return false;
             }
             return true;
         }

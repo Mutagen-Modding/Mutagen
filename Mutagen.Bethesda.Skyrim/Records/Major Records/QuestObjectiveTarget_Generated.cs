@@ -1045,8 +1045,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IQuestObjectiveTargetGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)QuestObjectiveTarget_FieldIndex.AliasIndex) ?? true))
             {
                 if (lhs.AliasIndex != rhs.AliasIndex) return false;

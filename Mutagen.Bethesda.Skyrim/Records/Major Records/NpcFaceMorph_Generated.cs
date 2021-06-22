@@ -1532,8 +1532,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcFaceMorphGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)NpcFaceMorph_FieldIndex.NoseLongVsShort) ?? true))
             {
                 if (!lhs.NoseLongVsShort.EqualsWithin(rhs.NoseLongVsShort)) return false;

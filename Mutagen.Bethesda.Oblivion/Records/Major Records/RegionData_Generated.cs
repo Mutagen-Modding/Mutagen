@@ -808,11 +808,14 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RegionData_FieldIndex.Header) ?? true))
             {
-                if (!object.Equals(lhs.Header, rhs.Header)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Header, rhs.Header, out var lhsHeader, out var rhsHeader, out var isHeaderEqual))
+                {
+                    if (!((RegionDataHeaderCommon)((IRegionDataHeaderGetter)lhsHeader).CommonInstance()!).Equals(lhsHeader, rhsHeader, crystal?.GetSubCrystal((int)RegionData_FieldIndex.Header))) return false;
+                }
+                else if (!isHeaderEqual) return false;
             }
             return true;
         }

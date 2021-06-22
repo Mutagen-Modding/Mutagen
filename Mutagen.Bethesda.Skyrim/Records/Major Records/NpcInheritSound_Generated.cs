@@ -807,8 +807,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             INpcInheritSoundGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IANpcSoundDefinitionGetter)lhs, (IANpcSoundDefinitionGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)NpcInheritSound_FieldIndex.InheritsSoundsFrom) ?? true))
             {

@@ -1767,12 +1767,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((PerkAdapterCommon)((IPerkAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Perk_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Name) ?? true))
             {
@@ -1784,7 +1787,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Icons) ?? true))
             {
-                if (!object.Equals(lhs.Icons, rhs.Icons)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Icons, rhs.Icons, out var lhsIcons, out var rhsIcons, out var isIconsEqual))
+                {
+                    if (!((IconsCommon)((IIconsGetter)lhsIcons).CommonInstance()!).Equals(lhsIcons, rhsIcons, crystal?.GetSubCrystal((int)Perk_FieldIndex.Icons))) return false;
+                }
+                else if (!isIconsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Perk_FieldIndex.Conditions) ?? true))
             {

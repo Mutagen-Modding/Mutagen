@@ -978,8 +978,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IGameSettingFloatGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IGameSettingGetter)lhs, (IGameSettingGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)GameSettingFloat_FieldIndex.Data) ?? true))
             {

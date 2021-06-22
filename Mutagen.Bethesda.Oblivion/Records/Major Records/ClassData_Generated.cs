@@ -1269,8 +1269,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IClassDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Versioning) ?? true))
             {
                 if (lhs.Versioning != rhs.Versioning) return false;
@@ -1297,7 +1296,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)ClassData_FieldIndex.Training) ?? true))
             {
-                if (!object.Equals(lhs.Training, rhs.Training)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Training, rhs.Training, out var lhsTraining, out var rhsTraining, out var isTrainingEqual))
+                {
+                    if (!((ClassTrainingCommon)((IClassTrainingGetter)lhsTraining).CommonInstance()!).Equals(lhsTraining, rhsTraining, crystal?.GetSubCrystal((int)ClassData_FieldIndex.Training))) return false;
+                }
+                else if (!isTrainingEqual) return false;
             }
             return true;
         }

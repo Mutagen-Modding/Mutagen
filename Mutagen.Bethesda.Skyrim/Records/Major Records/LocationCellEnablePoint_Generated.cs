@@ -909,8 +909,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILocationCellEnablePointGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LocationCellEnablePoint_FieldIndex.Actor) ?? true))
             {
                 if (!lhs.Actor.Equals(rhs.Actor)) return false;

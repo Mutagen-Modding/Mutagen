@@ -876,8 +876,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPackageDataTargetGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAPackageDataGetter)lhs, (IAPackageDataGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PackageDataTarget_FieldIndex.Type) ?? true))
             {
@@ -885,7 +884,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)PackageDataTarget_FieldIndex.Target) ?? true))
             {
-                if (!object.Equals(lhs.Target, rhs.Target)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Target, rhs.Target, out var lhsTarget, out var rhsTarget, out var isTargetEqual))
+                {
+                    if (!((APackageTargetCommon)((IAPackageTargetGetter)lhsTarget).CommonInstance()!).Equals(lhsTarget, rhsTarget, crystal?.GetSubCrystal((int)PackageDataTarget_FieldIndex.Target))) return false;
+                }
+                else if (!isTargetEqual) return false;
             }
             return true;
         }

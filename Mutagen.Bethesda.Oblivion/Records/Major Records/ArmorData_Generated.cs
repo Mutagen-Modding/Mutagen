@@ -935,8 +935,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IArmorDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ArmorData_FieldIndex.ArmorValue) ?? true))
             {
                 if (!lhs.ArmorValue.EqualsWithin(rhs.ArmorValue)) return false;

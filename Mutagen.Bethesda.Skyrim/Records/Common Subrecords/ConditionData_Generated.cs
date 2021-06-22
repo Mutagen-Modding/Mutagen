@@ -880,8 +880,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IConditionDataGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)ConditionData_FieldIndex.RunOnType) ?? true))
             {
                 if (lhs.RunOnType != rhs.RunOnType) return false;

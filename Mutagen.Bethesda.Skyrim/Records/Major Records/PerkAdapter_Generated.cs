@@ -837,12 +837,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkAdapterGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IAVirtualMachineAdapterGetter)lhs, (IAVirtualMachineAdapterGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)PerkAdapter_FieldIndex.ScriptFragments) ?? true))
             {
-                if (!object.Equals(lhs.ScriptFragments, rhs.ScriptFragments)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ScriptFragments, rhs.ScriptFragments, out var lhsScriptFragments, out var rhsScriptFragments, out var isScriptFragmentsEqual))
+                {
+                    if (!((PerkScriptFragmentsCommon)((IPerkScriptFragmentsGetter)lhsScriptFragments).CommonInstance()!).Equals(lhsScriptFragments, rhsScriptFragments, crystal?.GetSubCrystal((int)PerkAdapter_FieldIndex.ScriptFragments))) return false;
+                }
+                else if (!isScriptFragmentsEqual) return false;
             }
             return true;
         }

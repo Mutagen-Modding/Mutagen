@@ -1081,8 +1081,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             ILogEntryGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.Flags) ?? true))
             {
                 if (lhs.Flags != rhs.Flags) return false;
@@ -1097,7 +1096,11 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LogEntry_FieldIndex.ResultScript) ?? true))
             {
-                if (!object.Equals(lhs.ResultScript, rhs.ResultScript)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.ResultScript, rhs.ResultScript, out var lhsResultScript, out var rhsResultScript, out var isResultScriptEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsResultScript).CommonInstance()!).Equals(lhsResultScript, rhsResultScript, crystal?.GetSubCrystal((int)LogEntry_FieldIndex.ResultScript))) return false;
+                }
+                else if (!isResultScriptEqual) return false;
             }
             return true;
         }

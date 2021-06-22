@@ -2002,8 +2002,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ILightingTemplateGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.AmbientColor) ?? true))
             {
@@ -2099,7 +2098,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DirectionalAmbientColors) ?? true))
             {
-                if (!object.Equals(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.DirectionalAmbientColors, rhs.DirectionalAmbientColors, out var lhsDirectionalAmbientColors, out var rhsDirectionalAmbientColors, out var isDirectionalAmbientColorsEqual))
+                {
+                    if (!((AmbientColorsCommon)((IAmbientColorsGetter)lhsDirectionalAmbientColors).CommonInstance()!).Equals(lhsDirectionalAmbientColors, rhsDirectionalAmbientColors, crystal?.GetSubCrystal((int)LightingTemplate_FieldIndex.DirectionalAmbientColors))) return false;
+                }
+                else if (!isDirectionalAmbientColorsEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)LightingTemplate_FieldIndex.DATADataTypeState) ?? true))
             {

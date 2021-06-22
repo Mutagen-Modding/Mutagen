@@ -921,8 +921,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IModelGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISimpleModelGetter)lhs, (ISimpleModelGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Model_FieldIndex.AlternateTextures) ?? true))
             {

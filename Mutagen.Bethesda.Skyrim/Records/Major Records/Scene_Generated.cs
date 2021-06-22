@@ -1842,12 +1842,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             ISceneGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((SceneAdapterCommon)((ISceneAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)Scene_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Flags) ?? true))
             {
@@ -1867,11 +1870,19 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused) ?? true))
             {
-                if (!object.Equals(lhs.Unused, rhs.Unused)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Unused, rhs.Unused, out var lhsUnused, out var rhsUnused, out var isUnusedEqual))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused).CommonInstance()!).Equals(lhsUnused, rhsUnused, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused))) return false;
+                }
+                else if (!isUnusedEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Unused2) ?? true))
             {
-                if (!object.Equals(lhs.Unused2, rhs.Unused2)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Unused2, rhs.Unused2, out var lhsUnused2, out var rhsUnused2, out var isUnused2Equal))
+                {
+                    if (!((ScenePhaseUnusedDataCommon)((IScenePhaseUnusedDataGetter)lhsUnused2).CommonInstance()!).Equals(lhsUnused2, rhsUnused2, crystal?.GetSubCrystal((int)Scene_FieldIndex.Unused2))) return false;
+                }
+                else if (!isUnused2Equal) return false;
             }
             if ((crystal?.GetShouldTranslate((int)Scene_FieldIndex.Quest) ?? true))
             {

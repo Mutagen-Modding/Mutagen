@@ -3411,12 +3411,15 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IMagicEffectGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((ISkyrimMajorRecordGetter)lhs, (ISkyrimMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.VirtualMachineAdapter) ?? true))
             {
-                if (!object.Equals(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.VirtualMachineAdapter, rhs.VirtualMachineAdapter, out var lhsVirtualMachineAdapter, out var rhsVirtualMachineAdapter, out var isVirtualMachineAdapterEqual))
+                {
+                    if (!((VirtualMachineAdapterCommon)((IVirtualMachineAdapterGetter)lhsVirtualMachineAdapter).CommonInstance()!).Equals(lhsVirtualMachineAdapter, rhsVirtualMachineAdapter, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.VirtualMachineAdapter))) return false;
+                }
+                else if (!isVirtualMachineAdapterEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Name) ?? true))
             {
@@ -3496,7 +3499,11 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Archetype) ?? true))
             {
-                if (!object.Equals(lhs.Archetype, rhs.Archetype)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Archetype, rhs.Archetype, out var lhsArchetype, out var rhsArchetype, out var isArchetypeEqual))
+                {
+                    if (!((MagicEffectArchetypeCommon)((IMagicEffectArchetypeGetter)lhsArchetype).CommonInstance()!).Equals(lhsArchetype, rhsArchetype, crystal?.GetSubCrystal((int)MagicEffect_FieldIndex.Archetype))) return false;
+                }
+                else if (!isArchetypeEqual) return false;
             }
             if ((crystal?.GetShouldTranslate((int)MagicEffect_FieldIndex.Projectile) ?? true))
             {

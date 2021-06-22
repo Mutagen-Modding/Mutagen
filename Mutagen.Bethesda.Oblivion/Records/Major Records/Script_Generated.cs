@@ -933,12 +933,15 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IScriptGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if (!base.Equals((IOblivionMajorRecordGetter)lhs, (IOblivionMajorRecordGetter)rhs, crystal)) return false;
             if ((crystal?.GetShouldTranslate((int)Script_FieldIndex.Fields) ?? true))
             {
-                if (!object.Equals(lhs.Fields, rhs.Fields)) return false;
+                if (EqualsMaskHelper.RefEquality(lhs.Fields, rhs.Fields, out var lhsFields, out var rhsFields, out var isFieldsEqual))
+                {
+                    if (!((ScriptFieldsCommon)((IScriptFieldsGetter)lhsFields).CommonInstance()!).Equals(lhsFields, rhsFields, crystal?.GetSubCrystal((int)Script_FieldIndex.Fields))) return false;
+                }
+                else if (!isFieldsEqual) return false;
             }
             return true;
         }

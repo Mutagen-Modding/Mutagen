@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             var someWeapon = GetSomeWeapon();
             var other = someWeapon.DeepCopy();
-            other.BasicStats!.Damage = 10;
+            other.BasicStats!.Damage *= 10;
 
             someWeapon.Equals(other)
                 .Should().BeFalse();

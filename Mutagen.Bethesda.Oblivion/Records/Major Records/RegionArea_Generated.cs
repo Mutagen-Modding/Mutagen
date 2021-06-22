@@ -963,8 +963,7 @@ namespace Mutagen.Bethesda.Oblivion.Internals
             IRegionAreaGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)RegionArea_FieldIndex.EdgeFallOff) ?? true))
             {
                 if (lhs.EdgeFallOff != rhs.EdgeFallOff) return false;

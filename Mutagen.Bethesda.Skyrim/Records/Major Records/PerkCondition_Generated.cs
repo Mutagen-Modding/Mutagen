@@ -961,8 +961,7 @@ namespace Mutagen.Bethesda.Skyrim.Internals
             IPerkConditionGetter? rhs,
             TranslationCrystal? crystal)
         {
-            if (lhs == null && rhs == null) return false;
-            if (lhs == null || rhs == null) return false;
+            if (!EqualsMaskHelper.RefEquality(lhs, rhs, out var isEqual)) return isEqual;
             if ((crystal?.GetShouldTranslate((int)PerkCondition_FieldIndex.RunOnTabIndex) ?? true))
             {
                 if (lhs.RunOnTabIndex != rhs.RunOnTabIndex) return false;
