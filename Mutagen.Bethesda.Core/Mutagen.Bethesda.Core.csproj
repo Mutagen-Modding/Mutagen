@@ -101,6 +101,8 @@
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitCollection.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
     <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
     <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
     <Compile Include="Plugins\Order\CreationClubListingsProvider.cs" />

@@ -6,15 +6,6 @@ using System.Collections.Generic;
 // Intentionally not in Implicit
 namespace Mutagen.Bethesda.Plugins
 {
-    namespace Implicit
-    {
-        public record ImplicitRegistration(
-            GameRelease GameRelease,
-            IReadOnlyCollection<ModKey> BaseMasters,
-            IReadOnlyCollection<ModKey> Listings,
-            IReadOnlyCollection<FormKey> RecordFormKeys);
-    }
-
     public static class Implicits
     {
         public static readonly ImplicitBaseMasters BaseMasters = ImplicitBaseMasters.Instance;
@@ -30,7 +21,7 @@ namespace Mutagen.Bethesda.Plugins
         static Implicits()
         {
             #region Oblivion
-            var oblivionBaseMasters = new HashSet<ModKey>()
+            var oblivionBaseMasters = new List<ModKey>()
             {
                 "Oblivion.esm",
                 "Knights.esp",
@@ -46,21 +37,21 @@ namespace Mutagen.Bethesda.Plugins
             };
             Oblivion = new ImplicitRegistration(
                GameRelease.Oblivion,
-               BaseMasters: oblivionBaseMasters,
-               Listings: oblivionBaseMasters,
+               BaseMasters: new ImplicitModKeyCollection(oblivionBaseMasters),
+               Listings: new ImplicitModKeyCollection(Array.Empty<ModKey>()),
                RecordFormKeys: Array.Empty<FormKey>());
             #endregion
 
             #region Skyrim
             var skyrimModKey = ModKey.FromNameAndExtension("Skyrim.esm");
-            var skyrimBaseMasters = new HashSet<ModKey>()
+            var skyrimBaseMasters = new ImplicitModKeyCollection(new ModKey[]
             {
                 skyrimModKey,
                 "Update.esm",
                 "Dawnguard.esm",
                 "HearthFires.esm",
                 "Dragonborn.esm",
-            };
+            });
             SkyrimLE = new ImplicitRegistration(
                GameRelease.SkyrimLE,
                BaseMasters: skyrimBaseMasters,
@@ -110,8 +101,8 @@ namespace Mutagen.Bethesda.Plugins
             SkyrimVR = SkyrimSE with
             {
                 GameRelease = GameRelease.SkyrimVR,
-                BaseMasters = new HashSet<ModKey>(SkyrimSE.BaseMasters.And("SkyrimVR.esm")),
-                Listings = new HashSet<ModKey>(SkyrimSE.Listings.And("SkyrimVR.esm")),
+                BaseMasters = new ImplicitModKeyCollection(SkyrimSE.BaseMasters.And("SkyrimVR.esm")),
+                Listings = new ImplicitModKeyCollection(SkyrimSE.Listings.And("SkyrimVR.esm")),
             };
             #endregion
 
@@ -128,8 +119,8 @@ namespace Mutagen.Bethesda.Plugins
             };
             Fallout4 = new ImplicitRegistration(
                GameRelease.Fallout4,
-               BaseMasters: falloutBaseMasters,
-               Listings: falloutBaseMasters,
+               BaseMasters: new ImplicitModKeyCollection(falloutBaseMasters),
+               Listings: new ImplicitModKeyCollection(falloutBaseMasters),
                RecordFormKeys: new HashSet<FormKey>()
                {
                    // ToDo
