@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     return r.Value ?? Observable.Empty<IChangeSet<ModKey>>();
                 })
                 .Switch(),
-                ObservableExt.WatchFolderContents(dataFolderPath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
+                ObservableExt.WatchFolderContents(dataFolderPath.Path, fileSystem: _fileSystem)
                     .Transform(x =>
                     {
                         if (ModKey.TryFromNameAndExtension(Path.GetFileName(x), out var modKey))
