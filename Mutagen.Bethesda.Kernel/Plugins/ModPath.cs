@@ -4,11 +4,12 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins
 {
-    public class ModPath : IEquatable<ModPath>
+    public record ModPath
     {
-        public readonly ModKey ModKey;
-        public readonly FilePath Path;
         public static readonly ModPath Empty = new ModPath(ModKey.Null, string.Empty);
+        
+        public ModKey ModKey { get; }
+        public FilePath Path { get; }
 
         public ModPath(ModKey modKey, FilePath path)
         {
@@ -68,27 +69,6 @@ namespace Mutagen.Bethesda.Plugins
             {
                 return $"{ModKey} => {Path}";
             }
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is ModPath modPath && Equals(modPath);
-        }
-
-        public bool Equals(ModPath? other)
-        {
-            if (other == null) return false;
-            if (!ModKey.Equals(other.ModKey)) return false;
-            if (Path.Equals(other.Path)) return false;
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            HashCode hash = new HashCode();
-            hash.Add(ModKey);
-            hash.Add(Path);
-            return hash.ToHashCode();
         }
     }
 }
