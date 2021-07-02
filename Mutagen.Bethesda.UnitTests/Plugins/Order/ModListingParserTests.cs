@@ -12,7 +12,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
     {
         private IModListingParser GetParser(bool enabledMarkers)
         {
-            return new ModListingParser(enabledMarkers);
+            return new ModListingParser(
+                new HasEnabledMarkersInjector(enabledMarkers));
         }
 
         private ModListing Get(IModListingParser parser, ParseType type, string str)

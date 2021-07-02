@@ -1,24 +1,30 @@
 ﻿using System;
-using System.IO;
+using Mutagen.Bethesda.Environments;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface IPluginPathProvider
+    public interface IPluginPathContext
     {
         /// <summary>
         /// Returns expected location of the plugin load order file
         /// </summary>
-        /// <param name="release">Release to query</param>
         /// <returns>Expected path to load order file</returns>
-        FilePath Get(GameRelease release);
+        FilePath Path { get; }
     }
 
-    public class PluginPathProvider : IPluginPathProvider
+    public class PluginPathContext : IPluginPathContext
     {
-        private string GetRelativePluginsPath(GameRelease release)
+        private readonly IGameReleaseContext _gameReleaseContext;
+
+        public PluginPathContext(IGameReleaseContext gameReleaseContext)
         {
-            return release switch
+            _gameReleaseContext = gameReleaseContext;
+        }
+        
+        private string GetRelativePluginsPath()
+        {
+            return _gameReleaseContext.Release switch
             {
                 GameRelease.Oblivion => "Oblivion/Plugins.txt",
                 GameRelease.SkyrimLE => "Skyrim/Plugins.txt",
@@ -30,12 +36,10 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
 
         /// <inheritdoc />
-        public FilePath Get(GameRelease release)
-        {
-            string pluginPath = GetRelativePluginsPath(release);
-            return Path.Combine(
-                Environment.GetEnvironmentVariable("LocalAppData")!,
-                pluginPath);
-        }
+        public FilePath Path => System.IO.Path.Combine(
+            Environment.GetEnvironmentVariable("LocalAppData")!,
+            GetRelativePluginsPath());
     }
+
+    public record PluginPathInjection(FilePath Path) : IPluginPathContext;
 }

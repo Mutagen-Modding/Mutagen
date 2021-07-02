@@ -5,22 +5,19 @@ namespace Mutagen.Bethesda.Plugins.Implicit
 {
     public interface IImplicitRecordFormKeyProvider
     {
-        IReadOnlyCollection<FormKey> Get();
+        IReadOnlyCollection<FormKey> RecordFormKeys { get; }
     }
 
     public class ImplicitRecordFormKeyProvider : IImplicitRecordFormKeyProvider
     {
-        private readonly GameReleaseContext _gameRelease;
+        private readonly GameReleaseInjection _gameRelease;
 
         public ImplicitRecordFormKeyProvider(
-            GameReleaseContext gameRelease)
+            GameReleaseInjection gameRelease)
         {
             _gameRelease = gameRelease;
         }
-        
-        public IReadOnlyCollection<FormKey> Get()
-        {
-            return Implicits.Get(_gameRelease.Release).RecordFormKeys;
-        }
+
+        public IReadOnlyCollection<FormKey> RecordFormKeys => Implicits.Get(_gameRelease.Release).RecordFormKeys;
     }
 }

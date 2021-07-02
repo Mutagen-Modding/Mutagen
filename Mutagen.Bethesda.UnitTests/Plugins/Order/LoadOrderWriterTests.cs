@@ -1,7 +1,12 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System;
+using System.IO.Abstractions.TestingHelpers;
 using Mutagen.Bethesda.Plugins.Order;
 using Xunit;
 using System.Linq;
+using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Implicit;
+using Noggog;
+using NSubstitute;
 using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
@@ -16,15 +21,22 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(BaseFolder);
             var path = Path.Combine(BaseFolder, "Plugins.txt");
-            new LoadOrderWriter(fs).Write(
-                path,
-                GameRelease.Oblivion,
-                new ModListing[]
-                {
-                    new ModListing(Utility.PluginModKey, false),
-                    new ModListing(Utility.PluginModKey2, true),
-                    new ModListing(Utility.PluginModKey3, false),
-                });
+            var markers = Substitute.For<IHasEnabledMarkersProvider>();
+            markers.HasEnabledMarkers.Returns(false);
+            var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
+            implicitMods.Listings.Returns(Array.Empty<ModKey>());
+            new LoadOrderWriter(
+                    fs,
+                    markers,
+                    implicitMods)
+                .Write(
+                    path,
+                    new ModListing[]
+                    {
+                        new ModListing(Utility.PluginModKey, false),
+                        new ModListing(Utility.PluginModKey2, true),
+                        new ModListing(Utility.PluginModKey3, false),
+                    });
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Single(lines);
             Assert.Equal(Utility.PluginModKey2.FileName, lines[0]);
@@ -36,15 +48,22 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(BaseFolder);
             var path = Path.Combine(BaseFolder, "Plugins.txt");
-            new LoadOrderWriter(fs).Write(
-                path,
-                GameRelease.SkyrimSE,
-                new ModListing[]
-                {
-                    new ModListing(Utility.PluginModKey, false),
-                    new ModListing(Utility.PluginModKey2, true),
-                    new ModListing(Utility.PluginModKey3, false),
-                });
+            var markers = Substitute.For<IHasEnabledMarkersProvider>();
+            markers.HasEnabledMarkers.Returns(true);
+            var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
+            implicitMods.Listings.Returns(Array.Empty<ModKey>());
+            new LoadOrderWriter(
+                    fs,
+                    markers,
+                    implicitMods)
+                .Write(
+                    path,
+                    new ModListing[]
+                    {
+                        new ModListing(Utility.PluginModKey, false),
+                        new ModListing(Utility.PluginModKey2, true),
+                        new ModListing(Utility.PluginModKey3, false),
+                    });
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
             Assert.Equal($"{Utility.PluginModKey.FileName}", lines[0]);
@@ -58,16 +77,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(BaseFolder);
             var path = Path.Combine(BaseFolder, "Plugins.txt");
-            new LoadOrderWriter(fs).Write(
-                path,
-                GameRelease.SkyrimSE,
-                new ModListing[]
-                {
-                    new ModListing(Utility.Skyrim, true),
-                    new ModListing(Utility.PluginModKey, true),
-                    new ModListing(Utility.PluginModKey2, false),
-                },
-                removeImplicitMods: true);
+            var markers = Substitute.For<IHasEnabledMarkersProvider>();
+            markers.HasEnabledMarkers.Returns(true);
+            var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
+            implicitMods.Listings.Returns(Utility.Skyrim.AsEnumerable().ToList());
+            new LoadOrderWriter(
+                    fs,
+                    markers,
+                    implicitMods)
+                .Write(
+                    path,
+                    new ModListing[]
+                    {
+                        new ModListing(Utility.Skyrim, true),
+                        new ModListing(Utility.PluginModKey, true),
+                        new ModListing(Utility.PluginModKey2, false),
+                    },
+                    removeImplicitMods: true);
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(2, lines.Count);
             Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[0]);
@@ -80,16 +106,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(BaseFolder);
             var path = Path.Combine(BaseFolder, "Plugins.txt");
-            new LoadOrderWriter(fs).Write(
-                path,
-                GameRelease.SkyrimSE,
-                new ModListing[]
-                {
-                    new ModListing(Utility.Skyrim, true),
-                    new ModListing(Utility.PluginModKey, true),
-                    new ModListing(Utility.PluginModKey2, false),
-                },
-                removeImplicitMods: false);
+            var markers = Substitute.For<IHasEnabledMarkersProvider>();
+            markers.HasEnabledMarkers.Returns(true);
+            var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
+            implicitMods.Listings.Returns(Utility.Skyrim.AsEnumerable().ToList());
+            new LoadOrderWriter(
+                    fs,
+                    markers,
+                    implicitMods)
+                .Write(
+                    path,
+                    new ModListing[]
+                    {
+                        new ModListing(Utility.Skyrim, true),
+                        new ModListing(Utility.PluginModKey, true),
+                        new ModListing(Utility.PluginModKey2, false),
+                    },
+                    removeImplicitMods: false);
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
             Assert.Equal($"*{Utility.Skyrim.FileName}", lines[0]);

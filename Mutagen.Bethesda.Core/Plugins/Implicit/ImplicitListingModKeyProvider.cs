@@ -5,22 +5,19 @@ namespace Mutagen.Bethesda.Plugins.Implicit
 {
     public interface IImplicitListingModKeyProvider
     {
-        IReadOnlyCollection<ModKey> Get();
+        IReadOnlyCollection<ModKey> Listings { get; }
     }
 
     public class ImplicitListingModKeyProvider : IImplicitListingModKeyProvider
     {
-        private readonly GameReleaseContext _gameRelease;
+        private readonly GameReleaseInjection _gameRelease;
 
         public ImplicitListingModKeyProvider(
-            GameReleaseContext gameRelease)
+            GameReleaseInjection gameRelease)
         {
             _gameRelease = gameRelease;
         }
-        
-        public IReadOnlyCollection<ModKey> Get()
-        {
-            return Implicits.Get(_gameRelease.Release).Listings;
-        }
+
+        public IReadOnlyCollection<ModKey> Listings => Implicits.Get(_gameRelease.Release).Listings;
     }
 }

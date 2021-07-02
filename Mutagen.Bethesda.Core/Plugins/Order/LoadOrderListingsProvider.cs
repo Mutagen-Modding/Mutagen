@@ -1,109 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Abstractions;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Mutagen.Bethesda.Plugins.Exceptions;
-using Noggog;
-using Path = System.IO.Path;
-using FileNotFoundException = System.IO.FileNotFoundException;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface ILoadOrderListingsProvider
+    public interface ILoadOrderListingsProvider : IListingsProvider
     {
-        /// <summary>
-        /// Returns a load order listing from the usual sources
-        /// </summary>
-        /// <param name="game">Game type</param>
-        /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of modkeys representing a load order</returns>
-        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
-        /// <exception cref="FileNotFoundException">If plugin file not located</exception>
-        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
-        IEnumerable<IModListingGetter> GetListings(
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true);
-
-        IEnumerable<IModListingGetter> GetListings(
-            GameRelease game,
-            FilePath pluginsFilePath,
-            FilePath? creationClubFilePath,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true);
     }
 
     public class LoadOrderListingsProvider : ILoadOrderListingsProvider
     {
-        private readonly IFileSystem _fileSystem;
         private readonly IOrderListings _orderListings;
-        private readonly IPluginPathProvider _pathProvider;
-        private readonly IPluginListingsProvider _listingsRetriever;
-        private readonly ICreationClubPathProvider _cccPathProvider;
+        private readonly IImplicitListingsProvider _implicitListingsProvider;
+        private readonly IPluginListingsProvider _pluginListingsProvider;
         private readonly ICreationClubListingsProvider _cccListingsProvider;
 
         public LoadOrderListingsProvider(
-            IFileSystem fileSystem,
             IOrderListings orderListings,
-            IPluginPathProvider pathProvider,
-            IPluginListingsProvider listingsRetriever, 
-            ICreationClubPathProvider cccPathProvider,
+            IImplicitListingsProvider implicitListingsProvider,
+            IPluginListingsProvider pluginListingsProvider,
             ICreationClubListingsProvider cccListingsProvider)
         {
-            _fileSystem = fileSystem;
             _orderListings = orderListings;
-            _pathProvider = pathProvider;
-            _listingsRetriever = listingsRetriever;
-            _cccPathProvider = cccPathProvider;
+            _implicitListingsProvider = implicitListingsProvider;
+            _pluginListingsProvider = pluginListingsProvider;
             _cccListingsProvider = cccListingsProvider;
         }
         
         /// <inheritdoc />
-        public IEnumerable<IModListingGetter> GetListings(
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true)
+        public IEnumerable<IModListingGetter> Get()
         {
-            var path = _pathProvider.Get(game);
-            if (!_fileSystem.File.Exists(path))
-            {
-                throw new FileNotFoundException("Could not locate plugins file");
-            }
-            return GetListings(
-                game: game,
-                pluginsFilePath: path,
-                creationClubFilePath: _cccPathProvider.GetListingsPath(game.ToCategory(), dataPath),
-                dataPath: dataPath,
-                throwOnMissingMods: throwOnMissingMods);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModListingGetter> GetListings(
-            GameRelease game,
-            FilePath pluginsFilePath,
-            FilePath? creationClubFilePath,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true)
-        {
-            var listings = Enumerable.Empty<IModListingGetter>();
-            if (pluginsFilePath.Exists)
-            {
-                listings = _listingsRetriever.ListingsFromPath(pluginsFilePath, game, dataPath, throwOnMissingMods);
-            }
-            var implicitListings = Implicits.Get(game).Listings
-                .Where(x => _fileSystem.File.Exists(Path.Combine(dataPath.Path, x.FileName.String)))
-                .Select(x => new ModListing(x, enabled: true));
-            var ccListings = Enumerable.Empty<IModListingGetter>();
-            if (creationClubFilePath != null && _fileSystem.File.Exists(creationClubFilePath.Value))
-            {
-                ccListings = _cccListingsProvider.GetListingsFromPath(creationClubFilePath.Value, dataPath);
-            }
-
+            var implicitListings = _implicitListingsProvider.Get().ToArray();
             return _orderListings.Order(
                 implicitListings: implicitListings,
-                pluginsListings: listings.Except(implicitListings),
-                creationClubListings: ccListings,
+                pluginsListings: _pluginListingsProvider.Get().Except(implicitListings),
+                creationClubListings: _cccListingsProvider.Get(throwIfMissing: false),
                 selector: x => x.ModKey);
         }
     }

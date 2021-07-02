@@ -1,112 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
-using System.Linq;
-using Noggog;
+using Mutagen.Bethesda.Environments;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface IPluginListingsProvider
+    public interface IPluginListingsProvider : IListingsProvider
     {
-        /// <summary>
-        /// Parses the typical plugins file to retrieve all ModKeys in expected plugin file format,
-        /// Will order mods by timestamps if applicable
-        /// Will add implicit base mods if applicable
-        /// </summary>
-        /// <param name="game">Game type</param>
-        /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of ModKeys representing a load order</returns>
-        /// <exception cref="InvalidDataException">Line in plugin file is unexpected</exception>
-        IEnumerable<IModListingGetter> ListingsFromPath(
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true);
-
-        /// <summary>
-        /// Parses a file to retrieve all ModKeys in expected plugin file format,
-        /// Will order mods by timestamps if applicable
-        /// Will add implicit base mods if applicable
-        /// </summary>
-        /// <param name="game">Game type</param>
-        /// <param name="pluginTextPath">Path of plugin list</param>
-        /// <param name="dataPath">Path to game's data folder</param>
-        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
-        /// <returns>Enumerable of ModKeys representing a load order</returns>
-        /// <exception cref="InvalidDataException">Line in plugin file is unexpected</exception>
-        IEnumerable<IModListingGetter> ListingsFromPath(
-            FilePath pluginTextPath,
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true);
-
-        IEnumerable<IModListingGetter> RawListingsFromPath(
-            FilePath pluginTextPath,
-            GameRelease game);
     }
-
+    
     public class PluginListingsProvider : IPluginListingsProvider
     {
-        private readonly IFileSystem _FileSystem;
-        private readonly IPluginListingsParserFactory _parserFactory;
-        private readonly IPluginPathProvider _pathProvider;
-        private readonly ITimestampAligner _TimestampAligner;
+        private readonly IGameReleaseContext _gameReleaseContext;
+        private readonly ITimestampedPluginListingsProvider _timestampedPluginsProvider;
+        private readonly IEnabledPluginListingsProvider _enabledPluginListingsProvider;
 
         public PluginListingsProvider(
-            IFileSystem fileSystem,
-            IPluginListingsParserFactory parserFactory,
-            IPluginPathProvider pathProvider,
-            ITimestampAligner timestampAligner)
+            IGameReleaseContext gameReleaseContext,
+            ITimestampedPluginListingsProvider timestampedPluginsProvider,
+            IEnabledPluginListingsProvider enabledPluginListingsProvider)
         {
-            _FileSystem = fileSystem;
-            _parserFactory = parserFactory;
-            _pathProvider = pathProvider;
-            _TimestampAligner = timestampAligner;
+            _gameReleaseContext = gameReleaseContext;
+            _timestampedPluginsProvider = timestampedPluginsProvider;
+            _enabledPluginListingsProvider = enabledPluginListingsProvider;
         }
-
-        /// <inheritdoc />
-        public IEnumerable<IModListingGetter> ListingsFromPath(
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true)
+        
+        public IEnumerable<IModListingGetter> Get()
         {
-            return ListingsFromPath(
-                pluginTextPath: _pathProvider.Get(game),
-                game: game,
-                dataPath: dataPath,
-                throwOnMissingMods: throwOnMissingMods);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModListingGetter> ListingsFromPath(
-            FilePath pluginTextPath,
-            GameRelease game,
-            DirectoryPath dataPath,
-            bool throwOnMissingMods = true)
-        {
-            var mods = RawListingsFromPath(pluginTextPath, game);
-            if (_TimestampAligner.NeedsTimestampAlignment(game.ToCategory()))
+            switch (_gameReleaseContext.Release)
             {
-                return _TimestampAligner.AlignToTimestamps(mods, dataPath, throwOnMissingMods: throwOnMissingMods);
+                case GameRelease.Oblivion:
+                    return _timestampedPluginsProvider.Get();
+                case GameRelease.SkyrimLE:
+                case GameRelease.SkyrimSE:
+                case GameRelease.SkyrimVR:
+                case GameRelease.EnderalLE:
+                case GameRelease.EnderalSE:
+                case GameRelease.Fallout4:
+                    return _enabledPluginListingsProvider.Get();
+                default:
+                    throw new NotImplementedException();
             }
-            else
-            {
-                return mods;
-            }
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<IModListingGetter> RawListingsFromPath(
-            FilePath pluginTextPath,
-            GameRelease game)
-        {
-            if (!_FileSystem.File.Exists(pluginTextPath))
-            {
-                throw new FileNotFoundException("Could not locate plugins file");
-            }
-            using var stream = _FileSystem.FileStream.Create(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return _parserFactory.Create(game).Parse(stream).ToList();
         }
     }
 }

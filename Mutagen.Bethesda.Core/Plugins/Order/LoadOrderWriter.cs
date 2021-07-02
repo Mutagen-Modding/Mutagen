@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Linq;
+using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Plugins.Implicit;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
@@ -8,8 +10,7 @@ namespace Mutagen.Bethesda.Plugins.Order
     public interface ILoadOrderWriter
     {
         void Write(
-            FilePath path, 
-            GameRelease release, 
+            FilePath path,
             IEnumerable<IModListingGetter> loadOrder,
             bool removeImplicitMods = true);
     }
@@ -17,24 +18,30 @@ namespace Mutagen.Bethesda.Plugins.Order
     public class LoadOrderWriter : ILoadOrderWriter
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IHasEnabledMarkersProvider _hasEnabledMarkersProvider;
+        private readonly IImplicitListingModKeyProvider _implicitListingsProvider;
 
-        public LoadOrderWriter(IFileSystem fileSystem)
+        public LoadOrderWriter(
+            IFileSystem fileSystem,
+            IHasEnabledMarkersProvider hasEnabledMarkersProvider,
+            IImplicitListingModKeyProvider implicitListingsProvider)
         {
             _fileSystem = fileSystem;
+            _hasEnabledMarkersProvider = hasEnabledMarkersProvider;
+            _implicitListingsProvider = implicitListingsProvider;
         }
         
         /// <inheritdoc />
         public void Write(
-            FilePath path, 
-            GameRelease release, 
+            FilePath path,
             IEnumerable<IModListingGetter> loadOrder,
             bool removeImplicitMods = true)
         {
-            bool markers = PluginListings.HasEnabledMarkers(release);
+            bool markers = _hasEnabledMarkersProvider.HasEnabledMarkers;
             var loadOrderList = loadOrder.ToList();
             if (removeImplicitMods)
             {
-                foreach (var implicitMod in Implicits.Get(release).Listings)
+                foreach (var implicitMod in _implicitListingsProvider.Listings)
                 {
                     if (loadOrderList.Count > 0
                         && loadOrderList[0].ModKey == implicitMod

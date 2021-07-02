@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -59,24 +60,71 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new ModListing(modKey, enabled: true);
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static bool TryFromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
-            return new ModListingParser(enabledMarkerProcessing).TryFromString(str, out listing);
+            str = str.Trim();
+            bool enabled = true;
+            if (enabledMarkerProcessing)
+            {
+                if (str[0] == '*')
+                {
+                    str = str[1..];
+                }
+                else
+                {
+                    enabled = false;
+                }
+            }
+            if (ModKey.TryFromNameAndExtension(str, out var key))
+            {
+                listing = new ModListing(key, enabled);
+                return true;
+            }
+
+            var periodIndex = str.LastIndexOf('.');
+            if (periodIndex == -1)
+            {
+                listing = default;
+                return false;
+            }
+            var ghostTerm = str.Slice(periodIndex + 1);
+            str = str.Slice(0, periodIndex);
+
+            if (ModKey.TryFromNameAndExtension(str, out key))
+            {
+                listing = ModListing.CreateGhosted(key, ghostTerm.ToString());
+                return true;
+            }
+
+            listing = default;
+            return false;
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static bool TryFromFileName(FileName fileName, bool enabledMarkerProcessing, [MaybeNullWhen(false)] out ModListing listing)
         {
-            return new ModListingParser(enabledMarkerProcessing).TryFromFileName(fileName, out listing);
+            return TryFromString(fileName.String, enabledMarkerProcessing, out listing);
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static ModListing FromString(ReadOnlySpan<char> str, bool enabledMarkerProcessing)
         {
-            return new ModListingParser(enabledMarkerProcessing).FromString(str);
+            if (!TryFromString(str, enabledMarkerProcessing, out var listing))
+            {
+                throw new InvalidDataException($"Load order file had malformed line: {str.ToString()}");
+            }
+            return listing;
         }
 
+        /// <inheritdoc cref="IModListingParser" />
         public static ModListing FromFileName(FileName name, bool enabledMarkerProcessing)
         {
-            return new ModListingParser(enabledMarkerProcessing).FromFileName(name);
+            if (!TryFromFileName(name, enabledMarkerProcessing, out var listing))
+            {
+                throw new InvalidDataException($"Load order file had malformed line: {name}");
+            }
+            return listing;
         }
 
         public static Comparer<ModListing> GetComparer(Comparer<ModKey> comparer) =>

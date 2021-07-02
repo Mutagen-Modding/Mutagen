@@ -7,51 +7,37 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface IPluginLiveLoadOrderProvider
+    public interface IPluginLiveLoadOrderProvider : ISomeLiveLoadOrderProvider
     {
-        IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
-            GameRelease game,
-            FilePath loadOrderFilePath,
-            DirectoryPath dataFolderPath,
-            out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true,
-            bool orderListings = true);
-
-        IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath);
-        IObservable<Unit> GetLoadOrderChanged(GameRelease game);
     }
 
     public class PluginLiveLoadOrderProvider : IPluginLiveLoadOrderProvider
     {
         private readonly IFileSystem _fileSystem;
         private readonly IPluginListingsProvider _listingsProvider;
-        private readonly IPluginPathProvider _pathProvider;
+        private readonly IPluginPathContext _pluginFilePath;
 
         public PluginLiveLoadOrderProvider(
             IFileSystem fileSystem,
             IPluginListingsProvider listingsProvider,
-            IPluginPathProvider pathProvider)
+            IPluginPathContext pluginFilePath)
         {
             _fileSystem = fileSystem;
             _listingsProvider = listingsProvider;
-            _pathProvider = pathProvider;
+            _pluginFilePath = pluginFilePath;
         }
         
-        public IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
-            GameRelease game,
-            FilePath loadOrderFilePath,
-            DirectoryPath dataFolderPath,
+        public IObservable<IChangeSet<IModListingGetter>> Get(
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true,
             bool orderListings = true)
         {
-            var results = ObservableExt.WatchFile(loadOrderFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
+            var results = ObservableExt.WatchFile(_pluginFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
                 .StartWith(Unit.Default)
                 .Select(_ =>
                 {
                     try
                     {
-                        var lo = _listingsProvider.ListingsFromPath(loadOrderFilePath, game, dataFolderPath, throwOnMissingMods: throwOnMissingMods);
+                        var lo = _listingsProvider.Get();
                         if (orderListings)
                         {
                             lo = lo.OrderListings();
@@ -75,11 +61,8 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Switch();
         }
 
-        public IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath)
-        {
-            return ObservableExt.WatchFile(loadOrderFilePath.Path);
-        }
-
-        public IObservable<Unit> GetLoadOrderChanged(GameRelease game) => GetLoadOrderChanged(_pathProvider.Get(game));
+        public IObservable<Unit> Changed => ObservableExt
+            .WatchFile(_pluginFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
+            .StartWith(Unit.Default);
     }
 }

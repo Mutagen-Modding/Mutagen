@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         IEnumerable<IModListingGetter> Parse(Stream stream);
     }
 
-    internal class PluginListingsParser : IPluginListingsParser
+    public class PluginListingsParser : IPluginListingsParser
     {
         private readonly IModListingParser _listingParser;
 

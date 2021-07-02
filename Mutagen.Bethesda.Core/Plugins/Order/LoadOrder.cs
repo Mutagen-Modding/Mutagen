@@ -5,12 +5,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using DynamicData.Kernel;
+using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Plugins.Exceptions;
+using Mutagen.Bethesda.Plugins.Implicit;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
@@ -21,32 +25,27 @@ namespace Mutagen.Bethesda.Plugins.Order
     {
         private static TimestampAligner Aligner = new(IFileSystemExt.DefaultFilesystem);
         private static OrderListings Orderer = new();
-        private static readonly CreationClubPathProvider CccPathProvider = new(IFileSystemExt.DefaultFilesystem);
-        private static readonly PluginPathProvider PathProvider = new();
-        private static LoadOrderListingsProvider Retriever = new(
-            IFileSystemExt.DefaultFilesystem,
-            Orderer,
-            PathProvider,
-            new PluginListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                new PluginListingsParserFactory(
-                    new ModListingParserFactory()),
-                PathProvider,
-                new TimestampAligner(IFileSystemExt.DefaultFilesystem)),
-            CccPathProvider,
-            new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
-                CccPathProvider));
-        private static ConstructLiveLoadOrder LiveLoadOrder = new(Retriever);
+        private static readonly TimestampAligner TimestampAligner = new(IFileSystemExt.DefaultFilesystem);
         private static LoadOrderImporter Importer = new(IFileSystemExt.DefaultFilesystem);
-        private static LoadOrderWriter Writer = new(IFileSystemExt.DefaultFilesystem);
         
         #region Timestamps
 
-        /// <inheritdoc cref="ITimestampAligner"/>
+        /// <summary>
+        /// Returns whether given game needs timestamp alignment for its load order
+        /// </summary>
+        /// <param name="game">Game to check</param>
+        /// <returns>True if file located</returns>
         public static bool NeedsTimestampAlignment(GameCategory game) => Aligner.NeedsTimestampAlignment(game);
 
-        /// <inheritdoc cref="ITimestampAligner"/>
+        /// <summary>
+        /// Constructs a load order from a list of mods and a data folder.
+        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+        /// </summary>
+        /// <param name="incomingLoadOrder">Mods to include</param>
+        /// <param name="dataPath">Path to data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
         public static IEnumerable<IModListingGetter> AlignToTimestamps(
             IEnumerable<IModListingGetter> incomingLoadOrder,
             DirectoryPath dataPath,
@@ -55,13 +54,26 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Aligner.AlignToTimestamps(incomingLoadOrder, dataPath, throwOnMissingMods: throwOnMissingMods);
         }
 
-        /// <inheritdoc cref="ITimestampAligner"/>
+        /// <summary>
+        /// Constructs a load order from a list of mods and a data folder.
+        /// Load Order is sorted to the order the game will load the mod files: by file's date modified timestamp.
+        /// </summary>
+        /// <param name="incomingLoadOrder">Mods and their write timestamps</param>
+        /// <returns>Enumerable of modkeys in load order, excluding missing mods</returns>
         public static IEnumerable<ModKey> AlignToTimestamps(IEnumerable<(ModKey ModKey, DateTime Write)> incomingLoadOrder)
         {
             return Aligner.AlignToTimestamps(incomingLoadOrder);
         }
 
-        /// <inheritdoc cref="ITimestampAligner"/>
+        /// <summary>
+        /// Modifies time stamps of files to match the given ordering
+        /// <param name="loadOrder">Order to conform files to</param>
+        /// <param name="dataPath">Path to data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <param name="startDate">Date to give the first file</param>
+        /// <param name="interval">Time interval to space between each file's date</param>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
+        /// </summary>
         public static void AlignTimestamps(
             IEnumerable<ModKey> loadOrder,
             DirectoryPath dataPath,
@@ -78,16 +90,52 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
         #endregion
 
-        /// <inheritdoc cref="ILoadOrderListingsProvider"/>
+        /// <summary>
+        /// Returns a load order listing from the usual sources
+        /// </summary>
+        /// <param name="game">Game type</param>
+        /// <param name="dataPath">Path to game's data folder</param>
+        /// <param name="throwOnMissingMods">Whether to throw and exception if mods are missing</param>
+        /// <returns>Enumerable of modkeys representing a load order</returns>
+        /// <exception cref="ArgumentException">Line in plugin file is unexpected</exception>
+        /// <exception cref="FileNotFoundException">If plugin file not located</exception>
+        /// <exception cref="MissingModException">If throwOnMissingMods true and file is missing</exception>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            return Retriever.GetListings(game, dataPath, throwOnMissingMods);
+            var gameContext = new GameReleaseInjection(game);
+            var categoryContext = new GameCategoryInjection(game.ToCategory());
+            var pluginPath = new PluginPathContext(gameContext);
+            var dataDir = new DataDirectoryInjection(dataPath);
+            var pluginProvider = PluginListingsProvider(
+                dataDir,
+                gameContext,
+                pluginPath,
+                throwOnMissingMods);
+
+            return new LoadOrderListingsProvider(
+                    Orderer,
+                    new ImplicitListingsProvider(
+                        IFileSystemExt.DefaultFilesystem,
+                        new DataDirectoryInjection(dataPath),
+                        new ImplicitListingModKeyProvider(gameContext)),
+                    pluginProvider,
+                    new CreationClubListingsProvider(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDir,
+                        new CreationClubPathContext(
+                            categoryContext,
+                            new CreationClubEnabledProvider(
+                                categoryContext),
+                            dataDir),
+                        new CreationClubRawListingsReader(
+                            IFileSystemExt.DefaultFilesystem,
+                            dataDir)))
+                .Get();
         }
 
-        /// <inheritdoc cref="ILoadOrderListingsProvider"/>
         public static IEnumerable<IModListingGetter> GetListings(
             GameRelease game,
             FilePath pluginsFilePath,
@@ -95,16 +143,37 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            return Retriever.GetListings(game, pluginsFilePath, creationClubFilePath, dataPath, throwOnMissingMods);
+            var gameContext = new GameReleaseInjection(game);
+            var pluginPath = new PluginPathInjection(pluginsFilePath);
+            var dataDir = new DataDirectoryInjection(dataPath);
+            var pluginProvider = PluginListingsProvider(
+                dataDir,
+                gameContext,
+                pluginPath,
+                throwOnMissingMods);
+
+            return new LoadOrderListingsProvider(
+                    Orderer,
+                    new ImplicitListingsProvider(
+                        IFileSystemExt.DefaultFilesystem,
+                        new DataDirectoryInjection(dataPath),
+                        new ImplicitListingModKeyProvider(gameContext)),
+                    pluginProvider,
+                    new CreationClubListingsProvider(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDir,
+                        new CreationClubPathInjection(creationClubFilePath),
+                        new CreationClubRawListingsReader(
+                            IFileSystemExt.DefaultFilesystem,
+                            dataDir)))
+                .Get();
         }
 
-        /// <inheritdoc cref="IOrderListings"/>
         public static IEnumerable<T> OrderListings<T>(IEnumerable<T> e, Func<T, ModKey> selector)
         {
             return Orderer.Order(e, selector);
         }
 
-        /// <inheritdoc cref="IOrderListings"/>
         public static IEnumerable<T> OrderListings<T>(
             IEnumerable<T> implicitListings,
             IEnumerable<T> pluginsListings,
@@ -114,17 +183,58 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Orderer.Order(implicitListings, pluginsListings, creationClubListings, selector);
         }
 
-        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             bool throwOnMissingMods = true)
         {
-            return LiveLoadOrder.GetLiveLoadOrder(game, dataFolderPath, out state, throwOnMissingMods);
+            var dataDir = new DataDirectoryInjection(dataFolderPath);
+            var gameRelease = new GameReleaseInjection(game);
+            var pluginPath = new PluginPathContext(gameRelease);
+            var gameCategoryInjection = new GameCategoryInjection(game.ToCategory());
+            var cccPath = new CreationClubPathContext(
+                gameCategoryInjection,
+                new CreationClubEnabledProvider(
+                    gameCategoryInjection),
+                dataDir);
+            var pluginListingsProv = PluginListingsProvider(
+                dataDir,
+                gameRelease,
+                pluginPath,
+                throwOnMissingMods);
+            var creationClubRawListingsReader = new CreationClubRawListingsReader(
+                IFileSystemExt.DefaultFilesystem,
+                dataDir);
+            var cccListingsProv = new CreationClubListingsProvider(
+                IFileSystemExt.DefaultFilesystem,
+                dataDir,
+                cccPath,
+                creationClubRawListingsReader);
+            return new LiveLoadOrderProvider(
+                new PluginLiveLoadOrderProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    pluginListingsProv,
+                    pluginPath),
+                new CreationClubLiveLoadOrderProvider(
+                    new CreationClubLiveListingsFileReader(
+                        IFileSystemExt.DefaultFilesystem,
+                        creationClubRawListingsReader,
+                        cccPath),
+                    new CreationClubLiveLoadOrderFolderWatcher(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDir)),
+                new LoadOrderListingsProvider(
+                    Orderer,
+                    new ImplicitListingsProvider(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDir,
+                        new ImplicitListingModKeyProvider(gameRelease)),
+                    pluginListingsProv,
+                    cccListingsProv))
+                .Get(out state);
         }
 
-        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             IObservable<GameRelease> game,
             IObservable<DirectoryPath> dataFolderPath,
@@ -153,7 +263,6 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Switch();
         }
 
-        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             GameRelease game,
             FilePath loadOrderFilePath,
@@ -225,7 +334,6 @@ namespace Mutagen.Bethesda.Plugins.Order
             });
         }
 
-        /// <inheritdoc cref="IConstructLiveLoadOrder"/>
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             IObservable<GameRelease> game,
             IObservable<FilePath> loadOrderFilePath,
@@ -258,7 +366,14 @@ namespace Mutagen.Bethesda.Plugins.Order
                 .Switch();
         }
 
-        /// <inheritdoc cref="ILoadOrderImporter"/>
+        /// <summary>
+        /// Constructs a load order filled with mods constructed
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of listings to import</param>
+        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+        /// This may be unapplicable to some games with only one release, but should still be passed in.
+        /// </param>
         public static ILoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
@@ -268,7 +383,14 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Importer.Import<TMod>(dataFolder, loadOrder, gameRelease);
         }
 
-        /// <inheritdoc cref="ILoadOrderImporter"/>
+        /// <summary>
+        /// Constructs a load order filled with mods constructed
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="gameRelease">GameRelease associated with the mods to create<br/>
+        /// This may be unapplicable to some games with only one release, but should still be passed in.
+        /// </param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
@@ -278,7 +400,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Importer.Import<TMod>(dataFolder, loadOrder, gameRelease);
         }
 
-        /// <inheritdoc cref="ILoadOrderImporter"/>
+        /// <summary>
+        /// Constructs a load order filled with mods constructed by given importer func
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of mod keys to import</param>
+        /// <param name="factory">Func to use to create a new mod from a path</param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<ModKey> loadOrder,
@@ -288,7 +415,12 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Importer.Import<TMod>(dataFolder, loadOrder, factory);
         }
 
-        /// <inheritdoc cref="ILoadOrderImporter"/>
+        /// <summary>
+        /// Constructs a load order filled with mods constructed by given importer func
+        /// </summary>
+        /// <param name="dataFolder">Path data folder containing mods</param>
+        /// <param name="loadOrder">Unique list of listings to import</param>
+        /// <param name="factory">Func to use to create a new mod from a path</param>
         public static LoadOrder<IModListing<TMod>> Import<TMod>(
             DirectoryPath dataFolder,
             IEnumerable<IModListingGetter> loadOrder,
@@ -298,14 +430,45 @@ namespace Mutagen.Bethesda.Plugins.Order
             return Importer.Import<TMod>(dataFolder, loadOrder, factory);
         }
 
-        /// <inheritdoc cref="ILoadOrderWriter"/>
         public static void Write(
             FilePath path, 
             GameRelease release, 
             IEnumerable<IModListingGetter> loadOrder,
             bool removeImplicitMods = true)
         {
-            Writer.Write(path, release, loadOrder, removeImplicitMods);
+            var rel = new GameReleaseInjection(release);
+            new LoadOrderWriter(
+                    IFileSystemExt.DefaultFilesystem,
+                    new HasEnabledMarkersProvider(rel),
+                    new ImplicitListingModKeyProvider(rel))
+                .Write(path, loadOrder, removeImplicitMods);
+        }
+        
+        private static PluginListingsProvider PluginListingsProvider(
+            IDataDirectoryContext dataDirectory,
+            IGameReleaseContext gameContext,
+            IPluginPathContext pathContext, 
+            bool throwOnMissingMods)
+        {
+            var fs = IFileSystemExt.DefaultFilesystem;
+            var pluginListingParser = new PluginListingsParser(
+                new ModListingParser(
+                    new HasEnabledMarkersProvider(gameContext)));
+            var provider = new PluginListingsProvider(
+                gameContext,
+                new TimestampedPluginListingsProvider(
+                    new TimestampAligner(fs),
+                    new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
+                    new PluginRawListingsReader(
+                        fs,
+                        pluginListingParser),
+                    dataDirectory,
+                    pathContext),
+                new EnabledPluginListingsProvider(
+                    fs,
+                    pluginListingParser,
+                    pathContext));
+            return provider;
         }
     }
 

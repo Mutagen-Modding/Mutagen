@@ -1,50 +1,65 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
+using Mutagen.Bethesda.Environments;
 using Noggog;
 using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
-    public interface ICreationClubListingsProvider
+    public interface ICreationClubListingsProvider : IListingsProvider
     {
-        IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath);
-
-        IEnumerable<IModListingGetter> GetListingsFromPath(
-            FilePath cccFilePath,
-            DirectoryPath dataPath);
+        /// <summary>
+        /// Parses the typical plugins file to retrieve all ModKeys in expected plugin file format,
+        /// </summary>
+        /// <returns>Enumerable of ModKeys representing a load order</returns>
+        /// <exception cref="InvalidDataException">Line in plugin file is unexpected</exception>
+        public IEnumerable<IModListingGetter> Get(bool throwIfMissing);
     }
 
     public class CreationClubListingsProvider : ICreationClubListingsProvider
     {
         private readonly IFileSystem _fileSystem;
-        private readonly ICreationClubPathProvider _pathProvider;
+        private readonly IDataDirectoryContext _dataDirectoryContext;
+        private readonly ICreationClubPathContext _pluginPathContext;
+        private readonly ICreationClubRawListingsReader _reader;
 
         public CreationClubListingsProvider(
             IFileSystem fileSystem,
-            ICreationClubPathProvider pathProvider)
+            IDataDirectoryContext dataDirectoryContext,
+            ICreationClubPathContext pluginPathContext,
+            ICreationClubRawListingsReader reader)
         {
             _fileSystem = fileSystem;
-            _pathProvider = pathProvider;
-        }
-        
-        public IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath)
-        {
-            var path = _pathProvider.GetListingsPath(category, dataPath);
-            if (path == null || !path.Value.Exists) return Enumerable.Empty<IModListingGetter>();
-            return GetListingsFromPath(
-                path.Value,
-                dataPath);
+            _dataDirectoryContext = dataDirectoryContext;
+            _pluginPathContext = pluginPathContext;
+            _reader = reader;
         }
 
-        public IEnumerable<IModListingGetter> GetListingsFromPath(
-            FilePath cccFilePath,
-            DirectoryPath dataPath)
+        public IEnumerable<IModListingGetter> Get()
         {
-            return _fileSystem.File.ReadAllLines(cccFilePath.Path)
-                .Select(x => ModKey.FromNameAndExtension(x))
-                .Where(x => _fileSystem.File.Exists(Path.Combine(dataPath.Path, x.FileName)))
-                .Select(x => new ModListing(x, enabled: true))
+            return Get(throwIfMissing: true);
+        }
+        
+        public IEnumerable<IModListingGetter> Get(bool throwIfMissing)
+        {
+            var path = _pluginPathContext.Path;
+            if (path == null) return Enumerable.Empty<IModListingGetter>();
+            if (!_fileSystem.File.Exists(path.Value))
+            {
+                if (throwIfMissing)
+                {
+                    throw new FileNotFoundException("Could not locate ccc plugin file", path.Value.Path);   
+                }
+                else
+                {
+                    return Enumerable.Empty<IModListingGetter>();
+                }
+            }
+
+            return _reader.Read(_fileSystem.File.OpenRead(path.Value))
+                .Where(x => _fileSystem.File.Exists(Path.Combine(_dataDirectoryContext.Path, x.ModKey.FileName)))
                 .ToList();
         }
     }

@@ -3,33 +3,18 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reactive;
+using Mutagen.Bethesda.Environments;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
     public static class PluginListings
     {
-        private static readonly PluginPathProvider PathProvider = new();
-        private static readonly ModListingParserFactory ModListingParserFactory = new();
-        private static readonly PluginListingsParserFactory ParserFactory = new(ModListingParserFactory);
-        private static readonly PluginListingsProvider Retriever = new(
-            IFileSystemExt.DefaultFilesystem,
-            ParserFactory,
-            PathProvider,
-            new TimestampAligner(IFileSystemExt.DefaultFilesystem));
-        private static readonly PluginLiveLoadOrderProvider LiveLoadOrder = new(
-            IFileSystemExt.DefaultFilesystem,
-            Retriever,
-            PathProvider);
-        
-        /// <summary>
-        /// Returns expected location of the plugin load order file
-        /// </summary>
-        /// <param name="game">Release to query</param>
-        /// <returns>Expected path to load order file</returns>
+        /// <inheritdoc cref="IPluginListingsProvider"/>
         public static string GetListingsPath(GameRelease game)
         {
-            return PathProvider.Get(game);
+            return new PluginPathContext(new GameReleaseInjection(game)).Path;
         }
 
         /// <summary>
@@ -40,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <returns>True if file located</returns>
         public static bool TryGetListingsFile(GameRelease game, out FilePath path)
         {
-            path = new FilePath(PathProvider.Get(game));
+            path = GetListingsPath(game);
             return File.Exists(path);
         }
 
@@ -56,7 +41,9 @@ namespace Mutagen.Bethesda.Plugins.Order
             {
                 return path;
             }
-            throw new FileNotFoundException($"Could not locate load order automatically.  Expected a file at: {path.Path}");
+
+            throw new FileNotFoundException(
+                $"Could not locate load order automatically.  Expected a file at: {path.Path}");
         }
 
         /// <summary>
@@ -68,16 +55,25 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <exception cref="ArgumentException">Line in plugin stream is unexpected</exception>
         public static IEnumerable<IModListingGetter> ListingsFromStream(Stream stream, GameRelease game)
         {
-            return ParserFactory.Create(game).Parse(stream);
+            return new PluginListingsParser(
+                    new ModListingParser(
+                        new HasEnabledMarkersProvider(
+                            new GameReleaseInjection(game))))
+                .Parse(stream);
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
-        public static IEnumerable<IModListingGetter> ListingsFromPath(
+        public static IEnumerable<IModListingGetter> Listings(
             GameRelease game,
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            return Retriever.ListingsFromPath(game, dataPath, throwOnMissingMods: throwOnMissingMods);
+            return ListingsFromPath(
+                new PluginPathContext(
+                    new GameReleaseInjection(game)).Path,
+                game,
+                dataPath,
+                throwOnMissingMods);
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
@@ -87,7 +83,11 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataPath,
             bool throwOnMissingMods = true)
         {
-            return Retriever.ListingsFromPath(pluginTextPath, game, dataPath, throwOnMissingMods: throwOnMissingMods);
+            return PluginListingsProvider(
+                new DataDirectoryInjection(dataPath),
+                new GameReleaseInjection(game),
+                new PluginPathInjection(pluginTextPath),
+                throwOnMissingMods).Get();
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
@@ -95,7 +95,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             FilePath pluginTextPath,
             GameRelease game)
         {
-            return Retriever.RawListingsFromPath(pluginTextPath, game);
+            using var fs = new FileStream(pluginTextPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return ListingsFromStream(fs, game).ToList();
         }
 
         /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
@@ -107,38 +108,63 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true,
             bool orderListings = true)
         {
-            return LiveLoadOrder.GetLiveLoadOrder(
-                game: game,
-                loadOrderFilePath: loadOrderFilePath,
-                dataFolderPath: dataFolderPath,
-                state: out state,
-                throwOnMissingMods: throwOnMissingMods,
-                orderListings: orderListings);
+            var pluginPath = new PluginPathInjection(loadOrderFilePath);
+            var prov = PluginListingsProvider(
+                new DataDirectoryInjection(dataFolderPath),
+                new GameReleaseInjection(game),
+                pluginPath,
+                throwOnMissingMods);
+            return new PluginLiveLoadOrderProvider(
+                IFileSystemExt.DefaultFilesystem,
+                prov,
+                pluginPath).Get(out state, orderListings);
         }
 
         /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
         public static IObservable<Unit> GetLoadOrderChanged(FilePath loadOrderFilePath)
         {
-            return LiveLoadOrder.GetLoadOrderChanged(loadOrderFilePath);
+            return ObservableExt.WatchFile(loadOrderFilePath.Path);
         }
 
         /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
-        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game) =>
-            LiveLoadOrder.GetLoadOrderChanged(game);
+        public static IObservable<Unit> GetLoadOrderChanged(GameRelease game)
+        {
+            return ObservableExt.WatchFile(
+                new PluginPathContext(
+                    new GameReleaseInjection(game)).Path);
+        }
 
         public static bool HasEnabledMarkers(GameRelease game)
         {
-            return game switch
-            {
-                GameRelease.Fallout4 => true,
-                GameRelease.SkyrimSE => true,
-                GameRelease.EnderalSE => true,
-                GameRelease.SkyrimVR => true,
-                GameRelease.SkyrimLE => false,
-                GameRelease.EnderalLE => false,
-                GameRelease.Oblivion => false,
-                _ => throw new NotImplementedException(),
-            };
+            return new HasEnabledMarkersProvider(
+                new GameReleaseInjection(game)).HasEnabledMarkers;
+        }
+
+        private static PluginListingsProvider PluginListingsProvider(
+            IDataDirectoryContext dataDirectory,
+            IGameReleaseContext gameContext,
+            IPluginPathContext pathContext, 
+            bool throwOnMissingMods)
+        {
+            var fs = IFileSystemExt.DefaultFilesystem;
+            var pluginListingParser = new PluginListingsParser(
+                new ModListingParser(
+                    new HasEnabledMarkersProvider(gameContext)));
+            var provider = new PluginListingsProvider(
+                gameContext,
+                new TimestampedPluginListingsProvider(
+                    new TimestampAligner(fs),
+                    new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = throwOnMissingMods},
+                    new PluginRawListingsReader(
+                        fs,
+                        pluginListingParser),
+                    dataDirectory,
+                    pathContext),
+                new EnabledPluginListingsProvider(
+                    fs,
+                    pluginListingParser,
+                    pathContext));
+            return provider;
         }
     }
 }
