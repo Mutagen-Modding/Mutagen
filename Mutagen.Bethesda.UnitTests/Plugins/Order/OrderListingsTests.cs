@@ -3,6 +3,7 @@ using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order

@@ -4,9 +4,12 @@ using System.IO;
 using System.IO.Abstractions;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit;
+using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using NSubstitute;
 using Xunit;
 

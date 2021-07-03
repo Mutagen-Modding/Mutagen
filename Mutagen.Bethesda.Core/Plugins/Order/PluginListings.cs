@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Reactive;
 using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Order.DI;
 
 namespace Mutagen.Bethesda.Plugins.Order
 {
@@ -105,8 +107,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true,
-            bool orderListings = true)
+            bool throwOnMissingMods = true)
         {
             var pluginPath = new PluginPathInjection(loadOrderFilePath);
             var prov = PluginListingsProvider(
@@ -117,7 +118,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new PluginLiveLoadOrderProvider(
                 IFileSystemExt.DefaultFilesystem,
                 prov,
-                pluginPath).Get(out state, orderListings);
+                pluginPath).Get(out state);
         }
 
         /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
@@ -161,8 +162,9 @@ namespace Mutagen.Bethesda.Plugins.Order
                     dataDirectory,
                     pathContext),
                 new EnabledPluginListingsProvider(
-                    fs,
-                    pluginListingParser,
+                    new PluginRawListingsReader(
+                        fs,
+                        pluginListingParser),
                     pathContext));
             return provider;
         }

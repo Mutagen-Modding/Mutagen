@@ -5,6 +5,8 @@ using Xunit;
 using System.Linq;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Implicit;
+using Mutagen.Bethesda.Plugins.Implicit.DI;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using NSubstitute;
 using Path = System.IO.Path;

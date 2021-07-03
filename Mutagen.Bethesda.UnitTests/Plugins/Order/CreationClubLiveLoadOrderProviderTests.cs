@@ -12,21 +12,15 @@ using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveLoadOrderProviderTests : IClassFixture<Fixture>
+    public class CreationClubLiveLoadOrderProviderTests : TypicalTest
     {
-        private readonly Fixture _fixture;
-
-        public CreationClubLiveLoadOrderProviderTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
         public void Neither()
         {

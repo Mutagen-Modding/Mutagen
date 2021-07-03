@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
 using System;
 using System.IO.Abstractions.TestingHelpers;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Xunit;
 using Path = System.IO.Path;
 using FileNotFoundException = System.IO.FileNotFoundException;

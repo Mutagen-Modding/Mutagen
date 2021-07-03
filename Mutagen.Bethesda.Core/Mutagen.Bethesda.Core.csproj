@@ -60,7 +60,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Archives\Archive.cs" />
-    <Compile Include="Archives\ArchiveReaderFactory.cs" />
     <Compile Include="Archives\Ba2\Ba2EntryType.cs" />
     <Compile Include="Archives\Ba2\Ba2FolderWrapper.cs" />
     <Compile Include="Archives\Ba2\Ba2Reader.cs" />
@@ -73,19 +72,60 @@
     <Compile Include="Archives\Bsa\BsaUtility.cs" />
     <Compile Include="Archives\Bsa\BsaVersionType.cs" />
     <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
-    <Compile Include="Archives\CheckArchiveApplicability.cs" />
+    <Compile Include="Archives\DI\ArchiveReaderProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Archives\DI\CheckArchiveApplicability.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Archives\DI\GetApplicableArchivePaths.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Archives\DI\GetArchiveIniListings.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Archives\Exceptions\ArchiveException.cs" />
-    <Compile Include="Archives\GetApplicableArchivePaths.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
-    <Compile Include="Archives\GetArchiveIniListings.cs" />
+    <Compile Include="Environments\DI\IDataDirectoryContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\DI\IGameCategoryContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\DI\IGameDirectoryContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\DI\IGameDirectoryProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Environments\DI\IGameReleaseContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Environments\GameEnvironment.cs" />
-    <Compile Include="Environments\IDataDirectoryContext.cs" />
-    <Compile Include="Environments\IDataDirectoryProvider.cs" />
-    <Compile Include="Environments\IGameCategoryContext.cs" />
-    <Compile Include="Environments\IGameDirectoryContext.cs" />
-    <Compile Include="Environments\IGameDirectoryProvider.cs" />
-    <Compile Include="Environments\IGameReleaseContext.cs" />
     <Compile Include="Plugins\Aspects\CustomAspectInterface.cs" />
     <Compile Include="Plugins\Binary\Parameters\AMastersListOrderingOption.cs" />
     <Compile Include="Plugins\Binary\Parameters\BinaryWriteParameters.cs" />
@@ -104,49 +144,172 @@
     <Compile Include="Plugins\Extensions\ILinkCacheExt.cs" />
     <Compile Include="Plugins\Extensions\IFormLinkExt.cs" />
     <Compile Include="Plugins\Extensions\ModContextExt.cs" />
-    <Compile Include="Plugins\Implicit\ImplicitCollection.cs" />
-    <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
-    <Compile Include="Plugins\Implicit\ImplicitBaseMasterProvider.cs" />
-    <Compile Include="Plugins\Implicit\ImplicitListingModKeyProvider.cs" />
-    <Compile Include="Plugins\Implicit\ImplicitRecordFormKeyProvider.cs" />
-    <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
-    <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
-    <Compile Include="Plugins\Order\CreationClubEnabledProvider.cs" />
-    <Compile Include="Plugins\Order\CreationClubListingsProvider.cs" />
-    <Compile Include="Plugins\Order\CreationClubLiveListingsFileReader.cs" />
-    <Compile Include="Plugins\Order\CreationClubLiveLoadOrderFolderWatcher.cs" />
-    <Compile Include="Plugins\Order\CreationClubLiveLoadOrderProvider.cs" />
-    <Compile Include="Plugins\Order\CreationClubPathContext.cs" />
-    <Compile Include="Plugins\Order\CreationClubRawListingsReader.cs" />
-    <Compile Include="Plugins\Order\HasEnabledMarkersProvider.cs" />
-    <Compile Include="Plugins\Order\ImplicitListingsProvider.cs">
+    <Compile Include="Plugins\Implicit\DI\ImplicitBaseMasterProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Order\ISomeLiveLoadOrderProvider.cs" />
-    <Compile Include="Plugins\Order\PluginListingsProvider.cs" />
-    <Compile Include="Plugins\Order\LiveLoadOrderProvider.cs" />
-    <Compile Include="Plugins\Order\EnabledPluginListingsProvider.cs" />
-    <Compile Include="Plugins\Order\FindImplicitlyIncludedMods.cs" />
-    <Compile Include="Plugins\Order\IListingsProvider.cs" />
+    <Compile Include="Plugins\Implicit\DI\ImplicitListingModKeyProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Implicit\DI\ImplicitRecordFormKeyProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Implicit\ImplicitCollection.cs" />
+    <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
+    <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
+    <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
+    <Compile Include="Plugins\Order\CreationClubListings.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubEnabledProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubLiveListingsFileReader.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubLiveLoadOrderFolderWatcher.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubLiveLoadOrderProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubPathContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\CreationClubRawListingsReader.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\EnabledPluginListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\FindImplicitlyIncludedMods.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\HasEnabledMarkersProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\IListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\ImplicitListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\ISomeLiveLoadOrderProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\LiveLoadOrderProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\LoadOrderImporter.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\LoadOrderListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\LoadOrderWriter.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\ModListingParser.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\OrderListings.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingsParser.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\PluginListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\PluginLiveLoadOrderProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\PluginPathContext.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\PluginRawListingsReader.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\TimestampAligner.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\TimestampedPluginListingsPreferences.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
+    <Compile Include="Plugins\Order\DI\TimestampedPluginListingsProvider.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Order\Internals\TypedLoadOrderAccess.cs" />
-    <Compile Include="Plugins\Order\LoadOrderImporter.cs" />
     <Compile Include="Plugins\Order\LoadOrderMixIn.cs" />
     <Compile Include="Plugins\Binary\Translations\BooleanBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ByteArrayBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\ColorBinaryType.cs" />
-    <Compile Include="Plugins\Order\LoadOrderWriter.cs" />
-    <Compile Include="Plugins\Order\ModListingParser.cs" />
-    <Compile Include="Plugins\Order\OrderListings.cs" />
-    <Compile Include="Plugins\Order\PluginListingsParser.cs" />
-    <Compile Include="Plugins\Order\PluginLiveLoadOrderProvider.cs" />
-    <Compile Include="Plugins\Order\PluginPathContext.cs" />
-    <Compile Include="Plugins\Order\LoadOrderListingsProvider.cs" />
-    <Compile Include="Plugins\Order\TimestampAligner.cs" />
-    <Compile Include="Plugins\Order\TimestampedPluginListingsPreferences.cs" />
-    <Compile Include="Plugins\Order\TimestampedPluginListingsProvider.cs" />
-    <Compile Include="Plugins\Order\PluginRawListingsReader.cs" />
+    <Compile Include="Plugins\Records\DI\ModActivator.cs" />
+    <Compile Include="Plugins\Records\DI\ModImporter.cs" />
     <Compile Include="Strings\Language.cs" />
     <Compile Include="Plugins\Binary\Translations\FloatBinaryTranslationExt.cs" />
     <Compile Include="Plugins\Binary\Translations\PrimitiveBinaryTranslationExt.cs" />
@@ -224,7 +387,6 @@
     <Compile Include="Plugins\Cache\Implementations\MutableModLinkCache.cs" />
     <Compile Include="Plugins\Cache\Implementations\MutableLoadOrderLinkCache.cs" />
     <Compile Include="Plugins\FormLinkTypelessComparer.cs" />
-    <Compile Include="Plugins\Order\CreationClubListings.cs" />
     <Compile Include="Plugins\Order\LoadOrder.cs" />
     <Compile Include="Extensions\OverrideMixIns.cs" />
     <Compile Include="Plugins\Order\LoadOrderTimestampComparer.cs" />

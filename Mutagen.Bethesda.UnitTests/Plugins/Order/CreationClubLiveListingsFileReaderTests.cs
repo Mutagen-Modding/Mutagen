@@ -8,21 +8,15 @@ using DynamicData;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveListingsFileReaderTests : IClassFixture<Fixture>
+    public class CreationClubLiveListingsFileReaderTests : TypicalTest
     {
-        private readonly Fixture _fixture;
-
-        public CreationClubLiveListingsFileReaderTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-        
         [Fact]
         public void NotUsed()
         {
@@ -31,8 +25,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var obs = scheduler.Start(() =>
             {
                 var ret = new CreationClubLiveListingsFileReader(
-                        _fixture.Inject.Create<IFileSystem>(),
-                        _fixture.Inject.Create<ICreationClubRawListingsReader>(),
+                        Fixture.Create<IFileSystem>(),
+                        Fixture.Create<ICreationClubRawListingsReader>(),
                         new CreationClubPathInjection(null))
                     .Get(out var state);
                 stateTest = scheduler.Start(() => state);
@@ -60,7 +54,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             {
                 var ret = new CreationClubLiveListingsFileReader(
                         fs,
-                        _fixture.Inject.Create<ICreationClubRawListingsReader>(),
+                        Fixture.Create<ICreationClubRawListingsReader>(),
                         new CreationClubPathInjection("C:/SomeMissingPath"))
                     .Get(out var state);
                 stateTest = scheduler.Start(() => state);
@@ -78,7 +72,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var path = "C:/SomePath";
             var listingA = new ModListing("ModA.esp", true);
             var fs = Substitute.For<IFileSystem>();
-            fs.File.OpenRead(path).Returns(_fixture.Inject.Create<Stream>());
+            fs.File.OpenRead(path).Returns(Fixture.Create<Stream>());
             var reader = Substitute.For<ICreationClubRawListingsReader>();
             reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
             var list = new CreationClubLiveListingsFileReader(

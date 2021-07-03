@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO.Abstractions;
 using System.Linq;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Environments.DI;
 using Stream = System.IO.Stream;
 using StreamReader = System.IO.StreamReader;
 
@@ -33,11 +35,20 @@ namespace Mutagen.Bethesda.Archives
 
     public static class Archive
     {
-        private static ArchiveReaderFactory ReaderFactory = new(IFileSystemExt.DefaultFilesystem);
-        private static GetArchiveIniListings IniListings = new(IFileSystemExt.DefaultFilesystem);
-        private static CheckArchiveApplicability Applicability = new();
-        private static GetApplicableArchivePaths GetApplicable = new(IFileSystemExt.DefaultFilesystem, IniListings, Applicability);
-
+        private static GetApplicableArchivePaths GetApplicableArchivePathsDi(GameRelease release, DirectoryPath dataFolderPath)
+        {
+            var gameReleaseInjection = new GameReleaseInjection(release);
+            return new GetApplicableArchivePaths(
+                IFileSystemExt.DefaultFilesystem,
+                new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    gameReleaseInjection),
+                new CheckArchiveApplicability(
+                    gameReleaseInjection),
+                gameReleaseInjection,
+                new DataDirectoryInjection(dataFolderPath));
+        }
+        
         /// <summary>
         /// Returns the preferred extension (.bsa/.ba2) depending on the Game Release
         /// </summary>
@@ -65,7 +76,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Archive reader object</returns>
         public static IArchiveReader CreateReader(GameRelease release, FilePath path)
         {
-            return ReaderFactory.Create(release, path);
+            return new ArchiveReaderProvider(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Create(path);
         }
 
         /// <summary>
@@ -76,7 +90,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath)
         {
-            return GetApplicable.Get(release, dataFolderPath);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get();
         }
 
         /// <summary>
@@ -88,7 +103,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, IEnumerable<FileName>? archiveOrdering)
         {
-            return GetApplicable.Get(release, dataFolderPath, archiveOrdering);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(archiveOrdering);
         }
 
         /// <summary>
@@ -102,7 +118,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey)
         {
-            return GetApplicable.Get(release, dataFolderPath, modKey);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey);
         }
 
         /// <summary>
@@ -117,7 +134,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns></returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IEnumerable<FileName>? archiveOrdering)
         {
-            return GetApplicable.Get(release, dataFolderPath, modKey, archiveOrdering);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey, archiveOrdering);
         }
 
         /// <summary>
@@ -132,7 +150,8 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Full paths of Archives that apply to the given mod and exist</returns>
         public static IEnumerable<FilePath> GetApplicableArchivePaths(GameRelease release, DirectoryPath dataFolderPath, ModKey modKey, IComparer<FileName>? archiveOrdering)
         {
-            return GetApplicable.Get(release, dataFolderPath, modKey, archiveOrdering);
+            return GetApplicableArchivePathsDi(release, dataFolderPath)
+                .Get(modKey, archiveOrdering);
         }
 
         /// <summary>
@@ -148,7 +167,9 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>True if Archive is typically applicable to the given ModKey</returns>
         public static bool IsApplicable(GameRelease release, ModKey modKey, FileName archiveFileName)
         {
-            return Applicability.IsApplicable(release, modKey, archiveFileName);
+            return new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(modKey, archiveFileName);
         }
 
         /// <summary>
@@ -158,7 +179,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release)
         {
-            return IniListings.Get(release);
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get();
         }
 
         /// <summary>
@@ -169,7 +193,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release, FilePath path)
         {
-            return IniListings.Get(release, path);
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get(path);
         }
 
         /// <summary>
@@ -180,7 +207,10 @@ namespace Mutagen.Bethesda.Archives
         /// <returns>Any Archive ordering info retrieved from the ini definition</returns>
         public static IEnumerable<FileName> GetIniListings(GameRelease release, Stream iniStream)
         {
-            return IniListings.Get(release, iniStream);
+            return new GetArchiveIniListings(
+                    IFileSystemExt.DefaultFilesystem,
+                    new GameReleaseInjection(release))
+                .Get(iniStream);
         }
     }
 }

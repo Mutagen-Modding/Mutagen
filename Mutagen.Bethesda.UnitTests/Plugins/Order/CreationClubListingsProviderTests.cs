@@ -5,34 +5,28 @@ using System.IO.Abstractions.TestingHelpers;
 using AutoFixture;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubListingsProviderTests : IClassFixture<Fixture>
+    public class CreationClubListingsProviderTests : TypicalTest
     {
-        private readonly Fixture _Fixture;
         private const string DataDir = "C:/DataDirectory";
 
-        public CreationClubListingsProviderTests(Fixture fixture)
-        {
-            _Fixture = fixture;
-        }
-        
         [Fact]
         public void CccNotUsed()
         {
             var dataDirectoryInjection = new DataDirectoryInjection(DataDir);
             new CreationClubListingsProvider(
-                    _Fixture.Inject.Create<IFileSystem>(),
+                    Fixture.Create<IFileSystem>(),
                     dataDirectoryInjection,
                     new CreationClubPathInjection(default(FilePath?)),
                     new CreationClubRawListingsReader(
-                        _Fixture.Inject.Create<IFileSystem>(),
+                        Fixture.Create<IFileSystem>(),
                         dataDirectoryInjection))
                 .Get().Should().BeEmpty();
         }

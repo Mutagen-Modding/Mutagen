@@ -7,21 +7,16 @@ using DynamicData;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Environments;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveLoadOrderFolderWatcherTests : IClassFixture<Fixture>
+    public class CreationClubLiveLoadOrderFolderWatcherTests : TypicalTest
     {
-        private readonly Fixture _fixture;
-
-        public CreationClubLiveLoadOrderFolderWatcherTests(Fixture fixture)
-        {
-            _fixture = fixture;
-        }
-
         [Fact]
         public void FolderDoesNotExist()
         {

@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Mutagen.Bethesda.Archives;
+using Mutagen.Bethesda.Archives.DI;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Xunit;
 using Path = System.IO.Path;
@@ -12,10 +14,11 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         public void Matches()
         {
             var release = GameRelease.Fallout4;
-            Archive.IsApplicable(
-                release,
-                Utility.PluginModKey,
-                $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}{Archive.GetExtension(release)}")
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
+                    Utility.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}{Archive.GetExtension(release)}")
                 .Should().BeTrue();
         }
 
@@ -23,10 +26,11 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         public void MatchesWithSuffix()
         {
             var release = GameRelease.Fallout4;
-            Archive.IsApplicable(
-                release,
-                Utility.PluginModKey,
-                $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
+                    Utility.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
                 .Should().BeTrue();
         }
 
@@ -36,8 +40,9 @@ namespace Mutagen.Bethesda.UnitTests.Archives
             var release = GameRelease.Fallout4;
             var name = "SomeName - ExtraTitleNonsense";
             var modKey = ModKey.FromNameAndExtension($"{name}.esp");
-            Archive.IsApplicable(
-                    release,
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
                     modKey,
                     $"{name}{Archive.GetExtension(release)}")
                 .Should().BeTrue();
@@ -49,8 +54,9 @@ namespace Mutagen.Bethesda.UnitTests.Archives
             var release = GameRelease.Fallout4;
             var name = $"SomeName - Textures";
             var modKey = ModKey.FromNameAndExtension($"{name}.esp");
-            Archive.IsApplicable(
-                    release,
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
                     modKey,
                     $"{name}{Archive.GetExtension(release)}")
                 .Should().BeTrue();
@@ -60,10 +66,11 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         public void NoMatches()
         {
             var release = GameRelease.Fallout4;
-            Archive.IsApplicable(
-                release,
-                Utility.PluginModKey,
-                $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
+                    Utility.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
                 .Should().BeFalse();
         }
 
@@ -71,20 +78,22 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         public void NoMatchesWithSuffix()
         {
             var release = GameRelease.Fallout4;
-            Archive.IsApplicable(
-                release,
-                Utility.PluginModKey,
-                $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(release))
+                .IsApplicable(
+                    Utility.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
                 .Should().BeFalse();
         }
 
         [Fact]
         public void BadExtension()
         {
-            Archive.IsApplicable(
-                GameRelease.Fallout4,
-                Utility.PluginModKey,
-                $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}.bad")
+            new CheckArchiveApplicability(
+                    new GameReleaseInjection(GameRelease.Fallout4))
+                .IsApplicable(
+                    Utility.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}.bad")
                 .Should().BeFalse();
         }
     }
