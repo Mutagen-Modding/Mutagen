@@ -146,7 +146,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 list)
                 .ToList();
             found.Should().HaveCount(2);
-            found.Should().BeEquivalentTo(
+            found.Should().Equal(
                 ModC,
                 ModD);
         }
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 list)
                 .ToArray();
             found.Should().HaveCount(2);
-            found.Should().BeEquivalentTo(
+            found.Should().Equal(
                 ModC,
                 ModD);
         }

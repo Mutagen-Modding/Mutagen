@@ -23,7 +23,7 @@ sResourceArchiveList2=Skyrim - Voices_en0.bsa, Skyrim - Textures0.bsa") }
             var get = new GetArchiveIniListings(fileSystem);
             
             get.Get(GameRelease.SkyrimSE, Ini.GetTypicalPath(GameRelease.SkyrimSE))
-                .Should().BeEquivalentTo(new FileName[]
+                .Should().Equal(new FileName[]
                 {
                     "Skyrim - Misc.bsa",
                     "Skyrim - Shaders.bsa",

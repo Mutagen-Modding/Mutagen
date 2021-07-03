@@ -159,7 +159,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(
+            list.Items.First().Should().Be(
                 new ModListing("ModA.esp", true));
             err.Succeeded.Should().BeTrue();
         }
@@ -199,7 +199,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                         new ModListing("ModA.esp", true))
                 }));
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(
+            list.Items.First().Should().Be(
                 new ModListing("ModA.esp", true));
             err.Succeeded.Should().BeTrue();
         }
@@ -242,7 +242,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                         ModKey.FromNameAndExtension("ModA.esp"))
                 }));
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(
+            list.Items.First().Should().Be(
                 new ModListing("ModA.esp", true));
             err.Succeeded.Should().BeTrue();
         }
@@ -281,7 +281,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(
+            list.Items.First().Should().Be(
                 new ModListing("ModA.esp", true));
             err.Succeeded.Should().BeTrue();
             fileSubj.OnNext(new ChangeSet<IModListingGetter>(
@@ -333,7 +333,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(
+            list.Items.First().Should().Be(
                 new ModListing("ModA.esp", true));
             err.Succeeded.Should().BeTrue();
             folderSubj.OnNext(new ChangeSet<ModKey, ModKey>(

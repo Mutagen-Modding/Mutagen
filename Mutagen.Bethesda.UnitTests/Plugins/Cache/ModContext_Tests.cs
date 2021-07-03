@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
             contexts[0].Record.Should().Be(npc1);
             contexts[1].Record.Should().Be(npc2);
             var npc2Override = contexts[1].GetOrAddAsOverride(mod2);
-            npc2.FormKey.Should().BeEquivalentTo(npc2Override.FormKey);
+            npc2.FormKey.Should().Be(npc2Override.FormKey);
             mod2.Npcs.Should().HaveCount(1);
             mod.Npcs.Should().HaveCount(2);
         }
@@ -440,11 +440,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
 
             var mod4 = new SkyrimMod(Utility.PluginModKey4, SkyrimRelease.SkyrimSE);
             var placedObjOverride = contexts[0].GetOrAddAsOverride(mod4);
-            placedObjOverride.EditorID.Should().BeEquivalentTo(Mod1Name);
+            placedObjOverride.EditorID.Should().Be(Mod1Name);
             var cellOverride = mod4.Worldspaces.First().SubCells.First().Items.First().Items.First();
-            cellOverride.EditorID.Should().BeEquivalentTo(Mod2Name);
+            cellOverride.EditorID.Should().Be(Mod2Name);
             var worldspaceOverride = mod4.Worldspaces.First();
-            worldspaceOverride.EditorID.Should().BeEquivalentTo(Mod3Name);
+            worldspaceOverride.EditorID.Should().Be(Mod3Name);
         }
 
         [Fact]
@@ -478,7 +478,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Cache
             var cache = mod.ToImmutableLinkCache();
             var contexts = mod.EnumerateMajorRecordContexts<IPlacedObject, IPlacedObjectGetter>(linkCache: cache).ToArray();
             contexts.Should().HaveCount(1);
-            contexts[0].ModKey.Should().BeEquivalentTo(Utility.PluginModKey);
+            contexts[0].ModKey.Should().Be(Utility.PluginModKey);
         }
 
         [Fact]

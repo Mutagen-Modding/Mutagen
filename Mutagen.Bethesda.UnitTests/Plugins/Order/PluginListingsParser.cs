@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 ModB.esp
 *ModC.esp"))
                 .ToList();
-            result.Should().BeEquivalentTo(
+            result.Should().Equal(
                 new ModListing("ModA.esm", true),
                 new ModListing("ModB.esp", false),
                 new ModListing("ModC.esp", true));
@@ -51,7 +51,7 @@ ModB.esp
 #ModB.esp
 *ModC.esp"))
                 .ToList();
-            result.Should().BeEquivalentTo(
+            result.Should().Equal(
                 new ModListing("ModA.esm", true),
                 new ModListing("ModC.esp", true));
         }
@@ -66,7 +66,7 @@ ModB.esp
 ModB.esp#Hello
 *ModC.esp"))
                 .ToList();
-            result.Should().BeEquivalentTo(
+            result.Should().Equal(
                 new ModListing("ModA.esm", true),
                 new ModListing("ModB.esp", false),
                 new ModListing("ModC.esp", true));

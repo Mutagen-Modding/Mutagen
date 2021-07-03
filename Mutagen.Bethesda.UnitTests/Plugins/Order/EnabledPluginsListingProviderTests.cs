@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     parser,
                     path)
                 .Get()
-                .Should().BeEquivalentTo(listings);
+                .Should().Equal(listings);
         }
     }
 }

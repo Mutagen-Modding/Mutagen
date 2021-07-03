@@ -132,12 +132,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Enabled = false
             };
 
-            listing1.Should().BeEquivalentTo(listing1Eq);
-            listing1.Should().NotBeEquivalentTo(listing1Disabled);
-            listing1.Should().NotBeEquivalentTo(listing2);
-            listing2.Should().BeEquivalentTo(listing2Eq);
-            listing2.Should().NotBeEquivalentTo(listing2Disabled);
-            listing2.Should().NotBeEquivalentTo(listing1);
+            listing1.Should().Be(listing1Eq);
+            listing1.Should().NotBe(listing1Disabled);
+            listing1.Should().NotBe(listing2);
+            listing2.Should().Be(listing2Eq);
+            listing2.Should().NotBe(listing2Disabled);
+            listing2.Should().NotBe(listing1);
         }
     }
 }

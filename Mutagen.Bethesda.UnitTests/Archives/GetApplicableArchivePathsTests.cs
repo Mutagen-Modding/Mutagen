@@ -50,7 +50,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             var get = GetClass(fs);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder, Enumerable.Empty<FileName>())
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new FilePath[]
+            applicable.Should().Equal(new FilePath[]
             {
                 Path.Combine(BaseFolder, MyModBsa),
                 Path.Combine(BaseFolder, SkyrimBsa),
@@ -68,11 +68,12 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             var get = GetClass(fs);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder)
                 .ToArray();
+            applicable.Should().StartWith(new FilePath(Path.Combine(BaseFolder, SomeExplicitListingBsa)));
             applicable.Should().BeEquivalentTo(new FilePath[]
             {
-                Path.Combine(BaseFolder, SkyrimBsa),
                 Path.Combine(BaseFolder, SomeExplicitListingBsa),
-                Path.Combine(BaseFolder, MyModBsa),
+                Path.Combine(BaseFolder, SkyrimBsa),
+                Path.Combine(BaseFolder, MyModBsa)
             });
         }
 
@@ -110,7 +111,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder, Utility.Skyrim, Enumerable.Empty<FileName>())
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new FilePath[]
+            applicable.Should().Equal(new FilePath[]
             {
                 Path.Combine(BaseFolder, SkyrimBsa),
                 Path.Combine(BaseFolder, SomeExplicitListingBsa)
@@ -127,7 +128,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder, Utility.MasterModKey2, Enumerable.Empty<FileName>())
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new FilePath[]
+            applicable.Should().Equal(new FilePath[]
             {
                 Path.Combine(BaseFolder, $"{Utility.MasterModKey2.Name}.bsa"),
                 Path.Combine(BaseFolder, SomeExplicitListingBsa)
@@ -144,7 +145,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder, Utility.Skyrim)
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new FilePath[]
+            applicable.Should().Equal(new FilePath[]
             {
                 Path.Combine(BaseFolder, SomeExplicitListingBsa),
                 Path.Combine(BaseFolder, SkyrimBsa),
@@ -161,7 +162,7 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
             fs.File.WriteAllText(Path.Combine(BaseFolder, MyModBsa), string.Empty);
             var applicable = get.Get(GameRelease.SkyrimSE, BaseFolder, Utility.MasterModKey2)
                 .ToArray();
-            applicable.Should().BeEquivalentTo(new FilePath[]
+            applicable.Should().Equal(new FilePath[]
             {
                 Path.Combine(BaseFolder, SomeExplicitListingBsa),
                 Path.Combine(BaseFolder, $"{Utility.MasterModKey2.Name}.bsa"),

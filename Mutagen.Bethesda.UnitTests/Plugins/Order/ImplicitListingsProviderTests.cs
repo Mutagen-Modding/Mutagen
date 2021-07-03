@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     dataDir,
                     listings)
                 .Get()
-                .Should().BeEquivalentTo(new ModListing(Utility.MasterModKey, true));
+                .Should().Equal(new ModListing(Utility.MasterModKey, true));
         }
     }
 }

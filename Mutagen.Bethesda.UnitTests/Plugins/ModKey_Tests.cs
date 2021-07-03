@@ -150,7 +150,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins
         public void NullEqualityDesync()
         {
             var modKey = new ModKey(string.Empty, ModType.Plugin);
-            modKey.Should().BeEquivalentTo(ModKey.Null);
+            modKey.Should().Be(ModKey.Null);
         }
 
         #region Comparers

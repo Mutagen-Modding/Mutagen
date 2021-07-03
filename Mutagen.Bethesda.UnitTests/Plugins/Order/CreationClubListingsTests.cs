@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     dataPath: dataPath)
                 .ToList();
             results.Should().HaveCount(1);
-            results[0].Should().BeEquivalentTo(new ModListing(Utility.LightMasterModKey, enabled: true));
+            results[0].Should().Be(new ModListing(Utility.LightMasterModKey, enabled: true));
         }
 
         [Fact]

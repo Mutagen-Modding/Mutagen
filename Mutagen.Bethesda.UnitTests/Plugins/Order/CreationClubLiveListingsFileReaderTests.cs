@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);
-            list.Items.First().Should().BeEquivalentTo(listingA);
+            list.Items.First().Should().Be(listingA);
             var stateTest = scheduler.Start(() => state);
             stateTest.Messages.Should().HaveCount(1);
             stateTest.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             fs.File.WriteAllText(path, string.Empty);
             fileChanges.MarkCreated(path);
             list.Items.Should().HaveCount(1);
-            list.Items.First().Should().BeEquivalentTo(listingA);
+            list.Items.First().Should().Be(listingA);
             stateTest = scheduler.Start(() => state);
             stateTest.Messages[^1].Value.Kind.Should().Be(NotificationKind.OnNext);
             stateTest.Messages[^1].Value.Value.Succeeded.Should().BeTrue();
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);
-            list.Items.First().Should().BeEquivalentTo(listingA);
+            list.Items.First().Should().Be(listingA);
             var scheduler = new TestScheduler();
             var stateTest = scheduler.Start(() => state);
             stateTest.Messages.Should().HaveCount(1);
@@ -183,7 +183,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);
-            list.Items.First().Should().BeEquivalentTo(listingA);
+            list.Items.First().Should().Be(listingA);
             var scheduler = new TestScheduler();
             var stateTest = scheduler.Start(() => state);
             stateTest.Messages.Should().HaveCount(1);
@@ -193,7 +193,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable().And(listingB));
             fileChanges.MarkChanged(path);
             list.Items.Should().HaveCount(2);
-            list.Items.Should().BeEquivalentTo(
+            list.Items.Should().Equal(
                 listingA,
                 listingB);
             stateTest = scheduler.Start(() => state);

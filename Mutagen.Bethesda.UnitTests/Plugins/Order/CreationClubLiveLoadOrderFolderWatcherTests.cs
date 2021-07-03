@@ -79,7 +79,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(modKeyA);
+            list.Items.First().Should().Be(modKeyA);
         }
 
         [Fact]
@@ -103,12 +103,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(modKeyA);
+            list.Items.First().Should().Be(modKeyA);
             fs.File.WriteAllText(modKeyBPath, string.Empty);
             mockChange.MarkCreated(modKeyBPath);
             list.Count.Should().Be(2);
-            list.Items.First().Should().BeEquivalentTo(modKeyA);
-            list.Items.Last().Should().BeEquivalentTo(modKeyB);
+            list.Items.First().Should().Be(modKeyA);
+            list.Items.Last().Should().Be(modKeyB);
         }
 
         [Fact]
@@ -133,12 +133,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(2);
-            list.Items.First().Should().BeEquivalentTo(modKeyA);
-            list.Items.Last().Should().BeEquivalentTo(modKeyB);
+            list.Items.First().Should().Be(modKeyA);
+            list.Items.Last().Should().Be(modKeyB);
             fs.File.Delete(modKeyBPath);
             mockChange.MarkDeleted(modKeyBPath);
             list.Count.Should().Be(1);
-            list.Items.First().Should().BeEquivalentTo(modKeyA);
+            list.Items.First().Should().Be(modKeyA);
         }
     }
 }

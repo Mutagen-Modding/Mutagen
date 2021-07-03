@@ -33,7 +33,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
             var rec = mod.Npcs.AddNew(Utility.Form1);
             Assert.Equal(1, mod.Npcs.Count);
             Assert.Same(mod.Npcs.Records.First(), rec);
-            rec.FormKey.Should().BeEquivalentTo(Utility.Form1);
+            rec.FormKey.Should().Be(Utility.Form1);
         }
     }
 }
