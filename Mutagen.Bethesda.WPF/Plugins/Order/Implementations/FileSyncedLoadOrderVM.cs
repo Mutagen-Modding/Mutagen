@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using Noggog;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
@@ -46,11 +47,11 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
 
             _State = state
                 .ToGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
-
+                
             var loadOrder = lo
                 .Transform(x => new FileSyncedLoadOrderListingVM(this, x))
                 .PublishRefCount();
-            
+
             LoadOrder = loadOrder
                 .ToObservableCollection(this);
 
@@ -59,13 +60,13 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
                     loadOrder
                         .AutoRefresh(x => x.Enabled)
                         .Transform(x => x.Enabled, transformOnRefresh: true)
-                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .BufferInitialNoDeferred(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
                         .QueryWhenChanged(x => x)
                         .Unit(),
                     loadOrder
                         .AutoRefresh(x => x.GhostSuffix)
                         .Transform(x => x.GhostSuffix ?? string.Empty, transformOnRefresh: true)
-                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .BufferInitialNoDeferred(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
                         .QueryWhenChanged(x => x)
                         .Unit())
                 .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
