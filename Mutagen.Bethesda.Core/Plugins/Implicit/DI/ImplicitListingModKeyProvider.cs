@@ -11,10 +11,10 @@ namespace Mutagen.Bethesda.Plugins.Implicit.DI
 
     public class ImplicitListingModKeyProvider : IImplicitListingModKeyProvider
     {
-        private readonly GameReleaseInjection _gameRelease;
+        private readonly IGameReleaseContext _gameRelease;
 
         public ImplicitListingModKeyProvider(
-            GameReleaseInjection gameRelease)
+            IGameReleaseContext gameRelease)
         {
             _gameRelease = gameRelease;
         }
