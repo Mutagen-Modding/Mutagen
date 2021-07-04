@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO.Abstractions;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicData;
 using Noggog;
@@ -27,7 +28,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             _pluginListingsFilePath = pluginListingsFilePath;
         }
         
-        public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state)
+        public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
         {
             var results = ObservableExt.WatchFile(_pluginListingsFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
                 .StartWith(Unit.Default)
@@ -53,7 +54,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     return r.Value ?? Observable.Empty<IChangeSet<IModListingGetter>>();
                 })
-                .Switch();
+                .Switch()
+                .ObserveOnIfApplicable(scheduler);
         }
 
         public IObservable<Unit> Changed => ObservableExt

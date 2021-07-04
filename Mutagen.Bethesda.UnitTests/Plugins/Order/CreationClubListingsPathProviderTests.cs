@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubPahContextTests
+    public class CreationClubListingsPathProviderTests
     {
         [Fact]
         public void NotUsed()

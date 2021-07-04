@@ -9,6 +9,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -191,7 +192,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             GameRelease game,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IScheduler? scheduler = null)
         {
             var dataDir = new DataDirectoryInjection(dataFolderPath);
             var gameRelease = new GameReleaseInjection(game);
@@ -208,14 +210,16 @@ namespace Mutagen.Bethesda.Plugins.Order
                 dataFolderPath,
                 out state,
                 cccPath.Path,
-                throwOnMissingMods);
+                throwOnMissingMods,
+                scheduler: scheduler);
         }
 
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
             IObservable<GameRelease> game,
             IObservable<DirectoryPath> dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IScheduler? scheduler = null)
         {
             var obs = Observable.CombineLatest(
                     game,
@@ -228,7 +232,8 @@ namespace Mutagen.Bethesda.Plugins.Order
                             loadOrderFilePath: PluginListings.GetListingsPath(gameVal),
                             cccLoadOrderFilePath: CreationClubListings.GetListingsPath(gameVal.ToCategory(), dataFolderVal),
                             state: out var state,
-                            throwOnMissingMods: throwOnMissingMods);
+                            throwOnMissingMods: throwOnMissingMods,
+                            scheduler: scheduler);
                         return (LoadOrder: lo, State: state);
                     })
                 .Replay(1)
@@ -245,7 +250,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             FilePath? cccLoadOrderFilePath = null,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IScheduler? scheduler = null)
         {
             var dataDir = new DataDirectoryInjection(dataFolderPath);
             var gameRelease = new GameReleaseInjection(game);
@@ -285,7 +291,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                         new ImplicitListingModKeyProvider(gameRelease)),
                     pluginListingsProv,
                     cccListingsProv))
-                .Get(out state);
+                .Get(out state, scheduler);
         }
 
         public static IObservable<IChangeSet<IModListingGetter>> GetLiveLoadOrder(
@@ -294,7 +300,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             IObservable<DirectoryPath> dataFolderPath,
             out IObservable<ErrorResponse> state,
             IObservable<FilePath?>? cccLoadOrderFilePath = null,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IScheduler? scheduler = null)
         {
             var obs = Observable.CombineLatest(
                     game,
@@ -309,7 +316,8 @@ namespace Mutagen.Bethesda.Plugins.Order
                             loadOrderFilePath: loadOrderFilePathVal,
                             cccLoadOrderFilePath: cccVal,
                             state: out var state,
-                            throwOnMissingMods: throwOnMissingMods);
+                            throwOnMissingMods: throwOnMissingMods,
+                            scheduler: scheduler);
                         return (LoadOrder: lo, State: state);
                     })
                 .Replay(1)

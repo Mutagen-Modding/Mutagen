@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -57,7 +58,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             FilePath cccFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            IFileSystem? fileSystem = null)
+            IFileSystem? fileSystem = null,
+            IScheduler? scheduler = null)
         {
             fileSystem ??= IFileSystemExt.DefaultFilesystem;
             var cccPath = new CreationClubListingsPathInjection(cccFilePath);
@@ -71,7 +73,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     cccPath),
                 new CreationClubLiveLoadOrderFolderWatcher(
                     fileSystem,
-                    dataDir)).Get(out state);
+                    dataDir)).Get(out state, scheduler);
         }
 
         public static IObservable<Unit> GetLoadOrderChanged(

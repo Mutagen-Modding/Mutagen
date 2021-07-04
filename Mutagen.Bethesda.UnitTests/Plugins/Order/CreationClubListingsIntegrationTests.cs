@@ -16,12 +16,12 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubListingsTests 
+    public class CreationClubListingsIntegrationTests 
     {
         [Fact]
         public void FromCreationClubPathMissing()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsTests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsIntegrationTests));
             var missingPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             Action a = () =>
                 CreationClubListings.ListingsFromPath(
@@ -36,7 +36,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var sch = new TestScheduler();
             sch.Schedule(TimeSpan.FromTicks(1), () => { });
         
-            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsTests));
+            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsIntegrationTests));
             var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
             var dataPath = Path.Combine(tmpFolder.Dir.Path, "Data");
             File.WriteAllLines(cccPath,

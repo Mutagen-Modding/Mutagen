@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -107,7 +108,8 @@ namespace Mutagen.Bethesda.Plugins.Order
             FilePath loadOrderFilePath,
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IScheduler? scheduler = null)
         {
             var pluginPath = new PluginListingsPathInjection(loadOrderFilePath);
             var prov = PluginListingsProvider(
@@ -118,7 +120,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new PluginLiveLoadOrderProvider(
                 IFileSystemExt.DefaultFilesystem,
                 prov,
-                pluginPath).Get(out state);
+                pluginPath).Get(out state, scheduler);
         }
 
         /// <inheritdoc cref="IPluginLiveLoadOrderProvider"/>
