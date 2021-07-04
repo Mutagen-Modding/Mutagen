@@ -13,20 +13,20 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         private readonly ITimestampAligner _timestampAligner;
         private readonly ITimestampedPluginListingsPreferences _prefs;
         private readonly IPluginRawListingsReader _rawListingsReader;
-        private readonly IDataDirectoryContext _dataDirectoryContext;
+        private readonly IDataDirectoryProvider _dataDirectoryProvider;
         private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
 
         public TimestampedPluginListingsProvider(
             ITimestampAligner timestampAligner,
             ITimestampedPluginListingsPreferences prefs,
             IPluginRawListingsReader rawListingsReader,
-            IDataDirectoryContext dataDirectoryContext,
+            IDataDirectoryProvider dataDirectoryProvider,
             IPluginListingsPathProvider pluginListingsPathProvider)
         {
             _timestampAligner = timestampAligner;
             _prefs = prefs;
             _rawListingsReader = rawListingsReader;
-            _dataDirectoryContext = dataDirectoryContext;
+            _dataDirectoryProvider = dataDirectoryProvider;
             _pluginListingsPathProvider = pluginListingsPathProvider;
         }
 
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             var mods = _rawListingsReader.Read(_pluginListingsPathProvider.Path);
             return _timestampAligner.AlignToTimestamps(
                 mods,
-                _dataDirectoryContext.Path, 
+                _dataDirectoryProvider.Path, 
                 throwOnMissingMods: _prefs.ThrowOnMissingMods);
         }
     }

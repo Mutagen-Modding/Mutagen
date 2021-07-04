@@ -425,7 +425,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         }
         
         private static PluginListingsProvider PluginListingsProvider(
-            IDataDirectoryContext dataDirectory,
+            IDataDirectoryProvider dataDirectory,
             IGameReleaseContext gameContext,
             IPluginListingsPathProvider listingsPathProvider, 
             bool throwOnMissingMods)

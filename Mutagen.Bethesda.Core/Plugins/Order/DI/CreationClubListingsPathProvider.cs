@@ -17,12 +17,12 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     {
         private readonly IGameCategoryContext _categoryContext;
         private readonly ICreationClubEnabledProvider _isUsed;
-        private readonly IDataDirectoryContext _dataDirectory;
+        private readonly IDataDirectoryProvider _dataDirectory;
 
         public CreationClubListingsPathProvider(
             IGameCategoryContext categoryContext,
             ICreationClubEnabledProvider isUsed,
-            IDataDirectoryContext dataDirectory)
+            IDataDirectoryProvider dataDirectory)
         {
             _categoryContext = categoryContext;
             _isUsed = isUsed;

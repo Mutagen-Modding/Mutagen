@@ -17,11 +17,11 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubLiveLoadOrderFolderWatcher : ICreationClubLiveLoadOrderFolderWatcher
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryContext _dataDirectory;
+        private readonly IDataDirectoryProvider _dataDirectory;
 
         public CreationClubLiveLoadOrderFolderWatcher(
             IFileSystem fileSystem,
-            IDataDirectoryContext dataDirectory)
+            IDataDirectoryProvider dataDirectory)
         {
             _fileSystem = fileSystem;
             _dataDirectory = dataDirectory;

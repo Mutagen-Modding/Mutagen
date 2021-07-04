@@ -14,12 +14,12 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class ImplicitListingsProvider : IImplicitListingsProvider
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryContext _dataFolder;
+        private readonly IDataDirectoryProvider _dataFolder;
         private readonly IImplicitListingModKeyProvider _listingModKeys;
 
         public ImplicitListingsProvider(
             IFileSystem fileSystem,
-            IDataDirectoryContext dataFolder,
+            IDataDirectoryProvider dataFolder,
             IImplicitListingModKeyProvider listingModKeys)
         {
             _fileSystem = fileSystem;

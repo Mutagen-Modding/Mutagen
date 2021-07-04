@@ -1,5 +1,5 @@
 ﻿using FluentAssertions;
-using Mutagen.Bethesda.Installs;
+using Mutagen.Bethesda.Installs.DI;
 using Noggog;
 using Xunit;
 

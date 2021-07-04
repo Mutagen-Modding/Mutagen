@@ -21,18 +21,18 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubListingsProvider : ICreationClubListingsProvider
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryContext _dataDirectoryContext;
+        private readonly IDataDirectoryProvider _dataDirectoryProvider;
         private readonly ICreationClubListingsPathProvider _pluginListingsPathProvider;
         private readonly ICreationClubRawListingsReader _reader;
 
         public CreationClubListingsProvider(
             IFileSystem fileSystem,
-            IDataDirectoryContext dataDirectoryContext,
+            IDataDirectoryProvider dataDirectoryProvider,
             ICreationClubListingsPathProvider pluginListingsPathProvider,
             ICreationClubRawListingsReader reader)
         {
             _fileSystem = fileSystem;
-            _dataDirectoryContext = dataDirectoryContext;
+            _dataDirectoryProvider = dataDirectoryProvider;
             _pluginListingsPathProvider = pluginListingsPathProvider;
             _reader = reader;
         }
@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             }
 
             return _reader.Read(_fileSystem.File.OpenRead(path.Value))
-                .Where(x => _fileSystem.File.Exists(Path.Combine(_dataDirectoryContext.Path, x.ModKey.FileName)))
+                .Where(x => _fileSystem.File.Exists(Path.Combine(_dataDirectoryProvider.Path, x.ModKey.FileName)))
                 .ToList();
         }
     }

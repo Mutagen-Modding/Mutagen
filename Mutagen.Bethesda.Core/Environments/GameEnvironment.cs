@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 
@@ -19,17 +21,20 @@ namespace Mutagen.Bethesda.Environments
     /// <summary>
     /// A class housing commonly used utilities when interacting with a game environment
     /// </summary>
-    public class GameEnvironmentState<TModSetter, TModGetter> : IDisposable
+    public class GameEnvironmentState<TModSetter, TModGetter> : IDisposable, IDataDirectoryProvider, IPluginListingsPathProvider, ICreationClubListingsPathProvider
         where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
     {
         private readonly bool _dispose;
+        private DirectoryPath _path;
+        private FilePath _path1;
+        private FilePath? _path2;
 
         public DirectoryPath DataFolderPath { get; }
 
         public FilePath LoadOrderFilePath { get; }
 
-        public FilePath? CreationKitLoadOrderFilePath { get; }
+        public FilePath? CreationClubListingsFilePath { get; }
 
         /// <summary>
         /// Load Order object containing all the mods present in the environment.
@@ -44,14 +49,14 @@ namespace Mutagen.Bethesda.Environments
         public GameEnvironmentState(
             DirectoryPath dataFolderPath,
             FilePath loadOrderFilePath,
-            FilePath? creationKitLoadOrderFilePath,
+            FilePath? creationClubListingsFilePath,
             ILoadOrder<IModListing<TModGetter>> loadOrder,
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
             LoadOrderFilePath = loadOrderFilePath;
             DataFolderPath = dataFolderPath;
-            CreationKitLoadOrderFilePath = creationKitLoadOrderFilePath;
+            CreationClubListingsFilePath = creationClubListingsFilePath;
             LoadOrder = loadOrder;
             LinkCache = linkCache;
             _dispose = dispose;
@@ -86,10 +91,16 @@ namespace Mutagen.Bethesda.Environments
             return new GameEnvironmentState<TModSetter, TModGetter>(
                 dataFolderPath: dataFolder,
                 loadOrderFilePath: loadOrderFilePath.Path,
-                creationKitLoadOrderFilePath: ccPath,
+                creationClubListingsFilePath: ccPath,
                 loadOrder: loadOrder,
                 linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
                 dispose: true);
         }
+
+        DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
+
+        FilePath IPluginListingsPathProvider.Path => LoadOrderFilePath;
+
+        FilePath? ICreationClubListingsPathProvider.Path => CreationClubListingsFilePath;
     }
 }

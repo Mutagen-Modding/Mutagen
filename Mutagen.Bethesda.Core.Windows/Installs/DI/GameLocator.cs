@@ -7,13 +7,12 @@ using GameFinder;
 using GameFinder.StoreHandlers.GOG;
 using GameFinder.StoreHandlers.Steam;
 using Microsoft.Win32;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 
-namespace Mutagen.Bethesda.Installs
+namespace Mutagen.Bethesda.Installs.DI
 {
-    public class GameLocator : IGameDirectoryProvider, IDataDirectoryProvider
+    public class GameLocator : IGameDirectoryLookup, IDataDirectoryLookup
     {
         private readonly Lazy<GetResponse<SteamHandler>> _steamHandler;
         private readonly Lazy<GetResponse<GOGHandler>> _gogHandler;
@@ -24,31 +23,23 @@ namespace Mutagen.Bethesda.Installs
             _gogHandler = new(TryFactory<GOGHandler, GOGGame>);
         }
 
-        /// <summary>
-        /// Given a release, will return all the located game folders it could find
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <returns>The located game folders it could find</returns>
-        public IEnumerable<DirectoryPath> GetGameFolders(GameRelease release)
+        /// <inheritdoc />
+        public IEnumerable<DirectoryPath> GetGameDirectories(GameRelease release)
         {
             return InternalGetGameFolders(release)
                 .Distinct();
         }
 
-        /// <summary>
-        /// Given a release, will return all the located data folders it could find
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <returns>The located data folders it could find</returns>
-        public IEnumerable<DirectoryPath> GetDataFolders(GameRelease release)
+        /// <inheritdoc />
+        public IEnumerable<DirectoryPath> GetDataDirectories(GameRelease release)
         {
-            return GetGameFolders(release)
+            return GetGameDirectories(release)
                 .Select(path => new DirectoryPath(Path.Combine(path, "Data")));
         }
 
         private IEnumerable<DirectoryPath> InternalGetGameFolders(GameRelease release)
         {
-            if (TryGetGameFolderFromRegistry(release, out var regisPath)
+            if (TryGetGameDirectoryFromRegistry(release, out var regisPath)
                 && regisPath.Exists)
             {
                 yield return regisPath;
@@ -73,7 +64,8 @@ namespace Mutagen.Bethesda.Installs
             }
         }
         
-        public bool TryGetGameFolderFromRegistry(GameRelease release,
+        /// <inheritdoc />
+        public bool TryGetGameDirectoryFromRegistry(GameRelease release,
             [MaybeNullWhen(false)] out DirectoryPath path)
         {
             try
@@ -103,15 +95,10 @@ namespace Mutagen.Bethesda.Installs
             }
         }
         
-        /// <summary>
-        /// Given a release, tries to retrieve the preferred game directory (not the data folder within)
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <param name="path">The game folder, if located</param>
-        /// <returns>True if located</returns>
-        public bool TryGetGameFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+        /// <inheritdoc />
+        public bool TryGetGameDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
         {
-            var p = GetGameFolders(release).Select<DirectoryPath, DirectoryPath?>(x => x).FirstOrDefault();
+            var p = GetGameDirectories(release).Select<DirectoryPath, DirectoryPath?>(x => x).FirstOrDefault();
             if (p == null)
             {
                 path = default;
@@ -122,30 +109,20 @@ namespace Mutagen.Bethesda.Installs
             return true;
         }
 
-        /// <summary>
-        /// Given a release, tries to retrieve the preferred game directory (not the data folder within)
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <exception cref="System.IO.DirectoryNotFoundException">Thrown if the game folder could not be located</exception>
-        /// <returns>The game folder</returns>
-        public DirectoryPath GetGameFolder(GameRelease release)
+        /// <inheritdoc />
+        public DirectoryPath GetGameDirectory(GameRelease release)
         {
-            if (TryGetGameFolder(release, out var path))
+            if (TryGetGameDirectory(release, out var path))
             {
                 return path;
             }
             throw new DirectoryNotFoundException($"Game folder for {release} cannot be found automatically");
         }
 
-        /// <summary>
-        /// Given a release, tries to retrieve the preferred data directory
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <param name="path">The data folder, if located</param>
-        /// <returns>True if located</returns>
-        public bool TryGetDataFolder(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
+        /// <inheritdoc />
+        public bool TryGetDataDirectory(GameRelease release, [MaybeNullWhen(false)] out DirectoryPath path)
         {
-            if (TryGetGameFolder(release, out path))
+            if (TryGetGameDirectory(release, out path))
             {
                 path = Path.Combine(path, "Data");
                 return true;
@@ -154,15 +131,10 @@ namespace Mutagen.Bethesda.Installs
             return false;
         }
 
-        /// <summary>
-        /// Given a release, tries to retrieve the preferred data directory
-        /// </summary>
-        /// <param name="release">Release to query</param>
-        /// <exception cref="System.IO.DirectoryNotFoundException">Thrown if the data folder could not be located</exception>
-        /// <returns>The data folder provider</returns>
-        public DirectoryPath GetDataFolder(GameRelease release)
+        /// <inheritdoc />
+        public DirectoryPath GetDataDirectory(GameRelease release)
         {
-            if (TryGetDataFolder(release, out var path))
+            if (TryGetDataDirectory(release, out var path))
             {
                 return path;
             }
@@ -264,34 +236,34 @@ namespace Mutagen.Bethesda.Installs
         
         #region Interface Implementations
 
-        IEnumerable<DirectoryPath> IDataDirectoryProvider.GetAll(GameRelease release)
+        IEnumerable<DirectoryPath> IDataDirectoryLookup.GetAll(GameRelease release)
         {
-            return GetDataFolders(release);
+            return GetDataDirectories(release);
         }
 
-        bool IDataDirectoryProvider.TryGet(GameRelease release, out DirectoryPath path)
+        bool IDataDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
         {
-            return TryGetDataFolder(release, out path);
+            return TryGetDataDirectory(release, out path);
         }
 
-        DirectoryPath IDataDirectoryProvider.Get(GameRelease release)
+        DirectoryPath IDataDirectoryLookup.Get(GameRelease release)
         {
-            return GetDataFolder(release);
+            return GetDataDirectory(release);
         }
 
-        IEnumerable<DirectoryPath> IGameDirectoryProvider.GetAll(GameRelease release)
+        IEnumerable<DirectoryPath> IGameDirectoryLookup.GetAll(GameRelease release)
         {
-            return GetGameFolders(release);
+            return GetGameDirectories(release);
         }
 
-        bool IGameDirectoryProvider.TryGet(GameRelease release, out DirectoryPath path)
+        bool IGameDirectoryLookup.TryGet(GameRelease release, out DirectoryPath path)
         {
-            return TryGetGameFolder(release, out path);
+            return TryGetGameDirectory(release, out path);
         }
 
-        DirectoryPath IGameDirectoryProvider.Get(GameRelease release)
+        DirectoryPath IGameDirectoryLookup.Get(GameRelease release)
         {
-            return GetGameFolder(release);
+            return GetGameDirectory(release);
         }
 
         #endregion

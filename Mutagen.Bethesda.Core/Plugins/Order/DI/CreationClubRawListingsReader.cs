@@ -15,14 +15,14 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubRawListingsReader : ICreationClubRawListingsReader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryContext _dataDirectoryContext;
+        private readonly IDataDirectoryProvider _dataDirectoryProvider;
 
         public CreationClubRawListingsReader(
             IFileSystem fileSystem,
-            IDataDirectoryContext dataDirectoryContext)
+            IDataDirectoryProvider dataDirectoryProvider)
         {
             _fileSystem = fileSystem;
-            _dataDirectoryContext = dataDirectoryContext;
+            _dataDirectoryProvider = dataDirectoryProvider;
         }
         
         public IEnumerable<IModListingGetter> Read(Stream stream)

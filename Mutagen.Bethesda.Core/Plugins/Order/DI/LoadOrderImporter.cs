@@ -24,18 +24,18 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         where TMod : class, IModGetter
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryContext _dataDirectoryContext;
+        private readonly IDataDirectoryProvider _dataDirectoryProvider;
         private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
         private readonly IModImporter<TMod> _importer;
 
         public LoadOrderImporter(
             IFileSystem fileSystem,
-            IDataDirectoryContext dataDirectoryContext,
+            IDataDirectoryProvider dataDirectoryProvider,
             ILoadOrderListingsProvider loadOrderListingsProvider,
             IModImporter<TMod> importer)
         {
             _fileSystem = fileSystem;
-            _dataDirectoryContext = dataDirectoryContext;
+            _dataDirectoryProvider = dataDirectoryProvider;
             _loadOrderListingsProvider = loadOrderListingsProvider;
             _importer = importer;
         }
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     try
                     {
-                        var modPath = new ModPath(listing.ModKey, _dataDirectoryContext.Path.GetFile(listing.ModKey.FileName).Path);
+                        var modPath = new ModPath(listing.ModKey, _dataDirectoryProvider.Path.GetFile(listing.ModKey.FileName).Path);
                         if (!_fileSystem.File.Exists(modPath.Path))
                         {
                             results[modIndex] = (listing.ModKey, (int)modIndex, TryGet<TMod>.Failure, listing.Enabled);

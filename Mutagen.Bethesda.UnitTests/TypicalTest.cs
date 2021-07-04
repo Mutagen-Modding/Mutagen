@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.UnitTests
             var scheduler = Substitute.For<ISchedulerProvider>();
             scheduler.TaskPool.Returns(Scheduler.CurrentThread);
             fixture.Register(() => scheduler);
-            fixture.Register<IDataDirectoryContext>(() => new DataDirectoryInjection("C:/SomeFolder"));
+            fixture.Register<IDataDirectoryProvider>(() => new DataDirectoryInjection("C:/SomeFolder"));
             Fixture = fixture;
         }
     }

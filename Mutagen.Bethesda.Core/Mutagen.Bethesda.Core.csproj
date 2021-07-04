@@ -95,12 +95,12 @@
     <Compile Include="Archives\Exceptions\ArchiveException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
-    <Compile Include="Environments\DI\IDataDirectoryContext.cs">
+    <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
+    <Compile Include="Environments\DI\IDataDirectoryLookup.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -110,12 +110,12 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Environments\DI\IGameDirectoryContext.cs">
+    <Compile Include="Environments\DI\IGameDirectoryProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Environments\DI\IGameDirectoryProvider.cs">
+    <Compile Include="Environments\DI\IGameDirectoryLookup.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>

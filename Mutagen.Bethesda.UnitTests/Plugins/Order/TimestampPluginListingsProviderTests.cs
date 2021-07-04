@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var pluginRawListingsReader = Fixture.Create<IPluginRawListingsReader>();
             var aligner = Fixture.Create<ITimestampAligner>();
             var pluginPathContext = Fixture.Create<IPluginListingsPathProvider>();
-            var dataDirectoryContext = Fixture.Create<IDataDirectoryContext>();
+            var dataDirectoryContext = Fixture.Create<IDataDirectoryProvider>();
             var timestampedPluginListingsPreferences = Fixture.Create<ITimestampedPluginListingsPreferences>();
             new TimestampedPluginListingsProvider(
                     aligner,

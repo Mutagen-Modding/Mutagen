@@ -52,7 +52,7 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
         LoadOrderVM = new FileSyncedLoadOrderVM(env.LoadOrderFilePath)
         {
             DataFolderPath = env.DataFolderPath.Path,
-            CreationClubFilePath = env.CreationKitLoadOrderFilePath?.Path ?? string.Empty,
+            CreationClubFilePath = env.CreationClubListingsFilePath?.Path ?? string.Empty,
             GameRelease = gameRelease.ToGameRelease(),
         };
     }
