@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using AutoFixture;
 using FluentAssertions;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Masters;
@@ -18,9 +19,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
     public class FindImplicitlyIncludedModsTests : TypicalTest
     {
         private static readonly ModKey ModA = "ModA.esp";
-        private static readonly  ModKey ModB = "ModB.esp";
-        private static readonly  ModKey ModC = "ModC.esp";
-        private static readonly  ModKey ModD = "ModD.esp";
+        private static readonly ModKey ModB = "ModB.esp";
+        private static readonly ModKey ModC = "ModC.esp";
+        private static readonly ModKey ModD = "ModD.esp";
 
         record Listing(ModKey Mod, params ModKey[] Masters);
         
@@ -31,7 +32,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var masterReaderFactory = Substitute.For<IMasterReferenceReaderFactory>();
             foreach (var listing in listings)
             {
-                masterReaderFactory.FromPath(Path.Combine(dataFolder, listing.Mod.FileName.String), Arg.Any<GameRelease>())
+                masterReaderFactory.FromPath(Path.Combine(dataFolder, listing.Mod.FileName.String))
                     .Returns(_ =>
                     {
                         var reader = Substitute.For<IMasterReferenceReader>();
@@ -55,20 +56,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void NothingToDo()
         {
             var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                directoryPath.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA, ModC)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(directoryPath),
+                GetReaderFactory(
+                    directoryPath.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA, ModC)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, true),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    directoryPath,
-                    list)
+            var found = adder.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
@@ -77,20 +77,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void EnableOne()
         {
             var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                directoryPath.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA, ModC)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(directoryPath),
+                GetReaderFactory(
+                    directoryPath.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA, ModC)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    directoryPath,
-                    list)
+            var found = adder.Find(list)
                 .ToList();
             found.Should().HaveCount(1);
             found[0].Should().Be(ModC);
@@ -100,20 +99,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void SkipUnreferenced()
         {
             var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                directoryPath.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(directoryPath),
+                GetReaderFactory(
+                    directoryPath.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    directoryPath,
-                    list)
+            var found = adder.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
@@ -122,11 +120,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void RecursiveEnable()
         {
             var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                directoryPath.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA, ModC),
-                new Listing(ModC, ModD)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(directoryPath),
+                GetReaderFactory(
+                    directoryPath.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA, ModC),
+                    new Listing(ModC, ModD)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -134,10 +134,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    directoryPath,
-                    list)
+            var found = adder.Find(list)
                 .ToList();
             found.Should().HaveCount(2);
             found.Should().Equal(
@@ -149,11 +146,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void RecursiveEnableBadLo()
         {
             var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                directoryPath.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA, ModC),
-                new Listing(ModC, ModD)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(directoryPath),
+                GetReaderFactory(
+                    directoryPath.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA, ModC),
+                    new Listing(ModC, ModD)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -161,10 +160,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(ModB, true),
                 new ModListing(ModD, false),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    directoryPath,
-                    list)
+            var found = adder.Find(list)
                 .ToArray();
             found.Should().HaveCount(2);
             found.Should().Equal(
@@ -176,19 +172,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void UnlistedReference()
         {
             var dataFolder = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(GetReaderFactory(
-                dataFolder.Path,
-                new Listing(ModA),
-                new Listing(ModB, ModA, ModC)));
+            var adder = new FindImplicitlyIncludedMods(
+                new DataDirectoryInjection(dataFolder),
+                GetReaderFactory(
+                    dataFolder.Path,
+                    new Listing(ModA),
+                    new Listing(ModB, ModA, ModC)));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(
-                    Fixture.Create<GameRelease>(),
-                    dataFolder,
-                    list)
+            var found = adder.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
