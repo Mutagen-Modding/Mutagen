@@ -15,21 +15,21 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     {
         private readonly IFileSystem _fileSystem;
         private readonly IPluginListingsProvider _listingsProvider;
-        private readonly IPluginPathContext _pluginFilePath;
+        private readonly IPluginListingsPathProvider _pluginListingsFilePath;
 
         public PluginLiveLoadOrderProvider(
             IFileSystem fileSystem,
             IPluginListingsProvider listingsProvider,
-            IPluginPathContext pluginFilePath)
+            IPluginListingsPathProvider pluginListingsFilePath)
         {
             _fileSystem = fileSystem;
             _listingsProvider = listingsProvider;
-            _pluginFilePath = pluginFilePath;
+            _pluginListingsFilePath = pluginListingsFilePath;
         }
         
         public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state)
         {
-            var results = ObservableExt.WatchFile(_pluginFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
+            var results = ObservableExt.WatchFile(_pluginListingsFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
                 .StartWith(Unit.Default)
                 .Select(_ =>
                 {
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         }
 
         public IObservable<Unit> Changed => ObservableExt
-            .WatchFile(_pluginFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
+            .WatchFile(_pluginListingsFilePath.Path, fileWatcherFactory: _fileSystem.FileSystemWatcher)
             .StartWith(Unit.Default);
     }
 }

@@ -27,7 +27,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 var ret = new CreationClubLiveListingsFileReader(
                         Fixture.Create<IFileSystem>(),
                         Fixture.Create<ICreationClubRawListingsReader>(),
-                        new CreationClubPathInjection(null))
+                        new CreationClubListingsPathInjection(null))
                     .Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
@@ -55,7 +55,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 var ret = new CreationClubLiveListingsFileReader(
                         fs,
                         Fixture.Create<ICreationClubRawListingsReader>(),
-                        new CreationClubPathInjection("C:/SomeMissingPath"))
+                        new CreationClubListingsPathInjection("C:/SomeMissingPath"))
                     .Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
@@ -78,7 +78,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var list = new CreationClubLiveListingsFileReader(
                     fs,
                     reader,
-                    new CreationClubPathInjection(path))
+                    new CreationClubListingsPathInjection(path))
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);
@@ -104,7 +104,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var list = new CreationClubLiveListingsFileReader(
                     fs,
                     reader,
-                    new CreationClubPathInjection(path))
+                    new CreationClubListingsPathInjection(path))
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(0);
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var list = new CreationClubLiveListingsFileReader(
                     fs,
                     reader,
-                    new CreationClubPathInjection(path))
+                    new CreationClubListingsPathInjection(path))
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);
@@ -173,7 +173,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var list = new CreationClubLiveListingsFileReader(
                     fs,
                     reader,
-                    new CreationClubPathInjection(path))
+                    new CreationClubListingsPathInjection(path))
                 .Get(out var state)
                 .AsObservableList();
             list.Items.Should().HaveCount(1);

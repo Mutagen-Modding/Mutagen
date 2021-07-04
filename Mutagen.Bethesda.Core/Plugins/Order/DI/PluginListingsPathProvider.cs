@@ -5,7 +5,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI
 {
-    public interface IPluginPathContext
+    public interface IPluginListingsPathProvider
     {
         /// <summary>
         /// Returns expected location of the plugin load order file
@@ -14,11 +14,11 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         FilePath Path { get; }
     }
 
-    public class PluginPathContext : IPluginPathContext
+    public class PluginListingsPathProvider : IPluginListingsPathProvider
     {
         private readonly IGameReleaseContext _gameReleaseContext;
 
-        public PluginPathContext(IGameReleaseContext gameReleaseContext)
+        public PluginListingsPathProvider(IGameReleaseContext gameReleaseContext)
         {
             _gameReleaseContext = gameReleaseContext;
         }
@@ -42,5 +42,5 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             GetRelativePluginsPath());
     }
 
-    public record PluginPathInjection(FilePath Path) : IPluginPathContext;
+    public record PluginListingsPathInjection(FilePath Path) : IPluginListingsPathProvider;
 }

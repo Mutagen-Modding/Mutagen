@@ -10,19 +10,19 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class EnabledPluginListingsProvider : IEnabledPluginListingsProvider, IListingsProvider
     {
         private readonly IPluginRawListingsReader _reader;
-        private readonly IPluginPathContext _pluginPath;
+        private readonly IPluginListingsPathProvider _pluginListingsPath;
 
         public EnabledPluginListingsProvider(
             IPluginRawListingsReader reader,
-            IPluginPathContext pluginPath)
+            IPluginListingsPathProvider pluginListingsPath)
         {
             _reader = reader;
-            _pluginPath = pluginPath;
+            _pluginListingsPath = pluginListingsPath;
         }
         
         public IEnumerable<IModListingGetter> Get()
         {
-            return _reader.Read(_pluginPath.Path);
+            return _reader.Read(_pluginListingsPath.Path);
         }
     }
 }

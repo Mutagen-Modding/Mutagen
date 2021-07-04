@@ -16,21 +16,21 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     {
         private readonly IFileSystem _fileSystem;
         private readonly ICreationClubRawListingsReader _listingsReader;
-        private readonly ICreationClubPathContext _pathContext;
+        private readonly ICreationClubListingsPathProvider _listingsPathProvider;
 
         public CreationClubLiveListingsFileReader(
             IFileSystem fileSystem,
             ICreationClubRawListingsReader listingsReader,
-            ICreationClubPathContext pathContext)
+            ICreationClubListingsPathProvider listingsPathProvider)
         {
             _fileSystem = fileSystem;
             _listingsReader = listingsReader;
-            _pathContext = pathContext;
+            _listingsPathProvider = listingsPathProvider;
         }
         
         public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state)
         {
-            var path = _pathContext.Path;
+            var path = _listingsPathProvider.Path;
             if (path == null)
             {
                 state = Observable.Return(ErrorResponse.Success);

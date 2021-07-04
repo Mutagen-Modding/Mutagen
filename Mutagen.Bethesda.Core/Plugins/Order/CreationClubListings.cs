@@ -15,7 +15,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         public static FilePath? GetListingsPath(GameCategory category, DirectoryPath dataPath)
         {
             var categoryInject = new GameCategoryInjection(category);
-            return new CreationClubPathContext(
+            return new CreationClubListingsPathProvider(
                 categoryInject,
                 new CreationClubEnabledProvider(
                     categoryInject),
@@ -29,7 +29,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new CreationClubListingsProvider(
                 IFileSystemExt.DefaultFilesystem,
                 dataDirectoryInjection,
-                new CreationClubPathContext(
+                new CreationClubListingsPathProvider(
                     gameCategoryInjection,
                     new CreationClubEnabledProvider(
                         gameCategoryInjection),
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new CreationClubListingsProvider(
                 IFileSystemExt.DefaultFilesystem,
                 dataDirectoryInjection,
-                new CreationClubPathInjection(cccFilePath),
+                new CreationClubListingsPathInjection(cccFilePath),
                 new CreationClubRawListingsReader(
                     IFileSystemExt.DefaultFilesystem,
                     dataDirectoryInjection)).Get();
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             IFileSystem? fileSystem = null)
         {
             fileSystem ??= IFileSystemExt.DefaultFilesystem;
-            var cccPath = new CreationClubPathInjection(cccFilePath);
+            var cccPath = new CreationClubListingsPathInjection(cccFilePath);
             var dataDir = new DataDirectoryInjection(dataFolderPath);
             return new CreationClubLiveLoadOrderProvider(
                 new CreationClubLiveListingsFileReader(

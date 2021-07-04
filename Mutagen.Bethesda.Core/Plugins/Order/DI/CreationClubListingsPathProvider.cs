@@ -4,7 +4,7 @@ using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI
 {
-    public interface ICreationClubPathContext
+    public interface ICreationClubListingsPathProvider
     {
         /// <summary>
         /// Returns expected location of the creation club load order file
@@ -13,13 +13,13 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         FilePath? Path { get; }
     }
 
-    public class CreationClubPathContext : ICreationClubPathContext
+    public class CreationClubListingsPathProvider : ICreationClubListingsPathProvider
     {
         private readonly IGameCategoryContext _categoryContext;
         private readonly ICreationClubEnabledProvider _isUsed;
         private readonly IDataDirectoryContext _dataDirectory;
 
-        public CreationClubPathContext(
+        public CreationClubListingsPathProvider(
             IGameCategoryContext categoryContext,
             ICreationClubEnabledProvider isUsed,
             IDataDirectoryContext dataDirectory)
@@ -44,5 +44,5 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         }
     }
 
-    public record CreationClubPathInjection(FilePath? Path) : ICreationClubPathContext;
+    public record CreationClubListingsPathInjection(FilePath? Path) : ICreationClubListingsPathProvider;
 }

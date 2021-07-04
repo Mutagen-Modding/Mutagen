@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void NotUsed()
         {
-            new CreationClubPathContext(
+            new CreationClubListingsPathProvider(
                     new GameCategoryInjection(GameCategory.Skyrim),
                     new CreationClubEnabledInjection(false),
                     new DataDirectoryInjection("C:/SomeFolder"))
@@ -28,7 +28,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var dataDir = "C:/SomeFolder";
             foreach (var category in EnumExt.GetValues<GameCategory>())
             {
-                new CreationClubPathContext(
+                new CreationClubListingsPathProvider(
                         new GameCategoryInjection(category),
                         new CreationClubEnabledInjection(true),
                         new DataDirectoryInjection(dataDir))

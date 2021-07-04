@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void Typical()
         {
-            var path = Fixture.Create<IPluginPathContext>();
+            var path = Fixture.Create<IPluginListingsPathProvider>();
             var reader = Substitute.For<IPluginRawListingsReader>();
             var listings = Fixture.CreateMany<IModListingGetter>();
             reader.Read(path.Path).Returns(listings);

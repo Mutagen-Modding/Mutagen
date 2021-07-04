@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <inheritdoc cref="IPluginListingsProvider"/>
         public static string GetListingsPath(GameRelease game)
         {
-            return new PluginPathContext(new GameReleaseInjection(game)).Path;
+            return new PluginListingsPathProvider(new GameReleaseInjection(game)).Path;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true)
         {
             return ListingsFromPath(
-                new PluginPathContext(
+                new PluginListingsPathProvider(
                     new GameReleaseInjection(game)).Path,
                 game,
                 dataPath,
@@ -88,7 +88,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return PluginListingsProvider(
                 new DataDirectoryInjection(dataPath),
                 new GameReleaseInjection(game),
-                new PluginPathInjection(pluginTextPath),
+                new PluginListingsPathInjection(pluginTextPath),
                 throwOnMissingMods).Get();
         }
 
@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             out IObservable<ErrorResponse> state,
             bool throwOnMissingMods = true)
         {
-            var pluginPath = new PluginPathInjection(loadOrderFilePath);
+            var pluginPath = new PluginListingsPathInjection(loadOrderFilePath);
             var prov = PluginListingsProvider(
                 new DataDirectoryInjection(dataFolderPath),
                 new GameReleaseInjection(game),
@@ -131,7 +131,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         public static IObservable<Unit> GetLoadOrderChanged(GameRelease game)
         {
             return ObservableExt.WatchFile(
-                new PluginPathContext(
+                new PluginListingsPathProvider(
                     new GameReleaseInjection(game)).Path);
         }
 
@@ -144,7 +144,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static PluginListingsProvider PluginListingsProvider(
             IDataDirectoryContext dataDirectory,
             IGameReleaseContext gameContext,
-            IPluginPathContext pathContext, 
+            IPluginListingsPathProvider listingsPathProvider, 
             bool throwOnMissingMods)
         {
             var fs = IFileSystemExt.DefaultFilesystem;
@@ -160,12 +160,12 @@ namespace Mutagen.Bethesda.Plugins.Order
                         fs,
                         pluginListingParser),
                     dataDirectory,
-                    pathContext),
+                    listingsPathProvider),
                 new EnabledPluginListingsProvider(
                     new PluginRawListingsReader(
                         fs,
                         pluginListingParser),
-                    pathContext));
+                    listingsPathProvider));
             return provider;
         }
     }

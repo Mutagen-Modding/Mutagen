@@ -193,7 +193,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Order\DI\CreationClubPathContext.cs">
+    <Compile Include="Plugins\Order\DI\CreationClubListingsPathProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
@@ -278,7 +278,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
-    <Compile Include="Plugins\Order\DI\PluginPathContext.cs">
+    <Compile Include="Plugins\Order\DI\PluginListingsPathProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>

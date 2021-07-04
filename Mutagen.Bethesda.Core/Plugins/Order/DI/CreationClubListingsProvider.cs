@@ -22,18 +22,18 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     {
         private readonly IFileSystem _fileSystem;
         private readonly IDataDirectoryContext _dataDirectoryContext;
-        private readonly ICreationClubPathContext _pluginPathContext;
+        private readonly ICreationClubListingsPathProvider _pluginListingsPathProvider;
         private readonly ICreationClubRawListingsReader _reader;
 
         public CreationClubListingsProvider(
             IFileSystem fileSystem,
             IDataDirectoryContext dataDirectoryContext,
-            ICreationClubPathContext pluginPathContext,
+            ICreationClubListingsPathProvider pluginListingsPathProvider,
             ICreationClubRawListingsReader reader)
         {
             _fileSystem = fileSystem;
             _dataDirectoryContext = dataDirectoryContext;
-            _pluginPathContext = pluginPathContext;
+            _pluginListingsPathProvider = pluginListingsPathProvider;
             _reader = reader;
         }
 
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         
         public IEnumerable<IModListingGetter> Get(bool throwIfMissing)
         {
-            var path = _pluginPathContext.Path;
+            var path = _pluginListingsPathProvider.Path;
             if (path == null) return Enumerable.Empty<IModListingGetter>();
             if (!_fileSystem.File.Exists(path.Value))
             {

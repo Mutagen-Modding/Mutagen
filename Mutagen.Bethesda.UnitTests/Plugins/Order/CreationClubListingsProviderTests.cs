@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             new CreationClubListingsProvider(
                     Fixture.Create<IFileSystem>(),
                     dataDirectoryInjection,
-                    new CreationClubPathInjection(default(FilePath?)),
+                    new CreationClubListingsPathInjection(default(FilePath?)),
                     new CreationClubRawListingsReader(
                         Fixture.Create<IFileSystem>(),
                         dataDirectoryInjection))
@@ -42,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new CreationClubListingsProvider(
                         fs,
                         dataDirectoryInjection,
-                        new CreationClubPathInjection("C:/SomeMissingFile"),
+                        new CreationClubListingsPathInjection("C:/SomeMissingFile"),
                         new CreationClubRawListingsReader(
                             fs,
                             dataDirectoryInjection))
@@ -66,7 +66,7 @@ ModB.esp"},
             new CreationClubListingsProvider(
                     fs,
                     dataDirectoryInjection,
-                    new CreationClubPathInjection(cccPath),
+                    new CreationClubListingsPathInjection(cccPath),
                     new CreationClubRawListingsReader(fs, dataDirectoryInjection))
                 .Get().Should().Equal(
                     new ModListing("ModA.esp", true),
@@ -88,7 +88,7 @@ ModB.esp"},
             new CreationClubListingsProvider(
                     fs,
                     dataDirectoryInjection,
-                    new CreationClubPathInjection(cccPath),
+                    new CreationClubListingsPathInjection(cccPath),
                     new CreationClubRawListingsReader(fs, dataDirectoryInjection))
                 .Get().Should().Equal(
                     new ModListing("ModA.esp", true));   

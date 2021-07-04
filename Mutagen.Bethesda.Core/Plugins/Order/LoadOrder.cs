@@ -111,7 +111,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         {
             var gameContext = new GameReleaseInjection(game);
             var categoryContext = new GameCategoryInjection(game.ToCategory());
-            var pluginPath = new PluginPathContext(gameContext);
+            var pluginPath = new PluginListingsPathProvider(gameContext);
             var dataDir = new DataDirectoryInjection(dataPath);
             var pluginProvider = PluginListingsProvider(
                 dataDir,
@@ -129,7 +129,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     new CreationClubListingsProvider(
                         IFileSystemExt.DefaultFilesystem,
                         dataDir,
-                        new CreationClubPathContext(
+                        new CreationClubListingsPathProvider(
                             categoryContext,
                             new CreationClubEnabledProvider(
                                 categoryContext),
@@ -148,7 +148,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             bool throwOnMissingMods = true)
         {
             var gameContext = new GameReleaseInjection(game);
-            var pluginPath = new PluginPathInjection(pluginsFilePath);
+            var pluginPath = new PluginListingsPathInjection(pluginsFilePath);
             var dataDir = new DataDirectoryInjection(dataPath);
             var pluginProvider = PluginListingsProvider(
                 dataDir,
@@ -166,7 +166,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     new CreationClubListingsProvider(
                         IFileSystemExt.DefaultFilesystem,
                         dataDir,
-                        new CreationClubPathInjection(creationClubFilePath),
+                        new CreationClubListingsPathInjection(creationClubFilePath),
                         new CreationClubRawListingsReader(
                             IFileSystemExt.DefaultFilesystem,
                             dataDir)))
@@ -195,9 +195,9 @@ namespace Mutagen.Bethesda.Plugins.Order
         {
             var dataDir = new DataDirectoryInjection(dataFolderPath);
             var gameRelease = new GameReleaseInjection(game);
-            var pluginPath = new PluginPathContext(gameRelease);
+            var pluginPath = new PluginListingsPathProvider(gameRelease);
             var gameCategoryInjection = new GameCategoryInjection(game.ToCategory());
-            var cccPath = new CreationClubPathContext(
+            var cccPath = new CreationClubListingsPathProvider(
                 gameCategoryInjection,
                 new CreationClubEnabledProvider(
                     gameCategoryInjection),
@@ -249,8 +249,8 @@ namespace Mutagen.Bethesda.Plugins.Order
         {
             var dataDir = new DataDirectoryInjection(dataFolderPath);
             var gameRelease = new GameReleaseInjection(game);
-            var pluginPath = new PluginPathInjection(loadOrderFilePath);
-            var cccPath = new CreationClubPathInjection(cccLoadOrderFilePath);
+            var pluginPath = new PluginListingsPathInjection(loadOrderFilePath);
+            var cccPath = new CreationClubListingsPathInjection(cccLoadOrderFilePath);
             var pluginListingsProv = PluginListingsProvider(
                 dataDir,
                 gameRelease,
@@ -427,7 +427,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         private static PluginListingsProvider PluginListingsProvider(
             IDataDirectoryContext dataDirectory,
             IGameReleaseContext gameContext,
-            IPluginPathContext pathContext, 
+            IPluginListingsPathProvider listingsPathProvider, 
             bool throwOnMissingMods)
         {
             var fs = IFileSystemExt.DefaultFilesystem;
@@ -443,12 +443,12 @@ namespace Mutagen.Bethesda.Plugins.Order
                         fs,
                         pluginListingParser),
                     dataDirectory,
-                    pathContext),
+                    listingsPathProvider),
                 new EnabledPluginListingsProvider(
                     new PluginRawListingsReader(
                         fs,
                         pluginListingParser),
-                    pathContext));
+                    listingsPathProvider));
             return provider;
         }
     }
