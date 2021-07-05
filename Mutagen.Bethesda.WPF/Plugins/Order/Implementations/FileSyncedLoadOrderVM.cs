@@ -1,57 +1,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive;
-using System.Reactive.Concurrency;
 using Noggog;
 using ReactiveUI;
-using ReactiveUI.Fody.Helpers;
 using DynamicData;
 using System.Reactive.Linq;
 using Noggog.WPF;
 using DynamicData.Binding;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Plugins.Order.DI;
 
 namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
 {
     public class FileSyncedLoadOrderVM : ALoadOrderVM<FileSyncedLoadOrderListingVM>
     {
-        public string LoadOrderFilePath { get; } = string.Empty;
-
-        [Reactive]
-        public string DataFolderPath { get; set; } = string.Empty;
-
         private readonly ObservableAsPropertyHelper<ErrorResponse> _State;
         public ErrorResponse State => _State.Value;
 
-        [Reactive]
-        public string CreationClubFilePath { get; set; } = string.Empty;
-
-        [Reactive]
-        public GameRelease GameRelease { get; set; }
-
         public override IObservableCollection<FileSyncedLoadOrderListingVM> LoadOrder { get; }
 
-        public FileSyncedLoadOrderVM(FilePath loadOrderFilePath)
+        public FileSyncedLoadOrderVM(
+            IPluginLiveLoadOrderProvider liveLoadOrderProvider,
+            ILoadOrderWriter writer,
+            IPluginListingsPathProvider pluginPathContext,
+            IDataDirectoryProvider dataDirectoryContext)
         {
-            LoadOrderFilePath = loadOrderFilePath;
-            
-            var lo = Mutagen.Bethesda.Plugins.Order.LoadOrder.GetLiveLoadOrder(
-                this.WhenAnyValue(x => x.GameRelease),
-                Observable.Return(loadOrderFilePath),
-                this.WhenAnyValue(x => x.DataFolderPath)
-                    .Select(x => new DirectoryPath(x)),
-                out var state,
-                this.WhenAnyValue(x => x.CreationClubFilePath)
-                    .Select(x => x.IsNullOrWhitespace() ? default(FilePath?) : new FilePath(x)));
+            var loadOrder = liveLoadOrderProvider.Get(out var state)
+                .Transform(x => new FileSyncedLoadOrderListingVM(dataDirectoryContext, x))
+                .RefCount();
 
             _State = state
                 .ToGuiProperty(this, nameof(State), ErrorResponse.Fail("Uninitialized"));
-                
-            var loadOrder = lo
-                .Transform(x => new FileSyncedLoadOrderListingVM(this, x))
-                .PublishRefCount();
-
+            
             LoadOrder = loadOrder
                 .ToObservableCollection(this);
 
@@ -74,9 +55,8 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
                 .DistinctUntilChanged(new SequenceEqualityComparer())
                 .Subscribe(x =>
                 {
-                    Mutagen.Bethesda.Plugins.Order.LoadOrder.Write(
-                        LoadOrderFilePath,
-                        GameRelease,
+                    writer.Write(
+                        pluginPathContext.Path,
                         LoadOrder);
                 });
         }

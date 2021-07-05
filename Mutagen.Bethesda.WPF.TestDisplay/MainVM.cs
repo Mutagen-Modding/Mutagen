@@ -35,26 +35,21 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
 
         public FileSyncedLoadOrderVM LoadOrderVM { get; }
 
-    public MainVM()
-    {
-        var gameRelease = SkyrimRelease.SkyrimSE;
-        var env = GameEnvironment.Typical.Skyrim(gameRelease, LinkCachePreferences.OnlyIdentifiers())
-            .DisposeWith(this);
-        LinkCache = env.LinkCache;
-        LoadOrder = env.LoadOrder;
-        ScopedTypes = typeof(IArmorGetter).AsEnumerable();
-        LateSetPickerVM = new LateSetPickerVM(this);
-        Reflection = new ReflectionSettingsVM(
-            ReflectionSettingsParameters.CreateFrom(
-                new TestSettings(),
-                env.LoadOrder.ListedOrder,
-                env.LinkCache));
-        LoadOrderVM = new FileSyncedLoadOrderVM(env.LoadOrderFilePath)
+        public MainVM(FileSyncedLoadOrderVM loadOrderVm)
         {
-            DataFolderPath = env.DataFolderPath.Path,
-            CreationClubFilePath = env.CreationClubListingsFilePath?.Path ?? string.Empty,
-            GameRelease = gameRelease.ToGameRelease(),
-        };
-    }
+            var gameRelease = SkyrimRelease.SkyrimSE;
+            var env = GameEnvironment.Typical.Skyrim(gameRelease, LinkCachePreferences.OnlyIdentifiers())
+                .DisposeWith(this);
+            LinkCache = env.LinkCache;
+            LoadOrder = env.LoadOrder;
+            ScopedTypes = typeof(IArmorGetter).AsEnumerable();
+            LateSetPickerVM = new LateSetPickerVM(this);
+            Reflection = new ReflectionSettingsVM(
+                ReflectionSettingsParameters.CreateFrom(
+                    new TestSettings(),
+                    env.LoadOrder.ListedOrder,
+                    env.LinkCache));
+            LoadOrderVM = loadOrderVm;
+        }
     }
 }
