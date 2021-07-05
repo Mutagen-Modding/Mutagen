@@ -56,21 +56,21 @@ namespace Mutagen.Bethesda.Archives.DI
         private readonly IFileSystem _fileSystem;
         private readonly IGetArchiveIniListings _iniListings;
         private readonly ICheckArchiveApplicability _applicability;
-        private readonly IGameReleaseContext _gameReleaseContext;
         private readonly IDataDirectoryProvider _dataDirectoryProvider;
+        private readonly IArchiveExtensionProvider _archiveExtension;
 
         public GetApplicableArchivePaths(
             IFileSystem fileSystem,
             IGetArchiveIniListings iniListings,
             ICheckArchiveApplicability applicability,
-            IGameReleaseContext gameReleaseContext,
-            IDataDirectoryProvider dataDirectoryProvider)
+            IDataDirectoryProvider dataDirectoryProvider,
+            IArchiveExtensionProvider archiveExtension)
         {
             _fileSystem = fileSystem;
             _iniListings = iniListings;
             _applicability = applicability;
-            _gameReleaseContext = gameReleaseContext;
             _dataDirectoryProvider = dataDirectoryProvider;
+            _archiveExtension = archiveExtension;
         }
         
         /// <inheritdoc />
@@ -110,7 +110,7 @@ namespace Mutagen.Bethesda.Archives.DI
                 return Enumerable.Empty<FilePath>();
             }
             
-            var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{Archive.GetExtension(_gameReleaseContext.Release)}");
+            var ret = _fileSystem.Directory.EnumerateFilePaths(_dataDirectoryProvider.Path, searchPattern: $"*{_archiveExtension.Get()}");
             if (modKey != null)
             {
                 var iniListedArchives = _iniListings.Get().ToHashSet();

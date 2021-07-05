@@ -15,7 +15,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         {
             var release = GameRelease.Fallout4;
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     Utility.PluginModKey,
                     $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}{Archive.GetExtension(release)}")
@@ -27,7 +28,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         {
             var release = GameRelease.Fallout4;
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     Utility.PluginModKey,
                     $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
@@ -41,7 +43,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
             var name = "SomeName - ExtraTitleNonsense";
             var modKey = ModKey.FromNameAndExtension($"{name}.esp");
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     modKey,
                     $"{name}{Archive.GetExtension(release)}")
@@ -55,7 +58,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
             var name = $"SomeName - Textures";
             var modKey = ModKey.FromNameAndExtension($"{name}.esp");
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     modKey,
                     $"{name}{Archive.GetExtension(release)}")
@@ -67,7 +71,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         {
             var release = GameRelease.Fallout4;
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     Utility.PluginModKey,
                     $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
@@ -79,7 +84,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         {
             var release = GameRelease.Fallout4;
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(
                     Utility.PluginModKey,
                     $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
@@ -90,7 +96,8 @@ namespace Mutagen.Bethesda.UnitTests.Archives
         public void BadExtension()
         {
             new CheckArchiveApplicability(
-                    new GameReleaseInjection(GameRelease.Fallout4))
+                new ArchiveExtensionProvider(
+                    new GameReleaseInjection(GameRelease.Fallout4)))
                 .IsApplicable(
                     Utility.PluginModKey,
                     $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}.bad")

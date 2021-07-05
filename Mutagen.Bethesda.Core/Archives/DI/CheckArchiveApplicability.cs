@@ -22,17 +22,17 @@ namespace Mutagen.Bethesda.Archives.DI
 
     public class CheckArchiveApplicability : ICheckArchiveApplicability
     {
-        private readonly IGameReleaseContext _gameRelease;
+        private readonly IArchiveExtensionProvider _archiveExtensionProvider;
 
-        public CheckArchiveApplicability(IGameReleaseContext gameRelease)
+        public CheckArchiveApplicability(IArchiveExtensionProvider archiveExtensionProvider)
         {
-            _gameRelease = gameRelease;
+            _archiveExtensionProvider = archiveExtensionProvider;
         }
 
         /// <inheritdoc />
         public bool IsApplicable(ModKey modKey, FileName archiveFileName)
         {
-            if (!archiveFileName.Extension.Equals(Archive.GetExtension(_gameRelease.Release), StringComparison.OrdinalIgnoreCase)) return false;
+            if (!archiveFileName.Extension.Equals(_archiveExtensionProvider.Get(), StringComparison.OrdinalIgnoreCase)) return false;
             var nameWithoutExt = archiveFileName.NameWithoutExtension.AsSpan();
 
             // See if the name matches straight up

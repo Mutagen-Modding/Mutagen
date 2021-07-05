@@ -36,15 +36,16 @@ sResourceArchiveList={SomeExplicitListingBsa}, {UnusedExplicitListingBsa}") }
         private GetApplicableArchivePaths GetClass(IFileSystem fs)
         {
             var gameReleaseInjection = new GameReleaseInjection(GameRelease.SkyrimSE);
+            var ext = new ArchiveExtensionProvider(gameReleaseInjection);
             return new GetApplicableArchivePaths(
                 fs, 
                 new GetArchiveIniListings(
                     fs,
                     gameReleaseInjection),
                 new CheckArchiveApplicability(
-                    gameReleaseInjection),
-                gameReleaseInjection,
-                new DataDirectoryInjection(BaseFolder));
+                    ext),
+                new DataDirectoryInjection(BaseFolder),
+                ext);
         }
 
         #region No ModKey

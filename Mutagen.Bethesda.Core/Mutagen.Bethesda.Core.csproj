@@ -72,6 +72,7 @@
     <Compile Include="Archives\Bsa\BsaUtility.cs" />
     <Compile Include="Archives\Bsa\BsaVersionType.cs" />
     <Compile Include="Archives\Bsa\BsaFileNameBlock.cs" />
+    <Compile Include="Archives\DI\ArchiveExtensionProvider.cs" />
     <Compile Include="Archives\DI\ArchiveReaderProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>
@@ -95,6 +96,7 @@
     <Compile Include="Archives\Exceptions\ArchiveException.cs" />
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
+    <Compile Include="Archives\IArchiveReader.cs" />
     <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

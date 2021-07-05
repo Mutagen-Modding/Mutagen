@@ -18,35 +18,21 @@ using StreamReader = System.IO.StreamReader;
 
 namespace Mutagen.Bethesda.Archives
 {
-    /// <summary>
-    /// A readonly interface for retrieving data from a Bethesda Archive
-    /// </summary>
-    public interface IArchiveReader
-    {
-        /// <summary>
-        /// Attempts to locate and retrieve a folder from the archive
-        /// </summary>
-        /// <param name="path">Folder path to look for</param>
-        /// <param name="folder">Retrieved folder object, if successful</param>
-        /// <returns>True if folder with the given path was located in the archive</returns>
-        bool TryGetFolder(string path, [MaybeNullWhen(false)] out IArchiveFolder folder);
-        IEnumerable<IArchiveFile> Files { get; }
-    }
-
     public static class Archive
     {
         private static GetApplicableArchivePaths GetApplicableArchivePathsDi(GameRelease release, DirectoryPath dataFolderPath)
         {
             var gameReleaseInjection = new GameReleaseInjection(release);
+            var ext = new ArchiveExtensionProvider(gameReleaseInjection);
             return new GetApplicableArchivePaths(
                 IFileSystemExt.DefaultFilesystem,
                 new GetArchiveIniListings(
                     IFileSystemExt.DefaultFilesystem,
                     gameReleaseInjection),
                 new CheckArchiveApplicability(
-                    gameReleaseInjection),
-                gameReleaseInjection,
-                new DataDirectoryInjection(dataFolderPath));
+                    ext),
+                new DataDirectoryInjection(dataFolderPath),
+                ext);
         }
         
         /// <summary>
@@ -168,7 +154,8 @@ namespace Mutagen.Bethesda.Archives
         public static bool IsApplicable(GameRelease release, ModKey modKey, FileName archiveFileName)
         {
             return new CheckArchiveApplicability(
-                    new GameReleaseInjection(release))
+                    new ArchiveExtensionProvider(
+                        new GameReleaseInjection(release)))
                 .IsApplicable(modKey, archiveFileName);
         }
 
