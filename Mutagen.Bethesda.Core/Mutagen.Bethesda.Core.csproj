@@ -97,6 +97,7 @@
     <Compile Include="Archives\IArchiveFile.cs" />
     <Compile Include="Archives\IArchiveFolder.cs" />
     <Compile Include="Archives\IArchiveReader.cs" />
+    <Compile Include="Environments\DI\GameEnvironmentProvider.cs" />
     <Compile Include="Environments\DI\IDataDirectoryProvider.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

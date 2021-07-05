@@ -1,10 +1,13 @@
 using System;
 using System.IO;
+using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Cache;
+using Mutagen.Bethesda.Plugins.Implicit.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Plugins.Records.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Environments
@@ -74,27 +77,57 @@ namespace Mutagen.Bethesda.Environments
             DirectoryPath gameFolder,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            var dataPath = Path.Combine(gameFolder.Path, "Data");
-
-            var loadOrder = Mutagen.Bethesda.Plugins.Order.LoadOrder.Import<TModGetter>(
-                dataPath,
-                Mutagen.Bethesda.Plugins.Order.LoadOrder.GetListings(release, dataPath),
-                release);
-
-            if (!PluginListings.TryGetListingsFile(release, out var loadOrderFilePath))
-            {
-                throw new FileNotFoundException("Could not locate plugins file");
-            }
-
-            var ccPath = CreationClubListings.GetListingsPath(release.ToCategory(), dataPath);
-
-            return new GameEnvironmentState<TModSetter, TModGetter>(
-                dataFolderPath: dataPath,
-                loadOrderFilePath: loadOrderFilePath.Path,
-                creationClubListingsFilePath: ccPath,
-                loadOrder: loadOrder,
-                linkCache: loadOrder.ToImmutableLinkCache<TModSetter, TModGetter>(linkCachePrefs),
-                dispose: true);
+            var dataDirectory = new DataDirectoryInjection(Path.Combine(gameFolder, "Data"));
+            var gameReleaseInjection = new GameReleaseInjection(release);
+            var pluginRawListingsReader = new PluginRawListingsReader(
+                IFileSystemExt.DefaultFilesystem,
+                new PluginListingsParser(
+                    new ModListingParser(
+                        new HasEnabledMarkersProvider(
+                            gameReleaseInjection))));
+            var category = new GameCategoryContext(gameReleaseInjection);
+            var pluginListingsPathProvider = new PluginListingsPathProvider(gameReleaseInjection);
+            var creationClubListingsPathProvider = new CreationClubListingsPathProvider(
+                category,
+                new CreationClubEnabledProvider(
+                    category),
+                dataDirectory);
+            return new GameEnvironmentProvider<TModSetter, TModGetter>(
+                    new LoadOrderImporter<TModGetter>(
+                        IFileSystemExt.DefaultFilesystem,
+                        dataDirectory,
+                        new LoadOrderListingsProvider(
+                            new OrderListings(),
+                            new ImplicitListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
+                                dataDirectory,
+                                new ImplicitListingModKeyProvider(
+                                    gameReleaseInjection)),
+                            new PluginListingsProvider(
+                                gameReleaseInjection,
+                                new TimestampedPluginListingsProvider(
+                                    new TimestampAligner(IFileSystemExt.DefaultFilesystem),
+                                    new TimestampedPluginListingsPreferences() {ThrowOnMissingMods = false},
+                                    pluginRawListingsReader,
+                                    dataDirectory,
+                                    pluginListingsPathProvider),
+                                new EnabledPluginListingsProvider(
+                                    pluginRawListingsReader,
+                                    pluginListingsPathProvider)),
+                            new CreationClubListingsProvider(
+                                IFileSystemExt.DefaultFilesystem,
+                                dataDirectory,
+                                creationClubListingsPathProvider,
+                                new CreationClubRawListingsReader(
+                                    IFileSystemExt.DefaultFilesystem,
+                                    dataDirectory))),
+                        new ModImporter<TModGetter>(
+                            IFileSystemExt.DefaultFilesystem,
+                            gameReleaseInjection)),
+                    dataDirectory,
+                    pluginListingsPathProvider,
+                    creationClubListingsPathProvider)
+                .Construct();
         }
 
         DirectoryPath IDataDirectoryProvider.Path => DataFolderPath;
