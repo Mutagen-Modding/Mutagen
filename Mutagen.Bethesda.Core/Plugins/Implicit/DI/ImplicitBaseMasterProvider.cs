@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 
 namespace Mutagen.Bethesda.Plugins.Implicit.DI
@@ -11,10 +10,10 @@ namespace Mutagen.Bethesda.Plugins.Implicit.DI
 
     public class ImplicitBaseMasterProvider : IImplicitBaseMasterProvider
     {
-        private readonly GameReleaseInjection _gameRelease;
+        private readonly IGameReleaseContext _gameRelease;
 
         public ImplicitBaseMasterProvider(
-            GameReleaseInjection gameRelease)
+            IGameReleaseContext gameRelease)
         {
             _gameRelease = gameRelease;
         }

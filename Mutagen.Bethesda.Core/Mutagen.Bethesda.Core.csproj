@@ -164,8 +164,12 @@
     </Compile>
     <Compile Include="Plugins\Implicit\ImplicitCollection.cs" />
     <Compile Include="Plugins\Implicit\ImplicitRegistration.cs" />
+    <Compile Include="Plugins\Masters\DI\MasterReferenceReaderFactory.cs">
+      <CodeLanguage>cs</CodeLanguage>
+      <DefaultPackFolder>content</DefaultPackFolder>
+      <BuildAction>Compile</BuildAction>
+    </Compile>
     <Compile Include="Plugins\Masters\MasterReferenceReader.cs" />
-    <Compile Include="Plugins\Masters\MasterReferenceReaderFactory.cs" />
     <Compile Include="Plugins\Order\CreationClubListings.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

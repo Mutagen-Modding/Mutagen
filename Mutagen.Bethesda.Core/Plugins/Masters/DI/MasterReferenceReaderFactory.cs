@@ -3,7 +3,7 @@ using System.IO.Abstractions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Binary.Streams;
 
-namespace Mutagen.Bethesda.Plugins.Masters
+namespace Mutagen.Bethesda.Plugins.Masters.DI
 {
     public interface IMasterReferenceReaderFactory
     {

@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Masters;
+using Mutagen.Bethesda.Plugins.Masters.DI;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI
