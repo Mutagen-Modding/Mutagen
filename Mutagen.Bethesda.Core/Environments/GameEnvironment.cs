@@ -71,10 +71,10 @@ namespace Mutagen.Bethesda.Environments
 
         public static GameEnvironmentState<TModSetter, TModGetter> Construct(
             GameRelease release,
-            DirectoryPath dataFolder,
+            DirectoryPath gameFolder,
             LinkCachePreferences? linkCachePrefs = null)
         {
-            var dataPath = Path.Combine(dataFolder.Path, "Data");
+            var dataPath = Path.Combine(gameFolder.Path, "Data");
 
             var loadOrder = Mutagen.Bethesda.Plugins.Order.LoadOrder.Import<TModGetter>(
                 dataPath,
@@ -89,7 +89,7 @@ namespace Mutagen.Bethesda.Environments
             var ccPath = CreationClubListings.GetListingsPath(release.ToCategory(), dataPath);
 
             return new GameEnvironmentState<TModSetter, TModGetter>(
-                dataFolderPath: dataFolder,
+                dataFolderPath: dataPath,
                 loadOrderFilePath: loadOrderFilePath.Path,
                 creationClubListingsFilePath: ccPath,
                 loadOrder: loadOrder,
