@@ -41,13 +41,13 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
                     loadOrder
                         .AutoRefresh(x => x.Enabled)
                         .Transform(x => x.Enabled, transformOnRefresh: true)
-                        .BufferInitialNoDeferred(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
                         .QueryWhenChanged(x => x)
                         .Unit(),
                     loadOrder
                         .AutoRefresh(x => x.GhostSuffix)
                         .Transform(x => x.GhostSuffix ?? string.Empty, transformOnRefresh: true)
-                        .BufferInitialNoDeferred(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+                        .BufferInitial(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
                         .QueryWhenChanged(x => x)
                         .Unit())
                 .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
