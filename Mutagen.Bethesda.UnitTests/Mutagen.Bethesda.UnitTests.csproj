@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
     <PackageReference Include="FakeItEasy" Version="7.1.0" />
@@ -25,7 +26,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StructureMap" Version="4.7.1" />
     <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="13.2.38" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.runner.console" Version="2.4.1">
@@ -43,10 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Autofac\Mutagen.Bethesda.Autofac.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Json\Mutagen.Bethesda.Json.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.SourceGenerators\Mutagen.Bethesda.SourceGenerators.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Sqlite\Mutagen.Bethesda.Sqlite.csproj" />
-    <ProjectReference Include="..\Mutagen.Bethesda.StructureMap\Mutagen.Bethesda.StructureMap.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Tests\Mutagen.Bethesda.Tests.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.WPF\Mutagen.Bethesda.WPF.csproj" />

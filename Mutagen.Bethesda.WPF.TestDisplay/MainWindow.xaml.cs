@@ -1,5 +1,5 @@
 using System.Diagnostics;
-using StructureMap;
+using Autofac;
 
 namespace Mutagen.Bethesda.WPF.TestDisplay
 {
@@ -11,9 +11,9 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
         public MainWindow()
         {
             InitializeComponent();
-            var container = Container.For<Register>();
-            Debug.WriteLine(container.WhatDoIHave());
-            this.DataContext = container.GetInstance<MainVM>();
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<MainModule>();
+            this.DataContext = builder.Build().Resolve<MainVM>();
         }
     }
 }

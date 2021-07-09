@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Company>Mutagen</Company>
+        <Product>Mutagen</Product>
+        <Description>A convenience library for setting up IoC containers for Autofac</Description>
+        <Copyright>2021</Copyright>
+        <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/Noggog/Mutagen</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/Noggog/Mutagen</RepositoryUrl>
+        <PackageReleaseNotes>Bethesda Modding</PackageReleaseNotes>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <Authors>Noggog</Authors>
+        <IsPackable>true</IsPackable>
+        <WarningsAsErrors>nullable</WarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Autofac" Version="6.2.0" />
+        <PackageReference Include="GitInfo" Version="2.1.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Noggog.Autofac" Version="2.23.0.1-dev" />
+        <PackageReference Include="NuGetizer" Version="0.7.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Mutagen.Bethesda.Core.Windows\Mutagen.Bethesda.Core.Windows.csproj" />
+      <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
+    </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="RD /S /Q &quot;%25USERPROFILE%25\.nuget\packages\mutagen.bethesda.autofac&quot;" />
+  </Target>
+
+</Project>
