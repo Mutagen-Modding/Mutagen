@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var parser = new PluginListingsParser( 
                 new ModListingParser(
-                    new HasEnabledMarkersInjector(true)));
+                    new HasEnabledMarkersInjection(true)));
             var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp
 *ModC.esp"))
@@ -47,7 +47,7 @@ ModB.esp
         {
             var parser = new PluginListingsParser(
                 new ModListingParser(
-                    new HasEnabledMarkersInjector(true)));
+                    new HasEnabledMarkersInjection(true)));
             var result = parser.Parse(GetStream(@"*ModA.esm
 #ModB.esp
 *ModC.esp"))
@@ -62,7 +62,7 @@ ModB.esp
         {
             var parser = new PluginListingsParser(
                 new ModListingParser(
-                    new HasEnabledMarkersInjector(true)));
+                    new HasEnabledMarkersInjection(true)));
             var result = parser.Parse(GetStream(@"*ModA.esm
 ModB.esp#Hello
 *ModC.esp"))

@@ -38,21 +38,21 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         }
     }
 
-    public class LoadOrderListingsInjector : ILoadOrderListingsProvider
+    public class LoadOrderListingsInjection : ILoadOrderListingsProvider
     {
         private IModListingGetter[] _listings;
         
-        public LoadOrderListingsInjector(IEnumerable<IModListingGetter> listings)
+        public LoadOrderListingsInjection(IEnumerable<IModListingGetter> listings)
         {
             _listings = listings.ToArray();
         }
         
-        public LoadOrderListingsInjector(params IModListingGetter[] listings)
+        public LoadOrderListingsInjection(params IModListingGetter[] listings)
         {
             _listings = listings;
         }
         
-        public LoadOrderListingsInjector(params ModKey[] keys)
+        public LoadOrderListingsInjection(params ModKey[] keys)
         {
             _listings = keys
                 .Select<ModKey, IModListingGetter>(x => new ModListing(x, true))

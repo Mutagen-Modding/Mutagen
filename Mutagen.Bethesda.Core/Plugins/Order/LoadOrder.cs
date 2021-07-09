@@ -345,7 +345,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new LoadOrderImporter<TMod>(
                     IFileSystemExt.DefaultFilesystem,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(loadOrder),
+                    new LoadOrderListingsInjection(loadOrder),
                     new ModImporter<TMod>(
                         IFileSystemExt.DefaultFilesystem,
                         new GameReleaseInjection(gameRelease)))
@@ -369,7 +369,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new LoadOrderImporter<TMod>(
                     IFileSystemExt.DefaultFilesystem,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(
+                    new LoadOrderListingsInjection(
                         loadOrder.Select(x => new ModListing(x, true))),
                     new ModImporter<TMod>(
                         IFileSystemExt.DefaultFilesystem,
@@ -392,7 +392,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new LoadOrderImporter<TMod>(
                     IFileSystemExt.DefaultFilesystem,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(
+                    new LoadOrderListingsInjection(
                         loadOrder.Select(x => new ModListing(x, true))),
                     new ModImporterWrapper<TMod>(factory))
                 .Import();
@@ -413,7 +413,7 @@ namespace Mutagen.Bethesda.Plugins.Order
             return new LoadOrderImporter<TMod>(
                     IFileSystemExt.DefaultFilesystem,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(loadOrder),
+                    new LoadOrderListingsInjection(loadOrder),
                     new ModImporterWrapper<TMod>(factory))
                 .Import();
         }

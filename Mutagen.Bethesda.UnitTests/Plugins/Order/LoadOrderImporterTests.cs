@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var lo = new LoadOrderImporter<SkyrimMod>(
                     fs,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(modPaths.Select(x => x.ModKey).ToArray()),
+                    new LoadOrderListingsInjection(modPaths.Select(x => x.ModKey).ToArray()),
                     importer)
                 .Import();
                 lo.Count.Should().Be(3);
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new LoadOrderImporter<SkyrimMod>(
                         fs,
                         new DataDirectoryInjection("C:/DataFolder"),
-                        new LoadOrderListingsInjector(Utility.Dawnguard),
+                        new LoadOrderListingsInjection(Utility.Dawnguard),
                         importer)
                     .Import();
             };
@@ -95,7 +95,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new LoadOrderImporter<ISkyrimModDisposableGetter>(
                         fs,
                         new DataDirectoryInjection(dataFolder),
-                        new LoadOrderListingsInjector(modPaths.Select(x => x.ModKey).ToArray()),
+                        new LoadOrderListingsInjection(modPaths.Select(x => x.ModKey).ToArray()),
                         importer)
                     .Import();
             });
@@ -126,7 +126,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var lo = new LoadOrderImporter<SkyrimMod>(
                     fs,
                     new DataDirectoryInjection(dataFolder),
-                    new LoadOrderListingsInjector(modPaths.Select(x => x.ModKey).ToArray()),
+                    new LoadOrderListingsInjection(modPaths.Select(x => x.ModKey).ToArray()),
                     importer)
                 .Import();
             lo.Count.Should().Be(3);

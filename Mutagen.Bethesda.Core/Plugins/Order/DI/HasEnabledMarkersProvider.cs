@@ -37,5 +37,5 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         }
     }
 
-    public record HasEnabledMarkersInjector(bool HasEnabledMarkers) : IHasEnabledMarkersProvider;
+    public record HasEnabledMarkersInjection(bool HasEnabledMarkers) : IHasEnabledMarkersProvider;
 }
