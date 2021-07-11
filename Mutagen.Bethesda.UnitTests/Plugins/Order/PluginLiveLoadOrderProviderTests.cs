@@ -1,72 +1,82 @@
-﻿using System.IO;
-using System;
+﻿using System;
 using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using DynamicData;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using Noggog.Testing.AutoFixture;
+using Noggog.Testing.FileSystem;
 using NSubstitute;
 using Xunit;
+using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
 using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class PluginLiveLoadOrderProviderTests
     {
-        [Fact]
-        public async Task Integration()
+        [Theory, MutagenAutoData]
+        public void Integration(
+            [Frozen]FilePath pluginsTxt,
+            [Frozen]MockFileSystemWatcher watcher,
+            [Frozen]MockFileSystem fs)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(PluginLiveLoadOrderProviderTests));
-            var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            File.WriteAllLines(path,
+            fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
                     Skyrim.Constants.Skyrim.ToString(),
                     Skyrim.Constants.Update.ToString(),
                     Skyrim.Constants.Dawnguard.ToString(),
                 });
-            var live = PluginListings.GetLiveLoadOrder(GameRelease.SkyrimLE, path, default, out var state);
+            var live = PluginListings.GetLiveLoadOrder(
+                GameRelease.SkyrimLE,
+                pluginsTxt, 
+                default,
+                out var state, 
+                fileSystem: fs);
             var list = live.AsObservableList();
             Assert.Equal(3, list.Count);
             Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
             Assert.Equal(Skyrim.Constants.Update, list.Items.ElementAt(1).ModKey);
             Assert.Equal(Skyrim.Constants.Dawnguard, list.Items.ElementAt(2).ModKey);
-            File.WriteAllLines(path,
+            fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
                     Skyrim.Constants.Skyrim.ToString(),
                     Skyrim.Constants.Dawnguard.ToString(),
                 });
-            await Task.Delay(200);
+            watcher.MarkChanged(pluginsTxt);
             Assert.Equal(2, list.Count);
             Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
             Assert.Equal(Skyrim.Constants.Dawnguard, list.Items.ElementAt(1).ModKey);
-            File.WriteAllLines(path,
+            fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
                     Skyrim.Constants.Skyrim.ToString(),
                     Skyrim.Constants.Dawnguard.ToString(),
                     Skyrim.Constants.Dragonborn.ToString(),
                 });
-            await Task.Delay(200);
+            watcher.MarkChanged(pluginsTxt);
             Assert.Equal(3, list.Count);
             Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
             Assert.Equal(Skyrim.Constants.Dawnguard, list.Items.ElementAt(1).ModKey);
             Assert.Equal(Skyrim.Constants.Dragonborn, list.Items.ElementAt(2).ModKey);
         }
 
-        [Fact]
-        public void QueriesOnceInitially()
+        [Theory, MutagenAutoData]
+        public void QueriesOnceInitially(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory());
             var listings = Substitute.For<IPluginListingsProvider>();
             var list = new PluginLiveLoadOrderProvider(
                     fs,
@@ -78,13 +88,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             listings.Received(1).Get();
         }
 
-        [Fact]
-        public void QueriesIfChanged()
+        [Theory, MutagenAutoData]
+        public void QueriesIfChanged(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
-            var modified = new MockFileSystemWatcher();
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory(modified));
             var listings = Substitute.For<IPluginListingsProvider>();
             var list = new PluginLiveLoadOrderProvider(
                     fs,
@@ -99,13 +108,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             listings.Received(2).Get();
         }
 
-        [Fact]
-        public void ReturnsNewListings()
+        [Theory, MutagenAutoData]
+        public void ReturnsNewListings(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
-            var modified = new MockFileSystemWatcher();
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory(modified));
             var listings = new ModListing[]
             {
                 new ModListing(Utility.MasterModKey, true),
@@ -132,13 +140,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             list.Items.Should().Equal(listings2);
         }
 
-        [Fact]
-        public void NoErrors()
+        [Theory, MutagenAutoData]
+        public void NoErrors(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
-            var modified = new MockFileSystemWatcher();
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory(modified));
             var listings = Substitute.For<IPluginListingsProvider>();
             new PluginLiveLoadOrderProvider(
                     fs,
@@ -158,14 +165,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             testableObs.Messages[1].Value.Value.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void ErrorFlop()
+        [Theory, MutagenAutoData]
+        public void ErrorFlop(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
             TestScheduler scheduler = new();
-            var modified = new MockFileSystemWatcher();
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory(modified));
             var listings = new ModListing[]
             {
                 new ModListing(Utility.MasterModKey, true),
@@ -200,14 +206,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             testableObs.Messages[2].Value.Value.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void Changed()
+        [Theory, MutagenAutoData]
+        public void Changed(
+            [Frozen]FilePath pluginPath,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var pluginPath = "C:/SomePlugin.txt";
             TestScheduler scheduler = new();
-            var modified = new MockFileSystemWatcher();
-            var fs = Substitute.For<IFileSystem>();
-            fs.FileSystemWatcher.Returns(new MockFileSystemWatcherFactory(modified));
             var testableObs = scheduler.CreateObserver<Unit>();
             new PluginLiveLoadOrderProvider(
                     fs,

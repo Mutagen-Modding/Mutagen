@@ -35,7 +35,6 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             }
             return ObservableExt
                 .WatchFolderContents(_dataDirectory.Path, fileSystem: _fileSystem)
-                .Select(x => x)
                 .Transform(x =>
                 {
                     if (ModKey.TryFromNameAndExtension(Path.GetFileName(x), out var modKey))

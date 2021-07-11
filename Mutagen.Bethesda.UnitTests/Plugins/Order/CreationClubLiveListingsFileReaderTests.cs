@@ -4,14 +4,19 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive;
 using AutoFixture;
+using AutoFixture.Xunit2;
 using DynamicData;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using Noggog.Testing.AutoFixture;
+using Noggog.Testing.FileSystem;
 using NSubstitute;
 using Xunit;
+using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
@@ -41,14 +46,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[1].Value.Kind.Should().Be(NotificationKind.OnCompleted);
         }
 
-        [Fact]
-        public void FileMissing()
+        [Theory, MutagenAutoData]
+        public void FileMissing(
+            [Frozen]MockFileSystem fs)
         {
             var scheduler = new TestScheduler();
-            var fs = new MockFileSystem()
-            {
-                FileSystemWatcher = new MockFileSystemWatcherFactory()
-            };
             ITestableObserver<ErrorResponse> stateTest = null!;
             var obs = scheduler.Start(() =>
             {
@@ -89,15 +91,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[0].Value.Value.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FileIsCreated()
+        [Theory, MutagenAutoData]
+        public void FileIsCreated(
+            [Frozen]FilePath path,
+            [Frozen]MockFileSystemWatcher fileChanges,
+            [Frozen]MockFileSystem fs)
         {
-            var fileChanges = new MockFileSystemWatcher();
-            var fs = new MockFileSystem()
-            {
-                FileSystemWatcher = new MockFileSystemWatcherFactory(fileChanges)
-            };
-            var path = "C:/SomePath";
             var listingA = new ModListing("ModA.esp", true);
             var reader = Substitute.For<ICreationClubRawListingsReader>();
             reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
@@ -122,15 +121,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[^1].Value.Value.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FileIsDeleted()
+        [Theory, MutagenAutoData]
+        public void FileIsDeleted(
+            [Frozen]FilePath path,
+            [Frozen]MockFileSystemWatcher fileChanges,
+            [Frozen]MockFileSystem fs)
         {
-            var fileChanges = new MockFileSystemWatcher();
-            var fs = new MockFileSystem()
-            {
-                FileSystemWatcher = new MockFileSystemWatcherFactory(fileChanges)
-            };
-            var path = "C:/SomePath";
             fs.File.WriteAllText(path, string.Empty);
             var listingA = new ModListing("ModA.esp", true);
             var reader = Substitute.For<ICreationClubRawListingsReader>();
@@ -156,15 +152,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[^1].Value.Value.Succeeded.Should().BeFalse();
         }
 
-        [Fact]
-        public void FileIsUpdated()
+        [Theory, MutagenAutoData]
+        public void FileIsUpdated(
+            [Frozen]FilePath path,
+            [Frozen]MockFileSystemWatcher fileChanges,
+            [Frozen]MockFileSystem fs)
         {
-            var fileChanges = new MockFileSystemWatcher();
-            var fs = new MockFileSystem()
-            {
-                FileSystemWatcher = new MockFileSystemWatcherFactory(fileChanges)
-            };
-            var path = "C:/SomePath";
             fs.File.WriteAllText(path, string.Empty);
             var listingA = new ModListing("ModA.esp", true);
             var listingB = new ModListing("ModB.esp", true);

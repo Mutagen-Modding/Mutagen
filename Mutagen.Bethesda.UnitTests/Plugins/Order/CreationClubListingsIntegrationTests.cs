@@ -9,10 +9,15 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
+using AutoFixture.Xunit2;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using Noggog.Testing.AutoFixture;
+using Noggog.Testing.FileSystem;
 using Xunit;
+using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
@@ -55,24 +60,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             results[0].Should().Be(new ModListing(Utility.LightMasterModKey, enabled: true));
         }
 
-        [Fact]
-        public async Task LiveLoadOrder()
+        [Theory, MutagenAutoData]
+        public async Task LiveLoadOrder(
+            [Frozen]DirectoryPath dataFolder,
+            [Frozen]MockFileSystemWatcher modified,
+            [Frozen]MockFileSystem fs)
         {
-            var modified = new MockFileSystemWatcher();
-            var dataFolder = "C:/DataFolder";
-            var path = Path.Combine(dataFolder, "Skyrim.ccc");
-            var fs = new MockFileSystem(new Dictionary<string, MockFileData>()
-            {
-                { Path.Combine(dataFolder, Skyrim.Constants.Skyrim.FileName), string.Empty },
-                { Path.Combine(dataFolder, Skyrim.Constants.Update.FileName), string.Empty },
-                { path, @$"{Skyrim.Constants.Skyrim}
-{Skyrim.Constants.Dawnguard}"}
-            })
-            {
-                FileSystemWatcher = new MockFileSystemWatcherFactory(modified)
-            };
+            var ccPath = Path.Combine(dataFolder, "Skyrim.ccc");
+            fs.File.WriteAllText(Path.Combine(dataFolder, Skyrim.Constants.Skyrim.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataFolder, Skyrim.Constants.Update.FileName), string.Empty);
+            fs.File.WriteAllText(ccPath, @$"{Skyrim.Constants.Skyrim}
+{Skyrim.Constants.Dawnguard}");
             ErrorResponse err = ErrorResponse.Failure;
-            var live = CreationClubListings.GetLiveLoadOrder(path, dataFolder, out var state,
+            var live = CreationClubListings.GetLiveLoadOrder(ccPath, dataFolder, out var state,
                 fileSystem: fs);
             {
                 var list = live.AsObservableList();
@@ -86,14 +86,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
                 Assert.Equal(Skyrim.Constants.Dawnguard, list.Items.ElementAt(1).ModKey);
                 err.Succeeded.Should().BeTrue();
-                fs.File.WriteAllLines(path,
+                fs.File.WriteAllLines(ccPath,
                     new string[]
                     {
                         Skyrim.Constants.Skyrim.ToString(),
                         Skyrim.Constants.Update.ToString(),
                         Skyrim.Constants.Dawnguard.ToString(),
                     });
-                modified.MarkChanged(path);
+                modified.MarkChanged(ccPath);
                 Assert.Equal(3, list.Count);
                 Assert.Equal(Skyrim.Constants.Skyrim, list.Items.ElementAt(0).ModKey);
                 Assert.Equal(Skyrim.Constants.Update, list.Items.ElementAt(1).ModKey);

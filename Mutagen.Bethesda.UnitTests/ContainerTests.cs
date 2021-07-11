@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests
             builder.RegisterType<FileSystem>().As<IFileSystem>();
             builder.RegisterType<GameReleasePlaceholder>().As<IGameReleaseContext>();
             var cont = builder.Build();
-            cont.ValidateRegistrations(evaluateUsages: false);
+            cont.ValidateEverything();
         }
     }
 }

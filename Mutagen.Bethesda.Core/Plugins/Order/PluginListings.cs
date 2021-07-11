@@ -3,6 +3,7 @@ using Noggog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
@@ -84,13 +85,15 @@ namespace Mutagen.Bethesda.Plugins.Order
             FilePath pluginTextPath,
             GameRelease game,
             DirectoryPath dataPath,
-            bool throwOnMissingMods = true)
+            bool throwOnMissingMods = true,
+            IFileSystem? fileSystem = null)
         {
             return PluginListingsProvider(
                 new DataDirectoryInjection(dataPath),
                 new GameReleaseInjection(game),
                 new PluginListingsPathInjection(pluginTextPath),
-                throwOnMissingMods).Get();
+                throwOnMissingMods,
+                fileSystem ?? IFileSystemExt.DefaultFilesystem).Get();
         }
 
         /// <inheritdoc cref="IPluginListingsProvider"/>
@@ -109,16 +112,19 @@ namespace Mutagen.Bethesda.Plugins.Order
             DirectoryPath dataFolderPath,
             out IObservable<ErrorResponse> state,
             bool throwOnMissingMods = true,
-            IScheduler? scheduler = null)
+            IScheduler? scheduler = null,
+            IFileSystem? fileSystem = null)
         {
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
             var pluginPath = new PluginListingsPathInjection(loadOrderFilePath);
             var prov = PluginListingsProvider(
                 new DataDirectoryInjection(dataFolderPath),
                 new GameReleaseInjection(game),
                 pluginPath,
-                throwOnMissingMods);
+                throwOnMissingMods,
+                fileSystem);
             return new PluginLiveLoadOrderProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem,
                 prov,
                 pluginPath).Get(out state, scheduler);
         }
@@ -147,9 +153,9 @@ namespace Mutagen.Bethesda.Plugins.Order
             IDataDirectoryProvider dataDirectory,
             IGameReleaseContext gameContext,
             IPluginListingsPathProvider listingsPathProvider, 
-            bool throwOnMissingMods)
+            bool throwOnMissingMods,
+            IFileSystem fs)
         {
-            var fs = IFileSystemExt.DefaultFilesystem;
             var pluginListingParser = new PluginListingsParser(
                 new ModListingParser(
                     new HasEnabledMarkersProvider(gameContext)));
