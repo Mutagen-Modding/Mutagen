@@ -10,13 +10,13 @@ namespace Mutagen.Bethesda.Environments.DI
     public class GameDirectoryProvider : IGameDirectoryProvider
     {
         private readonly IGameReleaseContext _release;
-        private readonly IDataDirectoryLookup _locator;
+        private readonly IGameDirectoryLookup _locator;
 
         public DirectoryPath Path => _locator.Get(_release.Release);
 
         public GameDirectoryProvider(
             IGameReleaseContext release,
-            IDataDirectoryLookup locator)
+            IGameDirectoryLookup locator)
         {
             _release = release;
             _locator = locator;
