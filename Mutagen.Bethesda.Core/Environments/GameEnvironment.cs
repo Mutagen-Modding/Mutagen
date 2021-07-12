@@ -91,7 +91,7 @@ namespace Mutagen.Bethesda.Environments
                 category,
                 new CreationClubEnabledProvider(
                     category),
-                dataDirectory);
+                new GameDirectoryInjection(gameFolder));
             return new GameEnvironmentProvider<TModSetter, TModGetter>(
                     new LoadOrderImporter<TModGetter>(
                         IFileSystemExt.DefaultFilesystem,

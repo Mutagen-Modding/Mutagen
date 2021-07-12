@@ -2,10 +2,10 @@ using DynamicData;
 using Noggog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 categoryInject,
                 new CreationClubEnabledProvider(
                     categoryInject),
-                new DataDirectoryInjection(dataPath)).Path;
+                new GameDirectoryInjection(dataPath.Directory!.Value)).Path;
         }
 
         public static IEnumerable<IModListingGetter> GetListings(GameCategory category, DirectoryPath dataPath)
@@ -34,7 +34,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                     gameCategoryInjection,
                     new CreationClubEnabledProvider(
                         gameCategoryInjection),
-                    dataDirectoryInjection),
+                    new GameDirectoryInjection(dataPath.Directory!.Value)),
                 new CreationClubRawListingsReader(
                     IFileSystemExt.DefaultFilesystem,
                     dataDirectoryInjection)).Get();

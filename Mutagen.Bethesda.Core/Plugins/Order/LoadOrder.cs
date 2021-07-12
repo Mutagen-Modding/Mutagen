@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                             categoryContext,
                             new CreationClubEnabledProvider(
                                 categoryContext),
-                            dataDir),
+                            new GameDirectoryInjection(dataPath.Directory!.Value)),
                         new CreationClubRawListingsReader(
                             fileSystem,
                             dataDir)))
@@ -210,7 +210,7 @@ namespace Mutagen.Bethesda.Plugins.Order
                 gameCategoryInjection,
                 new CreationClubEnabledProvider(
                     gameCategoryInjection),
-                dataDir);
+                new GameDirectoryInjection(dataFolderPath.Directory!.Value));
             return GetLiveLoadOrder(
                 game,
                 pluginPath.Path,
