@@ -6,7 +6,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using DynamicData;
-using DynamicData.Kernel;
 using Noggog;
 
 namespace Mutagen.Bethesda.Plugins.Order.DI
@@ -17,19 +16,21 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     
     public class LiveLoadOrderProvider : ILiveLoadOrderProvider
     {
-        public static readonly TimeSpan ThrottleSpan = TimeSpan.FromMilliseconds(150);
         private readonly IPluginLiveLoadOrderProvider _pluginLive;
         private readonly ICreationClubLiveLoadOrderProvider _cccLive;
         private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
+        private readonly ILiveLoadOrderTimings _timings;
 
         public LiveLoadOrderProvider(
             IPluginLiveLoadOrderProvider pluginLive,
             ICreationClubLiveLoadOrderProvider cccLive,
-            ILoadOrderListingsProvider loadOrderListingsProvider)
+            ILoadOrderListingsProvider loadOrderListingsProvider,
+            ILiveLoadOrderTimings timings)
         {
             _pluginLive = pluginLive;
             _cccLive = cccLive;
             _loadOrderListingsProvider = loadOrderListingsProvider;
+            _timings = timings;
         }
     
         public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
@@ -42,11 +43,15 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     CompositeDisposable disp = new();
                     SourceList<IModListingGetter> list = new();
-                    disp.Add(_pluginLive.Changed
+                    var ret = _pluginLive.Changed
                         .Merge(_cccLive.Changed)
-                        .StartWith(Unit.Default)
-                        .ThrottleWithOptionalScheduler(ThrottleSpan, scheduler)
-                        .Select(_ =>
+                        .StartWith(Unit.Default);
+                    if (_timings.Throttle.Ticks > 0)
+                    {
+                        ret = ret.ThrottleWithOptionalScheduler(_timings.Throttle, scheduler);
+                    }
+                    disp.Add(
+                        ret.Select(_ =>
                         {
                             return Observable.Return(Unit.Default)
                                 .Do(_ =>
@@ -74,8 +79,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                                     }
                                 })
                                 .RetryWithRampingBackoff<Unit, Exception>(
-                                    TimeSpan.FromMilliseconds(250),
-                                    TimeSpan.FromSeconds(5),
+                                    _timings.RetryInterval,
+                                    _timings.RetryIntervalMax,
                                     scheduler);
                         })
                         .Switch()
@@ -89,5 +94,10 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
 
         public IObservable<Unit> Changed => _pluginLive.Changed
                 .Merge(_cccLive.Changed);
+
+        public override string ToString()
+        {
+            return nameof(LiveLoadOrderProvider);
+        }
     }
 }

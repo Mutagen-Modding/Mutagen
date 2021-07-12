@@ -2,49 +2,65 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
-using Noggog;
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Reactive.Concurrency;
+using AutoFixture.Xunit2;
+using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
+using Noggog.Testing.FileSystem;
 using Xunit;
+using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class LiveLoadOrderIntegrationTests
     {
-        [Fact]
-        public async Task LiveLoadOrder()
+        [Theory, MutagenAutoData(false)]
+        public void LiveLoadOrder(
+            [Frozen]IScheduler scheduler,
+            [Frozen]MockFileSystemWatcher watcher,
+            [Frozen]MockFileSystem fs,
+            [Frozen]ILiveLoadOrderTimings timings, 
+            [Frozen]IPluginListingsPathProvider pluginPath,
+            [Frozen]IDataDirectoryProvider dataDir,
+            [Frozen]ICreationClubListingsPathProvider cccPath)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrderIntegrationTests));
-            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
-            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
-            Directory.CreateDirectory(dataFolderPath);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
-            File.WriteAllLines(pluginPath,
+            var lightMasterPath = Path.Combine(dataDir.Path, Utility.LightMasterModKey.FileName);
+            var lightMaster2Path = Path.Combine(dataDir.Path, Utility.LightMasterModKey2.FileName);
+            var master2Path = Path.Combine(dataDir.Path, Utility.MasterModKey2.FileName);
+            
+            fs.File.WriteAllText(lightMasterPath, string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.Skyrim.FileName), string.Empty);
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.MasterModKey2}",
                     $"*{Utility.PluginModKey}",
                 });
-            File.WriteAllLines(cccPath,
+            fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
-            await Task.Delay(1000);
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(
+                GameRelease.SkyrimSE,
+                pluginPath.Path,
+                dataDir.Path, 
+                out var state,
+                scheduler: scheduler,
+                cccLoadOrderFilePath: cccPath.Path,
+                timings: timings,
+                fileSystem: fs);
             state.Subscribe(x =>
             {
                 if (x.Failed) throw x.Exception ?? new Exception();
             });
             var list = live.AsObservableList();
-            await Task.Delay(1000);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -54,15 +70,17 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Utility.PluginModKey,
             });
 
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.PluginModKey}",
                 });
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName), string.Empty);
-            File.Delete(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName));
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
+            fs.File.WriteAllText(lightMaster2Path, string.Empty);
+            watcher.MarkCreated(lightMaster2Path);
+            fs.File.Delete(lightMasterPath);
+            watcher.MarkDeleted(lightMasterPath);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -71,13 +89,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Utility.PluginModKey,
             });
 
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.MasterModKey2}",
                 });
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -86,15 +104,16 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Utility.MasterModKey2,
             });
 
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.MasterModKey2}",
                     $"*{Utility.PluginModKey}",
                 });
-            File.Delete(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName));
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
+            fs.File.Delete(lightMaster2Path);
+            watcher.MarkDeleted(lightMaster2Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -106,8 +125,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             // Does not respect just data folder modification
             // Since ModListing doesn't specify whether data folder is present
             // Data folder is just used for Timestamp alignment for Oblivion
-            File.Delete(Path.Combine(dataFolderPath, Utility.MasterModKey2.FileName));
-            await Task.Delay(1000);
+            fs.File.Delete(master2Path);
+            watcher.MarkDeleted(master2Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -117,17 +136,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             });
         }
 
-        [Fact]
-        public async Task LiveLoadOrder_EnsureReaddRetainsOrder()
+        [Theory, MutagenAutoData(false)]
+        public void LiveLoadOrder_EnsureReaddRetainsOrder(
+            [Frozen]IScheduler scheduler,
+            [Frozen]MockFileSystemWatcher watcher,
+            [Frozen]MockFileSystem fs,
+            [Frozen]ILiveLoadOrderTimings timings, 
+            [Frozen]IPluginListingsPathProvider pluginPath,
+            [Frozen]IDataDirectoryProvider dataDir,
+            [Frozen]ICreationClubListingsPathProvider cccPath)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrderIntegrationTests));
-            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
-            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
-            Directory.CreateDirectory(dataFolderPath);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.LightMasterModKey.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.Skyrim.FileName), string.Empty);
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
@@ -135,16 +156,22 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     $"*{Utility.MasterModKey3}",
                     $"*{Utility.PluginModKey}",
                 });
-            File.WriteAllLines(cccPath,
+            fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
-            await Task.Delay(1000);
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(
+                GameRelease.SkyrimSE,
+                pluginPath.Path,
+                dataDir.Path, 
+                out var state, 
+                cccLoadOrderFilePath: cccPath.Path,
+                scheduler: scheduler,
+                fileSystem: fs,
+                timings: timings);
             var list = live.AsObservableList();
-            await Task.Delay(1000);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -156,14 +183,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             });
 
             // Remove
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.MasterModKey3}",
                     $"*{Utility.PluginModKey}",
                 });
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -174,7 +201,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             });
 
             // Then readd
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
@@ -182,7 +209,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     $"*{Utility.MasterModKey3}",
                     $"*{Utility.PluginModKey}",
                 });
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -196,34 +223,43 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         // Vortex puts CC mods on the plugins file, as unactivated.  Seemingly to drive load order?
         // This ensures that is respected
-        [Fact]
-        public async Task LiveLoadOrder_PluginsCCListingReorders()
+        [Theory, MutagenAutoData(false)]
+        public void LiveLoadOrder_PluginsCCListingReorders(
+            [Frozen]IScheduler scheduler,
+            [Frozen]MockFileSystemWatcher watcher,
+            [Frozen]MockFileSystem fs,
+            [Frozen]ILiveLoadOrderTimings timings, 
+            [Frozen]IPluginListingsPathProvider pluginPath,
+            [Frozen]IDataDirectoryProvider dataDir,
+            [Frozen]ICreationClubListingsPathProvider cccPath)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrderIntegrationTests));
-            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
-            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
-            Directory.CreateDirectory(dataFolderPath);
-            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Skyrim.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Update.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Skyrim.Constants.Dawnguard.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey2.FileName), string.Empty);
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Skyrim.Constants.Skyrim.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Skyrim.Constants.Update.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Skyrim.Constants.Dawnguard.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.LightMasterModKey.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.LightMasterModKey2.FileName), string.Empty);
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.PluginModKey}",
                 });
-            File.WriteAllLines(cccPath,
+            fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(
+                GameRelease.SkyrimSE, 
+                pluginPath.Path, 
+                dataDir.Path, 
+                out var state, 
+                scheduler: scheduler,
+                cccLoadOrderFilePath: cccPath.Path,
+                fileSystem: fs,
+                timings: timings);
             var list = live.AsObservableList();
-            await Task.Delay(1000);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -235,14 +271,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Utility.PluginModKey,
             });
 
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.PluginModKey}",
                     $"{Utility.LightMasterModKey}",
                 });
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -254,7 +290,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 Utility.PluginModKey,
             });
 
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.MasterModKey}",
@@ -262,7 +298,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     $"{Utility.LightMasterModKey}",
                     $"{Utility.LightMasterModKey2}",
                 });
-            await Task.Delay(1000);
+            watcher.MarkChanged(pluginPath.Path);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Skyrim.Constants.Skyrim,
@@ -275,33 +311,40 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             });
         }
 
-        [Fact]
-        public async Task LiveLoadOrder_DontReorderPluginsFile()
+        [Theory, MutagenAutoData(false)]
+        public void LiveLoadOrder_DontReorderPluginsFile(
+            [Frozen]IScheduler scheduler,
+            [Frozen]MockFileSystem fs,
+            [Frozen]ILiveLoadOrderTimings timings, 
+            [Frozen]IPluginListingsPathProvider pluginPath,
+            [Frozen]IDataDirectoryProvider dataDir,
+            [Frozen]ICreationClubListingsPathProvider cccPath)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LiveLoadOrderIntegrationTests));
-            var pluginPath = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
-            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
-            var dataFolderPath = Path.Combine(tmpFolder.Dir.Path, "Data");
-            Directory.CreateDirectory(dataFolderPath);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.Skyrim.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataFolderPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllLines(pluginPath,
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.Skyrim.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, Utility.LightMasterModKey.FileName), string.Empty);
+            fs.File.WriteAllLines(pluginPath.Path,
                 new string[]
                 {
                     $"*{Utility.PluginModKey}",
                     $"*{Utility.MasterModKey}",
                     $"*{Utility.PluginModKey2}",
                 });
-            File.WriteAllLines(cccPath,
+            fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
                     Utility.LightMasterModKey.ToString(),
                     Utility.LightMasterModKey2.ToString(),
                 });
-            await Task.Delay(1000);
-            var live = LoadOrder.GetLiveLoadOrder(GameRelease.SkyrimSE, pluginPath, dataFolderPath, out var state, cccLoadOrderFilePath: cccPath);
+            var live = LoadOrder.GetLiveLoadOrder(
+                GameRelease.SkyrimSE,
+                pluginPath.Path,
+                dataDir.Path, 
+                out var state, 
+                cccLoadOrderFilePath: cccPath.Path,
+                scheduler: scheduler,
+                fileSystem: fs,
+                timings: timings);
             var list = live.AsObservableList();
-            await Task.Delay(1000);
             list.Items.Select(x => x.ModKey).Should().Equal(new ModKey[]
             {
                 Utility.Skyrim,

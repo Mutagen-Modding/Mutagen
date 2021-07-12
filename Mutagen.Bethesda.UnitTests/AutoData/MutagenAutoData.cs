@@ -7,7 +7,7 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
 {
     public class MutagenAutoDataAttribute : AutoDataAttribute
     {
-        public MutagenAutoDataAttribute(bool Strict = true, bool ConfigureMembers = false)
+        public MutagenAutoDataAttribute(bool Strict = true, bool ConfigureMembers = false, GameRelease Release = GameRelease.SkyrimSE)
             : base(() =>
             {
                 var customization = new AutoFakeItEasyCustomization()
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
                 }
                 return new Fixture()
                     .Customize(customization)
-                    .Customize(new MutagenAutoDataCustomization())
+                    .Customize(new MutagenAutoDataCustomization(Release))
                     .Customize(new FileSystemCustomization());
             })
         {

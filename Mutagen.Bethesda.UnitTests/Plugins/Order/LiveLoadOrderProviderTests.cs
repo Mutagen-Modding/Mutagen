@@ -1,170 +1,144 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
+using AutoFixture.Xunit2;
 using DynamicData;
 using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
-using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class LiveLoadOrderProviderTests
     {
-        [Fact]
-        public void NoSub()
+        [Theory, MutagenAutoData]
+        public void NoSub(
+            [Frozen]ILoadOrderListingsProvider loadOrderListingsProvider, 
+            [Frozen]IPluginLiveLoadOrderProvider pluginLive,
+            [Frozen]ICreationClubLiveLoadOrderProvider cccLive,
+            LiveLoadOrderProvider sut)
         {
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
-            var loadOrderListingsProvider = Substitute.For<ILoadOrderListingsProvider>();
-            new LiveLoadOrderProvider(
-                pluginLive,
-                cccLive,
-                loadOrderListingsProvider);
-            var changed = pluginLive.DidNotReceive().Changed;
-            pluginLive.DidNotReceive().Get(out _);
-            changed = cccLive.DidNotReceive().Changed;
-            cccLive.DidNotReceive().Get(out _);
-            loadOrderListingsProvider.DidNotReceive().Get();
         }
 
-        [Fact]
-        public void GetsListingsInitially()
+        [Theory, MutagenAutoData(false)]
+        public void GetsListingsInitially(
+            [Frozen]ILoadOrderListingsProvider loadOrderListingsProvider, 
+            IScheduler scheduler,
+            LiveLoadOrderProvider sut)
         {
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
             var listings = new ModListing[]
             {
                 new ModListing(Utility.MasterModKey, true),
                 new ModListing(Utility.MasterModKey2, false),
             };
-            var loadOrderListingsProvider = Substitute.For<ILoadOrderListingsProvider>();
-            var scheduler = new TestScheduler();
-            loadOrderListingsProvider.Get().Returns(listings);
-            var list = new LiveLoadOrderProvider(
-                    pluginLive,
-                    cccLive,
-                    loadOrderListingsProvider)
-                .Get(out var state)
+            A.CallTo(() => loadOrderListingsProvider.Get()).Returns(listings);
+            var list = sut.Get(out var state, scheduler)
                 .AsObservableList();
             list.Items.Should().Equal(listings);
-            loadOrderListingsProvider.Received(1).Get();
-            var err = scheduler.Start(() => state);
+            A.CallTo(() => loadOrderListingsProvider.Get()).MustHaveHappenedOnceExactly();
+            var obsScheduler = new TestScheduler();
+            var err = obsScheduler.Start(() => state);
             err.ShouldHaveNoErrors();
             err.ShouldNotBeCompleted();
             err.Messages.Select(x => x.Value.Value.Succeeded).Should().AllBeEquivalentTo(true);
         }
 
-        [Fact]
-        public void Throttles()
+        [Theory, MutagenAutoData(false)]
+        public void Throttles(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]IPluginLiveLoadOrderProvider pluginLive,
+            [Frozen]ILiveLoadOrderTimings throttle,
+            LiveLoadOrderProvider sut)
         {
+            A.CallTo(() => throttle.Throttle).Returns(TimeSpan.FromTicks(5));
             var pluginSubj = new Subject<Unit>();
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            pluginLive.Changed.Returns(pluginSubj);
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
-            var loadOrderListingsProvider = Substitute.For<ILoadOrderListingsProvider>();
-            var scheduler = new TestScheduler();
-            var list = new LiveLoadOrderProvider(
-                    pluginLive,
-                    cccLive,
-                    loadOrderListingsProvider)
-                .Get(out var state, scheduler)
+            A.CallTo(() => pluginLive.Changed).Returns(pluginSubj);
+            sut.Get(out _, scheduler)
                 .AsObservableList();
             scheduler.AdvanceBy(1);
             pluginSubj.OnNext(Unit.Default);
             scheduler.AdvanceBy(1);
             pluginSubj.OnNext(Unit.Default);
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
-            loadOrderListingsProvider.Received(1).Get();
+            scheduler.AdvanceBy(throttle.Throttle.Ticks);
+            A.CallTo(() => pluginLive.Changed).MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public void EitherChangedRequeries()
+        [Theory, MutagenAutoData(false)]
+        public void EitherChangedRequeries(
+            [Frozen]IScheduler scheduler,
+            [Frozen]ILoadOrderListingsProvider loadOrderListingsProvider, 
+            [Frozen]IPluginLiveLoadOrderProvider pluginLive,
+            [Frozen]ICreationClubLiveLoadOrderProvider cccLive,
+            LiveLoadOrderProvider sut)
         {
             var pluginSubj = new Subject<Unit>();
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            pluginLive.Changed.Returns(pluginSubj);
+            A.CallTo(() => pluginLive.Changed).Returns(pluginSubj);
             var cccSubj = new Subject<Unit>();
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
-            cccLive.Changed.Returns(cccSubj);
-            var loadOrderListingsProvider = Substitute.For<ILoadOrderListingsProvider>();
-            var scheduler = new TestScheduler();
-            var list = new LiveLoadOrderProvider(
-                    pluginLive,
-                    cccLive,
-                    loadOrderListingsProvider)
-                .Get(out var state, scheduler)
+            A.CallTo(() => cccLive.Changed).Returns(cccSubj);
+            sut.Get(out _, scheduler)
                 .AsObservableList();
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             pluginSubj.OnNext(Unit.Default);
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             cccSubj.OnNext(Unit.Default);
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
-            loadOrderListingsProvider.Received(3).Get();
+            A.CallTo(() => loadOrderListingsProvider.Get())
+                .MustHaveHappened(3, Times.Exactly);
         }
 
-        [Fact]
-        public void ErrorHandlingDuringSpam()
+        [Theory, MutagenAutoData(false)]
+        public void ErrorHandlingDuringSpam(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ILoadOrderListingsProvider loadOrderListingsProvider, 
+            [Frozen]IPluginLiveLoadOrderProvider pluginLive,
+            LiveLoadOrderProvider sut)
         {
             var pluginSubj = new Subject<Unit>();
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
-            pluginLive.Changed.Returns(pluginSubj);
-            var loadOrderListingsProvider = A.Fake<ILoadOrderListingsProvider>();
+            A.CallTo(() => pluginLive.Changed).Returns(pluginSubj);
             A.CallTo(() => loadOrderListingsProvider.Get())
                 .Returns(Enumerable.Empty<IModListingGetter>()).Once()
                 .Then.Throws<NotImplementedException>().Once()
                 .Then.Returns(Enumerable.Empty<IModListingGetter>()).Once();
             
-            var scheduler = new TestScheduler();
-            var list = new LiveLoadOrderProvider(
-                    pluginLive,
-                    cccLive,
-                    loadOrderListingsProvider)
-                .Get(out var state, scheduler)
+            sut.Get(out var state, scheduler)
                 .AsObservableList();
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
             err.Succeeded.Should().BeTrue();
 
             pluginSubj.OnNext(Unit.Default);
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             err.Succeeded.Should().BeFalse();
             
             pluginSubj.OnNext(Unit.Default);
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             err.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void RetryOnStaleInput()
+        [Theory, MutagenAutoData]
+        public void RetryOnStaleInput(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ILiveLoadOrderTimings throttle,
+            [Frozen]ILoadOrderListingsProvider loadOrderListingsProvider, 
+            [Frozen]IPluginLiveLoadOrderProvider pluginLive,
+            [Frozen]ICreationClubLiveLoadOrderProvider cccLive,
+            LiveLoadOrderProvider sut)
         {
+            A.CallTo(() => throttle.Throttle).Returns(TimeSpan.Zero);
+            A.CallTo(() => throttle.RetryInterval).Returns(TimeSpan.FromMilliseconds(250));
+            A.CallTo(() => throttle.RetryIntervalMax).Returns(TimeSpan.FromSeconds(5));
             var pluginSubj = new Subject<Unit>();
-            var pluginLive = Substitute.For<IPluginLiveLoadOrderProvider>();
-            pluginLive.Changed.Returns(pluginSubj);
+            A.CallTo(() => pluginLive.Changed).Returns(pluginSubj);
             var cccSubj = new Subject<Unit>();
-            var cccLive = Substitute.For<ICreationClubLiveLoadOrderProvider>();
-            cccLive.Changed.Returns(cccSubj);
-            var loadOrderListingsProvider = A.Fake<ILoadOrderListingsProvider>();
+            A.CallTo(() => cccLive.Changed).Returns(cccSubj);
             A.CallTo(() => loadOrderListingsProvider.Get())
                 .Throws<NotImplementedException>().Twice()
                 .Then.Returns(Enumerable.Empty<IModListingGetter>()).Once();
             
-            var scheduler = new TestScheduler();
-            var list = new LiveLoadOrderProvider(
-                    pluginLive,
-                    cccLive,
-                    loadOrderListingsProvider)
-                .Get(out var state, scheduler)
+            sut.Get(out var state, scheduler)
                 .AsObservableList();
-            scheduler.AdvanceBy(LiveLoadOrderProvider.ThrottleSpan.Ticks);
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
             err.Succeeded.Should().BeFalse();
