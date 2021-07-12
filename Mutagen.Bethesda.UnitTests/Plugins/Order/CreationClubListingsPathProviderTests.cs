@@ -1,9 +1,10 @@
 ﻿using System.IO;
+using AutoFixture.Xunit2;
+using FakeItEasy;
 using FluentAssertions;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using Xunit;
 
@@ -11,29 +12,29 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class CreationClubListingsPathProviderTests
     {
-        [Fact]
-        public void NotUsed()
+        [Theory, MutagenAutoData]
+        public void NotUsed(
+            [Frozen]ICreationClubEnabledProvider enabledProvider,
+            CreationClubListingsPathProvider sut)
         {
-            new CreationClubListingsPathProvider(
-                    new GameCategoryInjection(GameCategory.Skyrim),
-                    new CreationClubEnabledInjection(false),
-                    new GameDirectoryInjection("C:/SomeFolder"))
-                .Path
+            A.CallTo(() => enabledProvider.Used).Returns(false);
+            sut.Path
                 .Should().BeNull();
         }
 
-        [Fact]
-        public void Typical()
+        [Theory, MutagenAutoData]
+        public void Typical(
+            [Frozen]IGameDirectoryProvider gameDir,
+            [Frozen]IGameCategoryContext gameCategoryContext,
+            [Frozen]ICreationClubEnabledProvider enabledProvider,
+            CreationClubListingsPathProvider sut)
         {
-            var gameDir = "C:/SomeFolder";
+            A.CallTo(() => enabledProvider.Used).Returns(true);
             foreach (var category in EnumExt.GetValues<GameCategory>())
             {
-                new CreationClubListingsPathProvider(
-                        new GameCategoryInjection(category),
-                        new CreationClubEnabledInjection(true),
-                        new GameDirectoryInjection(gameDir))
-                    .Path
-                    .Should().Be(new FilePath($"C:/SomeFolder/{category}.ccc"));
+                A.CallTo(() => gameCategoryContext.Category).Returns(category);
+                sut.Path
+                    .Should().Be(new FilePath(Path.Combine(gameDir.Path, $"{category}.ccc")));
             }
         }
     }

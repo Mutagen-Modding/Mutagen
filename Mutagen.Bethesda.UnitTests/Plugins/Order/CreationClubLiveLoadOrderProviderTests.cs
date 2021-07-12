@@ -1,45 +1,40 @@
 ﻿using System;
-using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using AutoFixture;
+using AutoFixture.Xunit2;
 using DynamicData;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
-using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class CreationClubLiveLoadOrderProviderTests : TypicalTest
     {
-        [Fact]
-        public void Neither()
+        [Theory, MutagenAutoData]
+        public void Neither(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var scheduler = new TestScheduler();
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Empty<IChangeSet<IModListingGetter>>();
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(Observable.Empty<IChangeSet<ModKey, ModKey>>());
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Empty<IChangeSet<IModListingGetter>>());
+            A.CallTo(() => folderWatcher.Get())
+                .Returns(Observable.Empty<IChangeSet<ModKey, ModKey>>());
             ITestableObserver<ErrorResponse> stateTest = null!;
             var obs = scheduler.Start(() =>
             {
-                var ret = new CreationClubLiveLoadOrderProvider(
-                        fileReader,
-                        folderWatcher)
-                    .Get(out var state);
+                var ret = sut.Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
             });
@@ -50,31 +45,28 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[1].Value.Kind.Should().Be(NotificationKind.OnCompleted);
         }
 
-        [Fact]
-        public void OnlyFile()
+        [Theory, MutagenAutoData]
+        public void OnlyFile(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var scheduler = new TestScheduler();
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Return(new ChangeSet<IModListingGetter>(
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Return(new ChangeSet<IModListingGetter>(
                     new Change<IModListingGetter>[]
                     {
                         new Change<IModListingGetter>(
                             ListChangeReason.Add,
                             new ModListing("ModA.esp", true))
-                    }));
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(Observable.Empty<IChangeSet<ModKey, ModKey>>());
+                    })));
+            A.CallTo(() => folderWatcher.Get())
+                .Returns(Observable.Empty<IChangeSet<ModKey, ModKey>>());
             ITestableObserver<ErrorResponse> stateTest = null!;
             var obs = scheduler.Start(() =>
             {
-                var ret = new CreationClubLiveLoadOrderProvider(
-                        fileReader,
-                        folderWatcher)
-                    .Get(out var state);
+                var ret = sut.Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
             });
@@ -85,32 +77,26 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[1].Value.Kind.Should().Be(NotificationKind.OnCompleted);
         }
 
-        [Fact]
-        public void OnlyFolder()
+        [Theory, MutagenAutoData]
+        public void OnlyFolder(
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var scheduler = new TestScheduler();
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Empty<IChangeSet<IModListingGetter>>();
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return Observable.Return(new ChangeSet<ModKey, ModKey>(
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Empty<IChangeSet<IModListingGetter>>());
+            A.CallTo(() => folderWatcher.Get())
+                .Returns(Observable.Return(new ChangeSet<ModKey, ModKey>(
                     new Change<ModKey, ModKey>[]
                     {
                         new Change<ModKey, ModKey>(ChangeReason.Add, "ModA.esp", "ModA.esp")
-                    }));
-            });
+                    })));
             ITestableObserver<ErrorResponse> stateTest = null!;
             var obs = scheduler.Start(() =>
             {
-                var ret = new CreationClubLiveLoadOrderProvider(
-                        fileReader,
-                        folderWatcher)
-                    .Get(out var state);
+                var ret = sut.Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
             });
@@ -121,33 +107,28 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[1].Value.Kind.Should().Be(NotificationKind.OnCompleted);
         }
 
-        [Fact]
-        public void Both()
+        [Theory, MutagenAutoData]
+        public void Both(
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Return(new ChangeSet<IModListingGetter>(
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Return(new ChangeSet<IModListingGetter>(
                     new Change<IModListingGetter>[]
                     {
                         new Change<IModListingGetter>(
                             ListChangeReason.Add,
                             new ModListing("ModA.esp", true))
-                    }));
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return Observable.Return(new ChangeSet<ModKey, ModKey>(
+                    })));
+            A.CallTo(() => folderWatcher.Get())
+                .Returns(Observable.Return(new ChangeSet<ModKey, ModKey>(
                     new Change<ModKey, ModKey>[]
                     {
                         new Change<ModKey, ModKey>(ChangeReason.Add, "ModA.esp", "ModA.esp")
-                    }));
-            });
-            var list = new CreationClubLiveLoadOrderProvider(
-                    fileReader,
-                    folderWatcher)
+                    })));
+            var list = sut
                 .Get(out var state)
                 .AsObservableList();
             ErrorResponse err = ErrorResponse.Failure;
@@ -158,29 +139,25 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             err.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FileAdded()
+        [Theory, MutagenAutoData]
+        public void FileAdded(
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
             var fileSubj = new Subject<IChangeSet<IModListingGetter>>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return fileSubj;
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return Observable.Return(new ChangeSet<ModKey, ModKey>(
+            
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(fileSubj);
+            
+            A.CallTo(() => folderWatcher.Get())
+                .Returns(Observable.Return(new ChangeSet<ModKey, ModKey>(
                     new Change<ModKey, ModKey>[]
                     {
                         new Change<ModKey, ModKey>(ChangeReason.Add, "ModA.esp", "ModA.esp")
-                    }));
-            });
-            var list = new CreationClubLiveLoadOrderProvider(
-                    fileReader,
-                    folderWatcher)
-                .Get(out var state)
+                    })));
+            
+            var list = sut.Get(out var state)
                 .AsObservableList();
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
@@ -198,31 +175,25 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             err.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FolderAdded()
+        [Theory, MutagenAutoData]
+        public void FolderAdded(
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Return(new ChangeSet<IModListingGetter>(
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Return(new ChangeSet<IModListingGetter>(
                     new Change<IModListingGetter>[]
                     {
                         new Change<IModListingGetter>(
                             ListChangeReason.Add,
                             new ModListing("ModA.esp", true))
-                    }));
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
+                    })));
+            
             var folderSubj = new Subject<IChangeSet<ModKey, ModKey>>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return folderSubj;
-            });
-            var list = new CreationClubLiveLoadOrderProvider(
-                    fileReader,
-                    folderWatcher)
-                .Get(out var state)
+            A.CallTo(() => folderWatcher.Get()).Returns(folderSubj);
+            var list = sut.Get(out var state)
                 .AsObservableList();
             ErrorResponse err = ErrorResponse.Failure;
             using var sub = state.Subscribe(x => err = x);
@@ -241,29 +212,23 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             err.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FileRemoved()
+        [Theory, MutagenAutoData]
+        public void FileRemoved(
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
             var fileSubj = new Subject<IChangeSet<IModListingGetter>>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return fileSubj;
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return Observable.Return(new ChangeSet<ModKey, ModKey>(
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(fileSubj);
+
+            A.CallTo(() => folderWatcher.Get()).Returns(
+                Observable.Return(new ChangeSet<ModKey, ModKey>(
                     new Change<ModKey, ModKey>[]
                     {
                         new Change<ModKey, ModKey>(ChangeReason.Add, "ModA.esp", "ModA.esp")
-                    }));
-            });
-            var list = new CreationClubLiveLoadOrderProvider(
-                    fileReader,
-                    folderWatcher)
-                .Get(out var state)
+                    })));
+            var list = sut.Get(out var state)
                 .AsObservableList();
             fileSubj.OnNext(new ChangeSet<IModListingGetter>(
                 new Change<IModListingGetter>[]
@@ -290,31 +255,25 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             err.Succeeded.Should().BeTrue();
         }
 
-        [Fact]
-        public void FolderRemoved()
+        [Theory, MutagenAutoData]
+        public void FolderRemoved(
+            [Frozen]ICreationClubLiveListingsFileReader fileReader,
+            [Frozen]ICreationClubLiveLoadOrderFolderWatcher folderWatcher,
+            CreationClubLiveLoadOrderProvider sut)
         {
-            var fileReader = Substitute.For<ICreationClubLiveListingsFileReader>();
-            fileReader.Get(out var _).Returns(x =>
-            {
-                x[0] = Observable.Return(ErrorResponse.Success);
-                return Observable.Return(new ChangeSet<IModListingGetter>(
+            IObservable<ErrorResponse> mockState = Observable.Return(ErrorResponse.Success);
+            
+            A.CallTo(() => fileReader.Get(out mockState)).Returns(
+                Observable.Return(new ChangeSet<IModListingGetter>(
                     new Change<IModListingGetter>[]
                     {
                         new Change<IModListingGetter>(
                             ListChangeReason.Add,
                             new ModListing("ModA.esp", true))
-                    }));
-            });
-            var folderWatcher = Substitute.For<ICreationClubLiveLoadOrderFolderWatcher>();
+                    })));
             var folderSubj = new Subject<IChangeSet<ModKey, ModKey>>();
-            folderWatcher.Get().Returns(x =>
-            {
-                return folderSubj;
-            });
-            var list = new CreationClubLiveLoadOrderProvider(
-                    fileReader,
-                    folderWatcher)
-                .Get(out var state)
+            A.CallTo(() => folderWatcher.Get()).Returns(folderSubj);
+            var list = sut.Get(out var state)
                 .AsObservableList();
             folderSubj.OnNext(new ChangeSet<ModKey, ModKey>(
                 new Change<ModKey, ModKey>[]

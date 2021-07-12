@@ -6,6 +6,7 @@ using System.Reactive;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using DynamicData;
+using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
@@ -48,16 +49,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         [Theory, MutagenAutoData]
         public void FileMissing(
-            [Frozen]MockFileSystem fs)
+            [Frozen]TestScheduler scheduler,
+            [Frozen]ICreationClubListingsPathProvider cccPath,
+            CreationClubLiveListingsFileReader sut)
         {
-            var scheduler = new TestScheduler();
+            A.CallTo(() => cccPath.Path).Returns("C:/SomeMissingPath");
             ITestableObserver<ErrorResponse> stateTest = null!;
-            var obs = scheduler.Start(() =>
+            scheduler.Start(() =>
             {
-                var ret = new CreationClubLiveListingsFileReader(
-                        fs,
-                        Fixture.Create<ICreationClubRawListingsReader>(),
-                        new CreationClubListingsPathInjection("C:/SomeMissingPath"))
+                var ret = sut
                     .Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;

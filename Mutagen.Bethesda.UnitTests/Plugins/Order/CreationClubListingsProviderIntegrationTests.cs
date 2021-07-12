@@ -4,7 +4,6 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture;
 using FluentAssertions;
-using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
@@ -13,7 +12,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubListingsProviderTests : TypicalTest
+    public class CreationClubListingsProviderIntegrationTests : TypicalTest
     {
         private const string DataDir = "C:/DataDirectory";
 

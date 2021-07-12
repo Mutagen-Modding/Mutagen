@@ -42,15 +42,17 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         public static IEnumerable<IModListingGetter> ListingsFromPath(
             FilePath cccFilePath,
-            DirectoryPath dataPath)
+            DirectoryPath dataPath,
+            IFileSystem? fileSystem = null)
         {
+            fileSystem ??= IFileSystemExt.DefaultFilesystem;
             var dataDirectoryInjection = new DataDirectoryInjection(dataPath);
             return new CreationClubListingsProvider(
-                IFileSystemExt.DefaultFilesystem,
+                fileSystem,
                 dataDirectoryInjection,
                 new CreationClubListingsPathInjection(cccFilePath),
                 new CreationClubRawListingsReader(
-                    IFileSystemExt.DefaultFilesystem,
+                    fileSystem,
                     dataDirectoryInjection)).Get();
         }
 

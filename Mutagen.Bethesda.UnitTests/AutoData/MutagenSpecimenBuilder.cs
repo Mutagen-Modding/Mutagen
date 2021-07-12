@@ -42,7 +42,15 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
             }
             else if (t == typeof(IGameReleaseContext))
             {
-                return new GameReleaseInjection(_release);
+                var ret = A.Fake<IGameReleaseContext>();
+                A.CallTo(() => ret.Release).Returns(_release);
+                return ret;
+            }
+            else if (t == typeof(IGameCategoryContext))
+            {
+                var ret = A.Fake<IGameCategoryContext>();
+                A.CallTo(() => ret.Category).Returns(_release.ToCategory());
+                return ret;
             }
             else if (t == typeof(IGameDirectoryProvider))
             {
@@ -52,7 +60,19 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
             else if (t == typeof(IDataDirectoryProvider))
             {
                 var dir = context.Create<IGameDirectoryProvider>();
-                return new DataDirectoryInjection(Path.Combine(dir.Path, "DataDirectory"));
+                var ret = A.Fake<IDataDirectoryProvider>();
+                A.CallTo(() => ret.Path).ReturnsLazily(() =>
+                {
+                    return Path.Combine(dir.Path, "DataDirectory");
+                });
+                return ret;
+            }
+            else if (t == typeof(ICreationClubEnabledProvider))
+            {
+                var ret = A.Fake<ICreationClubEnabledProvider>();
+                A.CallTo(() => ret.Used).ReturnsLazily(
+                    () => new CreationClubEnabledProvider(context.Create<IGameCategoryContext>()).Used);
+                return ret;
             }
             else if (t == typeof(IPluginListingsPathProvider))
             {
@@ -60,8 +80,15 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
             }
             else if (t == typeof(ICreationClubListingsPathProvider))
             {
-                var dir = context.Create<IGameDirectoryProvider>();
-                return new CreationClubListingsPathInjection(Path.Combine(dir.Path, $"{_release.ToCategory()}.ccc"));
+                var ret = A.Fake<ICreationClubListingsPathProvider>();
+                A.CallTo(() => ret.Path).ReturnsLazily(() =>
+                {
+                    return new CreationClubListingsPathProvider(
+                        context.Create<IGameCategoryContext>(),
+                        context.Create<ICreationClubEnabledProvider>(),
+                        context.Create<IGameDirectoryProvider>()).Path;
+                });
+                return ret;
             }
             else if (t == typeof(IFileSystem))
             {

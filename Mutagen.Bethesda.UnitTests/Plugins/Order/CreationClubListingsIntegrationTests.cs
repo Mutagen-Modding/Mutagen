@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive.Linq;
@@ -11,7 +12,9 @@ using System.Reactive.Concurrency;
 using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using Microsoft.Reactive.Testing;
+using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using Noggog.Testing.AutoFixture;
@@ -23,41 +26,40 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
     public class CreationClubListingsIntegrationTests 
     {
-        [Fact]
-        public void FromCreationClubPathMissing()
+        [Theory, MutagenAutoData]
+        public void FromCreationClubPathMissing(
+            [Frozen]IDataDirectoryProvider dataDirectoryProvider,
+            [Frozen]IFileSystem fs)
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsIntegrationTests));
-            var missingPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
+            var missingPath = Path.Combine(dataDirectoryProvider.Path, "Skyrim.ccc");
             Action a = () =>
                 CreationClubListings.ListingsFromPath(
                     cccFilePath: missingPath,
-                    dataPath: default);
+                    dataPath: default,
+                    fileSystem: fs);
             a.Should().Throw<FileNotFoundException>();
         }
 
-        [Fact]
-        public void FromCreationClubPath()
+        [Theory, MutagenAutoData]
+        public void FromCreationClubPath(
+            [Frozen]MockFileSystem fs,
+            [Frozen]ModPath modPath,
+            [Frozen]IDataDirectoryProvider dataDir,
+            [Frozen]ICreationClubListingsPathProvider cccPath)
         {
-            var sch = new TestScheduler();
-            sch.Schedule(TimeSpan.FromTicks(1), () => { });
-        
-            using var tmpFolder = Utility.GetTempFolder(nameof(CreationClubListingsIntegrationTests));
-            var cccPath = Path.Combine(tmpFolder.Dir.Path, "Skyrim.ccc");
-            var dataPath = Path.Combine(tmpFolder.Dir.Path, "Data");
-            File.WriteAllLines(cccPath,
+            fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
-                    Utility.LightMasterModKey.FileName,
+                    modPath.ModKey.FileName,
                     Utility.LightMasterModKey2.FileName,
                 });
-            Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey.FileName), string.Empty);
             var results = CreationClubListings.ListingsFromPath(
-                    cccFilePath: cccPath,
-                    dataPath: dataPath)
+                    cccFilePath: cccPath.Path!.Value,
+                    dataPath: dataDir.Path,
+                    fileSystem: fs)
                 .ToList();
             results.Should().HaveCount(1);
-            results[0].Should().Be(new ModListing(Utility.LightMasterModKey, enabled: true));
+            results[0].Should().Be(new ModListing(modPath.ModKey, enabled: true));
         }
 
         [Theory, MutagenAutoData]
