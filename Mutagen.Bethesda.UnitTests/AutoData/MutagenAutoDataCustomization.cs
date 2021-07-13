@@ -32,8 +32,9 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
                 autoFakeItEasy.Relay = new FakeItEasyStrictRelay();
             }
             fixture.Customize(autoFakeItEasy);
-            fixture.Customizations.Add(new MutagenSpecimenBuilder(_release));
-            fixture.Customize(new FileSystemCustomization());
+            fixture.Customizations.Add(new BaseEnvironmentBuilder(_release));
+            fixture.Customizations.Add(new OrderBuilder());
+            fixture.Customize(new DefaultCustomization());
         }
     }
 }
