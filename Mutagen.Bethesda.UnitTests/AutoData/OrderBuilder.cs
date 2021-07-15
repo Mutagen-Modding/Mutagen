@@ -1,9 +1,11 @@
 ﻿using System;
 using AutoFixture;
 using AutoFixture.Kernel;
-using FakeItEasy;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Noggog;
+using NSubstitute;
 
 namespace Mutagen.Bethesda.UnitTests.AutoData
 {
@@ -11,30 +13,39 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
     {
         public object Create(object request, ISpecimenContext context)
         {
-            if (request is not Type t) return new NoSpecimen();
-            
-            if (t == typeof(ICreationClubEnabledProvider))
+            if (request is Type t)
             {
-                var ret = A.Fake<ICreationClubEnabledProvider>();
-                A.CallTo(() => ret.Used).ReturnsLazily(
-                    () => new CreationClubEnabledProvider(context.Create<IGameCategoryContext>()).Used);
-                return ret;
-            }
-            else if (t == typeof(IPluginListingsPathProvider))
-            {
-                return new PluginListingsPathInjection($"C:\\ExistingDirectory\\Plugins.txt");
-            }
-            else if (t == typeof(ICreationClubListingsPathProvider))
-            {
-                var ret = A.Fake<ICreationClubListingsPathProvider>();
-                A.CallTo(() => ret.Path).ReturnsLazily(() =>
+                if (t == typeof(ICreationClubEnabledProvider))
                 {
-                    return new CreationClubListingsPathProvider(
+                    var def = new CreationClubEnabledProvider(
+                        context.Create<IGameCategoryContext>()).Used;
+                    var ret = Substitute.For<ICreationClubEnabledProvider>();
+                    ret.Used.Returns(def);
+                    return ret;
+                }
+                else if (t == typeof(IPluginListingsPathProvider))
+                {
+                    var ret = Substitute.For<IPluginListingsPathProvider>();
+                    ret.Path.Returns(new FilePath($"C:\\ExistingDirectory\\Plugins.txt"));
+                    return ret;
+                }
+                else if (t == typeof(ICreationClubListingsPathProvider))
+                {
+                    var def = new CreationClubListingsPathProvider(
                         context.Create<IGameCategoryContext>(),
                         context.Create<ICreationClubEnabledProvider>(),
                         context.Create<IGameDirectoryProvider>()).Path;
-                });
-                return ret;
+                    var ret = Substitute.For<ICreationClubListingsPathProvider>();
+                    ret.Path.Returns(def);
+                    return ret;
+                }
+                else if (t == typeof(ILoadOrderListingsProvider))
+                {
+                    var ret = Substitute.For<ILoadOrderListingsProvider>();
+                    var keys = context.CreateMany<ModListing>();
+                    ret.Get().Returns(keys);
+                    return ret;
+                }
             }
             
             return new NoSpecimen();

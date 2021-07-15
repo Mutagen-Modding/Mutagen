@@ -1,24 +1,19 @@
 ﻿using System;
-using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive;
-using System.Threading.Tasks;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
-using Noggog.Testing.AutoFixture;
 using Noggog.Testing.FileSystem;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
-using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
-using Path = System.IO.Path;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
@@ -177,8 +172,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(Utility.MasterModKey, true),
                 new ModListing(Utility.MasterModKey2, false),
             };
-            var listingsProv = A.Fake<IPluginListingsProvider>();
-            A.CallTo(() => listingsProv.Get()).Returns(listings);
+            var listingsProv = Substitute.For<IPluginListingsProvider>();
+            listingsProv.Get().Returns(
+                _ => listings,
+                _ => throw new NotImplementedException(),
+                _ => listings);
             var list = new PluginLiveLoadOrderProvider(
                     fs,
                     listingsProv,
@@ -192,13 +190,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             testableObs.Messages[0].Value.Kind.Should().Be(NotificationKind.OnNext);
             testableObs.Messages[0].Value.Value.Succeeded.Should().BeTrue();
 
-            A.CallTo(() => listingsProv.Get()).Throws(() => new NotImplementedException());
             modified.MarkChanged(pluginPath);
             testableObs.Messages.Should().HaveCount(2);
             testableObs.Messages[1].Value.Kind.Should().Be(NotificationKind.OnNext);
             testableObs.Messages[1].Value.Value.Succeeded.Should().BeFalse();
 
-            A.CallTo(() => listingsProv.Get()).Returns(listings);
             modified.MarkChanged(pluginPath);
             list.Count.Should().Be(2);
             testableObs.Messages.Should().HaveCount(3);

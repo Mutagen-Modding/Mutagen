@@ -14,8 +14,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class ImplicitListingsProvider : IImplicitListingsProvider
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryProvider _dataFolder;
-        private readonly IImplicitListingModKeyProvider _listingModKeys;
+        public IDataDirectoryProvider DataFolder { get; }
+        public IImplicitListingModKeyProvider ListingModKeys { get; }
 
         public ImplicitListingsProvider(
             IFileSystem fileSystem,
@@ -23,14 +23,14 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             IImplicitListingModKeyProvider listingModKeys)
         {
             _fileSystem = fileSystem;
-            _dataFolder = dataFolder;
-            _listingModKeys = listingModKeys;
+            DataFolder = dataFolder;
+            ListingModKeys = listingModKeys;
         }
         
         public IEnumerable<IModListingGetter> Get()
         {
-            return _listingModKeys.Listings
-                .Where(x => _fileSystem.File.Exists(Path.Combine(_dataFolder.Path, x.FileName.String)))
+            return ListingModKeys.Listings
+                .Where(x => _fileSystem.File.Exists(Path.Combine(DataFolder.Path, x.FileName.String)))
                 .Select(x => new ModListing(x, enabled: true));
         }
     }

@@ -13,15 +13,15 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
 
     public class CreationClubLiveLoadOrderProvider : ICreationClubLiveLoadOrderProvider
     {
-        private readonly ICreationClubLiveListingsFileReader _fileReader;
-        private readonly ICreationClubLiveLoadOrderFolderWatcher _folderWatcher;
+        public ICreationClubLiveListingsFileReader FileReader { get; }
+        public ICreationClubLiveLoadOrderFolderWatcher FolderWatcher { get; }
 
         public CreationClubLiveLoadOrderProvider(
             ICreationClubLiveListingsFileReader fileReader,
             ICreationClubLiveLoadOrderFolderWatcher folderWatcher)
         {
-            _fileReader = fileReader;
-            _folderWatcher = folderWatcher;
+            FileReader = fileReader;
+            FolderWatcher = folderWatcher;
         }
     
         public IObservable<IChangeSet<IModListingGetter>> Get(
@@ -37,9 +37,9 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         private IObservable<IChangeSet<IModListingGetter>> InternalGet(out IObservable<ErrorResponse> state)
         {
             return ObservableCacheEx.And(
-                    _fileReader.Get(out state)
+                    FileReader.Get(out state)
                         .AddKey(x => x.ModKey),
-                    _folderWatcher.Get()
+                    FolderWatcher.Get()
                         .Transform<IModListingGetter, ModKey, ModKey>(x => new ModListing(x, true)))
                 .RemoveKey();
         }

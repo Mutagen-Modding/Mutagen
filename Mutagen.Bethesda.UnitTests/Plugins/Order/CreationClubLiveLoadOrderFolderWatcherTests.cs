@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using System.Reactive;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Environments.DI;
@@ -14,8 +12,8 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using Noggog.Testing.FileSystem;
+using NSubstitute;
 using Xunit;
-using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
@@ -27,7 +25,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             [Frozen]IDataDirectoryProvider dataDirectoryProvider,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
-            A.CallTo(() => dataDirectoryProvider.Path).Returns("C:/DoesNotExist");
+            dataDirectoryProvider.Path.Returns(new DirectoryPath("C:/DoesNotExist"));
             var obs = scheduler.Start(() =>
             {
                 return sut.Get();
@@ -44,7 +42,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
             fs.Directory.CreateDirectory("C:/Missing");
-            A.CallTo(() => dataDir.Path).Returns("C:/Missing");
+            dataDir.Path.Returns(new DirectoryPath("C:/Missing"));
             var obs = scheduler.Start(() =>
             {
                 return sut.Get();

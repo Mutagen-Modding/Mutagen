@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoFakeItEasy;
+using AutoFixture.AutoNSubstitute;
 using Noggog.Testing.AutoFixture;
 
 namespace Mutagen.Bethesda.UnitTests.AutoData
@@ -22,17 +22,15 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
         
         public void Customize(IFixture fixture)
         {
-            var autoFakeItEasy = new AutoFakeItEasyCustomization()
+            var autoMock = new AutoNSubstituteCustomization()
             {
                 ConfigureMembers = _configureMembers,
                 GenerateDelegates = true
             };
-            if (_strict)
-            {
-                autoFakeItEasy.Relay = new FakeItEasyStrictRelay();
-            }
-            fixture.Customize(autoFakeItEasy);
+            fixture.Customize(autoMock);
             fixture.Customizations.Add(new BaseEnvironmentBuilder(_release));
+            fixture.Customizations.Add(new ModKeyBuilder());
+            fixture.Customizations.Add(new ModListingBuilder());
             fixture.Customizations.Add(new OrderBuilder());
             fixture.Customize(new DefaultCustomization());
         }

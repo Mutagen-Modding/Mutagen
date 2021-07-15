@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using AutoFixture.Xunit2;
-using FakeItEasy;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             IEnumerable<IModListingGetter> listings,
             EnabledPluginListingsProvider sut)
         {
-            A.CallTo(() => reader.Read(pathProvider.Path)).Returns(listings);
+            reader.Read(pathProvider.Path).Returns(listings);
             sut.Get()
                 .Should().Equal(listings);
         }

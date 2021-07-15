@@ -15,18 +15,18 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
 
     public class CreationClubListingsPathProvider : ICreationClubListingsPathProvider
     {
-        private readonly IGameCategoryContext _categoryContext;
-        private readonly ICreationClubEnabledProvider _isUsed;
-        private readonly IGameDirectoryProvider _gameDirectoryProvider;
+        public IGameCategoryContext CategoryContext { get; }
+        public ICreationClubEnabledProvider IsUsed { get; }
+        public IGameDirectoryProvider DirectoryProvider { get; }
 
         public CreationClubListingsPathProvider(
             IGameCategoryContext categoryContext,
             ICreationClubEnabledProvider isUsed,
             IGameDirectoryProvider gameDirectoryProvider)
         {
-            _categoryContext = categoryContext;
-            _isUsed = isUsed;
-            _gameDirectoryProvider = gameDirectoryProvider;
+            CategoryContext = categoryContext;
+            IsUsed = isUsed;
+            DirectoryProvider = gameDirectoryProvider;
         }
 
         /// <inheritdoc />
@@ -34,9 +34,9 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         {
             get
             {
-                if (_isUsed.Used)
+                if (IsUsed.Used)
                 {
-                    return System.IO.Path.Combine(_gameDirectoryProvider.Path, $"{_categoryContext.Category}.ccc");
+                    return System.IO.Path.Combine(DirectoryProvider.Path, $"{CategoryContext.Category}.ccc");
                 }
 
                 return null;

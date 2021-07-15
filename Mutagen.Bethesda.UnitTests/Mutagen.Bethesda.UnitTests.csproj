@@ -11,7 +11,6 @@
     <PackageReference Include="Autofac" Version="6.2.0" />
     <PackageReference Include="AutoFixture" Version="4.17.0" />
     <PackageReference Include="AutoFixture.AutoNSubstitute" Version="4.17.0" />
-    <PackageReference Include="FakeItEasy" Version="7.1.0" />
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="GitInfo" Version="2.1.2">
       <PrivateAssets>all</PrivateAssets>
@@ -20,7 +19,7 @@
     <PackageReference Include="Loqui" Version="2.24.0.1-dev" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
-    <PackageReference Include="Noggog.CSharpExt" Version="2.24.0" />
+    <PackageReference Include="Noggog.CSharpExt" Version="2.24.0.1-dev" />
     <PackageReference Include="Noggog.Testing" Version="2.24.0.1-dev" />
     <PackageReference Include="NuGetizer" Version="0.7.0">
       <PrivateAssets>all</PrivateAssets>

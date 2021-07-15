@@ -17,24 +17,24 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubLiveLoadOrderFolderWatcher : ICreationClubLiveLoadOrderFolderWatcher
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryProvider _dataDirectory;
+        public IDataDirectoryProvider DataDirectory { get; }
 
         public CreationClubLiveLoadOrderFolderWatcher(
             IFileSystem fileSystem,
             IDataDirectoryProvider dataDirectory)
         {
             _fileSystem = fileSystem;
-            _dataDirectory = dataDirectory;
+            DataDirectory = dataDirectory;
         }
         
         public IObservable<IChangeSet<ModKey, ModKey>> Get()
         {
-            if (!_fileSystem.Directory.Exists(_dataDirectory.Path))
+            if (!_fileSystem.Directory.Exists(DataDirectory.Path))
             {
                 return Observable.Empty<IChangeSet<ModKey, ModKey>>();
             }
             return ObservableExt
-                .WatchFolderContents(_dataDirectory.Path, fileSystem: _fileSystem)
+                .WatchFolderContents(DataDirectory.Path, fileSystem: _fileSystem)
                 .Transform(x =>
                 {
                     if (ModKey.TryFromNameAndExtension(Path.GetFileName(x), out var modKey))

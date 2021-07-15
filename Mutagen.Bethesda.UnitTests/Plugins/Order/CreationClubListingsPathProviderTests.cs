@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using AutoFixture.Xunit2;
-using FakeItEasy;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             [Frozen]ICreationClubEnabledProvider enabledProvider,
             CreationClubListingsPathProvider sut)
         {
-            A.CallTo(() => enabledProvider.Used).Returns(false);
+            enabledProvider.Used.Returns(false);
             sut.Path
                 .Should().BeNull();
         }
@@ -29,10 +29,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             [Frozen]ICreationClubEnabledProvider enabledProvider,
             CreationClubListingsPathProvider sut)
         {
-            A.CallTo(() => enabledProvider.Used).Returns(true);
+            enabledProvider.Used.Returns(true);
             foreach (var category in EnumExt.GetValues<GameCategory>())
             {
-                A.CallTo(() => gameCategoryContext.Category).Returns(category);
+                gameCategoryContext.Category.Returns(category);
                 sut.Path
                     .Should().Be(new FilePath(Path.Combine(gameDir.Path, $"{category}.ccc")));
             }

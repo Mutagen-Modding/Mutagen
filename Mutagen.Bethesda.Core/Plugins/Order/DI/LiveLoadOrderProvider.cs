@@ -16,21 +16,21 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     
     public class LiveLoadOrderProvider : ILiveLoadOrderProvider
     {
-        private readonly IPluginLiveLoadOrderProvider _pluginLive;
-        private readonly ICreationClubLiveLoadOrderProvider _cccLive;
-        private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
-        private readonly ILiveLoadOrderTimings _timings;
+        public IPluginLiveLoadOrderProvider PluginLive { get; }
+        public ICreationClubLiveLoadOrderProvider CccLive { get; }
+        public ILoadOrderListingsProvider ListingsProvider { get; }
+        public ILiveLoadOrderTimings Timings { get; }
 
         public LiveLoadOrderProvider(
             IPluginLiveLoadOrderProvider pluginLive,
             ICreationClubLiveLoadOrderProvider cccLive,
-            ILoadOrderListingsProvider loadOrderListingsProvider,
+            ILoadOrderListingsProvider loadListingsProvider,
             ILiveLoadOrderTimings timings)
         {
-            _pluginLive = pluginLive;
-            _cccLive = cccLive;
-            _loadOrderListingsProvider = loadOrderListingsProvider;
-            _timings = timings;
+            PluginLive = pluginLive;
+            CccLive = cccLive;
+            ListingsProvider = loadListingsProvider;
+            Timings = timings;
         }
     
         public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state, IScheduler? scheduler = null)
@@ -43,12 +43,12 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     CompositeDisposable disp = new();
                     SourceList<IModListingGetter> list = new();
-                    var ret = _pluginLive.Changed
-                        .Merge(_cccLive.Changed)
+                    var ret = PluginLive.Changed
+                        .Merge(CccLive.Changed)
                         .StartWith(Unit.Default);
-                    if (_timings.Throttle.Ticks > 0)
+                    if (Timings.Throttle.Ticks > 0)
                     {
-                        ret = ret.ThrottleWithOptionalScheduler(_timings.Throttle, scheduler);
+                        ret = ret.ThrottleWithOptionalScheduler(Timings.Throttle, scheduler);
                     }
                     disp.Add(
                         ret.Select(_ =>
@@ -61,7 +61,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                                         // Short circuit if not subscribed anymore
                                         if (disp.IsDisposed) return;
 
-                                        var refreshedListings = _loadOrderListingsProvider.Get().ToArray();
+                                        var refreshedListings = ListingsProvider.Get().ToArray();
                                         // ToDo
                                         // Upgrade to SetTo mechanics.
                                         // SourceLists' EditDiff seems weird
@@ -79,8 +79,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                                     }
                                 })
                                 .RetryWithRampingBackoff<Unit, Exception>(
-                                    _timings.RetryInterval,
-                                    _timings.RetryIntervalMax,
+                                    Timings.RetryInterval,
+                                    Timings.RetryIntervalMax,
                                     scheduler);
                         })
                         .Switch()
@@ -92,8 +92,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 .ObserveOnIfApplicable(scheduler);
         }
 
-        public IObservable<Unit> Changed => _pluginLive.Changed
-                .Merge(_cccLive.Changed);
+        public IObservable<Unit> Changed => PluginLive.Changed
+                .Merge(CccLive.Changed);
 
         public override string ToString()
         {

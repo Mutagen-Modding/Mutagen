@@ -15,8 +15,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubLiveListingsFileReader : ICreationClubLiveListingsFileReader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly ICreationClubRawListingsReader _listingsReader;
-        private readonly ICreationClubListingsPathProvider _listingsPathProvider;
+        public ICreationClubRawListingsReader ListingsReader { get; }
+        public ICreationClubListingsPathProvider ListingsPathProvider { get; }
 
         public CreationClubLiveListingsFileReader(
             IFileSystem fileSystem,
@@ -24,13 +24,13 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             ICreationClubListingsPathProvider listingsPathProvider)
         {
             _fileSystem = fileSystem;
-            _listingsReader = listingsReader;
-            _listingsPathProvider = listingsPathProvider;
+            ListingsReader = listingsReader;
+            ListingsPathProvider = listingsPathProvider;
         }
         
         public IObservable<IChangeSet<IModListingGetter>> Get(out IObservable<ErrorResponse> state)
         {
-            var path = _listingsPathProvider.Path;
+            var path = ListingsPathProvider.Path;
             if (path == null)
             {
                 state = Observable.Return(ErrorResponse.Success);
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                     try
                     {
                         return GetResponse<IObservable<IChangeSet<IModListingGetter>>>.Succeed(
-                            _listingsReader.Read(_fileSystem.File.OpenRead(path.Value))
+                            ListingsReader.Read(_fileSystem.File.OpenRead(path.Value))
                                 .AsObservableChangeSet());
                     }
                     catch (Exception ex)

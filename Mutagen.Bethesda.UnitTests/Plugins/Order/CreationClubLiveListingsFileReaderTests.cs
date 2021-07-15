@@ -6,18 +6,15 @@ using System.Reactive;
 using AutoFixture;
 using AutoFixture.Xunit2;
 using DynamicData;
-using FakeItEasy;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
-using Noggog.Testing.AutoFixture;
 using Noggog.Testing.FileSystem;
 using NSubstitute;
 using Xunit;
-using MockFileSystemWatcherFactory = System.IO.Abstractions.TestingHelpers.MockFileSystemWatcherFactory;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
@@ -53,7 +50,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             [Frozen]ICreationClubListingsPathProvider cccPath,
             CreationClubLiveListingsFileReader sut)
         {
-            A.CallTo(() => cccPath.Path).Returns("C:/SomeMissingPath");
+            cccPath.Path.Returns(new FilePath("C:/SomeMissingPath"));
             ITestableObserver<ErrorResponse> stateTest = null!;
             scheduler.Start(() =>
             {
