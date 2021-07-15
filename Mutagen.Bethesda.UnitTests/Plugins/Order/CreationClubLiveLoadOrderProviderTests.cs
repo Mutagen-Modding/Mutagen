@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveLoadOrderProviderTests : TypicalTest
+    public class CreationClubLiveLoadOrderProviderTests
     {
         [Theory, MutagenAutoData]
         public void Neither(TestScheduler scheduler, CreationClubLiveLoadOrderProvider sut)

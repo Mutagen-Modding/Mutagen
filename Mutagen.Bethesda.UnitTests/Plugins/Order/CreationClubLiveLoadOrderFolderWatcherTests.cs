@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveLoadOrderFolderWatcherTests : TypicalTest
+    public class CreationClubLiveLoadOrderFolderWatcherTests
     {
         [Theory, MutagenAutoData]
         public void FolderDoesNotExist(

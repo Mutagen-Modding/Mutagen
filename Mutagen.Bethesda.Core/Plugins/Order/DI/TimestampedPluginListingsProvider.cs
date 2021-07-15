@@ -10,11 +10,11 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
 
     public class TimestampedPluginListingsProvider : ITimestampedPluginListingsProvider
     {
-        private readonly ITimestampAligner _timestampAligner;
-        private readonly ITimestampedPluginListingsPreferences _prefs;
-        private readonly IPluginRawListingsReader _rawListingsReader;
-        private readonly IDataDirectoryProvider _dataDirectoryProvider;
-        private readonly IPluginListingsPathProvider _pluginListingsPathProvider;
+        public ITimestampAligner Aligner { get; }
+        public ITimestampedPluginListingsPreferences Prefs { get; }
+        public IPluginRawListingsReader RawListingsReader { get; }
+        public IDataDirectoryProvider DirectoryProvider { get; }
+        public IPluginListingsPathProvider ListingsPathProvider { get; }
 
         public TimestampedPluginListingsProvider(
             ITimestampAligner timestampAligner,
@@ -23,20 +23,20 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             IDataDirectoryProvider dataDirectoryProvider,
             IPluginListingsPathProvider pluginListingsPathProvider)
         {
-            _timestampAligner = timestampAligner;
-            _prefs = prefs;
-            _rawListingsReader = rawListingsReader;
-            _dataDirectoryProvider = dataDirectoryProvider;
-            _pluginListingsPathProvider = pluginListingsPathProvider;
+            Aligner = timestampAligner;
+            Prefs = prefs;
+            RawListingsReader = rawListingsReader;
+            DirectoryProvider = dataDirectoryProvider;
+            ListingsPathProvider = pluginListingsPathProvider;
         }
 
         public IEnumerable<IModListingGetter> Get()
         {
-            var mods = _rawListingsReader.Read(_pluginListingsPathProvider.Path);
-            return _timestampAligner.AlignToTimestamps(
+            var mods = RawListingsReader.Read(ListingsPathProvider.Path);
+            return Aligner.AlignToTimestamps(
                 mods,
-                _dataDirectoryProvider.Path, 
-                throwOnMissingMods: _prefs.ThrowOnMissingMods);
+                DirectoryProvider.Path, 
+                throwOnMissingMods: Prefs.ThrowOnMissingMods);
         }
     }
 }

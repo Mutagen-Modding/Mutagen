@@ -6,14 +6,14 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
     public class MutagenAutoDataAttribute : AutoDataAttribute
     {
         public MutagenAutoDataAttribute(
-            bool Strict = true,
             bool ConfigureMembers = false, 
-            GameRelease Release = GameRelease.SkyrimSE)
+            GameRelease Release = GameRelease.SkyrimSE,
+            bool UseMockFileSystem = true)
             : base(() =>
             {
                 return new Fixture()
                     .Customize(new MutagenAutoDataCustomization(
-                        strict: Strict,
+                        useMockFilesystem: UseMockFileSystem,
                         configureMembers: ConfigureMembers,
                         release: Release));
             })

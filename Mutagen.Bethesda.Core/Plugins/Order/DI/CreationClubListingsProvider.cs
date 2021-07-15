@@ -21,9 +21,9 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class CreationClubListingsProvider : ICreationClubListingsProvider
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IDataDirectoryProvider _dataDirectoryProvider;
-        private readonly ICreationClubListingsPathProvider _pluginListingsPathProvider;
-        private readonly ICreationClubRawListingsReader _reader;
+        public IDataDirectoryProvider DirectoryProvider { get; }
+        public ICreationClubListingsPathProvider ListingsPathProvider { get; }
+        public ICreationClubRawListingsReader Reader { get; }
 
         public CreationClubListingsProvider(
             IFileSystem fileSystem,
@@ -32,9 +32,9 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
             ICreationClubRawListingsReader reader)
         {
             _fileSystem = fileSystem;
-            _dataDirectoryProvider = dataDirectoryProvider;
-            _pluginListingsPathProvider = pluginListingsPathProvider;
-            _reader = reader;
+            DirectoryProvider = dataDirectoryProvider;
+            ListingsPathProvider = pluginListingsPathProvider;
+            Reader = reader;
         }
 
         public IEnumerable<IModListingGetter> Get()
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         
         public IEnumerable<IModListingGetter> Get(bool throwIfMissing)
         {
-            var path = _pluginListingsPathProvider.Path;
+            var path = ListingsPathProvider.Path;
             if (path == null) return Enumerable.Empty<IModListingGetter>();
             if (!_fileSystem.File.Exists(path.Value))
             {
@@ -58,8 +58,8 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 }
             }
 
-            return _reader.Read(_fileSystem.File.OpenRead(path.Value))
-                .Where(x => _fileSystem.File.Exists(Path.Combine(_dataDirectoryProvider.Path, x.ModKey.FileName)))
+            return Reader.Read(_fileSystem.File.OpenRead(path.Value))
+                .Where(x => _fileSystem.File.Exists(Path.Combine(DirectoryProvider.Path, x.ModKey.FileName)))
                 .ToList();
         }
     }

@@ -3,41 +3,41 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
 using AutoFixture;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class PluginRawListingsReaderTests : TypicalTest
+    public class PluginRawListingsReaderTests
     {
-        [Fact]
-        public void PathDoesNotExist()
+        [Theory, MutagenAutoData]
+        public void PathDoesNotExist(
+            FilePath missingPath,
+            PluginRawListingsReader sut)
         {
             Assert.Throws<FileNotFoundException>(() =>
             {
-                new PluginRawListingsReader(
-                        new MockFileSystem(),
-                        Fixture.Create<IPluginListingsParser>())
-                    .Read("C:/NonExistantPath")
-                    .ToArray();
+                sut.Read(missingPath).ToArray();
             });
         }
 
-        [Fact]
-        public void Typical()
+        [Theory, MutagenAutoData(UseMockFileSystem: false)]
+        public void Typical(
+            [Frozen] IFileSystem fs,
+            FilePath path,
+            Stream someStream)
         {
             var listings = new ModListing[]
             {
                 new ModListing("ModA.esp", true),
                 new ModListing("ModB.esp", false),
             };
-            var path = new FilePath("C:/Plugin.txt");
-            var someStream = Substitute.For<Stream>();
-            var fs = Substitute.For<IFileSystem>();
             fs.File.Exists(path).Returns(true);
             fs.FileStream
                 .Create(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read)

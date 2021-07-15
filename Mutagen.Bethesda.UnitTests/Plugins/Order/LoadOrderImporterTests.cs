@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class LoadOrderImporterTests : TypicalTest
+    public class LoadOrderImporterTests
     {
         [Theory, MutagenAutoData]
         public void Typical(

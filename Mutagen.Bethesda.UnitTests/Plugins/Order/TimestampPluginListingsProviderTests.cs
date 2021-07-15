@@ -4,32 +4,22 @@ using Mutagen.Bethesda.Environments;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class TimestampPluginListingsProviderTests : TypicalTest
+    public class TimestampPluginListingsProviderTests
     {
-        [Fact]
-        public void Typical()
+        [Theory, MutagenAutoData]
+        public void Typical(TimestampedPluginListingsProvider sut)
         {
-            var pluginRawListingsReader = Fixture.Create<IPluginRawListingsReader>();
-            var aligner = Fixture.Create<ITimestampAligner>();
-            var pluginPathContext = Fixture.Create<IPluginListingsPathProvider>();
-            var dataDirectoryContext = Fixture.Create<IDataDirectoryProvider>();
-            var timestampedPluginListingsPreferences = Fixture.Create<ITimestampedPluginListingsPreferences>();
-            new TimestampedPluginListingsProvider(
-                    aligner,
-                timestampedPluginListingsPreferences,
-                pluginRawListingsReader,
-                dataDirectoryContext,
-                pluginPathContext)
-                .Get()
+            sut.Get()
                 .Should().Equal(
-                    aligner.AlignToTimestamps(
-                        pluginRawListingsReader.Read(pluginPathContext.Path),
-                        dataDirectoryContext.Path,
-                        timestampedPluginListingsPreferences.ThrowOnMissingMods));
+                    sut.Aligner.AlignToTimestamps(
+                        sut.RawListingsReader.Read(sut.ListingsPathProvider.Path),
+                        sut.DirectoryProvider.Path,
+                        sut.Prefs.ThrowOnMissingMods));
         }
     }
 }

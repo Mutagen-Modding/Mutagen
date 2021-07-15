@@ -6,7 +6,6 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Reactive.Concurrency;
 using AutoFixture;
 using AutoFixture.Kernel;
-using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using Noggog.Reactive;
@@ -26,6 +25,11 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
 
         public object Create(object request, ISpecimenContext context)
         {
+            if (request is SeededRequest seed)
+            {
+                request = seed.Request;
+            }
+            
             if (request is not Type t) return new NoSpecimen();
             if (t == typeof(IGameReleaseContext))
             {
@@ -74,10 +78,6 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
                 scheduler.TaskPool.Returns(Scheduler.CurrentThread);
                 scheduler.MainThread.Returns(Scheduler.CurrentThread);
                 return new SchedulerProvider();
-            }
-            else if (t == typeof(TestScheduler))
-            {
-                return new TestScheduler();
             }
 
             return new NoSpecimen();

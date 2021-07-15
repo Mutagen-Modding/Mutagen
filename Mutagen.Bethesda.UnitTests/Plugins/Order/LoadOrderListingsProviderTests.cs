@@ -6,26 +6,27 @@ using FluentAssertions;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class LoadOrderListingsProviderTests : TypicalTest
+    public class LoadOrderListingsProviderTests
     {
-        [Fact]
-        public void Typical()
+        [Theory, MutagenAutoData]
+        public void Typical(
+            IEnumerable<IModListingGetter> implicits,
+            IEnumerable<IModListingGetter> ccc,
+            IEnumerable<IModListingGetter> plugins,
+            IEnumerable<IModListingGetter> orderRet)
         {
-            var implicits = Fixture.CreateMany<IModListingGetter>();
             var implicitProv = Substitute.For<IImplicitListingsProvider>();
             implicitProv.Get().Returns(implicits);
-            var ccc = Fixture.CreateMany<IModListingGetter>();
             var cccProv = Substitute.For<ICreationClubListingsProvider>();
             cccProv.Get(throwIfMissing: false).Returns(ccc);
-            var plugins = Fixture.CreateMany<IModListingGetter>();
             var pluginsProv = Substitute.For<IPluginListingsProvider>();
             pluginsProv.Get().Returns(plugins);
-            var orderRet = Fixture.CreateMany<IModListingGetter>();
             var orderListings = Substitute.For<IOrderListings>();
             orderListings.Order(
                     Arg.Any<IEnumerable<IModListingGetter>>(),
@@ -48,19 +49,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     Arg.Any<Func<IModListingGetter, ModKey>>());
         }
         
-        [Fact]
-        public void BlockImplictsFromPlugins()
+        [Theory, MutagenAutoData]
+        public void BlockImplictsFromPlugins(
+            IEnumerable<IModListingGetter> ccc,
+            IEnumerable<IModListingGetter> plugins,
+            IEnumerable<IModListingGetter> orderRet)
         {
-            var ccc = Fixture.CreateMany<IModListingGetter>();
             var cccProv = Substitute.For<ICreationClubListingsProvider>();
             cccProv.Get(throwIfMissing: false).Returns(ccc);
-            var plugins = Fixture.CreateMany<IModListingGetter>();
             var pluginsProv = Substitute.For<IPluginListingsProvider>();
             pluginsProv.Get().Returns(plugins);
             var implicits = plugins.Take(1);
             var implicitProv = Substitute.For<IImplicitListingsProvider>();
             implicitProv.Get().Returns(implicits);
-            var orderRet = Fixture.CreateMany<IModListingGetter>();
             var orderListings = Substitute.For<IOrderListings>();
             orderListings.Order(
                     Arg.Any<IEnumerable<IModListingGetter>>(),

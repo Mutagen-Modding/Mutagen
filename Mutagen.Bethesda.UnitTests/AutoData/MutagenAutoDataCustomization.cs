@@ -7,16 +7,16 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
     public class MutagenAutoDataCustomization : ICustomization
     {
         private readonly GameRelease _release;
-        private readonly bool _strict;
+        private readonly bool _useMockFilesystem;
         private readonly bool _configureMembers;
 
         public MutagenAutoDataCustomization(
-            bool strict,
             bool configureMembers, 
-            GameRelease release)
+            GameRelease release,
+            bool useMockFilesystem)
         {
             _release = release;
-            _strict = strict;
+            _useMockFilesystem = useMockFilesystem;
             _configureMembers = configureMembers;
         }
         
@@ -32,7 +32,9 @@ namespace Mutagen.Bethesda.UnitTests.AutoData
             fixture.Customizations.Add(new ModKeyBuilder());
             fixture.Customizations.Add(new ModListingBuilder());
             fixture.Customizations.Add(new OrderBuilder());
-            fixture.Customize(new DefaultCustomization());
+            fixture.Customizations.Add(new FileSystemBuilder(_useMockFilesystem));
+            fixture.Customizations.Add(new SchedulerBuilder());
+            fixture.Customizations.Add(new PathBuilder());
         }
     }
 }

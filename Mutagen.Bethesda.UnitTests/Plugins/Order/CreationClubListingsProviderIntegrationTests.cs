@@ -3,49 +3,38 @@ using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture;
+using AutoFixture.Xunit2;
 using FluentAssertions;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
+using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubListingsProviderIntegrationTests : TypicalTest
+    public class CreationClubListingsProviderIntegrationTests
     {
         private const string DataDir = "C:/DataDirectory";
-
-        [Fact]
-        public void CccNotUsed()
+        
+        [Theory, MutagenAutoData(Release: GameRelease.Oblivion)]
+        public void CccNotUsed(
+            CreationClubListingsProvider sut)
         {
-            var dataDirectoryInjection = new DataDirectoryInjection(DataDir);
-            new CreationClubListingsProvider(
-                    Fixture.Create<IFileSystem>(),
-                    dataDirectoryInjection,
-                    new CreationClubListingsPathInjection(default(FilePath?)),
-                    new CreationClubRawListingsReader(
-                        Fixture.Create<IFileSystem>(),
-                        dataDirectoryInjection))
-                .Get().Should().BeEmpty();
+            sut.Get().Should().BeEmpty();
         }
 
-        [Fact]
-        public void CccMissing()
+        [Theory, MutagenAutoData]
+        public void CccMissing(
+            FilePath missingFile,
+            CreationClubListingsProvider sut)
         {
-            var fs = new MockFileSystem();
-            fs.Directory.CreateDirectory(DataDir);
+            sut.ListingsPathProvider.Path.Returns(missingFile);
             Assert.Throws<FileNotFoundException>(() =>
             {
-                var dataDirectoryInjection = new DataDirectoryInjection(DataDir);
-                new CreationClubListingsProvider(
-                        fs,
-                        dataDirectoryInjection,
-                        new CreationClubListingsPathInjection("C:/SomeMissingFile"),
-                        new CreationClubRawListingsReader(
-                            fs,
-                            dataDirectoryInjection))
-                    .Get();
+                sut.Get();
             });
         }
 

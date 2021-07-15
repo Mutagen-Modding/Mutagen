@@ -15,15 +15,15 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
 
     public class FindImplicitlyIncludedMods : IFindImplicitlyIncludedMods
     {
-        private readonly IDataDirectoryProvider _dataDirectoryProvider;
-        private readonly IMasterReferenceReaderFactory _readerFactory;
+        public IDataDirectoryProvider DirectoryProvider { get; }
+        public IMasterReferenceReaderFactory ReaderFactory { get; }
 
         public FindImplicitlyIncludedMods(
             IDataDirectoryProvider dataDirectoryProvider,
             IMasterReferenceReaderFactory readerFactory)
         {
-            _dataDirectoryProvider = dataDirectoryProvider;
-            _readerFactory = readerFactory;
+            DirectoryProvider = dataDirectoryProvider;
+            ReaderFactory = readerFactory;
         }
         
         public IEnumerable<ModKey> Find(IEnumerable<IModListingGetter> loadOrderListing)
@@ -43,7 +43,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 {
                     yield return listing.ModKey;
                 }
-                var reader = _readerFactory.FromPath(Path.Combine(_dataDirectoryProvider.Path, listing.ModKey.FileName));
+                var reader = ReaderFactory.FromPath(Path.Combine(DirectoryProvider.Path, listing.ModKey.FileName));
                 foreach (var master in reader.Masters)
                 {
                     if (!referencedMasters.Contains(master.Master))

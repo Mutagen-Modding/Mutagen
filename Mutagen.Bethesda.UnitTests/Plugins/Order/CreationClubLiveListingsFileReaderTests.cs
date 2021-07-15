@@ -18,20 +18,17 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class CreationClubLiveListingsFileReaderTests : TypicalTest
+    public class CreationClubLiveListingsFileReaderTests
     {
-        [Fact]
-        public void NotUsed()
+        [Theory, MutagenAutoData(Release: GameRelease.Oblivion)]
+        public void NotUsed(
+            TestScheduler scheduler,
+            CreationClubLiveListingsFileReader sut)
         {
-            var scheduler = new TestScheduler();
             ITestableObserver<ErrorResponse> stateTest = null!;
             var obs = scheduler.Start(() =>
             {
-                var ret = new CreationClubLiveListingsFileReader(
-                        Fixture.Create<IFileSystem>(),
-                        Fixture.Create<ICreationClubRawListingsReader>(),
-                        new CreationClubListingsPathInjection(null))
-                    .Get(out var state);
+                var ret = sut.Get(out var state);
                 stateTest = scheduler.Start(() => state);
                 return ret;
             });
@@ -46,11 +43,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         [Theory, MutagenAutoData]
         public void FileMissing(
+            FilePath missingPath,
             [Frozen]TestScheduler scheduler,
             [Frozen]ICreationClubListingsPathProvider cccPath,
             CreationClubLiveListingsFileReader sut)
         {
-            cccPath.Path.Returns(new FilePath("C:/SomeMissingPath"));
+            cccPath.Path.Returns(missingPath);
             ITestableObserver<ErrorResponse> stateTest = null!;
             scheduler.Start(() =>
             {
@@ -64,14 +62,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             stateTest.Messages[0].Value.Value.Succeeded.Should().BeFalse();
         }
 
-        [Fact]
-        public void FileExists()
+        [Theory, MutagenAutoData]
+        public void FileExists(Stream stream)
         {
             var scheduler = new TestScheduler();
             var path = "C:/SomePath";
             var listingA = new ModListing("ModA.esp", true);
             var fs = Substitute.For<IFileSystem>();
-            fs.File.OpenRead(path).Returns(Fixture.Create<Stream>());
+            fs.File.OpenRead(path).Returns(stream);
             var reader = Substitute.For<ICreationClubRawListingsReader>();
             reader.Read(Arg.Any<Stream>()).Returns(listingA.AsEnumerable());
             var list = new CreationClubLiveListingsFileReader(

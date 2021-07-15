@@ -9,9 +9,9 @@ using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class EnabledPluginsListingProviderTests : TypicalTest
+    public class EnabledPluginsListingProviderTests
     {
-        [Theory, MutagenAutoData(false)]
+        [Theory, MutagenAutoData]
         public void Typical(
             [Frozen]IPluginListingsPathProvider pathProvider,
             [Frozen]IPluginRawListingsReader reader,

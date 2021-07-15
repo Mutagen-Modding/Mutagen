@@ -8,16 +8,16 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Masters;
 using Mutagen.Bethesda.Plugins.Masters.DI;
-using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.UnitTests.AutoData;
 using Noggog;
 using NSubstitute;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {
-    public class FindImplicitlyIncludedModsTests : TypicalTest
+    public class FindImplicitlyIncludedModsTests
     {
         private static readonly ModKey ModA = "ModA.esp";
         private static readonly ModKey ModB = "ModB.esp";
@@ -26,14 +26,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         record Listing(ModKey Mod, params ModKey[] Masters);
         
-        private IMasterReferenceReaderFactory GetReaderFactory(
-            string dataFolder,
+        private void SetReaderFactory(
+            FindImplicitlyIncludedMods includedMods,
             params Listing[] listings)
         {
-            var masterReaderFactory = Substitute.For<IMasterReferenceReaderFactory>();
             foreach (var listing in listings)
             {
-                masterReaderFactory.FromPath(Path.Combine(dataFolder, listing.Mod.FileName.String))
+                includedMods.ReaderFactory
+                    .FromPath(Path.Combine(includedMods.DirectoryProvider.Path, listing.Mod.FileName.String))
                     .Returns(_ =>
                     {
                         var reader = Substitute.For<IMasterReferenceReader>();
@@ -50,84 +50,67 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                         return reader;
                     });
             }
-            return masterReaderFactory;
         }
         
-        [Fact]
-        public void NothingToDo()
+        [Theory, MutagenAutoData]
+        public void NothingToDo(FindImplicitlyIncludedMods sut)
         {
-            var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(directoryPath),
-                GetReaderFactory(
-                    directoryPath.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA, ModC)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, true),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
         
-        [Fact]
-        public void EnableOne()
+        [Theory, MutagenAutoData]
+        public void EnableOne(FindImplicitlyIncludedMods sut)
         {
-            var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(directoryPath),
-                GetReaderFactory(
-                    directoryPath.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA, ModC)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToList();
             found.Should().HaveCount(1);
             found[0].Should().Be(ModC);
         }
         
-        [Fact]
-        public void SkipUnreferenced()
+        [Theory, MutagenAutoData]
+        public void SkipUnreferenced(FindImplicitlyIncludedMods sut)
         {
-            var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(directoryPath),
-                GetReaderFactory(
-                    directoryPath.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
         
-        [Fact]
-        public void RecursiveEnable()
+        [Theory, MutagenAutoData]
+        public void RecursiveEnable(FindImplicitlyIncludedMods sut)
         {
-            var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(directoryPath),
-                GetReaderFactory(
-                    directoryPath.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA, ModC),
-                    new Listing(ModC, ModD)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC, ModD));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -135,7 +118,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(ModC, false),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToList();
             found.Should().HaveCount(2);
             found.Should().Equal(
@@ -143,17 +126,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 ModD);
         }
         
-        [Fact]
-        public void RecursiveEnableBadLo()
+        [Theory, MutagenAutoData]
+        public void RecursiveEnableBadLo(FindImplicitlyIncludedMods sut)
         {
-            var directoryPath = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(directoryPath),
-                GetReaderFactory(
-                    directoryPath.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA, ModC),
-                    new Listing(ModC, ModD)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC),
+                new Listing(ModC, ModD));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
@@ -161,7 +140,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new ModListing(ModB, true),
                 new ModListing(ModD, false),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToArray();
             found.Should().HaveCount(2);
             found.Should().Equal(
@@ -169,22 +148,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 ModD);
         }
 
-        [Fact]
-        public void UnlistedReference()
+        [Theory, MutagenAutoData]
+        public void UnlistedReference(FindImplicitlyIncludedMods sut)
         {
-            var dataFolder = Fixture.Create<DirectoryPath>();
-            var adder = new FindImplicitlyIncludedMods(
-                new DataDirectoryInjection(dataFolder),
-                GetReaderFactory(
-                    dataFolder.Path,
-                    new Listing(ModA),
-                    new Listing(ModB, ModA, ModC)));
+            SetReaderFactory(sut,
+                new Listing(ModA),
+                new Listing(ModB, ModA, ModC));
             var list = new List<IModListingGetter>()
             {
                 new ModListing(ModA, true),
                 new ModListing(ModB, true),
             };
-            var found = adder.Find(list)
+            var found = sut.Find(list)
                 .ToList();
             found.Should().BeEmpty();
         }
