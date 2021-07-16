@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using System;
 using System.Linq;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Path = System.IO.Path;

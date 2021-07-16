@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.SourceGene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Autofac", "Mutagen.Bethesda.Autofac\Mutagen.Bethesda.Autofac.csproj", "{DD442F52-6F7B-452B-B1B4-5CB53262D662}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Core.UnitTests", "Mutagen.Bethesda.Core.UnitTests\Mutagen.Bethesda.Core.UnitTests.csproj", "{F67AD3A7-C6EF-437D-B57A-4B76CC4A9E87}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{DD442F52-6F7B-452B-B1B4-5CB53262D662}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD442F52-6F7B-452B-B1B4-5CB53262D662}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD442F52-6F7B-452B-B1B4-5CB53262D662}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F67AD3A7-C6EF-437D-B57A-4B76CC4A9E87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F67AD3A7-C6EF-437D-B57A-4B76CC4A9E87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F67AD3A7-C6EF-437D-B57A-4B76CC4A9E87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F67AD3A7-C6EF-437D-B57A-4B76CC4A9E87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

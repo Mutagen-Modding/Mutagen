@@ -1,10 +1,6 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Skyrim;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Mutagen.Bethesda.Core.UnitTests;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

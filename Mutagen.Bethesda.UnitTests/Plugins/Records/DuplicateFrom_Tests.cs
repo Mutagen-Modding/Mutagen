@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Skyrim;
 using System;
 using System.Linq;
+using Mutagen.Bethesda.Core.UnitTests;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

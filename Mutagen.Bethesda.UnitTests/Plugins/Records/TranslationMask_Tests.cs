@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Xunit;

@@ -4,6 +4,7 @@ using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using Noggog.Utility;
 using System;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 

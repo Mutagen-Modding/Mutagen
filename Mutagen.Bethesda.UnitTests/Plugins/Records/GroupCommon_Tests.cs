@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Oblivion;
 using System.Linq;
+using Mutagen.Bethesda.Core.UnitTests;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

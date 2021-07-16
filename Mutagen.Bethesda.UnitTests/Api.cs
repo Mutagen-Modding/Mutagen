@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda;
+using Mutagen.Bethesda.Core.UnitTests;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;

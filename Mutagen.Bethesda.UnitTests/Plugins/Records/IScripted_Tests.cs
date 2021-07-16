@@ -1,3 +1,4 @@
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Skyrim;
 using Xunit;
 

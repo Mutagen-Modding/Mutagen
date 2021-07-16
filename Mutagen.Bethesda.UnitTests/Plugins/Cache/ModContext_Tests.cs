@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Skyrim;
 using Noggog;
 using System.Linq;
+using Mutagen.Bethesda.Core.UnitTests;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
 

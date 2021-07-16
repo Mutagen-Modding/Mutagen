@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using Loqui;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Oblivion.Internals;
 using Mutagen.Bethesda.Plugins;

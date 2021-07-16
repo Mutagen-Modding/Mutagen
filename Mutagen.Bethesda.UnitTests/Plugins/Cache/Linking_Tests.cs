@@ -10,6 +10,7 @@ using Noggog.Utility;
 using System;
 using System.Linq;
 using System.Reactive.Disposables;
+using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Skyrim;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Mutagen.Bethesda.Core.UnitTests;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
