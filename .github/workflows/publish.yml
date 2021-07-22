@@ -15,12 +15,12 @@ jobs:
         dotnet-version: 5.0.*
     - name: Install dependencies
       run: |
-        dotnet clean -c Release && dotnet nuget locals all --clear
-        dotnet restore
+        dotnet clean Mutagen.Records.sln -c Release && dotnet nuget locals all --clear
+        dotnet restore Mutagen.Records.sln
     - name: Build
-      run: dotnet build --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Mutagen-Modding/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
+      run: dotnet build Mutagen.Records.sln --no-restore -c Release /p:Version=${{ github.event.release.tag_name }} -p:PackageReleaseNotes="See https://github.com/Mutagen-Modding/Mutagen/releases/tag/${{ github.event.release.tag_name }}"
     - name: Test
-      run: dotnet test --no-build -c Release
+      run: dotnet test Mutagen.Records.sln --no-build -c Release
     - name: Publish to Github
       uses: svenstaro/upload-release-action@v2
       with:
