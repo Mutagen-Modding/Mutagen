@@ -90,6 +90,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
         [Fact]
         public void SetDefaultOntoNonLocalized()
         {
+            TranslatedString.DefaultLanguage = Language.English;
             ITranslatedString str = Create(EnglishString);
             str.Set(Language.English, FrenchString);
             Assert.Equal(FrenchString, str.String);
@@ -320,6 +321,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
         }
     }
 
+    [Collection("TranslatedString")]
     public class TranslatedString_ByCtor : ATranslatedString_Tests
     {
         public override TranslatedString Create(string str)
@@ -333,6 +335,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Strings
         }
     }
 
+    [Collection("TranslatedString")]
     public class TranslatedString_ByLookup : ATranslatedString_Tests
     {
         public class ManualStringsLookup : IStringsFolderLookup
