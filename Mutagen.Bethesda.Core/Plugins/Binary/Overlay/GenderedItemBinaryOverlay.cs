@@ -189,19 +189,21 @@ namespace Mutagen.Bethesda.Plugins.Binary.Overlay
             {
                 if (stream.Complete) break;
                 // Skip marker
-                var recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out var markerLen);
-                if (recType != marker) break;
-                stream.Position += markerLen;
+                var markerFrame = stream.GetSubrecordFrame();
+                if (markerFrame.RecordType != marker) break;
+                stream.Position += markerFrame.TotalLength;
 
                 // Read and skip gender marker
-                recType = HeaderTranslation.ReadNextRecordType(stream, package.MetaData.Constants.SubConstants.LengthLength, out markerLen);
-                stream.Position += markerLen;
+                var genderMarkerFrame = stream.GetSubrecordFrame();
+                var recType = genderMarkerFrame.RecordType;
                 if (recType == male)
                 {
+                    stream.Position += genderMarkerFrame.TotalLength;
                     maleObj = creator(stream, package, recordTypeConverter);
                 }
                 else if (recType == female)
                 {
+                    stream.Position += genderMarkerFrame.TotalLength;
                     femaleObj = creator(stream, package, femaleRecordConverter ?? recordTypeConverter);
                 }
                 else
