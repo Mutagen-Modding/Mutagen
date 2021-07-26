@@ -36,6 +36,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             {
                 fg.AppendLine($"using Mutagen.Bethesda.{modObj.ProtoGen.Protocol.Namespace};");
             }
+            fg.AppendLine($"using Mutagen.Bethesda.Environments;");
             fg.AppendLine($"using Mutagen.Bethesda.Plugins.Cache;");
             fg.AppendLine();
 
