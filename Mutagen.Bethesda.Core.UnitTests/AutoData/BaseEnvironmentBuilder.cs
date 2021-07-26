@@ -9,6 +9,7 @@ using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Noggog;
 using Noggog.Reactive;
+using Noggog.Testing.AutoFixture;
 using Noggog.WPF;
 using NSubstitute;
 
@@ -45,8 +46,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             }
             else if (t == typeof(IGameDirectoryProvider))
             {
-                var dir = context.Create<DirectoryPath>();
-                return new GameDirectoryInjection(Path.Combine(dir.Path, "GameDirectory"));
+                return new GameDirectoryInjection(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory"));
             }
             else if (t == typeof(IDataDirectoryProvider))
             {
@@ -64,12 +64,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 {
                     FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
                 };
-                var dir = context.Create<DirectoryPath>();
-                ret.Directory.CreateDirectory(dir.Path);
-                ret.Directory.CreateDirectory(Path.Combine(dir.Path, "GameDirectory", "DataDirectory"));
-                ret.File.Create(Path.Combine(dir.Path, "Plugins.txt"));
-                ret.File.Create(Path.Combine(dir.Path, "GameDirectory", $"{_release.ToCategory()}.ccc"));
-                ret.File.Create(Path.Combine(dir.Path, "GameDirectory", "DataDirectory", Utility.PluginModKey.FileName));
+                ret.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                ret.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
+                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
+                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
+                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", Utility.PluginModKey.FileName));
                 return ret;
             }
             else if (t == typeof(ISchedulerProvider))

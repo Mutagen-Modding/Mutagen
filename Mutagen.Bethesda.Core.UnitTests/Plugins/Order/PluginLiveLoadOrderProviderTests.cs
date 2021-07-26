@@ -203,7 +203,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
 
         [Theory, MutagenAutoData]
         public void Changed(
-            [Frozen]FilePath pluginPath,
+            [Frozen]FilePath existingPluginPath,
             [Frozen]MockFileSystemWatcher modified,
             [Frozen]MockFileSystem fs)
         {
@@ -212,14 +212,14 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
             new PluginLiveLoadOrderProvider(
                     fs,
                     Substitute.For<IPluginListingsProvider>(),
-                    new PluginListingsPathInjection(pluginPath))
+                    new PluginListingsPathInjection(existingPluginPath))
                 .Changed
                 .Subscribe(testableObs);
             testableObs.ShouldNotBeCompleted();
             testableObs.ShouldHaveNoErrors();
             testableObs.Messages.Should().HaveCount(1);
             
-            modified.MarkChanged(pluginPath);
+            modified.MarkChanged(existingPluginPath);
             testableObs.ShouldNotBeCompleted();
             testableObs.ShouldHaveNoErrors();
             testableObs.Messages.Should().HaveCount(2);

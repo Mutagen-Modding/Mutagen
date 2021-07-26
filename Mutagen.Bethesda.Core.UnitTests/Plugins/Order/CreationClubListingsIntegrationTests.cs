@@ -58,24 +58,24 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
 
         [Theory, MutagenAutoData]
         public async Task LiveLoadOrder(
-            [Frozen]DirectoryPath dataFolder,
+            IDataDirectoryProvider dataFolder,
             [Frozen]MockFileSystemWatcher modified,
             [Frozen]MockFileSystem fs)
         {
-            var ccPath = Path.Combine(dataFolder, "Skyrim.ccc");
-            fs.File.WriteAllText(Path.Combine(dataFolder, Utility.PluginModKey.FileName), string.Empty);
-            fs.File.WriteAllText(Path.Combine(dataFolder, Utility.PluginModKey2.FileName), string.Empty);
+            var ccPath = Path.Combine(dataFolder.Path, "Skyrim.ccc");
+            fs.File.WriteAllText(Path.Combine(dataFolder.Path, Utility.PluginModKey.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataFolder.Path, Utility.PluginModKey2.FileName), string.Empty);
             fs.File.WriteAllText(ccPath, @$"{Utility.PluginModKey.FileName}
 {Utility.PluginModKey3.FileName}");
             ErrorResponse err = ErrorResponse.Failure;
-            var live = CreationClubListings.GetLiveLoadOrder(ccPath, dataFolder, out var state,
+            var live = CreationClubListings.GetLiveLoadOrder(ccPath, dataFolder.Path, out var state,
                 fileSystem: fs);
             {
                 var list = live.AsObservableList();
                 state.Subscribe(x => err = x);
                 Assert.Equal(1, list.Count);
                 Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-                var thirdPath = Path.Combine(dataFolder, Utility.PluginModKey3.FileName);
+                var thirdPath = Path.Combine(dataFolder.Path, Utility.PluginModKey3.FileName);
                 fs.File.WriteAllText(thirdPath, string.Empty);
                 modified.MarkCreated(thirdPath);
                 Assert.Equal(2, list.Count);
