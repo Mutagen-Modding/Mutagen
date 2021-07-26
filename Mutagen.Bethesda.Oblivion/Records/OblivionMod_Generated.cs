@@ -2794,8 +2794,9 @@ namespace Mutagen.Bethesda.Oblivion
         #region Mutagen
         public static readonly RecordType GrupRecordType = OblivionMod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Oblivion;
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
-        ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => OblivionModMixIn.GetEqualsMask(this, (IOblivionModGetter)rhs, include);
@@ -3692,16 +3693,29 @@ namespace Mutagen.Bethesda.Oblivion
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetTopLevelGroupGetter<T>(this IOblivionModGetter obj)
+        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IOblivionModGetter obj)
             where T : IMajorRecordCommonGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommonGetter<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
-        public static ICache<T, FormKey> GetGroup<T>(this IOblivionMod obj)
+        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+            this IOblivionModGetter obj,
+            Type type)
+        {
+            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
+        }
+
+        public static IGroupCommon<T> GetTopLevelGroup<T>(this IOblivionMod obj)
             where T : IMajorRecordCommon
         {
-            return (ICache<T, FormKey>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommon<T>)((OblivionModCommon)((IOblivionModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
         public static void WriteToBinaryParallel(
@@ -5935,231 +5949,232 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         }
         
         #region Mutagen
-        public object GetGroup<TMajor>(IOblivionModGetter obj)
-            where TMajor : IMajorRecordCommonGetter
+        public object GetGroup(
+            IOblivionModGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    return obj.GameSettings.RecordCache;
+                    return obj.GameSettings;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    return obj.Globals.RecordCache;
+                    return obj.Globals;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    return obj.Classes.RecordCache;
+                    return obj.Classes;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    return obj.Factions.RecordCache;
+                    return obj.Factions;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    return obj.Hairs.RecordCache;
+                    return obj.Hairs;
                 case "Eye":
                 case "IEyeGetter":
                 case "IEye":
                 case "IEyeInternal":
-                    return obj.Eyes.RecordCache;
+                    return obj.Eyes;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    return obj.Races.RecordCache;
+                    return obj.Races;
                 case "Sound":
                 case "ISoundGetter":
                 case "ISound":
                 case "ISoundInternal":
-                    return obj.Sounds.RecordCache;
+                    return obj.Sounds;
                 case "SkillRecord":
                 case "ISkillRecordGetter":
                 case "ISkillRecord":
                 case "ISkillRecordInternal":
-                    return obj.Skills.RecordCache;
+                    return obj.Skills;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    return obj.MagicEffects.RecordCache;
+                    return obj.MagicEffects;
                 case "Script":
                 case "IScriptGetter":
                 case "IScript":
                 case "IScriptInternal":
-                    return obj.Scripts.RecordCache;
+                    return obj.Scripts;
                 case "LandTexture":
                 case "ILandTextureGetter":
                 case "ILandTexture":
                 case "ILandTextureInternal":
-                    return obj.LandTextures.RecordCache;
+                    return obj.LandTextures;
                 case "Enchantment":
                 case "IEnchantmentGetter":
                 case "IEnchantment":
                 case "IEnchantmentInternal":
-                    return obj.Enchantments.RecordCache;
+                    return obj.Enchantments;
                 case "SpellUnleveled":
                 case "ISpellUnleveledGetter":
                 case "ISpellUnleveled":
                 case "ISpellUnleveledInternal":
-                    return obj.Spells.RecordCache;
+                    return obj.Spells;
                 case "Birthsign":
                 case "IBirthsignGetter":
                 case "IBirthsign":
                 case "IBirthsignInternal":
-                    return obj.Birthsigns.RecordCache;
+                    return obj.Birthsigns;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    return obj.Activators.RecordCache;
+                    return obj.Activators;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    return obj.AlchemicalApparatus.RecordCache;
+                    return obj.AlchemicalApparatus;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    return obj.Armors.RecordCache;
+                    return obj.Armors;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    return obj.Books.RecordCache;
+                    return obj.Books;
                 case "Clothing":
                 case "IClothingGetter":
                 case "IClothing":
                 case "IClothingInternal":
-                    return obj.Clothes.RecordCache;
+                    return obj.Clothes;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    return obj.Containers.RecordCache;
+                    return obj.Containers;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    return obj.Doors.RecordCache;
+                    return obj.Doors;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    return obj.Ingredients.RecordCache;
+                    return obj.Ingredients;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    return obj.Lights.RecordCache;
+                    return obj.Lights;
                 case "Miscellaneous":
                 case "IMiscellaneousGetter":
                 case "IMiscellaneous":
                 case "IMiscellaneousInternal":
-                    return obj.Miscellaneous.RecordCache;
+                    return obj.Miscellaneous;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    return obj.Statics.RecordCache;
+                    return obj.Statics;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    return obj.Grasses.RecordCache;
+                    return obj.Grasses;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    return obj.Trees.RecordCache;
+                    return obj.Trees;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    return obj.Flora.RecordCache;
+                    return obj.Flora;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    return obj.Furniture.RecordCache;
+                    return obj.Furniture;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    return obj.Weapons.RecordCache;
+                    return obj.Weapons;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    return obj.Ammunitions.RecordCache;
+                    return obj.Ammunitions;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    return obj.Npcs.RecordCache;
+                    return obj.Npcs;
                 case "Creature":
                 case "ICreatureGetter":
                 case "ICreature":
                 case "ICreatureInternal":
-                    return obj.Creatures.RecordCache;
+                    return obj.Creatures;
                 case "LeveledCreature":
                 case "ILeveledCreatureGetter":
                 case "ILeveledCreature":
                 case "ILeveledCreatureInternal":
-                    return obj.LeveledCreatures.RecordCache;
+                    return obj.LeveledCreatures;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    return obj.SoulGems.RecordCache;
+                    return obj.SoulGems;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    return obj.Keys.RecordCache;
+                    return obj.Keys;
                 case "Potion":
                 case "IPotionGetter":
                 case "IPotion":
                 case "IPotionInternal":
-                    return obj.Potions.RecordCache;
+                    return obj.Potions;
                 case "Subspace":
                 case "ISubspaceGetter":
                 case "ISubspace":
                 case "ISubspaceInternal":
-                    return obj.Subspaces.RecordCache;
+                    return obj.Subspaces;
                 case "SigilStone":
                 case "ISigilStoneGetter":
                 case "ISigilStone":
                 case "ISigilStoneInternal":
-                    return obj.SigilStones.RecordCache;
+                    return obj.SigilStones;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    return obj.LeveledItems.RecordCache;
+                    return obj.LeveledItems;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    return obj.Weathers.RecordCache;
+                    return obj.Weathers;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    return obj.Climates.RecordCache;
+                    return obj.Climates;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    return obj.Regions.RecordCache;
+                    return obj.Regions;
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
@@ -6168,59 +6183,59 @@ namespace Mutagen.Bethesda.Oblivion.Internals
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    return obj.Worldspaces.RecordCache;
+                    return obj.Worldspaces;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    return obj.DialogTopics.RecordCache;
+                    return obj.DialogTopics;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    return obj.Quests.RecordCache;
+                    return obj.Quests;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    return obj.IdleAnimations.RecordCache;
+                    return obj.IdleAnimations;
                 case "AIPackage":
                 case "IAIPackageGetter":
                 case "IAIPackage":
                 case "IAIPackageInternal":
-                    return obj.AIPackages.RecordCache;
+                    return obj.AIPackages;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    return obj.CombatStyles.RecordCache;
+                    return obj.CombatStyles;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    return obj.LoadScreens.RecordCache;
+                    return obj.LoadScreens;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    return obj.LeveledSpells.RecordCache;
+                    return obj.LeveledSpells;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    return obj.AnimatedObjects.RecordCache;
+                    return obj.AnimatedObjects;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    return obj.Waters.RecordCache;
+                    return obj.Waters;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    return obj.EffectShaders.RecordCache;
+                    return obj.EffectShaders;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -12495,7 +12510,8 @@ namespace Mutagen.Bethesda.Oblivion.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Oblivion;
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

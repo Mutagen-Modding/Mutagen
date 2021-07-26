@@ -5246,8 +5246,9 @@ namespace Mutagen.Bethesda.Skyrim
         public static readonly RecordType GrupRecordType = SkyrimMod_Registration.TriggeringRecordType;
         public SkyrimRelease SkyrimRelease { get; }
         public override GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
-        ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => SkyrimModMixIn.GetEqualsMask(this, (ISkyrimModGetter)rhs, include);
@@ -6651,16 +6652,29 @@ namespace Mutagen.Bethesda.Skyrim
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetTopLevelGroupGetter<T>(this ISkyrimModGetter obj)
+        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this ISkyrimModGetter obj)
             where T : IMajorRecordCommonGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommonGetter<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
-        public static ICache<T, FormKey> GetGroup<T>(this ISkyrimMod obj)
+        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+            this ISkyrimModGetter obj,
+            Type type)
+        {
+            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
+        }
+
+        public static IGroupCommon<T> GetTopLevelGroup<T>(this ISkyrimMod obj)
             where T : IMajorRecordCommon
         {
-            return (ICache<T, FormKey>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommon<T>)((SkyrimModCommon)((ISkyrimModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
         public static void WriteToBinaryParallel(
@@ -10563,276 +10577,277 @@ namespace Mutagen.Bethesda.Skyrim.Internals
         }
         
         #region Mutagen
-        public object GetGroup<TMajor>(ISkyrimModGetter obj)
-            where TMajor : IMajorRecordCommonGetter
+        public object GetGroup(
+            ISkyrimModGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    return obj.GameSettings.RecordCache;
+                    return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    return obj.Keywords.RecordCache;
+                    return obj.Keywords;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    return obj.LocationReferenceTypes.RecordCache;
+                    return obj.LocationReferenceTypes;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    return obj.Actions.RecordCache;
+                    return obj.Actions;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    return obj.TextureSets.RecordCache;
+                    return obj.TextureSets;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    return obj.Globals.RecordCache;
+                    return obj.Globals;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    return obj.Classes.RecordCache;
+                    return obj.Classes;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    return obj.Factions.RecordCache;
+                    return obj.Factions;
                 case "HeadPart":
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    return obj.HeadParts.RecordCache;
+                    return obj.HeadParts;
                 case "Hair":
                 case "IHairGetter":
                 case "IHair":
                 case "IHairInternal":
-                    return obj.Hairs.RecordCache;
+                    return obj.Hairs;
                 case "Eyes":
                 case "IEyesGetter":
                 case "IEyes":
                 case "IEyesInternal":
-                    return obj.Eyes.RecordCache;
+                    return obj.Eyes;
                 case "Race":
                 case "IRaceGetter":
                 case "IRace":
                 case "IRaceInternal":
-                    return obj.Races.RecordCache;
+                    return obj.Races;
                 case "SoundMarker":
                 case "ISoundMarkerGetter":
                 case "ISoundMarker":
                 case "ISoundMarkerInternal":
-                    return obj.SoundMarkers.RecordCache;
+                    return obj.SoundMarkers;
                 case "AcousticSpace":
                 case "IAcousticSpaceGetter":
                 case "IAcousticSpace":
                 case "IAcousticSpaceInternal":
-                    return obj.AcousticSpaces.RecordCache;
+                    return obj.AcousticSpaces;
                 case "MagicEffect":
                 case "IMagicEffectGetter":
                 case "IMagicEffect":
                 case "IMagicEffectInternal":
-                    return obj.MagicEffects.RecordCache;
+                    return obj.MagicEffects;
                 case "LandscapeTexture":
                 case "ILandscapeTextureGetter":
                 case "ILandscapeTexture":
                 case "ILandscapeTextureInternal":
-                    return obj.LandscapeTextures.RecordCache;
+                    return obj.LandscapeTextures;
                 case "ObjectEffect":
                 case "IObjectEffectGetter":
                 case "IObjectEffect":
                 case "IObjectEffectInternal":
-                    return obj.ObjectEffects.RecordCache;
+                    return obj.ObjectEffects;
                 case "Spell":
                 case "ISpellGetter":
                 case "ISpell":
                 case "ISpellInternal":
-                    return obj.Spells.RecordCache;
+                    return obj.Spells;
                 case "Scroll":
                 case "IScrollGetter":
                 case "IScroll":
                 case "IScrollInternal":
-                    return obj.Scrolls.RecordCache;
+                    return obj.Scrolls;
                 case "Activator":
                 case "IActivatorGetter":
                 case "IActivator":
                 case "IActivatorInternal":
-                    return obj.Activators.RecordCache;
+                    return obj.Activators;
                 case "TalkingActivator":
                 case "ITalkingActivatorGetter":
                 case "ITalkingActivator":
                 case "ITalkingActivatorInternal":
-                    return obj.TalkingActivators.RecordCache;
+                    return obj.TalkingActivators;
                 case "Armor":
                 case "IArmorGetter":
                 case "IArmor":
                 case "IArmorInternal":
-                    return obj.Armors.RecordCache;
+                    return obj.Armors;
                 case "Book":
                 case "IBookGetter":
                 case "IBook":
                 case "IBookInternal":
-                    return obj.Books.RecordCache;
+                    return obj.Books;
                 case "Container":
                 case "IContainerGetter":
                 case "IContainer":
                 case "IContainerInternal":
-                    return obj.Containers.RecordCache;
+                    return obj.Containers;
                 case "Door":
                 case "IDoorGetter":
                 case "IDoor":
                 case "IDoorInternal":
-                    return obj.Doors.RecordCache;
+                    return obj.Doors;
                 case "Ingredient":
                 case "IIngredientGetter":
                 case "IIngredient":
                 case "IIngredientInternal":
-                    return obj.Ingredients.RecordCache;
+                    return obj.Ingredients;
                 case "Light":
                 case "ILightGetter":
                 case "ILight":
                 case "ILightInternal":
-                    return obj.Lights.RecordCache;
+                    return obj.Lights;
                 case "MiscItem":
                 case "IMiscItemGetter":
                 case "IMiscItem":
                 case "IMiscItemInternal":
-                    return obj.MiscItems.RecordCache;
+                    return obj.MiscItems;
                 case "AlchemicalApparatus":
                 case "IAlchemicalApparatusGetter":
                 case "IAlchemicalApparatus":
                 case "IAlchemicalApparatusInternal":
-                    return obj.AlchemicalApparatuses.RecordCache;
+                    return obj.AlchemicalApparatuses;
                 case "Static":
                 case "IStaticGetter":
                 case "IStatic":
                 case "IStaticInternal":
-                    return obj.Statics.RecordCache;
+                    return obj.Statics;
                 case "MoveableStatic":
                 case "IMoveableStaticGetter":
                 case "IMoveableStatic":
                 case "IMoveableStaticInternal":
-                    return obj.MoveableStatics.RecordCache;
+                    return obj.MoveableStatics;
                 case "Grass":
                 case "IGrassGetter":
                 case "IGrass":
                 case "IGrassInternal":
-                    return obj.Grasses.RecordCache;
+                    return obj.Grasses;
                 case "Tree":
                 case "ITreeGetter":
                 case "ITree":
                 case "ITreeInternal":
-                    return obj.Trees.RecordCache;
+                    return obj.Trees;
                 case "Flora":
                 case "IFloraGetter":
                 case "IFlora":
                 case "IFloraInternal":
-                    return obj.Florae.RecordCache;
+                    return obj.Florae;
                 case "Furniture":
                 case "IFurnitureGetter":
                 case "IFurniture":
                 case "IFurnitureInternal":
-                    return obj.Furniture.RecordCache;
+                    return obj.Furniture;
                 case "Weapon":
                 case "IWeaponGetter":
                 case "IWeapon":
                 case "IWeaponInternal":
-                    return obj.Weapons.RecordCache;
+                    return obj.Weapons;
                 case "Ammunition":
                 case "IAmmunitionGetter":
                 case "IAmmunition":
                 case "IAmmunitionInternal":
-                    return obj.Ammunitions.RecordCache;
+                    return obj.Ammunitions;
                 case "Npc":
                 case "INpcGetter":
                 case "INpc":
                 case "INpcInternal":
-                    return obj.Npcs.RecordCache;
+                    return obj.Npcs;
                 case "LeveledNpc":
                 case "ILeveledNpcGetter":
                 case "ILeveledNpc":
                 case "ILeveledNpcInternal":
-                    return obj.LeveledNpcs.RecordCache;
+                    return obj.LeveledNpcs;
                 case "Key":
                 case "IKeyGetter":
                 case "IKey":
                 case "IKeyInternal":
-                    return obj.Keys.RecordCache;
+                    return obj.Keys;
                 case "Ingestible":
                 case "IIngestibleGetter":
                 case "IIngestible":
                 case "IIngestibleInternal":
-                    return obj.Ingestibles.RecordCache;
+                    return obj.Ingestibles;
                 case "IdleMarker":
                 case "IIdleMarkerGetter":
                 case "IIdleMarker":
                 case "IIdleMarkerInternal":
-                    return obj.IdleMarkers.RecordCache;
+                    return obj.IdleMarkers;
                 case "ConstructibleObject":
                 case "IConstructibleObjectGetter":
                 case "IConstructibleObject":
                 case "IConstructibleObjectInternal":
-                    return obj.ConstructibleObjects.RecordCache;
+                    return obj.ConstructibleObjects;
                 case "Projectile":
                 case "IProjectileGetter":
                 case "IProjectile":
                 case "IProjectileInternal":
-                    return obj.Projectiles.RecordCache;
+                    return obj.Projectiles;
                 case "Hazard":
                 case "IHazardGetter":
                 case "IHazard":
                 case "IHazardInternal":
-                    return obj.Hazards.RecordCache;
+                    return obj.Hazards;
                 case "SoulGem":
                 case "ISoulGemGetter":
                 case "ISoulGem":
                 case "ISoulGemInternal":
-                    return obj.SoulGems.RecordCache;
+                    return obj.SoulGems;
                 case "LeveledItem":
                 case "ILeveledItemGetter":
                 case "ILeveledItem":
                 case "ILeveledItemInternal":
-                    return obj.LeveledItems.RecordCache;
+                    return obj.LeveledItems;
                 case "Weather":
                 case "IWeatherGetter":
                 case "IWeather":
                 case "IWeatherInternal":
-                    return obj.Weathers.RecordCache;
+                    return obj.Weathers;
                 case "Climate":
                 case "IClimateGetter":
                 case "IClimate":
                 case "IClimateInternal":
-                    return obj.Climates.RecordCache;
+                    return obj.Climates;
                 case "ShaderParticleGeometry":
                 case "IShaderParticleGeometryGetter":
                 case "IShaderParticleGeometry":
                 case "IShaderParticleGeometryInternal":
-                    return obj.ShaderParticleGeometries.RecordCache;
+                    return obj.ShaderParticleGeometries;
                 case "VisualEffect":
                 case "IVisualEffectGetter":
                 case "IVisualEffect":
                 case "IVisualEffectInternal":
-                    return obj.VisualEffects.RecordCache;
+                    return obj.VisualEffects;
                 case "Region":
                 case "IRegionGetter":
                 case "IRegion":
                 case "IRegionInternal":
-                    return obj.Regions.RecordCache;
+                    return obj.Regions;
                 case "NavigationMeshInfoMap":
                 case "INavigationMeshInfoMapGetter":
                 case "INavigationMeshInfoMap":
                 case "INavigationMeshInfoMapInternal":
-                    return obj.NavigationMeshInfoMaps.RecordCache;
+                    return obj.NavigationMeshInfoMaps;
                 case "CellBlock":
                 case "ICellBlockGetter":
                 case "ICellBlock":
@@ -10841,299 +10856,299 @@ namespace Mutagen.Bethesda.Skyrim.Internals
                 case "IWorldspaceGetter":
                 case "IWorldspace":
                 case "IWorldspaceInternal":
-                    return obj.Worldspaces.RecordCache;
+                    return obj.Worldspaces;
                 case "DialogTopic":
                 case "IDialogTopicGetter":
                 case "IDialogTopic":
                 case "IDialogTopicInternal":
-                    return obj.DialogTopics.RecordCache;
+                    return obj.DialogTopics;
                 case "Quest":
                 case "IQuestGetter":
                 case "IQuest":
                 case "IQuestInternal":
-                    return obj.Quests.RecordCache;
+                    return obj.Quests;
                 case "IdleAnimation":
                 case "IIdleAnimationGetter":
                 case "IIdleAnimation":
                 case "IIdleAnimationInternal":
-                    return obj.IdleAnimations.RecordCache;
+                    return obj.IdleAnimations;
                 case "Package":
                 case "IPackageGetter":
                 case "IPackage":
                 case "IPackageInternal":
-                    return obj.Packages.RecordCache;
+                    return obj.Packages;
                 case "CombatStyle":
                 case "ICombatStyleGetter":
                 case "ICombatStyle":
                 case "ICombatStyleInternal":
-                    return obj.CombatStyles.RecordCache;
+                    return obj.CombatStyles;
                 case "LoadScreen":
                 case "ILoadScreenGetter":
                 case "ILoadScreen":
                 case "ILoadScreenInternal":
-                    return obj.LoadScreens.RecordCache;
+                    return obj.LoadScreens;
                 case "LeveledSpell":
                 case "ILeveledSpellGetter":
                 case "ILeveledSpell":
                 case "ILeveledSpellInternal":
-                    return obj.LeveledSpells.RecordCache;
+                    return obj.LeveledSpells;
                 case "AnimatedObject":
                 case "IAnimatedObjectGetter":
                 case "IAnimatedObject":
                 case "IAnimatedObjectInternal":
-                    return obj.AnimatedObjects.RecordCache;
+                    return obj.AnimatedObjects;
                 case "Water":
                 case "IWaterGetter":
                 case "IWater":
                 case "IWaterInternal":
-                    return obj.Waters.RecordCache;
+                    return obj.Waters;
                 case "EffectShader":
                 case "IEffectShaderGetter":
                 case "IEffectShader":
                 case "IEffectShaderInternal":
-                    return obj.EffectShaders.RecordCache;
+                    return obj.EffectShaders;
                 case "Explosion":
                 case "IExplosionGetter":
                 case "IExplosion":
                 case "IExplosionInternal":
-                    return obj.Explosions.RecordCache;
+                    return obj.Explosions;
                 case "Debris":
                 case "IDebrisGetter":
                 case "IDebris":
                 case "IDebrisInternal":
-                    return obj.Debris.RecordCache;
+                    return obj.Debris;
                 case "ImageSpace":
                 case "IImageSpaceGetter":
                 case "IImageSpace":
                 case "IImageSpaceInternal":
-                    return obj.ImageSpaces.RecordCache;
+                    return obj.ImageSpaces;
                 case "ImageSpaceAdapter":
                 case "IImageSpaceAdapterGetter":
                 case "IImageSpaceAdapter":
                 case "IImageSpaceAdapterInternal":
-                    return obj.ImageSpaceAdapters.RecordCache;
+                    return obj.ImageSpaceAdapters;
                 case "FormList":
                 case "IFormListGetter":
                 case "IFormList":
                 case "IFormListInternal":
-                    return obj.FormLists.RecordCache;
+                    return obj.FormLists;
                 case "Perk":
                 case "IPerkGetter":
                 case "IPerk":
                 case "IPerkInternal":
-                    return obj.Perks.RecordCache;
+                    return obj.Perks;
                 case "BodyPartData":
                 case "IBodyPartDataGetter":
                 case "IBodyPartData":
                 case "IBodyPartDataInternal":
-                    return obj.BodyParts.RecordCache;
+                    return obj.BodyParts;
                 case "AddonNode":
                 case "IAddonNodeGetter":
                 case "IAddonNode":
                 case "IAddonNodeInternal":
-                    return obj.AddonNodes.RecordCache;
+                    return obj.AddonNodes;
                 case "ActorValueInformation":
                 case "IActorValueInformationGetter":
                 case "IActorValueInformation":
                 case "IActorValueInformationInternal":
-                    return obj.ActorValueInformation.RecordCache;
+                    return obj.ActorValueInformation;
                 case "CameraShot":
                 case "ICameraShotGetter":
                 case "ICameraShot":
                 case "ICameraShotInternal":
-                    return obj.CameraShots.RecordCache;
+                    return obj.CameraShots;
                 case "CameraPath":
                 case "ICameraPathGetter":
                 case "ICameraPath":
                 case "ICameraPathInternal":
-                    return obj.CameraPaths.RecordCache;
+                    return obj.CameraPaths;
                 case "VoiceType":
                 case "IVoiceTypeGetter":
                 case "IVoiceType":
                 case "IVoiceTypeInternal":
-                    return obj.VoiceTypes.RecordCache;
+                    return obj.VoiceTypes;
                 case "MaterialType":
                 case "IMaterialTypeGetter":
                 case "IMaterialType":
                 case "IMaterialTypeInternal":
-                    return obj.MaterialTypes.RecordCache;
+                    return obj.MaterialTypes;
                 case "Impact":
                 case "IImpactGetter":
                 case "IImpact":
                 case "IImpactInternal":
-                    return obj.Impacts.RecordCache;
+                    return obj.Impacts;
                 case "ImpactDataSet":
                 case "IImpactDataSetGetter":
                 case "IImpactDataSet":
                 case "IImpactDataSetInternal":
-                    return obj.ImpactDataSets.RecordCache;
+                    return obj.ImpactDataSets;
                 case "ArmorAddon":
                 case "IArmorAddonGetter":
                 case "IArmorAddon":
                 case "IArmorAddonInternal":
-                    return obj.ArmorAddons.RecordCache;
+                    return obj.ArmorAddons;
                 case "EncounterZone":
                 case "IEncounterZoneGetter":
                 case "IEncounterZone":
                 case "IEncounterZoneInternal":
-                    return obj.EncounterZones.RecordCache;
+                    return obj.EncounterZones;
                 case "Location":
                 case "ILocationGetter":
                 case "ILocation":
                 case "ILocationInternal":
-                    return obj.Locations.RecordCache;
+                    return obj.Locations;
                 case "Message":
                 case "IMessageGetter":
                 case "IMessage":
                 case "IMessageInternal":
-                    return obj.Messages.RecordCache;
+                    return obj.Messages;
                 case "DefaultObjectManager":
                 case "IDefaultObjectManagerGetter":
                 case "IDefaultObjectManager":
                 case "IDefaultObjectManagerInternal":
-                    return obj.DefaultObjectManagers.RecordCache;
+                    return obj.DefaultObjectManagers;
                 case "LightingTemplate":
                 case "ILightingTemplateGetter":
                 case "ILightingTemplate":
                 case "ILightingTemplateInternal":
-                    return obj.LightingTemplates.RecordCache;
+                    return obj.LightingTemplates;
                 case "MusicType":
                 case "IMusicTypeGetter":
                 case "IMusicType":
                 case "IMusicTypeInternal":
-                    return obj.MusicTypes.RecordCache;
+                    return obj.MusicTypes;
                 case "Footstep":
                 case "IFootstepGetter":
                 case "IFootstep":
                 case "IFootstepInternal":
-                    return obj.Footsteps.RecordCache;
+                    return obj.Footsteps;
                 case "FootstepSet":
                 case "IFootstepSetGetter":
                 case "IFootstepSet":
                 case "IFootstepSetInternal":
-                    return obj.FootstepSets.RecordCache;
+                    return obj.FootstepSets;
                 case "StoryManagerBranchNode":
                 case "IStoryManagerBranchNodeGetter":
                 case "IStoryManagerBranchNode":
                 case "IStoryManagerBranchNodeInternal":
-                    return obj.StoryManagerBranchNodes.RecordCache;
+                    return obj.StoryManagerBranchNodes;
                 case "StoryManagerQuestNode":
                 case "IStoryManagerQuestNodeGetter":
                 case "IStoryManagerQuestNode":
                 case "IStoryManagerQuestNodeInternal":
-                    return obj.StoryManagerQuestNodes.RecordCache;
+                    return obj.StoryManagerQuestNodes;
                 case "StoryManagerEventNode":
                 case "IStoryManagerEventNodeGetter":
                 case "IStoryManagerEventNode":
                 case "IStoryManagerEventNodeInternal":
-                    return obj.StoryManagerEventNodes.RecordCache;
+                    return obj.StoryManagerEventNodes;
                 case "DialogBranch":
                 case "IDialogBranchGetter":
                 case "IDialogBranch":
                 case "IDialogBranchInternal":
-                    return obj.DialogBranches.RecordCache;
+                    return obj.DialogBranches;
                 case "MusicTrack":
                 case "IMusicTrackGetter":
                 case "IMusicTrack":
                 case "IMusicTrackInternal":
-                    return obj.MusicTracks.RecordCache;
+                    return obj.MusicTracks;
                 case "DialogView":
                 case "IDialogViewGetter":
                 case "IDialogView":
                 case "IDialogViewInternal":
-                    return obj.DialogViews.RecordCache;
+                    return obj.DialogViews;
                 case "WordOfPower":
                 case "IWordOfPowerGetter":
                 case "IWordOfPower":
                 case "IWordOfPowerInternal":
-                    return obj.WordsOfPower.RecordCache;
+                    return obj.WordsOfPower;
                 case "Shout":
                 case "IShoutGetter":
                 case "IShout":
                 case "IShoutInternal":
-                    return obj.Shouts.RecordCache;
+                    return obj.Shouts;
                 case "EquipType":
                 case "IEquipTypeGetter":
                 case "IEquipType":
                 case "IEquipTypeInternal":
-                    return obj.EquipTypes.RecordCache;
+                    return obj.EquipTypes;
                 case "Relationship":
                 case "IRelationshipGetter":
                 case "IRelationship":
                 case "IRelationshipInternal":
-                    return obj.Relationships.RecordCache;
+                    return obj.Relationships;
                 case "Scene":
                 case "ISceneGetter":
                 case "IScene":
                 case "ISceneInternal":
-                    return obj.Scenes.RecordCache;
+                    return obj.Scenes;
                 case "AssociationType":
                 case "IAssociationTypeGetter":
                 case "IAssociationType":
                 case "IAssociationTypeInternal":
-                    return obj.AssociationTypes.RecordCache;
+                    return obj.AssociationTypes;
                 case "Outfit":
                 case "IOutfitGetter":
                 case "IOutfit":
                 case "IOutfitInternal":
-                    return obj.Outfits.RecordCache;
+                    return obj.Outfits;
                 case "ArtObject":
                 case "IArtObjectGetter":
                 case "IArtObject":
                 case "IArtObjectInternal":
-                    return obj.ArtObjects.RecordCache;
+                    return obj.ArtObjects;
                 case "MaterialObject":
                 case "IMaterialObjectGetter":
                 case "IMaterialObject":
                 case "IMaterialObjectInternal":
-                    return obj.MaterialObjects.RecordCache;
+                    return obj.MaterialObjects;
                 case "MovementType":
                 case "IMovementTypeGetter":
                 case "IMovementType":
                 case "IMovementTypeInternal":
-                    return obj.MovementTypes.RecordCache;
+                    return obj.MovementTypes;
                 case "SoundDescriptor":
                 case "ISoundDescriptorGetter":
                 case "ISoundDescriptor":
                 case "ISoundDescriptorInternal":
-                    return obj.SoundDescriptors.RecordCache;
+                    return obj.SoundDescriptors;
                 case "DualCastData":
                 case "IDualCastDataGetter":
                 case "IDualCastData":
                 case "IDualCastDataInternal":
-                    return obj.DualCastData.RecordCache;
+                    return obj.DualCastData;
                 case "SoundCategory":
                 case "ISoundCategoryGetter":
                 case "ISoundCategory":
                 case "ISoundCategoryInternal":
-                    return obj.SoundCategories.RecordCache;
+                    return obj.SoundCategories;
                 case "SoundOutputModel":
                 case "ISoundOutputModelGetter":
                 case "ISoundOutputModel":
                 case "ISoundOutputModelInternal":
-                    return obj.SoundOutputModels.RecordCache;
+                    return obj.SoundOutputModels;
                 case "CollisionLayer":
                 case "ICollisionLayerGetter":
                 case "ICollisionLayer":
                 case "ICollisionLayerInternal":
-                    return obj.CollisionLayers.RecordCache;
+                    return obj.CollisionLayers;
                 case "ColorRecord":
                 case "IColorRecordGetter":
                 case "IColorRecord":
                 case "IColorRecordInternal":
-                    return obj.Colors.RecordCache;
+                    return obj.Colors;
                 case "ReverbParameters":
                 case "IReverbParametersGetter":
                 case "IReverbParameters":
                 case "IReverbParametersInternal":
-                    return obj.ReverbParameters.RecordCache;
+                    return obj.ReverbParameters;
                 case "VolumetricLighting":
                 case "IVolumetricLightingGetter":
                 case "IVolumetricLighting":
                 case "IVolumetricLightingInternal":
-                    return obj.VolumetricLightings.RecordCache;
+                    return obj.VolumetricLightings;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -24147,7 +24162,8 @@ namespace Mutagen.Bethesda.Skyrim.Internals
 
         public SkyrimRelease SkyrimRelease { get; }
         public GameRelease GameRelease => SkyrimRelease.ToGameRelease();
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

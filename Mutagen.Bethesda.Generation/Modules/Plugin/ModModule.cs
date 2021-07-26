@@ -61,8 +61,9 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             }
 
             // Interfaces
-            fg.AppendLine($"IReadOnlyCache<T, {nameof(FormKey)}> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>() => this.{nameof(IModGetter.GetTopLevelGroupGetter)}<T>();");
-            fg.AppendLine($"ICache<T, {nameof(FormKey)}> {nameof(IMod)}.{nameof(IMod.GetGroup)}<T>() => this.GetGroup<T>();");
+            fg.AppendLine($"IGroupCommonGetter<T> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}<T>() => this.{nameof(IModGetter.GetTopLevelGroup)}<T>();");
+            fg.AppendLine($"IGroupCommonGetter<IMajorRecordCommonGetter> {nameof(IModGetter)}.{nameof(IModGetter.GetTopLevelGroup)}(Type type) => this.{nameof(IModGetter.GetTopLevelGroup)}(type);");
+            fg.AppendLine($"IGroupCommon<T> {nameof(IMod)}.{nameof(IMod.GetTopLevelGroup)}<T>() => this.{nameof(IMod.GetTopLevelGroup)}<T>();");
             fg.AppendLine($"void IModGetter.WriteToBinary({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);");
             fg.AppendLine($"void IModGetter.WriteToBinaryParallel({nameof(FilePath)} path, {nameof(BinaryWriteParameters)}? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);");
             fg.AppendLine($"IMask<bool> {nameof(IEqualsMask)}.{nameof(IEqualsMask.GetEqualsMask)}(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => {obj.MixInClassName}.GetEqualsMask(this, ({obj.Interface(getter: true, internalInterface: true)})rhs, include);");
@@ -349,7 +350,7 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
 
             if (obj.GetObjectType() != ObjectType.Mod) return;
             using (var args = new FunctionWrapper(fg,
-                $"public static IReadOnlyCache<T, FormKey> {nameof(IModGetter.GetTopLevelGroupGetter)}<T>"))
+                $"public static IGroupCommonGetter<T> {nameof(IModGetter.GetTopLevelGroup)}<T>"))
             {
                 args.Wheres.Add($"where T : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"this {obj.Interface(getter: true)} obj");
@@ -357,15 +358,33 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (IReadOnlyCache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
+                    $"return (IGroupCommonGetter<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
+                    args.Add("type: typeof(T)");
+                }
+            }
+            fg.AppendLine();
+            
+            using (var args = new FunctionWrapper(fg,
+                $"public static IGroupCommonGetter<{nameof(IMajorRecordCommonGetter)}> {nameof(IModGetter.GetTopLevelGroup)}"))
+            {
+                args.Add($"this {obj.Interface(getter: true)} obj");
+                args.Add("Type type");
+            }
+            using (new BraceWrapper(fg))
+            {
+                using (var args = new ArgsWrapper(fg,
+                    $"return (IGroupCommonGetter<{nameof(IMajorRecordCommonGetter)}>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
+                {
+                    args.AddPassArg("obj");
+                    args.AddPassArg("type");
                 }
             }
             fg.AppendLine();
 
             using (var args = new FunctionWrapper(fg,
-                "public static ICache<T, FormKey> GetGroup<T>"))
+                $"public static IGroupCommon<T> {nameof(IMod.GetTopLevelGroup)}<T>"))
             {
                 args.Wheres.Add($"where T : {nameof(IMajorRecordCommon)}");
                 args.Add($"this {obj.Interface(getter: false)} obj");
@@ -373,9 +392,10 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
             using (new BraceWrapper(fg))
             {
                 using (var args = new ArgsWrapper(fg,
-                    $"return (ICache<T, FormKey>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup<T>"))
+                    $"return (IGroupCommon<T>){obj.CommonClassInstance("obj", LoquiInterfaceType.IGetter, CommonGenerics.Class, MaskType.Normal)}.GetGroup"))
                 {
                     args.AddPassArg("obj");
+                    args.Add("type: typeof(T)");
                 }
             }
             fg.AppendLine();
@@ -459,14 +479,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
         private void GenerateGetGroup(ObjectGeneration obj, FileGeneration fg)
         {
             using (var args = new FunctionWrapper(fg,
-                "public object GetGroup<TMajor>"))
+                "public object GetGroup"))
             {
-                args.Wheres.Add($"where TMajor : {nameof(IMajorRecordCommonGetter)}");
                 args.Add($"{obj.Interface(getter: true)} obj");
+                args.Add("Type type");
             }
             using (new BraceWrapper(fg))
             {
-                fg.AppendLine("switch (typeof(TMajor).Name)");
+                fg.AppendLine("switch (type.Name)");
                 using (new BraceWrapper(fg))
                 {
                     foreach (var field in obj.IterateFields())
@@ -496,14 +516,14 @@ namespace Mutagen.Bethesda.Generation.Modules.Plugin
                             }
                             else
                             {
-                                fg.AppendLine($"return obj.{field.Name}.RecordCache;");
+                                fg.AppendLine($"return obj.{field.Name};");
                             }
                         }
                     }
                     fg.AppendLine("default:");
                     using (new DepthWrapper(fg))
                     {
-                        fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {typeof(TMajor)}\");");
+                        fg.AppendLine("throw new ArgumentException($\"Unknown major record type: {type}\");");
                     }
                 }
             }

@@ -903,8 +903,9 @@ namespace Mutagen.Bethesda.Fallout4
         #region Mutagen
         public static readonly RecordType GrupRecordType = Fallout4Mod_Registration.TriggeringRecordType;
         public override GameRelease GameRelease => GameRelease.Fallout4;
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
-        ICache<T, FormKey> IMod.GetGroup<T>() => this.GetGroup<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
+        IGroupCommon<T> IMod.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param, fileSystem: fileSystem);
         IMask<bool> IEqualsMask.GetEqualsMask(object rhs, EqualsMaskHelper.Include include = EqualsMaskHelper.Include.OnlyFailures) => Fallout4ModMixIn.GetEqualsMask(this, (IFallout4ModGetter)rhs, include);
@@ -1471,16 +1472,29 @@ namespace Mutagen.Bethesda.Fallout4
         }
 
         #region Mutagen
-        public static IReadOnlyCache<T, FormKey> GetTopLevelGroupGetter<T>(this IFallout4ModGetter obj)
+        public static IGroupCommonGetter<T> GetTopLevelGroup<T>(this IFallout4ModGetter obj)
             where T : IMajorRecordCommonGetter
         {
-            return (IReadOnlyCache<T, FormKey>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommonGetter<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
-        public static ICache<T, FormKey> GetGroup<T>(this IFallout4Mod obj)
+        public static IGroupCommonGetter<IMajorRecordCommonGetter> GetTopLevelGroup(
+            this IFallout4ModGetter obj,
+            Type type)
+        {
+            return (IGroupCommonGetter<IMajorRecordCommonGetter>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: type);
+        }
+
+        public static IGroupCommon<T> GetTopLevelGroup<T>(this IFallout4Mod obj)
             where T : IMajorRecordCommon
         {
-            return (ICache<T, FormKey>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup<T>(obj: obj);
+            return (IGroupCommon<T>)((Fallout4ModCommon)((IFallout4ModGetter)obj).CommonInstance()!).GetGroup(
+                obj: obj,
+                type: typeof(T));
         }
 
         public static void WriteToBinaryParallel(
@@ -2493,73 +2507,74 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         }
         
         #region Mutagen
-        public object GetGroup<TMajor>(IFallout4ModGetter obj)
-            where TMajor : IMajorRecordCommonGetter
+        public object GetGroup(
+            IFallout4ModGetter obj,
+            Type type)
         {
-            switch (typeof(TMajor).Name)
+            switch (type.Name)
             {
                 case "GameSetting":
                 case "IGameSettingGetter":
                 case "IGameSetting":
                 case "IGameSettingInternal":
-                    return obj.GameSettings.RecordCache;
+                    return obj.GameSettings;
                 case "Keyword":
                 case "IKeywordGetter":
                 case "IKeyword":
                 case "IKeywordInternal":
-                    return obj.Keywords.RecordCache;
+                    return obj.Keywords;
                 case "LocationReferenceType":
                 case "ILocationReferenceTypeGetter":
                 case "ILocationReferenceType":
                 case "ILocationReferenceTypeInternal":
-                    return obj.LocationReferenceTypes.RecordCache;
+                    return obj.LocationReferenceTypes;
                 case "ActionRecord":
                 case "IActionRecordGetter":
                 case "IActionRecord":
                 case "IActionRecordInternal":
-                    return obj.Actions.RecordCache;
+                    return obj.Actions;
                 case "Transform":
                 case "ITransformGetter":
                 case "ITransform":
                 case "ITransformInternal":
-                    return obj.Transforms.RecordCache;
+                    return obj.Transforms;
                 case "Component":
                 case "IComponentGetter":
                 case "IComponent":
                 case "IComponentInternal":
-                    return obj.Components.RecordCache;
+                    return obj.Components;
                 case "TextureSet":
                 case "ITextureSetGetter":
                 case "ITextureSet":
                 case "ITextureSetInternal":
-                    return obj.TextureSets.RecordCache;
+                    return obj.TextureSets;
                 case "Global":
                 case "IGlobalGetter":
                 case "IGlobal":
                 case "IGlobalInternal":
-                    return obj.Globals.RecordCache;
+                    return obj.Globals;
                 case "ADamageType":
                 case "IADamageTypeGetter":
                 case "IADamageType":
                 case "IADamageTypeInternal":
-                    return obj.DamageTypes.RecordCache;
+                    return obj.DamageTypes;
                 case "Class":
                 case "IClassGetter":
                 case "IClass":
                 case "IClassInternal":
-                    return obj.Classes.RecordCache;
+                    return obj.Classes;
                 case "Faction":
                 case "IFactionGetter":
                 case "IFaction":
                 case "IFactionInternal":
-                    return obj.Factions.RecordCache;
+                    return obj.Factions;
                 case "HeadPart":
                 case "IHeadPartGetter":
                 case "IHeadPart":
                 case "IHeadPartInternal":
-                    return obj.HeadParts.RecordCache;
+                    return obj.HeadParts;
                 default:
-                    throw new ArgumentException($"Unknown major record type: {typeof(TMajor)}");
+                    throw new ArgumentException($"Unknown major record type: {type}");
             }
         }
         
@@ -4341,7 +4356,8 @@ namespace Mutagen.Bethesda.Fallout4.Internals
         void IPrintable.ToString(FileGeneration fg, string? name) => this.ToString(fg, name);
 
         public GameRelease GameRelease => GameRelease.Fallout4;
-        IReadOnlyCache<T, FormKey> IModGetter.GetTopLevelGroupGetter<T>() => this.GetTopLevelGroupGetter<T>();
+        IGroupCommonGetter<T> IModGetter.GetTopLevelGroup<T>() => this.GetTopLevelGroup<T>();
+        IGroupCommonGetter<IMajorRecordCommonGetter> IModGetter.GetTopLevelGroup(Type type) => this.GetTopLevelGroup(type);
         void IModGetter.WriteToBinary(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinary(path, importMask: null, param: param, fileSystem: fileSystem);
         void IModGetter.WriteToBinaryParallel(FilePath path, BinaryWriteParameters? param, IFileSystem? fileSystem) => this.WriteToBinaryParallel(path, param: param, fileSystem: fileSystem);
         IReadOnlyList<IMasterReferenceGetter> IModGetter.MasterReferences => this.ModHeader.MasterReferences;

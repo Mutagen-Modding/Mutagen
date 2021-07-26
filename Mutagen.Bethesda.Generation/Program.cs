@@ -16,7 +16,7 @@ namespace Mutagen.Bethesda.Generation
 
         static void AttachDebugInspector()
         {
-            string testString = "ublic static OblivionModBinaryOverlay OblivionModFactory(ModPath path)";
+            string testString = "obj.LocationReferenceTypes.RecordCache";
             FileGeneration.LineAppended
                 .Where(i => i.Contains(testString))
                 .Subscribe(s =>

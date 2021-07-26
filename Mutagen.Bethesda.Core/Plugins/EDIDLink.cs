@@ -80,8 +80,8 @@ namespace Mutagen.Bethesda.Plugins
             }
             // ToDo
             // Improve to not be a forloop
-            var group = mod.GetTopLevelGroupGetter<TMajor>();
-            foreach (var rec in group.Items)
+            var group = mod.GetTopLevelGroup<TMajor>();
+            foreach (var rec in group)
             {
                 if (this.EDID.Type.Equals(rec.EditorID))
                 {
