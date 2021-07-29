@@ -65,6 +65,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                     FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
                 };
                 ret.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                ret.File.Create(PathBuilder.ExistingFile);
                 ret.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));

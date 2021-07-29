@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
-using AutoFixture;
 using AutoFixture.Xunit2;
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
@@ -28,26 +26,32 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         }
 
         [Theory, MutagenAutoData(UseMockFileSystem: false)]
-        public void Typical(
+        public void PassesFileSystemStreamToParser(
             [Frozen] IFileSystem fs,
             FilePath path,
-            Stream someStream)
+            Stream someStream,
+            PluginRawListingsReader sut)
+        {
+            fs.File.Exists(path).Returns(true);
+            fs.FileStream
+                .Create(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read)
+                .Returns(someStream);
+            sut.Read(path);
+            sut.Parser.Received(1).Parse(someStream);
+        }
+
+        [Theory, MutagenAutoData]
+        public void ParserResultsGetReturned(
+            FilePath existingPath,
+            PluginRawListingsReader sut)
         {
             var listings = new ModListing[]
             {
                 new ModListing("ModA.esp", true),
                 new ModListing("ModB.esp", false),
             };
-            fs.File.Exists(path).Returns(true);
-            fs.FileStream
-                .Create(path.Path, FileMode.Open, FileAccess.Read, FileShare.Read)
-                .Returns(someStream);
-            var parser = Substitute.For<IPluginListingsParser>();
-            parser.Parse(someStream).Returns(listings);
-            new PluginRawListingsReader(
-                    fs,
-                    parser)
-                .Read(path)
+            sut.Parser.Parse(default!).ReturnsForAnyArgs(listings);
+            sut.Read(existingPath)
                 .Should().BeEquivalentTo(listings);
         }
     }

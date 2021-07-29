@@ -14,14 +14,14 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     public class PluginRawListingsReader : IPluginRawListingsReader
     {
         private readonly IFileSystem _fileSystem;
-        private readonly IPluginListingsParser _parser;
+        public IPluginListingsParser Parser { get; }
 
         public PluginRawListingsReader(
             IFileSystem fileSystem,
             IPluginListingsParser parser)
         {
             _fileSystem = fileSystem;
-            _parser = parser;
+            Parser = parser;
         }
         
         public IEnumerable<IModListingGetter> Read(FilePath pluginPath)
@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
                 throw new FileNotFoundException("Could not locate plugins file");
             }
             using var stream = _fileSystem.FileStream.Create(pluginPath.Path, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return _parser.Parse(stream).ToList();
+            return Parser.Parse(stream).ToList();
         }
     }
 }
