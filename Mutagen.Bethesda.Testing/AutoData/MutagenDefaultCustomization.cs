@@ -2,22 +2,22 @@
 using AutoFixture.AutoNSubstitute;
 using Noggog.Testing.AutoFixture;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
-    public class MutagenAutoDataCustomization : ICustomization
+    public class MutagenDefaultCustomization : ICustomization
     {
-        private readonly GameRelease _release;
-        private readonly bool _useMockFilesystem;
         private readonly bool _configureMembers;
+        private readonly GameRelease _release;
+        private readonly bool _useMockFileSystem;
 
-        public MutagenAutoDataCustomization(
+        public MutagenDefaultCustomization(
             bool configureMembers, 
             GameRelease release,
-            bool useMockFilesystem)
+            bool useMockFileSystem)
         {
-            _release = release;
-            _useMockFilesystem = useMockFilesystem;
             _configureMembers = configureMembers;
+            _release = release;
+            _useMockFileSystem = useMockFileSystem;
         }
         
         public void Customize(IFixture fixture)
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             fixture.Customize(autoMock);
             fixture.Customize(new MutagenBaseCustomization());
             fixture.Customize(new MutagenReleaseCustomization(_release));
-            fixture.Customize(new DefaultCustomization(_useMockFilesystem));
+            fixture.Customize(new DefaultCustomization(_useMockFileSystem));
         }
     }
 }

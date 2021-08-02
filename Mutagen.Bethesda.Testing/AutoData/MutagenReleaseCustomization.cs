@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
     public class MutagenReleaseCustomization : ICustomization
     {

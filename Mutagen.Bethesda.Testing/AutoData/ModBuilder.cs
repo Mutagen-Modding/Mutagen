@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using NSubstitute;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
     public class ModBuilder : ISpecimenBuilder
     {

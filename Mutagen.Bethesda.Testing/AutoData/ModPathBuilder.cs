@@ -1,18 +1,42 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Testing;
+using Noggog;
+using Noggog.Testing.AutoFixture;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
-    public class ModKeyBuilder : ISpecimenBuilder
+    public class ModPathBuilder : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {
+            if (request is ParameterInfo p)
+            {
+                if (p.Name == null) return new NoSpecimen();
+                if (p.Name.ContainsInsensitive("missing"))
+                {
+                    if (p.ParameterType == typeof(ModPath))
+                    {
+                        return new ModPath(
+                            ModKey.FromNameAndExtension("MissingMod.esp"), 
+                            Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", "MissingMod.esp"));
+                    }
+                }
+                else if (p.Name.ContainsInsensitive("existing"))
+                {
+                    if (p.ParameterType == typeof(ModPath))
+                    {
+                        return new ModPath(
+                            TestConstants.PluginModKey.FileName,
+                            Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", TestConstants.PluginModKey.FileName));
+                    }
+                }
+            }
             if (request is MultipleRequest mult)
             {
                 var req = mult.Request;
@@ -22,16 +46,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 }
                 if (req is Type t)
                 {
-                    if (t == typeof(ModKey))
-                    {
-                        return new object[]
-                        {
-                            TestConstants.MasterModKey,
-                            TestConstants.PluginModKey,
-                            TestConstants.PluginModKey2,
-                        };
-                    }
-                    else if (t == typeof(ModPath))
+                    if (t == typeof(ModPath))
                     {
                         var dataDir = context.Create<IDataDirectoryProvider>();
                         return new ModKey[]
@@ -49,11 +64,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             else if (request is Type t)
             {
                 var modKey = TestConstants.PluginModKey;
-                if (t == typeof(ModKey))
-                {
-                    return modKey;
-                }
-                else if (t == typeof(ModPath))
+                if (t == typeof(ModPath))
                 {
                     var dataDir = context.Create<IDataDirectoryProvider>();
                     return new ModPath(modKey, Path.Combine(dataDir.Path, modKey.FileName));

@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Linq;
-using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
-using Mutagen.Bethesda.Plugins.Order;
-using Mutagen.Bethesda.Testing;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
-    public class ModListingBuilder : ISpecimenBuilder
+    public class ModKeyBuilder : ISpecimenBuilder
     {
         public object Create(object request, ISpecimenContext context)
         {
@@ -21,21 +17,26 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 }
                 if (req is Type t)
                 {
-                    if (t == typeof(ModListing))
+                    if (t == typeof(ModKey))
                     {
-                        var keys = context.CreateMany<ModKey>();
-                        return keys.Select(x => new ModListing(x, true));
+                        return new object[]
+                        {
+                            TestConstants.MasterModKey,
+                            TestConstants.PluginModKey,
+                            TestConstants.PluginModKey2,
+                        };
                     }
                 }
             }
             else if (request is Type t)
             {
-                if (t == typeof(ModListing))
+                var modKey = TestConstants.PluginModKey;
+                if (t == typeof(ModKey))
                 {
-                    return new ModListing(TestConstants.PluginModKey, true);
+                    return modKey;
                 }
             }
-            
+
             return new NoSpecimen();
         }
     }

@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Reactive.Concurrency;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
-using Mutagen.Bethesda.Testing;
 using Noggog;
-using Noggog.Reactive;
 using Noggog.Testing.AutoFixture;
-using Noggog.WPF;
 using NSubstitute;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
     public class BaseEnvironmentBuilder : ISpecimenBuilder
     {
@@ -72,13 +68,6 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", TestConstants.PluginModKey.FileName));
                 return ret;
-            }
-            else if (t == typeof(ISchedulerProvider))
-            {
-                var scheduler = Substitute.For<ISchedulerProvider>();
-                scheduler.TaskPool.Returns(Scheduler.CurrentThread);
-                scheduler.MainThread.Returns(Scheduler.CurrentThread);
-                return new SchedulerProvider();
             }
 
             return new NoSpecimen();

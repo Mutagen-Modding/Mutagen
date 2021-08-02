@@ -1,8 +1,6 @@
 ﻿using AutoFixture;
-using AutoFixture.AutoNSubstitute;
-using Noggog.Testing.AutoFixture;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
     public class MutagenBaseCustomization : ICustomization
     {
@@ -10,6 +8,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
         {
             fixture.Customizations.Add(new ModKeyBuilder());
             fixture.Customizations.Add(new ModListingBuilder());
+            fixture.Customizations.Add(new ModPathBuilder());
             fixture.Customizations.Add(new OrderBuilder());
         }
     }

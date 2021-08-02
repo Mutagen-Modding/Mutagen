@@ -7,7 +7,7 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Noggog;
 using NSubstitute;
 
-namespace Mutagen.Bethesda.Core.UnitTests.AutoData
+namespace Mutagen.Bethesda.Testing.AutoData
 {
     public class OrderBuilder : ISpecimenBuilder
     {

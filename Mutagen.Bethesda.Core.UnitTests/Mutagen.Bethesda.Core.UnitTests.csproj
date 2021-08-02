@@ -61,12 +61,4 @@
         </Content>
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="TestPathing.cs">
-        <CodeLanguage>cs</CodeLanguage>
-        <DefaultPackFolder>content</DefaultPackFolder>
-        <BuildAction>Compile</BuildAction>
-      </Compile>
-    </ItemGroup>
-
 </Project>
