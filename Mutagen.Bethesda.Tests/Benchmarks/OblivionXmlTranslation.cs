@@ -109,7 +109,7 @@ namespace Mutagen.Bethesda.Tests.Benchmarks
         [IterationCleanup]
         public void OneTimeCleanups()
         {
-            OneTimeXmlFolder.DeleteContainedFiles(true);
+            OneTimeXmlFolder.DeleteEntireFolder();
         }
 
         //[Benchmark]
