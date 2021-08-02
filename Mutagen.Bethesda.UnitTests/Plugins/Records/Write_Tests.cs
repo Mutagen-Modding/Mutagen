@@ -6,6 +6,7 @@ using Noggog.Utility;
 using System;
 using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Binary.Parameters;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

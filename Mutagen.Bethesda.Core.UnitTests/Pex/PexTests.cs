@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using FluentAssertions;
 using Mutagen.Bethesda.Pex;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Pex

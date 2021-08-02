@@ -48,6 +48,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5665EE3D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Core.UnitTests", "Mutagen.Bethesda.Core.UnitTests\Mutagen.Bethesda.Core.UnitTests.csproj", "{089ACC27-8B8D-4659-B20C-966899DF195D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mutagen.Bethesda.Testing", "Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj", "{930001F7-10D2-4E18-B900-D8AC1B9A9A73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,10 @@ Global
 		{089ACC27-8B8D-4659-B20C-966899DF195D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{089ACC27-8B8D-4659-B20C-966899DF195D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{089ACC27-8B8D-4659-B20C-966899DF195D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{930001F7-10D2-4E18-B900-D8AC1B9A9A73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930001F7-10D2-4E18-B900-D8AC1B9A9A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930001F7-10D2-4E18-B900-D8AC1B9A9A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930001F7-10D2-4E18-B900-D8AC1B9A9A73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,5 +162,6 @@ Global
 		{0BF7565B-7AF2-4D7D-A450-043AD601FF57} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{E64E58E8-E2C6-4B2C-B649-2934FFFA603F} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 		{089ACC27-8B8D-4659-B20C-966899DF195D} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
+		{930001F7-10D2-4E18-B900-D8AC1B9A9A73} = {5665EE3D-F3C2-4F07-B4EE-7FCC8D2BF6D2}
 	EndGlobalSection
 EndGlobal

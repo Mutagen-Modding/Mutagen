@@ -7,6 +7,7 @@ using System.Reactive.Concurrency;
 using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Environments.DI;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Noggog.Reactive;
 using Noggog.Testing.AutoFixture;

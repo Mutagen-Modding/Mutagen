@@ -7,6 +7,7 @@ using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Inis;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Xunit;
 using Path = System.IO.Path;

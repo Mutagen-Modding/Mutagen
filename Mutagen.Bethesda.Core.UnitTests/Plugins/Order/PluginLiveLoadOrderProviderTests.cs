@@ -9,6 +9,7 @@ using Microsoft.Reactive.Testing;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Noggog.Testing.FileSystem;
 using NSubstitute;

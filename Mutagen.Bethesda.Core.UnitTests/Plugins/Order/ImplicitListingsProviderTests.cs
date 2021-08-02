@@ -3,11 +3,11 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AutoFixture.Xunit2;
 using FluentAssertions;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
+using Mutagen.Bethesda.Testing;
 using NSubstitute;
 using Xunit;
 

@@ -3,6 +3,7 @@ using Mutagen.Bethesda.Archives;
 using Mutagen.Bethesda.Archives.DI;
 using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 using Path = System.IO.Path;
 

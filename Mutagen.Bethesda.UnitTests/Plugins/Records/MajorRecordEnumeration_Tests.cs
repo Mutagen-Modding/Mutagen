@@ -3,7 +3,7 @@ using Mutagen.Bethesda.Oblivion;
 using Mutagen.Bethesda.Plugins.Records;
 using Noggog;
 using System.Linq;
-using Mutagen.Bethesda.Core.UnitTests;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

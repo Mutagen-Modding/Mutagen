@@ -3,8 +3,8 @@ using Noggog;
 using System.Linq;
 using Xunit;
 using FluentAssertions;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Testing;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 {

@@ -4,6 +4,7 @@ using AutoFixture;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
+using Mutagen.Bethesda.Testing;
 
 namespace Mutagen.Bethesda.Core.UnitTests.AutoData
 {

@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Environments.DI;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Noggog.Testing.FileSystem;
 using Xunit;

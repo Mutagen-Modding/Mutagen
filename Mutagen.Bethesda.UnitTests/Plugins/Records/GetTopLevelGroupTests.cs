@@ -1,7 +1,7 @@
 ﻿using System;
-using FluentAssertions;
 using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Skyrim;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

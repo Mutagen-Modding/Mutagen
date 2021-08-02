@@ -1,8 +1,5 @@
 ﻿using Mutagen.Bethesda.Oblivion;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Mutagen.Bethesda.Core.UnitTests;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Records

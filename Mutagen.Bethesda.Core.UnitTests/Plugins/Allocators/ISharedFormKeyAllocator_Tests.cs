@@ -7,6 +7,7 @@ using System.Linq;
 using Mutagen.Bethesda.Core.UnitTests.Placeholders;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators

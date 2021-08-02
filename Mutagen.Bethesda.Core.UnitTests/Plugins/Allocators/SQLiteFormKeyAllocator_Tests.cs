@@ -2,6 +2,7 @@
 using System.IO.Abstractions;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Testing;
 using Noggog;
 using Noggog.Utility;
 

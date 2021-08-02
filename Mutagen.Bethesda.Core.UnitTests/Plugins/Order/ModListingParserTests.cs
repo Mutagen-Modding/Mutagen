@@ -1,12 +1,9 @@
 using FluentAssertions;
 using Mutagen.Bethesda.Plugins.Order;
 using System;
-using System.IO.Abstractions.TestingHelpers;
-using Mutagen.Bethesda.Core.UnitTests;
 using Mutagen.Bethesda.Plugins.Order.DI;
+using Mutagen.Bethesda.Testing;
 using Xunit;
-using Path = System.IO.Path;
-using FileNotFoundException = System.IO.FileNotFoundException;
 
 namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 {

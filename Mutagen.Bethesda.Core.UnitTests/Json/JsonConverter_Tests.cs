@@ -2,6 +2,7 @@ using FluentAssertions;
 using Mutagen.Bethesda.Core.UnitTests.Placeholders;
 using Mutagen.Bethesda.Json;
 using Mutagen.Bethesda.Plugins;
+using Mutagen.Bethesda.Testing;
 using Newtonsoft.Json;
 using Xunit;
 

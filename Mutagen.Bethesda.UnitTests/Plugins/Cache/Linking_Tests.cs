@@ -15,6 +15,8 @@ using Mutagen.Bethesda.Plugins.Binary.Parameters;
 using Xunit;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Testing;
+
 #nullable disable
 #pragma warning disable CS0618 // Type or member is obsolete
 

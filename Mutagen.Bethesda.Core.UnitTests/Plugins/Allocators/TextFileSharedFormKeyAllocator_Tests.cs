@@ -5,6 +5,7 @@ using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 using Path = System.IO.Path;
 

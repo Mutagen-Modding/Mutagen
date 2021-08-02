@@ -1,18 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mutagen.Bethesda.Skyrim;
-using Mutagen.Bethesda;
-using Mutagen.Bethesda.Core.UnitTests;
 using Noggog;
 using Xunit;
 using Xunit.Abstractions;
 using Constants = Mutagen.Bethesda.Plugins.Internals.Constants;
-using Mutagen.Bethesda.UnitTests;
 using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Plugins.Cache;
 using Mutagen.Bethesda.Plugins.Aspects;
+using Mutagen.Bethesda.Testing;
 using Mutagen.Bethesda.UnitTests.Plugins.Cache;
 
 namespace Mutagen.Bethesda.UnitTests.Api

@@ -32,6 +32,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Mutagen.Bethesda.Testing\Mutagen.Bethesda.Testing.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda\Mutagen.Bethesda.csproj" />
     <ProjectReference Include="..\Mutagen.Bethesda.Core\Mutagen.Bethesda.Core.csproj" />
   </ItemGroup>
@@ -66,6 +67,5 @@
     <Compile Include="Test.cs" />
     <Compile Include="TestingSettings.cs" />
     <Compile Include="TestBattery.cs" />
-    <Compile Include="TestingConstants.cs" />
   </ItemGroup>
 </Project>

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
-using Mutagen.Bethesda.Core.UnitTests.Placeholders;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
 using Mutagen.Bethesda.Plugins.Records;
-using NSubstitute;
+using Mutagen.Bethesda.Testing;
 using Xunit;
 
 namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
