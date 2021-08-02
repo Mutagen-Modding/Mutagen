@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Pex
             };
             pex.DebugInfo?.Functions.Add(functionToAdd);
 
-            using var tempFolder = Utility.GetTempFolder(nameof(PexTests));
+            using var tempFolder = TestPathing.GetTempFolder(nameof(PexTests));
             var outPath = Path.Combine(tempFolder.Dir.Path, Path.GetTempFileName());
             pex.WritePexFile(outPath, GameCategory.Skyrim);
 
@@ -136,7 +136,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Pex
             pex.UserFlags[flagToAdd.Index] = flagToAdd.Name;
             pex.Objects.First().SetFlag(pex, flagToAdd, true);
 
-            using var tempFolder = Utility.GetTempFolder(nameof(PexTests));
+            using var tempFolder = TestPathing.GetTempFolder(nameof(PexTests));
             var outPath = Path.Combine(tempFolder.Dir.Path, Path.GetTempFileName());
             pex.WritePexFile(outPath, GameCategory.Skyrim);
 

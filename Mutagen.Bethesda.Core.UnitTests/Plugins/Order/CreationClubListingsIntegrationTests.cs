@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
                 new string[]
                 {
                     modPath.ModKey.FileName,
-                    Utility.LightMasterModKey2.FileName,
+                    TestConstants.LightMasterModKey2.FileName,
                 });
             var results = CreationClubListings.ListingsFromPath(
                     cccFilePath: cccPath.Path!.Value,
@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
             [Frozen]MockFileSystem fs)
         {
             var ccPath = Path.Combine(dataFolder.Path, "Skyrim.ccc");
-            fs.File.WriteAllText(Path.Combine(dataFolder.Path, Utility.PluginModKey.FileName), string.Empty);
-            fs.File.WriteAllText(Path.Combine(dataFolder.Path, Utility.PluginModKey2.FileName), string.Empty);
-            fs.File.WriteAllText(ccPath, @$"{Utility.PluginModKey.FileName}
-{Utility.PluginModKey3.FileName}");
+            fs.File.WriteAllText(Path.Combine(dataFolder.Path, TestConstants.PluginModKey.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(dataFolder.Path, TestConstants.PluginModKey2.FileName), string.Empty);
+            fs.File.WriteAllText(ccPath, @$"{TestConstants.PluginModKey.FileName}
+{TestConstants.PluginModKey3.FileName}");
             ErrorResponse err = ErrorResponse.Failure;
             var live = CreationClubListings.GetLiveLoadOrder(ccPath, dataFolder.Path, out var state,
                 fileSystem: fs);
@@ -74,32 +74,32 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
                 var list = live.AsObservableList();
                 state.Subscribe(x => err = x);
                 Assert.Equal(1, list.Count);
-                Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-                var thirdPath = Path.Combine(dataFolder.Path, Utility.PluginModKey3.FileName);
+                Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+                var thirdPath = Path.Combine(dataFolder.Path, TestConstants.PluginModKey3.FileName);
                 fs.File.WriteAllText(thirdPath, string.Empty);
                 modified.MarkCreated(thirdPath);
                 Assert.Equal(2, list.Count);
-                Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-                Assert.Equal(Utility.PluginModKey3, list.Items.ElementAt(1).ModKey);
+                Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+                Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(1).ModKey);
                 err.Succeeded.Should().BeTrue();
                 fs.File.WriteAllLines(ccPath,
                     new string[]
                     {
-                        Utility.PluginModKey.ToString(),
-                        Utility.PluginModKey2.ToString(),
-                        Utility.PluginModKey3.ToString(),
+                        TestConstants.PluginModKey.ToString(),
+                        TestConstants.PluginModKey2.ToString(),
+                        TestConstants.PluginModKey3.ToString(),
                     });
                 modified.MarkChanged(ccPath);
                 Assert.Equal(3, list.Count);
-                Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-                Assert.Equal(Utility.PluginModKey2, list.Items.ElementAt(1).ModKey);
-                Assert.Equal(Utility.PluginModKey3, list.Items.ElementAt(2).ModKey);
+                Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+                Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
+                Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(2).ModKey);
                 err.Succeeded.Should().BeTrue();
                 fs.File.Delete(thirdPath);
                 modified.MarkDeleted(thirdPath);
                 Assert.Equal(2, list.Count);
-                Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-                Assert.Equal(Utility.PluginModKey2, list.Items.ElementAt(1).ModKey);
+                Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+                Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
                 err.Succeeded.Should().BeTrue();
             }
         }

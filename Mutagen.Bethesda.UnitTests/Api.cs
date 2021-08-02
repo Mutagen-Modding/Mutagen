@@ -37,11 +37,11 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void TypicalLinksLocate()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var race = sourceMod.Races.AddNew();
             using var cleanup = Linking_ImmutableOverlay_Tests.ConvertModToOverlay(sourceMod, out var sourceModGetter);
             var cache = sourceModGetter.ToImmutableLinkCache();
-            var otherMod = new SkyrimMod(Utility.PluginModKey2, SkyrimRelease.SkyrimSE);
+            var otherMod = new SkyrimMod(TestConstants.PluginModKey2, SkyrimRelease.SkyrimSE);
             var npc = otherMod.Npcs.AddNew();
             npc.Race.SetTo(race);
             Assert.True(npc.Race.TryResolve(cache, out var _));
@@ -50,7 +50,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void FormLinkListCovariance()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             Armor armor = sourceMod.Armors.AddNew();
 
             void Tester(IReadOnlyList<IFormLinkGetter<IKeywordGetter>> tester)
@@ -68,7 +68,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void CleanFormLinkListAPI()
         {
-            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             FormKey key = sourceMod.GetNextFormKey();
             Keyword keyword = sourceMod.Keywords.AddNew();
             Armor armor = sourceMod.Armors.AddNew();
@@ -81,7 +81,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void FormLinkSetToNull()
         {
-            var cameraShot = new CameraShot(Utility.Form1, SkyrimRelease.SkyrimSE);
+            var cameraShot = new CameraShot(TestConstants.Form1, SkyrimRelease.SkyrimSE);
             cameraShot.ImageSpaceModifier.Clear();
             cameraShot.ImageSpaceModifier.SetTo(FormKey.Null);
         }
@@ -100,9 +100,9 @@ namespace Mutagen.Bethesda.UnitTests.Api
             TestFunction<IWeaponGetter>();
             TestFunction2<IWeaponGetter>();
 
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             IKeyworded<IKeywordGetter> keyworded = mod.Armors.AddNew();
-            keyworded.TryResolveKeyword(Utility.Form2, mod.ToImmutableLinkCache(), out var keyword);
+            keyworded.TryResolveKeyword(TestConstants.Form2, mod.ToImmutableLinkCache(), out var keyword);
         }
 
         [Fact]
@@ -122,7 +122,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         public void DisableAPI()
         {
             // Some calls assuring the Disable() API is accessible and working.
-            SkyrimMod sourceMod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            SkyrimMod sourceMod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             FormKey key = sourceMod.GetNextFormKey();
             PlacedObject placedObject = new PlacedObject(key, SkyrimRelease.SkyrimSE);
 
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void FormLink()
         {
-            var mod = new SkyrimMod(Utility.LightMasterModKey, SkyrimRelease.SkyrimLE);
+            var mod = new SkyrimMod(TestConstants.LightMasterModKey, SkyrimRelease.SkyrimLE);
             var light = mod.Lights.AddNew();
             var cache = mod.ToImmutableLinkCache();
 
@@ -211,9 +211,9 @@ namespace Mutagen.Bethesda.UnitTests.Api
             iLink.ResolveContext<ISkyrimMod, ISkyrimModGetter, ISkyrimMajorRecordGetter, ILight, ILightGetter>(cache);
 
             // Getter interface conversion
-            IPerkGetter getter = new Perk(Utility.Form1, SkyrimRelease.SkyrimLE);
-            Perk direct = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
-            IPerk setter = new Perk(Utility.Form2, SkyrimRelease.SkyrimLE);
+            IPerkGetter getter = new Perk(TestConstants.Form1, SkyrimRelease.SkyrimLE);
+            Perk direct = new Perk(TestConstants.Form2, SkyrimRelease.SkyrimLE);
+            IPerk setter = new Perk(TestConstants.Form2, SkyrimRelease.SkyrimLE);
             IFormLink<IPerkGetter> formLink = new FormLink<IPerkGetter>();
             formLink = getter.AsLink();
             formLink = direct.AsLink();
@@ -237,15 +237,15 @@ namespace Mutagen.Bethesda.UnitTests.Api
         public static void LoadOrderTryGetValue()
         {
             var lo = new LoadOrder<ISkyrimModGetter>();
-            lo.TryGetValue(Utility.LightMasterModKey, out var item);
+            lo.TryGetValue(TestConstants.LightMasterModKey, out var item);
         }
 
         [Fact]
         public static void GroupAccessors()
         {
-            var mod = new SkyrimMod(Utility.LightMasterModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.LightMasterModKey, SkyrimRelease.SkyrimSE);
             var group = new Group<Npc>(mod);
-            if (group.TryGetValue(Utility.Form1, out var npc))
+            if (group.TryGetValue(TestConstants.Form1, out var npc))
             {
             }
         }
@@ -253,7 +253,7 @@ namespace Mutagen.Bethesda.UnitTests.Api
         [Fact]
         public static void ImplicitsApi()
         {
-            Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(Utility.PluginModKey);
+            Implicits.Listings.Skyrim(SkyrimRelease.SkyrimSE).Contains(TestConstants.PluginModKey);
         }
 
         public static void LoadOrderOnlyEnabledAndExisting()

@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void GetTopLevelGroupByGenericDoesNotThrow()
         {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var g = mod.GetTopLevelGroup<Npc>();
             var g2 = mod.GetTopLevelGroup<INpcGetter>();
         }
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void GetTopLevelGroupByGenericISetterThrows()
         {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             Assert.Throws<InvalidCastException>(() =>
             {
                 mod.GetTopLevelGroup<INpc>();
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void GetTopLevelGroupByParameterDoesNotThrow()
         {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var g = mod.GetTopLevelGroup(typeof(Npc));
             var g2 = mod.GetTopLevelGroup(typeof(INpc));
             Assert.True(g == g2);
@@ -41,14 +41,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void GetOverlayTopLevelGroupByGenericDoesNotThrow()
         {
-            var mod = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var mod = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             mod.GetTopLevelGroup<INpcGetter>();
         }
         
         [Fact]
         public void GetOverlayTopLevelGroupByParameterDoesNotThrow()
         {
-            var mod = SkyrimMod.CreateFromBinaryOverlay(Utility.SkyrimTestMod, SkyrimRelease.SkyrimSE);
+            var mod = SkyrimMod.CreateFromBinaryOverlay(TestPathing.SkyrimTestMod, SkyrimRelease.SkyrimSE);
             mod.GetTopLevelGroup(typeof(INpcGetter));
         }
     }

@@ -27,9 +27,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
             fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
-                    Utility.PluginModKey.ToString(),
-                    Utility.PluginModKey2.ToString(),
-                    Utility.PluginModKey3.ToString(),
+                    TestConstants.PluginModKey.ToString(),
+                    TestConstants.PluginModKey2.ToString(),
+                    TestConstants.PluginModKey3.ToString(),
                 });
             var live = PluginListings.GetLiveLoadOrder(
                 GameRelease.SkyrimLE,
@@ -39,31 +39,31 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
                 fileSystem: fs);
             var list = live.AsObservableList();
             Assert.Equal(3, list.Count);
-            Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-            Assert.Equal(Utility.PluginModKey2, list.Items.ElementAt(1).ModKey);
-            Assert.Equal(Utility.PluginModKey3, list.Items.ElementAt(2).ModKey);
+            Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+            Assert.Equal(TestConstants.PluginModKey2, list.Items.ElementAt(1).ModKey);
+            Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(2).ModKey);
             fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
-                    Utility.PluginModKey.ToString(),
-                    Utility.PluginModKey3.ToString(),
+                    TestConstants.PluginModKey.ToString(),
+                    TestConstants.PluginModKey3.ToString(),
                 });
             watcher.MarkChanged(pluginsTxt);
             Assert.Equal(2, list.Count);
-            Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-            Assert.Equal(Utility.PluginModKey3, list.Items.ElementAt(1).ModKey);
+            Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+            Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(1).ModKey);
             fs.File.WriteAllLines(pluginsTxt,
                 new string[]
                 {
-                    Utility.PluginModKey.ToString(),
-                    Utility.PluginModKey3.ToString(),
-                    Utility.PluginModKey4.ToString(),
+                    TestConstants.PluginModKey.ToString(),
+                    TestConstants.PluginModKey3.ToString(),
+                    TestConstants.PluginModKey4.ToString(),
                 });
             watcher.MarkChanged(pluginsTxt);
             Assert.Equal(3, list.Count);
-            Assert.Equal(Utility.PluginModKey, list.Items.ElementAt(0).ModKey);
-            Assert.Equal(Utility.PluginModKey3, list.Items.ElementAt(1).ModKey);
-            Assert.Equal(Utility.PluginModKey4, list.Items.ElementAt(2).ModKey);
+            Assert.Equal(TestConstants.PluginModKey, list.Items.ElementAt(0).ModKey);
+            Assert.Equal(TestConstants.PluginModKey3, list.Items.ElementAt(1).ModKey);
+            Assert.Equal(TestConstants.PluginModKey4, list.Items.ElementAt(2).ModKey);
         }
 
         [Theory, MutagenAutoData]
@@ -110,8 +110,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, true),
-                new ModListing(Utility.MasterModKey2, false),
+                new ModListing(TestConstants.MasterModKey, true),
+                new ModListing(TestConstants.MasterModKey2, false),
             };
             var listingsProv = Substitute.For<IPluginListingsProvider>();
             listingsProv.Get().Returns(listings);
@@ -125,9 +125,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
             
             var listings2 = new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, true),
-                new ModListing(Utility.MasterModKey2, false),
-                new ModListing(Utility.MasterModKey3, true),
+                new ModListing(TestConstants.MasterModKey, true),
+                new ModListing(TestConstants.MasterModKey2, false),
+                new ModListing(TestConstants.MasterModKey3, true),
             };
             listingsProv.Get().Returns(listings2);
             modified.MarkChanged(pluginPath);
@@ -168,8 +168,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
             TestScheduler scheduler = new();
             var listings = new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, true),
-                new ModListing(Utility.MasterModKey2, false),
+                new ModListing(TestConstants.MasterModKey, true),
+                new ModListing(TestConstants.MasterModKey2, false),
             };
             var listingsProv = Substitute.For<IPluginListingsProvider>();
             listingsProv.Get().Returns(

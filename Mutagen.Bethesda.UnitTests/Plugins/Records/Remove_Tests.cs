@@ -14,7 +14,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typeless_Typical()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var npc1 = mod.Npcs.AddNew();
             var npc2 = mod.Npcs.AddNew();
             mod.Remove(npc2.FormKey);
@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typeless_Blocked()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var cell = new Cell(mod.GetNextFormKey());
             var subBlock = new CellSubBlock()
             {
@@ -65,7 +65,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typeless_Deep()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var placed1 = new PlacedObject(mod.GetNextFormKey());
             var placed2 = new PlacedObject(mod.GetNextFormKey());
             var cell = new Cell(mod.GetNextFormKey());
@@ -101,7 +101,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typed_Typical()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var npc1 = mod.Npcs.AddNew();
             var npc2 = mod.Npcs.AddNew();
             var weapon = mod.Weapons.AddNew();
@@ -115,7 +115,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typed_Blocked()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var npc1 = mod.Npcs.AddNew();
             var cell = new Cell(mod.GetNextFormKey());
             var subBlock = new CellSubBlock()
@@ -158,7 +158,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Typed_Deep()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var placed1 = new PlacedObject(mod.GetNextFormKey());
             var placed2 = new PlacedObject(mod.GetNextFormKey());
             var cell = new Cell(mod.GetNextFormKey());

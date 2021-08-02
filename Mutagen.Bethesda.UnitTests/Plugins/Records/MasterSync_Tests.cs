@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterFlagSync_Correct()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
             masterMod.WriteToBinary(masterPath,
@@ -44,7 +44,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterFlagSync_MasterThrow()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var masterMod = new OblivionMod(new ModKey("Test", ModType.Master));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esp");
             Assert.Throws<ArgumentException>(() =>
@@ -62,7 +62,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterFlagSync_ChildThrow()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var masterMod = new OblivionMod(new ModKey("Test", ModType.Plugin));
             var masterPath = Path.Combine(folder.Dir.Path, "Test.esm");
             Assert.Throws<ArgumentException>(() =>
@@ -82,7 +82,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterListSync_AddMissingToEmpty()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var knights = ModKey.FromNameAndExtension("Knights.esm");
             var other = ModKey.FromNameAndExtension("Other.esp");
@@ -108,7 +108,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterListSync_RemoveUnnecessary()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var knights = ModKey.FromNameAndExtension("Knights.esm");
             var mod = new OblivionMod(obliv);
@@ -138,7 +138,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterListSync_SkipNulls()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var mod = new OblivionMod(obliv);
             var npc = mod.Npcs.AddNew();
@@ -160,7 +160,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterOrderSync_Typical()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var knights = ModKey.FromNameAndExtension("Knights.esm");
             var other = ModKey.FromNameAndExtension("Other.esp");
@@ -190,7 +190,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterOrderSync_EsmFirst()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var first = ModKey.FromNameAndExtension("First.esp");
             var second = ModKey.FromNameAndExtension("Second.esp");
@@ -221,7 +221,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         public void MasterOrderSync_ByLoadOrder()
         {
             WarmupOblivion.Init();
-            using var folder = Utility.GetTempFolder(nameof(MasterSync_Tests));
+            using var folder = TestPathing.GetTempFolder(nameof(MasterSync_Tests));
             var obliv = ModKey.FromNameAndExtension("Oblivion.esm");
             var esm = ModKey.FromNameAndExtension("First.esm");
             var esp = ModKey.FromNameAndExtension("Second.esp");

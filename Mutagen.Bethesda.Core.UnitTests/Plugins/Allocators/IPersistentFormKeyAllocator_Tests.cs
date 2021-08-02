@@ -153,7 +153,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             {
                 using var allocator = CreateAllocator(fileSystem, modA);
 
-                expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
+                expectedFormKey = allocator.GetNextFormKey(TestConstants.Edid1);
 
                 allocator.Commit();
             }
@@ -161,7 +161,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             {
                 using var allocator = CreateAllocator(fileSystem, modB);
 
-                var formKey = allocator.GetNextFormKey(Utility.Edid1);
+                var formKey = allocator.GetNextFormKey(TestConstants.Edid1);
 
                 Assert.Equal(expectedFormKey, formKey);
             }
@@ -176,11 +176,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             ((IMod)mod).NextFormID = nextFormID;
             using var allocator = CreateAllocator(fileSystem, mod);
 
-            var expectedFormKey = allocator.GetNextFormKey(Utility.Edid1);
+            var expectedFormKey = allocator.GetNextFormKey(TestConstants.Edid1);
 
             allocator.Rollback();
 
-            var formKey = allocator.GetNextFormKey(Utility.Edid1);
+            var formKey = allocator.GetNextFormKey(TestConstants.Edid1);
 
             Assert.Equal(expectedFormKey, formKey);
         }
@@ -192,12 +192,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             uint formID1, formID2;
             {
                 using var allocator = CreateAllocator(fileSystem, modA);
-                var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
+                var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
                 formID1 = formKey1.ID;
 
                 var formKey = allocator.GetNextFormKey();
 
-                var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
+                var formKey2 = allocator.GetNextFormKey(TestConstants.Edid2);
                 formID2 = formKey2.ID;
 
                 Assert.NotEqual(formKey, formKey1);
@@ -210,12 +210,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             {
                 using var allocator = CreateAllocator(fileSystem, modB);
 
-                var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
+                var formKey2 = allocator.GetNextFormKey(TestConstants.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
 
                 var formKey = allocator.GetNextFormKey();
 
-                var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
+                var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
                 Assert.Equal(formID1, formKey1.ID);
 
                 Assert.NotEqual(formKey, formKey1);

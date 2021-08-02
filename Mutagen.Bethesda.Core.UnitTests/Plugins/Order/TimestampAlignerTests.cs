@@ -20,10 +20,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             return new List<(ModKey ModKey, DateTime Write)>
             {
-                (Utility.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
-                (Utility.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
-                (Utility.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
-                (Utility.PluginModKey2, new DateTime(2020, 8, 8, 10, 9, 0)),
+                (TestConstants.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
+                (TestConstants.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
+                (TestConstants.PluginModKey2, new DateTime(2020, 8, 8, 10, 9, 0)),
             };
         }
         
@@ -31,10 +31,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             return new List<(ModKey ModKey, DateTime Write)>
             {
-                (Utility.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
-                (Utility.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
-                (Utility.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
-                (Utility.PluginModKey2,  new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
+                (TestConstants.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
+                (TestConstants.PluginModKey2,  new DateTime(2020, 8, 8, 10, 11, 0)),
             };
         }
         
@@ -63,10 +63,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var results = new TimestampAligner(null!)
                 .AlignToTimestamps(GetTypical())
                 .ToList();
-            Assert.Equal(Utility.PluginModKey, results[0]);
-            Assert.Equal(Utility.PluginModKey2, results[1]);
-            Assert.Equal(Utility.PluginModKey3, results[2]);
-            Assert.Equal(Utility.PluginModKey4, results[3]);
+            Assert.Equal(TestConstants.PluginModKey, results[0]);
+            Assert.Equal(TestConstants.PluginModKey2, results[1]);
+            Assert.Equal(TestConstants.PluginModKey3, results[2]);
+            Assert.Equal(TestConstants.PluginModKey4, results[3]);
         }
         
         [Fact]
@@ -77,10 +77,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var results = new TimestampAligner(fs)
                 .AlignToTimestamps(GetListings(items), DataFolder)
                 .ToList();
-            Assert.Equal(new ModListing(Utility.PluginModKey, true), results[0]);
-            Assert.Equal(new ModListing(Utility.PluginModKey2, true), results[1]);
-            Assert.Equal(new ModListing(Utility.PluginModKey3, true), results[2]);
-            Assert.Equal(new ModListing(Utility.PluginModKey4, true), results[3]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey, true), results[0]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey2, true), results[1]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey3, true), results[2]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey4, true), results[3]);
         }
 
         [Fact]
@@ -88,10 +88,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var results = LoadOrder.AlignToTimestamps(GetSameTimestamps())
                 .ToList();
-            Assert.Equal(Utility.PluginModKey, results[0]);
-            Assert.Equal(Utility.PluginModKey3, results[1]);
-            Assert.Equal(Utility.PluginModKey4, results[2]);
-            Assert.Equal(Utility.PluginModKey2, results[3]);
+            Assert.Equal(TestConstants.PluginModKey, results[0]);
+            Assert.Equal(TestConstants.PluginModKey3, results[1]);
+            Assert.Equal(TestConstants.PluginModKey4, results[2]);
+            Assert.Equal(TestConstants.PluginModKey2, results[3]);
         }
 
         [Fact]
@@ -102,10 +102,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var results = new TimestampAligner(fs)
                 .AlignToTimestamps(GetListings(items), DataFolder)
                 .ToList();
-            Assert.Equal(new ModListing(Utility.PluginModKey, true), results[0]);
-            Assert.Equal(new ModListing(Utility.PluginModKey3, true), results[1]);
-            Assert.Equal(new ModListing(Utility.PluginModKey4, true), results[2]);
-            Assert.Equal(new ModListing(Utility.PluginModKey2, true), results[3]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey, true), results[0]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey3, true), results[1]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey4, true), results[2]);
+            Assert.Equal(new ModListing(TestConstants.PluginModKey2, true), results[3]);
         }
     }
 }

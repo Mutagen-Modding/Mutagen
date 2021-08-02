@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void HasMod_Empty()
         {
             Enumerable.Empty<ModListing>()
-                .HasMod(Utility.LightMasterModKey)
+                .HasMod(TestConstants.LightMasterModKey)
                 .Should().BeFalse();
         }
 
@@ -22,21 +22,21 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMod(Utility.LightMasterModKey)
+                .HasMod(TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey2)
+                .HasMod(TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey3)
+                .HasMod(TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey4)
+                .HasMod(TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -45,27 +45,27 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMod(Utility.LightMasterModKey, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey, enabled: true)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey, enabled: false)
                 .Should().BeFalse();
             listings
-                .HasMod(Utility.LightMasterModKey2, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey2, enabled: false)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey2, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey2, enabled: true)
                 .Should().BeFalse();
             listings
-                .HasMod(Utility.LightMasterModKey3, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey3, enabled: true)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey3, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey3, enabled: false)
                 .Should().BeFalse();
         }
 
@@ -73,7 +73,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void EmptyListings()
         {
             Enumerable.Empty<ModListing>()
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
         }
 
@@ -90,21 +90,21 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(Utility.LightMasterModKey)
+                .HasMods(TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey3)
+                .HasMods(TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey4)
+                .HasMods(TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -113,18 +113,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -132,10 +132,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void Enabled_EmptyListings()
         {
             Enumerable.Empty<ModListing>()
-                .HasMods(true, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
             Enumerable.Empty<ModListing>()
-                .HasMods(false, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
         }
 
@@ -155,33 +155,33 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(true, Utility.LightMasterModKey)
+                .HasMods(true, TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey)
+                .HasMods(false, TestConstants.LightMasterModKey)
                 .Should().BeFalse();
             listings
-                .HasMods(false, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(true, Utility.LightMasterModKey2)
+                .HasMods(true, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
             listings
-                .HasMods(true, Utility.LightMasterModKey3)
+                .HasMods(true, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey3)
+                .HasMods(false, TestConstants.LightMasterModKey3)
                 .Should().BeFalse();
             listings
-                .HasMods(true, Utility.LightMasterModKey4)
+                .HasMods(true, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
             listings
-                .HasMods(false, Utility.LightMasterModKey4)
+                .HasMods(false, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -190,27 +190,27 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey3)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
                 .Should().BeFalse();
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
     }

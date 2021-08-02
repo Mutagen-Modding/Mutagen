@@ -13,8 +13,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void FalseLoquiSpecification()
         {
-            ICell cell = new Cell(Utility.Form1, SkyrimRelease.SkyrimLE);
-            cell.Landscape = new Landscape(Utility.Form2, SkyrimRelease.SkyrimLE);
+            ICell cell = new Cell(TestConstants.Form1, SkyrimRelease.SkyrimLE);
+            cell.Landscape = new Landscape(TestConstants.Form2, SkyrimRelease.SkyrimLE);
             var copy = (Cell) cell.DeepCopy(new Cell.TranslationMask(true)
             {
                 Landscape = false
@@ -24,7 +24,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 
         private Npc GetNpc()
         {
-            return new Npc(Utility.Form1, SkyrimRelease.SkyrimLE)
+            return new Npc(TestConstants.Form1, SkyrimRelease.SkyrimLE)
             {
                 Name = Name,
                 Destructible = new Destructible()

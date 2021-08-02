@@ -59,7 +59,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 new LoadOrderImporter<TestMod>(
                         fs,
                         new DataDirectoryInjection("C:/DataFolder"),
-                        new LoadOrderListingsInjection(Utility.Dawnguard),
+                        new LoadOrderListingsInjection(TestConstants.Dawnguard),
                         importer)
                     .Import();
             };
@@ -73,8 +73,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var dataFolder = "C:/DataFolder";
             var modPaths = new ModKey[]
                 {
-                    Utility.MasterModKey,
-                    Utility.MasterModKey2,
+                    TestConstants.MasterModKey,
+                    TestConstants.MasterModKey2,
                 }
                 .Select(x => ModPath.FromPath(Path.Combine(dataFolder, x.FileName)))
                 .ToArray();
@@ -102,9 +102,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var dataFolder = "C:/DataFolder";
             var modPaths = new ModKey[]
                 {
-                    Utility.MasterModKey,
-                    Utility.MasterModKey2,
-                    Utility.MasterModKey3,
+                    TestConstants.MasterModKey,
+                    TestConstants.MasterModKey2,
+                    TestConstants.MasterModKey3,
                 }
                 .Select(x => ModPath.FromPath(Path.Combine(dataFolder, x.FileName)))
                 .ToArray();
@@ -125,7 +125,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Import();
             lo.Count.Should().Be(3);
             lo.First().Value.Mod.Should().BeNull();
-            lo.First().Value.ModKey.Should().Be(Utility.MasterModKey);
+            lo.First().Value.ModKey.Should().Be(TestConstants.MasterModKey);
             lo.Select(x => x.Value.Mod)
                 .Skip(1)
                 .Should().Equal(

@@ -36,18 +36,18 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new (string, FormKey)[]
                 {
-                    (Utility.Edid1, Utility.Form1),
-                    (Utility.Edid2, Utility.Form2),
+                    (TestConstants.Edid1, TestConstants.Form1),
+                    (TestConstants.Edid2, TestConstants.Form2),
                 },
                 fileSystem);
             var lines = fileSystem.File.ReadAllLines(someFile + ".txt");
             Assert.Equal(
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form2.ID.ToString(),
                 },
                 lines);
         }
@@ -67,18 +67,18 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 Path.Combine(SomeFolder, Patcher1 + ".txt"),
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form2.ID.ToString(),
                 });
             fileSystem.File.WriteAllText(Path.Combine(SomeFolder, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             var allocator = new TextFileSharedFormKeyAllocator(mod, SomeFolder, Patcher1, preload: true, fileSystem: fileSystem);
-            var formID = allocator.GetNextFormKey(Utility.Edid1);
-            Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            Assert.Equal(Utility.Form1, formID);
-            formID = allocator.GetNextFormKey(Utility.Edid2);
-            Assert.Equal(Utility.Form2, formID);
+            var formID = allocator.GetNextFormKey(TestConstants.Edid1);
+            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
+            Assert.Equal(TestConstants.Form1, formID);
+            formID = allocator.GetNextFormKey(TestConstants.Edid2);
+            Assert.Equal(TestConstants.Form2, formID);
         }
 
         [Theory, MutagenAutoData(Release: GameRelease.Oblivion)]
@@ -89,10 +89,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 Path.Combine(SomeFolder, Patcher1 + ".txt"),
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    //Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    //TestConstants.Form2.ID.ToString(),
                 });
             Assert.ThrowsAny<Exception>(() => new TextFileSharedFormKeyAllocator(mod, SomeFolder, DefaultName, preload: true, fileSystem: fileSystem));
         }
@@ -106,10 +106,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 Path.Combine(SomeFolder, Patcher1 + ".txt"),
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form1.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form1.ID.ToString(),
                 });
             Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, SomeFolder, DefaultName, preload: true, fileSystem: fileSystem));
         }
@@ -123,10 +123,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 Path.Combine(SomeFolder, Patcher1 + ".txt"),
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid1,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form2.ID.ToString(),
                 });
             Assert.Throws<ArgumentException>(() => new TextFileSharedFormKeyAllocator(mod, SomeFolder, Patcher1, preload: true, fileSystem: fileSystem));
         }
@@ -139,18 +139,18 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 Path.Combine(SomeFolder, Patcher1),
                 new (string, FormKey)[]
                 {
-                    (Utility.Edid1, Utility.Form1),
-                    (Utility.Edid2, Utility.Form2),
+                    (TestConstants.Edid1, TestConstants.Form1),
+                    (TestConstants.Edid2, TestConstants.Form2),
                 },
                 fileSystem: fileSystem);
             fileSystem.File.WriteAllText(Path.Combine(SomeFolder, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             using var allocator = new TextFileSharedFormKeyAllocator(mod, SomeFolder, Patcher1, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey();
-            Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            formID = allocator.GetNextFormKey(Utility.Edid1);
-            Assert.Equal(formID, Utility.Form1);
-            formID = allocator.GetNextFormKey(Utility.Edid2);
-            Assert.Equal(formID, Utility.Form2);
+            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
+            formID = allocator.GetNextFormKey(TestConstants.Edid1);
+            Assert.Equal(formID, TestConstants.Form1);
+            formID = allocator.GetNextFormKey(TestConstants.Edid2);
+            Assert.Equal(formID, TestConstants.Form2);
         }
     }
 }

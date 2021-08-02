@@ -25,9 +25,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                     {
                         return new object[]
                         {
-                            Utility.MasterModKey,
-                            Utility.PluginModKey,
-                            Utility.PluginModKey2,
+                            TestConstants.MasterModKey,
+                            TestConstants.PluginModKey,
+                            TestConstants.PluginModKey2,
                         };
                     }
                     else if (t == typeof(ModPath))
@@ -35,9 +35,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                         var dataDir = context.Create<IDataDirectoryProvider>();
                         return new ModKey[]
                         {
-                            Utility.MasterModKey,
-                            Utility.PluginModKey,
-                            Utility.PluginModKey2,
+                            TestConstants.MasterModKey,
+                            TestConstants.PluginModKey,
+                            TestConstants.PluginModKey2,
                         }.Select(mk =>
                         {
                             return new ModPath(mk, Path.Combine(dataDir.Path, mk.FileName));
@@ -47,7 +47,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             }
             else if (request is Type t)
             {
-                var modKey = Utility.PluginModKey;
+                var modKey = TestConstants.PluginModKey;
                 if (t == typeof(ModKey))
                 {
                     return modKey;

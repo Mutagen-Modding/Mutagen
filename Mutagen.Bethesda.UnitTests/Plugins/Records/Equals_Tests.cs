@@ -12,19 +12,19 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void FreshEquals()
         {
-            var npc1 = new Npc(Utility.Form1);
-            var npc2 = new Npc(Utility.Form1);
+            var npc1 = new Npc(TestConstants.Form1);
+            var npc2 = new Npc(TestConstants.Form1);
             Assert.Equal(npc1, npc2);
         }
 
         [Fact]
         public void SimpleEquals()
         {
-            var npc1 = new Npc(Utility.Form1)
+            var npc1 = new Npc(TestConstants.Form1)
             {
                 Name = "TEST"
             };
-            var npc2 = new Npc(Utility.Form1)
+            var npc2 = new Npc(TestConstants.Form1)
             {
                 Name = "TEST"
             };

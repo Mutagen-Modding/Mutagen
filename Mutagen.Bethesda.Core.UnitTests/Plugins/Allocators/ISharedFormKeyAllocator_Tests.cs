@@ -28,29 +28,29 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             var fileSystem = new MockFileSystem();
             uint formID1, formID2;
             {
-                var mod = new TestMod(Utility.PluginModKey);
+                var mod = new TestMod(TestConstants.PluginModKey);
                 using var allocator = CreateNamedAllocator(fileSystem, mod, Patcher1);
-                var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
+                var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
                 formID1 = formKey1.ID;
 
                 allocator.GetNextFormKey();
 
-                var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
+                var formKey2 = allocator.GetNextFormKey(TestConstants.Edid2);
                 formID2 = formKey2.ID;
 
                 allocator.Commit();
             }
 
             {
-                var mod = new TestMod(Utility.PluginModKey);
+                var mod = new TestMod(TestConstants.PluginModKey);
                 using var allocator = CreateNamedAllocator(fileSystem, mod, Patcher1);
 
-                var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
+                var formKey2 = allocator.GetNextFormKey(TestConstants.Edid2);
                 Assert.Equal(formID2, formKey2.ID);
 
                 allocator.GetNextFormKey();
 
-                var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
+                var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
                 Assert.Equal(formID1, formKey1.ID);
             }
         }
@@ -60,7 +60,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
         {
             var input = Enumerable.Range(1, 100).Select(i => (i, i.ToString())).ToList();
             var output1 = new ConcurrentDictionary<int, uint>();
-            var mod = new TestMod(Utility.PluginModKey);
+            var mod = new TestMod(TestConstants.PluginModKey);
 
             var fileSystem = new MockFileSystem();
             {
@@ -105,11 +105,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
         public void DuplicateAllocationBetweenTwoPatchersThrows()
         {
             var fileSystem = new MockFileSystem();
-            var mod = new TestMod(Utility.PluginModKey);
+            var mod = new TestMod(TestConstants.PluginModKey);
             {
                 using var allocator = CreateNamedAllocator(fileSystem, mod, Patcher1);
 
-                allocator.GetNextFormKey(Utility.Edid1);
+                allocator.GetNextFormKey(TestConstants.Edid1);
 
                 allocator.Commit();
             }
@@ -117,7 +117,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             {
                 using var allocator = CreateNamedAllocator(fileSystem, mod, Patcher2);
 
-                var e = Assert.Throws<ConstraintException>(() => allocator.GetNextFormKey(Utility.Edid1));
+                var e = Assert.Throws<ConstraintException>(() => allocator.GetNextFormKey(TestConstants.Edid1));
             }
         }
     }

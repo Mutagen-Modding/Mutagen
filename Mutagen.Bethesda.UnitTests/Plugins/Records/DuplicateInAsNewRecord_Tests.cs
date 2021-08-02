@@ -12,11 +12,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             const string Name = "TEST";
 
-            var npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE)
+            var npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE)
             {
                 Name = Name
             };
-            var mod = new SkyrimMod(Utility.PluginModKey4, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
             var npc2 = mod.Npcs.DuplicateInAsNewRecord(npc);
             npc2.FormKey.ModKey.Should().Be(mod.ModKey);
             npc2.Name!.String.Should().Be(Name);
@@ -27,11 +27,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             const int Data = 15;
 
-            Global glob = new GlobalInt(Utility.Form1, SkyrimRelease.SkyrimSE)
+            Global glob = new GlobalInt(TestConstants.Form1, SkyrimRelease.SkyrimSE)
             {
                 Data = Data
             };
-            var mod = new SkyrimMod(Utility.PluginModKey4, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
             var glob2 = (GlobalInt)mod.Globals.DuplicateInAsNewRecord(glob);
             glob2.FormKey.ModKey.Should().Be(mod.ModKey);
             glob2.Data.Should().Be(Data);
@@ -42,11 +42,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         {
             const int Data = 15;
 
-            var glob = new GlobalInt(Utility.Form1, SkyrimRelease.SkyrimSE)
+            var glob = new GlobalInt(TestConstants.Form1, SkyrimRelease.SkyrimSE)
             {
                 Data = Data
             };
-            var mod = new SkyrimMod(Utility.PluginModKey4, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey4, SkyrimRelease.SkyrimSE);
             var glob2 = (GlobalInt)mod.Globals.DuplicateInAsNewRecord<Global, IGlobalIntGetter, IGlobalGetter>(glob);
             glob2.FormKey.ModKey.Should().Be(mod.ModKey);
             glob2.Data.Should().Be(Data);

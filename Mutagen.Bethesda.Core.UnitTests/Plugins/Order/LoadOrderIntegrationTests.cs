@@ -17,17 +17,17 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var lo = new List<(ModKey ModKey, DateTime Write)>
             {
-                (Utility.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
-                (Utility.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
-                (Utility.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
-                (Utility.PluginModKey2, new DateTime(2020, 8, 8, 10, 9, 0)),
+                (TestConstants.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
+                (TestConstants.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
+                (TestConstants.PluginModKey2, new DateTime(2020, 8, 8, 10, 9, 0)),
             };
             var results = LoadOrder.AlignToTimestamps(lo)
                 .ToList();
-            Assert.Equal(Utility.PluginModKey, results[0]);
-            Assert.Equal(Utility.PluginModKey2, results[1]);
-            Assert.Equal(Utility.PluginModKey3, results[2]);
-            Assert.Equal(Utility.PluginModKey4, results[3]);
+            Assert.Equal(TestConstants.PluginModKey, results[0]);
+            Assert.Equal(TestConstants.PluginModKey2, results[1]);
+            Assert.Equal(TestConstants.PluginModKey3, results[2]);
+            Assert.Equal(TestConstants.PluginModKey4, results[3]);
         }
 
         [Fact]
@@ -35,50 +35,50 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var lo = new List<(ModKey ModKey, DateTime Write)>
             {
-                (Utility.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
-                (Utility.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
-                (Utility.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
-                (Utility.PluginModKey2, new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey4, new DateTime(2020, 8, 8, 10, 11, 0)),
+                (TestConstants.PluginModKey, new DateTime(2020, 8, 8, 10, 8, 0)),
+                (TestConstants.PluginModKey3, new DateTime(2020, 8, 8, 10, 10, 0)),
+                (TestConstants.PluginModKey2, new DateTime(2020, 8, 8, 10, 11, 0)),
             };
             var results = LoadOrder.AlignToTimestamps(lo)
                 .ToList();
-            Assert.Equal(Utility.PluginModKey, results[0]);
-            Assert.Equal(Utility.PluginModKey3, results[1]);
-            Assert.Equal(Utility.PluginModKey4, results[2]);
-            Assert.Equal(Utility.PluginModKey2, results[3]);
+            Assert.Equal(TestConstants.PluginModKey, results[0]);
+            Assert.Equal(TestConstants.PluginModKey3, results[1]);
+            Assert.Equal(TestConstants.PluginModKey4, results[2]);
+            Assert.Equal(TestConstants.PluginModKey2, results[3]);
         }
 
         [Fact]
         public void GetListings()
         {
-            using var tmp = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmp = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
             File.WriteAllLines(cccPath,
                 new string[]
                 {
-                    Utility.LightMasterModKey.FileName,
-                    Utility.LightMasterModKey2.FileName,
+                    TestConstants.LightMasterModKey.FileName,
+                    TestConstants.LightMasterModKey2.FileName,
                 });
             File.WriteAllLines(pluginsPath,
                 new string[]
                 {
-                    $"*{Utility.MasterModKey.FileName}",
-                    $"{Utility.MasterModKey2.FileName}",
-                    $"*{Utility.LightMasterModKey3.FileName}",
-                    $"{Utility.LightMasterModKey4.FileName}",
-                    $"*{Utility.PluginModKey.FileName}",
-                    $"{Utility.PluginModKey2.FileName}",
+                    $"*{TestConstants.MasterModKey.FileName}",
+                    $"{TestConstants.MasterModKey2.FileName}",
+                    $"*{TestConstants.LightMasterModKey3.FileName}",
+                    $"{TestConstants.LightMasterModKey4.FileName}",
+                    $"*{TestConstants.PluginModKey.FileName}",
+                    $"{TestConstants.PluginModKey2.FileName}",
                 });
             Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey2.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey3.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey4.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
             var results = LoadOrder.GetListings(
                     game: GameRelease.SkyrimSE,
                     dataPath: dataPath,
@@ -88,40 +88,40 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             results.Should().HaveCount(7);
             results.Should().Equal(new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, enabled: true),
-                new ModListing(Utility.MasterModKey, enabled: true),
-                new ModListing(Utility.MasterModKey2, enabled: false),
-                new ModListing(Utility.LightMasterModKey3, enabled: true),
-                new ModListing(Utility.LightMasterModKey4, enabled: false),
-                new ModListing(Utility.PluginModKey, enabled: true),
-                new ModListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(TestConstants.LightMasterModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey2, enabled: false),
+                new ModListing(TestConstants.LightMasterModKey3, enabled: true),
+                new ModListing(TestConstants.LightMasterModKey4, enabled: false),
+                new ModListing(TestConstants.PluginModKey, enabled: true),
+                new ModListing(TestConstants.PluginModKey2, enabled: false),
             });
         }
 
         [Fact]
         public void GetListings_CreationClubMissing()
         {
-            using var tmp = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmp = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
             File.WriteAllLines(pluginsPath,
                 new string[]
                 {
-                    $"*{Utility.MasterModKey.FileName}",
-                    $"{Utility.MasterModKey2.FileName}",
-                    $"*{Utility.LightMasterModKey3.FileName}",
-                    $"{Utility.LightMasterModKey4.FileName}",
-                    $"*{Utility.PluginModKey.FileName}",
-                    $"{Utility.PluginModKey2.FileName}",
+                    $"*{TestConstants.MasterModKey.FileName}",
+                    $"{TestConstants.MasterModKey2.FileName}",
+                    $"*{TestConstants.LightMasterModKey3.FileName}",
+                    $"{TestConstants.LightMasterModKey4.FileName}",
+                    $"*{TestConstants.PluginModKey.FileName}",
+                    $"{TestConstants.PluginModKey2.FileName}",
                 });
             Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey2.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey3.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey4.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
             var results = LoadOrder.GetListings(
                     game: GameRelease.SkyrimSE,
                     dataPath: dataPath,
@@ -131,30 +131,30 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             results.Should().HaveCount(6);
             results.Should().Equal(new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, enabled: true),
-                new ModListing(Utility.MasterModKey2, enabled: false),
-                new ModListing(Utility.LightMasterModKey3, enabled: true),
-                new ModListing(Utility.LightMasterModKey4, enabled: false),
-                new ModListing(Utility.PluginModKey, enabled: true),
-                new ModListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(TestConstants.MasterModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey2, enabled: false),
+                new ModListing(TestConstants.LightMasterModKey3, enabled: true),
+                new ModListing(TestConstants.LightMasterModKey4, enabled: false),
+                new ModListing(TestConstants.PluginModKey, enabled: true),
+                new ModListing(TestConstants.PluginModKey2, enabled: false),
             });
         }
 
         [Fact]
         public void GetListings_NoCreationClub()
         {
-            using var tmp = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmp = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
             File.WriteAllLines(pluginsPath,
                 new string[]
                 {
-                    $"{Utility.MasterModKey.FileName}",
-                    $"{Utility.PluginModKey.FileName}",
+                    $"{TestConstants.MasterModKey.FileName}",
+                    $"{TestConstants.PluginModKey.FileName}",
                 });
             Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
             var results = LoadOrder.GetListings(
                     game: GameRelease.Oblivion,
                     dataPath: dataPath,
@@ -164,8 +164,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             results.Should().HaveCount(2);
             results.Should().Equal(new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, enabled: true),
-                new ModListing(Utility.PluginModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey, enabled: true),
+                new ModListing(TestConstants.PluginModKey, enabled: true),
             });
         }
 
@@ -176,37 +176,37 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void GetListings_VortexCreationClub()
         {
-            using var tmp = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmp = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var cccPath = Path.Combine(tmp.Dir.Path, "Skyrim.ccc");
             var pluginsPath = Path.Combine(tmp.Dir.Path, "Plugins.txt");
             var dataPath = Path.Combine(tmp.Dir.Path, "Data");
             File.WriteAllLines(cccPath,
                 new string[]
                 {
-                    Utility.LightMasterModKey.FileName,
-                    Utility.LightMasterModKey2.FileName,
+                    TestConstants.LightMasterModKey.FileName,
+                    TestConstants.LightMasterModKey2.FileName,
                 });
             File.WriteAllLines(pluginsPath,
                 new string[]
                 {
-                    Utility.LightMasterModKey2.FileName,
-                    Utility.LightMasterModKey.FileName,
-                    $"*{Utility.MasterModKey.FileName}",
-                    $"{Utility.MasterModKey2.FileName}",
-                    $"*{Utility.LightMasterModKey3.FileName}",
-                    $"{Utility.LightMasterModKey4.FileName}",
-                    $"*{Utility.PluginModKey.FileName}",
-                    $"{Utility.PluginModKey2.FileName}",
+                    TestConstants.LightMasterModKey2.FileName,
+                    TestConstants.LightMasterModKey.FileName,
+                    $"*{TestConstants.MasterModKey.FileName}",
+                    $"{TestConstants.MasterModKey2.FileName}",
+                    $"*{TestConstants.LightMasterModKey3.FileName}",
+                    $"{TestConstants.LightMasterModKey4.FileName}",
+                    $"*{TestConstants.PluginModKey.FileName}",
+                    $"{TestConstants.PluginModKey2.FileName}",
                 });
             Directory.CreateDirectory(dataPath);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey2.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.MasterModKey2.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey3.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.LightMasterModKey4.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey.FileName), string.Empty);
-            File.WriteAllText(Path.Combine(dataPath, Utility.PluginModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.MasterModKey2.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey3.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.LightMasterModKey4.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey.FileName), string.Empty);
+            File.WriteAllText(Path.Combine(dataPath, TestConstants.PluginModKey2.FileName), string.Empty);
             var results = LoadOrder.GetListings(
                     game: GameRelease.SkyrimSE,
                     dataPath: dataPath,
@@ -216,14 +216,14 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             results.Should().HaveCount(8);
             results.Should().Equal(new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey2, enabled: true),
-                new ModListing(Utility.LightMasterModKey, enabled: true),
-                new ModListing(Utility.MasterModKey, enabled: true),
-                new ModListing(Utility.MasterModKey2, enabled: false),
-                new ModListing(Utility.LightMasterModKey3, enabled: true),
-                new ModListing(Utility.LightMasterModKey4, enabled: false),
-                new ModListing(Utility.PluginModKey, enabled: true),
-                new ModListing(Utility.PluginModKey2, enabled: false),
+                new ModListing(TestConstants.LightMasterModKey2, enabled: true),
+                new ModListing(TestConstants.LightMasterModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey, enabled: true),
+                new ModListing(TestConstants.MasterModKey2, enabled: false),
+                new ModListing(TestConstants.LightMasterModKey3, enabled: true),
+                new ModListing(TestConstants.LightMasterModKey4, enabled: false),
+                new ModListing(TestConstants.PluginModKey, enabled: true),
+                new ModListing(TestConstants.PluginModKey2, enabled: false),
             });
         }
 
@@ -325,84 +325,84 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void WriteExclude()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmpFolder = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
                 GameRelease.Oblivion,
                 new ModListing[]
                 {
-                    new ModListing(Utility.PluginModKey, false),
-                    new ModListing(Utility.PluginModKey2, true),
-                    new ModListing(Utility.PluginModKey3, false),
+                    new ModListing(TestConstants.PluginModKey, false),
+                    new ModListing(TestConstants.PluginModKey2, true),
+                    new ModListing(TestConstants.PluginModKey3, false),
                 });
             var lines = File.ReadAllLines(path).ToList();
             Assert.Single(lines);
-            Assert.Equal(Utility.PluginModKey2.FileName, lines[0]);
+            Assert.Equal(TestConstants.PluginModKey2.FileName, lines[0]);
         }
 
         [Fact]
         public void WriteMarkers()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmpFolder = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
                 new ModListing[]
                 {
-                    new ModListing(Utility.PluginModKey, false),
-                    new ModListing(Utility.PluginModKey2, true),
-                    new ModListing(Utility.PluginModKey3, false),
+                    new ModListing(TestConstants.PluginModKey, false),
+                    new ModListing(TestConstants.PluginModKey2, true),
+                    new ModListing(TestConstants.PluginModKey3, false),
                 });
             var lines = File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
-            Assert.Equal($"{Utility.PluginModKey.FileName}", lines[0]);
-            Assert.Equal($"*{Utility.PluginModKey2.FileName}", lines[1]);
-            Assert.Equal($"{Utility.PluginModKey3.FileName}", lines[2]);
+            Assert.Equal($"{TestConstants.PluginModKey.FileName}", lines[0]);
+            Assert.Equal($"*{TestConstants.PluginModKey2.FileName}", lines[1]);
+            Assert.Equal($"{TestConstants.PluginModKey3.FileName}", lines[2]);
         }
 
         [Fact]
         public void WriteImplicitFilteredOut()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmpFolder = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
                 new ModListing[]
                 {
-                    new ModListing(Utility.Skyrim, true),
-                    new ModListing(Utility.PluginModKey, true),
-                    new ModListing(Utility.PluginModKey2, false),
+                    new ModListing(TestConstants.Skyrim, true),
+                    new ModListing(TestConstants.PluginModKey, true),
+                    new ModListing(TestConstants.PluginModKey2, false),
                 },
                 removeImplicitMods: true);
             var lines = File.ReadAllLines(path).ToList();
             Assert.Equal(2, lines.Count);
-            Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[0]);
-            Assert.Equal($"{Utility.PluginModKey2.FileName}", lines[1]);
+            Assert.Equal($"*{TestConstants.PluginModKey.FileName}", lines[0]);
+            Assert.Equal($"{TestConstants.PluginModKey2.FileName}", lines[1]);
         }
 
         [Fact]
         public void WriteImplicit()
         {
-            using var tmpFolder = Utility.GetTempFolder(nameof(LoadOrderIntegrationTests));
+            using var tmpFolder = TestPathing.GetTempFolder(nameof(LoadOrderIntegrationTests));
             var path = Path.Combine(tmpFolder.Dir.Path, "Plugins.txt");
             LoadOrder.Write(
                 path,
                 GameRelease.SkyrimSE,
                 new ModListing[]
                 {
-                    new ModListing(Utility.Skyrim, true),
-                    new ModListing(Utility.PluginModKey, true),
-                    new ModListing(Utility.PluginModKey2, false),
+                    new ModListing(TestConstants.Skyrim, true),
+                    new ModListing(TestConstants.PluginModKey, true),
+                    new ModListing(TestConstants.PluginModKey2, false),
                 },
                 removeImplicitMods: false);
             var lines = File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
-            Assert.Equal($"*{Utility.Skyrim.FileName}", lines[0]);
-            Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[1]);
-            Assert.Equal($"{Utility.PluginModKey2.FileName}", lines[2]);
+            Assert.Equal($"*{TestConstants.Skyrim.FileName}", lines[0]);
+            Assert.Equal($"*{TestConstants.PluginModKey.FileName}", lines[1]);
+            Assert.Equal($"{TestConstants.PluginModKey2.FileName}", lines[2]);
         }
 
         #region HasMod
@@ -410,7 +410,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void HasMod_Empty()
         {
             Enumerable.Empty<ModListing>()
-                .HasMod(Utility.LightMasterModKey)
+                .HasMod(TestConstants.LightMasterModKey)
                 .Should().BeFalse();
         }
 
@@ -419,21 +419,21 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMod(Utility.LightMasterModKey)
+                .HasMod(TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey2)
+                .HasMod(TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey3)
+                .HasMod(TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey4)
+                .HasMod(TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -442,27 +442,27 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMod(Utility.LightMasterModKey, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey, enabled: true)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey, enabled: false)
                 .Should().BeFalse();
             listings
-                .HasMod(Utility.LightMasterModKey2, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey2, enabled: false)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey2, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey2, enabled: true)
                 .Should().BeFalse();
             listings
-                .HasMod(Utility.LightMasterModKey3, enabled: true)
+                .HasMod(TestConstants.LightMasterModKey3, enabled: true)
                 .Should().BeTrue();
             listings
-                .HasMod(Utility.LightMasterModKey3, enabled: false)
+                .HasMod(TestConstants.LightMasterModKey3, enabled: false)
                 .Should().BeFalse();
         }
 
@@ -470,7 +470,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void HasMods_EmptyListings()
         {
             Enumerable.Empty<ModListing>()
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
         }
 
@@ -487,21 +487,21 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(Utility.LightMasterModKey)
+                .HasMods(TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey3)
+                .HasMods(TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey4)
+                .HasMods(TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -510,18 +510,18 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                .HasMods(TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -529,10 +529,10 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void HasMods_Enabled_EmptyListings()
         {
             Enumerable.Empty<ModListing>()
-                .HasMods(true, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(true, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
             Enumerable.Empty<ModListing>()
-                .HasMods(false, Utility.LightMasterModKey, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
         }
 
@@ -552,33 +552,33 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
-                .HasMods(true, Utility.LightMasterModKey)
+                .HasMods(true, TestConstants.LightMasterModKey)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey)
+                .HasMods(false, TestConstants.LightMasterModKey)
                 .Should().BeFalse();
             listings
-                .HasMods(false, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
-                .HasMods(true, Utility.LightMasterModKey2)
+                .HasMods(true, TestConstants.LightMasterModKey2)
                 .Should().BeFalse();
             listings
-                .HasMods(true, Utility.LightMasterModKey3)
+                .HasMods(true, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey3)
+                .HasMods(false, TestConstants.LightMasterModKey3)
                 .Should().BeFalse();
             listings
-                .HasMods(true, Utility.LightMasterModKey4)
+                .HasMods(true, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
             listings
-                .HasMods(false, Utility.LightMasterModKey4)
+                .HasMods(false, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
 
@@ -587,27 +587,27 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.LightMasterModKey, true),
-                new ModListing(Utility.LightMasterModKey2, false),
-                new ModListing(Utility.LightMasterModKey3, true),
+                new ModListing(TestConstants.LightMasterModKey, true),
+                new ModListing(TestConstants.LightMasterModKey2, false),
+                new ModListing(TestConstants.LightMasterModKey3, true),
             };
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey3)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey3)
                 .Should().BeTrue();
             listings
-                .HasMods(false, Utility.LightMasterModKey2)
+                .HasMods(false, TestConstants.LightMasterModKey2)
                 .Should().BeTrue();
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey3)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey3)
                 .Should().BeFalse();
             listings
                 .HasMods(
                     true,
-                    Utility.LightMasterModKey, Utility.LightMasterModKey2, Utility.LightMasterModKey4)
+                    TestConstants.LightMasterModKey, TestConstants.LightMasterModKey2, TestConstants.LightMasterModKey4)
                 .Should().BeFalse();
         }
         #endregion

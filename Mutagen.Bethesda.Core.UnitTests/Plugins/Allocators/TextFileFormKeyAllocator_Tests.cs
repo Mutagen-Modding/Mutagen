@@ -33,8 +33,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new KeyValuePair<string, FormKey>[]
                 {
-                    new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
-                    new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
+                    new KeyValuePair<string, FormKey>(TestConstants.Edid1, TestConstants.Form1),
+                    new KeyValuePair<string, FormKey>(TestConstants.Edid2, TestConstants.Form2),
                 },
                 fileSystem);
 
@@ -42,10 +42,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             Assert.Equal(
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form2.ID.ToString(),
                 },
                 lines);
         }
@@ -59,17 +59,17 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form2.ID.ToString(),
                 });
             using var allocator = new TextFileFormKeyAllocator(mod, someFile, fileSystem: fileSystem);
-            var formID = allocator.GetNextFormKey(Utility.Edid1);
-            Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            Assert.Equal(formID, Utility.Form1);
-            formID = allocator.GetNextFormKey(Utility.Edid2);
-            Assert.Equal(formID, Utility.Form2);
+            var formID = allocator.GetNextFormKey(TestConstants.Edid1);
+            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
+            Assert.Equal(formID, TestConstants.Form1);
+            formID = allocator.GetNextFormKey(TestConstants.Edid2);
+            Assert.Equal(formID, TestConstants.Form2);
         }
 
         [Theory, MutagenAutoData]
@@ -82,9 +82,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
                 });
             Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem:fileSystem));
         }
@@ -99,10 +99,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid2,
-                    Utility.Form1.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid2,
+                    TestConstants.Form1.ID.ToString(),
                 });
             Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem));
         }
@@ -117,10 +117,10 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new string[]
                 {
-                    Utility.Edid1,
-                    Utility.Form1.ID.ToString(),
-                    Utility.Edid1,
-                    Utility.Form2.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form1.ID.ToString(),
+                    TestConstants.Edid1,
+                    TestConstants.Form2.ID.ToString(),
                 });
             Assert.Throws<ArgumentException>(() => new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem));
         }
@@ -134,16 +134,16 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 someFile,
                 new KeyValuePair<string, FormKey>[]
                 {
-                    new KeyValuePair<string, FormKey>(Utility.Edid1, Utility.Form1),
-                    new KeyValuePair<string, FormKey>(Utility.Edid2, Utility.Form2),
+                    new KeyValuePair<string, FormKey>(TestConstants.Edid1, TestConstants.Form1),
+                    new KeyValuePair<string, FormKey>(TestConstants.Edid2, TestConstants.Form2),
                 },
                 fileSystem);
             using var allocator = new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem);
-            var formID = allocator.GetNextFormKey(Utility.Edid1);
-            Assert.Equal(Utility.PluginModKey, formID.ModKey);
-            Assert.Equal(formID, Utility.Form1);
-            formID = allocator.GetNextFormKey(Utility.Edid2);
-            Assert.Equal(formID, Utility.Form2);
+            var formID = allocator.GetNextFormKey(TestConstants.Edid1);
+            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
+            Assert.Equal(formID, TestConstants.Form1);
+            formID = allocator.GetNextFormKey(TestConstants.Edid2);
+            Assert.Equal(formID, TestConstants.Form2);
         }
     }
 }

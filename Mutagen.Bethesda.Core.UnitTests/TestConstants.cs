@@ -1,11 +1,8 @@
-using System.IO;
-using System.Runtime.CompilerServices;
-using Mutagen.Bethesda.Plugins;
-using Noggog.Utility;
+﻿using Mutagen.Bethesda.Plugins;
 
 namespace Mutagen.Bethesda.Core.UnitTests
 {
-    public static class Utility
+    public class TestConstants
     {
         public static readonly ModKey PluginModKey = new ModKey("MutagenPluginKey", ModType.Plugin);
         public static readonly ModKey PluginModKey2 = new ModKey("MutagenPluginKey2", ModType.Plugin);
@@ -33,15 +30,5 @@ namespace Mutagen.Bethesda.Core.UnitTests
         public static readonly FormKey Form3 = new FormKey(PluginModKey, 0x223456);
         public static readonly FormKey Form4 = new FormKey(PluginModKey, 0x22345F);
         public static readonly FormKey UnusedForm = new FormKey(PluginModKey, 0x323456);
-        public static readonly string TempFolderPath = "MutagenUnitTests";
-        public static ModPath OblivionTestMod = new ModPath(ModKey.FromNameAndExtension("test.esp"), "../../../Plugins/Records/Files/oblivion_test.esp");
-        public static ModPath OblivionOverrideMod = new ModPath(ModKey.FromNameAndExtension("override.esp"), "../../../Plugins/Records/Files/oblivion_override.esp");
-        public static ModPath SkyrimTestMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_test.esp");
-        public static ModPath SkyrimOverrideMod = ModPath.FromPath("../../../Plugins/Records/Files/skyrim_override.esp");
-
-        public static TempFolder GetTempFolder(string folderName, [CallerMemberName] string? testName = null)
-        {
-            return TempFolder.FactoryByAddedPath(Path.Combine(Utility.TempFolderPath, folderName, testName!));
-        }
     }
 }

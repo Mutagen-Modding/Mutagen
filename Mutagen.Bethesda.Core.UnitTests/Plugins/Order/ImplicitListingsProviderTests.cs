@@ -22,13 +22,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             sut.ListingModKeys.Listings.Returns(new List<ModKey>()
             {
-                Utility.MasterModKey,
-                Utility.MasterModKey2
+                TestConstants.MasterModKey,
+                TestConstants.MasterModKey2
             });
-            fs.File.WriteAllText(Path.Combine(sut.DataFolder.Path, Utility.MasterModKey.FileName), string.Empty);
+            fs.File.WriteAllText(Path.Combine(sut.DataFolder.Path, TestConstants.MasterModKey.FileName), string.Empty);
 
             sut.Get()
-                .Should().Equal(new ModListing(Utility.MasterModKey, true));
+                .Should().Equal(new ModListing(TestConstants.MasterModKey, true));
         }
     }
 }

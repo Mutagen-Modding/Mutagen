@@ -11,7 +11,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void AddNew()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var rec = mod.Npcs.AddNew();
             Assert.Equal(1, mod.Npcs.Count);
             Assert.Same(mod.Npcs.Records.First(), rec);
@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void AddNew_DifferentForSecond()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var rec = mod.Npcs.AddNew();
             var rec2 = mod.Npcs.AddNew();
             Assert.Equal(2, mod.Npcs.Count);
@@ -30,11 +30,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void AddWithFormKey()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
-            var rec = mod.Npcs.AddNew(Utility.Form1);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
+            var rec = mod.Npcs.AddNew(TestConstants.Form1);
             Assert.Equal(1, mod.Npcs.Count);
             Assert.Same(mod.Npcs.Records.First(), rec);
-            rec.FormKey.Should().Be(Utility.Form1);
+            rec.FormKey.Should().Be(TestConstants.Form1);
         }
     }
 }

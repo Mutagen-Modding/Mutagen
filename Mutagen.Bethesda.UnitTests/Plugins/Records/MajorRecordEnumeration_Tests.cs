@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void Empty()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var conv = ConvertMod(mod);
             Assert.Empty(conv.EnumerateMajorRecords());
             Assert.Empty(conv.EnumerateMajorRecords<IMajorRecordCommon>());
@@ -30,7 +30,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateAll()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -40,7 +40,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateAllViaGeneric()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateSpecificType_Matched()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             mod.Npcs.AddNew();
             mod.Ammunitions.AddNew();
             var conv = ConvertMod(mod);
@@ -63,7 +63,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateSpecificType_Unmatched()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             mod.Npcs.AddNew();
             var conv = ConvertMod(mod);
             Assert.Empty(conv.EnumerateMajorRecords<IAmmunition>());
@@ -74,7 +74,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateLinkInterface()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             mod.Factions.AddNew();
             var conv = ConvertMod(mod);
             Assert.NotEmpty(conv.EnumerateMajorRecords<IFactionGetter>());
@@ -85,7 +85,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateDeepLinkInterface()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var placed = new PlacedNpc(mod);
             mod.Cells.Records.Add(new CellBlock()
             {
@@ -121,7 +121,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EnumerateDeepMajorRecordType()
         {
-            var mod = new OblivionMod(Utility.PluginModKey);
+            var mod = new OblivionMod(TestConstants.PluginModKey);
             var placed = new PlacedNpc(mod);
             mod.Cells.Records.Add(new CellBlock()
             {

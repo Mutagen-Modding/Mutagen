@@ -12,7 +12,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         #region FormKey
         class FormKeyClass
         {
-            public FormKey Member { get; set; } = Utility.Form1;
+            public FormKey Member { get; set; } = TestConstants.Form1;
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var toSerialize = new FormKeyClass()
             {
-                Member = Utility.Form2
+                Member = TestConstants.Form2
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -35,7 +35,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var target = new FormKeyClass()
             {
-                Member = Utility.Form2
+                Member = TestConstants.Form2
             };
             var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
             JsonConvert.DeserializeObject<FormKeyClass>(toDeserialize, settings)!
@@ -57,7 +57,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
 
         class NullableFormKeyClass
         {
-            public FormKey? Member { get; set; } = Utility.Form1;
+            public FormKey? Member { get; set; } = TestConstants.Form1;
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var toSerialize = new NullableFormKeyClass()
             {
-                Member = Utility.Form2
+                Member = TestConstants.Form2
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -93,7 +93,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var target = new NullableFormKeyClass()
             {
-                Member = Utility.Form2
+                Member = TestConstants.Form2
             };
             var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
             JsonConvert.DeserializeObject<NullableFormKeyClass>(toDeserialize, settings)!
@@ -128,9 +128,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         #region FormLink
         class FormLinkClass
         {
-            public FormLink<ITestMajorRecordGetter> Direct { get; set; } = new(Utility.Form1);
-            public IFormLink<ITestMajorRecordGetter> Setter { get; set; } = new FormLink<ITestMajorRecordGetter>(Utility.Form1);
-            public IFormLinkGetter<ITestMajorRecordGetter> Getter { get; set; } = new FormLink<ITestMajorRecordGetter>(Utility.Form1);
+            public FormLink<ITestMajorRecordGetter> Direct { get; set; } = new(TestConstants.Form1);
+            public IFormLink<ITestMajorRecordGetter> Setter { get; set; } = new FormLink<ITestMajorRecordGetter>(TestConstants.Form1);
+            public IFormLinkGetter<ITestMajorRecordGetter> Getter { get; set; } = new FormLink<ITestMajorRecordGetter>(TestConstants.Form1);
         }
 
         [Fact]
@@ -140,9 +140,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var toSerialize = new FormLinkClass()
             {
-                Direct = new FormLink<ITestMajorRecordGetter>(Utility.Form2),
-                Setter = new FormLink<ITestMajorRecordGetter>(Utility.Form2),
-                Getter = new FormLink<ITestMajorRecordGetter>(Utility.Form2)
+                Direct = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+                Setter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+                Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Direct\":\"{toSerialize.Direct.FormKey}\",\"Setter\":\"{toSerialize.Direct.FormKey}\",\"Getter\":\"{toSerialize.Direct.FormKey}\"}}");
@@ -155,9 +155,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var target = new FormLinkClass()
             {
-                Direct = new FormLink<ITestMajorRecordGetter>(Utility.Form2),
-                Setter = new FormLink<ITestMajorRecordGetter>(Utility.Form2),
-                Getter = new FormLink<ITestMajorRecordGetter>(Utility.Form2)
+                Direct = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+                Setter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2),
+                Getter = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
             };
             var toDeserialize = $"{{\"Direct\":\"{target.Direct.FormKey}\",\"Setter\":\"{target.Direct.FormKey}\",\"Getter\":\"{target.Direct.FormKey}\"}}";
             JsonConvert.DeserializeObject<FormLinkClass>(toDeserialize, settings)!
@@ -181,7 +181,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         // Re-enable after FormLink refactor
         // class NullableFormLinkClass
         // {
-        //     public FormLink<ITestMajorRecordGetter>? Member { get; set; } = new FormLink<ITestMajorRecordGetter>(Utility.Form1);
+        //     public FormLink<ITestMajorRecordGetter>? Member { get; set; } = new FormLink<ITestMajorRecordGetter>(TestConstants.Form1);
         // }
         //
         // [Fact]
@@ -191,7 +191,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         //     settings.Converters.Add(new FormKeyJsonConverter());
         //     var toSerialize = new NullableFormLinkClass()
         //     {
-        //         Member = new FormLink<ITestMajorRecordGetter>(Utility.Form2)
+        //         Member = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
         //     };
         //     JsonConvert.SerializeObject(toSerialize, settings)
         //         .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -217,7 +217,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         //     settings.Converters.Add(new FormKeyJsonConverter());
         //     var target = new NullableFormLinkClass()
         //     {
-        //         Member = new FormLink<ITestMajorRecordGetter>(Utility.Form2)
+        //         Member = new FormLink<ITestMajorRecordGetter>(TestConstants.Form2)
         //     };
         //     var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
         //     JsonConvert.DeserializeObject<NullableFormLinkClass>(toDeserialize, settings)!
@@ -252,7 +252,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         #region FormLinkNullable
         class FormLinkNullableClass
         {
-            public FormLinkNullable<ITestMajorRecordGetter> Member { get; set; } = new(Utility.Form1);
+            public FormLinkNullable<ITestMajorRecordGetter> Member { get; set; } = new(TestConstants.Form1);
         }
 
         [Fact]
@@ -262,7 +262,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var toSerialize = new FormLinkNullableClass()
             {
-                Member = new FormLinkNullable<ITestMajorRecordGetter>(Utility.Form2)
+                Member = new FormLinkNullable<ITestMajorRecordGetter>(TestConstants.Form2)
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Member\":\"{toSerialize.Member.FormKey}\"}}");
@@ -275,7 +275,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new FormKeyJsonConverter());
             var target = new FormLinkNullableClass()
             {
-                Member = new FormLinkNullable<ITestMajorRecordGetter>(Utility.Form2)
+                Member = new FormLinkNullable<ITestMajorRecordGetter>(TestConstants.Form2)
             };
             var toDeserialize = $"{{\"Member\":\"{target.Member.FormKey}\"}}";
             JsonConvert.DeserializeObject<FormLinkNullableClass>(toDeserialize, settings)!
@@ -300,7 +300,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         // Re-enable after FormLinkNullable refactor
         //class NullableFormLinkNullableClass
         //{
-        //    public FormLinkNullable<INpcGetter>? Member { get; set; } = new FormLinkNullable<INpcGetter>(Utility.Form1);
+        //    public FormLinkNullable<INpcGetter>? Member { get; set; } = new FormLinkNullable<INpcGetter>(TestConstants.Form1);
         //}
 
         //[Fact]
@@ -310,7 +310,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         //    settings.Converters.Add(new FormKeyJsonConverter());
         //    var toSerialize = new NullableFormLinkNullableClass()
         //    {
-        //        Member = new FormLinkNullable<INpcGetter>(Utility.Form2)
+        //        Member = new FormLinkNullable<INpcGetter>(TestConstants.Form2)
         //    };
         //    JsonConvert.SerializeObject(toSerialize, settings)
         //        .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -336,7 +336,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         //    settings.Converters.Add(new FormKeyJsonConverter());
         //    var target = new NullableFormLinkNullableClass()
         //    {
-        //        Member = new FormLinkNullable<INpcGetter>(Utility.Form2)
+        //        Member = new FormLinkNullable<INpcGetter>(TestConstants.Form2)
         //    };
         //    var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
         //    JsonConvert.DeserializeObject<NullableFormLinkNullableClass>(toDeserialize, settings)!
@@ -371,7 +371,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
         #region ModKey
         class ModKeyClass
         {
-            public ModKey Member { get; set; } = Utility.MasterModKey2;
+            public ModKey Member { get; set; } = TestConstants.MasterModKey2;
         }
 
         [Fact]
@@ -381,7 +381,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new ModKeyJsonConverter());
             var toSerialize = new ModKeyClass()
             {
-                Member = Utility.LightMasterModKey3
+                Member = TestConstants.LightMasterModKey3
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -394,7 +394,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new ModKeyJsonConverter());
             var target = new ModKeyClass()
             {
-                Member = Utility.LightMasterModKey3
+                Member = TestConstants.LightMasterModKey3
             };
             var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
             JsonConvert.DeserializeObject<ModKeyClass>(toDeserialize, settings)!
@@ -416,7 +416,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
 
         class NullableModKeyClass
         {
-            public ModKey? Member { get; set; } = Utility.MasterModKey2;
+            public ModKey? Member { get; set; } = TestConstants.MasterModKey2;
         }
 
         [Fact]
@@ -426,7 +426,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new ModKeyJsonConverter());
             var toSerialize = new NullableModKeyClass()
             {
-                Member = Utility.LightMasterModKey3
+                Member = TestConstants.LightMasterModKey3
             };
             JsonConvert.SerializeObject(toSerialize, settings)
                 .Should().Be($"{{\"Member\":\"{toSerialize.Member}\"}}");
@@ -452,7 +452,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Json
             settings.Converters.Add(new ModKeyJsonConverter());
             var target = new NullableModKeyClass()
             {
-                Member = Utility.LightMasterModKey3
+                Member = TestConstants.LightMasterModKey3
             };
             var toDeserialize = $"{{\"Member\":\"{target.Member}\"}}";
             JsonConvert.DeserializeObject<NullableModKeyClass>(toDeserialize, settings)!

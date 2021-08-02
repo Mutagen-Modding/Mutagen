@@ -18,8 +18,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Archives
                     new ArchiveExtensionProvider(
                         new GameReleaseInjection(release)))
                 .IsApplicable(
-                    Utility.PluginModKey,
-                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}{Archive.GetExtension(release)}")
+                    TestConstants.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)}{Archive.GetExtension(release)}")
                 .Should().BeTrue();
         }
 
@@ -31,8 +31,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Archives
                     new ArchiveExtensionProvider(
                         new GameReleaseInjection(release)))
                 .IsApplicable(
-                    Utility.PluginModKey,
-                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
+                    TestConstants.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)} - Textures{Archive.GetExtension(release)}")
                 .Should().BeTrue();
         }
 
@@ -74,8 +74,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Archives
                     new ArchiveExtensionProvider(
                         new GameReleaseInjection(release)))
                 .IsApplicable(
-                    Utility.PluginModKey,
-                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
+                    TestConstants.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey2.FileName)}{Archive.GetExtension(release)}")
                 .Should().BeFalse();
         }
 
@@ -87,8 +87,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Archives
                     new ArchiveExtensionProvider(
                         new GameReleaseInjection(release)))
                 .IsApplicable(
-                    Utility.PluginModKey,
-                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
+                    TestConstants.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey2.FileName)} - Textures{Archive.GetExtension(release)}")
                 .Should().BeFalse();
         }
 
@@ -99,8 +99,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Archives
                 new ArchiveExtensionProvider(
                     new GameReleaseInjection(GameRelease.Fallout4)))
                 .IsApplicable(
-                    Utility.PluginModKey,
-                    $"{Path.GetFileNameWithoutExtension(Utility.PluginModKey.FileName)}.bad")
+                    TestConstants.PluginModKey,
+                    $"{Path.GetFileNameWithoutExtension(TestConstants.PluginModKey.FileName)}.bad")
                 .Should().BeFalse();
         }
     }

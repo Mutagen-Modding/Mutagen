@@ -63,12 +63,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         public void Import_Null_ID()
         {
             Assert.True(
-                FormKey.TryFactory($"{FormKey.NullStr}:{Utility.Skyrim}", out FormKey id));
+                FormKey.TryFactory($"{FormKey.NullStr}:{TestConstants.Skyrim}", out FormKey id));
             Assert.Equal(
-                Utility.Skyrim.MakeFormKey(0),
+                TestConstants.Skyrim.MakeFormKey(0),
                 id);
             Assert.Equal(
-                Utility.Skyrim,
+                TestConstants.Skyrim,
                 id.ModKey);
             Assert.True(id.IsNull);
         }
@@ -106,7 +106,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
 
         public IMasterReferenceReader TypicalMasters() =>
             new MasterReferenceReader(
-                Utility.PluginModKey,
+                TestConstants.PluginModKey,
                 new List<IMasterReferenceGetter>()
                 {
                     new MasterReference()
@@ -186,7 +186,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         [Fact]
         public void Null_TypicalNotNull()
         {
-            Utility.Skyrim.IsNull.Should().BeFalse();
+            TestConstants.Skyrim.IsNull.Should().BeFalse();
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins
         [Fact]
         public void Null_ExistingModKeyIsNull()
         {
-            new FormKey(Utility.Skyrim, 0).IsNull.Should().BeTrue();
+            new FormKey(TestConstants.Skyrim, 0).IsNull.Should().BeTrue();
         }
 
         [Fact]

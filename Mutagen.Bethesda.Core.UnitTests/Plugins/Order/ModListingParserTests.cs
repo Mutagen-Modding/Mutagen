@@ -62,13 +62,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void EnabledMarkerProcessing(ParseType type)
         {
             var parser = GetParser(true);
-            var item = Get(parser, type, Utility.PluginModKey.FileName);
+            var item = Get(parser, type, TestConstants.PluginModKey.FileName);
             Assert.False(item.Enabled);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = Get(parser, type, $"*{Utility.PluginModKey.FileName}");
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
+            item = Get(parser, type, $"*{TestConstants.PluginModKey.FileName}");
             Assert.True(item.Enabled);
             Assert.False(item.Ghosted);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
         }
 
         [Theory]
@@ -79,13 +79,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void GhostProcessing(ParseType type)
         {
             var parser = GetParser(true);
-            var item = Get(parser, type, Utility.PluginModKey.FileName);
+            var item = Get(parser, type, TestConstants.PluginModKey.FileName);
             Assert.False(item.Enabled);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = Get(parser, type, $"{Utility.PluginModKey.FileName}.ghost");
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
+            item = Get(parser, type, $"{TestConstants.PluginModKey.FileName}.ghost");
             Assert.False(item.Enabled);
             Assert.True(item.Ghosted);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
         }
 
         [Theory]
@@ -96,13 +96,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         public void EnabledGhostProcessing(ParseType type)
         {
             var parser = GetParser(true);
-            var item = Get(parser, type, Utility.PluginModKey.FileName);
+            var item = Get(parser, type, TestConstants.PluginModKey.FileName);
             Assert.False(item.Enabled);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
-            item = Get(parser, type, $"*{Utility.PluginModKey.FileName}.ghost");
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
+            item = Get(parser, type, $"*{TestConstants.PluginModKey.FileName}.ghost");
             Assert.False(item.Enabled);
             Assert.True(item.Ghosted);
-            Assert.Equal(Utility.PluginModKey, item.ModKey);
+            Assert.Equal(TestConstants.PluginModKey, item.ModKey);
         }
 
         #endregion
@@ -111,26 +111,26 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Fact]
         public void LoadOrderListingTests()
         {
-            var listing1 = new ModListing(Utility.PluginModKey, enabled: true);
+            var listing1 = new ModListing(TestConstants.PluginModKey, enabled: true);
             var listing1Eq = new ModListing
             {
-                ModKey = Utility.PluginModKey,
+                ModKey = TestConstants.PluginModKey,
                 Enabled = true,
             };
             var listing1Disabled = new ModListing
             {
-                ModKey = Utility.PluginModKey,
+                ModKey = TestConstants.PluginModKey,
                 Enabled = false,
             };
-            var listing2 = new ModListing(Utility.PluginModKey2, enabled: true);
+            var listing2 = new ModListing(TestConstants.PluginModKey2, enabled: true);
             var listing2Eq = new ModListing()
             {
-                ModKey = Utility.PluginModKey2,
+                ModKey = TestConstants.PluginModKey2,
                 Enabled = true
             };
             var listing2Disabled = new ModListing()
             {
-                ModKey = Utility.PluginModKey2,
+                ModKey = TestConstants.PluginModKey2,
                 Enabled = false
             };
 

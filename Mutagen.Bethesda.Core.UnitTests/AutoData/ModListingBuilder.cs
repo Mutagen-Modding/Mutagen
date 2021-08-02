@@ -31,7 +31,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             {
                 if (t == typeof(ModListing))
                 {
-                    return new ModListing(Utility.PluginModKey, true);
+                    return new ModListing(TestConstants.PluginModKey, true);
                 }
             }
             

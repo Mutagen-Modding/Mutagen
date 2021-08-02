@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
         public SQLiteFormKeyAllocator_Tests()
         {
             tempFolder = new(() => TempFolder.Factory());
-            tempFile = new(() => new TempFile(extraDirectoryPaths: Utility.TempFolderPath));
+            tempFile = new(() => new TempFile(extraDirectoryPaths: TestPathing.TempFolderPath));
         }
         
         protected override string ConstructTypicalPath(IFileSystem fileSystem)

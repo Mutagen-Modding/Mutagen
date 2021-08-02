@@ -45,7 +45,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
 
             var allocator = CreateAllocator(fileSystem, mod);
 
-            var formKey = allocator.GetNextFormKey(Utility.Edid1);
+            var formKey = allocator.GetNextFormKey(TestConstants.Edid1);
 
             Assert.Equal(mod.ModKey, formKey.ModKey);
             Assert.Equal(nextID, formKey.ID);
@@ -75,8 +75,8 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
 
             var allocator = CreateAllocator(fileSystem, mod);
 
-            var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
-            var formKey2 = allocator.GetNextFormKey(Utility.Edid2);
+            var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
+            var formKey2 = allocator.GetNextFormKey(TestConstants.Edid2);
 
             Assert.NotEqual(formKey1, formKey2);
 
@@ -90,9 +90,9 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             var fileSystem = GetFileSystem();
             var allocator = CreateAllocator(fileSystem, mod);
 
-            var formKey1 = allocator.GetNextFormKey(Utility.Edid1);
+            var formKey1 = allocator.GetNextFormKey(TestConstants.Edid1);
 
-            var e = Assert.Throws<ConstraintException>(() => allocator.GetNextFormKey(Utility.Edid1));
+            var e = Assert.Throws<ConstraintException>(() => allocator.GetNextFormKey(TestConstants.Edid1));
 
             DisposeFormKeyAllocator(allocator);
         }

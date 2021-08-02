@@ -13,7 +13,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void NewSkyrimSEForm44Header()
         {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimSE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimSE);
             var ammo = mod.Ammunitions.AddNew();
             ammo.FormVersion.Should().Be(44);
         }
@@ -21,7 +21,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void NewSkyrimSEForm43Header()
         {
-            var mod = new SkyrimMod(Utility.PluginModKey, SkyrimRelease.SkyrimLE);
+            var mod = new SkyrimMod(TestConstants.PluginModKey, SkyrimRelease.SkyrimLE);
             var ammo = mod.Ammunitions.AddNew();
             ammo.FormVersion.Should().Be(43);
         }

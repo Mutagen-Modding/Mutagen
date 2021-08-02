@@ -69,7 +69,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 ret.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
                 ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
-                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", Utility.PluginModKey.FileName));
+                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", TestConstants.PluginModKey.FileName));
                 return ret;
             }
             else if (t == typeof(ISchedulerProvider))

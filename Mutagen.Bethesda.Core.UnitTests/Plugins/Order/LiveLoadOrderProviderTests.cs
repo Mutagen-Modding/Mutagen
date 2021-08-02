@@ -37,8 +37,8 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         {
             var listings = new ModListing[]
             {
-                new ModListing(Utility.MasterModKey, true),
-                new ModListing(Utility.MasterModKey2, false),
+                new ModListing(TestConstants.MasterModKey, true),
+                new ModListing(TestConstants.MasterModKey2, false),
             };
             sut.ListingsProvider.Get().Returns(listings);
             sut.PluginLive.Changed.Returns(Observable.Empty<Unit>());

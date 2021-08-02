@@ -36,13 +36,13 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     path,
                     new ModListing[]
                     {
-                        new ModListing(Utility.PluginModKey, false),
-                        new ModListing(Utility.PluginModKey2, true),
-                        new ModListing(Utility.PluginModKey3, false),
+                        new ModListing(TestConstants.PluginModKey, false),
+                        new ModListing(TestConstants.PluginModKey2, true),
+                        new ModListing(TestConstants.PluginModKey3, false),
                     });
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Single(lines);
-            Assert.Equal(Utility.PluginModKey2.FileName, lines[0]);
+            Assert.Equal(TestConstants.PluginModKey2.FileName, lines[0]);
         }
 
         [Fact]
@@ -63,15 +63,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     path,
                     new ModListing[]
                     {
-                        new ModListing(Utility.PluginModKey, false),
-                        new ModListing(Utility.PluginModKey2, true),
-                        new ModListing(Utility.PluginModKey3, false),
+                        new ModListing(TestConstants.PluginModKey, false),
+                        new ModListing(TestConstants.PluginModKey2, true),
+                        new ModListing(TestConstants.PluginModKey3, false),
                     });
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
-            Assert.Equal($"{Utility.PluginModKey.FileName}", lines[0]);
-            Assert.Equal($"*{Utility.PluginModKey2.FileName}", lines[1]);
-            Assert.Equal($"{Utility.PluginModKey3.FileName}", lines[2]);
+            Assert.Equal($"{TestConstants.PluginModKey.FileName}", lines[0]);
+            Assert.Equal($"*{TestConstants.PluginModKey2.FileName}", lines[1]);
+            Assert.Equal($"{TestConstants.PluginModKey3.FileName}", lines[2]);
         }
 
         [Fact]
@@ -83,7 +83,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var markers = Substitute.For<IHasEnabledMarkersProvider>();
             markers.HasEnabledMarkers.Returns(true);
             var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
-            implicitMods.Listings.Returns(Utility.Skyrim.AsEnumerable().ToList());
+            implicitMods.Listings.Returns(TestConstants.Skyrim.AsEnumerable().ToList());
             new LoadOrderWriter(
                     fs,
                     markers,
@@ -92,15 +92,15 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     path,
                     new ModListing[]
                     {
-                        new ModListing(Utility.Skyrim, true),
-                        new ModListing(Utility.PluginModKey, true),
-                        new ModListing(Utility.PluginModKey2, false),
+                        new ModListing(TestConstants.Skyrim, true),
+                        new ModListing(TestConstants.PluginModKey, true),
+                        new ModListing(TestConstants.PluginModKey2, false),
                     },
                     removeImplicitMods: true);
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(2, lines.Count);
-            Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[0]);
-            Assert.Equal($"{Utility.PluginModKey2.FileName}", lines[1]);
+            Assert.Equal($"*{TestConstants.PluginModKey.FileName}", lines[0]);
+            Assert.Equal($"{TestConstants.PluginModKey2.FileName}", lines[1]);
         }
 
         [Fact]
@@ -112,7 +112,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
             var markers = Substitute.For<IHasEnabledMarkersProvider>();
             markers.HasEnabledMarkers.Returns(true);
             var implicitMods = Substitute.For<IImplicitListingModKeyProvider>();
-            implicitMods.Listings.Returns(Utility.Skyrim.AsEnumerable().ToList());
+            implicitMods.Listings.Returns(TestConstants.Skyrim.AsEnumerable().ToList());
             new LoadOrderWriter(
                     fs,
                     markers,
@@ -121,16 +121,16 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                     path,
                     new ModListing[]
                     {
-                        new ModListing(Utility.Skyrim, true),
-                        new ModListing(Utility.PluginModKey, true),
-                        new ModListing(Utility.PluginModKey2, false),
+                        new ModListing(TestConstants.Skyrim, true),
+                        new ModListing(TestConstants.PluginModKey, true),
+                        new ModListing(TestConstants.PluginModKey2, false),
                     },
                     removeImplicitMods: false);
             var lines = fs.File.ReadAllLines(path).ToList();
             Assert.Equal(3, lines.Count);
-            Assert.Equal($"*{Utility.Skyrim.FileName}", lines[0]);
-            Assert.Equal($"*{Utility.PluginModKey.FileName}", lines[1]);
-            Assert.Equal($"{Utility.PluginModKey2.FileName}", lines[2]);
+            Assert.Equal($"*{TestConstants.Skyrim.FileName}", lines[0]);
+            Assert.Equal($"*{TestConstants.PluginModKey.FileName}", lines[1]);
+            Assert.Equal($"{TestConstants.PluginModKey2.FileName}", lines[2]);
         }
     }
 }

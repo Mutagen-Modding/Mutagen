@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
 
         public static TempFile GetFile()
         {
-            return new TempFile(extraDirectoryPaths: Utility.TempFolderPath, suffix: ".esp");
+            return new TempFile(extraDirectoryPaths: TestPathing.TempFolderPath, suffix: ".esp");
         }
 
         [Fact]

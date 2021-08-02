@@ -10,7 +10,7 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Records
         [Fact]
         public void EqualityToActualRecord()
         {
-            var npc = new Npc(Utility.Form1, SkyrimRelease.SkyrimSE);
+            var npc = new Npc(TestConstants.Form1, SkyrimRelease.SkyrimSE);
             var link = npc.AsLink();
             npc.Should().Be(link);
             link.Should().Be(npc);
