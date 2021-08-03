@@ -22,10 +22,9 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Theory, MutagenAutoData]
         public void FolderDoesNotExist(
             [Frozen]TestScheduler scheduler,
-            [Frozen]IDataDirectoryProvider dataDirectoryProvider,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
-            dataDirectoryProvider.Path.Returns(new DirectoryPath("C:/DoesNotExist"));
+            sut.DataDirectory.Path.Returns(new DirectoryPath("C:/DoesNotExist"));
             var obs = scheduler.Start(() =>
             {
                 return sut.Get();
@@ -37,12 +36,11 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Theory, MutagenAutoData]
         public void Empty(
             [Frozen]TestScheduler scheduler,
-            [Frozen]MockFileSystem fs,
-            [Frozen]IDataDirectoryProvider dataDir,
+            MockFileSystem fs,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
             fs.Directory.CreateDirectory("C:/Missing");
-            dataDir.Path.Returns(new DirectoryPath("C:/Missing"));
+            sut.DataDirectory.Path.Returns(new DirectoryPath("C:/Missing"));
             var obs = scheduler.Start(() =>
             {
                 return sut.Get();
@@ -52,44 +50,46 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
 
         [Theory, MutagenAutoData]
         public void HasMod(
-            [Frozen]ModKey modKey,
+            ModKey existingModKey,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
             var list = sut
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(1);
-            list.Items.First().Should().Be(modKey);
+            list.Items.First().Should().Be(existingModKey);
         }
 
         [Theory, MutagenAutoData]
         public void ModAdded(
-            [Frozen]ModKey modKey,
-            [Frozen]IDataDirectoryProvider dataDir,
-            [Frozen]MockFileSystemWatcher mockChange,
-            [Frozen]MockFileSystem fs,
+            ModKey existingModKey,
+            IDataDirectoryProvider dataDir,
+            MockFileSystemWatcher mockChange,
+            MockFileSystem fs,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
-            var modKeyB = ModKey.FromNameAndExtension("NewMod.esm");
-            var modKeyBPath = Path.Combine(dataDir.Path, modKeyB.FileName);
+            fs.File.WriteAllText(Path.Combine(dataDir.Path, existingModKey.FileName), string.Empty);
             var list = sut
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(1);
-            list.Items.First().Should().Be(modKey);
+            list.Items.First().Should().Be(existingModKey);
+            
+            var modKeyB = ModKey.FromNameAndExtension("NewMod.esm");
+            var modKeyBPath = Path.Combine(dataDir.Path, modKeyB.FileName);
             fs.File.WriteAllText(modKeyBPath, string.Empty);
             mockChange.MarkCreated(modKeyBPath);
             list.Count.Should().Be(2);
-            list.Items.First().Should().Be(modKey);
+            list.Items.First().Should().Be(existingModKey);
             list.Items.Last().Should().Be(modKeyB);
         }
 
         [Theory, MutagenAutoData]
         public void ModRemoved(
-            [Frozen]MockFileSystemWatcher mockChange,
-            [Frozen]MockFileSystem fs,
-            [Frozen]ModKey modKey,
-            [Frozen]IDataDirectoryProvider dataDir,
+            ModKey existingModKey,
+            MockFileSystemWatcher mockChange,
+            MockFileSystem fs,
+            IDataDirectoryProvider dataDir,
             CreationClubLiveLoadOrderFolderWatcher sut)
         {
             var modKeyB = ModKey.FromNameAndExtension("ModB.esm");
@@ -99,12 +99,12 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
                 .Get()
                 .AsObservableCache();
             list.Count.Should().Be(2);
-            list.Items.First().Should().Be(modKey);
+            list.Items.First().Should().Be(existingModKey);
             list.Items.Last().Should().Be(modKeyB);
             fs.File.Delete(modKeyBPath);
             mockChange.MarkDeleted(modKeyBPath);
             list.Count.Should().Be(1);
-            list.Items.First().Should().Be(modKey);
+            list.Items.First().Should().Be(existingModKey);
         }
     }
 }

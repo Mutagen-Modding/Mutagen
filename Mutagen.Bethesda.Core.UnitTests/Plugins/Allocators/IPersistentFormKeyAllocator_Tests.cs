@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.IO.Abstractions;
 using System.Linq;
+using AutoFixture.Xunit2;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
@@ -146,6 +147,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
 
         [Theory, MutagenAutoData]
         public void AllocatesSameFormKeyForEditorIdAfterLoad(
+            [Frozen]ModKey modKey,
             IMod modA,
             IMod modB)
         {

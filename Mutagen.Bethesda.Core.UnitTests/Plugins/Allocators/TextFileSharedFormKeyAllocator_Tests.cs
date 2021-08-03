@@ -76,10 +76,11 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             fileSystem.File.WriteAllText(Path.Combine(SomeFolder, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             var allocator = new TextFileSharedFormKeyAllocator(mod, SomeFolder, Patcher1, preload: true, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey(TestConstants.Edid1);
-            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
-            Assert.Equal(TestConstants.Form1, formID);
+            Assert.Equal(TestConstants.Form1.ID, formID.ID);
+            Assert.Equal(mod.ModKey, formID.ModKey);
             formID = allocator.GetNextFormKey(TestConstants.Edid2);
-            Assert.Equal(TestConstants.Form2, formID);
+            Assert.Equal(TestConstants.Form2.ID, formID.ID);
+            Assert.Equal(mod.ModKey, formID.ModKey);
         }
 
         [Theory, MutagenAutoData(Release: GameRelease.Oblivion)]
@@ -147,11 +148,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
             fileSystem.File.WriteAllText(Path.Combine(SomeFolder, TextFileSharedFormKeyAllocator.MarkerFileName), null);
             using var allocator = new TextFileSharedFormKeyAllocator(mod, SomeFolder, Patcher1, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey();
-            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
             formID = allocator.GetNextFormKey(TestConstants.Edid1);
-            Assert.Equal(formID, TestConstants.Form1);
+            Assert.Equal(formID.ID, TestConstants.Form1.ID);
+            Assert.Equal(formID.ModKey, mod.ModKey);
             formID = allocator.GetNextFormKey(TestConstants.Edid2);
-            Assert.Equal(formID, TestConstants.Form2);
+            Assert.Equal(formID.ID, TestConstants.Form2.ID);
+            Assert.Equal(formID.ModKey, mod.ModKey);
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Mutagen.Bethesda.Testing.AutoData
     public class BaseEnvironmentBuilder : ISpecimenBuilder
     {
         private readonly GameRelease _release;
+        private MockFileSystem? _mockFileSystem;
 
         public BaseEnvironmentBuilder(GameRelease release)
         {
@@ -57,17 +58,19 @@ namespace Mutagen.Bethesda.Testing.AutoData
             }
             else if (t == typeof(MockFileSystem))
             {
-                var ret = new MockFileSystem(new Dictionary<string, MockFileData>())
+                if (_mockFileSystem == null)
                 {
-                    FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
-                };
-                ret.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
-                ret.File.Create(PathBuilder.ExistingFile);
-                ret.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
-                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
-                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
-                ret.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory", TestConstants.PluginModKey.FileName));
-                return ret;
+                    _mockFileSystem = new MockFileSystem(new Dictionary<string, MockFileData>())
+                    {
+                        FileSystemWatcher = context.Create<IFileSystemWatcherFactory>()
+                    };
+                    _mockFileSystem.Directory.CreateDirectory(PathBuilder.ExistingDirectory);
+                    _mockFileSystem.File.Create(PathBuilder.ExistingFile);
+                    _mockFileSystem.Directory.CreateDirectory(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", "DataDirectory"));
+                    _mockFileSystem.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "Plugins.txt"));
+                    _mockFileSystem.File.Create(Path.Combine(PathBuilder.ExistingDirectory, "GameDirectory", $"{_release.ToCategory()}.ccc"));
+                }
+                return _mockFileSystem;
             }
 
             return new NoSpecimen();

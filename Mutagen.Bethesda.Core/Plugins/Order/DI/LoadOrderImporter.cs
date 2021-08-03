@@ -25,7 +25,7 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
     {
         private readonly IFileSystem _fileSystem;
         private readonly IDataDirectoryProvider _dataDirectoryProvider;
-        private readonly ILoadOrderListingsProvider _loadOrderListingsProvider;
+        public ILoadOrderListingsProvider LoadOrderListingsProvider { get; }
         public IModImporter<TMod> Importer { get; }
 
         public LoadOrderImporter(
@@ -36,13 +36,13 @@ namespace Mutagen.Bethesda.Plugins.Order.DI
         {
             _fileSystem = fileSystem;
             _dataDirectoryProvider = dataDirectoryProvider;
-            _loadOrderListingsProvider = loadOrderListingsProvider;
+            LoadOrderListingsProvider = loadOrderListingsProvider;
             Importer = importer;
         }
         
         public ILoadOrder<IModListing<TMod>> Import()
         {
-            var loList = _loadOrderListingsProvider.Get().ToList();
+            var loList = LoadOrderListingsProvider.Get().ToList();
             var results = new (ModKey ModKey, int ModIndex, TryGet<TMod> Mod, bool Enabled)[loList.Count];
             try
             {

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using AutoFixture.Kernel;
 using Mutagen.Bethesda.Plugins;
+using Noggog;
 
 namespace Mutagen.Bethesda.Testing.AutoData
 {
@@ -30,14 +32,19 @@ namespace Mutagen.Bethesda.Testing.AutoData
             }
             else if (request is Type t)
             {
-                var modKey = TestConstants.PluginModKey;
                 if (t == typeof(ModKey))
                 {
-                    return modKey;
+                    return GetRandomModKey(ModType.Plugin);
                 }
             }
 
             return new NoSpecimen();
+        }
+
+        public static ModKey GetRandomModKey(ModType type)
+        {
+            var fileName = new FileName(Path.GetRandomFileName());
+            return new ModKey(fileName.NameWithoutExtension, ModType.Plugin);
         }
     }
 }

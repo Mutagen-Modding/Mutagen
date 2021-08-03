@@ -38,14 +38,14 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
         [Theory, MutagenAutoData]
         public void FromCreationClubPath(
             [Frozen]MockFileSystem fs,
-            [Frozen]ModPath modPath,
+            [Frozen]ModPath existingModPath,
             [Frozen]IDataDirectoryProvider dataDir,
             [Frozen]ICreationClubListingsPathProvider cccPath)
         {
             fs.File.WriteAllLines(cccPath.Path,
                 new string[]
                 {
-                    modPath.ModKey.FileName,
+                    existingModPath.ModKey.FileName,
                     TestConstants.LightMasterModKey2.FileName,
                 });
             var results = CreationClubListings.ListingsFromPath(
@@ -54,7 +54,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Order
                     fileSystem: fs)
                 .ToList();
             results.Should().HaveCount(1);
-            results[0].Should().Be(new ModListing(modPath.ModKey, enabled: true));
+            results[0].Should().Be(new ModListing(existingModPath.ModKey, enabled: true));
         }
 
         [Theory, MutagenAutoData]

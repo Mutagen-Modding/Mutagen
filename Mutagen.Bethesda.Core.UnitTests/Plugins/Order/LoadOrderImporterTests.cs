@@ -13,6 +13,7 @@ using Mutagen.Bethesda.Plugins.Order.DI;
 using Mutagen.Bethesda.Plugins.Records.DI;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Core.UnitTests.Placeholders;
+using Mutagen.Bethesda.Plugins.Order;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Testing;
 using NSubstitute;
@@ -26,25 +27,32 @@ namespace Mutagen.Bethesda.UnitTests.Plugins.Order
         [Theory, MutagenAutoData]
         public void Typical(
             [Frozen]MockFileSystem fs,
-            [Frozen]IEnumerable<ModPath> modPaths,
-            [Frozen]IModImporter<TestMod> importer,
+            IEnumerable<ModPath> modPaths,
+            [Frozen] IModImporter<TestMod> importer,
             LoadOrderImporter<TestMod> sut)
         {
             foreach (var mp in modPaths)
             {
                 fs.File.WriteAllText(mp.Path, string.Empty);
             }
+
             foreach (var modPath in modPaths)
             {
                 importer.Import(modPath)
                     .Returns(new TestMod(modPath.ModKey));
             }
+
+            sut.LoadOrderListingsProvider.Get()
+                .Returns(modPaths.Select(x => new ModListing(x.ModKey, true)));
             
             var lo = sut.Import();
-                lo.Count.Should().Be(3);
-                lo.Select(x => x.Value.Mod)
-                    .Should().Equal(
-                        modPaths.Select(x => importer.Import(x)));
+            
+            var expected = modPaths
+                .Select(x => importer.Import(x))
+                .ToArray();
+            lo.Count.Should().Be(modPaths.Count());
+            lo.Select(x => x.Value.Mod)
+                .Should().Equal(expected);
         }
 
         [Fact]

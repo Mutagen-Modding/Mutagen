@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using FluentAssertions;
 using Mutagen.Bethesda.Core.UnitTests.AutoData;
 using Mutagen.Bethesda.Plugins;
 using Mutagen.Bethesda.Plugins.Allocators;
@@ -65,10 +66,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 });
             using var allocator = new TextFileFormKeyAllocator(mod, someFile, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey(TestConstants.Edid1);
-            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
-            Assert.Equal(formID, TestConstants.Form1);
+            Assert.Equal(mod.ModKey, formID.ModKey);
+            Assert.Equal(formID.ID, TestConstants.Form1.ID);
+            formID.ModKey.Should().Be(mod.ModKey);
             formID = allocator.GetNextFormKey(TestConstants.Edid2);
-            Assert.Equal(formID, TestConstants.Form2);
+            Assert.Equal(formID.ID, TestConstants.Form2.ID);
+            formID.ModKey.Should().Be(mod.ModKey);
         }
 
         [Theory, MutagenAutoData]
@@ -139,10 +142,12 @@ namespace Mutagen.Bethesda.Core.UnitTests.Plugins.Allocators
                 fileSystem);
             using var allocator = new TextFileFormKeyAllocator(mod, someFile, preload: true, fileSystem: fileSystem);
             var formID = allocator.GetNextFormKey(TestConstants.Edid1);
-            Assert.Equal(TestConstants.PluginModKey, formID.ModKey);
-            Assert.Equal(formID, TestConstants.Form1);
+            Assert.Equal(mod.ModKey, formID.ModKey);
+            Assert.Equal(formID.ID, TestConstants.Form1.ID);
+            Assert.Equal(formID.ModKey, mod.ModKey);
             formID = allocator.GetNextFormKey(TestConstants.Edid2);
-            Assert.Equal(formID, TestConstants.Form2);
+            Assert.Equal(formID.ID, TestConstants.Form2.ID);
+            Assert.Equal(formID.ModKey, mod.ModKey);
         }
     }
 }
