@@ -266,6 +266,7 @@
       <DefaultPackFolder>content</DefaultPackFolder>
       <BuildAction>Compile</BuildAction>
     </Compile>
+    <Compile Include="Plugins\Order\DI\ModListingToStringConverter.cs" />
     <Compile Include="Plugins\Order\DI\OrderListings.cs">
       <CodeLanguage>cs</CodeLanguage>
       <DefaultPackFolder>content</DefaultPackFolder>

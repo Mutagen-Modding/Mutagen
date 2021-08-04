@@ -53,7 +53,7 @@ namespace Mutagen.Bethesda.Plugins.Order
 
         public override string ToString()
         {
-            return $"[{(Enabled ? "X" : "_")}] {ModKey}{(Ghosted ? " (ghosted)" : null)}";
+            return IModListingGetter.ToString(this);
         }
 
         public static implicit operator ModListing(ModKey modKey)
@@ -184,7 +184,7 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// <inheritdoc/>
         public override string ToString()
         {
-            return IModListingExt.ToString(this);
+            return IModListingGetter<TMod>.ToString(this);
         }
 
         public void Dispose()
@@ -209,6 +209,11 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// Mod object
         /// </summary>
         TMod? Mod { get; }
+        
+        public static string ToString(IModListingGetter<TMod> getter)
+        {
+            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
+        }
     }
 
     /// <inheritdoc />
@@ -245,6 +250,11 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// the mods differently depending on the context
         /// </summary>
         string GhostSuffix { get; }
+        
+        public static string ToString(IModListingGetter getter)
+        {
+            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
+        }
     }
 
     /// <inheritdoc cref="IModListingGetter" />
@@ -261,19 +271,5 @@ namespace Mutagen.Bethesda.Plugins.Order
         /// the mods differently depending on the context
         /// </summary>
         new string GhostSuffix { get; set; }
-    }
-
-    public static class IModListingExt
-    {
-        public static string ToString(IModListingGetter getter)
-        {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Ghosted ? " (ghosted)" : null)}";
-        }
-        
-        public static string ToString<TMod>(IModListing<TMod> getter)
-            where TMod : class, IModGetter
-        {
-            return $"[{(getter.Enabled ? "X" : "_")}] {getter.ModKey}{(getter.Mod == null ? " (missing)" : null)}{(getter.Ghosted ? " (ghosted)" : null)}";
-        }
     }
 }

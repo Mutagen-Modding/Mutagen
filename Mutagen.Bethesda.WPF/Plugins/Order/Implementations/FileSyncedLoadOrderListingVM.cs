@@ -51,7 +51,7 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order.Implementations
 
         public override string ToString()
         {
-            return IModListingExt.ToString(this);
+            return IModListingGetter.ToString(this);
         }
     }
 }
