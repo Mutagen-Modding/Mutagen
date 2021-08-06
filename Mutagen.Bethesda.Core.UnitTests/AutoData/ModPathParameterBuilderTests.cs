@@ -58,7 +58,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
                 var param = method.GetParameters().First();
                 context.ClearReceivedCalls();
                 sut.Create(param, context);
-                context.AssertWasCreated<ModPath>();
+                context.ShouldHaveCreated<ModPath>();
             }
         }
         

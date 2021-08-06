@@ -66,7 +66,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
                     })
                     .AutoRefresh(x => x.DisplayName)
                     .Transform(n => n.DisplayName, transformOnRefresh: true)
-                    .ToObservableCollection(this.CompositeDisposable);
+                    .ToObservableCollection(this);
             });
         }
 

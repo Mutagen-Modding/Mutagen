@@ -20,7 +20,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
         {
             context.MockToReturn<IDataDirectoryProvider>();
             sut.MakeExist(modKey, context);
-            context.AssertWasCreated<IDataDirectoryProvider>();
+            context.ShouldHaveCreated<IDataDirectoryProvider>();
         }
         
         [Theory, BasicAutoData]

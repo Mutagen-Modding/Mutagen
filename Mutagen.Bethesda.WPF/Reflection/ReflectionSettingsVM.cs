@@ -26,7 +26,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
                     DisplayName = "Top Level",
                     MainVM = this
                 });
-            CompositeDisposable.Add(ObjVM);
+            Add(ObjVM);
             SelectedSettings = ObjVM;
         }
     }

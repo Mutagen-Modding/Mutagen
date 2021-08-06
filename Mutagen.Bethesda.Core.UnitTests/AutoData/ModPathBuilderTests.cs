@@ -23,7 +23,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             
             sut.Create(typeof(ModPath), context);
             
-            context.AssertWasCreated<ModKey>();
+            context.ShouldHaveCreated<ModKey>();
         }
         
         [Theory, BasicAutoData]
@@ -37,7 +37,7 @@ namespace Mutagen.Bethesda.Core.UnitTests.AutoData
             
             sut.Create(typeof(ModPath), context);
             
-            context.AssertWasCreated<IDataDirectoryProvider>();
+            context.ShouldHaveCreated<IDataDirectoryProvider>();
         }
         
         [Theory, BasicAutoData]
