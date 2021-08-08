@@ -25,14 +25,14 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyFallback(x => x.ViewModel!.Path)
-                    .BindToStrict(this, x => x.PathPicker.PickerVM)
+                    .BindTo(this, x => x.PathPicker.PickerVM)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, vm => vm.Do, v => v.DoCheckbox.IsChecked)
+                this.Bind(this.ViewModel, vm => vm.Do, v => v.DoCheckbox.IsChecked)
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
                 this.WhenAnyFallback(x => x.ViewModel!.DeleteCommand)
-                    .BindToStrict(this, v => v.DeleteButton.Command)
+                    .BindTo(this, v => v.DeleteButton.Command)
                     .DisposeWith(disposable);
             });
         }

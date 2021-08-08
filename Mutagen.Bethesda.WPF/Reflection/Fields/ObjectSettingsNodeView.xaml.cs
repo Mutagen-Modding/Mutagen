@@ -21,17 +21,17 @@ namespace  Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingNameBlock.Text)
+                    .BindTo(this, x => x.SettingNameBlock.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
                     .Select(x => x.IsNullOrWhitespace() ? Visibility.Collapsed : Visibility.Visible)
-                    .BindToStrict(this, x => x.SettingNameBlock.Visibility)
+                    .BindTo(this, x => x.SettingNameBlock.Visibility)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Nodes)
-                    .BindToStrict(this, x => x.Nodes.ItemsSource)
+                    .BindTo(this, x => x.Nodes.ItemsSource)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.FocusSettingCommand)
-                    .BindToStrict(this, x => x.SettingNameButton.Command)
+                    .BindTo(this, x => x.SettingNameButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.ScrolledToSettings)
                     .WithLatestFrom(this.WhenAnyValue(x => x.ViewModel!.Meta.MainVM.SelectedSettings),

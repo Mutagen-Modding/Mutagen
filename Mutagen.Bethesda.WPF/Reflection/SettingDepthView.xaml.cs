@@ -18,7 +18,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
             this.WhenActivated((disposable) =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Parents.Value)
-                    .BindToStrict(this, x => x.ParentSettingList.ItemsSource)
+                    .BindTo(this, x => x.ParentSettingList.ItemsSource)
                     .DisposeWith(disposable);
             });
         }

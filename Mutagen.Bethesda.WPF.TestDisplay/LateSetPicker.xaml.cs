@@ -16,19 +16,19 @@ namespace Mutagen.Bethesda.WPF.TestDisplay
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.BindStrict(this.ViewModel, vm => vm.FormKey, view => view.FormKeyPicker.FormKey)
+                this.Bind(this.ViewModel, vm => vm.FormKey, view => view.FormKeyPicker.FormKey)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.LinkCache)
-                    .BindToStrict(this, x => x.FormKeyPicker.LinkCache)
+                    .BindTo(this, x => x.FormKeyPicker.LinkCache)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.ScopedTypes)
-                    .BindToStrict(this, x => x.FormKeyPicker.ScopedTypes)
+                    .BindTo(this, x => x.FormKeyPicker.ScopedTypes)
                     .DisposeWith(disposable);
 
                 this.WhenAnyValue(x => x.ViewModel!.SetCommand)
-                    .BindToStrict(this, x => x.SetButton.Command)
+                    .BindTo(this, x => x.SetButton.Command)
                     .DisposeWith(disposable);
             });
         }

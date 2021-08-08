@@ -19,19 +19,19 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingsNameBox.Text)
+                    .BindTo(this, x => x.SettingsNameBox.Text)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, x => x.Value, x => x.FormPicker.FormKey)
+                this.Bind(this.ViewModel, x => x.Value, x => x.FormPicker.FormKey)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.LinkCache)
-                    .BindToStrict(this, x => x.FormPicker.LinkCache)
+                    .BindTo(this, x => x.FormPicker.LinkCache)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.ScopedTypes)
-                    .BindToStrict(this, x => x.FormPicker.ScopedTypes)
+                    .BindTo(this, x => x.FormPicker.ScopedTypes)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.ViewModel!.IsFocused)
                     .Select((focused) => focused ? double.NaN : 200d)
-                    .BindToStrict(this, x => x.FormPicker.SearchBoxHeight)
+                    .BindTo(this, x => x.FormPicker.SearchBoxHeight)
                     .DisposeWith(disposable);
             });
         }

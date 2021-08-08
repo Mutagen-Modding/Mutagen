@@ -19,29 +19,29 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             InitializeComponent();
             this.WhenActivated(disposable =>
             {
-                this.BindStrict(this.ViewModel, vm => vm.NicknameSuffix, view => view.NicknameSuffix.Text)
+                this.Bind(this.ViewModel, vm => vm.NicknameSuffix, view => view.NicknameSuffix.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyFallback(x => x.ViewModel!.AddPassthroughCommand)
-                    .BindToStrict(this, x => x.AddButton.Command)
+                    .BindTo(this, x => x.AddButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyFallback(x => x.ViewModel!.Passthroughs)
-                    .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
+                    .BindTo(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, vm => vm.Do, view => view.DoCheckbox.IsChecked)
+                this.Bind(this.ViewModel, vm => vm.Do, view => view.DoCheckbox.IsChecked)
                     .DisposeWith(disposable);
 
                 // Set up combobox
                 this.GameReleasesCombobox.ItemsSource = PassthroughGroupVM.GameReleases;
-                this.BindStrict(this.ViewModel, vm => vm.GameRelease, v => v.GameReleasesCombobox.SelectedItem)
+                this.Bind(this.ViewModel, vm => vm.GameRelease, v => v.GameReleasesCombobox.SelectedItem)
                     .DisposeWith(disposable);
 
                 // Wire Delete Button
                 this.WhenAnyFallback(x => x.ViewModel!.DeleteCommand)
-                    .BindToStrict(this, v => v.DeleteGroupButton.Command)
+                    .BindTo(this, v => v.DeleteGroupButton.Command)
                     .DisposeWith(disposable);
                 this.WhenAnyValue(x => x.TopGrid.IsMouseOver)
                     .Select(b => b ? Visibility.Visible : Visibility.Hidden)
-                    .BindToStrict(this, v => v.DeleteGroupButton.Visibility)
+                    .BindTo(this, v => v.DeleteGroupButton.Visibility)
                     .DisposeWith(disposable);
             });
         }

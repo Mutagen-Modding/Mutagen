@@ -31,9 +31,9 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             {
                 this.WhenAnyFallback(x => x.ViewModel!.GameRelease)
                     .Select(x => x.ToString())
-                    .BindToStrict(this, x => x.Name.Text)
+                    .BindTo(this, x => x.Name.Text)
                     .DisposeWith(disposable);
-                this.BindStrict(this.ViewModel, vm => vm.DataFolder, v => v.DataFolderPicker.PickerVM)
+                this.Bind(this.ViewModel, vm => vm.DataFolder, v => v.DataFolderPicker.PickerVM)
                     .DisposeWith(disposable);
             });
         }

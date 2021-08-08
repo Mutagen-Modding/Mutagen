@@ -29,10 +29,10 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyFallback(x => x.ViewModel!.Name)
-                    .BindToStrict(this, x => x.Name.Text)
+                    .BindTo(this, x => x.Name.Text)
                     .DisposeWith(disposable);
                 this.WhenAnyFallback(x => x.ViewModel!.PassthroughDisplay)
-                    .BindToStrict(this, x => x.PassthroughsControl.ItemsSource)
+                    .BindTo(this, x => x.PassthroughsControl.ItemsSource)
                     .DisposeWith(disposable);
             });
         }

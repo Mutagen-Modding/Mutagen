@@ -25,20 +25,20 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                 this.SettingsView.ViewModel = this.ViewModel;
 
                 this.WhenAnyFallback(x => x.ViewModel!.SelectedConfigPath)
-                    .BindToStrict(this, x => x.SettingsPicker.PickerVM)
+                    .BindTo(this, x => x.SettingsPicker.PickerVM)
                     .DisposeWith(disposable);
 
                 // Set up passthrough group pane
                 this.WhenAnyFallback(x => x.ViewModel!.Groups)
-                    .BindToStrict(this, x => x.PassthroughGroupsList.ItemsSource)
+                    .BindTo(this, x => x.PassthroughGroupsList.ItemsSource)
                     .DisposeWith(disposable);
                 this.WhenAnyFallback(x => x.ViewModel!.AddPassthroughGroupCommand)
-                    .BindToStrict(this, x => x.AddPassthroughButton.Command)
+                    .BindTo(this, x => x.AddPassthroughButton.Command)
                     .DisposeWith(disposable);
 
                 // Setup run button
                 this.WhenAnyFallback(x => x.ViewModel!.RunAllCommand)
-                    .BindToStrict(this, x => x.RunButton.Command)
+                    .BindTo(this, x => x.RunButton.Command)
                     .DisposeWith(disposable);
 
                 // Set up valid enabled states
@@ -47,13 +47,13 @@ namespace Mutagen.Bethesda.Tests.GUI.Views
                     .Replay(1)
                     .RefCount();
                 enabledObs
-                    .BindToStrict(this, x => x.RunButton.IsEnabled)
+                    .BindTo(this, x => x.RunButton.IsEnabled)
                     .DisposeWith(disposable);
                 enabledObs
-                    .BindToStrict(this, x => x.SettingsView.IsEnabled)
+                    .BindTo(this, x => x.SettingsView.IsEnabled)
                     .DisposeWith(disposable);
                 enabledObs
-                    .BindToStrict(this, x => x.AddPassthroughButton.IsEnabled)
+                    .BindTo(this, x => x.AddPassthroughButton.IsEnabled)
                     .DisposeWith(disposable);
             });
         }

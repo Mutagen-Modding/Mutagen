@@ -18,12 +18,12 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Noggog.CSharpExt" Version="2.26.0.1-dev" />
     <PackageReference Include="Noggog.WPF" Version="2.26.0.1-dev" />
-    <PackageReference Include="NuGetizer" Version="0.7.0">
+    <PackageReference Include="NuGetizer" Version="0.7.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="ReactiveUI" Version="13.3.2" />
-    <PackageReference Include="ReactiveUI.Fody" Version="13.3.2" />
+    <PackageReference Include="ReactiveUI" Version="14.2.1" />
+    <PackageReference Include="ReactiveUI.Fody" Version="14.2.1" />
     <PackageReference Include="Simple.Wpf.Terminal" Version="2.3.20" />
   </ItemGroup>
 

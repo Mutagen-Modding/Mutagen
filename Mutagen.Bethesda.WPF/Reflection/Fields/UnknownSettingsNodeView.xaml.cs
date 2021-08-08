@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.WPF.Reflection.Fields
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.Meta.DisplayName)
-                    .BindToStrict(this, x => x.SettingNameBlock.Text)
+                    .BindTo(this, x => x.SettingNameBlock.Text)
                     .DisposeWith(disposable);
             });
         }

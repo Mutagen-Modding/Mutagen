@@ -19,12 +19,12 @@ namespace Mutagen.Bethesda.WPF.Plugins.Order
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.LoadOrder)
-                    .BindToStrict(this, x => x.ItemsControl.ItemsSource)
+                    .BindTo(this, x => x.ItemsControl.ItemsSource)
                     .DisposeWith(disposable);
 
                 //this.WhenAnyValue(x => x.MainGrid.IsMouseOver)
                 //    .Select(isOver => isOver ? Visibility.Visible : Visibility.Collapsed)
-                //    .BindToStrict(this, x => x.BottomBorder.Visibility)
+                //    .BindTo(this, x => x.BottomBorder.Visibility)
                 //    .DisposeWith(disposable);
             });
         }

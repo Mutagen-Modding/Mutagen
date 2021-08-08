@@ -17,7 +17,7 @@ namespace Mutagen.Bethesda.WPF.Reflection
             this.WhenActivated(disposable =>
             {
                 this.WhenAnyValue(x => x.ViewModel!.SelectedSettings)
-                    .BindToStrict(this, x => x.MainGrid.DataContext)
+                    .BindTo(this, x => x.MainGrid.DataContext)
                     .DisposeWith(disposable);
             });
         }
