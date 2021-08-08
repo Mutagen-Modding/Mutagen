@@ -18,7 +18,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ContentControl Content="{Binding}" ToolTip="{Binding Meta.Tooltip}">
+    <ContentControl Content="{Binding}" 
+                    ToolTip="{Binding Meta.Tooltip}"
+                    ToolTipService.ShowDuration="120000">
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type local:BoolSettingsVM}">
                 <local:BoolSettingsNodeView />
