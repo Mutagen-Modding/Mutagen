@@ -29,12 +29,10 @@ namespace Mutagen.Bethesda.Environments
         where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
     {
         private readonly bool _dispose;
-        private DirectoryPath _path;
-        private FilePath _path1;
-        private FilePath? _path2;
 
         public DirectoryPath DataFolderPath { get; }
 
+        public GameRelease GameRelease { get; }
         public FilePath LoadOrderFilePath { get; }
 
         public FilePath? CreationClubListingsFilePath { get; }
@@ -50,6 +48,7 @@ namespace Mutagen.Bethesda.Environments
         public ILinkCache<TModSetter, TModGetter> LinkCache { get; }
 
         public GameEnvironmentState(
+            GameRelease gameRelease,
             DirectoryPath dataFolderPath,
             FilePath loadOrderFilePath,
             FilePath? creationClubListingsFilePath,
@@ -57,6 +56,7 @@ namespace Mutagen.Bethesda.Environments
             ILinkCache<TModSetter, TModGetter> linkCache,
             bool dispose = true)
         {
+            GameRelease = gameRelease;
             LoadOrderFilePath = loadOrderFilePath;
             DataFolderPath = dataFolderPath;
             CreationClubListingsFilePath = creationClubListingsFilePath;
@@ -93,6 +93,7 @@ namespace Mutagen.Bethesda.Environments
                     category),
                 new GameDirectoryInjection(gameFolder));
             return new GameEnvironmentProvider<TModSetter, TModGetter>(
+                    gameReleaseInjection,
                     new LoadOrderImporter<TModGetter>(
                         IFileSystemExt.DefaultFilesystem,
                         dataDirectory,
