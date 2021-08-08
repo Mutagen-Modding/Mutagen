@@ -21,10 +21,34 @@ namespace Mutagen.Bethesda.Environments
         }
     }
 
+    public interface IGameEnvironmentState<TModSetter, TModGetter> : IDisposable 
+        where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
+        where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
+    {
+        DirectoryPath DataFolderPath { get; }
+        GameRelease GameRelease { get; }
+        FilePath LoadOrderFilePath { get; }
+        FilePath? CreationClubListingsFilePath { get; }
+
+        /// <summary>
+        /// Load Order object containing all the mods present in the environment.
+        /// </summary>
+        ILoadOrder<IModListing<TModGetter>> LoadOrder { get; }
+
+        /// <summary>
+        /// Convenience Link Cache to use created from the provided Load Order object
+        /// </summary>
+        ILinkCache<TModSetter, TModGetter> LinkCache { get; }
+    }
+
     /// <summary>
     /// A class housing commonly used utilities when interacting with a game environment
     /// </summary>
-    public class GameEnvironmentState<TModSetter, TModGetter> : IDisposable, IDataDirectoryProvider, IPluginListingsPathProvider, ICreationClubListingsPathProvider
+    public class GameEnvironmentState<TModSetter, TModGetter> : 
+        IDataDirectoryProvider, 
+        IPluginListingsPathProvider,
+        ICreationClubListingsPathProvider,
+        IGameEnvironmentState<TModSetter, TModGetter> 
         where TModSetter : class, IContextMod<TModSetter, TModGetter>, TModGetter
         where TModGetter : class, IContextGetterMod<TModSetter, TModGetter>
     {
